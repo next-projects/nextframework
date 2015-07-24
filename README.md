@@ -1,2 +1,2 @@
 # nextframework
-Next Framework 
+Next Framework Project
