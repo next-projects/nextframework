@@ -1,0 +1,9 @@
+<project>
+	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
+		
+	<fileset id="project.source.dirs" dir=".">
+		<include name="src/**/*"/>
+		<include name="google-src/**/*"/>
+		<include name="jfreechart-src/**/*"/>
+	</fileset>
+</project>

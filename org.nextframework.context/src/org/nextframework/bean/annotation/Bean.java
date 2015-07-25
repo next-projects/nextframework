@@ -1,0 +1,47 @@
+/*
+ * Next Framework http://www.nextframework.org
+ * Copyright (C) 2009 the original author or authors.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * 
+ * You may obtain a copy of the license at
+ * 
+ *     http://www.gnu.org/copyleft/lesser.html
+ * 
+ */
+package org.nextframework.bean.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.stereotype.Component;
+
+/**
+ * @author rogelgarcia
+ * @since 20/10/2005
+ * @version 1.0
+ * 
+ * @deprecated Use @Component
+ */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Component
+@Deprecated
+public @interface Bean {
+	String name() default "";
+	Property[] properties() default {};
+}

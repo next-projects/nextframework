@@ -1,0 +1,1456 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<description>Next 1.1 core library</description>
+	<display-name>Next core</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>n</short-name>
+	<uri>next</uri>
+
+	<tag>
+		<description>Form</description>
+		<name>form</name>
+		<tag-class>org.nextframework.view.FormTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>action</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>method</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>enctype</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>url</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>validate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>validateFunction</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Ignora a funcionalidade dessa tag. Apenas renderizando as tags filhas, como se essa tag não existisse.</description>
+			<name>bypass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description>Indica que esse formulário será utilizado para um determinado bean que estiver no escopo. Se esse atributo for configurado, será criada uma tag n:bean implicita.</description>
+			<name>forBean</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Valores possíveis input ou output. Indica em qual modo as tags property aninhadas devem ser automaticamente configuradas, input ou output. Default: input</description>
+			<name>propertyMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>		
+	</tag>
+
+	<tag>
+		<name>doBody</name>
+		<tag-class>org.nextframework.view.DoBodyTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	
+	<tag>
+		<name>chart</name>
+		<tag-class>org.nextframework.view.ChartTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>chart</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+	
+	<tag>
+		<description>Inclui javascripts e css do next</description>
+		<name>head</name>
+		<tag-class>org.nextframework.view.HeadTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>includeDefaultCss</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>includeUtilJs</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>includeNextJs</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>includeNextDirectJs</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>includeThemeCss</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>searchCssDir</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>searchJsDir</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>		
+	</tag>
+
+	<tag>
+		<description>Link</description>
+		<name>link</name>
+		<tag-class>org.nextframework.view.LinkTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>url</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>action</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>img</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>description</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				button ou link.. default é link Se tiver setado o
+				atributo img .. fica sendo image
+			</description>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>parameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>confirmationMessage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>
+		<description>Submit</description>
+		<name>submit</name>
+		<tag-class>org.nextframework.view.SubmitTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>url</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>confirmationScript</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>action</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>img</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>description</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				button, link, image ou submit. default é button. Se tiver setado o
+				atributo img, será image. A diferença entre button e submit é que 
+				button será renderizada a tag button e submit será renderizada a tag
+				input type="submit". Quando se utiliza input type="submit" o navegador
+				ativa a tecla ENTER em cada input, que se for pressionada envia o formulário.
+			</description>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>parameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				Informa se é para validar o formulário
+			</description>
+			<name>validate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+
+	<tag>
+		<description>A tag bean exporta algum objeto para ser utilizado por tags n:property.</description>
+		<name>bean</name>
+		<tag-class>org.nextframework.view.BeanTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description>
+				Nome do objeto no escopo que será utilizado. 
+				Se existir a possibilidade de não existir nenhum objeto com o nome informado, deve ser informado o atributo valueType.
+				Caso contrário uma exceção será lançada.
+			</description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				Prefixo para ser adicionado ao nome da propriedade filha. 
+				Exemplo: Se o propertyPrefix for 'meubean' e tiver uma tag n:property aninhada com o valor 'propriedade' o nome completo da propriedade será meubean.propriedade. 
+			</description>
+			<name>propertyPrefix</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				Indice a ser adicionado ao final do nome da propriedade
+			</description>
+			<name>propertyIndex</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Tipo do bean informado.</description>
+			<name>valueType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Nome da variável que será exportada com o label desse objeto</description>
+			<name>varLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description>Ignora a funcionalidade dessa tag. Apenas renderizando as tags filhas, como se essa tag não existisse.</description>
+			<name>bypass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+
+	<tag>
+		<description>Property</description>
+		<name>property</name>
+		<tag-class>org.nextframework.view.PropertyTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varValue</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varAnnotations</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varParameterizedTypes</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+	
+	<tag>
+		<description>Um for para iteragir sobre os itens de um collection</description>
+		<name>forEachBean</name>
+		<tag-class>org.nextframework.view.ForEachBeanTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>property</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varIndex</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>	
+		<description>
+		</description>
+		<name>img</name>
+		<tag-class>org.nextframework.view.ImgTag</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<description></description>
+			<name>resource</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>	
+		<description>
+			Renderiza um input. Os tipos permitidos são:
+			BUTTON, CHECKBOX, FILE, HIDDEN, IMAGE, PASSWORD, RADIO, RESET,
+			SUBMIT,	TEXT, DATE, TIME, FLOAT, INTEGER, MONEY, CPF, CNPJ, CEP,
+			INSCRICAO_ESTADUAL, CREDIT_CARD, SELECT_ONE, SELECT_MANY,
+			SELECT_ONE_BUTTON, SELECT_ONE_RADIO, TEXT_AREA, PHONE
+		</description>
+		<name>input</name>
+		<tag-class>org.nextframework.view.InputTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>			
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>forceValidation</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>autoSugestUniqueItem</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<description></description>
+			<name>holdValue</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<attribute>
+			<description></description>
+			<name>useAjax</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>onLoadItens</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		
+		<attribute>
+			<description>
+			BUTTON, CHECKBOX, FILE, HIDDEN, 
+			IMAGE, PASSWORD, RADIO, RESET, 
+			SUBMIT, TEXT, DATE, TIME, FLOAT, 
+			INTEGER, MONEY, CPF, CNPJ, CEP,
+			INSCRICAO_ESTADUAL, CREDIT_CARD, 
+			SELECT_ONE, SELECT_MANY, SELECT_ONE_BUTTON, 
+			SELECT_ONE_RADIO, TEXT_AREA, PHONE			
+			</description>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<attribute>
+			<description></description>
+			<name>selectLabelProperty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>required</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>ognl</description>
+			<name>itens</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Parametros da função itens que são opcionais</description>
+			<name>optionalParams</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description></description>
+			<name>cols</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rows</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>showLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>includeBlank</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>blankLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>selectOnePath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>reloadOnChange</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>trueFalseNullLabels</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description></description>
+			<name>write</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<attribute>
+			<description></description>
+			<name>dynamicAttributesMap</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		
+		<attribute>
+			<description></description>
+			<name>labelStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<description></description>
+			<name>labelStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+
+		<attribute>
+			<description>Se um arquivo é transiente não existe a opção para fazer download</description>
+			<name>transientFile</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		
+		
+		<attribute>
+			<description>Indica de deve ser mostrado o botão remover para tipos FILE</description>
+			<name>showRemoverButton</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		
+		<attribute>
+			<description></description>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<attribute>
+			<description></description>
+			<name>selectOnePathParameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<attribute>
+			<description>
+				Determina os atributos width, height, top e left, da janela que será utilizada por um select one button.
+				Os valores devem ser separados por vírgula. Não é necessário informar todos os parâmetros. 
+				Se quiser definir a largura e altura pode-se usar: selectOneWindowSize="400,300" 
+			</description>
+			<name>selectOneWindowSize</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description></description>
+			<name>insertPath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+	
+	<tag>
+		<description>Output</description>
+		<name>output</name>
+		<tag-class>org.nextframework.view.OutputTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>escapeHTML</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>itemSeparator</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>trueFalseNullLabels</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description>Determina se deve ser impresso um &amp; nbsp; quando o valor for nulo (default: true)</description>
+			<name>printMarkerWhenEmpty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>	
+	
+
+	<tag>
+		<description></description>
+		<name>dataGrid</name>
+		<tag-class>org.nextframework.view.DataGridTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Propriedade que indica a ordenação da lista. Se fornecida a lista será reordenada pelo indexProperty</description>
+			<name>indexProperty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<!-- Atributos para configurar agrupamento -->
+		<attribute>
+			<description></description>
+			<name>groupProperty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>groupStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>groupStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+				
+		<attribute>
+			<description>Coloca no escopo qual é a classe dos itens desse dataGrid para tags property que estiverem dentro desse datagrid usarem</description>
+			<name>itemType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<attribute>
+			<description></description>
+			<name>itens</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>headerStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>headerStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>bodyStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>bodyStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>footerStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>footerStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varStatus</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<description></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>dynaLine</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>varIndex</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		
+		<attribute>
+			<description>Indica qual caracter deve ser utilizado para separar os valores dos rows. (Expressao regular)</description>
+			<name>rowSeparator</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+			
+		<attribute>
+			<description>O attributo row na verdade não existe. 
+			Deve na verdade ser utilizado row[attributo da linha]. 
+			Ex: Se quiser setar o atributo height dos row utilizar: rowHeight="valor". 
+			Pode-se utilizar mais de um valor. 
+			Será feita a iteração pelos valores e cada linha receberá um valor diferente.
+			Os valores serão separados pelo valor do atributo rowSeparator. Se não for informado valor em rowSeparator, os atributos nao serão separados
+			A linha de titulo não é configurada</description>
+			<name>row</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<dynamic-attributes>true</dynamic-attributes>		
+	</tag>	
+	
+	<tag>
+		<description>Renderiza uma coluna (atributos que começem com header só serão atribuidos ao header, atributos começados com body só serão atribuidos ao body)</description>
+		<name>column</name>
+		<tag-class>org.nextframework.view.ColumnTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>header</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>order</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+	
+	<tag>
+		<description>Enables optional columsn for datagrids</description>
+		<name>dataGridOptionalColumns</name>
+		<tag-class>org.nextframework.view.DataGridOptionalColumnsTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>The key to be used to save the configuration</description>
+			<name>cacheKey</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>false</dynamic-attributes>
+	</tag>
+	
+	<tag>
+		<description></description>
+		<name>header</name>
+		<tag-class>org.nextframework.view.HeaderTag</tag-class>
+		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>		
+	</tag>
+	
+	<tag>
+		<description></description>
+		<name>body</name>
+		<tag-class>org.nextframework.view.BodyTag</tag-class>
+		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>		
+	</tag>
+	
+	<tag>
+		<description></description>
+		<name>footer</name>
+		<tag-class>org.nextframework.view.FooterTag</tag-class>
+		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+	
+	<tag>
+		<description></description>
+		<name>panelGrid</name>
+		<tag-class>org.nextframework.view.PanelGridTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rowStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rowStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>columnStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>columnStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description>Utilizado para determinar se os property que estiverem dentro desse panelGrid devem ser renderizados com 2 colunas</description>
+			<name>propertyRenderAsDouble</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>					
+		<attribute>
+			<description></description>
+			<name>dynamicAttributesMap</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<attribute>
+			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<description>Informa se esse panelGrid deve herdar as propriedades de estilo do panelGrid pai (se existir) default = true</description>
+			<name>useParentPanelGridProperties</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+	
+	<tag>
+		<description></description>
+		<name>group</name>
+		<tag-class>org.nextframework.view.GroupTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rowStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rowStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>columnStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>columnStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>legend</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>showBorder</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Informa se esse group deve herdar as propriedades de estilo do panelGrid pai (se existir) default = true</description>
+			<name>useParentPanelGridProperties</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+	
+	
+	<tag>
+		<description></description>
+		<name>panel</name>
+		<tag-class>org.nextframework.view.PanelTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description>Utilizado quando esse panel estiver dentro de um panelGrid</description>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<attribute>
+			<description>Utilizado quando esse panel estiver dentro de um tagPanel</description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description>Utilizado para determinar se os property que estiverem dentro desse panel devem ser renderizados com 2 colunas</description>
+			<name>propertyRenderAsDouble</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>						
+		<attribute>
+			<name>onSelectTab</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>								
+		
+		<dynamic-attributes>true</dynamic-attributes>		
+	</tag>
+	
+	<tag>
+		<description></description>
+		<name>tabPanel</name>
+		<tag-class>org.nextframework.view.TabPanelTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description>Id do tabPanel (se quiser manter a aba selecionada durante um refresh, setar o id)</description>
+			<name>id</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>renderUniqueTab</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>	
+	
+	<tag>
+		<description></description>
+		<name>validation</name>
+		<tag-class>org.nextframework.view.ValidationTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description>Nome da função de validação</description>
+			<name>functionName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description>Ignora a funcionalidade dessa tag. Apenas renderizando as tags filhas, como se essa tag não existisse.</description>
+			<name>bypass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+	</tag>	
+	
+	<tag>
+		<description>Monta um menu</description>
+		<name>menu</name>
+		<tag-class>org.nextframework.view.menu.MenuTag</tag-class>
+		<body-content>empty</body-content>	
+		<attribute>
+			<description>Path onde se encontra o menu</description>
+			<name>menupath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>O próprio menu a ser apresentado</description>
+			<name>menu</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>orientation</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	
+	<tag>
+		<name>pagging</name>
+		<tag-class>org.nextframework.view.PaggingTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>currentPage</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>totalNumberOfPages</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<name>selectedClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>unselectedClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<name>parameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>				
+	</tag>	
+	
+	<tag>
+		<description></description>
+		<name>messages</name>
+		<tag-class>org.nextframework.view.MessagesTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>	
+	
+	<tag>
+		<description></description>
+		<name>getContent</name>
+		<tag-class>org.nextframework.view.GetContentTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>tagName</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>vars</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+		<attribute>
+			<description>
+				Variável que conterá o corpo. Quando utilizado, os atributos devem ser usados depois do fechamento da tag.
+			</description>
+			<name>bodyVar</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>			
+	</tag>	
+	<tag>
+		<description></description>
+		<name>content</name>
+		<tag-class>org.nextframework.view.ContentTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
+	
+	<tag>
+		<description></description>
+		<name>comboReloadGroup</name>
+		<tag-class>org.nextframework.view.ComboReloadGroupTag</tag-class>
+		<body-content>scriptless</body-content>	
+		<attribute>
+			<name>useAjax</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
+		
+	<tag>
+		<description>Include</description>
+		<name>include</name>
+		<tag-class>org.nextframework.view.IncludeTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>url</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>Verifica se existem mensagens</description>
+		<name>hasMessages</name>
+		<tag-class>org.nextframework.view.HasMessagesTag</tag-class>
+		<body-content>scriptless</body-content>	
+	</tag>
+	
+	<tag>
+		<description>Verifica se existem mensagens</description>
+		<name>hasAuthorization</name>
+		<tag-class>org.nextframework.view.HasAuthorizationTag</tag-class>
+		<body-content>scriptless</body-content>	
+		<attribute>
+			<description></description>
+			<name>url</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>action</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>
+			Renderiza um progress bar para um determinado ProgressMonitor.
+			Chamadas AJAX irão atualizar a barra de progresso.
+		</description>
+		<name>progressBar</name>
+		<tag-class>org.nextframework.view.ProgressBarTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>progressMonitor</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description>Javascript que irá executar quando um erro ocorrer.
+			Existirá uma variável chamada 'element' com as informações da barra de progresso.
+			Os atributos dessa variável são: progressBar, percentDone, subtask, done e tasks.
+			Para criar um evento para mostrar o percentual por exemplo use: onError('Percentual '+element.percentDone);
+			</description>
+			<name>onError</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description>Javascript que irá executar quando o processo terminar.
+			Existirá uma variável chamada 'element' com as informações da barra de progresso.
+			Os atributos dessa variável são: progressBar, percentDone, subtask, done e tasks.
+			Para criar um evento para mostrar o percentual por exemplo use: onComplete('Percentual '+element.percentDone);</description>
+			<name>onComplete</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+	
+	<tag>
+		<description>Creates a datasource provider to be used with suggest inputs.</description>
+		<name>suggestProvider</name>
+		<tag-class>org.nextframework.view.SuggestProviderTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>Name of this provider.</description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>List to be used as dataSource for this provider. This list will be loaded with the page. No AJAX roundtrips to provide suggestions.</description>
+			<name>dataSource</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<description>Importa arquivos Javascript em algum pacote, ou pelo nome completo do arquivo</description>
+		<name>importJS</name>
+		<tag-class>org.nextframework.view.ImportJSTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				The JS file that must be imported. It must be in the classpath in a package that ends with 'resource'. 
+				For example: foo.bar.resource.MyFile. 
+				It will load only files with .js extension. The extension can be omited in this attribute.
+				</description>
+			<name>fileName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				The package that contains .js files to be imported. The package must end with 'resource'.
+				This tag will create an import statement for every .js file that exists in this package.
+			</description>
+			<name>package</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<function>
+		<name>printStackTrace</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Object printStackTrace(java.lang.Throwable)</function-signature>
+	</function>
+	
+	<function>
+		<name>id</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Object id(java.lang.Object)</function-signature>
+	</function>
+	
+	<function>
+		<name>isId</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Boolean isId(java.lang.annotation.Annotation[])</function-signature>
+	</function>
+	
+	<function>
+		<name>idProperty</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String idProperty(java.lang.Object)</function-signature>
+	</function>
+	
+	<function>
+		<name>descriptionToString</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String descriptionToString(java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<name>valueToString</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String valueToString(java.lang.Object)</function-signature>
+	</function>	
+	
+	<function>
+		<name>reevaluate</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Object reevaluate(java.lang.String, javax.servlet.jsp.PageContext)</function-signature>
+	</function>	
+	
+	<function>
+		<name>default</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Object chooseDefault(java.lang.Object, java.lang.Object)</function-signature>
+	</function>		
+	
+	<function>
+		<name>ognl</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Object ognl(java.lang.String)</function-signature>
+	</function>			
+	
+	<function>
+		<name>hierarchy</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String hierarchy(java.lang.Class)</function-signature>
+	</function>		
+	
+	<function>
+		<name>escape</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String escape(java.lang.String)</function-signature>
+	</function>	
+	
+	<function>
+		<name>size</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Integer size(java.util.Collection)</function-signature>
+	</function>
+	
+	<function>
+		<name>contains</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>boolean contains(java.util.Collection, java.lang.Object)</function-signature>
+	</function>
+	
+	<function>
+		<name>isDetailProperty</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.Boolean isDetailProperty(java.lang.String)</function-signature>
+	</function>		
+</taglib>

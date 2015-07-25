@@ -1,0 +1,2 @@
+<input type="text" name="${tag.name}" id="${tag.id}" value="${tag.valueToString}" maxlength="${tag.dynamicAttributesMap['maxlength']}" size="${tag.dynamicAttributesMap['size']}" onKeyUp="mascara_data(this, event, '${tag.pattern}');" onKeyPress="return valida_tecla_data(this, event, '${tag.pattern}')" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}/>
+<input type="hidden" name="${tag.name}_datePattern" value="${tag.pattern}"/>

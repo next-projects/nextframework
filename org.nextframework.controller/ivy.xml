@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.nextframework" module="next-controller" />
+	<configurations>
+		<include file="../org.nextframework.build/configurations.xml" />
+	</configurations>
+	<dependencies>
+		<dependency org="org.springframework"	name="spring-webmvc"		rev="4.1.5.RELEASE" 		conf="lib" />
+		
+		<dependency org="commons-fileupload"	name="commons-fileupload"	rev="1.2.2" 		conf="lib" />
+		<dependency org="commons-io" 			name="commons-io" 			rev="1.4" 			conf="lib" />
+		
+		<dependency org="org.codehaus.jackson"  name="jackson-mapper-asl" 	rev="1.9.13"		conf="lib" />
+		<dependency org="org.codehaus.jackson"	name="jackson-core-asl"		rev="1.9.13"		conf="lib" />
+	</dependencies>
+</ivy-module>

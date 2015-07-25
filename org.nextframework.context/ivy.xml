@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.nextframework" module="next-context"/>
+	<configurations>
+		<include file="../org.nextframework.build/configurations.xml"/>
+	</configurations>
+	<dependencies>
+		<dependency org="org.springframework"	name="spring-context"			rev="4.1.5.RELEASE"	conf="lib" />
+		<dependency org="org.springframework"	name="spring-context-support" 	rev="4.1.5.RELEASE"	conf="lib" />
+		
+		<!-- Runtime dependencies -->
+		<dependency org="org.springframework"	name="spring-aop" 				rev="4.1.5.RELEASE"	conf="lib" />
+		<dependency org="org.springframework"	name="spring-expression" 		rev="4.1.5.RELEASE"	conf="lib" />
+		
+		<dependency org="aopalliance" 			name="aopalliance" 				rev="1.0"		conf="lib" />
+
+		<!-- optional -->
+		<!-- 
+		<dependency org="org.springframework"   name="spring-aspects" 			rev="3.2.0.M1"	conf="lib" />
+		<dependency org="org.aspectj"			name="aspectjrt" 				rev="1.6.12"	conf="lib" />
+		<dependency org="org.aspectj"			name="aspectjweaver" 			rev="1.6.12"	conf="lib" />		
+		 -->
+	</dependencies>
+</ivy-module>

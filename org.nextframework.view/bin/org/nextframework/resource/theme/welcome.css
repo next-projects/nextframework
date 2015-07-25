@@ -1,0 +1,19 @@
+HTML {
+	min-height: 100%;
+}
+BODY {
+	font-family: sans-serif;
+	background-color: #6441A5;
+	background-image: linear-gradient(to bottom,#2a0845 0,#6441A5 100%);
+	text-align:center;
+	padding: 80px;
+	color:white;	
+	background-repeat: no-repeat;
+}
+
+H1 {
+	margin: 50px;
+}
+H2 {
+	margin: 40px;
+}

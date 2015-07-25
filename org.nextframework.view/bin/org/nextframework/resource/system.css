@@ -1,0 +1,60 @@
+.datagridcontainer {
+	width: 100%; 
+	overflow: auto;
+}
+
+.datagridblock {
+	position: relative; 
+}
+
+/*position: relative;*/
+th.datagridresizeblock {
+	vertical-align: middle;
+	background-position: center;
+	width: 16px;
+	min-width: 16px;
+	cursor: e-resize;
+	background-color: white;
+	/*opacity: 0.01;
+	filter:alpha(opacity=1);*/
+	background-image: url("../img/resize-bar-tiny.png"); 
+	z-index: 100;
+}
+.datagridoriginalcontents {
+}
+
+.datagridresizeblocktable {
+}
+
+.dataGrid thead * .datagridresizeblocktable {
+	padding: 0px;
+	border-bottom: 0px;
+}
+
+.dataGrid thead * .datagridresizeblocktable th {
+	padding: 0px;
+	border-bottom: 0px;
+}
+
+/* Os dois estilos abaixo são necessários para corrigir o problema de background que pode acontecer nos datagrids*/
+TABLE.dataGrid TR.dataGridHeader TH TABLE.datagridresizeblocktable TR TH.datagridoriginalcontents {
+	background-image: none;
+	background-color: transparent;
+}
+
+TABLE.dataGrid TR.dataGridHeader TD TABLE.datagridresizeblocktable TR TH.datagridoriginalcontents {
+	background-image: none;
+	background-color: transparent;
+}
+
+TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock,TABLE.dataGrid TR.dataGridHeader TD th.datagridresizeblock {
+	background-color: transparent;
+	background-position: center;
+	background-image: url("../img/resize-bar-tiny.png");
+}
+
+.blockScreenTransparent{
+	filter:alpha(opacity=40);
+	-moz-opacity: 0.4;
+	opacity: 0.4;
+}

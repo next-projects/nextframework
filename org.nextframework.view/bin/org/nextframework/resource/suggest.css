@@ -1,0 +1,25 @@
+.nssv {
+	position: absolute;
+	border: 1px solid black;
+	background-color: white;
+}
+
+.nssv UL {
+	padding: 0px;
+	margin: 0px;
+	max-height: 300px;
+	overflow: auto;
+}
+
+.nssv LI {
+	list-style-type: none;
+	padding-left: 10px;
+	padding-right: 10px;
+	cursor: default;
+	line-height: 22px;
+	white-space: nowrap;
+}
+
+.nssi {
+	background-color: #eeeeee;
+}

@@ -1,0 +1,4 @@
+<project name="Tasks for next submodules">
+	<import file="../build-dependencies.xml"/>
+	<import file="../build-package.xml"/>
+</project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.types"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.persistence"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.context"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-jdbc-4.1.5.RELEASE.jar" sourcepath="lib/src/spring-jdbc-4.1.5.RELEASE-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-orm-4.1.5.RELEASE.jar" sourcepath="lib/src/spring-orm-4.1.5.RELEASE-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-tx-4.1.5.RELEASE.jar" sourcepath="lib/src/spring-tx-4.1.5.RELEASE-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

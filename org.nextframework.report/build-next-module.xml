@@ -1,0 +1,11 @@
+<project>
+	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
+	
+	<fileset id="project.source.dirs" dir=".">
+		<include name="core-src/**/*"/>
+		<include name="jasper-base-src/**/*"/>
+		<include name="jasper-impl-src/**/*"/>
+		<include name="jasper-html-src/**/*"/>
+		<include name="builder-src/**/*"/>
+	</fileset>
+</project>

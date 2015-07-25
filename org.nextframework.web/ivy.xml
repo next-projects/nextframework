@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.nextframework" module="next-web" />
+	<configurations>
+		<include file="../org.nextframework.build/configurations.xml" />
+	</configurations>
+	<dependencies>
+		<dependency org="javax.servlet"			name="javax.servlet-api"		rev="3.1.0"		conf="provided" />
+		<dependency org="javax.servlet.jsp"		name="javax.servlet.jsp-api"	rev="2.2.1"		conf="provided" />
+		<dependency org="javax.el"				name="javax.el-api"				rev="2.2.1"		conf="provided" />
+		
+		<dependency org="org.springframework"	name="spring-web"				rev="4.1.5.RELEASE"	conf="lib" 		/>
+	</dependencies>
+</ivy-module>

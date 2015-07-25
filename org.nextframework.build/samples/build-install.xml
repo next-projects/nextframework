@@ -1,0 +1,99 @@
+<project name="Install next framework" default="install">
+
+	<!-- Configure custom webroot dir -->
+	<!--<property name="webroot.dir" value=""/>-->
+	
+	<property name="default.webroot.dir" value="WebContent"/>
+
+	<target name="-config-build-properties" unless="${build.file.available}">
+		<replace file="build.properties" 
+			token="module.name=" 
+			value="module.name=${projectName}" />
+
+		<basename file="${webroot.dir}" property="webroot.dir.base"/>
+		<condition property="webroot.dir.config" value="webroot.dir=${webroot.dir}">
+			<not>
+				<equals arg1="${webroot.dir.base}" arg2="${default.webroot.dir}" />
+			</not>
+		</condition>
+		<property name="webroot.dir.config" value=""/>
+		
+		<echo file="build.properties" append="true">${webroot.dir.config}</echo>
+	</target>
+
+	<macrodef name="set-webroot-dir">
+		<attribute name="dirName" />
+		<sequential>
+			<condition property="webroot.dir" value="@{dirName}">
+				<available file="@{dirName}" type="dir" />
+			</condition>
+		</sequential>
+	</macrodef>
+
+	<target name="-project-properties">
+		<basename property="projectName" file="${basedir}" />
+		<set-webroot-dir dirname="web" />	<!-- intellij idea, netbeans -->
+		<set-webroot-dir dirname="WebContent" />	<!-- eclipse -->
+		<property name="webroot.dir" value="${default.webroot.dir}" />	<!-- default -->
+		
+		<condition property="file.index.available">
+			<available file="${webroot.dir}/index.jsp" type="file" />
+		</condition>
+		<condition property="file.webxml.available">
+			<available file="${webroot.dir}/WEB-INF/web.xml" type="file" />
+		</condition>		
+			
+		<echo>Project name: ${projectName}</echo>
+		<echo>Web dir: /${webroot.dir}</echo>
+	</target>
+	
+	<target name="-rename-index" depends="-project-properties" if="${file.index.available}">
+		<echo>Renaming ${webroot.dir}/index.jsp to ${webroot.dir}/index.jsp.bak</echo>
+		<move file="${webroot.dir}/index.jsp" tofile="${webroot.dir}/index.jsp.bak"/>
+	</target>
+	<target name="-rename-webxml" depends="-project-properties" if="${file.webxml.available}">
+		<echo>Renaming ${webroot.dir}/WEB-INF/web.xml to ${webroot.dir}/WEB-INF/web.xml.bak</echo>
+		<move file="${webroot.dir}/WEB-INF/web.xml" tofile="${webroot.dir}/WEB-INF/web.xml.bak"/>
+	</target>
+	
+	<target name="install" depends="-project-properties,-rename-index,-rename-webxml" description="Install Next On Project">
+
+		<available file="build.properties" property="build.file.available" />
+		
+		<echo>Unzipping next files to project </echo>
+		<unzip dest="./">
+			<fileset dir="./">
+				<include name="next-*-full.zip" />
+			</fileset>
+			<patternset>
+				<include name="next-*-full/**" />
+				<exclude name="next-*-full" />
+			</patternset>
+			<chainedmapper>
+				<mapper type="regexp" from="^next(.*)full/(.*)" to="temp/\2" />
+				<firstmatchmapper>
+					<globmapper from="temp/WebContent/*" to="temp/${webroot.dir}/*" />
+					<globmapper from="*" to="*" />
+				</firstmatchmapper>
+			</chainedmapper>
+		</unzip>
+		<copy todir="./" overwrite="false">
+			<fileset dir="./temp">
+			</fileset>
+		</copy>
+		
+		<delete dir="./temp" />
+		
+		<antcall target="-config-build-properties" />
+
+		<echo>
+			
+	Please refresh your project!
+			
+	Configure server.deploy in build.properties file!
+		</echo>
+
+
+	</target>
+
+</project>

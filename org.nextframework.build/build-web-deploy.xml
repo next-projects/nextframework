@@ -1,0 +1,219 @@
+<project name="Next Project Web Deploy" default="Deploy Project on Server">
+
+	<import file="include/build-commons.xml"/>
+	<import file="build-dependencies.xml"/>
+	<import file="build-js.xml"/>
+
+	<!-- Required properties to be set by the project. Must be set before the import. -->
+	<fail unless="deploy.dir" message="Property 'deploy.dir' was not set. The property 'deploy.dir' must be set before importing the build-web-deploy.xml file."/>
+
+	<condition property="deploy.exploded.true">
+		<or>
+			<istrue value="${deploy.exploded}"/>
+			<not>
+				<isset property="deploy.exploded"/>
+			</not>
+		</or>
+	</condition>
+
+	<!-- Configuration of build package. (Use prefix build.package.parameter) -->
+	<property name="build.package.parameter.classes.dir" 	 	  value="${deploy.dir}/WEB-INF/classes"/>
+	<property name="build.package.parameter.lib.dir" 			  value="${deploy.dir}/WEB-INF/lib"/>
+	<property name="build.package.parameter.lib.dependencies.dir" value="${deploy.dir}/WEB-INF/lib"/>
+
+	<propertyset id="build_package_parameters">
+		<propertyref prefix="build.package.parameter"/>
+	</propertyset>
+	<import file="build-package.xml"/>
+	<!-- end of build package configuration -->
+
+	<propertyset id="build_deploy_parameters">
+		<propertyref prefix="build.package.parameter"/>
+		<propertyset refid="build_package_parameters"/>
+	</propertyset>
+
+	<target name="deploy-web-all-next-modules-packaged" unless="${deploy.exploded.true}">
+		<build-next-modules target="jar-module-classes"			 parameters="build_deploy_parameters"/>
+		<build-next-modules target="copy-module-dependency-jars" parameters="build_deploy_parameters"/>
+	</target>
+
+	<target name="deploy-web-all-next-modules-exploded" if="${deploy.exploded.true}">
+		<build-next-modules target="copy-module-classes"		 parameters="build_deploy_parameters"/>
+		<build-next-modules target="jar-module-resources"		 parameters="build_deploy_parameters"/>
+		<build-next-modules target="copy-module-dependency-jars" parameters="build_deploy_parameters"/>
+	</target>
+
+	<target name="deploy-next-classes">
+		<build-next-modules target="copy-module-classes"		 parameters="build_deploy_parameters"/>
+	</target>
+
+	<target name="deploy-web-all-next-modules" depends="check-all" unless="${next.jars.available}">
+		<echo>Next jars not found in project, copying from workspace if available</echo>
+		<antcall target="deploy-web-all-next-modules-packaged"/>
+		<antcall target="deploy-web-all-next-modules-exploded"/>
+	</target>
+	
+	<target name="deploy-project" depends="deploy-web-all-next-modules, deploy-project-files, deploy-project-metainf, overwrite-next-files">
+	</target>
+
+	<target name="undeploy-project" >
+		<delete dir="${deploy.dir}"/>
+	</target>
+
+	<target name="check-all">
+		<condition property="lib.dir.avaiable">
+			<available type="dir" file="lib"/>
+		</condition>
+		<condition property="bin.dir.available">
+			<available type="dir" file="bin"/>
+		</condition>
+		<condition property="project.metainf.available">
+			<available type="dir" file="bin/META-INF/"/>
+		</condition>		
+		
+		<condition property="webroot.dir.available" >
+			<available type="dir" file="${webroot.dir}"/>
+		</condition>
+		
+		<fileset id="next.jar.files" dir="${basedir}" includes="**/lib/next-*.jar"/>
+
+	    <condition property="next.jars.available">
+	        <resourcecount refid="next.jar.files" when="greater" count="0"/>
+	    </condition>
+	</target>
+
+	<target name="copy-libs" depends="check-all" if="${lib.dir.avaiable}">
+		<copy todir="${deploy.dir}/WEB-INF/lib" includeemptydirs="false" >
+			<fileset dir="lib">
+				<include name="*.jar"/>
+				<exclude name="*src*"/>
+				<exclude name="*source*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy-web-files" depends="check-all" if="${webroot.dir.available}">
+		<copy todir="${deploy.dir}">
+			<fileset dir="${webroot.dir}">
+				<exclude name="*.class"/>
+				<exclude name="*.tld"/>
+				<exclude name="**/META-INF/**/*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="deploy-project-metainf" depends="copy-libs">
+		<deploy-metainf from="./bin"/>
+		<deploy-metainf from="./build/classes"/>
+		<deploy-metainf from="${webroot.dir}/WEB-INF/classes"/>
+	</target>
+		
+	<target name="deploy-java-javascript-files">
+		<deploy-classes from="${javascript.generated.dir}"/>
+	</target>
+			
+	<target name="deploy-project-files">
+		<basename file="${basedir}" property="project.name"/>
+		<echo>Deploying ${project.name}</echo>
+		
+		<antcall target="copy-web-files"/>
+		<antcall target="copy-libs"/>
+		
+		<deploy-classes from="./bin"/>
+		<deploy-classes from="./build/classes"/>
+		<deploy-classes from="${javascript.generated.dir}"/>
+		<deploy-classes from="./${webroot.dir}/WEB-INF/classes"/>
+		<deploy-classes from="./out/production/${module.name}"/>
+		<deploy-classes from="./out/production/${project.name}"/>
+		<deploy-classes from="${output.dir}"/> <!-- Custom classes output -->
+		
+	</target>
+
+	<target name="overwrite-next-files">
+		<override-next-classes from="./bin"/>
+		<override-next-classes from="./build/classes"/>
+		<override-next-classes from="./${webroot.dir}/WEB-INF/classes"/>
+	</target>
+	
+	<macrodef name="module">
+		<attribute name="name"/>
+		<sequential>
+			<ant antfile="../@{name}/build-module.xml" target="${project.module.ant.target}" inheritall="false">
+				<reference refid="ivy.instance" />
+				<property name="deploy.dir" value="${deploy.dir}"/>
+				<property name="module.name" value="@{name}"/>
+			</ant>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="dynamic-module">
+		<attribute name="name"/>
+		<attribute name="workspace" default="."/>
+		<sequential>
+			<echo message="Building dynamic-module @{name}"></echo>
+			<ant antfile="${ant.file}" target="${project.module.ant.target}" inheritall="false" dir="../@{workspace}/@{name}">
+				
+				<reference refid="ivy.instance" />
+				<property name="deploy.dir" value="${deploy.dir}"/>
+				<property name="module.name" value="@{name}"/>
+			</ant>
+		</sequential>
+	</macrodef>
+
+	<!-- PUBLIC TARGETS -->
+
+	<target name="Deploy Project on Server" depends="deploy-project" description="Deploy Project Files">
+		<antcall target="Project Modules">
+			<param name="project.module.ant.target" value="Copy Application Files"/>
+		</antcall>
+		<antcall target="Project Modules">
+			<param name="project.module.ant.target" value="deploy-project-metainf"/>
+		</antcall>
+		<antcall target="Project Modules">
+			<param name="project.module.ant.target" value="Overwrite Next Files"/>
+		</antcall>
+	</target>
+
+	<target name="Copy Application Files" depends="deploy-project-files" description="Deploy Project">
+		<antcall target="Project Modules">
+			<param name="project.module.ant.target" value="Copy Application Files"/>
+		</antcall>
+	</target>
+
+	<target name="Copy Next Files" depends="deploy-next-classes" >
+	</target>
+
+	<target name="Undeploy" depends="undeploy-project" description="Remove the project deployment">
+	</target>
+
+	<target name="Overwrite Next Files" depends="overwrite-next-files">
+		<antcall target="Project Modules">
+			<param name="project.module.ant.target" value="Overwrite Next Files"/>
+		</antcall>
+	</target>
+
+	<target name="Retrieve Ivy Dependencies" description="retrieve ivy">
+		<ant antfile="${ant.file.Project Dependencies Download}" target="copy-module-dependencies">
+			<reference refid="ivy.instance" />
+		</ant>
+		<antcall target="Project Modules">
+			<param name="project.module.ant.target" value="Retrieve Ivy Dependencies"/>
+		</antcall>
+	</target>
+	
+	<target name="Generate Javascript Files" description="Build the javascript files from Java files">
+		<ant antfile="${ant.file.Javascript Generator}" target="Build JS Files">
+		</ant>
+		<antcall target="deploy-java-javascript-files"/>
+		<antcall target="Project Modules">
+			<param name="project.module.ant.target" value="Generate Javascript Files"/>
+		</antcall>		
+	</target>
+
+	<!-- This task should be overriden in projects that have various modules -->
+	<target name="Project Modules">
+
+	</target>
+
+
+</project>

@@ -1,0 +1,4 @@
+org.nextframework.authorization.web.impl.WebPermissionLocator=100
+org.nextframework.authorization.web.impl.WebPermissionLocator=100
+org.nextframework.authorization.impl.AuthorizationManagerImpl=100
+org.nextframework.authorization.impl.AuthorizationDAOImpl=100

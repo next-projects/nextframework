@@ -1,0 +1,8 @@
+<project name="Report Generator" default="Build JS Files">
+
+	<property name="javascript.generated.dir"	value="${basedir}/../org.nextframework.view/resources"/>
+	<import file="../org.nextframework.build/build-js.xml"/>
+	
+
+
+</project>

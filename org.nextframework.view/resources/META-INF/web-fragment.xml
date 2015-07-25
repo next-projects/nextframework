@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment version="3.0"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+						http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
+	
+	<name>next_view</name>
+
+	<ordering>
+		<after>
+			<name>next_web</name>
+		</after>
+		<before>
+			<others/>
+		</before>
+	</ordering>
+
+	<!-- Creates the Next Context -->
+	<!-- Filtro para criar o contexto do NEXT -->
+	<filter>
+		<filter-name>nextFilter</filter-name>
+		<filter-class>org.nextframework.core.web.NextFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>nextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Servlet that redirects requests from select-one and select-new input buttons -->
+	<!-- Servlet que redireciona as resquisições dos botões SelectOne e Cadastrar dos inputs -->
+	<servlet>
+		<servlet-name>selectcreateServlet</servlet-name>
+		<servlet-class>org.nextframework.view.SelecionarCadastrarServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>selectcreateServlet</servlet-name>
+		<url-pattern>/selectcreate/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Provides resources like CSS, JS for the application -->
+	<!-- Servlet dos recursos CSS, JS, etc -->
+	<servlet>
+		<servlet-name>resourceServlet</servlet-name>
+		<servlet-class>org.nextframework.view.ResourceServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>resourceServlet</servlet-name>
+		<url-pattern>/resource/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Ajax Servlet -->
+	<!-- Servlet necessário para Ajax -->
+	<servlet>
+		<servlet-name>ajaxServlet</servlet-name>
+		<servlet-class>org.nextframework.view.AjaxServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ajaxServlet</servlet-name>
+		<url-pattern>/ajax/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet to download uploaded files -->
+	<!-- Servlet necessário para downloads de Arquivo -->
+	<servlet>
+		<servlet-name>downloadFileServlet</servlet-name>
+		<servlet-class>org.nextframework.view.DownloadFileServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>downloadFileServlet</servlet-name>
+		<url-pattern>/DOWNLOADFILE/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>downloadFileServlet</servlet-name>
+		<url-pattern>/downloadfile/*</url-pattern>
+	</servlet-mapping>
+	
+</web-fragment>

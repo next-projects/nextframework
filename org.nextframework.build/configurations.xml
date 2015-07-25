@@ -1,0 +1,6 @@
+<configurations defaultconfmapping="*->provided,lib,lib-test,extras/stjs;provided,lib,lib-test,extras/stjs->*">
+	<conf name="provided"	transitive="false" />
+	<conf name="lib"		transitive="false" />
+	<conf name="lib-test" 	transitive="false"/>	
+	<conf name="extras/stjs" transitive="false"/>	
+</configurations>

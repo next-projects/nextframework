@@ -1,0 +1,28 @@
+<project name="Application" default="Next Project Web Deploy.deploy-project">
+
+	<!-- This is an exemple build file for next applications. -->
+	<!-- This file must be in the root of your project -->
+	
+	<property file="build.properties"/>
+	
+	<!-- Configure here the deploy path -->
+	<!-- It is advised to configure the server home in the Eclipse Ant properties (like the tomcat7.home). Otherwise, put the full path of the app server. -->
+	<property name="deploy.dir" value="${server.deploy}/${module.name}"/>
+	
+	<!-- Configure where the Web files are stored in your project-->
+	<property name="webroot.dir" value="WebContent"/>
+	
+	<!-- Configure the next-web-deploy.xml accordingly -->
+	<import file="../build-web-deploy.xml"/>
+	<!--
+	With next workspace project
+	<import file="../org.nextframework.build/build-web-deploy.xml"/>
+	-->
+	
+	<!-- Other projects required by the application -->
+	<target name="Project Modules">
+		<!--<dynamic-module name="name-of-the-other-project"/>-->
+	</target>
+	
+	
+</project>

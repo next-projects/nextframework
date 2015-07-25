@@ -1,0 +1,1 @@
+<input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" onKeyUp="mascara_cpf(this)" onKeyPress="if(valida_tecla(this, event, true)) {${tag.dynamicAttributesMap['onkeypress']};return true;} else {return false;}" onchange="${tag.reloadOnChangeString}" maxlength="14" size="15" ${tag.dynamicAttributesToString}/>

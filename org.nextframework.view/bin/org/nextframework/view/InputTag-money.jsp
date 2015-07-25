@@ -1,0 +1,1 @@
+<input type="text" name="${tag.name}" id="${tag.id}" value="${tag.valueToString}" maxlength="21" onKeyDown="return formata_money(this,event)" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}/>

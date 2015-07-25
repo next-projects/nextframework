@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="generator/src/main/java"/>
+	<classpathentry kind="src" path="generator/src/main/resources"/>
+	<classpathentry kind="src" path="js-lib/src/main/java"/>
+	<classpathentry kind="src" path="server/src/main/java"/>
+	<classpathentry kind="src" path="shared/src/main/java"/>
+	<classpathentry kind="src" path="js-next/src/main/java"/>
+	<classpathentry kind="src" path="js-google/src/main/java"/>
+	<classpathentry kind="src" path="js-builder"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="provided/bcel-5.2.jar"/>
+	<classpathentry kind="lib" path="provided/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="provided/guava-11.0.1.jar"/>
+	<classpathentry kind="lib" path="provided/jackson-core-asl-1.9.4.jar"/>
+	<classpathentry kind="lib" path="provided/jackson-mapper-asl-1.9.4.jar"/>
+	<classpathentry kind="lib" path="provided/javaparser-1.0.8.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

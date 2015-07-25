@@ -1,0 +1,271 @@
+3.8.0
+- [I18N] ComboFilter (used in ajax) attributes renamed listaParametros -> parameterList, listaClasses -> classesList
+- [Improvement] AuthorizationDAOImpl renamed to AbstractAuthorizationDAO
+- [BUG] Moneys were not rendered correctly on n:output. Now it uses its Formattable interface
+- [BUG] Inputs with type="hidden" and write="true" were not using the pattern to format date types. Fixed
+- [Improvement] Datagrid n:footer tag is optional for columns that don't have footers
+- [Improvement] Dynatable scripts updated. New functions newRow(table), deleteRow(el, table) and deleteRowByIndex(table, index)
+- [Improvement] NextNumbers.formataDecimal removed. Use formatDecimal
+- [Improvement] HeadTag now includes normalize.css and system.css. Added configuration parameters. 
+- [Improvement] Created NextSuggest.SuggestView.SELECTED_INDEX_STYLE_CLASS constant to define next suggest selected style. 
+- [Improvement] Created dynatable-listeners.js file, to listen for dynatable (Detail) events. Can be overridden in apps.
+- [Improvement] CSS Styles are now organized into themes. Check sample base.jsp
+- [Improvement] ivy jar file initialization fixed
+- [I18N] ListagemResult -> ResultListImpl
+- [I18N] RelatorioTag removed. Use ViewTag 
+- [I18N] Tags renamed to english, check template-legacy.tld for modifications. Example: ListagemTag -> ListViewTag (attributes also renamed to english)
+- [I18N] template.tld now have english tags, template-legacy.tld has the older tags
+- [I18N] next.tld now have english tags, next-legacy.tld has the older tags
+- [Improvement] AuthorizationDAO.findUserByLogin renamed to findUserByUsername
+- [I18N] Crud JSP patterns renamed. Listagem -> List, Entrada -> Form, Consulta -> View. Example: alunoListagem.jsp -> alunoList.jsp
+- [I18N] Renamed. FiltroListagem -> ListingFilter -> ListViewFilter. (2 rename operations)
+- [I18N] Renamed. updateListagemQuery -> updateListQuery, updateEntradaQuery -> updateFormQuery
+- [I18N] Renamed. findForListagem -> loadListModel, loadForEntrada -> loadFormModel
+- [Improvement] Crud internal attributes lista, currentPage, numberOfPages and filtro encapsulated in ListModel object. 
+- [Improvement] CrudController getBeanDisplayName and getBeanName methods removed.
+- [I18N] EntradaTag, ListagemTag updated to reflect CrudContext object.
+- [BUG]  File entity must be in the default connection. When there are multiple database connections. [Fixed]
+- [I18N] Method CrudController.setInfoForTemplate removed. Information is on CrudContext object. All "TEMPLATE_*" attributes are removed.
+- [I18N] CrudContext class created. All information about a crud request is on this class.
+- [I18N] Renamed method CrudControler.listagemVaziaPrimeiraVez -> listEmptyOnFirstRequest
+- [I18N] AbstractCrudController methods renamed. Ex: doListagem -> doList, doEntrada -> doForm, doEditar -> doUpdate
+- [I18N] CrudControler methods renamed. listagem -> list. criar -> create. editar -> update. excluir -> delete
+- [I18N] Created org.nextframework.deprecated logger, to log deprecated usage of the framework.
+- [I18N] ACAO parameter has been renamed to ACTION. ACAO works but is deprecated.
+- [I18N] Type Telefone (and related) renamed to Phone
+- [I18N] Type Hora (and related) renamed to SimpleTime 
+- [I18N] User.login renamed to User.username
+
+3.7.0
+
+- [Bug]			Util.strings.escapeQuotes now recognizes \r\n sequence character and do the proper escaping.
+- [Improvement] ColumnTag now render a TH tag for table headers insteadof TD.
+- [Improvement] DataGridTag now accepts listeners that are plugable and can change the behavior of the dataGrid.
+- [Improvement] User persistent data module. It is now possible to persist user data (like session data). See org.nextframework.persistence.internal.NextPersistenceManager
+- [Improvement] Project org.nextframework.legacy removed.
+- [Improvement] All libraries updated to the latest version.
+
+3.6.1
+
+- [Improvement] Mascara de telefone suporta números com 9 dígitos
+- [Improvement] O contexto de aplicação do next é inicializado no filtro (servlet filter) agora. Isso permite utilizar o NextApplicationContext na inicialização da aplicação.
+- [Improvement] !IMPORTANTE! Quando é feito um object value (ex pacote.Class[attr1=X,attr2=Y]) o separador de atributos foi trocado de ',' para ';' (ex pacote.Class[attr1=X;attr2=Y]) 
+- [Improvement] next.ajax.send has the URL as the window.location.pathname by default
+- [Improvement] GenericDAO.getComboSelect renamed to GenericDAO.getSelectClauseForIdAndDescription
+- [Improvement] GenericDAO.loadDescriptionProperty now considers usingFields of @DescriptionProperty
+- [Bug] When using datagridcolumnresize in n:datagrid, two requests were send for the page. Fixed.
+
+
+3.6.0 - Has compatibility breaks
+
+- [Improvement] InputTagSelectComponent has cache (request scope) for functions that do not have parameters
+- [Bug] Bug in the body tag (of datagrids). The contents were rendered twice. Corrected.
+- [Improvement] IMPORTANT: Applications MUST update to Servlet 3.0
+- [Improvement] Package org.nextframework.progress renamed to org.nextframework.view.progress 
+- [Improvement] Authorization module is a separated project. (AuthorizationDAO configuration has changed, now using Next Services API)
+- [Improvement] Fixed bug in input type select one button
+- [New] BeanDescriptorFactory class to create BeanDescriptor objects (this factory can be customized).
+- [Improvement] Packages org.nextframework.report and org.nextframework.rtf are in separated optional legacy JARs. (If you are using reports or rtf, add their jars to your project)
+- [Improvement] Next now uses JEE version 6. Supporting servlet 3.0. 
+- [Improvement] The query builder use QueryBuilderConfiguration object to set its properties. (including removeAccentFunction)
+
+3.5.4
+
+- [Improvment] Modificada a forma de reindexação de detalhes.
+- [Improvment] O input de time agora utiliza no HTML type="text". Isso evita que determinados browsers sobrescrevam o comportamento padrão do next.
+- [Improvment] A aplicação liga mais rápido! Principalmente quando houver vários módulos configurados. Agora o inicializador de contexto de cada servlet aproveita o contexto de aplicação para inicializar os beans. Evitando refresh desnecessários de contexto.
+- [Improvment] Agora é possível formatar os valores dos gráficos no google chart. Usando chart.getStyle().setValueFormatterPattern(...) ou chart.getStyle().setValuesFormatter(...)
+- [Improvment] Novo objeto javascript next.browser que provê informações sobre o browser.
+- [Bug] Corrigido bug no next-modules.js função attachAttributes. Agora os estilos são transformados para o nome correto de javascript antes de serem configurados no elemento. Esse erro fazia com que estilos com hifens não fossem configurados no firefox.
+- [Improvment] Agora é possível ordenar a lista de detalhes (atributo indexProperty da tag n:datagrid e t:detalhe)
+- [Improvment] Em um detalhe se desejar utilizar um ID único e incremental para identificar algum elemento basta utilizar ${sequence}. Esse sequece será um ID único sequencial.
+- [Improvment] Agora é possível delegar ao DAO original da coleção o carregamento dos objetos quando utilizado o método fetchCollection(...). Ex query.fetchCollection("colecao", true); Nesse exemplo o DAO de coleção irá carregar a coleção pelo método loadForEntrada. (útil quando se deseja carregar detalhes de detalhes)
+- [Improvment] Os códigos Javascript de detalhes estão em funções mais fáceis de utilizar quando se deseja o controle manual das funções do detalhe (veja DetalheTag.jsp)
+- [Improvment] O ID gerado nas tags de view não possui mais uma parte aleatória, apenas uma incremental.
+- [Improvment] Warnings do projeto removidos
+- [Improvment] NextStandard agora procura classes no classpath para inicializar a aplicação e registrar os objetos
+- [Improvment] Atualizada a biblioteca commons-fileupload
+- [Improvment] Todas as cláusulas do query builder serão convertidas para named parameters. Isso permitirá o uso do WHERE IN 
+- [Improvment] Possibilidade de alterar a obrigatoriedade ou não de um input através do atributo required da tag n:input (beta)
+- [Improvment] Classe BeansUtil renomeada para BeanUtils.
+- [Improvment] Util.web agora está deprecated. Use WebUtils diretamente. Esse atributo será removido na próxima versão (implica em dependência do módulo web ao usar a classe Util).
+- [Improvment] Novo método getAnnotation para a interface PropertyDescriptor
+- [Improvment] Novos métodos para a classe BeansUtil
+- [Improvment] Atributo useType para combos. Permite que seja definido o tipo de dados do combo quando o type já é usado para especificar o tipo do combo (select-one, select-one-button.. etc)
+- [Improvment] Agora o next consegue mapear parametros de requests como itens para listas nulas. Exemplo: minhalista[0]=value será mapeado corretamente na lista, mesmo ela sendo nula. O tipo de minhalista deve ser List. 
+- [Improvment] Novo atributo para inputs do tipo RADIO: itemStyle. Com esse atributo é possível fazer itemStyle="display:block" e cada item de RADIO fica em uma linha individual. 
+- [Bug] Corrigido bug que impedia de usar select-one-buttom como primeiro item de um comboreloadgroup
+- [Improvment] Movido o código dos Property Editors da classe BaseTag para BaseTagPropertyEditorsManager. Agora é possível personalizar como os valores nas tags serão formatados.
+- [Improvment] Movido o código de templates do BaseTag para o BaseTagTemplateManager. Com isso é possível personalizar como os templates serão copiados.
+- [Improvment] O next passa a não suportar o neo-tck. Se estiver usando o neo-tck deverá migrar a aplicação.
+- [Improvment] Refatoração da tag InputTag.java. Possibilidade de adicionar tipos de input personalizados. O type que era enum passa a ser classe.
+
+3.5.3 _01
+
+- [Improvment] Reorganização dos métodos setInfoForTemplate do CrudController
+- [Bug] Erro ao tentar pegar o DAO de algum bean e esse bean for um objeto lazy.
+- [Improvment] t:tabelaResultados agora copia o valor de groupProperty para o dataGrid interno.
+- [Bug] Corrigida a forma de renderização para inputs do tipo Class (antes era efetuado um toString mas o certo é pegar o getName da classe). 
+
+3.5.3
+
+- [New] API de compilação dinâmica
+- [Improvment] Melhoria da checagem dos tipos Date e subclasses. (créditos jtakata)
+- [Improvment] Novo método do SaveOrUpdateStrategy attachFlushBefore
+- [Improvment] Tag n:dataGrid suporta agora no atributo property uma referência para array.
+- [Improvment] Quando obtem um retorno genérico, o BeanWrapper tenta pegar dinamicamente o tipo requerido.
+- [New] API Summary para utilização em relatórios
+- [Improvment] O next agora deve ser compilado e executado com JDK 1.6 ou superior.
+- [Improvment] Removida a dependencia do JAR cewolf (para gráficos)
+- [New] Classe utilitária DateUtils, para manipulação de Date e Calendar. (Util.dates) 
+- [New] Tag n:chart para criação de gráficos usando o google tools
+- [Improvment] Tag n:img além de aceitar um resource, aceita também um chart como parãmetro
+- [New] API Chart (API para construção de gráficos. Plugin para google tools e jfreechart) 
+- [New] API Javascript Builder (permite a construção de códigos javascript em Java de maneira simplificada)
+- [Improvment] Evento onRemove na tag t:detalhe (sugestão gerfferson)
+- [Improvment] Ajustes na exibição das mensagens de exceção
+- [Improvment] API Javascript para controle de mensagens (mais flexibilidade e eventos ao adicionar mensagens a tela)
+- [Bug] O método compareTo da classe Money retornava o valor invertido. (corrigido, sugestao jtakata)
+- [Improvment] O tipo de input date, era renderizado como <input type="date"..> agora é renderizado como <input type="text"../> (alguns browsers colocam componentes no type=date, o que implicava em despadronizacao do sistema) 
+- [Improvment] Melhoria da API de callbacks de Javascript (para utilização facilitada por tags)
+- [New] Nova API Javascript
+- [Improvment] Criado o arquivo next.js que irá conter os Javascripts do framework. Com uma organização orientada a objetos.
+- [Improvment] Eliminado os logs System.out da classe FunctionCall (esses logs eram desnecessários)
+- [New] Componente e API de barra de progresso
+- [Improvment] Ao inicializar o Hibernate, classes do tipo org.hibernate.Interceptor são automaticamente resgistradas na configuração
+- [Improvment] Colunas de datagrid são redimensionáveis (desative com o atributo nocolumnresize="true", não funcionará se o datagrid tiver dentro de outro datagrid, e o datagrid pai tiver dynalines; ou se o datagrid estiver dentro de abas)
+- [Improvment] Agora os inputs do tipo date mostram um Calendário para escolha da data. (use o atributo nocaledar="true" para não mostrar o calendário, o calendário é desabilitado em detalhes)
+- [Improvment] Criado o ViewConfig (como atributo de Config), para configurar parâmetros da visão.
+- [Improvment] Agora é possível configurar qual marcador de obrigatoriedade é usado na view.
+- [Improvment] É possível agora registrar classes personalizadas para utilizarem determinado tipo de Input
+- [Improvment] NextWeb.getApplicationContext retorna uma interface mais específica WebApplicationContext
+- [Improvment] Agora é possível pegar o config com Next.getConfig()
+- [Improvment] Suporte a container Servlet 2.5 (Glasfish 3.1+)
+- [Improvment] Tipos CPF e CNPJ agora podem ter a validação automática desligada.
+- [Improvment] Modificações no menu, agora a orientação (hbr) é informada na tag e não no DTD
+- [Improvment] SaveOrUpdateStrategy agora utiliza informações das anotações para saber o tipo correto da propriedade pai ao salvar coleções
+- [Improvment] ClassRegister renomeado para StandardClassRegister para usar o mesmo padrão do WebClassRegister
+- [Improvment] Criado o WebRequestFactory que permite personalizar o WebRequestContext
+
+3.5.2
+
+- [Bug] Ao deletar um arquivo, todos os arquivos de todos as entidades da mesma classe eram deletados (corrigido) (sugestão Biharck)
+- [Improvment] Possibilidade de utilizar @Input em actions sem commands.
+- [BUG] getHibernateTemplate().bulkUpdate("update "+bean.getClass().getName()+" set "+filePropertyName+" = null"); Fazia com que todos os registros da tabela fossem afetados. Corrigido.
+- [Improvment] Melhoria das funções de AJAX. Agora é possível receber na função de callback os parametros passados para a funcao de chamada do ajax.
+- [Improvment] Novos tipos de mensagem MessageType (alguns ainda não possuem ícones personalizados default do framework, mas podem ser criados na aplicacao)
+- [Improvment] Adicionado o método noActionHandler no MultiActionController para gerenciar requisições onde nenhuma action adequada foi encontrada para responder a requisição
+- [Bug] Quando era utilizada a tag n:header dentro de um n:column para um datagrid, o conteúdo do header não estava sendo renderizado (corrigido)
+- [Bug] BeanWrapper lê informacoes das classes mãe
+- [Improvment] Melhor descrição de erro ao tentar criar queries sem uma cláusula from.
+- [Improvment] Testes e habilitação da funcionalidade de consultar para CRUDs. (Atualização de versões anteriores com template EntradaTag.jsp modificado, podem acontecer de campos virem sem input. Basta atualizar o EntradaTag.jsp para solucionar)
+- [Bug] Actions em controllers genéricos sem o parâmetro Request, nao estavam com o command mapeado corretamente. (corrigido)
+- [Improvment] Método mais inteligente de busca das actions. Agora é possível sobrescrever o comportamento das actions já definidas em classes superiores.
+- [Bug] As linhas dinamicas do detalhe estavam sendo inseridas no THEAD ao invés de TBODY causando problemas de CSS. (corrigido)
+- [Improvment] Atributo (dinamico) headerStyle para a tag t:detalhe. Útil se desejar criar um detalhe sem header. (use headerStyle="display: none").
+- [Improvment] O Next agora detecta objetos da classe HandlerInterceptor criados na aplicação. Eles serão utilizados como listeners para as requisições.
+- [Improvment] Melhoria da forma de renderização quando um column não tem header. Atributo para configurar o header da coluna ação de detalhes (nomeColunaAcao)
+- [Improvment] Criada uma interface para a classe ListagemResult, isso possibilitará maior flexibilidade para montar as listagens de dados de cruds
+- [Improvment] Criada a interface BinderConfigurer, para configuração dos Binders dos controllers da aplicação. (Cada BinderConfigurer deve ser configurado com @Bean para ser utilizado pelos controllers)
+- [Improvment] Criado o método (noSuchMethodHandler) no MultiActionController  para definir o comportamento quando nenhuma action é encontrada para a requisição
+- [Bug] Erro no javascript do input quando utilizava selectOnePath, era obrigatorio informar o tamanho da janela (corrigido)
+- [Improvment] Melhor mensagem de erro quando um CrudController está fora do padrão de nomeclatura
+- [Improvment] Melhor mensagem de erro em caso de falha ao tentar fazer upload de arquivos. Especialmente em casos onde se utilizar como chave primaria tipos primitivos, o que causa problemas. (contribuiçao eduardosodre)
+- [Improvment] Movida a configuraçao dos t:property mode="input".. das tags t:detalhe e t:tabelaEntrada para a tag t:entrada
+- [Bug] Label renderizado incorretamente com renderAs=single showLabel=true (corrigido)
+- [Improvment] Atualizada máscara de money para formatar as casas de milhar (créditos Biharck)
+- [Bug] NextPropertyTagFastRenderer estava renderizando incorretamente quando o valor era null. (Corrigido)
+- [Bug] Quando utilizava-se valores negativos com double, a formatação nao ficava correta (apresentava -,21 por exemplo para números -0,xx) corrigido. (Sugestão Guilherme Carvalho)
+
+3.5.1
+
+- [Improvment] Agora o Next tentará inicializar a aplicação mesmo com erros. Os erros serão logados normalmente. Poderá ser pedida a URL http://localhost:8080/[aplicacao]/next para verificar o erro ocorrido.
+- [Improvment] Adicionado os atributos forBean e e propertyMode para interagir com tags n:bean e t:property
+- [Improvment] Cache do GenericDAO desabilitado para a aplicação suportar vários clientes
+- [Bug] Bug na exibição do label correto quanto utilizava-se o atributo label da tag t:property
+- [Improvment] Tag comboReload por padrão agora usa AJAX
+- [Bug] Corrigido bug que fazia com que tags property type="hidden" e valor date não fossem formatadas corretamente
+- [Improvment] Tag t:property agora aceita styleClass ou class como atributos para atribuir a classe de CSS
+- [Improvment] Agora é possivel adicionar arquivos default.css especifico por módulo do sistema
+- [Improvment] Os arquivos JS e CSS agora são inseridos no header do html de acordo com a ordem alfabética
+- [Bug] Corrigido bug ao carregar itens de AJAX quando se utiliza um nome personalizado para o form
+- [Bug] Corrigido o bug que fazia com que ENUMs não pudessem ter como parametro 'itens', uma chamada de método (utilizado em AJAX)
+- [Bug] Corrigido bug quando não era utilizada validação do formulário em tags t:tela (erro de javascript ao chamar uma funcao que nao existia)
+- [Improvment] Novo layout: simpleposts 
+- [Improvment] Novo layout: alternate
+- [Improvment] Possibilidade de retornar String ao invés de ModelAndView em actions de controllers (sugestão Sândalo)
+- [Improvment] Parâmetro WebRequestContext opcional em action de controllers (sugestão Sândalo)
+- [Improvment] Adicionado vários métodos auxiliares a classe MultiActionController para serem utilizados quando não existir o parâmetro request
+- [Improvment] Adicionado o atributo bypass nas tags n:bean e n:form
+- [Improvment] Possibilidade de alterar o funcionamento padrão do imprimirSelecionar (Alterar o HTML que será renderizado)
+- [Improvment] A tag code:call agora suporta passagem de parâmetros
+- [Improvment] Atributo rendered para a tag n:panel, n:panelGrid, t:property (excluido o atributo printWhen)
+- [Improvment] Função submitForm(ACAO) para enviar o formulario via javascript escolhendo a ação a ser chamada
+- [Improvment] Atributos useBean e beanType para renderizar uma tag n:bean para a tela, sem a necessidade de outra tag
+- [Improvment] Atributo selectOneWindowSize para definir o tamanho da janela a ser aberta quando utilizar type select-one-button em inputs
+
+
+--------------------------------------------------------------------
+3.5.0 Release Final
+
+- [Bug] O arquivo de configuração applicationConfig.xml não estava sendo lido. (Corrigido, colaboração Júlio)
+- [Improvment] Melhorada mensagem caso nenhum método para receber a requisição seja encontrado no controller, mensagem em portugues
+- [Improvment] Adicionado um flush antes de salvar algum detalhe
+- [Improvment] Adicionado o metodo  saveOrUpdateManaged(String path, boolean delegateToEntityDAO) a classe SaveOrUpdateStrategy para delegar a responsabilidade de persistir os detalhes ao DAO do item de detalhe
+- [Improvment] As propriedades hibernate.dialect e hibernate.show_sql agora podem ser especificadas no arquivo hibernate.properties, o framework não irá sobrescrever
+- [Improvment] Agora é possível utilizar a configuração simplificada para os banco de dados que nao tem detecção automática de dialeto
+- [Improvment] Melhorado o estilo da caixa de erros quando não é possível fazer o bind do objeto
+- [Improvment] Melhorado o estilo da caixa de erros quando ocorre exceções no sistema
+
+--------------------------------------------------------------------
+3.5.0 Release Candidate 4
+
+- [Bug] O QueryBuilder tentava fazer a inicialização das coleções quando utilizava unique() e nenhum objeto era encontrado (corrigido)
+- [Improvment] Atualizada a versão do Spring para 3.0.0 RELEASE
+- [Improvment] O ResourceServlet agora permite a configuração de layouts externos (é possível desenvolver um layout colocar em um jar e pluga-lo no next)
+- [Improvment] Campos transient, por default não tem ordenação nas listagens
+- [Bug] Bug no Firefox e Google Chrome que ao acessar um SELECT ONE por uma url sem ser localhost, causava o HTML ser impresso na tela, ao invés de renderizar o conteudo (corrigido) (colaboração Biharck)
+- [Improvement] Código mais eficiente para renderizar tags t:property em modo output em datagrids. Performance 3x superior.
+- [Improvement] Troca do engine da tag Template, agora é possível fazer a renderização em código java ao invés de template para melhorar performance
+- [Improvement] Melhoria da performance dos JSPs de 3% a 10% para telas com muitas tags.
+- [Improvement] Adicionado WARNING quando alguma classe com @Controller não extende da interface Controller.
+- [Bug] Erro de compilação na classe ContextLoader linha 240 (corrigido).
+
+-------------------------------------------------------------------
+3.5.0 Release Candidate 3
+
+- [Improvment] Melhorado o sistema de uploads. Mais simples e com melhor suporte a reload da tela.
+- [Bug] NullPointerException ao utilizar inputs do tipo date disabled (corrigido)
+- [Improvment] Melhorada renderização de erros de bind
+- [Bug] Em modo output os números estavam sendo formatados sem o zero a esquerda, exemplo: ,34 (corrigido)
+- [Bug] CNPJ nao apagando do filtro (corrigido)
+- [Bug] Em modo input nao alinhar as tds com tipos numericos pois o input já alinha (corrigido)
+- [Improvment] Adicionado listeners para o saveorupdatestrategy
+- 0000049: [Bug] Erro de classnotfound no validador de email - corrigido
+- 0000048: [Bug] Largura das imagens das tabs pequeno - corrigido
+- 0000047: [Bug] Erro de formatação do tipo Time - corrigido
+
+--------------------------------------------------------------------
+3.5.0 Release Candidate 2
+
+- 0000043: [Bug] Mensagem ruim quando o bean tem um description property que necessita join (e o join nao foi feito) na listagem (Rogelgarcia) - resolved.
+- 0000042: [Improvement] Automatizar o save de arquivo (Rogelgarcia) - resolved.
+- 0000041: [Bug] Montar código de exclusao de arquivo (upload) (Rogelgarcia) - resolved.
+- 0000038: [Flexibilização] Fazer a renderização das tabs por template (Rogelgarcia) - resolved.
+- 0000028: [New] Kit de compatibilidade de estilos com o neo (Rogelgarcia) - resolved.
+- Removido os métodos get e set Tsmodification do tipo File
+- Imp 0004: Padronizada a utilizaçao dos atributos panelStyle, panelStyleClass, panelClass da tag property, agora os atributos são case INSENSITIVE (por vberga)
+- Imp 0031: Removido o pacote org.nextframework.crypto que era causa de problemas de compilação caso o ambiente não estivesse corretamente configurado
+- Atributo printMarkerWhenEmpty para a tag output que imprime um &nbsp; quando value for nulo 
+- Corrigido bug que inseria uma tag SPAN vazia em datagrids quando o valor do objeto era nulo.
+- Novos layouts disponíveis
+- Tags Listagem, Entrada e Relatorio aproveitam a tag Tela ao invés de implementar o próprio layout
+- Reorganização dos templates das tags
+- Ignorado atributo colspan quando o valor do atributo colspan é nulo
+- Bug 0006: atributo panelclass nao funciona (Corrigido)
+- Bug 0003: Erro no atributo style da tag panel. (Quando utilizado junto com um style de um panelGrid, o panelGrid sobrescrevia o style do panel) (Corrigido)
+- Compilado para a versão 1.5 do Java
+- Bug 0009: NullPointer em modo standard quando tem diretorio com espaco (Corrigido)
+- Bug 0008: NullPointer quando nao tem WEB-INF/classes em modo web (Corrigido)
+- Bug 0010: NullPointer ao usar JNDI no connection.properties (Corrigido)
+--------------------------------------------------------------------

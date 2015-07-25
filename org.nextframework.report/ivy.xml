@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.nextframework" module="next-report" />
+	<configurations>
+		<include file="../org.nextframework.build/configurations.xml" />
+	</configurations>
+	<dependencies>
+
+		<!-- jasperreports depends on it -->
+		<dependency org="commons-collections"	name="commons-collections"	rev="3.2.1"	conf="lib" /> 
+		<dependency org="commons-beanutils" 	name="commons-beanutils" 	rev="1.9.2"	conf="lib" /> 
+				
+		<dependency org="commons-digester"		name="commons-digester"		rev="2.1"	conf="lib" />
+		<dependency org="net.sf.jasperreports"	name="jasperreports"		rev="6.0.3" conf="lib" />
+		<dependency org="com.itextpdf" 			name="itextpdf" 			rev="5.5.5" conf="lib" />
+		<dependency org="com.itextpdf" 			name="itext-pdfa" 			rev="5.5.5"	conf="lib"/>
+		
+		<!-- Barcode library -->
+		<dependency org="net.sourceforge.barbecue" name="barbecue" 			rev="1.5-beta1" conf="lib"/>
+		
+		<!-- These dependencies are for the JasperReports compilation (only used in glassfish) -->
+		<!-- 
+		<dependency org="eclipse"						name="jdtcore"					rev="3.1.0"		conf="lib"/>
+		<dependency org="jdt-compiler"					name="jdt-compiler" 			rev="3.1.1"		conf="lib"/>
+		 -->
+	</dependencies>
+</ivy-module>

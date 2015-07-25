@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subreporttable19887160270.5718191179689884" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="36fe25b1-d46a-4d8f-96ed-8014406d1cc1">
+	<style name="groupLabelRow_0" mode="Opaque" forecolor="#FFFFFF" backcolor="#333333"/>
+	<style name="groupLabelRow_1" mode="Opaque" forecolor="#FFFFFF" backcolor="#505050" isItalic="true"/>
+	<style name="default" isDefault="true"/>
+	<style name="header" forecolor="#000000" fontSize="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="detailHeader" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<parameter name="LOGO" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="DATE_BEGIN" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_END" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_INFO" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Powered by Next Framework"]]></defaultValueExpression>
+	</parameter>
+	<field name="GROUP" class="java.lang.Object"/>
+	<field name="c1_value" class="java.lang.Object"/>
+	<field name="c2_value" class="java.lang.Object"/>
+	<field name="c3_value" class="java.lang.Object"/>
+	<field name="c4_value" class="java.lang.Object"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="14">
+			<staticText>
+				<reportElement uuid="1e126e4e-804e-47eb-aedf-1b1e9927fdc0" key="Label 1 C[1,span=1] R[DETAIL_HEADER,0] W[-1073741824]" style="default" positionType="Float" isPrintRepeatedValues="false" x="111" y="0" width="111" height="14" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Phase 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2fcace80-954d-4993-9355-dd095fd52a82" key="Label 2 C[2,span=1] R[DETAIL_HEADER,0] W[-1073741824]" style="default" positionType="Float" isPrintRepeatedValues="false" x="222" y="0" width="111" height="14" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Phase 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9aaa7d66-8561-4375-831e-e52545f8c7ef" key="Label 3 C[3,span=1] R[DETAIL_HEADER,0] W[-1073741824]" style="default" positionType="Float" isPrintRepeatedValues="false" x="333" y="0" width="111" height="14" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Phase 3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="087a1fa9-48fb-4e39-b22f-4ac1a9ab2cf0" key="Label 4 C[4,span=1] R[DETAIL_HEADER,0] W[-1073741824]" style="default" positionType="Float" isPrintRepeatedValues="false" x="444" y="0" width="111" height="14" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Phase 4]]></text>
+			</staticText>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement uuid="cf285d8b-5380-4842-bde5-50c4e0231fc1" key="TextField 6 C[0,span=1] R[DETAIL,0] W[-1073741824]" style="default" positionType="Float" x="0" y="0" width="111" height="14"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{GROUP}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement uuid="73c1e3c1-f087-4415-a1f3-4fb85144c742" key="TextField 7 C[1,span=1] R[DETAIL,0] W[-1073741824]" style="default" positionType="Float" x="111" y="0" width="111" height="14"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{c1_value}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement uuid="cc65b30e-dc08-4fb7-982d-4817e95accc5" key="TextField 8 C[2,span=1] R[DETAIL,0] W[-1073741824]" style="default" positionType="Float" x="222" y="0" width="111" height="14"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{c2_value}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement uuid="3d838c47-c9d4-411b-a126-4d91fd0f9e64" key="TextField 9 C[3,span=1] R[DETAIL,0] W[-1073741824]" style="default" positionType="Float" x="333" y="0" width="111" height="14"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{c3_value}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement uuid="9292e7cc-d6c0-4659-b6f8-9fba8679a518" key="TextField 10 C[4,span=1] R[DETAIL,0] W[-1073741824]" style="default" positionType="Float" x="444" y="0" width="111" height="14"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{c4_value}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="16">
+			<frame>
+				<reportElement uuid="ba0846fb-d8bd-4752-8b7c-ec3996fd927b" positionType="FixRelativeToBottom" mode="Transparent" x="0" y="0" width="555" height="16" isRemoveLineWhenBlank="true">
+					<property name="static" value="bottom"/>
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get( "isSubreport" ) == null]]></printWhenExpression>
+				</reportElement>
+				<textField>
+					<reportElement uuid="16b6099c-da51-4fd1-b1de-40b12442a23b" x="0" y="0" width="176" height="16" forecolor="#666666"/>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{COMPANY_INFO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="dbebf058-7e32-475d-906b-c1b141e86def" mode="Transparent" x="391" y="0" width="132" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de "]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement uuid="656a1230-cfa3-4d60-8145-17bd8a0fc349" mode="Transparent" x="526" y="0" width="28" height="16"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""+$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement uuid="62d682ba-29b9-43ef-96c4-ecb2c7ccde87" mode="Transparent" x="175" y="0" width="217" height="16" forecolor="#666666"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{DATE_BEGIN} != null ?
+new SimpleDateFormat("dd/MM/yyyy HH:mm 'até' ").format($P{DATE_BEGIN})+new SimpleDateFormat("dd/MM/yyyy HH:mm").format($P{DATE_END})+", gerado em "+new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())
+:
+"Gerado em "+new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date())]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

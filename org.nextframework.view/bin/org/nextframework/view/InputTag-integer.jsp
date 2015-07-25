@@ -1,0 +1,1 @@
+<input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" onKeyDown="return mascara_integer(this,event)" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}/>

@@ -1,0 +1,1 @@
+<textarea name="${tag.name}" cols="${tag.cols}" id="${tag.id}" rows="${tag.rows}" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}>${tag.valueToString}</textarea>

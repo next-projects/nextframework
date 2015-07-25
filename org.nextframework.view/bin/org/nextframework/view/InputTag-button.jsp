@@ -1,0 +1,1 @@
+<input type="button" name="${tag.name}" id="${tag.id}" value="${tag.valueToString}" ${tag.dynamicAttributesToString}/>

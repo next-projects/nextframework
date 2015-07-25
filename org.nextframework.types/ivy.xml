@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.nextframework" module="next-types" />
+	<configurations>
+		<include file="../org.nextframework.build/configurations.xml" />
+	</configurations>
+	<dependencies>
+		<dependency org="org.hibernate" 					name="hibernate-core" 			rev="4.3.8.Final"	conf="provided"/>
+		<dependency org="org.hibernate.javax.persistence" 	name="hibernate-jpa-2.1-api" 	rev="1.0.0.Final"	conf="provided"/>
+	</dependencies>
+</ivy-module>

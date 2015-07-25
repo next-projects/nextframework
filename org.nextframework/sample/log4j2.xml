@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+        	<!-- 
+            <PatternLayout pattern="%-d{HH:mm:ss,SSS} [%t] %C{2} (%F:%L) %n%-5p %m %n"/>
+        	 -->
+            <PatternLayout pattern="%-d{HH:mm:ss,SSS} %-4p %m (%c{1})%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+    	<Logger name="org.apache.log4j.xml" level="info"/>
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+		<Logger name="org.springframework" 				level="info"/>
+		
+		<Logger name="org.nextframework" 				level="info"/>        
+		<Logger name="org.nextframework.persistence" 	level="warn"/>
+		
+		<Logger name="org.hibernate" 					level="info"/>
+		<Logger name="org.hibernate.engine" 			level="warn"/>
+		<Logger name="org.hibernate.hql.internal" 		level="warn"/>
+		<Logger name="org.hibernate.dialect" 			level="warn"/>
+		<Logger name="org.hibernate.tool" 				level="warn"/>
+		<Logger name="org.hibernate.cfg" 				level="warn"/>
+		
+		<Logger name="hsqldb.db" 						level="warn"/>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE menugroup PUBLIC "//Next//Next Menu 1.0//EN" "http://www.nextframework.org/dtd/menu.dtd">
+<menugroup>
+	<menu title="System">
+		<menu title="Logout" url="/logout" />	
+	</menu>		
+</menugroup>

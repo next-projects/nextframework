@@ -1,0 +1,486 @@
+/**
+ * Para alterar o CSS padrão da aplicação, basta adicionar um arquivo default.css na pasta /css 
+ *
+ * Se copiar esse CSS para o diretório /css da sua aplicação
+ * será necessário refatorar o caminho das imagens para
+ * ../resource/css/layout/lightblue/
+ * Exemplo: onde tiver url("header-background.jpg"); terá que ser url("../resource/css/layout/lightblue/header-background.jpg");
+ *
+ * Você poderá excluir o conteúdo desse arquivo e importar outro CSS se desejar, para isso basta ter um arquivo com o seguinte conteúdo:
+ *
+ * @IMPORT url("../resource/css/layout/lightblue/default.css");
+ *
+ * Isso importará o arquivo CSS padrão, você poderá adicionar regras CSS para incrementar ou alterar o estilo padrão.
+ *
+ * Os layouts disponíveis são:
+ *   @IMPORT url("../resource/css/layout/lightblue/default.css"); //padrão
+ *   @IMPORT url("../resource/css/layout/alternate/default.css");
+ *   @IMPORT url("../resource/css/layout/simpleposts/default.css"); 
+ *
+ */
+
+BODY {
+	background-image: url("header-background.jpg");
+	background-position: top;
+	background-repeat: repeat-x;
+	font-family: verdana;
+	margin: 0px;
+}
+.applicationTitle {
+	position: absolute;
+	top: 14px;
+	left: 14px;
+	font-size: 12px;
+	display: none;	
+}
+
+div.body {
+	margin: 5px;
+	position: relative;
+	top: -46px;
+}
+
+.menubar {
+	margin-left: 16%;
+	margin-right: 16%;
+}
+.menubar-before {
+	display: inline;
+	float: left;
+	background-image: url("menu-bar-left.png");
+	background-position: top;
+	width: 26px;
+	height: 24px;
+	
+}
+.menubar-in {
+	background-image: url("menu-bar-center.png");
+	background-position: top;
+	background-repeat: repeat-x;
+	height: 24px;
+	padding-left: 10px;
+	margin-right: 26px;
+	margin-left: 26px;
+		padding-top: 2px;
+}
+.menubar-after {
+	display: inline;
+	background-image: url("menu-bar-right.png");
+	background-position: top;
+	width: 26px;
+	height: 24px;
+	float:right;
+	position: relative;
+
+}
+
+.pageTitle {
+	font-family: verdana;
+	font-size: 20px;
+	position: relative;
+	left: 2px;
+	top: -10px;
+}
+
+
+.linkBar {
+	font-size: 12px;
+	font-family: verdana;
+	padding-bottom: 6px;
+	padding-top: 6px;
+	padding-left: 2px;
+	border: 1px solid #a1bc6f;
+	background: #e2eecd;
+	background-position: center;
+}
+
+.linkBar A {
+	color: black;
+	text-decoration: none;
+	padding: 7px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	width: 180px;
+	min-width: 120px;
+} 
+.linkBar A:hover {
+	border: 1px solid #aac47c;
+	text-decoration: none;
+	padding-left: 6px;
+	padding-right: 6px;
+	background: #deebc8;
+}
+
+.messageOuterDiv {
+	padding-top: 0px;
+	min-height: 80px;
+	padding-bottom: 3px;
+}
+
+.messageblock {
+	margin-left: 240px;
+	margin-right: 60px;
+}
+
+.messageblock UL {
+	display: inline;
+	margin: 0px;
+	font-family: tahoma;
+	font-size: 12px;
+}
+
+.messageblock LI {
+	list-style: none;
+	list-style-position: outside;
+	border: 1px solid;
+	margin-bottom: 1px;
+	margin-top: 1px;
+	padding: 4px;
+	padding-left: 28px;
+	-webkit-border-radius: 6px;
+    -moz-border-radius: 6px;	
+}
+
+.bindblock {
+	padding: 4px;
+	margin-left: 240px;
+	margin-right: 60px;
+	border: 1px solid;
+	border-color: #b40404;
+	background-color: #FFCCCC;
+	color: #555555;
+}
+.bindblock .messagetitle {
+	background-color: #FFCCCC;
+	display: inline;
+	line-height: 2em;
+	vertical-align: top;
+	font-size: 12px;
+	font-weight: bold;
+	padding-left: 2px;
+}
+
+.bindblock UL {
+	display: inline;
+	margin: 0px;
+	font-family: tahoma;
+	font-size: 12px;
+	
+}
+
+.bindblock .fieldname {
+	font-weight: bold;	
+}
+
+.bindblock LI {
+	list-style: none;
+	list-style-position: outside;
+	padding-left: 2px;
+}
+
+LI.info{
+	background-image: url("ok.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #CCFFCC;
+	color: #004400;
+	border-color: #006633;
+}
+LI.error{
+	background-image: url("error.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;	
+	background-color: #fddada;
+	color: #b40404;
+	border-color: #b40404;
+
+}
+LI.event {
+	background-image: url("event.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #f4fef4;
+	color: #004400;
+	border-color: #006633;
+}
+LI.causeitem {
+	border: 0px;
+}
+LI.warn{
+	background-image: url("warn.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;		
+	background-color: #fcedb9;
+	color: #ab6622;
+	border-color: #996633;
+}
+LI.debug{
+	background-image: url("debug.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;	
+	background-color: #CCFFFF;
+	color: #003333;
+	border-color: #003333;
+}
+LI.redirect {
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;	
+	background-color: #FFFFFF;
+	color: #333366;
+	border-color: #333366;
+}
+LI.trace{
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;	
+	background-color: #FFFFFF;
+	color: #333366;
+	border-color: #333366;
+}
+
+LI.binderror{
+	background-color: #FFCCCC;
+	color: #993333;
+	border-color: #993333;
+}
+
+.resultWindow {
+	margin: 0px;
+	margin-top: 1px;
+	border: 1px solid #B0B0B0;
+	border-collapse: collapse;
+}
+.dataGrid {
+	width: 100%;	
+}
+.dataGridHeader *  {
+	font-weight: normal;
+}
+.dataGrid TD {
+	font-size: 12px;
+}
+.dataGrid TH {
+	font-size: 12px;
+	text-align: left;
+	padding: 3px;	
+}
+.dataGrid THEAD {
+	background-color: #d4e8b0;
+}
+.dataGrid THEAD TH {
+	border-bottom: 1px solid #ABABAB;
+}
+.dataGrid THEAD TD {
+	border-bottom: 1px solid #ABABAB;
+}
+.dataGrid TBODY TD {
+	font-size: 11px;
+	padding: 3px;
+	border-bottom: 1px solid #CCCCCC;
+}
+.dataGridBody1 {
+	background-color: #FAFAFA;
+}
+.dataGridBody2 {
+	background-color: #F9F9F9;
+}
+.filterWindow  {
+	border: 1px solid #C0C0C0;
+	margin: 0px;
+	margin-top: 1px;	
+}
+.filterWindow * {
+	font-size: 11px;
+}
+.inputWindow  {
+	margin: 0px;
+	margin-top: 1px;
+	border: 1px solid #C0C0C0;
+}
+.inputWindow * {
+	font-size: 11px;
+}
+
+.inputTable {
+}
+
+.sectionTitle {
+	font-size: 20px;
+	margin: 4px;
+	margin-top: 8px;
+	color: #006699;
+	display: none;
+}
+
+.order {
+	font-size: 12px;
+	text-decoration: none;
+	text-align: left;
+}
+
+.pagging {
+	font-size: 12px;
+	text-align: right;
+	background-color: #e7f4cf;
+	padding: 4px;
+	font-size: 11px;
+}
+
+.actionBar {
+	font-size: 12px;
+	text-align: left;
+	background-color: #e7f4cf;
+	padding: 3px;
+	font-size: 11px;
+	border-top: 1px solid #CCCCCC;
+}
+
+A {
+	text-decoration: none;
+	font-weight: normal;
+	color: black;
+}
+A:HOVER {
+	text-decoration: underline;
+}
+
+FORM {
+	display: inline;
+}
+.labelColumn {
+	min-width: 80px;
+	min-height: 19px;
+	line-height: 19px;
+}
+.propertyColumn {
+	min-height: 19px;
+	line-height: 19px;
+}
+SELECT  {
+	min-width: 120px;
+}
+
+
+/* Tabs */
+
+
+#tabPanelClear {
+	background-color: white;
+	float: right;
+	position: relative;
+	right: -4px;
+	padding: 10px 0px 0px;
+}
+	
+    #tabPanel {
+    	position: relative;
+    	left: -1px;
+    	right: 1px;
+    	top: -1px;
+    	background-color: white;
+    	float:left;
+    	width: 100%;
+      	font-size:93%;
+      	line-height:normal;
+      	background:#FFFFFF url("tab-bg.gif") repeat-x bottom;
+      }
+    #tabPanel ul {
+      margin:0;
+      padding:0px 0px 0;
+      list-style:none;
+      }
+    #tabPanel li {
+      float:left;
+      background:url("tab-right-off.gif") no-repeat right top;
+      margin:0;
+      margin-right: 1px;
+      padding:0px;
+      }
+    #tabPanel a {
+      display:block;
+      background:url("tab-left-off.gif") no-repeat left top;
+      padding:5px 15px 4px;
+      }
+    #tabPanel #current {
+      background-image:url("tab-right.gif");
+      }
+    #tabPanel #current a {
+      background-image:url("tab-left.gif");
+      padding-bottom:5px;
+      }
+    #tabPanel a:hover {
+    	text-decoration: none;
+    }
+    #tabPanel a:ACTIVE {
+    	text-decoration: none;
+    }
+/* Tabs end */
+
+
+
+/**
+  Progress bar
+ */
+div.progressbar {
+	border: 1px solid gray;
+}
+div.progressbar div {
+	background-color: #7fb871;
+	height: 12px;
+	width: 0px;
+	
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#a0d7a7), to(#5c9839));
+	 
+	/* Safari 5.1, Chrome 10+ */
+	background: -webkit-linear-gradient(top, #a0d7a7, #5c9839);
+	  
+	/* Firefox 3.6+ */
+	background: -moz-linear-gradient(top, #a0d7a7, #5c9839);
+	  
+	/* IE 10 */
+	background: -ms-linear-gradient(top, #a0d7a7, #5c9839);
+	/* IE 9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#a0d7a7, endColorstr=#5c9839)";
+	/* IE <= 8*/    
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a0d7a7', endColorstr='#5c9839');
+	
+	/* Opera 11.10+ */
+	background: -o-linear-gradient(top, #a0d7a7, #5c9839);	
+}
+
+div.progressbar div.progressBarError {
+	background-color: #red;
+	
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d65656), to(#741414));
+	 
+	/* Safari 5.1, Chrome 10+ */
+	background: -webkit-linear-gradient(top, #d65656, #741414);
+	  
+	/* Firefox 3.6+ */
+	background: -moz-linear-gradient(top, #d65656, #741414);
+	  
+	/* IE 10 */
+	background: -ms-linear-gradient(top, #d65656, #741414);
+	/* IE 9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#d65656, endColorstr=#741414)";
+	/* IE <= 8*/    
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d65656', endColorstr='#741414');
+	
+	/* Opera 11.10+ */
+	background: -o-linear-gradient(top, #d65656, #741414);	
+}
+
+div.progressStatus {
+}
+
+div.progressTasks {
+	padding-left: 10px;
+	font-style: italic;
+}
+
+div.progressTasks *.progressInfoError {
+	color: red;
+}

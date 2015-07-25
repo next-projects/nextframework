@@ -1,0 +1,3 @@
+<project>
+	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
+</project>

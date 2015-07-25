@@ -1,0 +1,71 @@
+<project name="Javascript Generator" default="Build JS Files">
+
+	<property name="javascript.builder.dir" 	value="${basedir}/js-builder"/>
+	<property name="javascript.generated.dir"	value="${basedir}/build/js-generated"/>
+
+	<property name="javascript.custom.pkg" value=""/>
+
+
+	<path id="stjs.cp">
+		<!-- Project classpath -->
+		<pathelement location="${basedir}/bin"/>
+		<pathelement location="${basedir}/bin-js"/>
+		<pathelement location="${basedir}/build/classes"/>
+		<pathelement location="${basedir}/js-bin"/>
+		<pathelement location="${basedir}/js-builder-bin"/>
+		<pathelement location="${webroot.dir}/WEB-INF/classes"/>
+
+		<!-- Next classpath -->
+		<fileset dir="${basedir}/../">
+			<include name="org.nextframework.stjs/provided/*.jar"/>
+		</fileset>
+		<pathelement location="${basedir}/../org.nextframework.stjs/bin"/>
+
+		<!-- In project classpath -->
+		<fileset dir="${basedir}">
+			<include name="extras/stjs/*.jar"/>
+		</fileset>
+		<fileset dir="${basedir}">
+			<include name="${webroot.dir}/WEB-INF/lib/next-stjs*.jar"/>
+		</fileset>
+
+		<!-- Custom classpath -->
+		<path location="${javascript.path.base}"/>
+	</path>
+
+	<target name="test-builder-dir">
+		<condition property="builder.dir.available">
+			<available type="dir" file="${javascript.builder.dir}"/>
+		</condition>
+	</target>
+
+	<target name="Build JS Files" depends="test-builder-dir" if="${builder.dir.available}">
+		<echo>Building JS Files ${basedir}</echo>
+		<apply executable="java" verbose="true">
+			<fileset dir="${javascript.builder.dir}">
+				<include name="**/*.java"/>
+			</fileset>
+			<arg value="-cp"/>
+			<arg pathref="stjs.cp"/>
+			<arg value="org.stjs.generator.QuickGenerator"/>
+			<arg value="${javascript.builder.dir}"/>
+			<arg value="${javascript.generated.dir}"/>
+			<arg value="[${javascript.custom.pkg}]"/>
+			<arg pathref="stjs.cp"/>
+		</apply>
+		<echo>${javascript.generated.dir} updated.</echo>
+		<delete dir="${basedir}/temp"/>
+	</target>
+
+	<!--
+	<java classname="org.stjs.generator.Generator">
+		<classpath>
+			<fileset dir="${basedir}/../org.nextframework.stjs/">
+				<include name="**/*.jar"/>
+			</fileset>
+			<pathelement location="${basedir}/../org.nextframework.stjs/bin"/>
+		</classpath>
+	</java>
+	-->
+
+</project>

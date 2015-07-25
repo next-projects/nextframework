@@ -1,0 +1,167 @@
+<project name="Build Commmons">
+
+	<property name="next.module.build.filename" value="build-next-module.xml"/>
+
+	<propertyset id="empty_parameters">
+	</propertyset>
+
+
+	<target name="override-next-classes-internal" if="${from.dir.available}">
+		<copy todir="${deployDir}/WEB-INF/classes" overwrite="true" verbose="true">
+			<!-- If the bin directory is not found and it is a web project, one should set the webroot.dir property if it is a web project -->
+			<fileset dir="${from}">
+				<include name="org/nextframework/**/*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="deploy-classes-internal" if="${from.dir.available}">
+		<echo>${from}</echo>
+		<echo>Deploying to ${deployDir}/WEB-INF/classes</echo>
+		<copy todir="${deployDir}/WEB-INF/classes" failonerror="${from.dir.available}">
+			<fileset dir="${from}">
+				<exclude name="**/META-INF/**/*"/>
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+		<antcall target="deploy-tlds"/>
+	</target>
+	
+	<target name="deploy-tlds" if="${from.metainf.dir.available}">
+		<copy todir="${deployDir}/WEB-INF/TLDs" verbose="true" failonerror="${from.metainf.dir.available}">
+			<fileset dir="${from}/META-INF/" >
+				<include name="*.tld"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="deploy-metainf-internal" if="${from.dir.available}">
+		<jar destfile="${deployDir}/WEB-INF/lib/${moduleName}-metainf.jar" filesonly="true" whenempty="skip" filesetmanifest="skip">
+			<fileset dir="${from}" includes="META-INF/**/*" excludes="*.tld">
+			</fileset>
+		</jar>
+	</target>
+
+
+	<macrodef name="deploy-classes">
+		<attribute name="from"/>
+		<attribute name="deployDir" default="${deploy.dir}"/>
+		<sequential>
+			<local name="from.dir.available"/>
+			<available file="@{from}" type="dir" property="from.dir.available" />
+			<local name="from.metainf.dir.available"/>
+			<available file="@{from}/META-INF" type="dir" property="from.metainf.dir.available" />
+
+			<basename property="module.name" file="${basedir}"/>
+
+			<antcall target="deploy-classes-internal">
+				<param name="moduleName" value="${module.name}"/>
+				<param name="from.dir.available" value="${from.dir.available}"/>
+				<param name="from.metainf.dir.available" value="${from.metainf.dir.available}"/>
+				<param name="from" value="@{from}"/>
+				<param name="deployDir" value="@{deployDir}"/>
+			</antcall>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="deploy-metainf">
+		<attribute name="from"/>
+		<attribute name="deployDir" default="${deploy.dir}"/>
+		<sequential>
+			<local name="from.dir.available"/>
+			<available file="@{from}" type="dir" property="from.dir.available" />
+			<local name="from.metainf.dir.available"/>
+			<available file="@{from}/META-INF" type="dir" property="from.metainf.dir.available" />
+
+			<basename property="module.name" file="${basedir}"/>
+
+			<antcall target="deploy-metainf-internal">
+				<param name="moduleName" value="${module.name}"/>
+				<param name="from.dir.available" value="${from.dir.available}"/>
+				<param name="from.metainf.dir.available" value="${from.metainf.dir.available}"/>
+				<param name="from" value="@{from}"/>
+				<param name="deployDir" value="@{deployDir}"/>
+			</antcall>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="override-next-classes">
+		<attribute name="from"/>
+		<attribute name="deployDir" default="${deploy.dir}"/>
+		<sequential>
+			<local name="from.dir.available"/>
+			<available file="@{from}" type="dir" property="from.dir.available" />
+
+			<antcall target="override-next-classes-internal">
+				<param name="from.dir.available" value="${from.dir.available}"/>
+				<param name="from" value="@{from}"/>
+				<param name="deployDir" value="@{deployDir}"/>
+			</antcall>
+		</sequential>
+	</macrodef>
+
+
+	<!--
+	  Property build.dist.dir will be passed to modules builds.
+	-->
+	<macrodef name="build-next-modules">
+		<attribute name="target" />
+		<attribute name="parameters" default="empty_parameters"/>
+		<sequential>
+			<echo>Building Target: @{target}</echo>
+			<subant target="next-module-execute-task">
+				<reference refid="ivy.instance" />
+				<property name="next.module.execute.task.name" value="@{target}"/>
+				<propertyset refid="@{parameters}"/>
+				<fileset dir="../" 
+					includes="org.nextframework*/${next.module.build.filename}">
+					<exclude name="org.nextframework.build/*"/>
+				</fileset>
+			</subant>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="copy-jars">
+		<attribute name="fromdir" default="lib"/>
+		<attribute name="todir" />
+		<sequential>
+			<copy todir="@{todir}" failonerror="no">
+				<fileset dir="@{fromdir}">
+					<include name="*.jar"/>
+					<exclude name="*src*"/>
+					<exclude name="*source*"/>
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="copy-jar-sources">
+		<attribute name="fromdir" default="lib"/>
+		<attribute name="todir" />
+		<sequential>
+			<copy todir="@{todir}" failonerror="no">
+				<fileset dir="@{fromdir}">
+					<include name="*.jar"/>
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+
+	<target name="next-module-execute-task" depends="show-module-info" unless="module.disabled">
+		<echo>${next.module.execute.task.name}: ${basedir}</echo>
+		<antcall target="${next.module.execute.task.name}">
+			<reference refid="ivy.instance" />
+		</antcall>
+	</target>
+
+	<target name="show-module-info" if="module.disabled">
+		<echo>Module: ${basedir} DISABLED</echo>
+	</target>
+
+	<target name="check-ivy-file">
+		<condition property="ivy.file.available">
+			<available file="ivy.xml" type="file"/>
+		</condition>
+	</target>
+
+</project>

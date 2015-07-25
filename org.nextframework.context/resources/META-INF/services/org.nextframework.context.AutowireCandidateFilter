@@ -1,0 +1,3 @@
+org.nextframework.context.support.GenericTypeAutowireCandidateFilter
+org.nextframework.context.support.DefaultBeanAutowireCandidateFilter
+org.nextframework.context.support.PackageSimilarityAutowireCandidateFilter

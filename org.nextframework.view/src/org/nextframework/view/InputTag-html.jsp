@@ -1,0 +1,2 @@
+<textarea id="${tag.id}" name="${tag.name}" cols="${tag.cols}" rows="${tag.rows}" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}>${tag.valueToString}</textarea>
+<script language="javascript1.2">editor_generate('${tag.name}');</script>

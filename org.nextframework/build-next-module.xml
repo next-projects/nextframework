@@ -1,0 +1,5 @@
+<project>
+	<property name="next.module.name" value="next-base"/>
+	
+	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
+</project>

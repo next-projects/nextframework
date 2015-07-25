@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-settings>
+	<!-- 
+	<property name="ivy.checksums" 							value="md5,sha1" />
+	<property name="ivy.local.default.root" 				value="${ivy.default.ivy.user.dir}/cache" override="false" />
+	<property name="ivy.local.default.ivy.pattern"      	value="[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" override="false"/>
+	<property name="ivy.local.default.artifact.pattern" 	value="[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" override="false"/>
+	 -->
+	
+	<settings defaultResolver="default" />
+	<resolvers>
+		<chain name="default">
+			<ibiblio name="public"				m2compatible="true" root="http://repo1.maven.org/maven2/" />
+			<ibiblio name="mavencentral"		m2compatible="true" root="http://central.maven.org/maven2" />
+			<ibiblio name="spring-release"		m2compatible="true" root="http://repo.springsource.org/libs-release" />
+			<ibiblio name="spring-milestone"	m2compatible="true" root="http://repo.springsource.org/libs-milestone" />
+			<ibiblio name="java-net"			m2compatible="true" root="http://download.java.net/maven/2" />
+			<ibiblio name="glassfish"			m2compatible="true" root="http://download.java.net/maven/glassfish" />
+			<ibiblio name="jboss"				m2compatible="true" root="https://repository.jboss.org/nexus/content/repositories/releases/" />
+		</chain>
+	</resolvers>
+</ivy-settings>

@@ -1,0 +1,1 @@
+<input type="submit" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" ${tag.dynamicAttributesToString}/>

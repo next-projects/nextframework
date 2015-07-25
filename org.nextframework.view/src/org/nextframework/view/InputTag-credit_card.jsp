@@ -1,0 +1,1 @@
+<input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}/>

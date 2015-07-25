@@ -1,0 +1,40 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="Project Dependencies Download" default="Download Next Ivy Dependencies">
+	
+	<import file="include/build-ivy.xml"/>
+	<import file="include/build-commons.xml"/>
+	
+	<target name="copy-all-dependencies" depends="init-ivy">
+		<build-next-modules target="copy-module-dependencies"/>
+	</target>
+	
+	<target name="Remove Next Ivy Dependencies" >
+		<build-next-modules target="remove-libs"/>
+	</target>
+	
+	<!--
+		The following tasks have module scope. That is ${basedir} == the project dir (not the build dir)
+	-->
+	
+	<target name="remove-libs">
+		<echo>Deleting libs ${basedir}</echo>
+		<delete dir="lib" />
+		<delete dir="provided" />
+	</target>
+	
+	<target name="copy-module-dependencies" depends="init-ivy,check-ivy-file,show-no-ivy-file" if="ivy.file.available"> 
+		<echo>Downloading dependencies for: ${basedir}</echo>
+		<ivy:retrieve file="ivy.xml" pattern="[conf]/[artifact]-[revision].[ext]" type="jar,bundle" haltonfailure="false"/>
+		<ivy:retrieve file="ivy.xml" pattern="[conf]/src/[artifact]-[revision]-sources.[ext]" type="source" haltonfailure="false"/>
+	</target>
+
+	<target name="show-no-ivy-file" unless="ivy.file.available">
+		<echo>${basedir} - No ivy.xml</echo>
+	</target>
+	
+	<target name="Download Next Ivy Dependencies" depends="copy-all-dependencies" >
+	</target>
+	
+	<target name="Retrieve Ivy Dependencies" depends="copy-module-dependencies" >
+	</target>
+	
+</project>

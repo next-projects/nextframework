@@ -1,0 +1,3 @@
+org.nextframework.service.context.support.ServiceBeanDefinitionLoader
+org.nextframework.service.context.support.CrudControllerBeanDefinitionLoader
+org.nextframework.service.context.support.ControllerBeanDefinitionLoader

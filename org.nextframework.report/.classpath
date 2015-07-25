@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="core-src"/>
+	<classpathentry kind="src" path="jasper-base-src"/>
+	<classpathentry kind="src" path="jasper-impl-src"/>
+	<classpathentry kind="src" path="jasper-html-src"/>
+	<classpathentry kind="src" path="builder-src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.chart"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/barbecue-1.5-beta1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester-2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jasperreports-6.0.3.jar" sourcepath="lib/src/jasperreports-6.0.3-sources.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/itext-pdfa-5.5.5.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,238 @@
+<project  xmlns:ivy="antlib:org.apache.ivy.ant" name="Next Project Package" default="create-distribution-file">
+	
+	<import file="include/build-ivy.xml"/>
+	<import file="include/build-commons.xml"/>
+	
+	<!-- Configuration of this build (with org.nextframework.build scope) -->
+	<!-- Use prefix build.package.parameter -->
+	<property name="build.package.parameter.lib.dir" 					value="${basedir}/dist/lib"/>
+	<property name="build.package.parameter.lib.dependencies.dir"		value="${build.package.parameter.lib.dir}/dependencies"/>
+	<property name="build.package.parameter.lib.dependencies.src.dir" 	value="${build.package.parameter.lib.dir}/dependencies-src"/>
+	
+	<target name="package-all-modules">
+		<build-next-modules target="package-module" parameters="build_package_parameters"/>
+	</target>
+	
+	<propertyset id="build_package_parameters">
+		<propertyref prefix="build.package.parameter"/>
+	</propertyset>
+	
+	<!-- 
+		The following tasks have module scope. That is ${basedir} = the project path (not the org.nextframework.build path)
+	 -->
+	
+	<property name="build.lib.dir" value="${build.package.parameter.lib.dir}"/>
+	<property name="build.classes.dir" value="${build.package.parameter.classes.dir}"/>
+	
+	<!-- 
+		Configuration of the project dirs.
+		Can be changed by project.
+		Add the properties before the import build-module-basics.xml
+	-->
+	<property name="project.lib.dir" value="lib"/>
+	<property name="project.lib.src.dir" value="lib/src"/>
+	<property name="project.bin.dir" value="bin"/>
+	
+	<!-- if overriding fileset it must come after import od build-module-basics.xml -->
+	<fileset id="project.source.dirs" dir=".">
+		<include name="src/**/*"/>
+		<include name="resources/**/*"/>
+	</fileset>
+	
+	<!-- Module tasks -->
+	<target name="package-module" depends="set-information" unless="module.disabled.package">
+		<antcall target="copy-module-dependency-jars"/>
+		<antcall target="jar-module-classes"/>
+		<antcall target="jar-module-sources"/>
+	</target>
+	
+	<target name="copy-module-dependency-jars" depends="set-information">
+		<copy-jars fromdir="${project.lib.dir}" todir="${build.package.parameter.lib.dependencies.dir}"/>
+		<copy-jar-sources fromdir="${project.lib.src.dir}" todir="${build.package.parameter.lib.dependencies.src.dir}"/>
+	</target>
+	
+	<target name="jar-module-classes" depends="set-information">
+		<jar destfile="${build.lib.dir}/${next.module.name}-${next.version}.jar" whenempty="skip" filesetmanifest="skip">
+			<fileset dir="${project.bin.dir}" includes="**/*"/>
+		</jar>
+	</target>
+	
+	<target name="jar-module-resources" depends="set-information">
+		<jar destfile="${build.lib.dir}/${next.module.name}-${next.version}.jar" filesonly="true" whenempty="skip" filesetmanifest="skip">
+			<fileset dir="${project.bin.dir}" includes="META-INF/**/*">
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="copy-module-classes">
+		<copy todir="${build.classes.dir}" includeemptydirs="false">
+			<fileset dir="${project.bin.dir}">
+				<exclude name="**/test/**/*"/>
+				<exclude name="**/META-INF/**/*"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="jar-module-sources" depends="set-information">
+		<zip destfile="${build.lib.dir}/sources/${next.module.name}-${next.version}-sources.jar">
+			<fileset refid="project.source.dirs"/>
+		</zip>
+	</target>
+	
+	
+	<!-- validation and configuration -->
+	<target name="validate-module" >
+		<condition property="module.valid">
+			<or>
+				<available file="ivy.xml" type="file"/>
+				<isset property="next.module.name"/>
+			</or>
+		</condition>
+		<fail unless="module.valid" message="${basedir} build failed. ivy.xml must be present OR ${next.module.build.filename} must set 'next.module.name' property."/>
+	</target>
+		
+	<target name="set-information" depends="set-next-version,set-module-name" />
+	
+	<target name="set-next-version" unless="next.version">
+		<property file="../org.nextframework.build/build.properties"/>
+	</target>
+	
+	<target name="set-module-name" depends="validate-module,init-ivy" unless="next.module.name">
+		<antcall target="check-ivy-file"/>
+		<ivy:info file="ivy.xml" />
+		<property name="next.module.name" value="${ivy.module}"/>
+	</target>
+	
+	
+	
+	<target name="execute-package-modules" unless="${lib.dir.available}">
+		<echo>Packaging all modules</echo>
+		
+		<antcall target="package-all-modules"/>
+	</target>
+		
+	<target name="check-package-modules">
+		<available file="${build.package.parameter.lib.dir}" property="lib.dir.available"/>
+		<antcall target="execute-package-modules"/>
+	</target>
+	
+	<target name="create-distribution-file" depends="check-package-modules,set-next-version">
+		<echo>${next.version}</echo>
+		<property name="package.root.dir" 		value="next-${next.version}-full"/>
+		<property name="package.webcontent.dir" value="next-${next.version}-full/WebContent"/>
+		<property name="package.lib.dir" 		value="next-${next.version}-full/WebContent/WEB-INF/lib"/>
+		<property name="package.webinf.dir" 	value="next-${next.version}-full/WebContent/WEB-INF"/>
+		<property name="package.src.dir" 		value="next-${next.version}-full/src"/>
+		<property name="package.extra.dir" 		value="next-${next.version}-full/extras"/>
+		<property name="package.builds.dir" 	value="next-${next.version}-full/extras/builds"/>
+		<property name="package.ivy.dir" 		value="next-${next.version}-full/extras/ivy"/>
+		
+		<!--
+		<mkdir dir="${package.lib.dir}"/>
+		<mkdir dir="next-${next.version}-full/src"/>
+		<mkdir dir="next-${next.version}-full/extras/lib-src"/>
+		<mkdir dir="next-${next.version}-full/extras/lib-provided"/>
+		<mkdir dir="next-${next.version}-full/extras/build"/>
+		-->
+		
+		<copy todir="${package.src.dir}">
+			<fileset dir="../org.nextframework/sample">
+				<include name="hibernate.properties"/>
+				<include name="connection.properties"/>
+				<include name="log4j2.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${package.webinf.dir}/jsp">
+			<fileset dir="../org.nextframework/sample">
+				<include name="base.jsp"/>
+			</fileset>
+		</copy>
+		
+		<echo file="${package.webcontent.dir}/index.jsp">&lt;%response.sendRedirect("next");%></echo>
+			
+		<copy todir="${package.webinf.dir}/jsp">
+			<fileset dir="../org.nextframework/sample">
+				<include name="base.jsp"/>
+			</fileset>
+		</copy>
+		<copy todir="${package.webinf.dir}">
+			<fileset dir="../org.nextframework/sample">
+				<include name="menu.xml"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${package.lib.dir}" >
+			<fileset dir="${build.package.parameter.lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${build.package.parameter.lib.dir}/dependencies">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${package.root.dir}/lib/src">
+			<fileset dir="${build.package.parameter.lib.dir}/sources">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${package.builds.dir}">
+			<fileset dir="./">
+				<include name="build-dependencies.xml"/>
+				<include name="build-js.xml"/>
+				<include name="build-package.xml"/>
+				<include name="build-web-deploy.xml"/>
+				<include name="include/*.xml"/>
+			</fileset>
+		</copy>
+		
+		
+		<!-- Creates and updates build.xml -->
+		<copy todir="${package.root.dir}">
+			<fileset dir="./samples">
+				<include name="build-sample-app.xml"/>
+			</fileset>
+			<mapper type="merge" to="build.xml"/>
+		</copy>
+		<replace file="${package.root.dir}/build.xml" 
+			token="../build-web-deploy.xml" 
+			value="extras/builds/build-web-deploy.xml"/>
+		<copy todir="${package.root.dir}">
+			<fileset dir="./samples">
+				<include name="build-sample-app.properties"/>
+			</fileset>
+			<mapper type="merge" to="build.properties"/>
+		</copy>
+		
+
+		<copy todir="${package.root.dir}">
+			<fileset dir="./samples">
+				<include name="ivy-sample-app.xml"/>
+			</fileset>
+			<mapper type="merge" to="ivy.xml"/>
+		</copy>
+		<copy todir="${package.ivy.dir}">
+			<fileset dir="./">
+				<include name="configurations.xml"/>
+			</fileset>
+		</copy>
+		
+		
+		<zip destfile="next-${next.version}-full.zip">
+			<fileset dir="./">
+				<include name="next-${next.version}-full/**/*"/>
+			</fileset>
+			<fileset dir="./samples">
+				<include name="build-install.xml"/>
+			</fileset>
+		</zip>
+		
+		<zip destfile="next-${next.version}-dependencies-src.zip">
+			<fileset dir="${build.package.parameter.lib.dir}/">
+				<include name="/dependencies-src/*.jar"/>
+			</fileset>
+		</zip>
+		
+	</target>
+
+</project>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<description>Next 1.1 combo library</description>
+	<display-name>Next combo</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>combo</short-name>
+	<uri>combo</uri>
+
+	<tag>
+		<description></description>
+		<name>propertyPanel</name>
+		<tag-class>org.nextframework.view.combo.PropertyPanelTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	
+	<tag>
+		<description></description>
+		<name>propertyColumn</name>
+		<tag-class>org.nextframework.view.combo.PropertyColumnOutputTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	
+	<tag>
+		<description></description>
+		<name>beanDataGrid</name>
+		<tag-class>org.nextframework.view.combo.BeanDataGridTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>itens</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>itemType</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+
+	<tag>
+		<description></description>
+		<name>beanPanelGrid</name>
+		<tag-class>org.nextframework.view.combo.BeanPanelGridTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+		<attribute>
+			<description></description>
+			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>valueType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>		
+	</tag>
+	
+	
+	<tag>
+		<description></description>
+		<name>inputProperty</name>
+		<tag-class>org.nextframework.view.combo.InputPropertyTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description></description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>	
+		<attribute>
+			<description></description>
+			<name>showLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>					
+	</tag>
+</taglib>

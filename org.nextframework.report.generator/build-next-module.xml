@@ -1,0 +1,5 @@
+<project>
+	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
+	
+	<property name="module.disabled.package" value="true"/>	
+</project>
