@@ -1,5 +1,5 @@
 # Next Framework
-Next Framework is a full-stack web framework that embraces existing technologies and enhances them to provide extended productivity and lighter learning curve. In its core there are frameworks like Spring and Hibernate, it is familiar to most Java programmers. 
+Next Framework is a full-stack web framework that embraces existing technologies and enhances them to provide extended productivity and lighter learning curve. In its core there are frameworks like Spring and Hibernate, therefore it is familiar to most Java enterprise developers. 
 
 ## Quick Start
 
