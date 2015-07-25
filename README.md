@@ -5,13 +5,14 @@ Next Framework is a full-stack web framework that embraces existing technologies
 
 Go to [Next Framework Site][] and download latest version zip.
 
-Extract build-install.xml from the zip file.
+Extract `build-install.xml` from the zip file.
 
 Create a web project in your IDE and copy both the zip and install files.
 
-Execute build-install as an ANT script.
+Execute `build-install.xml` as an ANT script.
 
 Your project is configured with next! No tools, no command lines, no plugins are necessary.
+Refresh your project to see the new files.
 
 ## Next Build
 
