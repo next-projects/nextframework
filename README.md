@@ -56,11 +56,11 @@ Next is built on top of Spring Framework. Any Spring configuration will work. Ne
 
 ## IVY and library management
 
-Next comes with ivy pre-configured. You don't have to install ivy. Next will detect its absence and automatically download if necessary. 
+Next comes with ivy pre-configured. You don't have to install ivy. Next will detect its absence and automatically download it if necessary. 
 
-File `/ivy.xml` created on install, already contain some examples of libraries to download. 
+The file `/ivy.xml` created on install, already contain some examples of libraries to download. 
 
-Place your ivy dependent modules and execute ant task `Retrieve Ivy Dependencies` from the build.xml file.
+Configure your ivy  modules and execute ant task `Retrieve Ivy Dependencies` from the `build.xml` file.
 
 ## Database Connection and Hibernate
 
