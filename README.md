@@ -1,5 +1,5 @@
 # Next Framework
-Next Framework is a full-stack web framework that embraces existing technologies and enhances them to provide extended productivity and lighter learning curve. In its core there are frameworks like Spring and Hibernate, therefore it is familiar to most Java enterprise developers. 
+Next Framework is a full-stack web framework that embraces existing technologies and enhances them to provide extended productivity and lighter learning curve. At its core there are frameworks like Spring and Hibernate, therefore it is familiar to most Java enterprise developers. 
 
 ## Quick Start
 
@@ -16,12 +16,12 @@ Refresh your project to see the new files.
 
 ## Next Build
 
-Next comes with ANT scripts ready to use. A `build.xml` is placed at the root of the project. It contains commons tasks. 
+Next comes with ANT scripts ready to use. A `build.xml` is placed at the root of the project. It contains common tasks. 
 If you want to use this script file to deploy your application, configure in `build.properties` file, the path where the project should be deployed.
 
 ## Hello World - MVC
 
-To create a controller in next, you should extend `org.nextframework.controller.MultiActionController`, and anotate it with `@Controller` annotation. Methods in controllers (that follows certain convensions) are actions. To define a standard action, use `@DefaultAction` annotation in a method.
+To create a controller in next, you should extend `org.nextframework.controller.MultiActionController`, and annotate it with `@Controller` annotation. Methods in controllers (that follows certain conventions) are actions. To define a standard action, use `@DefaultAction` annotation in a method.
 
 	package com.foo.bar;
 	
@@ -36,7 +36,7 @@ To create a controller in next, you should extend `org.nextframework.controller.
 		}
 	}
 
-Every controller must be registered in its own `module`. The `module` is the first part of the path. `/public` in the example above.
+Each controller must be registered in one `module`. The `module` is the first part of the path. `/public` in the example above.
 
 The `index` method returns a String representing the name of the JSP to dispatch the request. The JSPs must be placed at `WEB-INF/jsp/[controllermodule]`. 
 
@@ -56,7 +56,7 @@ Next is built on top of Spring Framework. Any Spring configuration will work. Ne
 
 ## IVY and library management
 
-Next commes with ivy preconfigured. You don't have to install ivy. Next will detect its absence and automatically download if necessary. 
+Next comes with ivy pre-configured. You don't have to install ivy. Next will detect its absence and automatically download if necessary. 
 
 File `/ivy.xml` created on install, already contain some examples of libraries to download. 
 
@@ -64,15 +64,15 @@ Place your ivy dependent modules and execute ant task `Retrieve Ivy Dependencies
 
 ## Database Connection and Hibernate
 
-The quickest way to configure a database is to uncomment the HSQLDB dependency on `/ivy.xml` file, and run `Retrieve Ivy dependencies`. Next automatically detects HSQLDB on classpath and configures a datasource automatically for it.
+The quickest way to configure a database is to uncomment the HSQLDB dependency on `/ivy.xml` file, and run `Retrieve Ivy dependencies`. Next automatically detects HSQLDB on the classpath and configures a data source automatically for it.
 
-To define custom datasource, use connection.properties file. Define driver, url, username and password properties. 
+To define a custom data source, use connection.properties file. Define driver, url, username and password properties. 
 
-When there is a datasource avaiable, next configures hibernate. Hibernate annotations can be used. No configuration required.
+When there is a data source available, next configures hibernate. Hibernate annotations can be used. No configuration required.
 
 ## More
 
-Next yet comes with features like, crud operations support, gereneric DAOs, java to javscript convertion, a collections of tags, reports and charts api and more. Access [Next Framework Site][] for more information.
+Next yet comes with features like, crud operations support, generic DAOs, java to javascript conversion, a collection of tags, reports and charts API and more. Access [Next Framework Site][] for more information.
 
 
 
