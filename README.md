@@ -28,7 +28,7 @@ To create a controller in next, you should extend `org.nextframework.controller.
 	import org.nextframework.controller.*;
 	
 	@Controller(path="/public/helloworld")
-	public class IndexController extends MultiActionController {
+	public class HelloWorldController extends MultiActionController {
 	
 		@DefaultAction
 		public String index(){
