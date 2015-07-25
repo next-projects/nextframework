@@ -50,10 +50,6 @@ In the `WEB-INF/jsp/public` create a `helloPage.jsp` file with the contents:
 
 Ask `/public/helloworld` in your web browser, and you will see the `Hello World!!` message.
 
-## Dependency Injection
-
-Next is built on top of Spring Framework. Any Spring configuration will work. Next already pre-configures spring to use annotations. So, you don't have to configure Spring by yourself. `@Service` and `@Autowired` annotations work out of the box. All controllers are Spring beans.
-
 ## IVY and library management
 
 Next comes with ivy pre-configured. You don't have to install ivy. Next will detect its absence and automatically download it if necessary. 
@@ -61,6 +57,10 @@ Next comes with ivy pre-configured. You don't have to install ivy. Next will det
 The file `/ivy.xml` created on install, already contain some examples of libraries to download. 
 
 Configure your ivy  modules and execute ant task `Retrieve Ivy Dependencies` from the `build.xml` file.
+
+## Dependency Injection and Spring
+
+Next is built on top of Spring Framework. Any Spring configuration will work. Next already pre-configures spring to use annotations. So, you don't have to configure Spring by yourself. `@Service` and `@Autowired` annotations work out of the box. All controllers are Spring beans.
 
 ## Database Connection and Hibernate
 
