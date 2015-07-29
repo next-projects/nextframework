@@ -1,1 +1,0 @@
-<input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" onKeyUp="mascara_cnpj(this)" onKeyPress="return valida_tecla(this, event)" onchange="${tag.reloadOnChangeString}" maxlength="18" size="19" ${tag.dynamicAttributesToString}/>

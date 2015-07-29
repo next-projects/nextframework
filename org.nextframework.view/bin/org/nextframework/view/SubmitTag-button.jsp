@@ -1,1 +1,0 @@
-<button type="button" onclick="${tag.action}${tag.onclick}" title="${description}" ${tag.dynamicAttributesToString}><dobody/></button>

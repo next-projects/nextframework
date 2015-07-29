@@ -1,3 +1,0 @@
-org.nextframework.service.JavaLoaderServiceProvider
-org.nextframework.service.StaticServiceProvider
-org.nextframework.service.LowPriorityStaticServiceProvider

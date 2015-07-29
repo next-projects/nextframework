@@ -1,1 +1,0 @@
-<a href="javascript:${tag.action}${tag.onclick}" title="${tag.description}" ${tag.dynamicAttributesToString}><dobody/></a>

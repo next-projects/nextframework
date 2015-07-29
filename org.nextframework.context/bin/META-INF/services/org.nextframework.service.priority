@@ -1,4 +1,0 @@
-org.nextframework.context.support.GenericTypeAutowireCandidateFilter=100
-org.nextframework.context.support.PackageSimilarityAutowireCandidateFilter=200
-org.nextframework.context.support.DefaultBeanAutowireCandidateFilter=300
-org.nextframework.context.support.ConnectionPropertiesBeanDefinitionLoader=0

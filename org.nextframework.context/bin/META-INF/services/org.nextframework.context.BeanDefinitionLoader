@@ -1,4 +1,0 @@
-org.nextframework.context.support.ApplicationConfigBeanDefinitionLoader
-org.nextframework.context.support.ConnectionPropertiesBeanDefinitionLoader
-org.nextframework.context.support.HibernateBeanDefinitionLoader
-org.nextframework.context.support.MultipartBeanDefinitionLoader

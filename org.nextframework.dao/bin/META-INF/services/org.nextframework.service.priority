@@ -1,5 +1,0 @@
-org.nextframework.persistence.DAODelegateSaveOrUpdateStrategyListener=100
-org.nextframework.persistence.NextSessionProviderFactory=100
-org.nextframework.persistence.DAOCollectionFetcherFactory=100
-org.nextframework.persistence.internal.UserPersistentDataProviderImpl=100
-org.nextframework.persistence.context.support.DaoBeanDefinitionLoader=2

@@ -1,4 +1,0 @@
-org.nextframework.controller.mvt.StringBuilderModelAndViewTranslator
-org.nextframework.controller.mvt.StringModelAndViewTranslator
-org.nextframework.controller.mvt.ResourceModelAndViewTranslator
-org.nextframework.controller.mvt.JsonModelAndViewTranslator

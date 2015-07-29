@@ -1,3 +1,0 @@
-org.nextframework.core.config.DefaultViewConfig=100
-org.nextframework.view.ResourceProvider=100
-org.nextframework.view.DownloadFileProvider=100

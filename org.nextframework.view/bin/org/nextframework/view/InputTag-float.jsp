@@ -1,1 +1,0 @@
-<input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" onKeyDown="return mascara_float(this,event)" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}/>

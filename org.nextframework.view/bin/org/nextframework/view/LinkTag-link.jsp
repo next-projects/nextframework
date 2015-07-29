@@ -1,1 +1,0 @@
-<a href="${tag.url}" title="${tag.description}" ${tag.dynamicAttributesToString}><dobody/></a>

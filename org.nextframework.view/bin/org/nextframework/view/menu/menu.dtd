@@ -1,9 +1,0 @@
-<!ELEMENT menugroup (menu*)>
-
-<!ELEMENT menu (menu*)>
-
-<!ATTLIST menu icon CDATA "">
-<!ATTLIST menu title CDATA "">
-<!ATTLIST menu url CDATA "">
-<!ATTLIST menu target CDATA "">
-<!ATTLIST menu description CDATA "">

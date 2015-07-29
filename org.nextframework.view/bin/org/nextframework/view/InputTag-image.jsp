@@ -1,1 +1,0 @@
-<input id="${tag.id}" type="image" name="${tag.name}" value="${tag.valueToString}" ${tag.dynamicAttributesToString}/>

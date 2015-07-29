@@ -1,7 +1,0 @@
-org.nextframework.service.context.support.CrudControllerBeanDefinitionLoader=100
-org.nextframework.service.context.support.ControllerBeanDefinitionLoader=200
-org.nextframework.controller.ResourceAuthorizationMapperImpl=100
-org.nextframework.controller.mvt.StringModelAndViewTranslator=100
-org.nextframework.controller.mvt.StringBuilderModelAndViewTranslator=200
-org.nextframework.controller.mvt.ResourceModelAndViewTranslator=300
-org.nextframework.controller.mvt.JsonModelAndViewTranslator=400
