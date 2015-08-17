@@ -5,12 +5,12 @@
 
 <n:dataGrid itens="${TtabelaResultados.itens}" var="${TtabelaResultados.name}" cellspacing="0" groupProperty="${TtabelaResultados.dynamicAttributesMap['groupproperty']}" >
 	<n:bean name="${TtabelaResultados.name}" valueType="${TtabelaResultados.valueType}">
-		<n:getContent tagName="acaoTag" vars="acoes">
+		<n:getContent tagName="actionPanelTag" vars="acoes">
 			<t:propertyConfig mode="output" renderAs="column">
 				<n:doBody />
 			</t:propertyConfig>
 			<c:if test="${(!empty acoes) || (TtabelaResultados.showEditarLink) || (TtabelaResultados.showExcluirLink) || (TtabelaResultados.showConsultarLink)}">
-				<n:column header="AÁ„o" style="width: 1px; white-space: nowrap; padding-right: 3px;"> <%-- width: 1%;  --%>
+				<n:column header="A√ß√£o" style="width: 1px; white-space: nowrap; padding-right: 3px;"> <%-- width: 1%;  --%>
 					${acoes}
 						<script language="javascript">
 						<c:catch var="exSelecionar">
@@ -20,7 +20,7 @@
 						</script>
 						<c:if test="${!empty exSelecionar}">
 							${n:printStackTrace(exSelecionar)}
-							<span style="font-size: 10px; color: red; white-space: pre; display:block;">Erro ao imprimir bot„o selecionar: ${exSelecionar.message} <c:catch>${exSelecionar.rootCause.message}</c:catch></span>
+							<span style="font-size: 10px; color: red; white-space: pre; display:block;">Erro ao imprimir bot√£o selecionar: ${exSelecionar.message} <c:catch>${exSelecionar.rootCause.message}</c:catch></span>
 						</c:if>
 					<c:if test="${TtabelaResultados.showConsultarLink}">
 						<n:link action="view" parameters="${n:idProperty(n:reevaluate(TtabelaResultados.name,pageContext))}=${n:id(n:reevaluate(TtabelaResultados.name,pageContext))}">consultar</n:link>
