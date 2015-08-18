@@ -30,6 +30,7 @@ import javax.persistence.Transient;
 import javax.servlet.jsp.JspException;
 
 import org.nextframework.classmanager.ClassManagerFactory;
+import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
 import org.nextframework.types.Money;
@@ -290,7 +291,9 @@ public class PropertyTag extends TemplateTag {
 			}
 		}
 		
-		if(findParent2(DetailTag.class, false) == null && getRequest().getAttribute("TEMPLATE_listagem") != null && order == null){
+		boolean noParentDetail = findParent2(DetailTag.class, false) == null;
+		boolean crudList = CrudContext.getCurrentInstance() != null && CrudContext.getCurrentInstance().getListModel().getList() != null;
+		if(noParentDetail && crudList && order == null){
 			BeanTag beanTag = findParent(BeanTag.class);
 			order = "";
 			if(beanTag != null){
