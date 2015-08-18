@@ -1,3 +1,11 @@
 <project>
 	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
+	
+	<fileset id="project.source.dirs" dir=".">
+		<include name="shared/src/main/java/**/*"/>
+		<include name="js-lib/src/main/java/**/*"/>
+		<include name="js-next/src/main/java/**/*"/>
+		<include name="js-google/src/main/java/**/*"/>
+		<include name="js-builder/src/main/java/**/*"/>
+	</fileset>
 </project>
