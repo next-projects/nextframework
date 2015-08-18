@@ -531,7 +531,7 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>showBotaoNovaLinha</name>
+			<name>showButtonNewLine</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>		
