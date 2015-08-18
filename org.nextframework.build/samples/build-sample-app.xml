@@ -6,7 +6,7 @@
 	<property file="build.properties"/>
 	
 	<!-- Configure here the deploy path -->
-	<!-- It is advised to configure the server home in the Eclipse Ant properties (like the tomcat7.home). Otherwise, put the full path of the app server. -->
+	<!-- It is advised to configure the server home in the Eclipse Ant properties (like the server.deploy). Otherwise, put the full path of the app server. -->
 	<property name="deploy.dir" value="${server.deploy}/${module.name}"/>
 	
 	<!-- Configure where the Web files are stored in your project-->
@@ -15,8 +15,8 @@
 	<!-- Configure the next-web-deploy.xml accordingly -->
 	<import file="../build-web-deploy.xml"/>
 	<!--
-	With next workspace project
-	<import file="../org.nextframework.build/build-web-deploy.xml"/>
+	With next workspace project (configure with the correct path of the project)
+	<import file="../../git/nextframework/org.nextframework.build/build-web-deploy.xml"/>
 	-->
 	
 	<!-- Other projects required by the application -->
