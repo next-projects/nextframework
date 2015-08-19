@@ -583,7 +583,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		functionCode += "        " + parameterListFunction + "\n";
 		functionCode += "        " + classesListFunction + "\n";
 		functionCode += "        ajaxLoadCombo('" + inputTag.getRequest().getContextPath() + "', " + comp + ", '" + usingType.getName() + "', '" + Util.strings.escape(absoluteCall) 
-					 + "', listaClasses, listaParametros, '" + inputTag.getSelectLabelProperty() + "', " + parentValue	+ ");\n";
+					 + "', classesList, parameterList, '" + inputTag.getSelectLabelProperty() + "', " + parentValue	+ ");\n";
 		functionCode += "    }\n";
 		functionCode += "    else {\n";
 		functionCode += "        limparCombo(" + comp + ", " + isIncludeBlank() + ", '', '" + inputTag.getBlankLabel() + "');\n";
