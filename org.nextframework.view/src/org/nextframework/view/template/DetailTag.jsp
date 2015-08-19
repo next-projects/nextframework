@@ -12,7 +12,7 @@
 			indexProperty="${Tdetalhe.indexProperty}"
 			>
 		<n:bean name="${Tdetalhe.detailVar}" valueType="${Tdetalhe.detailClass}" propertyPrefix="${Tdetalhe.fullNestedName}" propertyIndex="${index}">
-			<n:getContent tagName="acaoTag" vars="acoes">
+			<n:getContent tagName="actionPanelTag" vars="acoes">
 				<t:propertyConfig renderAs="column">
 					<n:doBody />
 				</t:propertyConfig>
