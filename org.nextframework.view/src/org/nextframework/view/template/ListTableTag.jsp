@@ -10,7 +10,7 @@
 				<n:doBody />
 			</t:propertyConfig>
 			<c:if test="${(!empty acoes) || (TtabelaResultados.showEditarLink) || (TtabelaResultados.showExcluirLink) || (TtabelaResultados.showConsultarLink)}">
-				<n:column header="AÃ§Ã£o" style="width: 1px; white-space: nowrap; padding-right: 3px;"> <%-- width: 1%;  --%>
+				<n:column header="Ação" style="width: 1px; white-space: nowrap; padding-right: 3px;"> <%-- width: 1%;  --%>
 					${acoes}
 						<script language="javascript">
 						<c:catch var="exSelecionar">
