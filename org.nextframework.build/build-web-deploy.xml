@@ -49,6 +49,8 @@
 
 	<target name="deploy-web-all-next-modules" depends="check-all" unless="${next.jars.available}">
 		<echo>Next jars not found in project, copying from workspace if available</echo>
+		<dirname  file="${ant.file.Next Project Web Deploy}/../" property="next.workspace.dir"/>
+		<echo>Using next workspace: ${next.workspace.dir}</echo>
 		<antcall target="deploy-web-all-next-modules-packaged"/>
 		<antcall target="deploy-web-all-next-modules-exploded"/>
 	</target>

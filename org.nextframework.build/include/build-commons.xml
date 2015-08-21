@@ -113,7 +113,7 @@
 				<reference refid="ivy.instance" />
 				<property name="next.module.execute.task.name" value="@{target}"/>
 				<propertyset refid="@{parameters}"/>
-				<fileset dir="../" 
+				<fileset dir="${next.workspace.dir}" 
 					includes="org.nextframework*/${next.module.build.filename}">
 					<exclude name="org.nextframework.build/*"/>
 				</fileset>
