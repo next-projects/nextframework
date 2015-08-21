@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <input type="file" id="${tag.id}" name="${tag.name}" onchange = "${tag.inputComponent.fileOnChange}" value="${tag.inputComponent.fileValue}" ${tag.dynamicAttributesToString}/> 
-${tag.inputComponent.arquivoLink}
+${tag.inputComponent.fileLink}
 <input type="hidden" name="${tag.name}_excludeField" id="${tag.name}_excludeField">
 <c:if test="${tag.showRemoverButton}">
 	<button id="${tag.name}_removerbtn" type="button" onclick="document.getElementById('${tag.name}_excludeField').value='true'; document.getElementById('${tag.name}_div').style.textDecoration = 'line-through'" ${tag.inputComponent.showRemoverBtn}>remover</button>
