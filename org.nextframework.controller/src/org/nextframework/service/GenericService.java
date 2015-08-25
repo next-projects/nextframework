@@ -46,8 +46,8 @@ public class GenericService<BEAN extends Object> {
 		return genericDAO.findForCombo(extraFields);
 	}
 
-	public ResultList<BEAN> loadListModel(ListViewFilter filtro) {
-		return genericDAO.loadListModel(filtro);
+	public ResultList<BEAN> loadListModel(ListViewFilter filter) {
+		return genericDAO.loadListModel(filter);
 	}
 
 	public BEAN loadFormModel(BEAN bean) {

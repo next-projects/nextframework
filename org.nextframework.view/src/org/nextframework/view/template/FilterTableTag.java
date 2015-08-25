@@ -23,7 +23,6 @@
  */
 package org.nextframework.view.template;
 
-
 /**
  * @author rogelgarcia
  * @since 03/02/2006
@@ -88,8 +87,8 @@ public class FilterTableTag extends TemplateTag {
 			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
 		}
 		if(submitAction == null){
-			if(findParent(RelatorioTag.class) != null){
-				submitAction = "gerar";
+			if(findParent(ReportViewTag.class) != null){
+				submitAction = "generate";
 			}
 		}
 		pushAttribute("TabelaFiltroTag", this);

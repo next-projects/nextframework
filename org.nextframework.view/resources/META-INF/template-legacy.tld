@@ -131,7 +131,7 @@
 	<tag>
 		<description></description>
 		<name>relatorio</name>
-		<tag-class>org.nextframework.view.template.RelatorioTag</tag-class>
+		<tag-class>org.nextframework.view.template.ReportViewTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
 			<description></description>

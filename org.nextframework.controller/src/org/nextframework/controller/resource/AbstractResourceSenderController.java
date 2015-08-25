@@ -38,49 +38,19 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public abstract class AbstractResourceSenderController<FILTRO> extends MultiActionController {
 
-	public static final String FILTRO = "filtro";
-	public static final String GERAR = "gerar";
+	public static final String FILTER = "filter";
+	public static final String GENERATE = "generate";
 	
 	@DefaultAction
-	@Action(FILTRO)
+	@Action(FILTER)
 	@Command(session = true, validate = false)
-	@Input(FILTRO)
-	public abstract ModelAndView doFiltro(WebRequestContext request, FILTRO filtro) throws Exception;
+	@Input(FILTER)
+	public abstract ModelAndView doFilter(WebRequestContext request, FILTRO filter) throws Exception;
 	
-	@Action(GERAR)
+	@Action(GENERATE)
 	@Command(session = true, validate = true)
-	@Input(FILTRO)
-	public abstract ModelAndView doGerar(WebRequestContext request, FILTRO filtro) throws Exception;
+	@Input(FILTER)
+	public abstract ModelAndView doGenerate(WebRequestContext request, FILTRO filter) throws Exception;
 
-	/*
-	public ModelAndView handleGenerationException(WebRequestContext request, ResourceGenerationException e) throws Throwable {
-		// TODO MELHORAR O SISTEMA DE MENSAGENS
-		String action = e.getAction();
-		if (action.equals(FILTRO)) {
-			throw new Exception("Não foi possível exibir a tela de listagem. "+e.getCause().getMessage(), e.getCause());
-		} else if (action.equals(GERAR)) {
-			request.addError(e.getCause());
-			return goToAction(FILTRO);
-		} else {
-			throw new RuntimeException("Ação não suportada: "+action);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public ModelAndView handleServletRequestBidingException(WebRequestContext request, ServletRequestBindingException e) throws Exception {
-		String action = request.getParameter(MultiActionController.ACTION_PARAMETER);
-		BindException errors = (BindException) e.getRootCause();
-		
-		((DefaultWebRequestContext) request).setBindException(errors);
-		// TODO VERIFICAR SE ESTÁ DE ACORDO
-		if (action.equals(FILTRO)) {
-			return doFiltro(request, (FILTRO) errors.getTarget());
-		} else if (action.equals(GERAR)) {
-			return doFiltro(request, (FILTRO) errors.getTarget());
-		} else {
-			throw new RuntimeException("Ação não suportada");
-		}
-	}
-	*/
 }
 

@@ -33,16 +33,14 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 02/02/2006
  * @version 1.1
  */
-public abstract class ResourceSenderController<FILTRO> extends AbstractResourceSenderController<FILTRO> {
+public abstract class ResourceSenderController<FILTER> extends AbstractResourceSenderController<FILTER> {
 
 	@Override
-	public ModelAndView doGerar(WebRequestContext request, FILTRO filtro) throws Exception {
+	public ModelAndView doGenerate(WebRequestContext request, FILTER filter) throws Exception {
 		HttpServletResponse response = request.getServletResponse();
-		Resource recurso = generateResource(request, filtro);
+		Resource recurso = generateResource(request, filter);
 		if (recurso == null) {
-			// TODO DEVERIA SER CRIADO OUTRO CONTROLER PARA MANDAR EMAILS POR EXEMPLO
-			// ESSE AQUI É PARA ENVIAR COISAS PARA O CLIENTE, FAZER DOWNLOAD
-			return goToAction(FILTRO);
+			return goToAction(FILTER);
 		}
 		response.setContentType(recurso.getContentType());
 		
@@ -51,6 +49,6 @@ public abstract class ResourceSenderController<FILTRO> extends AbstractResourceS
 		return null;
 	}
 
-	public abstract Resource generateResource(WebRequestContext request, FILTRO filtro) throws Exception;
+	public abstract Resource generateResource(WebRequestContext request, FILTER filter) throws Exception;
 
 }

@@ -28,6 +28,6 @@ package org.nextframework.view.template;
  * @since 07/02/2006
  * @version 1.1
  */
-public class RelatorioTag extends ViewTag {
+public class ReportViewTag extends ViewTag {
 
 }

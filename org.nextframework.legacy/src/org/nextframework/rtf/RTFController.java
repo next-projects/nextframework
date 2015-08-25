@@ -40,31 +40,13 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 		this.name = name;
 	}
 		
-	protected Class<FILTRO> filtroClass;
+	protected Class<FILTRO> filterClass;
 	
 	@SuppressWarnings("unchecked")
 	public RTFController(){
 		Class[] genericTypes = GenericTypeResolver.resolveTypeArguments(this.getClass(), RTFController.class);
-//		if(genericTypes.length < 1){
-//			boolean invalido = false;
-//			//tentar a outra forma de Generics
-//			{
-//				try {
-//					genericTypes = Util.generics.getGenericTypes2(this.getClass());
-//					if(genericTypes.length != 1){
-//						invalido = true;
-//					}
-//				} catch (Exception e) {
-//					genericTypes = new Class[]{Object.class};
-//				}
-//				
-//			}
-//			if(invalido){
-//				throw new RuntimeException("A classe "+this.getClass().getName()+" deve declarar um tipo genérico que indique o command que será usado");
-//			}
-//		}
 		Class<?> clazz = genericTypes[0];
-		filtroClass = (Class<FILTRO>) clazz;
+		filterClass = (Class<FILTRO>) clazz;
 	}
 	
 	@Override
@@ -91,21 +73,21 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 	}
 
 	@Override
-	public ModelAndView doFiltro(WebRequestContext request, FILTRO filtro) throws Exception {
+	public ModelAndView doFilter(WebRequestContext request, FILTRO filtro) throws Exception {
 		try {
 			request.setAttribute("filtro", filtro);
 			filtro(request, filtro);
 		} catch (Exception e) {
-			throw new ResourceGenerationException(FILTRO, e);
+			throw new ResourceGenerationException(FILTER, e);
 		}
-		return getFiltroModelAndView(request, filtro);
+		return getFilterModelAndView(request, filtro);
 	}
 
 	protected void filtro(WebRequestContext request, FILTRO filtro) {
 		
 	}
 	
-	protected ModelAndView getFiltroModelAndView(WebRequestContext request, FILTRO filtro) {
+	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTRO filtro) {
 		if (name == null) {
 			if(!this.getClass().getSimpleName().endsWith("RTF")){
 				throw new NextException("Um controller de rtf deve ter o sufixo RTF ou então setar a variável name");

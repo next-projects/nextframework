@@ -57,7 +57,7 @@ public abstract class AbstractCrudController<FILTER extends ListViewFilter, FORM
 	@Action(LIST)
 	@Input(LIST)
 	@Command(session = true, validate = true)
-	public abstract ModelAndView doList(WebRequestContext request, FILTER filtro) throws CrudException;
+	public abstract ModelAndView doList(WebRequestContext request, FILTER filter) throws CrudException;
 
 	@Action(FORM)
 	@Input(FORM)

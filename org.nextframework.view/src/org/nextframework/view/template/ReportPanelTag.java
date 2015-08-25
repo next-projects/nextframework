@@ -31,7 +31,7 @@ package org.nextframework.view.template;
 public class ReportPanelTag extends TemplateTag {
 	
 	String submitLabel = "Gerar relatório";
-	String submitAction = "gerar";
+	String submitAction = "generate";
 	String submitConfirmationScript = "true";
 
 	public String getSubmitConfirmationScript() {

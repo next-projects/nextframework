@@ -36,7 +36,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 02/02/2006
  * @version 1.1
  */
-public abstract class ReportController<FILTRO> extends ResourceSenderController<FILTRO> {
+public abstract class ReportController<FILTER> extends ResourceSenderController<FILTER> {
 	
 	protected String name;
 	
@@ -44,55 +44,27 @@ public abstract class ReportController<FILTRO> extends ResourceSenderController<
 		this.name = name;
 	}
 	
-	protected Class<FILTRO> filtroClass;
+	protected Class<FILTER> filterClass;
 
 	@SuppressWarnings("unchecked")
 	public ReportController(){
-		Class[] genericTypes = GenericTypeResolver.resolveTypeArguments(this.getClass(), ReportController.class);
-//		if(genericTypes.length < 1){
-//			boolean invalido = false;
-//			//tentar a outra forma de Generics
-//			{
-//				try {
-//					genericTypes = Util.generics.getGenericTypes2(this.getClass());
-//					if(genericTypes.length != 1){
-//						invalido = true;
-//					}
-//				} catch (Exception e) {
-//					genericTypes = new Class[]{Object.class};
-//				}
-//				
-//			}
-//			if(invalido){
-//				throw new RuntimeException("A classe "+this.getClass().getName()+" deve declarar um tipo genérico que indique o command que será usado");
-//			}
-//		}
+		Class<?>[] genericTypes = GenericTypeResolver.resolveTypeArguments(this.getClass(), ReportController.class);
 		Class<?> clazz = genericTypes[0];
-		filtroClass = (Class<FILTRO>) clazz;
+		filterClass = (Class<FILTER>) clazz;
 	}
 	
-//	@Override
-//	// isso é necessário quando utilizar generics e o método nao estiver sobrescrito
-//	protected Class<?> getCommandClass(Method method) {
-//		//TODO FAZER A DETECCAO MESMO QUANDO UTILIZAR GENERICS
-//		Class<?> class1 = super.getCommandClass(method);
-//		if(!class1.equals(Object.class)){
-//			return class1;
-//		}
-//		return filtroClass;
-//	}
 	
 	@Override
-	public ModelAndView doFiltro(WebRequestContext request, FILTRO filtro) throws ResourceGenerationException {
+	public ModelAndView doFilter(WebRequestContext request, FILTER filter) throws ResourceGenerationException {
 		try {
-			filtro(request, filtro);
+			filter(request, filter);
 		} catch (Exception e) {
-			throw new ResourceGenerationException(FILTRO, e);
+			throw new ResourceGenerationException(FILTER, e);
 		}
-		return getFiltroModelAndView(request, filtro);
+		return getFilterModelAndView(request, filter);
 	}
 	
-	protected ModelAndView getFiltroModelAndView(WebRequestContext request, FILTRO filtro) {
+	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTER filter) {
 		if (name == null) {
 			if(!this.getClass().getSimpleName().endsWith("Report")){
 				throw new NextException("Um controller de relatórios deve ter o sufixo Report ou então setar a variável name");
@@ -101,15 +73,15 @@ public abstract class ReportController<FILTRO> extends ResourceSenderController<
 					.getSimpleName());
 			name = className.substring(0, className.length()- "Report".length());
 		}
-		return new ModelAndView("relatorio/"+name,"filtro", filtro);
+		return new ModelAndView("relatorio/"+name,"filtro", filter);
 	}
 
-	protected void filtro(WebRequestContext request, FILTRO filtro) throws Exception {
-		request.setAttribute("filtro", filtro);
+	protected void filter(WebRequestContext request, FILTER filter) throws Exception {
+		request.setAttribute("filtro", filter);
 	}
 
 	@Override
-	public Resource generateResource(WebRequestContext request, FILTRO filtro) throws Exception {
+	public Resource generateResource(WebRequestContext request, FILTER filtro) throws Exception {
 		IReport report = createReport(request, filtro);
 		
         String name = getReportName(report);
@@ -148,7 +120,7 @@ public abstract class ReportController<FILTRO> extends ResourceSenderController<
 		return LegacyReportUtils.getReportGenerator();
 	}
 
-	public IReport createReport(WebRequestContext request, FILTRO filtro) throws Exception {
+	public IReport createReport(WebRequestContext request, FILTER filter) throws Exception {
 		throw new RuntimeException("Implement the method createReport or overwrite the method generateResource");
 	}
 
