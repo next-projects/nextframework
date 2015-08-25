@@ -33,7 +33,7 @@ import org.nextframework.persistence.PageAndOrder;
  */
 public class FilterPanelTag extends TemplateTag {
 
-	protected String name = "filtro";
+	protected String name = "filter";
 	
 	public String getName() {
 		return name;

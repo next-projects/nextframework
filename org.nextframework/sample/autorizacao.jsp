@@ -10,9 +10,9 @@
         </t:tabelaFiltro>
     </t:janelaFiltro>
     
-    <c:forEach items="${filtro.groupAuthorizationMap}" var="item">
+    <c:forEach items="${filter.groupAuthorizationMap}" var="item">
         <t:janelaResultados>
-            <n:panelGrid columns="1" rowStyleClasses="filtro1" width="100%">
+            <n:panelGrid columns="1" rowStyleClasses="filter1" width="100%">
                 <n:panel style="color: #333333">   <b><i>${item.key}</i></b></n:panel>
             </n:panelGrid>
             <n:dataGrid itens="${item.value}" width="100%" cellspacing="1" headerStyleClass="listagemHeader" bodyStyleClasses="listagemBody1, listagemBody2" footerStyleClass="listagemFooter">
@@ -42,9 +42,9 @@
             
         </t:janelaResultados>
     </c:forEach>
-    <c:if test="${!empty filtro.role}">
+    <c:if test="${!empty filter.role}">
         <t:janelaResultados>
-        <div class="filtro1" width="100%"><n:submit action="salvar">Salvar</n:submit></div>
+        <div class="filter1" width="100%"><n:submit action="salvar">Salvar</n:submit></div>
         </t:janelaResultados>
     </c:if>
 </t:tela>

@@ -110,7 +110,7 @@ public class AuthorizationController extends MultiActionController {
 	public ModelAndView list(WebRequestContext request, AuthorizationProcessFilter authorizationFilter) {
 		authorizationFilter.setGroupAuthorizationMap(new HashMap<String, List<AuthorizationProcessItemFilter>>());
 		request.setAttribute("roles", Authorization.getAuthorizationDAO().findAllRoles());
-		request.setAttribute("filtro", authorizationFilter);
+		request.setAttribute("filter", authorizationFilter);
 		
 		if(authorizationFilter.getRole() != null){
 			Map<String, AuthorizationModule> mapaGroupModule = new HashMap<String, AuthorizationModule>();

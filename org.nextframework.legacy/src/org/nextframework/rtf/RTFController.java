@@ -50,8 +50,8 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 	}
 	
 	@Override
-	public Resource generateResource(WebRequestContext request, FILTRO filtro) throws Exception {
-		RTF rtf = createRTF(request, filtro);
+	public Resource generateResource(WebRequestContext request, FILTRO filter) throws Exception {
+		RTF rtf = createRTF(request, filter);
 		RTFGenerator generator = LegacyRftUtils.getRTFGenerator();
 		byte[] generate = generator.generate(rtf);
 		Resource resource = new Resource("application/rtf", getRTFName(rtf), generate);
@@ -73,21 +73,21 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 	}
 
 	@Override
-	public ModelAndView doFilter(WebRequestContext request, FILTRO filtro) throws Exception {
+	public ModelAndView doFilter(WebRequestContext request, FILTRO filter) throws Exception {
 		try {
-			request.setAttribute("filtro", filtro);
-			filtro(request, filtro);
+			request.setAttribute("filter", filter);
+			filter(request, filter);
 		} catch (Exception e) {
 			throw new ResourceGenerationException(FILTER, e);
 		}
-		return getFilterModelAndView(request, filtro);
+		return getFilterModelAndView(request, filter);
 	}
 
-	protected void filtro(WebRequestContext request, FILTRO filtro) {
+	protected void filter(WebRequestContext request, FILTRO filter) {
 		
 	}
 	
-	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTRO filtro) {
+	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTRO filter) {
 		if (name == null) {
 			if(!this.getClass().getSimpleName().endsWith("RTF")){
 				throw new NextException("Um controller de rtf deve ter o sufixo RTF ou então setar a variável name");
@@ -96,7 +96,7 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 					.getSimpleName());
 			name = className.substring(0, className.length()- "RTF".length());
 		}
-		return new ModelAndView("rtf/"+name,"filtro", filtro);
+		return new ModelAndView("rtf/"+name,"filtro", filter);
 	}
 	
 	public abstract RTF createRTF(WebRequestContext request, FILTRO filtro) throws Exception;

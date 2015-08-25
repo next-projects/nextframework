@@ -4,7 +4,7 @@
 <%@ taglib prefix="t" uri="template"%>
 
 
-<n:bean name="filtro">
+<n:bean name="filter">
 	<div class="sectionTitle">
 		Relatório
 	</div>

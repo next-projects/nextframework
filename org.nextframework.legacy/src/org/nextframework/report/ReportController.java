@@ -73,16 +73,16 @@ public abstract class ReportController<FILTER> extends ResourceSenderController<
 					.getSimpleName());
 			name = className.substring(0, className.length()- "Report".length());
 		}
-		return new ModelAndView("relatorio/"+name,"filtro", filter);
+		return new ModelAndView("relatorio/"+name, "filter", filter);
 	}
 
 	protected void filter(WebRequestContext request, FILTER filter) throws Exception {
-		request.setAttribute("filtro", filter);
+		request.setAttribute("filter", filter);
 	}
 
 	@Override
-	public Resource generateResource(WebRequestContext request, FILTER filtro) throws Exception {
-		IReport report = createReport(request, filtro);
+	public Resource generateResource(WebRequestContext request, FILTER filter) throws Exception {
+		IReport report = createReport(request, filter);
 		
         String name = getReportName(report);
         byte[] bytes = getReportBytes(report);
