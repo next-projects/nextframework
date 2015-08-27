@@ -112,6 +112,9 @@
 	</target>
 		
 	<target name="check-package-modules">
+		<dirname  file="${basedir}../" property="next.workspace.dir"/>
+		<echo>Using next workspace: ${next.workspace.dir}</echo>
+		
 		<available file="${build.package.parameter.lib.dir}" property="lib.dir.available"/>
 		<antcall target="execute-package-modules"/>
 	</target>

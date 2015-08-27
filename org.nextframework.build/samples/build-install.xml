@@ -2,10 +2,11 @@
 
 	<!-- Configure custom webroot dir -->
 	<!--<property name="webroot.dir" value=""/>-->
-	
+
 	<property name="default.webroot.dir" value="WebContent"/>
 
 	<target name="-config-build-properties" unless="${build.file.available}">
+		<echo>build.file.available ${build.file.available}</echo>
 		<replace file="build.properties" 
 			token="module.name=" 
 			value="module.name=${projectName}" />
@@ -17,7 +18,7 @@
 			</not>
 		</condition>
 		<property name="webroot.dir.config" value=""/>
-		
+
 		<echo file="build.properties" append="true">${webroot.dir.config}</echo>
 	</target>
 
@@ -32,34 +33,84 @@
 
 	<target name="-project-properties">
 		<basename property="projectName" file="${basedir}" />
-		<set-webroot-dir dirname="web" />	<!-- intellij idea, netbeans -->
-		<set-webroot-dir dirname="WebContent" />	<!-- eclipse -->
-		<property name="webroot.dir" value="${default.webroot.dir}" />	<!-- default -->
-		
-		<condition property="file.index.available">
+		<set-webroot-dir dirname="web" />
+		<!-- intellij idea, netbeans -->
+		<set-webroot-dir dirname="WebContent" />
+		<!-- eclipse -->
+		<property name="webroot.dir" value="${default.webroot.dir}" />
+		<!-- default -->
+
+		<condition property="file.index.available" else="false">
 			<available file="${webroot.dir}/index.jsp" type="file" />
 		</condition>
 		<condition property="file.webxml.available">
 			<available file="${webroot.dir}/WEB-INF/web.xml" type="file" />
-		</condition>		
-			
+		</condition>
+
+
+		<fileset id="next.jar.files" dir="${basedir}" includes="**/WEB-INF/lib/next-*.jar"/>
+
+		<condition property="next.update" else="false">
+			<resourcecount refid="next.jar.files" when="greater" count="0"/>
+		</condition>
+
+		<fileset id="next.zip.files" dir="${basedir}" includes="next-*.zip"/>
+
+		<condition property="next.multiple.zip.files" else="false">
+			<resourcecount refid="next.zip.files" when="greater" count="1"/>
+		</condition>
+		<condition property="next.no.zip.files" else="false">
+			<resourcecount refid="next.zip.files" when="equal" count="0"/>
+		</condition>
+
+		<fail if="${next.no.zip.files}" message="No Next install zip file found."/>
+		<fail if="${next.multiple.zip.files}" message="Multiple Next install zip files found. Please, delete the next zip files that you don't want to install. Leave just one file. "/>
+
+		<condition property="rename.index.file">
+			<and>
+				<isfalse value="${next.update}"/>
+				<istrue value="${file.index.available}"/>
+			</and>
+		</condition>
+		<condition property="rename.webxml.file">
+			<and>
+				<isfalse value="${next.update}"/>
+				<istrue value="${file.webxml.available}"/>
+			</and>
+		</condition>
+
+		<condition property="next.update.message" value="Next detected on project. ** UPDATING NEXT VERSION ** " 
+				else="Installing next">
+			<istrue value="${next.update}" />
+		</condition>
+
 		<echo>Project name: ${projectName}</echo>
 		<echo>Web dir: /${webroot.dir}</echo>
+		<echo>${next.update.message}</echo>
 	</target>
-	
-	<target name="-rename-index" depends="-project-properties" if="${file.index.available}">
+
+	<target name="-rename-index" depends="-project-properties" if="${rename.index.file}">
 		<echo>Renaming ${webroot.dir}/index.jsp to ${webroot.dir}/index.jsp.bak</echo>
 		<move file="${webroot.dir}/index.jsp" tofile="${webroot.dir}/index.jsp.bak"/>
 	</target>
-	<target name="-rename-webxml" depends="-project-properties" if="${file.webxml.available}">
+	<target name="-rename-webxml" depends="-project-properties" if="${rename.webxml.file}">
 		<echo>Renaming ${webroot.dir}/WEB-INF/web.xml to ${webroot.dir}/WEB-INF/web.xml.bak</echo>
 		<move file="${webroot.dir}/WEB-INF/web.xml" tofile="${webroot.dir}/WEB-INF/web.xml.bak"/>
 	</target>
-	
+
 	<target name="install" depends="-project-properties,-rename-index,-rename-webxml" description="Install Next On Project">
 
 		<available file="build.properties" property="build.file.available" />
-		
+
+		<delete dir="./extras/builds"/>
+		<delete dir="./extras/ivy"/>
+		<delete>
+			<fileset dir="./lib/src/" includes="next-*.jar" />
+		</delete>
+		<delete >
+			<fileset dir="${webroot.dir}/WEB-INF/lib" includes="*.jar" />
+		</delete>
+
 		<echo>Unzipping next files to project </echo>
 		<unzip dest="./">
 			<fileset dir="./">
@@ -77,13 +128,14 @@
 				</firstmatchmapper>
 			</chainedmapper>
 		</unzip>
-		<copy todir="./" overwrite="false">
+		<!-- granularity prevents overwriting existing files, even if they are older -->
+		<copy todir="./" overwrite="false" granularity="9000000000000">
 			<fileset dir="./temp">
 			</fileset>
 		</copy>
-		
+
 		<delete dir="./temp" />
-		
+
 		<antcall target="-config-build-properties" />
 
 		<echo>

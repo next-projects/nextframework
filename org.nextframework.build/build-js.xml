@@ -5,7 +5,6 @@
 
 	<property name="javascript.custom.pkg" value=""/>
 
-
 	<path id="stjs.cp">
 		<!-- Project classpath -->
 		<pathelement location="${basedir}/bin"/>
@@ -14,12 +13,13 @@
 		<pathelement location="${basedir}/js-bin"/>
 		<pathelement location="${basedir}/js-builder-bin"/>
 		<pathelement location="${webroot.dir}/WEB-INF/classes"/>
+		<pathelement location="${ant.file}/../org.nextframework.stjs/bin"/>
 
 		<!-- Next classpath -->
-		<fileset dir="${basedir}/../">
+		<fileset dir="${ant.file}/../../">
 			<include name="org.nextframework.stjs/provided/*.jar"/>
 		</fileset>
-		<pathelement location="${basedir}/../org.nextframework.stjs/bin"/>
+		<pathelement location="${ant.file}/../../org.nextframework.stjs/bin"/>
 
 		<!-- In project classpath -->
 		<fileset dir="${basedir}">
@@ -29,6 +29,14 @@
 			<include name="${webroot.dir}/WEB-INF/lib/next-stjs*.jar"/>
 		</fileset>
 
+		<!-- In module project classpath -->
+		<fileset dir="${ant.file}/../../../">
+			<include name="extras/stjs/*.jar"/>
+		</fileset>
+		<fileset dir="${ant.file}/../../../">
+			<include name="${webroot.dir}/WEB-INF/lib/next-stjs*.jar"/>
+		</fileset>
+		
 		<!-- Custom classpath -->
 		<path location="${javascript.path.base}"/>
 	</path>

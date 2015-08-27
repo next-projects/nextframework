@@ -46,9 +46,11 @@
 	<target name="deploy-next-classes">
 		<build-next-modules target="copy-module-classes"		 parameters="build_deploy_parameters"/>
 	</target>
+	
 
 	<target name="deploy-web-all-next-modules" depends="check-all" unless="${next.jars.available}">
 		<echo>Next jars not found in project, copying from workspace if available</echo>
+		
 		<dirname  file="${ant.file.Next Project Web Deploy}/../" property="next.workspace.dir"/>
 		<echo>Using next workspace: ${next.workspace.dir}</echo>
 		<antcall target="deploy-web-all-next-modules-packaged"/>
@@ -131,6 +133,19 @@
 		
 	</target>
 
+	<target name="generate-javascript-files">
+		<ant antfile="${ant.file.Javascript Generator}" target="Build JS Files">
+		</ant>
+		<antcall target="deploy-java-javascript-files"/>
+	</target>
+		
+		
+	<target name="retrieve-ivy-dependencies">
+		<ant antfile="${ant.file.Project Dependencies Download}" target="copy-module-dependencies">
+			<reference refid="ivy.instance" />
+		</ant>
+	</target>
+			
 	<target name="overwrite-next-files">
 		<override-next-classes from="./bin"/>
 		<override-next-classes from="./build/classes"/>
@@ -139,8 +154,9 @@
 	
 	<macrodef name="module">
 		<attribute name="name"/>
+		<attribute name="workspace" default="."/>
 		<sequential>
-			<ant antfile="../@{name}/build-module.xml" target="${project.module.ant.target}" inheritall="false">
+			<ant antfile="../@{workspace}/@{name}/build-module.xml" target="${project.module.ant.target}" inheritall="false">
 				<reference refid="ivy.instance" />
 				<property name="deploy.dir" value="${deploy.dir}"/>
 				<property name="module.name" value="@{name}"/>
@@ -178,7 +194,7 @@
 
 	<target name="Copy Application Files" depends="deploy-project-files" description="Deploy Project">
 		<antcall target="Project Modules">
-			<param name="project.module.ant.target" value="Copy Application Files"/>
+			<param name="project.module.ant.target" value="deploy-project-files"/>
 		</antcall>
 	</target>
 
@@ -190,25 +206,19 @@
 
 	<target name="Overwrite Next Files" depends="overwrite-next-files">
 		<antcall target="Project Modules">
-			<param name="project.module.ant.target" value="Overwrite Next Files"/>
+			<param name="project.module.ant.target" value="overwrite-next-files"/>
 		</antcall>
 	</target>
 
-	<target name="Retrieve Ivy Dependencies" description="retrieve ivy">
-		<ant antfile="${ant.file.Project Dependencies Download}" target="copy-module-dependencies">
-			<reference refid="ivy.instance" />
-		</ant>
+	<target name="Retrieve Ivy Dependencies" depends="retrieve-ivy-dependencies" description="retrieve ivy">
 		<antcall target="Project Modules">
-			<param name="project.module.ant.target" value="Retrieve Ivy Dependencies"/>
+			<param name="project.module.ant.target" value="retrieve-ivy-dependencies"/>
 		</antcall>
 	</target>
 	
-	<target name="Generate Javascript Files" description="Build the javascript files from Java files">
-		<ant antfile="${ant.file.Javascript Generator}" target="Build JS Files">
-		</ant>
-		<antcall target="deploy-java-javascript-files"/>
+	<target name="Generate Javascript Files" depends="generate-javascript-files" description="Build the javascript files from Java files">
 		<antcall target="Project Modules">
-			<param name="project.module.ant.target" value="Generate Javascript Files"/>
+			<param name="project.module.ant.target" value="generate-javascript-files"/>
 		</antcall>		
 	</target>
 

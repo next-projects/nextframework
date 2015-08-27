@@ -16,8 +16,7 @@
 	</target>
 
 	<target name="deploy-classes-internal" if="${from.dir.available}">
-		<echo>${from}</echo>
-		<echo>Deploying to ${deployDir}/WEB-INF/classes</echo>
+		<echo level="verbose">Deploying from ${from} to ${deployDir}/WEB-INF/classes</echo>
 		<copy todir="${deployDir}/WEB-INF/classes" failonerror="${from.dir.available}">
 			<fileset dir="${from}">
 				<exclude name="**/META-INF/**/*"/>
@@ -53,7 +52,7 @@
 			<available file="@{from}/META-INF" type="dir" property="from.metainf.dir.available" />
 
 			<basename property="module.name" file="${basedir}"/>
-
+			
 			<antcall target="deploy-classes-internal">
 				<param name="moduleName" value="${module.name}"/>
 				<param name="from.dir.available" value="${from.dir.available}"/>
@@ -108,7 +107,7 @@
 		<attribute name="target" />
 		<attribute name="parameters" default="empty_parameters"/>
 		<sequential>
-			<echo>Building Target: @{target}</echo>
+			<echo>Building Target: @{target} ${next.workspace.dir}</echo>
 			<subant target="next-module-execute-task">
 				<reference refid="ivy.instance" />
 				<property name="next.module.execute.task.name" value="@{target}"/>
