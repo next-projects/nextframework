@@ -8,6 +8,14 @@ public class QuickGenerator {
 //		System.out.println(args[3]);
 //		System.out.println("=====================");
 //		Thread.sleep(5000);
+		//check libraries
+		try {
+			Class.forName("japa.parser.ParseException");
+		} catch(ClassNotFoundException e){
+			throw new RuntimeException("Error\nRequired libraries (STJS) not found in classpath. \n"
+					+ "To download STJS libraries, uncomment stjs block at ivy.xml and execute Ant task 'Retrieve Ivy Dependencies' ");
+		}
+		
 		String customPackages = args[2];
 		String sourceDir = args[0];
 		String destDir = args[1];
