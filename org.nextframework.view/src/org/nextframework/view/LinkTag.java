@@ -166,10 +166,7 @@ public class LinkTag extends BaseTag {
 			separator = "&";
 		}
 		// adicionar parameters na url
-		//comment fix #14.. can cause undesired effects.. in this case use & to separate parameters, instead of ;
-//		if (parameters != null) {
-//			fullUrl += separator + parameters.replace(";", "&");
-//		}
+		//fix #14.. can cause undesired effects.. in this case use & to separate parameters, instead of ;
 		
 		//Verifica URL Sufix
 		fullUrl = WebUtils.rewriteUrl(fullUrl);
