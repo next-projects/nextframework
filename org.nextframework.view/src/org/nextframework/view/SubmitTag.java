@@ -195,9 +195,10 @@ public class SubmitTag extends BaseTag {
 		String fullUrl = url == null || url.length() == 0 ? WebUtils.getFirstFullUrl() : (url.startsWith("/") ? WebUtils.getFullUrl(getRequest(), url) : url);
 		String separator = fullUrl.contains("?") ? "&" : "?";
 		// adicionar parameters na url
-		if (parameters != null) {
-			fullUrl += separator + parameters.replace(";", "&");
-		}
+		//comment fix #14.. can cause undesired effects.. in this case use & to separate parameters, instead of ; 
+//		if (parameters != null) {
+//			fullUrl += separator + parameters.replace(";", "&");
+//		}
 		
 		//Verifica URL Sufix
 		fullUrl = WebUtils.rewriteUrl(fullUrl);
