@@ -104,6 +104,9 @@
 
 		<delete dir="./extras/builds"/>
 		<delete dir="./extras/ivy"/>
+		<mkdir dir="./lib"/>
+		<mkdir dir="./lib/src"/>
+		<mkdir dir="${webroot.dir}/WEB-INF/lib"/>
 		<delete>
 			<fileset dir="./lib/src/" includes="next-*.jar" />
 		</delete>
