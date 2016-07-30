@@ -12,10 +12,11 @@
 	<!-- Configure where the Web files are stored in your project-->
 	<property name="webroot.dir" value="WebContent"/>
 	
-	<!-- Configure the next-web-deploy.xml accordingly -->
+	<!-- Configure the [org.nextframework.build]/next-web-deploy.xml accordingly -->
 	<import file="../build-web-deploy.xml"/>
 	<!--
 	With next workspace project (configure with the correct path of the project)
+	The following config may work if you are using eclipse and all default directories (workspace, git)
 	<import file="../../git/nextframework/org.nextframework.build/build-web-deploy.xml"/>
 	-->
 	
