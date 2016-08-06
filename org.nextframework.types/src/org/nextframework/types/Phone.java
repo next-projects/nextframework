@@ -25,6 +25,10 @@ package org.nextframework.types;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * @deprecated Use PhoneBrazil class
+ */
 public class Phone implements Serializable {
 
 	private static final long serialVersionUID = 1L;

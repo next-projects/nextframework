@@ -69,6 +69,7 @@ import org.nextframework.bean.editors.CustomSqlDateEditor;
 import org.nextframework.bean.editors.SimpleTimePropertyEditor;
 import org.nextframework.bean.editors.InscricaoEstadualPropertyEditor;
 import org.nextframework.bean.editors.MoneyPropertyEditor;
+import org.nextframework.bean.editors.PhoneBrazilPropertyEditor;
 import org.nextframework.bean.editors.PhonePropertyEditor;
 import org.nextframework.bean.editors.TimePropertyEditor;
 import org.nextframework.bean.editors.TimestampPropertyEditor;
@@ -82,6 +83,7 @@ import org.nextframework.types.InscricaoEstadual;
 import org.nextframework.types.ListSet;
 import org.nextframework.types.Money;
 import org.nextframework.types.Phone;
+import org.nextframework.types.PhoneBrazil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
@@ -330,6 +332,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 		registerCustomEditor(InscricaoEstadual.class, new InscricaoEstadualPropertyEditor());
 		registerCustomEditor(Money.class, new MoneyPropertyEditor());
 		registerCustomEditor(Cep.class, new CepPropertyEditor());
+		registerCustomEditor(PhoneBrazil.class, new PhoneBrazilPropertyEditor());
 		registerCustomEditor(Phone.class, new PhonePropertyEditor());
 	}
 
@@ -423,7 +426,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 			throw new IllegalArgumentException("Either requiredType or propertyPath is required");
 		}
 		if (this.customEditors == null) {
-			this.customEditors = new HashMap();
+			this.customEditors = new LinkedHashMap();
 		}
 		if (propertyPath != null) {
 			this.customEditors.put(propertyPath, new CustomEditorHolder(propertyEditor, requiredType));

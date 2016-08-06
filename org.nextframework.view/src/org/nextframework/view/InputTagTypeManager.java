@@ -7,21 +7,22 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.nextframework.types.Cep;
 import org.nextframework.types.Cnpj;
 import org.nextframework.types.Cpf;
 import org.nextframework.types.File;
-import org.nextframework.types.SimpleTime;
 import org.nextframework.types.InscricaoEstadual;
 import org.nextframework.types.Money;
 import org.nextframework.types.Phone;
+import org.nextframework.types.PhoneBrazil;
+import org.nextframework.types.SimpleTime;
 
 public class InputTagTypeManager {
 
-	protected Map<Class<?>, InputTagType> classTypeMap = new HashMap<Class<?>, InputTagType>();
+	protected Map<Class<?>, InputTagType> classTypeMap = new LinkedHashMap<Class<?>, InputTagType>();
 
 	public void registerTypeForClass(Class<?> key, InputTagType value) {
 		classTypeMap.put(key, value);
@@ -64,10 +65,11 @@ public class InputTagTypeManager {
 		instance.registerTypeForClass(Double.class, 			InputTagType.FLOAT);
 		instance.registerTypeForClass(BigDecimal.class,			InputTagType.FLOAT);
 		instance.registerTypeForClass(Cep.class, 				InputTagType.CEP);
-		instance.registerTypeForClass(Phone.class, 			InputTagType.PHONE);
+		instance.registerTypeForClass(PhoneBrazil.class, 		InputTagType.PHONE);
+		instance.registerTypeForClass(Phone.class, 				InputTagType.PHONE);
 		instance.registerTypeForClass(Cpf.class, 				InputTagType.CPF);
 		instance.registerTypeForClass(Cnpj.class, 				InputTagType.CNPJ);
-		instance.registerTypeForClass(SimpleTime.class, 				InputTagType.TIME);
+		instance.registerTypeForClass(SimpleTime.class, 		InputTagType.TIME);
 		instance.registerTypeForClass(Money.class, 				InputTagType.MONEY);
 		instance.registerTypeForClass(File.class, 				InputTagType.FILE);
 	}

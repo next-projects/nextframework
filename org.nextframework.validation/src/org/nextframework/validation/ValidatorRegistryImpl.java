@@ -27,6 +27,7 @@ import java.lang.annotation.Annotation;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.nextframework.types.Cep;
@@ -35,6 +36,7 @@ import org.nextframework.types.Cpf;
 import org.nextframework.types.SimpleTime;
 import org.nextframework.types.InscricaoEstadual;
 import org.nextframework.types.Phone;
+import org.nextframework.types.PhoneBrazil;
 import org.nextframework.validation.annotation.Email;
 import org.nextframework.validation.annotation.MaxLength;
 import org.nextframework.validation.annotation.MaxValue;
@@ -71,7 +73,7 @@ import org.nextframework.validation.validators.YearValidator;
 public class ValidatorRegistryImpl implements ValidatorRegistry {
 
 	protected Map<Class<? extends Annotation>, PropertyValidator> validators = new HashMap<Class<? extends Annotation>, PropertyValidator>();
-	protected Map<Class<?>, PropertyValidator> typeValidators = new HashMap<Class<?>, PropertyValidator>();
+	protected Map<Class<?>, PropertyValidator> typeValidators = new LinkedHashMap<Class<?>, PropertyValidator>();
 	//TODO REGISTRAR OS TIPOS STRING
 	protected Map<String, PropertyValidator> typeValidatorsString = new HashMap<String, PropertyValidator>();
 
@@ -112,6 +114,7 @@ public class ValidatorRegistryImpl implements ValidatorRegistry {
 		registerType(Cnpj.class, new CnpjValidator());
 		registerType(InscricaoEstadual.class, new InscricaoEstadualValidator());
 		registerType(Cep.class, new CepValidator());
+		registerType(PhoneBrazil.class, new PhoneValidator());
 		registerType(Phone.class, new PhoneValidator());
 		
 		registerType("integer", new IntegerValidator());
