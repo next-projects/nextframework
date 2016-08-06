@@ -1,5 +1,7 @@
 # Next Framework
-Next Framework is a full-stack web framework that embraces existing technologies and enhances them to provide extended productivity and lighter learning curve. At its core there are frameworks like Spring and Hibernate, therefore it is familiar to most Java enterprise developers. 
+Next Framework is a full-stack web framework that embraces and enhances existing technologies to provide extended productivity and lighter learning curve. Spring and Hibernate are on Next core, therefore it is familiar to most Java enterprise developers. 
+
+Reference documentation on https://github.com/next-projects/nextframework/wiki
 
 ## Quick Start - (3 min)
 
@@ -17,7 +19,7 @@ Refresh your project to see the new files.
 ## Next Build
 
 Next comes with ANT scripts ready to use. A `build.xml` is placed at the root of the project. It contains common tasks. 
-If you want to use this script file to deploy your application, configure in `build.properties` file, the path where the project should be deployed.
+If you want to use this script file to deploy your application, configure in `build.properties` file. The property `server.deploy` sets where the files must be deployed. 
 
 ## Hello World - MVC
 
@@ -60,20 +62,21 @@ Configure your ivy  modules and execute ant task `Retrieve Ivy Dependencies` fro
 
 ## Dependency Injection and Spring
 
-Next is built on top of Spring Framework. Any Spring configuration will work. Next already pre-configures spring to use annotations. So, you don't have to configure Spring by yourself. `@Service` and `@Autowired` annotations work out of the box. All controllers are Spring beans.
+Next is built on top of Spring Framework. Any Spring configuration will work. Next already pre-configures spring to use annotations. So, you don't have to configure Spring by yourself. `@Service` and `@Autowired` annotations work out of the box. All Next controllers are Spring beans.
 
 ## Database Connection and Hibernate
 
-The quickest way to configure a database is to uncomment the HSQLDB dependency on `/ivy.xml` file, and run `Retrieve Ivy dependencies`. Next automatically detects HSQLDB on the classpath and configures a data source automatically for it.
+The quickest way to configure a database is to uncomment the HSQLDB dependency on `/ivy.xml` file, and run `Retrieve Ivy dependencies` in `build.xml`. Next automatically detects HSQLDB on the classpath and configures a data source automatically for it.
 
 To define a custom data source, use connection.properties file. Define driver, url, username and password properties. 
 
-When there is a data source available, next configures hibernate. Hibernate annotations can be used. No configuration required.
+When there is a data source available, next configures hibernate. Hibernate annotations can be used. No extra configuration required.
 
 ## More
 
-Next yet comes with features like, crud operations support, generic DAOs, java to javascript conversion, a collection of tags, reports and charts API and more. Access [Next Framework Site][] for more information.
+Next yet comes with features like, crud operations support, generic DAOs, java to javascript conversion, a collection of tags, reports and charts API and more. Access [Next Framework Site][] for more information. Or go to [wiki documentation][].
 
 
 
 [Next Framework Site]: http://www.nextframework.org
+[wiki documentation]: https://github.com/next-projects/nextframework/wiki
