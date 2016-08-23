@@ -56,22 +56,25 @@ public class BeanTag extends BaseTag implements LogicalTag {
 	@SuppressWarnings("unchecked")
 	protected void doComponent() throws Exception {
 		if(Util.strings.isEmpty(name)){
-			throw new IllegalArgumentException("O atributo name da tag BeanTag está vazio. ");
+			throw new IllegalArgumentException("Attribute name of tag BeanTag is empty. ");
 		}	
 		bean = WebUtils.evaluate("${"+name+"}", getPageContext(), (valueType == null? Object.class : valueType) );
 		if(bean == null && getParent() instanceof DataGridTag){
 			DataGridTag dataGridTag = (DataGridTag) getParent();
 			if(dataGridTag.currentStatus == Status.DYNALINE){
-				//se estiver renderizando um dynaline e não tiver bean no escopo.. instanciar um
+				//if dynaline and there is no bean on scope.. instantiate one
 				bean = valueType.newInstance();
 			}
 		}
 		try {
+			if (bean == null && valueType == null) {
+				throw new NextException("bean and valueType cannot be both null for BeanTag. Object with name=" + name + ", not found in scope. ");
+			}
 			beanDescriptor = BeanDescriptorFactory.forBeanOrClass(bean, (Class<Object>)valueType);
 		} catch (BeanDescriptorCreationException e) {
-			String msg = "Problema na tag bean (name='"+name+"'). ";
+			String msg = "Error in tag bean (name='"+name+"'). ";
 			if(valueType == null){
-				msg += "Talvez seja necessário informar o atributo valueType. ";
+				msg += "You may need to set attribute valueType. ";
 			}
 			throw new NextException(msg+e.getMessage(), e);
 		}
