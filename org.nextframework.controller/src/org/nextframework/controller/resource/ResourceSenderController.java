@@ -38,14 +38,14 @@ public abstract class ResourceSenderController<FILTER> extends AbstractResourceS
 	@Override
 	public ModelAndView doGenerate(WebRequestContext request, FILTER filter) throws Exception {
 		HttpServletResponse response = request.getServletResponse();
-		Resource recurso = generateResource(request, filter);
-		if (recurso == null) {
+		Resource resource = generateResource(request, filter);
+		if (resource == null) {
 			return goToAction(FILTER);
 		}
-		response.setContentType(recurso.getContentType());
+		response.setContentType(resource.getContentType());
 		
-		response.addHeader("Content-Disposition", "attachment; filename=\"" + recurso.getFileName() + "\";");
-		response.getOutputStream().write(recurso.getContents());
+		response.addHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
+		response.getOutputStream().write(resource.getContents());
 		return null;
 	}
 
