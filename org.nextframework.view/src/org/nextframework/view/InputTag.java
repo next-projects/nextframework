@@ -171,7 +171,7 @@ public class InputTag extends BaseTag {
 		
 		inputComponent.prepare();
 		
-		if (showLabel) {
+		if (Util.booleans.isTrue(showLabel)) {
 			if (label != null && label.trim().length() != 0) {
 				boolean usespan = labelStyle != null && labelStyle.length() > 0 || labelStyleClass != null && labelStyleClass.length() > 0;
 				if(getId() != null){
