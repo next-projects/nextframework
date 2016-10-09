@@ -60,4 +60,9 @@ public class DefaultViewConfig implements ViewConfig {
 	public boolean isDefaultHideDatagridWhileLoading() {
 		return false;
 	}
+
+	@Override
+	public String getDefaultJSPCharset() {
+		return "iso-8859-1";
+	}
 }

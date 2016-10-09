@@ -22,4 +22,6 @@ public interface ViewConfig {
 	UrlRewriter getUrlRewriter();
 
 	boolean isPersistTemporaryFiles();
+	
+	String getDefaultJSPCharset();
 }
