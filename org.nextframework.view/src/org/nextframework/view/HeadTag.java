@@ -27,11 +27,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.nextframework.core.config.ViewConfig;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.service.ServiceFactory;
 
 public class HeadTag extends BaseTag {
 	
-	protected String charset = "iso-8859-1";
+	protected String charset;
 	
 	protected boolean includeNormalizeCss = true;
 	protected boolean includeSystemCss = true;
@@ -43,15 +45,13 @@ public class HeadTag extends BaseTag {
 	protected boolean searchCssDir = true;
 	protected boolean searchJsDir = true;
 
-
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void doComponent() throws Exception {
 		String firstRequestUrl = NextWeb.getRequestContext().getFirstRequestUrl();
 		String module = firstRequestUrl.substring(0, firstRequestUrl.substring(1).indexOf('/')+1);
 		
 		//procurar css
-		Set resourcePathsCssServer = getServletContext().getResourcePaths("/css");
+		Set<String> resourcePathsCssServer = getServletContext().getResourcePaths("/css");
 		Set<String> resourcePathsCss = null;
 		if (resourcePathsCssServer != null) {
 			resourcePathsCss = new TreeSet<String>(resourcePathsCssServer);
@@ -68,7 +68,7 @@ public class HeadTag extends BaseTag {
 		}
 		
 		//procurar css para modulo
-		Set resourcePathsCssModuleServer = getServletContext().getResourcePaths("/css"+module);
+		Set<String> resourcePathsCssModuleServer = getServletContext().getResourcePaths("/css"+module);
 		Set<String> resourcePathsModuleCss = null;
 		if (resourcePathsCssModuleServer != null) {
 			resourcePathsModuleCss = new TreeSet<String>(resourcePathsCssModuleServer);
@@ -84,7 +84,7 @@ public class HeadTag extends BaseTag {
 			}
 		}
 		//procurar JS
-		Set resourcePathsJsServer = getServletContext().getResourcePaths("/js");
+		Set<String> resourcePathsJsServer = getServletContext().getResourcePaths("/js");
 		Set<String> resourcePathsJs = null;
 		if (resourcePathsJsServer != null) {
 			resourcePathsJs = new TreeSet<String>(resourcePathsJsServer);
@@ -97,7 +97,7 @@ public class HeadTag extends BaseTag {
 			}
 		}
 		//procurar JS para modulo
-		Set resourcePathsJsModuleServer = getServletContext().getResourcePaths("/js"+module);
+		Set<String> resourcePathsJsModuleServer = getServletContext().getResourcePaths("/js"+module);
 		Set<String> resourcePathsModuleJs = null;
 		if (resourcePathsJsModuleServer != null) {
 			resourcePathsModuleJs = new TreeSet<String>(resourcePathsJsModuleServer);
@@ -112,6 +112,8 @@ public class HeadTag extends BaseTag {
 		
 		filterDirs(resourcePathsJs);
 		filterDirs(resourcePathsCss);
+		
+		charset = charset != null ? charset : ServiceFactory.getService(ViewConfig.class).getDefaultJSPCharset();
 		
 		pushAttribute("jss", resourcePathsJs);
 		pushAttribute("csss", resourcePathsCss);
