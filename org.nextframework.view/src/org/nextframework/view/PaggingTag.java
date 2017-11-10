@@ -23,6 +23,8 @@
  */
 package org.nextframework.view;
 
+import java.util.Optional;
+
 import org.nextframework.core.web.NextWeb;
 
 /**
@@ -36,7 +38,7 @@ public class PaggingTag extends BaseTag {
 	protected Integer totalNumberOfPages;
 	protected String parameters;
 	
-	protected String selectedClass;
+	protected String selectedClass = "disabled";
 	protected String unselectedClass;
 		
 	@Override
@@ -45,14 +47,17 @@ public class PaggingTag extends BaseTag {
 		boolean start3pontos = start != 0;
 		int fim = Math.min( 9 - (currentPage - start) + currentPage , totalNumberOfPages);
 		boolean fim3pontos = fim < totalNumberOfPages;//fim nao é incluido
-		if(start3pontos)getOut().print("...&nbsp;");
+		String paggingExtraStyleClass = getViewConfig().getPaggingExtraStyleClass();
+		getOut().println("<ul class=\"pagination " + paggingExtraStyleClass + "\">");
+		Optional.ofNullable(selectedClass).orElse(getViewConfig().getPaggingDefaultSelectedClass());
+		if(start3pontos)getOut().print("<li><a href=\""+getRequest().getContextPath()+NextWeb.getRequestContext().getRequestQuery()+"?currentPage=0"+getParameters()+"\">...</a></li>");
 		for (int i = start; i < fim; i++) {
 			if(i == currentPage){
 				String cs = selectedClass != null? " class=\""+selectedClass +"\"": "";
-				getOut().print("<span"+cs+">"+(i+1)+"</span> ");
+				getOut().print("<li"+cs+"><a href=\"#\">"+(i+1)+"</a></li> ");
 			} else {
 				String cs = unselectedClass != null? " class=\""+unselectedClass +"\"": "";
-				getOut().print("<a href=\""+getRequest().getContextPath()+NextWeb.getRequestContext().getRequestQuery()+"?currentPage="+i+getParameters()+"\" "+cs+">"+(i+1)+"</a> ");
+				getOut().print("<li><a href=\""+getRequest().getContextPath()+NextWeb.getRequestContext().getRequestQuery()+"?currentPage="+i+getParameters()+"\" "+cs+">"+(i+1)+"</a> </li>");
 			}
 			//codigo de teste
 //			if(i==currentPage){
@@ -61,7 +66,8 @@ public class PaggingTag extends BaseTag {
 //				System.out.println((i+1));
 //			}
 		}
-		if(fim3pontos)getOut().print("...&nbsp;");
+		if(fim3pontos)getOut().print("<li><a href=\"#\">...</a></li>");
+		getOut().println("</ul>");
 	}
 	
 	public Integer getCurrentPage() {

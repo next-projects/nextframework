@@ -54,9 +54,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.config.ViewConfig;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.TagNotFoundException;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
 import org.springframework.context.NoSuchMessageException;
@@ -721,6 +723,10 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	protected <E> E getOgnlValue(String expression, Class<E> expectedType) {
 		return evaluator.evaluate(expression, expectedType, this);
+	}
+
+	protected ViewConfig getViewConfig() {
+		return ServiceFactory.getService(ViewConfig.class);
 	}
 
 }

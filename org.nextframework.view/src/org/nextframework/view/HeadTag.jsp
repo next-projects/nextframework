@@ -14,9 +14,30 @@
 
 <% request.setAttribute("app", request.getContextPath()); %>
 
+<c:if test="${tag.useBootstrap}">  <%-- BOOTSTRAP --%>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="${app}/resource/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+    
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="${app}/resource/bootstrap/js/bootstrap.min.js"></script>    
+</c:if><%-- BOOTSTRAP --%>
+
+
+<%--
 <c:if test="${tag.includeNormalizeCss}">
 <link rel="stylesheet"	href="${app}/resource/theme/normalize.css"/>	
 </c:if>
+ --%>
 <c:if test="${tag.includeSystemCss}">
 <link rel="stylesheet"	href="${app}/resource/theme/system.css"/>	
 </c:if>
@@ -62,6 +83,7 @@
 <link rel="StyleSheet"        href="${app}/resource/css/system.css" type="text/css">
 
 <link rel="StyleSheet"        href="${app}/resource/css/select_many_popup.css" type="text/css">
+ 
 
 <%-- CALENDAR --%>
 <script language="JavaScript" src="${app}/resource/calendar/calendar.js"></script>
@@ -98,11 +120,13 @@
 
 
 <%-- DEFAULT CSS --%>
+<%--
 <c:if test="${tag.includeDefaultCss}">
 <link rel="StyleSheet"        href="${app}/resource/css/default.css" type="text/css">	
 </c:if>
+ --%>
 
-<%-- CSS JS DA APLICAÇÃO --%>
+<%-- APPLICATION CSS JS --%>
 <c:if test="${searchCssDir == true}">
 	<c:forEach items="${csss}" var="css">
 	<link rel="StyleSheet"        href="${app}${css}" type="text/css">	
@@ -111,7 +135,6 @@
 	<link rel="StyleSheet"        href="${app}${css}" type="text/css">	
 	</c:forEach>
 </c:if>
-
 
 <c:if test="${searchJsDir == true}">
 	<c:forEach items="${jss}" var="js">

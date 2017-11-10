@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <n:panel title="${detailTag.detailDysplayName}" colspan="${detailTag.colspan}">
@@ -19,10 +18,10 @@
 							${acoes}
 							<c:if test="${detailTag.showDeleteButton}">
 								<c:if test="${!propertyConfigDisabled || dataGridDynaline}">
-									<button type="button" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
+									<button class="btn btn-default" type="button" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
 								</c:if>
 								<c:if test="${propertyConfigDisabled && !dataGridDynaline}">
-									<button type="button" disabled="disabled" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
+									<button class="btn btn-default" type="button" disabled="disabled" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
 								</c:if>
 							</c:if>
 						</n:column>
@@ -32,10 +31,10 @@
 		</n:dataGrid>
 		<c:if test="${detailTag.showNewLineButton && !view}">
 			<c:if test="${!propertyConfigDisabled}">
-				<button type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="btn btn-primary btn-sm" type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 			<c:if test="${propertyConfigDisabled}">
-				<button type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="btn btn-primary btn-sm" type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 		</c:if>
 	</div>

@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <c:if test="${empty Tproperty.dynamicAttributesMap['enctype']}">
@@ -28,18 +27,17 @@
 			}
 		</script>
 
-		<c:if test="${! empty viewTag.title }">
-			<div class="pageTitleBar">
-				<div class="pageTitle">${viewTag.title}</div>
+		<div class="panel panel-default">
+			<c:if test="${! empty viewTag.title }">
+				<div class="panel-heading">${viewTag.title}</div>
+			</c:if>
+			<div class="panel-body">
+				<n:bean name="${viewTag.useBean}" valueType="${viewTag.beanType}" bypass="${empty viewTag.useBean}">
+					<t:propertyConfig mode="${viewTag.propertyMode}" bypass="${(empty viewTag.useBean || empty viewTag.propertyMode) && empty viewTag.includeForm}">
+						<n:doBody />
+					</t:propertyConfig>
+				</n:bean>
 			</div>
-		</c:if>
-
-		<div class="pageBody">
-			<n:bean name="${viewTag.useBean}" valueType="${viewTag.beanType}" bypass="${empty viewTag.useBean}">
-				<t:propertyConfig mode="${viewTag.propertyMode}" bypass="${(empty viewTag.useBean || empty viewTag.propertyMode) && empty viewTag.includeForm}">
-					<n:doBody />
-				</t:propertyConfig>
-			</n:bean>
 		</div>
 
 	</n:validation>

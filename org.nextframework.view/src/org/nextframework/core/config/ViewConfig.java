@@ -21,6 +21,12 @@ public interface ViewConfig {
 
 	boolean isPersistTemporaryFiles();
 
-	String getDefaultJSPCharset();
+	String getJSPDefaultCharset();
+
+	boolean isUseBootstrap();
+
+	String getPaggingDefaultSelectedClass();
+
+	String getPaggingExtraStyleClass();
 
 }

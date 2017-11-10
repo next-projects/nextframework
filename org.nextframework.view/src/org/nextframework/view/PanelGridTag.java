@@ -30,6 +30,7 @@ import java.util.Map;
 
 import org.nextframework.util.Util;
 import org.nextframework.view.template.PropertyConfigTag;
+import org.nextframework.view.template.PropertyTag;
 
 /**
  * @author rogelgarcia
@@ -106,7 +107,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		if(propertyRenderAsDouble == null){
 			BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class);
 			if(findFirst instanceof PropertyConfigTag){
-				this.propertyRenderAsDouble = PropertyConfigTag.DOUBLE.equals(((PropertyConfigTag)findFirst).getRenderAs());	
+				this.propertyRenderAsDouble = PropertyTag.DOUBLE.equals(((PropertyConfigTag)findFirst).getRenderAs());	
 			} else if(findFirst instanceof PanelGridTag){
 				Boolean propertyRenderAsDouble = ((PanelGridTag)findFirst).getPropertyRenderAsDouble();
 				this.propertyRenderAsDouble = propertyRenderAsDouble;

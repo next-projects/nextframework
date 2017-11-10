@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <n:dataGrid itens="${listTableTag.itens}" var="${listTableTag.name}" cellspacing="0" groupProperty="${listTableTag.groupProperty}" >
@@ -40,6 +39,4 @@
 	</n:bean>
 </n:dataGrid>
 
-<div class="pagging" >
-	${n:messageArgs('ListTableTag.paginaLabel', null, 'Página')} <n:pagging currentPage="${listTableTag.currentPage}" totalNumberOfPages="${listTableTag.numberOfPages}" selectedClass="pageSelected" unselectedClass="pageUnselected" />
-</div>
+${n:messageArgs('ListTableTag.paginaLabel', null, 'Página')} <n:pagging currentPage="${listTableTag.currentPage}" totalNumberOfPages="${listTableTag.numberOfPages}" />

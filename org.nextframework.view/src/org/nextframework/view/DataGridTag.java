@@ -69,7 +69,7 @@ public class DataGridTag extends BaseTag {
 	protected Object itemType;
 	protected Object itens;
 	protected String style;
-	protected String styleClass = "dataGrid";
+	protected String styleClass = "table";
 	protected String headerStyleClass = "dataGridHeader";
 	protected String headerStyle;
 	protected String bodyStyleClasses = "dataGridBody1, dataGridBody2";

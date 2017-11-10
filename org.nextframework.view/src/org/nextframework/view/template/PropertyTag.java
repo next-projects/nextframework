@@ -24,6 +24,8 @@
 package org.nextframework.view.template;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -67,6 +69,10 @@ public class PropertyTag extends TemplateTag {
 	public static final String INVERT = "invert";
 
 	public static final String DOUBLELINE = "doubleline";
+
+	public static final String FORMGROUP = "form-group";
+
+	private static final List<String> RENDERAS_OPTIONS = Arrays.asList(COLUMN, SINGLE, DOUBLE, DOUBLELINE, FORMGROUP);
 
 	protected String name;
 	protected String renderAs = null;
@@ -223,8 +229,12 @@ public class PropertyTag extends TemplateTag {
 		if (DOUBLELINE.equals(renderAs)) {
 			renderAs = SINGLE;
 		}
-		if (!COLUMN.equals(renderAs) && !SINGLE.equals(renderAs) && !DOUBLE.equals(renderAs) && !INVERT.equals(renderAs) && !DOUBLELINE.equals(renderAs)) {
-			throw new NextException("A tag property só aceita no atributo 'renderAs' os seguintes valores: column, single, double, invert ou doubleline. Valor encontrado: " + renderAs);
+		validateRenderAs(renderAs);
+	}
+
+	public static void validateRenderAs(String renderAs) {
+		if (!RENDERAS_OPTIONS.contains(renderAs)) {
+			throw new NextException("Property 'renderAs' must be one of: " + RENDERAS_OPTIONS + ". Value found: " + renderAs);
 		}
 	}
 
@@ -243,8 +253,12 @@ public class PropertyTag extends TemplateTag {
 				}
 			}
 		}
+		validateMode(mode);
+	}
+
+	public static void validateMode(String mode) {
 		if (!INPUT.equals(mode) && !OUTPUT.equals(mode)) {
-			throw new NextException("A tag property só aceita no atributo 'mode' os seguintes valores: input ou output. Valor encontrado: " + mode);
+			throw new NextException("Property 'mode' must be one of: input, output. Value found: " + mode);
 		}
 	}
 

@@ -47,8 +47,23 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
-	public String getDefaultJSPCharset() {
+	public String getJSPDefaultCharset() {
 		return "iso-8859-1";
+	}
+
+	@Override
+	public boolean isUseBootstrap() {
+		return true;
+	}
+
+	@Override
+	public String getPaggingDefaultSelectedClass() {
+		return "disabled";
+	}
+
+	@Override
+	public String getPaggingExtraStyleClass() {
+		return "pagination-sm pull-right";
 	}
 
 }
