@@ -24,8 +24,7 @@
 				</c:if>				
 				<n:body align="${Tproperty.columnAlign}" style="${Tproperty.bodyStyle}" class="${Tproperty.bodyStyleClass}">
 					<c:if test="${Tproperty.mode == 'input'}">
-						
-						<n:input pattern="${Tproperty.pattern}" selectOneWindowSize="${Tproperty.selectOneWindowSize}" selectOnePathParameters="${Tproperty.selectOnePathParameters}" insertPath="${Tproperty.insertPath}" holdValue="${Tproperty.holdValue}" showRemoverButton="${Tproperty.showRemoverButton}" optionalParams="${Tproperty.optionalParams}" transientFile="${Tproperty.transientFile}" autoSugestUniqueItem="${Tproperty.autoSugestUniqueItem}" onLoadItens="${Tproperty.onLoadItens}" useAjax="${Tproperty.useAjax}" showLabel="${Tproperty.showLabel}"  type="${Tproperty.type}" reloadOnChange="${Tproperty.reloadOnChange}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" selectOnePath="${Tproperty.selectOnePath}" itens="${Tproperty.itens}"
+						<n:input class="form-control" pattern="${Tproperty.pattern}" selectOneWindowSize="${Tproperty.selectOneWindowSize}" selectOnePathParameters="${Tproperty.selectOnePathParameters}" insertPath="${Tproperty.insertPath}" holdValue="${Tproperty.holdValue}" showRemoverButton="${Tproperty.showRemoverButton}" optionalParams="${Tproperty.optionalParams}" transientFile="${Tproperty.transientFile}" autoSugestUniqueItem="${Tproperty.autoSugestUniqueItem}" onLoadItens="${Tproperty.onLoadItens}" useAjax="${Tproperty.useAjax}" showLabel="${Tproperty.showLabel}"  type="${Tproperty.type}" reloadOnChange="${Tproperty.reloadOnChange}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" selectOnePath="${Tproperty.selectOnePath}" itens="${Tproperty.itens}"
 							label="${n:default(label, Tproperty.label)}" selectLabelProperty="${Tproperty.selectLabelProperty}" includeBlank="${Tproperty.includeBlank}" blankLabel="${Tproperty.blankLabel}" cols="${Tproperty.cols}" rows="${Tproperty.rows}" write="${Tproperty.write}" dynamicAttributesMap="${Tproperty.dynamicAttributesMap}"
 							id="${compId}">
 							<n:doBody />
@@ -68,6 +67,23 @@
 				</c:if>
 			</n:panel>
 		</c:when>
+		<c:when test="${Tproperty.renderAs == 'form-group'}">
+			<%-- form-group --%>
+			<div class="form-group">
+				<label class="control-label col-sm-2 ${Tproperty.labelStyleClass}" style="${Tproperty.labelStyle}" for="${compId}"><n:output pattern="${Tproperty.pattern}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" value="${n:default(label, Tproperty.label)}" /></label> 
+				<div class="col-sm-10 ${Tproperty.panelStyleClass}" style="${Tproperty.panelStyle}">
+					<c:if test="${Tproperty.mode == 'input'}">
+						<n:input class="form-control" pattern="${Tproperty.pattern}"  selectOneWindowSize="${Tproperty.selectOneWindowSize}"  selectOnePathParameters="${Tproperty.selectOnePathParameters}" insertPath="${Tproperty.insertPath}"  holdValue="${Tproperty.holdValue}" showRemoverButton="${Tproperty.showRemoverButton}" optionalParams="${Tproperty.optionalParams}"  transientFile="${Tproperty.transientFile}" autoSugestUniqueItem="${Tproperty.autoSugestUniqueItem}" onLoadItens="${Tproperty.onLoadItens}" useAjax="${Tproperty.useAjax}" showLabel="${Tproperty.showLabel}" type="${Tproperty.type}" reloadOnChange="${Tproperty.reloadOnChange}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" selectOnePath="${Tproperty.selectOnePath}" itens="${Tproperty.itens}"
+							label="${n:default(Tproperty.label, label)}" id="${compId}" selectLabelProperty="${Tproperty.selectLabelProperty}" includeBlank="${Tproperty.includeBlank}" blankLabel="${Tproperty.blankLabel}" cols="${Tproperty.cols}" rows="${Tproperty.rows}" write="${Tproperty.write}" dynamicAttributesMap="${Tproperty.dynamicAttributesMap}">
+							<n:doBody />
+						</n:input>
+					</c:if>
+					<c:if test="${Tproperty.mode == 'output'}">
+						<n:output  pattern="${Tproperty.pattern}" styleClass="${Tproperty.dynamicAttributesMap['styleclass']}" style="${Tproperty.dynamicAttributesMap['style']}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" escapeHTML="${Tproperty.type=='html'? false: true}"/>
+					</c:if>
+				</div>
+			</div>		
+		</c:when>		
 		<c:otherwise>
 			<%-- single --%>
 			<n:panel colspan="${Tproperty.colspan}" style="${Tproperty.panelStyle}" class="${Tproperty.panelStyleClass}">

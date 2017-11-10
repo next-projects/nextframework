@@ -21,12 +21,12 @@
 					${acoes}
 					<c:if test="${Tdetalhe.showBotaoRemover}">
 						<c:if test="${!propertyConfigDisabled || dataGridDynaline}">
-							<button type="button"                     onclick="_detail_deleteLine_${Tdetalhe.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${Tdetalhe.tableId}, indice=${rowIndex}]">
+							<button class="btn btn-default" type="button" onclick="_detail_deleteLine_${Tdetalhe.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${Tdetalhe.tableId}, indice=${rowIndex}]">
 								remover
 							</button>
 						</c:if>
 						<c:if test="${propertyConfigDisabled && !dataGridDynaline}">	
-							<button type="button" disabled="disabled" onclick="_detail_deleteLine_${Tdetalhe.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${Tdetalhe.tableId}, indice=${rowIndex}]">
+							<button class="btn btn-default" type="button" disabled="disabled" onclick="_detail_deleteLine_${Tdetalhe.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${Tdetalhe.tableId}, indice=${rowIndex}]">
 								remover
 							</button>						
 						</c:if>					
@@ -45,12 +45,12 @@
 		</c:if>
 		
 		<c:if test="${!propertyConfigDisabled}">
-			<button type="button" onclick="_detail_newLine_${Tdetalhe.tableId}()">
+			<button class="btn btn-primary btn-sm" type="button" onclick="_detail_newLine_${Tdetalhe.tableId}()">
 				${labelnovalinha}
 			</button>
 		</c:if>
 		<c:if test="${propertyConfigDisabled}">
-			<button type="button" disabled="disabled" onclick="_detail_newLine_${Tdetalhe.tableId}()">
+			<button class="btn btn-primary btn-sm" type="button" disabled="disabled" onclick="_detail_newLine_${Tdetalhe.tableId}()">
 				${labelnovalinha}
 			</button>
 		</c:if>

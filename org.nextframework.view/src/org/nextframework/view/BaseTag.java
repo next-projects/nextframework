@@ -53,7 +53,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.config.ViewConfig;
 import org.nextframework.exception.TagNotFoundException;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 
 /**
@@ -735,6 +737,9 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	public void setDynamicAttributesMap(Map<String, Object> dynamicAttributesMap) {
 		this.dynamicAttributesMap.putAll(dynamicAttributesMap);
 	}
-	
+
+	protected ViewConfig getViewConfig() {
+		return ServiceFactory.getService(ViewConfig.class);
+	}
 }
 

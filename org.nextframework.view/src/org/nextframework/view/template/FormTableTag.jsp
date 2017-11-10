@@ -5,13 +5,9 @@
 
 
 <n:panel title="${TtabelaEntrada.title}" colspan="${TtabelaEntrada.colspan}">
-	<n:panelGrid columns="${TtabelaEntrada.columns}" style="${TtabelaEntrada.style}" styleClass="${TtabelaEntrada.styleClass}" rowStyleClasses="${TtabelaEntrada.rowStyleClasses}" rowStyles="${TtabelaEntrada.rowStyles}"
-		columnStyleClasses="${TtabelaEntrada.columnStyleClasses}" columnStyles="${TtabelaEntrada.columnStyles}" colspan="${TtabelaEntrada.colspan}" propertyRenderAsDouble="${TtabelaEntrada.propertyRenderAsDouble}"
-		dynamicAttributesMap="${TtabelaEntrada.dynamicAttributesMap}" cellpadding="1" cellspacing="0">
-
-		<t:propertyConfig showLabel="${tag.propertyShowLabel}">
-			<n:doBody />
-		</t:propertyConfig>
-
-	</n:panelGrid>
+<div class="form-horizontal">
+	<t:propertyConfig showLabel="${tag.propertyShowLabel}" renderAs="form-group">
+		<n:doBody />
+	</t:propertyConfig>
+</div>
 </n:panel>

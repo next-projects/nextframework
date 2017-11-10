@@ -35,6 +35,8 @@ public class HeadTag extends BaseTag {
 	
 	protected String charset;
 	
+	protected Boolean useBootstrap;
+	
 	protected boolean includeNormalizeCss = true;
 	protected boolean includeSystemCss = true;
 	protected boolean includeDefaultCss = true;
@@ -113,7 +115,9 @@ public class HeadTag extends BaseTag {
 		filterDirs(resourcePathsJs);
 		filterDirs(resourcePathsCss);
 		
-		charset = charset != null ? charset : ServiceFactory.getService(ViewConfig.class).getDefaultJSPCharset();
+		ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
+		charset = charset != null ? charset : viewConfig.getJSPDefaultCharset();
+		useBootstrap = useBootstrap != null ? useBootstrap : viewConfig.isUseBootstrap();
 		
 		pushAttribute("jss", resourcePathsJs);
 		pushAttribute("csss", resourcePathsCss);
@@ -126,6 +130,14 @@ public class HeadTag extends BaseTag {
 		popAttribute("searchCssDir");
 		popAttribute("csss");
 		popAttribute("jss");
+	}
+
+	public Boolean getUseBootstrap() {
+		return useBootstrap;
+	}
+
+	public void setUseBootstrap(Boolean useBootstrap) {
+		this.useBootstrap = useBootstrap;
 	}
 
 	protected void filterDirs(Set<String> resourcePathsJs) {

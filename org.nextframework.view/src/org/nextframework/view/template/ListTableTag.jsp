@@ -36,7 +36,5 @@
 		</n:getContent>
 	</n:bean>
 </n:dataGrid>
+<n:pagging currentPage="${tag.currentPage}" totalNumberOfPages="${tag.numberOfPages}"/>
 
-<div class="pagging" >
-	P&aacute;gina <n:pagging currentPage="${tag.currentPage}" totalNumberOfPages="${tag.numberOfPages}" selectedClass="pageSelected" unselectedClass="pageUnselected" />
-</div>

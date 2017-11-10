@@ -26,6 +26,10 @@ public class ResourceProvider {
 	protected Map<String, String> map = new HashMap<String, String>();
 	
 	public void init(ServletConfig config) throws ServletException {
+		map.put("bootstrap/css",   "org/nextframework/resource/bootstrap/css");
+		map.put("bootstrap/fonts", "org/nextframework/resource/bootstrap/fonts");
+		map.put("bootstrap/js",    "org/nextframework/resource/bootstrap/js");
+		
 		map.put("js/validation", "org/nextframework/resource");
 		map.put("js/inputs", 	 "org/nextframework/resource");
 		map.put("js/ajax",       "org/nextframework/resource");

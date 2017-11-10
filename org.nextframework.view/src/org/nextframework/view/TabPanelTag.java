@@ -77,16 +77,18 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 		if(tabBlocks.size() == 1 && !renderUniqueTab){
 			getOut().println(tabBlocks.get(0).getBody());
 		} else {
+			getOut().println("<div class=\"tab-content\">");
 			for (TabPanelBlock block : tabBlocks) {
 				if(index == selectedIndex){
-					getOut().print("<div style=\"width: 100%; clear: both; \" id=\""+block.getId()+"\">");	
+					getOut().print("<div class=\"tab-pane active\" id=\""+block.getId()+"\">");	
 				} else {
-					getOut().print("<div style=\"width: 100%; clear: both; display: none;\" id=\""+block.getId()+"\">");
+					getOut().print("<div class=\"tab-pane\" id=\""+block.getId()+"\">");
 				}
 				getOut().println(block.getBody());
 				getOut().print("</div>");
 				index ++;
 			}	
+			getOut().print("</div>");
 		}
 		
 	}
