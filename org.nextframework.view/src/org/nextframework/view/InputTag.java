@@ -202,7 +202,7 @@ public class InputTag extends BaseTag {
 		}
 
 //		if (selectedType == InputTagType.FILE && propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled())) {
-//			this.showRemoverButton = false;
+//			this.showDeleteButton = false;
 //		}
 
 		DebugInputsTag debugInputsTag = findParent(DebugInputsTag.class, false);
@@ -587,12 +587,12 @@ public class InputTag extends BaseTag {
 		return showDeleteButton;
 	}
 
-	public void setShowDeleteButton(boolean showRemoverButon) {
-		this.showDeleteButton = showRemoverButon;
+	public void setShowDeleteButton(boolean showDeleteButton) {
+		this.showDeleteButton = showDeleteButton;
 	}
 	@Deprecated
-	public void setShowRemoverButton(boolean showRemoverButon) {
-		this.showDeleteButton = showRemoverButon;
+	public void setShowRemoverButton(boolean showDeleteButton) {
+		this.showDeleteButton = showDeleteButton;
 	}
 
 	public Boolean getHoldValue() {

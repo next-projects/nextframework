@@ -196,7 +196,7 @@ public class SubmitTag extends BaseTag {
 		String separator = fullUrl.contains("?") ? "&" : "?";
 		// adicionar parameters na url
 		if (parameters != null) {
-			fullUrl += separator + parameters;
+			fullUrl += separator + parameters.replace(";", "&");
 		}		
 		
 		//Verifica URL Sufix

@@ -1,4 +1,4 @@
-/*Instala os módulos do next para uma utilização simplificada*/
+/*Instala os mÃ³dulos do next para uma utilizaÃ§Ã£o simplificada*/
 $ = next.dom.toElement;
 
 //$V = function(el){

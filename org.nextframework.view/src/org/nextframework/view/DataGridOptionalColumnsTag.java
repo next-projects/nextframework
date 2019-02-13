@@ -53,9 +53,9 @@ public class DataGridOptionalColumnsTag extends BaseTag implements LogicalTag {
 		@Override
 		public void beforeTableTagContainer() throws IOException {
 			this.id = getDataGrid().generateUniqueId();
-			getDataGrid().getOut().println("<div> <!-- optional columns -->");
+			getDataGrid().getOut().println("<div style='position: relative;'> <!-- optional columns -->");
 			getDataGrid().getOut().println(
-					"<div style='text-align: right'>" +
+					"<div style='position: absolute; top: -17px; right: 0px;'>" +
 					"<div id='"+id+"'><img width='10px' style='padding: 4px;' src=\""+getDataGrid().getRequest().getContextPath()+"/resource/img/dropdown.png\"/></div>" +
 					"</div>");
 		}

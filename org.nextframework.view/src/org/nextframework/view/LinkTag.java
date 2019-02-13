@@ -167,7 +167,7 @@ public class LinkTag extends BaseTag {
 		}
 		// adicionar parameters na url
 		if (parameters != null) {
-			fullUrl += separator + parameters;
+			fullUrl += separator + parameters.replace(";", "&");
 		}		
 				
 		

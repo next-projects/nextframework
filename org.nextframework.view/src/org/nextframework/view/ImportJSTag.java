@@ -1,7 +1,6 @@
 package org.nextframework.view;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,6 +40,8 @@ public class ImportJSTag extends SimpleTagSupport {
 	public void doTag() throws JspException, IOException {
 		ServletContext servletContext = ((PageContext)getJspContext()).getServletContext();
 		Set<String> files = new HashSet<String>();
+		
+		//FIXME Se for necessário uma ordem de carregamento, o carregamento por pacote não está pronto pra isso... :-(
 		if(pack != null){
 			if(!pack.endsWith("resource")){
 				getJspContext().getOut().println("<div style='color:red; background-color: white'>The package attribute of the importJS tag does not end with \"resource\". " +

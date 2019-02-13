@@ -69,7 +69,8 @@ function sendRequest(url,params,HttpMethod, callbackfunction1, errorcallback, or
 			}
 	
 			req.open(HttpMethod,url,true);
-			req.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=ISO-8859-1");
+			//req.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=ISO-8859-1");
+			req.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
 			req.send(params);
 		}
 	}
@@ -128,14 +129,14 @@ function addItensToCombo(combo, lista, holdingValue){
 var nowLoadingItens = new Array();
 var ajaxLoadComboLoading = new Array();
 
-function ajaxLoadCombo(appname, combo, type, loadfunction, listaClasses, listaParametros, label, parentValue){
+function ajaxLoadCombo(appname, combo, type, loadfunction, classesList, parameterList, label, parentValue){
 	var params = 
 			'parentValue='+parentValue + '&' +
 			'label='+label + '&' +
 			'type='+type + '&' +
 			'loadFunction='+loadfunction + '&' +
-			'parameterList='+listaParametros + '&' +
-			'classesList='+listaClasses
+			'parameterList='+parameterList + '&' +
+			'classesList='+classesList
 		;
 	var callback = function(data){
 		eval(data);

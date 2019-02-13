@@ -142,8 +142,8 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 		for (int i = 0; i < tabBlocks.size(); i++) {
 			TabPanelBlock block = tabBlocks.get(i);
 			String linkId = createLinkId(idTabPanel, i);
-			getOut().println("        hide" + idTabPanel + "('" + block.getId() + "')");
-			getOut().println("        unselect" + idTabPanel + "('" + block.getId() + "', '"+linkId+"')");
+			getOut().println("        hide" + idTabPanel + "('" + block.getId() + "');");
+			getOut().println("        unselect" + idTabPanel + "('" + block.getId() + "', '"+linkId+"');");
 		}
 		getOut().println("        document.getElementById(panel).style.display = '';");
 		getOut().println("        select" + idTabPanel + "(panel, index, linkid);");

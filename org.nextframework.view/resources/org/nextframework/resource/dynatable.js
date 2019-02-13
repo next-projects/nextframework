@@ -151,6 +151,7 @@ function reindexFormPorNome(nome, form, indexedProperty, considerHeader){
 	}
 	reindex(form, indexedProperty+'['+indice+']');
 	reindex(form, '_'+indexedProperty+'['+indice+']');
+	reindex(form, '!'+indexedProperty+'['+indice+']');
 	
 }
 

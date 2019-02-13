@@ -37,11 +37,14 @@ public class InputTagSelectManyBoxComponent extends InputTagSelectComboComponent
 		inputTag.setIncludeBlank(false);
 		
 		Object widthParam = (String) inputTag.getDAAtribute("inputwidth", true);
-		try {
-			this.inputWidth = new Integer(widthParam.toString());
-		} catch (Exception e){
-			//if the property is wrong.. don't do anything
+		if (widthParam != null) {
+			try {
+				this.inputWidth = new Integer(widthParam.toString());
+			} catch (Exception e){
+				//if the property is wrong.. don't do anything
+			}
 		}
+		
 	}
 	
 	@Override
