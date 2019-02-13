@@ -7,7 +7,7 @@ public class InputTagSelectManyPopupComponent  extends InputTagSelectComboCompon
 	
 	public String getStyleString(){
 		String daAtribute = (String) inputTag.getDAAtribute("popupstyle", true);
-		daAtribute = "width: 650px; "+daAtribute ;
+		daAtribute = "width: 920px; "+daAtribute ;
 		return daAtribute;
 	}
 	
