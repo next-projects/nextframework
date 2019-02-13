@@ -19,7 +19,7 @@ import org.nextframework.controller.resource.Resource;
 
 public class ResourceProvider {
 
-	protected static final String RESOURCE_LASTMOD = "RESOURCE_LASTMOD";
+	protected static final String RESOURCE_LASTMOD = "RESOURCE_LASTMOD_";
 
 	public static final String RESOURCE = "resource";
 
@@ -39,10 +39,10 @@ public class ResourceProvider {
 		map.put("report",        "org/nextframework/report/renderer/html/resource");
 		
 		//layouts
-		map.put("css/layout/lightblue",          "org/nextframework/resource/layout/lightblue");
-		map.put("css/layout/lightgreen",         "org/nextframework/resource/layout/lightgreen");
-		map.put("css/layout/alternate",          "org/nextframework/resource/layout/alternate");
-		map.put("css/layout/simpleposts",        "org/nextframework/resource/layout/simpleposts");
+		map.put("css/layout/lightblue",           "org/nextframework/resource/layout/lightblue");
+		map.put("css/layout/lightgreen",          "org/nextframework/resource/layout/lightgreen");
+		map.put("css/layout/alternate",           "org/nextframework/resource/layout/alternate");
+		map.put("css/layout/simpleposts",         "org/nextframework/resource/layout/simpleposts");
 		
 		map.put("theme",				         "org/nextframework/resource/theme");
 		map.put("theme/fonts",				     "org/nextframework/resource/theme/fonts");
@@ -59,17 +59,11 @@ public class ResourceProvider {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
-		String requestResource = getRequestedResource(request);
-		int indexOfFile = requestResource.lastIndexOf('/');
-		String tipo;
-		String file = null;
-		if(indexOfFile < 0){
-			tipo = requestResource;
-		} else {
-			tipo = requestResource.substring(0, indexOfFile);
-			file = requestResource.substring(indexOfFile);
-		}
-
+		
+		String[] references = getReferences(request);
+		String tipo = references[0];
+		String file = references[1];
+		
 		if(tipo.equals(RESOURCE)){
 			HttpSession session = request.getSession();
 			Integer id = new Integer(request.getParameter("id"));
@@ -78,45 +72,29 @@ public class ResourceProvider {
 				response.setContentType(recurso.getContentType());
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + recurso.getFileName()	+ "\";");
 				response.getOutputStream().write(recurso.getContents());
+			} else {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 		} else {
-	        String basePath = map.get(tipo);
-	        InputStream classpathInputStream = null;
-			if(basePath == null){
-				if(tipo.endsWith(RESOURCE)){
-					classpathInputStream = getClasspathResource(request, tipo, file);
-				}
-				if(classpathInputStream == null){
-					response.sendError(HttpServletResponse.SC_NOT_FOUND);
-					return;
-				}
-			}
-			String resourcePath = basePath+file;
-			//request.getSession().getServletContext().getResourceAsStream("/WEB-INF/classes/"+
-			//this.getClass().getClassLoader().getResourceAsStream(
 			
-			//verificar se o recurso existe na aplicaçao (NEXT aberto)
-			boolean useLastModified = true;
-	        InputStream inputStream = classpathInputStream != null? classpathInputStream: request.getSession().getServletContext().getResourceAsStream("/WEB-INF/classes/"+resourcePath);
-	        if(inputStream == null){
-	        	//procurar no classpath (utiliza JAR)
-	        	useLastModified = true; // usamos o lastModified apenas para o JAR porque no outro modo alterações tem que ser enviadas para o cliente
-	        	inputStream = this.getClass().getClassLoader().getResourceAsStream(resourcePath);
-	        }
-			
+			InputStream inputStream = getResource(request, response, tipo, file);
 			if (inputStream != null) {
-				if(useLastModified && request.getSession().getServletContext().getAttribute(RESOURCE_LASTMOD+resourcePath) == null){
-					request.getSession().getServletContext().setAttribute(RESOURCE_LASTMOD+resourcePath, System.currentTimeMillis());					
+				
+				String chave = RESOURCE_LASTMOD + tipo + file;
+				if(request.getSession().getServletContext().getAttribute(chave) == null){
+					request.getSession().getServletContext().setAttribute(chave, System.currentTimeMillis());
 				}
-				if(file.endsWith(".css")){
-					response.setContentType("text/css");
-				}
-	            
+				
 				InputStream in = new BufferedInputStream(inputStream);
 				OutputStream out = response.getOutputStream();
 				
+				String contentType = getContentType(file);
+				if(contentType != null){
+					response.setContentType(contentType);
+				}
+				
 				String ae = request.getHeader("accept-encoding");
-				if (ae != null && ae.indexOf("gzip") != -1 && (requestResource.endsWith("js") || requestResource.endsWith("css"))) {
+				if (ae != null && ae.indexOf("gzip") != -1 && (file.endsWith("js") || file.endsWith("css"))) {
 					response.addHeader("Content-Encoding", "gzip");
 					out = new GZIPOutputStream(out);
 				}
@@ -133,22 +111,42 @@ public class ResourceProvider {
 					out.write(buffer, 0, read);
 				}
 				*/
+				
 				if(out instanceof GZIPOutputStream){
 					((GZIPOutputStream)out).finish();
 				}
 				
 				out.flush();
+				out.close();
+				in.close();
+				inputStream.close();
+				
 			} else {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}			
 		}
-
+		
 	}
 
-	protected InputStream getClasspathResource(HttpServletRequest request, String tipo, String file) {
-		return getClass().getClassLoader().getResourceAsStream(tipo + file);
+	protected String[] getReferences(HttpServletRequest request) {
+		String tipo = null;
+		String file = null;
+		String requestResource = getRequestedResource(request);
+		int indexOfFile = requestResource.lastIndexOf('/');
+		if(indexOfFile < 0){
+			if (requestResource.indexOf(".") > -1) {
+				tipo = "file";
+				file = requestResource;
+			}else{
+				tipo = requestResource;
+			}
+		} else {
+			tipo = requestResource.substring(0, indexOfFile);
+			file = requestResource.substring(indexOfFile);
+		}
+		return new String[]{tipo, file};
 	}
-
+	
 	protected String getRequestedResource(HttpServletRequest request) {
 		String requestURI = request.getRequestURI();
 		requestURI = requestURI.replace((CharSequence)"//", "/");
@@ -157,29 +155,55 @@ public class ResourceProvider {
 		String requestResource = requestURI.substring(s);
 		return requestResource;
 	}
-
-    public long getLastModified(HttpServletRequest request) {
-    	String requestResource = getRequestedResource(request);
-		int indexOfFile = requestResource.lastIndexOf('/');
-		String tipo;
-		String file = null;
-		if(indexOfFile < 0){
-			tipo = requestResource;
-		} else {
-			tipo = requestResource.substring(0, indexOfFile);
-			file = requestResource.substring(indexOfFile);
-		}
-		if(!tipo.equals(RESOURCE)){
-			String basePath = map.get(tipo);
-			if(basePath != null){
-				String resourcePath = basePath+file;
-				Object last = request.getSession().getServletContext().getAttribute(RESOURCE_LASTMOD+resourcePath);
-				if(last != null){
-					return (Long)last;
+	
+	protected InputStream getResource(HttpServletRequest request, HttpServletResponse response, String tipo, String file) throws IOException {
+		String basePath = map.get(tipo);
+		if(basePath == null){
+			//solicitações de js dentro de pacotes
+			if(tipo.endsWith(RESOURCE)){
+				InputStream inputStream = getInputStream(request, tipo, file);
+				if (inputStream != null) {
+					return inputStream;
 				}
 			}
-			
+			//Se não encontrou...
+			return null;
 		}
-    	return -1;
-    }
+		return getInputStream(request, basePath, file);
+	}
+	
+	protected InputStream getInputStream(HttpServletRequest request, String tipo, String file) {
+		//Tenta encontrar o arquivo explodido
+		InputStream stream = request.getSession().getServletContext().getResourceAsStream("/WEB-INF/classes/" + tipo + file);
+		if (stream == null) {
+			//Se não encontrar, tenta no classpath
+			stream = getClass().getClassLoader().getResourceAsStream(tipo + file);
+		}
+		return stream;
+	}
+	
+	protected String getContentType(String file) {
+		if(file.endsWith(".css")){
+			return "text/css";
+		}
+		return null;
+	}
+
+	public long getLastModified(HttpServletRequest request) {
+		
+		String[] references = getReferences(request);
+		String tipo = references[0];
+		String file = references[1];
+		
+		if(!tipo.equals(RESOURCE)){
+			String chave = RESOURCE_LASTMOD + tipo + file;
+			Long last = (Long) request.getSession().getServletContext().getAttribute(chave);
+			if(last != null && last != -1){
+				return last / 1000 * 1000;
+			}
+		}
+		
+		return -1;
+	}
+	
 }
