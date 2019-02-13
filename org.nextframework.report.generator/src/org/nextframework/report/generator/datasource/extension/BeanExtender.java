@@ -121,27 +121,41 @@ public class BeanExtender {
 		
 		Set<Class> serviceClasses = new HashSet<Class>();
 		for (ExtensionInfo extensionInfo : extensionInfoList) {
+			
 			String serviceFieldName = "service$$"+extensionInfo.getService().getClass().getSimpleName();
 			if(serviceClasses.add(extensionInfo.getService().getClass())){
-				code.declareAttribute(extensionInfo.getService().getClass(), 
-						serviceFieldName);
+				code.declareAttribute(extensionInfo.getService().getClass(), serviceFieldName);
 			}
+			
 			Method serviceMethod = extensionInfo.getMethod();
-			SourceCodeBlock methodBlock = code.declareMethod(serviceMethod.getReturnType(), 
-					serviceMethod.getName(),
-					new Class[0],
-					new String[0]);
-			methodBlock.call("return "+serviceFieldName+"."+serviceMethod.getName(), new StringBuilder("this"));
+			
+			SourceCodeBlock methodBlock = code.declareMethod(serviceMethod.getReturnType(), serviceMethod.getName(), new Class[0], new String[0]);
 			
 			Annotation[] annotations = serviceMethod.getAnnotations();
 			for (Annotation annotation : annotations) {
-//				if(!annotation.annotationType().equals(ExtendBean.class)){
 				code.addImport(annotation.annotationType());
 				methodBlock.declareAnnotation(annotation, true);
-//				}
 			}
+			
+			ExtendBean extendBean = serviceMethod.getAnnotation(ExtendBean.class);
+			if (extendBean.cacheResult()) {
+				
+				String methodCacheAttribute = "cache$$"+extensionInfo.getService().getClass().getSimpleName()+"$$"+serviceMethod.getName();
+				code.declareAttribute(serviceMethod.getReturnType(), methodCacheAttribute);
+				
+				methodBlock.append("if (" + methodCacheAttribute + " == null) " + methodCacheAttribute + " = " + serviceFieldName + "." + serviceMethod.getName() + "(this);");
+				methodBlock.append("return " + methodCacheAttribute + ";");
+				
+			}else{
+				
+				methodBlock.append("return " + serviceFieldName + "." + serviceMethod.getName() + "(this);");
+				//methodBlock.call("return "+serviceFieldName+"."+serviceMethod.getName(), new StringBuilder("this"));
+			}
+			
 		}
-//		System.out.println(code);
+		
+		//System.out.println(code);
+		
 		try {
 			return code.generateClass(x.getClassLoader());
 		} catch (Exception e) {
