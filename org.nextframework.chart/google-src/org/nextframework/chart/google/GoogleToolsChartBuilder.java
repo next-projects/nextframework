@@ -73,7 +73,7 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 			DecimalFormat format = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.US));
 			for (int j = 0; j < chartRow.getValues().length; j++) {
 				Number value = chartRow.getValues()[j];
-				data.setValue(i, j+1, new StringBuilder(value == null? "": format.format(value)));
+				data.setValue(i, j+1, new StringBuilder(value == null || Double.isNaN(value.doubleValue()) ? "": format.format(value)));
 				String formattedValue = getFormatedValue(j, value);
 				if(formattedValue != null){
 					data.setFormattedValue(i, j+1, formattedValue);
