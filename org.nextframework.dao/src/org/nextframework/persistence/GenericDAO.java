@@ -303,6 +303,8 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				save.attachBefore(new HibernateCommand(){
 					@Override
 					public Object doInHibernate(Session session) throws HibernateException {
+						session.flush();
+						session.clear(); //Importante limpar o cache dos beans na transação, pois objetos são carregados dentro do método saveFile e o cache atrapalha
 						fileDAO.saveFile(bean, pd.getName());
 						return null;
 					}
