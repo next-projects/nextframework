@@ -503,7 +503,7 @@ public class QueryBuilder<E> {
 	 * @param parameter
 	 * @return
 	 */
-	public QueryBuilder<E> where(String whereClause, Object[] parameters) {
+	public QueryBuilder<E> where(String whereClause, Object... parameters) {
 		if(parameters == null){
 			return this;
 		}
@@ -794,7 +794,9 @@ public class QueryBuilder<E> {
 					throw new RuntimeException("Erro ao inicializar Proxys (Coleções). "+stackTrace[7],e);
 				}
 				
-				if(uniqueResult != null && !uniqueResult.getClass().getName().startsWith("java") && !uniqueResult.getClass().isArray()){
+				if(	uniqueResult != null && !uniqueResult.getClass().getName().startsWith("java") && 
+					uniqueResult.getClass().getName().indexOf("framework") == -1 && !uniqueResult.getClass().isArray()){
+					
 					//only evict entities
 					//TODO check with hibernate if the result is an entity
 					session.evict(uniqueResult);
@@ -1101,7 +1103,7 @@ public class QueryBuilder<E> {
 		private String convertToNamedParameter(String clause) {
 			int count = parameters.size();
 			while(clause.contains("?")){
-				clause = clause.replace("?", ":param"+(count++));
+				clause = clause.replaceFirst("\\?", ":param"+(count++));
 			}
 			return clause;
 		}
