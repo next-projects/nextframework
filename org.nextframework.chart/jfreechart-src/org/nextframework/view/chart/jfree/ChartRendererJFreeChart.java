@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import javax.imageio.IIOImage;
@@ -100,8 +101,7 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 	 */
 	public static byte[] convertChartToSVG(JFreeChart chart, int width, int height) {
         // Get a DOMImplementation and create an XML document
-        DOMImplementation domImpl =
-            GenericDOMImplementation.getDOMImplementation();
+		DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
         Document document = domImpl.createDocument(null, "svg", null);
 
         // Create an instance of the SVG Generator
@@ -113,7 +113,7 @@ public class ChartRendererJFreeChart implements ChartRenderer {
         // Write svg file
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			Writer out = new OutputStreamWriter(baos, "UTF-8");
+			Writer out = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
 			svgGenerator.stream(out, true /* use css */);						
 			out.flush();
 			out.close();

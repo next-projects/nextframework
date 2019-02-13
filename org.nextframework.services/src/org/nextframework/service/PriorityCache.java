@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ class PriorityCache {
 		BufferedReader r = null;
 		try {
 			in = u.openStream();
-			r = new BufferedReader(new InputStreamReader(in, "utf-8"));
+			r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 			int lc = 1;
 			while ((lc = parseLine(u, r, lc, names)) >= 0)
 				;
