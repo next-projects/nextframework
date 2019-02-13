@@ -34,8 +34,6 @@ import java.util.Map;
  */
 public interface Permission {
 	
-	Role getRole();
-
 	Map<String, String> getPermissionMap();
 	
 	String getPermissionValue(String id);

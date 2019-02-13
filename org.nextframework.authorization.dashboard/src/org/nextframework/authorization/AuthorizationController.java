@@ -48,7 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class AuthorizationController extends MultiActionController {
 	
-	TransactionTemplate transactionTemplate;
+	private TransactionTemplate transactionTemplate;
 	
 	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
 		this.transactionTemplate = transactionTemplate;
