@@ -8,7 +8,7 @@
 
     	<dependency org="org.apache.bcel" 		name="bcel" 	rev="5.2"		conf="provided" />
 		<dependency org="com.google.code.gson" 	name="gson"		rev="2.1"		conf="provided" />
-		<dependency org="com.google.guava" 		name="guava" 	rev="11.0.1"	conf="provided" />
+		<dependency org="com.google.guava" 		name="guava" 	rev="16.0"		conf="provided" />
 		<dependency org="org.codehaus.jackson" 	name="jackson-mapper-asl" 	rev="1.9.4"	conf="provided" />
 		<dependency org="org.codehaus.jackson" 	name="jackson-core-asl" 	rev="1.9.4"	conf="provided" />
 		<dependency org="com.google.code.javaparser" name="javaparser" 		rev="1.0.8"	conf="provided"/>

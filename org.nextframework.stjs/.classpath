@@ -11,7 +11,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="provided/bcel-5.2.jar"/>
 	<classpathentry kind="lib" path="provided/gson-2.1.jar"/>
-	<classpathentry kind="lib" path="provided/guava-11.0.1.jar"/>
+	<classpathentry kind="lib" path="provided/guava-16.0.jar"/>
 	<classpathentry kind="lib" path="provided/jackson-core-asl-1.9.4.jar"/>
 	<classpathentry kind="lib" path="provided/jackson-mapper-asl-1.9.4.jar"/>
 	<classpathentry kind="lib" path="provided/javaparser-1.0.8.jar"/>

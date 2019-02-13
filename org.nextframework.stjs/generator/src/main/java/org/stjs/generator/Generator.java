@@ -15,18 +15,17 @@
  */
 package org.stjs.generator;
 
-import japa.parser.JavaParser;
-import japa.parser.ParseException;
-import japa.parser.ast.CompilationUnit;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.stjs.generator.scope.CompilationUnitScope;
@@ -39,6 +38,10 @@ import org.stjs.generator.writer.JavascriptWriterVisitor;
 
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
+
+import japa.parser.JavaParser;
+import japa.parser.ParseException;
+import japa.parser.ast.CompilationUnit;
 
 /**
  * This class parses a Java source file, launches several visitors and finally generate the corresponding Javascript.
@@ -88,14 +91,16 @@ public class Generator {
 
 		CompilationUnit cu = parseAndResolve(classLoaderWrapper, inputFile, context);
 
-		FileWriter writer = null;
+		Writer writer = null;
 
 		try {
 			// generate the javascript code
 			JavascriptWriterVisitor generatorVisitor = new JavascriptWriterVisitor();
 			generatorVisitor.visit(cu, context);
 
-			writer = new FileWriter(outputFile);
+			//writer = new FileWriter(outputFile);
+			writer = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8);
+			writer.write("\uFEFF"); //BOM
 			writer.write(generatorVisitor.getGeneratedSource());
 			writer.flush();
 
