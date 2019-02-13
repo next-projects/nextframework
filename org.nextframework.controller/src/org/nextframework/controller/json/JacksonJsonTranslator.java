@@ -1,84 +1,70 @@
 package org.nextframework.controller.json;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.Version;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.module.SimpleModule;
+import org.nextframework.exception.ApplicationException;
+import org.nextframework.types.Cep;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 public class JacksonJsonTranslator implements JsonTranslator {
-	public static boolean CREATE_DATES_WITH_CUSTOMPATTERN = true;
-	
-//	public static DateFormat customDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-	public static DateFormat customDateFormat = new SimpleDateFormat("'new Date('yyyy','MM','dd','HH','mm','ss','SSS')'");
-	
-	private static final class DateFormater extends JsonSerializer<Date> {
-		public void serialize(Date value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
-			if(value == null){
-				jgen.writeNull();
-			} else {
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(value);
-				calendar.add(Calendar.MONTH, -1); //the month is zero based
-				jgen.writeRawValue(customDateFormat.format(calendar.getTime()));
-			}
-		}
+
+	public static DateFormat customDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+	public ObjectMapper getObjectMapper() {
+
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setDateFormat(customDateFormat);
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+
+		SimpleModule nextModule = new SimpleModule("NextModule", new Version(1, 0, 0, null, "org.nextframework", "next-controller"));
+		nextModule.addSerializer(Date.class, new JsonJSDateSerializer());
+		nextModule.addSerializer(Cep.class, new CepSerializer());
+		nextModule.addDeserializer(Cep.class, new CepDeserializer());
+		nextModule.addSerializer(Throwable.class, new ThrowableSerializer());
+		mapper.registerModule(nextModule);
+
+		return mapper;
 	}
 
-
-	@Override
 	public String toJson(Object o) {
-		ObjectMapper mapper = new ObjectMapper();
-		SimpleModule nextModule = new SimpleModule("NextModule", new Version(1, 0, 0, null));
-		if(CREATE_DATES_WITH_CUSTOMPATTERN){
-			nextModule.addSerializer(Date.class, new DateFormater());
-//			mapper.setDateFormat(customDateFormat);
-//			mapper.disable(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS);
-		}
-		
-		mapper.registerModule(nextModule);
+		ObjectMapper mapper = getObjectMapper();
 		Writer strWriter = new StringWriter();
 		try {
 			mapper.writeValue(strWriter, o);
 		} catch (Exception e) {
-			throw new RuntimeException("Error transforming object to json.", e);
+			throw new ApplicationException("Error transforming object to json.", e);
 		}
 		return strWriter.toString();
 	}
 
-
-	@Override
 	public <E> E fromJson(String json, Class<E> type) {
-		ObjectMapper mapper = new ObjectMapper();
-		SimpleModule nextModule = new SimpleModule("NextModule", new Version(1, 0, 0, null));
-		if(CREATE_DATES_WITH_CUSTOMPATTERN){
-			nextModule.addSerializer(Date.class, new DateFormater());
-//			mapper.setDateFormat(customDateFormat);
-//			mapper.disable(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS);
-		}
-		
-		mapper.registerModule(nextModule);
-		
+		ObjectMapper mapper = getObjectMapper();
 		try {
 			return mapper.readValue(json, type);
-		} catch (JsonParseException e) {
-			throw new RuntimeException(e);
-		} catch (JsonMappingException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		} catch (Exception e) {
+			throw new ApplicationException("Error transforming json to object.", e);
+		}
+	}
+
+	public <E> List<E> fromJsonAsList(String json, Class<E> type) {
+		ObjectMapper mapper = getObjectMapper();
+		try {
+			CollectionType ctype = mapper.getTypeFactory().constructCollectionType(List.class, type);
+			return mapper.readValue(json, ctype);
+		} catch (Exception e) {
+			throw new ApplicationException("Error transforming json to object.", e);
 		}
 	}
 
