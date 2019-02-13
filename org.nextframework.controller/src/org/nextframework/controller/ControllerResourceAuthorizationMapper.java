@@ -16,16 +16,20 @@ public class ControllerResourceAuthorizationMapper implements ResourceAuthorizat
 		ResourceHandlerMap resourceHandlerMap = ServiceFactory.getService(ResourceHandlerMap.class);
 		Object handler = resourceHandlerMap.getHandler(resource);
 		if(handler != null){
-			AuthorizationModule authorizationModule = BeanUtils.instantiate(ClassUtils.getUserClass(handler.getClass()).getAnnotation(Controller.class).authorizationModule());
-			if(authorizationModule instanceof HasAccessAuthorizationModule && resourceHandlerMap.isAuthenticationRequired(resource)){
-				authorizationModule = new RequiresAuthenticationAuthorizationModule(); //if the module is secured, change the authorization module
+			Controller ctrlAnnotation = ClassUtils.getUserClass(handler.getClass()).getAnnotation(Controller.class);
+			if(ctrlAnnotation != null){
+				AuthorizationModule authorizationModule = BeanUtils.instantiate(ctrlAnnotation.authorizationModule());
+				if(authorizationModule instanceof HasAccessAuthorizationModule && resourceHandlerMap.isAuthenticationRequired(resource)){
+					authorizationModule = new RequiresAuthenticationAuthorizationModule(); //if the module is secured, change the authorization module
+				}
+				authorizationModule.setControllerClass(handler.getClass());
+				authorizationModule.setPath(resource);
+				return authorizationModule;
 			}
-			authorizationModule.setControllerClass(handler.getClass());
-			authorizationModule.setPath(resource);
-			return authorizationModule;
 		}
 		return null;
 	}
+
 
 //	@Override
 //	public void setResourceAuthorizationModule(String resource, AuthorizationModule authorizationModule) {
