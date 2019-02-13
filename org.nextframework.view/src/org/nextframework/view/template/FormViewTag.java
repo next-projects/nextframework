@@ -54,8 +54,8 @@ public class FormViewTag extends TemplateTag {
 		return showListLink;
 	}
 
-	public void setShowListLink(boolean showListagemLink) {
-		this.showListLink = showListagemLink;
+	public void setShowListLink(boolean showListLink) {
+		this.showListLink = showListLink;
 	}
 	
 	@Deprecated
@@ -64,8 +64,8 @@ public class FormViewTag extends TemplateTag {
 	}
 	
 	@Deprecated
-	public void setShowListagemLink(boolean showListagemLink) {
-		this.showListLink = showListagemLink;
+	public void setShowListagemLink(boolean showListLink) {
+		this.showListLink = showListLink;
 	}
 
 	public String getTitle() {
@@ -87,15 +87,20 @@ public class FormViewTag extends TemplateTag {
 
 	@Override
 	protected void doComponent() throws Exception {
-		if(Util.strings.isEmpty(title)){
-//			titulo = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
-			title = CrudContext.getCurrentInstance().getDisplayName();
+		CrudContext crudContext = CrudContext.getCurrentInstance();
+		//titulo = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
+		if(Util.strings.isEmpty(title) && crudContext != null){
+			title = crudContext.getDisplayName();
 		}
-		pushAttribute("crudContext", CrudContext.getCurrentInstance());
+		if (crudContext != null){
+			pushAttribute("crudContext", crudContext);
+		}
 		pushAttribute("entradaTag", this);
 		includeJspTemplate();
 		popAttribute("entradaTag");
-		popAttribute("crudContext");
+		if (crudContext != null){
+			popAttribute("crudContext");
+		}
 	}
 	
 	/**

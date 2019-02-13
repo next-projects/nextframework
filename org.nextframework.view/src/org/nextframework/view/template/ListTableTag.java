@@ -125,26 +125,26 @@ public class ListTableTag extends TemplateTag {
 				itens = crudContext.getListModel().getList();
 			}
 		}
-		if(valueType == null){
+		if(valueType == null && crudContext != null){
 //			valueType = (Class<?>) getRequest().getAttribute("TEMPLATE_beanClass");
-			valueType = CrudContext.getCurrentInstance().getBeanClass();
+			valueType = crudContext.getBeanClass();
 		}
-		if(Util.strings.isEmpty(name)){
+		if(Util.strings.isEmpty(name) && crudContext != null){
 //			name = (String) getRequest().getAttribute("TEMPLATE_beanNameUncaptalized");
-			name = CrudContext.getCurrentInstance().getBeanName();
+			name = crudContext.getBeanName();
 			if(Util.strings.isEmpty(name) && Util.objects.isNotEmpty(valueType)){
 				name = Util.strings.uncaptalize(valueType.getSimpleName());
 			}
 		}
 		if(numberOfPages == null){
 			numberOfPages = (Number) getRequest().getAttribute("numberOfPages");
-			if(numberOfPages == null && crudContext != null){
+			if(numberOfPages == null && crudContext != null && crudContext.getListModel().getFilter() != null){
 				numberOfPages = crudContext.getListModel().getFilter().getNumberOfPages();
 			}
 		}
 		if(currentPage == null){
 			currentPage = (Number) getRequest().getAttribute("currentPage");
-			if(currentPage == null && crudContext != null){
+			if(currentPage == null && crudContext != null && crudContext.getListModel().getFilter() != null){
 				currentPage = crudContext.getListModel().getFilter().getCurrentPage();
 			}
 		}

@@ -74,10 +74,9 @@ public class FormTableTag extends TemplateTag {
 
 	@Override
 	protected void doComponent() throws Exception {
-		if(title == null){
-//			title = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
+		//title = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
+		if(title == null && CrudContext.getCurrentInstance() != null){
 			title = CrudContext.getCurrentInstance().getDisplayName();
-			
 		}
 		if(propertyShowLabel == null){
 			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;

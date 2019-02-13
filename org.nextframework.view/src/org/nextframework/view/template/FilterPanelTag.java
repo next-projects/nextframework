@@ -46,10 +46,7 @@ public class FilterPanelTag extends TemplateTag {
 	@Override
 	protected void doComponent() throws Exception {
 		CrudContext crudContext = CrudContext.getCurrentInstance();
-		PageAndOrder filter = null;
-		if(crudContext != null){
-			filter = crudContext.getListModel().getFilter();
-		}
+		PageAndOrder filter = crudContext != null && getRequest().getAttribute(name) == null ? crudContext.getListModel().getFilter() : null;
 		if(filter != null){
 			pushAttribute(name, filter);
 		}
