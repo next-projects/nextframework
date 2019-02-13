@@ -16,10 +16,10 @@
 				<t:propertyConfig renderAs="column">
 					<n:doBody />
 				</t:propertyConfig>
-				<c:if test="${Tdetalhe.showColunaAcao && !view}">
-				<n:column header="${Tdetalhe.nomeColunaAcao}" style="width: 1%; white-space: nowrap; padding-right: 3px;">
+				<c:if test="${Tdetalhe.showActionColumn && !view}">
+				<n:column header="${Tdetalhe.actionColumnName}" style="width: 1%; white-space: nowrap; padding-right: 3px;">
 					${acoes}
-					<c:if test="${Tdetalhe.showBotaoRemover}">
+					<c:if test="${Tdetalhe.showDeleteButton}">
 						<c:if test="${!propertyConfigDisabled || dataGridDynaline}">
 							<button type="button"                     onclick="_detail_deleteLine_${Tdetalhe.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${Tdetalhe.tableId}, indice=${rowIndex}]">
 								remover
@@ -36,7 +36,7 @@
 			</n:getContent>
 		</n:bean>
 	</n:dataGrid>
-	<c:if test="${Tdetalhe.showBotaoNovaLinha && !view}">
+	<c:if test="${Tdetalhe.showNewLineButton && !view}">
 		<c:if test="${empty Tdetalhe.dynamicAttributesMap['labelnovalinha']}">
 			<c:set value="Adicionar Registro" scope="page" var="labelnovalinha"/>
 		</c:if>
@@ -65,7 +65,7 @@
 	 */
 	function _detail_deleteLine_${Tdetalhe.tableId}(index, quiet){
 		var id = "button.excluir[table_id=${Tdetalhe.tableId}, indice="+(index+1)+"]"; //passar de indice da propriedade para indice da linha (considerando header)
-		var isToRemove = function(button){${Tdetalhe.onRemove}}(this);//onRemove function should return true or false
+		var isToRemove = function(button){${Tdetalhe.onDelete}}(this);//onDelete function should return true or false
 		var removed = false;
 		if(isToRemove) {
 			try {
@@ -82,9 +82,9 @@
 
 	function _detail_newLine_${Tdetalhe.tableId}(){
 		${Tdetalhe.beforeNewLine}
-		var indiceLinha = newLine${Tdetalhe.tableId}();
+		var row = newLine${Tdetalhe.tableId}();
 		
 		${Tdetalhe.onNewLine};
-		return indiceLinha -1;//passar para indice da propriedade (considerando header)
+		return row.rowIndex -1;//passar para indice da propriedade (considerando header)
 	}
 </script>

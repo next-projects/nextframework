@@ -539,13 +539,13 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>showButtonDelete</name>
+			<name>showDeleteButton</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>showButtonNewLine</name>
+			<name>showNewLineButton</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>		
@@ -803,7 +803,7 @@
 		
 		<attribute>
 			<description>Indica de deve ser mostrado o botão remover</description>
-			<name>showButtonDelete</name>
+			<name>showDeleteButton</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>				

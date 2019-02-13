@@ -132,7 +132,7 @@ public class PropertyTag extends TemplateTag {
 	
 	//arquivo
 	protected Boolean transientFile;
-	protected boolean showButtonDelete = true;
+	protected boolean showDeleteButton = true;
 	
 	// taginput fim
 	
@@ -649,21 +649,21 @@ public class PropertyTag extends TemplateTag {
 		this.optionalParams = optionalParams;
 	}
 
-	public boolean isShowButtonDelete() {
-		return showButtonDelete;
+	public boolean isShowDeleteButton() {
+		return showDeleteButton;
 	}
 
-	public void setShowButtonDelete(boolean showRemoverButon) {
-		this.showButtonDelete = showRemoverButon;
+	public void setShowDeleteButton(boolean showDeleteButton) {
+		this.showDeleteButton = showDeleteButton;
 	}
 	
 	@Deprecated
 	public boolean isShowRemoverButton() {
-		return showButtonDelete;
+		return showDeleteButton;
 	}
 	@Deprecated
-	public void setShowRemoverButton(boolean showRemoverButon) {
-		this.showButtonDelete = showRemoverButon;
+	public void setShowRemoverButton(boolean showRemoverButton) {
+		this.showDeleteButton = showRemoverButton;
 	}
 
 	public Boolean getHoldValue() {

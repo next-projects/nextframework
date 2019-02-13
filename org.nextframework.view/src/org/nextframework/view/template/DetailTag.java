@@ -59,26 +59,26 @@ public class DetailTag extends TemplateTag {
 	private String onNewLine;
 
 	private Boolean showActionColumn = true;
-	private Boolean showButtonDelete = true;
-	private Boolean showButtonNewLine = true;
+	private Boolean showDeleteButton = true;
+	private Boolean showNewLineButton = true;
 
 
-	public Boolean getShowButtonNewLine() {
-		return showButtonNewLine;
+	public Boolean getShowNewLineButton() {
+		return showNewLineButton;
 	}
 
-	public void setShowButtonNewLine(Boolean showBotaoNovaLinha) {
-		this.showButtonNewLine = showBotaoNovaLinha;
+	public void setShowNewLineButton(Boolean showNewLineButton) {
+		this.showNewLineButton = showNewLineButton;
 	}
 	
 	@Deprecated
 	public Boolean getShowBotaoNovaLinha() {
-		return showButtonNewLine;
+		return showNewLineButton;
 	}
 	
 	@Deprecated
 	public void setShowBotaoNovaLinha(Boolean showBotaoNovaLinha) {
-		this.showButtonNewLine = showBotaoNovaLinha;
+		this.showNewLineButton = showBotaoNovaLinha;
 	}
 
 	
@@ -89,36 +89,36 @@ public class DetailTag extends TemplateTag {
 	public String getActionColumnName() {
 		return actionColumnName;
 	}
+	public void setActionColumnName(String actionColumnName) {
+		this.actionColumnName = actionColumnName;
+	}
 
+	@Deprecated
 	public void setNomeColunaAcao(String nomeColunaAcao) {
 		this.actionColumnName = nomeColunaAcao;
 	}
-	
+	@Deprecated
 	public String getNomeColunaAcao() {
 		return actionColumnName;
 	}
-	
-	public void setActionColumnName(String nomeColunaAcao) {
-		this.actionColumnName = nomeColunaAcao;
+
+
+	public Boolean getShowDeleteButton() {
+		return showDeleteButton;
 	}
 
-
-	public Boolean getShowButtonDelete() {
-		return showButtonDelete;
-	}
-
-	public void setShowButtonDelete(Boolean showBotaoRemover) {
-		this.showButtonDelete = showBotaoRemover;
+	public void setShowDeleteButton(Boolean showDeleteButton) {
+		this.showDeleteButton = showDeleteButton;
 	}
 	
 	@Deprecated
 	public Boolean getShowBotaoRemover() {
-		return showButtonDelete;
+		return showDeleteButton;
 	}
 	
 	@Deprecated
-	public void setShowBotaoRemover(Boolean showBotaoRemover) {
-		this.showButtonDelete = showBotaoRemover;
+	public void setShowBotaoRemover(Boolean showDeleteButton) {
+		this.showDeleteButton = showDeleteButton;
 	}
 
 
@@ -126,8 +126,8 @@ public class DetailTag extends TemplateTag {
 		return showActionColumn;
 	}
 
-	public void setShowActionColumn(Boolean showColunaAcao) {
-		this.showActionColumn = showColunaAcao;
+	public void setShowActionColumn(Boolean showActionColumn) {
+		this.showActionColumn = showActionColumn;
 	}
 	
 	@Deprecated
@@ -305,8 +305,8 @@ public class DetailTag extends TemplateTag {
 	public String getOnDelete() {
 		return onDelete;
 	}
-	public void setOnDelete(String onRemove) {
-		this.onDelete = onRemove;
+	public void setOnDelete(String onDelete) {
+		this.onDelete = onDelete;
 	}
 	@Deprecated
 	public String getOnRemove() {
