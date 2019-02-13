@@ -1,4 +1,4 @@
-/**
+Ôªø/**
  * Fun??o utilizada como callback de janelas que foram criadas com o objectivo
  * de selecionar algum bean.
  * Possui as informa??es necess?rias para a janela saber como deve preencher o
@@ -30,15 +30,15 @@ function refreshPai() {
  * Imprime o bot?o selecionar onde for necess?rio
  * O bot?o selecionar s? ? impresso onde a classe for da hierarquia da classe que pediu para selecionar
  */
-function imprimirSelecionar(listaClasses, texto){
-	//alert('valor '+valor+'  label '+label+'    listaclasses '+listaClasses);
+function imprimirSelecionar(classesList, texto){
+	//alert('valor '+valor+'  label '+label+'    classesList '+classesList);
 	//alert(top.selecionarCallback);
 	if(top.selecionarCallback){
 		
 		//document.write("dd");
 		var ok = false;
-		for(i in listaClasses){
-			var clazz = listaClasses[i];
+		for(i in classesList){
+			var clazz = classesList[i];
 			if(clazz == top.selecionarCallback.valueType){
 				ok = true;
 			}
@@ -49,7 +49,7 @@ function imprimirSelecionar(listaClasses, texto){
 		}
 		//DEBUG ----- c?digo abaixo ? debug descomente se nao aparecer o botao selecionar
 		//else {
-		//	alert('A classe \n'+listaClasses[0]+' \nnao eh a mesma ou uma subclasse de \n'+top.selecionarCallback.valueType);
+		//	alert('A classe \n'+classesList[0]+' \nnao eh a mesma ou uma subclasse de \n'+top.selecionarCallback.valueType);
 		//}
 	}
 }
@@ -160,7 +160,7 @@ function limparCombo(combo, includeblank, currentValue,blankLabel){
 	var op = new Option();
 	op.text = blankLabel;
 	op.value = '<null>';
-	combo.options.add(op);//forÁar o redimensionamento do form
+	combo.options.add(op);//for√ßar o redimensionamento do form
 	combo.remove(pararEm + remove - 1);
 	
 	if(includeblank){
@@ -210,10 +210,10 @@ function aplicaHTML(html, elemento){
 				}
 			}
 		}else{
-			alert("Elemento n„o encontrado: " + elemento);
+			alert("Elemento n√£o encontrado: " + elemento);
 		}
 	} catch(e1){
-		alert('N„o foi possÌvel adicionar o javascript din‚mico. '+ e);
+		alert('N√£o foi poss√≠vel adicionar o javascript din√¢mico. '+ e);
 	}
 }
 

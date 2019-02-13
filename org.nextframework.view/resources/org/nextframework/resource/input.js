@@ -1,4 +1,4 @@
-//------------------------------------------------------------
+ï»¿//------------------------------------------------------------
 
 function getTecla(event){
 	if(navigator.appName.indexOf("Netscape")!= -1) {
@@ -56,7 +56,7 @@ function valida_tecla_data(campo, event, pattern) {
 		tecla = event.keyCode;
 	}
 
-	//ignorar se for TAB .. no firefox o tab é acusado 0
+	//ignorar se for TAB .. no firefox o tab Ã© acusado 0
 	if(tecla == 0){
 		return true;
 	}
@@ -156,7 +156,7 @@ function verifica_hora(hour) {
 			if(ponto != ':') {
 				situacao = 0;
 				if(situacao==0) {
-					alert('Hora inválida! Exemplo de hora válida: 09:30');
+					alert('Hora invÃ¡lida! Exemplo de hora vÃ¡lida: 09:30');
 					hour.value='';
 					return false;
 				}
@@ -221,12 +221,12 @@ function verifica_data(data) {
 		else {
 			dia = (data.substring(0,2));
 
-			// Verifica se o dia é válido para cada mês, exceto fevereiro.
+			// Verifica se o dia Ã© vÃ¡lido para cada mÃªs, exceto fevereiro.
 			if (dia < 1 || dia > 31 || (dia > 30 && (mes == 4 || mes == 6 || mes == 9 || mes == 11))) {
 				situacao = 'falsa';
 			}
 		
-			// Verifica se o dia é válido para o mês de fevereiro.
+			// Verifica se o dia Ã© vÃ¡lido para o mÃªs de fevereiro.
 			if (mes == 2 && (dia < 1 || dia > 29 || (dia > 28 && (parseInt(ano/4) != ano/4)))) {
 				situacao = 'falsa';
 			}
@@ -234,7 +234,7 @@ function verifica_data(data) {
 	}
 
 	if (situacao == 'falsa') {
-		alert('Data inválida!');
+		alert('Data invÃ¡lida!');
 		return false;
 	}
 
@@ -303,7 +303,7 @@ function formata_cnpj (numCICEl) {
 		case 0:
 			return;
 		default : 
-			alert("Tamanho incorreto do CNPJ. O CNPJ deve conter 15 dígitos");
+			alert("Tamanho incorreto do CNPJ. O CNPJ deve conter 15 dÃ­gitos");
 			numCICEl.focus();
 			return;
 	}
@@ -327,15 +327,15 @@ function mascara_float(campo, teclapres) {
 	}
 	*/
 
-	// Falta o caractere ',' (vírgula) do teclado numérico.
-	if (  (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (só é possivel se for a primeira posicao)
+	// Falta o caractere ',' (vÃ­rgula) do teclado numÃ©rico.
+	if (  (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (sÃ³ Ã© possivel se for a primeira posicao)
 			|| (tecla >= 48 && tecla <= 57) || (tecla >= 96 && tecla <= 105)
 	 		|| tecla == 110 || tecla == 188 || tecla == 190
 	  		|| tecla == 8 || tecla == 9 || tecla == 13
 	    	|| tecla == 37 || tecla == 39
 	    	|| tecla == 45 || tecla == 46 || tecla == 35 || tecla == 36
 		    || (tecla == 67 || tecla == 86 && teclapres.ctrlKey)) {
-		if(tecla == 188){// não pode inserir duas virgulas (TODO colocar a condicao da virgula do teclado numerico)
+		if(tecla == 188){// nÃ£o pode inserir duas virgulas (TODO colocar a condicao da virgula do teclado numerico)
 			return campo.value.indexOf(',') < 0;
 		}
 		return true;
@@ -365,8 +365,8 @@ function mascara_integer(campo, teclapres) {
 		tecla = teclapres.keyCode;
 	}
 
-	// Falta o caractere ',' (vírgula) do teclado numérico.
-	if ( (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (só é possivel se for a primeira posicao)
+	// Falta o caractere ',' (vÃ­rgula) do teclado numÃ©rico.
+	if ( (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (sÃ³ Ã© possivel se for a primeira posicao)
 		  ||(tecla >= 48 && tecla <= 57) || (tecla >= 96 && tecla <= 105)
 	      || tecla == 8 || tecla == 9 || tecla == 13
 	      || tecla == 37 || tecla == 39
@@ -433,7 +433,7 @@ function formata_money(campo, teclapres) {
 	
 	
 	//verifica a tecla
-	if ( (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (só é possivel se for a primeira posicao)
+	if ( (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (sÃ³ Ã© possivel se for a primeira posicao)
 		  ||(tecla >= 48 && tecla <= 57) || (tecla >= 96 && tecla <= 105)
 	      || tecla == 8 || tecla == 9 || tecla == 13
 	      || tecla == 37 || tecla == 39
@@ -488,7 +488,7 @@ function selectManyAddOption(from, optionName, value, properties){
 //		from.add(option);
 //	} catch(e){
 //		if(!selectManyAddOptionMessage){
-//			alert("Seu navegador precisar ser atualizado para suportar essa página.");
+//			alert("Seu navegador precisar ser atualizado para suportar essa pÃ¡gina.");
 //			selectManyAddOptionMessage = true;
 //		}
 //	}

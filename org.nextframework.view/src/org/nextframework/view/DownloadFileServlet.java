@@ -67,7 +67,7 @@ public class DownloadFileServlet extends HttpServlet {
 	}
 	
 	public static void persist(File value, long tempFileId) throws IOException {
-		//TODO UNIFICAR O LOCAL DE SALVAR DE LER OS ARQUIVOS TEMPORARIOS
+		//TODO UNIFICAR O LOCAL DE SALVAR E LER OS ARQUIVOS TEMPORARIOS
 		java.io.File tempFile = new java.io.File(System.getProperty("java.io.tmpdir"), Next.getApplicationName()+"_tempFileObject"+tempFileId+".next");
 		System.out.println("TEMPORARY FILE    "+tempFile.getAbsolutePath());
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));

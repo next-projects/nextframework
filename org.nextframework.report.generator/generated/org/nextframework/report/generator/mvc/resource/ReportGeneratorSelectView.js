@@ -1,4 +1,4 @@
-var ReportGeneratorSelectView = function(viewDiv) {
+Ôªøvar ReportGeneratorSelectView = function(viewDiv) {
 
     this.items = [];
     this.viewDiv = viewDiv;
@@ -22,7 +22,7 @@ ReportGeneratorSelectView.prototype.selectItem = function(item) {
         this.onselect(this.selectedItem);
     }
     if (!(item.selectView == this)) {
-        alert("Erro: o item n„o È do tipo do select view");
+        alert("Erro: o item n√£o √© do tipo do select view");
         return;
     }
     this.unselectSelectedItem();

@@ -79,14 +79,14 @@ public class ComboFilter {
 	public String getClassesList() {
 		return classesList;
 	}
-	public void setClassesList(String listaClasses) {
-		this.classesList = listaClasses;
+	public void setClassesList(String classesList) {
+		this.classesList = classesList;
 	}
 	public String getParameterList() {
 		return parameterList;
 	}
-	public void setParameterList(String listaParametros) {
-		this.parameterList = listaParametros;
+	public void setParameterList(String parameterList) {
+		this.parameterList = parameterList;
 	}
 	public String getLabel() {
 		return label;

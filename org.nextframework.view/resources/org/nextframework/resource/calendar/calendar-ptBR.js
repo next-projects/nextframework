@@ -1,4 +1,4 @@
-// ** I18N
+ï»¿// ** I18N
 
 // Calendar EN language
 // Author: Mihai Bazon, <mihai_bazon@yahoo.com>
@@ -13,11 +13,11 @@
 Calendar._DN = new Array
 ("Domingo",
  "Segunda",
- "Terça",
+ "TerÃ§a",
  "Quarta",
  "Quinta",
  "Sexta",
- "Sábado",
+ "SÃ¡bado",
  "Domingo");
 
 // Please note that the following array of short day names (and the same goes
@@ -51,7 +51,7 @@ Calendar._FD = 0;
 Calendar._MN = new Array
 ("Janeiro",
  "Fevereiro",
- "Março",
+ "MarÃ§o",
  "Abril",
  "Maio",
  "Junho",
@@ -79,7 +79,7 @@ Calendar._SMN = new Array
 
 // tooltips
 Calendar._TT = {};
-Calendar._TT["INFO"] = "Sobre o calendário";
+Calendar._TT["INFO"] = "Sobre o calendÃ¡rio";
 
 Calendar._TT["ABOUT"] =
 "DHTML Date/Time Selector\n" +
@@ -98,10 +98,10 @@ Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "- or click and drag for faster selection.";
 
 Calendar._TT["PREV_YEAR"] = "Ano anterior (segure para menu)";
-Calendar._TT["PREV_MONTH"] = "Mês anterior (segure para menu)";
+Calendar._TT["PREV_MONTH"] = "MÃªs anterior (segure para menu)";
 Calendar._TT["GO_TODAY"] = "Ir para HOJE";
-Calendar._TT["NEXT_MONTH"] = "Próximo Mês (segure para menu)";
-Calendar._TT["NEXT_YEAR"] = "Próximo Ano (segure para menu)";
+Calendar._TT["NEXT_MONTH"] = "PrÃ³ximo MÃªs (segure para menu)";
+Calendar._TT["NEXT_YEAR"] = "PrÃ³ximo Ano (segure para menu)";
 Calendar._TT["SEL_DATE"] = "Selecione a data";
 Calendar._TT["DRAG_TO_MOVE"] = "Arraste para mover";
 Calendar._TT["PART_TODAY"] = " (hoje)";

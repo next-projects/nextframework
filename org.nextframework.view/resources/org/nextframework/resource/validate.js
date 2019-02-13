@@ -1,6 +1,6 @@
-//----------------------------------------------------------------------
+Ôªø//----------------------------------------------------------------------
 
-	//Lista com todas as propriedades.. para evitar um loop em todas as propriedades para cada validaÁ„o
+	//Lista com todas as propriedades.. para evitar um loop em todas as propriedades para cada valida√ß√£o
 	var formProperties = null;
 	
 	function organizeProperties(form){
@@ -10,7 +10,7 @@
 			if(element.name == null || element.name == '') {continue;}
 			if(formProperties[element.name]){
 				if(formProperties[element.name].isArray){
-					//j· È lista			
+					//j√° √© lista			
 					var obj = formProperties[element.name];
 					obj[obj.length] = element;
 				} else {
@@ -437,7 +437,7 @@
 			startFrom = 2;
 		}
 		
-		//Este cÛdigo d· erro ao processar os n˙meros 08,8 ou 1,08.
+		//Este c√≥digo d√° erro ao processar os n√∫meros 08,8 ou 1,08.
 		//else if (argvalue.charAt(0) == "0") {
 		//	validChars = "01234567";
 		//	startFrom = 1;
@@ -1021,7 +1021,7 @@
 				var orderShortYear = datePattern.indexOf(SHORTYEAR);
 				
 				if(datePattern.indexOf('hh') > 0){
-					alert('Hora \'hh\' n„o suportada! Utilize \'HH\' para formatar hora.');
+					alert('Hora \'hh\' n√£o suportada! Utilize \'HH\' para formatar hora.');
 				}
 				
 				var regex = "^"+datePattern+"$";
@@ -1066,7 +1066,7 @@
 				
 				// alert(regex + '\n' + matched);
 				if (matched != null) {
-					// o value È conforme com o pattern.. precisamos verificar os valores
+					// o value √© conforme com o pattern.. precisamos verificar os valores
 					var month = -1;
 					var day = -1;
 					var year = -1;

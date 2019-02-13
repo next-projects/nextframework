@@ -1,4 +1,4 @@
-var ChartWizzard = function(element, designer) {
+Ôªøvar ChartWizzard = function(element, designer) {
 
     this.mainDiv = element;
     this.nextButton = next.dom.getInnerElementById(this.mainDiv, "nextButton");
@@ -228,7 +228,7 @@ ChartWizzard.prototype.getSelectedChartType = function() {
             return radio.value;
         }
     }
-    alert("Erro: Nenhum tipo de gr·fico selecionado");
+    alert("Erro: Nenhum tipo de gr√°fico selecionado");
     return null;
 };
 ChartWizzard.prototype.next = function() {
@@ -288,7 +288,7 @@ ChartWizzard.prototype.getSeriesLimitType = function() {
             return radio.value;
         }
     }
-    //		Global.alert("Erro: Nenhum tipo de limitador de sÈries selecionado");
+    //		Global.alert("Erro: Nenhum tipo de limitador de s√©ries selecionado");
     return "showall";
 };
 ChartWizzard.prototype.saveConfiguration = function(configuration) {

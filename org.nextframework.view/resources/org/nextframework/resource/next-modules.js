@@ -1,4 +1,4 @@
-NEXT_MODULES_DEFINED = true;
+ÔªøNEXT_MODULES_DEFINED = true;
 
 /**************************************************************************************  UTIL  **/
 NextUtil = function(){};
@@ -135,13 +135,13 @@ NextUtil.prototype.removeSingleQuotes = function(string){
 }
 
 /**
- * Cria uma funÁ„o de parametros default.
+ * Cria uma fun√ß√£o de parametros default.
  * 
  * Exemplo:
  * 
  * var def = next.util.defaultParam(params);
  * 
- * def("title", "Sem Titulo"); // se o parametro title nao foi definido em params, ele ser· definido como Sem Titulo
+ * def("title", "Sem Titulo"); // se o parametro title nao foi definido em params, ele ser√° definido como Sem Titulo
  * 
  * @param params
  * @return
@@ -180,7 +180,7 @@ NextUtil.prototype.isObject = function(item){
 /**
  * Iterage sobre um array ou mapa de objetos
  * @param obj Array ou mapa a ser iteragido
- * @param func FunÁ„o de callback que ser· chamada para cada item
+ * @param func Fun√ß√£o de callback que ser√° chamada para cada item
  * @return
  */
 NextUtil.prototype.each = function(obj, func){
@@ -269,7 +269,7 @@ NextUtil.prototype.getYearFromDate = function(date){
 }
 
 /**
- * Transforma o elemento passado como par‚metro em um array.
+ * Transforma o elemento passado como par√¢metro em um array.
  * @param el
  * @return
  */
@@ -285,11 +285,11 @@ NextUtil.prototype.toArray = function(el){
 NextNumbers = function(){};
 
 /**
- * Formata um n˙mero
- * @param n N˙mero original
+ * Formata um n√∫mero
+ * @param n N√∫mero original
  * @param c Casas decimais
- * @param d DÌgito separador de decimal
- * @param t DÌgito separador de milhar
+ * @param d D√≠gito separador de decimal
+ * @param t D√≠gito separador de milhar
  */
 NextNumbers.prototype.formatDecimal = function(n, c, d, t){
 	var c = isNaN(c = Math.abs(c)) ? 2 : c, d = d == undefined ? "," : d, t = t == undefined ? "." : t, s = n < 0 ? "-" : "", i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
@@ -307,7 +307,7 @@ NextLog.enabled = false;
 /**
  * Exibe um warning no log do next
  * @param text Texto do log
- * @param family MÛdulo que È feito o log
+ * @param family M√≥dulo que √© feito o log
  */
 NextLog.prototype.warn = function(text, family){
 	var log = next.dom.newElement('DIV', {style:{backgroundColor: '#FFFEF0'}});
@@ -318,7 +318,7 @@ NextLog.prototype.warn = function(text, family){
 /**
  * Exibe um info no log do next
  * @param text Texto do log
- * @param family MÛdulo que È feito o log
+ * @param family M√≥dulo que √© feito o log
  */
 NextLog.prototype.info = function(text, family){
 	var log = next.dom.newElement('DIV', {});
@@ -358,9 +358,9 @@ NextEvents.prototype.toString = function (){
 };
 
 /**
- * Adiciona uma funÁ„o para ser executada quando o browser terminar a carga da p·gina.
+ * Adiciona uma fun√ß√£o para ser executada quando o browser terminar a carga da p√°gina.
  * <BR>
- * Exemplo: next.events.onLoad(function(){alert('p·gina carregada');});
+ * Exemplo: next.events.onLoad(function(){alert('p√°gina carregada');});
  * @param func
  * @return
  */
@@ -390,7 +390,7 @@ NextEvents.prototype.dispatchEvent = function(el, eventType){
 }
 
 /**
- * Anexa um evento a um elemento. (Na funÁ„o informada, o this ser· o elemento passado como par‚metro)<BR>
+ * Anexa um evento a um elemento. (Na fun√ß√£o informada, o this ser√° o elemento passado como par√¢metro)<BR>
  * Exemplo: next.events.attachEvent(div, 'click', function(){alert('Evento click executado!');});
  * @param el
  * @param event
@@ -406,8 +406,8 @@ NextEvents.prototype.attachEvent = function(el, event, func){
 		el.addEventListener(event, func, false);
 		return func;
 	} else if(el.attachEvent){
-		//criar outra funÁ„o para redirecionar o this e fazer com que o IE funcione igual a outros browsers
-		//o this na funÁ„o ir· referenciar o elemento
+		//criar outra fun√ß√£o para redirecionar o this e fazer com que o IE funcione igual a outros browsers
+		//o this na fun√ß√£o ir√° referenciar o elemento
 		var newFunc = function(e){
 			var ret = func.call(el, e);
 			if (ret === false) {
@@ -451,7 +451,7 @@ NextEvents.prototype.getChar = function(event){
 }
 
 /**
- * Cancela a propagaÁ„o de eventos<BR>
+ * Cancela a propaga√ß√£o de eventos<BR>
  */
 NextEvents.prototype.cancelEvent = function(event){
 	var evt = event? event: window.event;
@@ -466,10 +466,10 @@ new NextEvents();
 NextHttp = function(){};
 
 /**
- * Configura um cookie na p·gina
+ * Configura um cookie na p√°gina
  * @param cookieName Nome do cookie
  * @param value Valor do cookie
- * @param exdays N˙mero de dias para expirar o cookie, passar null caso n„o expira
+ * @param exdays N√∫mero de dias para expirar o cookie, passar null caso n√£o expira
  * @return
  */
 NextHttp.prototype.setCookie = function(cookieName, value, exdays) {
@@ -502,7 +502,7 @@ NextHttp.prototype.getServletPath = function(){
 }
 /**
  * Retorna o applicationContext, equivalente ao request.getContextPath() do JEE<BR>
- * LÍ a URL atual do browser para conseguir o nome da aplicaÁ„o.
+ * L√™ a URL atual do browser para conseguir o nome da aplica√ß√£o.
  * @return
  */
 NextHttp.prototype.getApplicationContext = function(){
@@ -525,7 +525,7 @@ NextDom.prototype.id = function(id){
 	return document.getElementById(id);
 }
 /**
- * Gera um id ˙nico
+ * Gera um id √∫nico
  * @return
  */
 NextDom.prototype.generateUniqueId = function(){
@@ -551,8 +551,8 @@ NextDom.prototype.generateUniqueId = function(){
  */
 NextDom.prototype.newElement = function(tag, options){
 	if(tag == "image"){
-		// o IE aceita a tag image, mas outros browsers n„o.. para forÁar a compatibilidade alertar
-		alert("Use tag 'img' ao invÈs de 'image' no mÈtodo newElement");
+		// o IE aceita a tag image, mas outros browsers n√£o.. para for√ßar a compatibilidade alertar
+		alert("Use tag 'img' ao inv√©s de 'image' no m√©todo newElement");
 	}
 
 	var element = document.createElement(tag);
@@ -723,9 +723,9 @@ NextDom.prototype.setSelectedValue = function(el, value, dispatchEvent){
 					next.events.dispatchEvent(el, "change");
 				}
 				return true;
-			}
 		}
 	}
+}
 	return false;
 }
 
@@ -798,9 +798,9 @@ NextDom.prototype.newCheckbox = function(name, label, options){
 	return this.newInput("checkbox", name, label, options);
 }
 /**
- * Se o elemento passado como par‚metro for um elemento, retorna o prÛprio elemento.<BR>
- * Se for uma string, ser· pesquisada na p·gina um elemento com ID ou NAME igual a string.<BR>
- * Retorna null se n„o encontrar.
+ * Se o elemento passado como par√¢metro for um elemento, retorna o pr√≥prio elemento.<BR>
+ * Se for uma string, ser√° pesquisada na p√°gina um elemento com ID ou NAME igual a string.<BR>
+ * Retorna null se n√£o encontrar.
  * @param el
  * @return
  */
@@ -863,7 +863,7 @@ NextDom.prototype.getParentTagByClass = function(el, className){
 }
 
 /**
- * Cria um wrapper para o elemento. Se o elemento j· possui um wrapper, retorna o wrapper j· criado.
+ * Cria um wrapper para o elemento. Se o elemento j√° possui um wrapper, retorna o wrapper j√° criado.
  * @param el
  * @return
  */
@@ -978,7 +978,7 @@ NextDom.prototype.getNewPopupDiv = function (){
 }
 
 /**
- * Classe que representa um formul·rio.
+ * Classe que representa um formul√°rio.
  * @param name
  * @param elements
  */
@@ -1010,10 +1010,10 @@ NextDomForm.prototype.getElements = function(){
 	return this.elements;
 }
 /**
- * Retorna um novo formul·rio com apenas os elementos determinados.
+ * Retorna um novo formul√°rio com apenas os elementos determinados.
  * <BR>
- * Exemplo: new next.dom.Form('meuForm').subForm('detalhe'); //retornar· um form com as propriedades iniciadas com 'detalhe'
- * @param property Inicio do padr„o de nome da propriedade
+ * Exemplo: new next.dom.Form('meuForm').subForm('detalhe'); //retornar√° um form com as propriedades iniciadas com 'detalhe'
+ * @param property Inicio do padr√£o de nome da propriedade
  * @return
  */
 NextDomForm.prototype.subForm = function(){
@@ -1074,7 +1074,7 @@ NextDomForm.prototype.removeSystemFields = function(){
 }
 
 /**
- * Cria a query com os elementos do formul·rio
+ * Cria a query com os elementos do formul√°rio
  * @return
  */
 NextDomForm.prototype.toQueryString = function(){
@@ -1110,10 +1110,10 @@ NextDomForm.prototype.newForm = function(){
  * Associa os elementos do HTML aos atributos do objeto.
  * O elemento deve ter como id um '#' seguido do nome do atributo.
  * Se deseja associar um botao, a um elemento do objeto, e o atributo no objeto for foo,
- * o id do bot„o deve ser #foo. 
- * TambÈm associa eventos. Se existir um elemento #foo, e no objeto existir uma funÁ„o fooOnClick, 
- * a funÁ„o ser· associada ao evento onclick do elemento.
- * Se o parametro el for informado, sÛ ir· fazer o bind, dos elementos que forem filhos de el.
+ * o id do bot√£o deve ser #foo. 
+ * Tamb√©m associa eventos. Se existir um elemento #foo, e no objeto existir uma fun√ß√£o fooOnClick, 
+ * a fun√ß√£o ser√° associada ao evento onclick do elemento.
+ * Se o parametro el for informado, s√≥ ir√° fazer o bind, dos elementos que forem filhos de el.
  * Os atributos precisam ter sido definidos no protoype da classe. (Objetos STJS atendem esse requisito) 
  */
 NextDom.prototype.autobind = function (obj, parentEl){
@@ -1156,9 +1156,9 @@ new NextDom();
 
 /*
  * 
- * Para o correto funcionamento das funÁıes de estilo o browser deve estar funcionando em modo Standard
+ * Para o correto funcionamento das fun√ß√µes de estilo o browser deve estar funcionando em modo Standard
  * 
- * Coloque o seguinte conte˙do no topo do HTML
+ * Coloque o seguinte conte√∫do no topo do HTML
  *  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  *  
  */
@@ -1200,7 +1200,7 @@ NextStyle.prototype.removeClass = function(ele, cls) {
     }
 }
 /**
- * Transforma um valor em pixels em um inteiro (faz as conversıes necess·rias)
+ * Transforma um valor em pixels em um inteiro (faz as convers√µes necess√°rias)
  * <BR>
  * Exemplo: Se o valor informado for '20px' retorna 20, se for '20' retorna 20
  * 
@@ -1220,7 +1220,7 @@ NextStyle.prototype.fromPxToInt = function(value){
 }
 
 /**
- * Retorna o valor de uma propriedade CSS computada pelo browser. Deve ser utilizado o padr„o CSS de propriedades exemplo:
+ * Retorna o valor de uma propriedade CSS computada pelo browser. Deve ser utilizado o padr√£o CSS de propriedades exemplo:
  * next.style.getStyleProperty(obj, 'padding-left').
  * <BR>
  * @param obj Elemento do qual deseja o valor
@@ -1267,7 +1267,7 @@ NextStyle.prototype.getHeight = function(el){
 	el = next.dom.toElement(el);
 	var offsetHeight = el.offsetHeight;
 	if(offsetHeight == 0){
-		return 0; //se o offsetHeight È zero, o height tambÈm È
+		return 0; //se o offsetHeight √© zero, o height tamb√©m √©
 	}
 	//pegar o valor calculado
 	var styleHeight = this.getStyleProperty(el, 'height');
@@ -1289,7 +1289,7 @@ NextStyle.prototype.getWidth = function(el){
 	el = next.dom.toElement(el);
 	var offsetWidth = el.offsetWidth;
 	if(offsetWidth == 0){
-		return 0; //se o offsetWidth È zero, o width tambÈm È
+		return 0; //se o offsetWidth √© zero, o width tamb√©m √©
 	}
 	//pegar o valor calculado
 	var styleWidth = this.getStyleProperty(el, 'width');
@@ -1305,7 +1305,7 @@ NextStyle.prototype.getWidth = function(el){
 
 /**
  * Retorna a altura completa do elemento. Incluindo padding, margin e border.
- * Se a margem for auto, ser· considerado o valor 0.
+ * Se a margem for auto, ser√° considerado o valor 0.
  * @param el
  * @return
  */
@@ -1313,7 +1313,7 @@ NextStyle.prototype.getFullHeight = function(el){
 	el = next.dom.toElement(el);
 	var offsetHeight = el.offsetHeight;
 	var fullHeight = offsetHeight;
-	//se o display for none.. a margem tambÈm È
+	//se o display for none.. a margem tamb√©m √©
 	var display = this.getStyleProperty(el, 'display');
 	if(display == 'none'){
 		fullHeight = 0;
@@ -1325,7 +1325,7 @@ NextStyle.prototype.getFullHeight = function(el){
 }
 /**
  * Retorna a largura completa do elemento. Incluindo padding, margin e border.
- * Se a margem for auto, ser· considerado o valor 0.
+ * Se a margem for auto, ser√° considerado o valor 0.
  * @param el
  * @return
  */
@@ -1333,7 +1333,7 @@ NextStyle.prototype.getFullWidth = function(el){
 	el = next.dom.toElement(el);
 	var offsetWidth = el.offsetWidth;
 	var fullWidth = offsetWidth;
-	//se o display for none.. a margem tambÈm È
+	//se o display for none.. a margem tamb√©m √©
 	var display = this.getStyleProperty(el, 'display');
 	if(display == 'none'){
 		fullWidth = 0;
@@ -1557,7 +1557,7 @@ NextAjax.prototype.send = function(options){
 			}
 		});
 	p("afterError", function(data){});	
-	p("on404", function(data, status){alert("Erro 404 - N„o encontrado: "+options.url);});
+	p("on404", function(data, status){alert("Erro 404 - N√£o encontrado: "+options.url);});
 
 	if(options.appendContext){
 		options.url = next.http.getApplicationContext()+options.url;
@@ -1616,7 +1616,7 @@ NextAjax.prototype.getXMLHTTPRequest = function(){
 	} else if (typeof ActiveXObject != "undefined"){
 		return new ActiveXObject("Microsoft.XMLHTTP");
 	} else {
-		throw "Nao foi possÌvel criar um objeto XMLHTTPRequest";
+		throw "Nao foi poss√≠vel criar um objeto XMLHTTPRequest";
 	}
 }
 
@@ -1688,7 +1688,7 @@ NextAjaxRequest.prototype.setParameterFromElement = function(el, name){
 	}
 	if(!next.util.isDefined(name)){
 		name = el.name;
-	}
+}
 	return this.setParameter(name, value);
 }
 NextAjaxRequest.prototype.setParameter = function(name, value){
@@ -1731,7 +1731,7 @@ NextAjaxRequest.prototype.setCallback = function(callback, methodName){
 		if(methodName){
 			callback[methodName].call(callback, objectResponse);
 		} else {
-			callback(objectResponse);
+		callback(objectResponse);
 		}
 	};
 	return this;
@@ -2008,12 +2008,12 @@ NextEffects.prototype.fade = function(el, fromOpacity, toOpacity, options, onEnd
 }
 
 /**
- * Executa a funÁ„o definida por <i>func</i> a cada intervalo de tempo.
- * @param func FunÁ„o a ser executada (pode receber um par‚metro com passo atual
+ * Executa a fun√ß√£o definida por <i>func</i> a cada intervalo de tempo.
+ * @param func Fun√ß√£o a ser executada (pode receber um par√¢metro com passo atual
  * @param frameInterval Intervalo entre cada chamada
- * @param ammount N˙mero de chamadas
+ * @param ammount N√∫mero de chamadas
  * @param timeout Timeout (default: 60 segundos)
- * @param onEndFunction FunÁ„o a ser executada quando terminar a execuÁ„o
+ * @param onEndFunction Fun√ß√£o a ser executada quando terminar a execu√ß√£o
  * @return
  */
 NextEffects.prototype.runSteps = function(func, frameInterval, ammount, timeout, onEndFunction){
@@ -2052,7 +2052,7 @@ NextEffects.prototype.runSteps = function(func, frameInterval, ammount, timeout,
 new NextEffects();
 
 
-/**************************************************************************************  MESSAGE  **/
+/**************************************************************************************  MENSAGEM  **/
 
 NextMessageTypes = function(){
 	this.DEBUG = 'debug';
@@ -2182,7 +2182,6 @@ NextMessages.prototype.initialize = function(div, blockId){
 			ul.appendChild(li);
 			return li;
 		}
-		
 		ul.removeMessage = function(message){
 			var lis = ul.childNodes;
 			for(var i = 0; i < lis.length; i++){
@@ -2252,7 +2251,7 @@ NextMessages.prototype.removeBindMessage = function(message, div){
 	return this.removeMessageFromBlock(message, div, 'bindBlock');
 }
 /**
- * Configura o tÌtulo da mensagem de bind
+ * Configura o t√≠tulo da mensagem de bind
  * @param title
  * @param div
  * @return

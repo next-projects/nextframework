@@ -1,48 +1,48 @@
-/*
+Ôªø/*
 ALGORITMO TREETABLE - DOCUMENTACAO
-Os treeTable s„o tablesHTML extendidos. … necess·rio fazer a instalaÁ„o do TreeTable em algum table do HTML.
-O table obrigatoriamente deve ter um id (N√O REPETIDO NA P¡GINA).
+Os treeTable s√£o tablesHTML extendidos. √â necess√°rio fazer a instala√ß√£o do TreeTable em algum table do HTML.
+O table obrigatoriamente deve ter um id (N√ÉO REPETIDO NA P√ÅGINA).
 Ex.:
 installTreeTable(tableId);
 */
 
 /*
-Exemplo de uso de tree table ou tree view (treeview È na verdade um treetable com uma coluna):
+Exemplo de uso de tree table ou tree view (treeview √© na verdade um treetable com uma coluna):
 
-Cada linha do treetable contÈm um node.. cada node contÈm v·rios columns que representam cada coluna no treetable
+Cada linha do treetable cont√©m um node.. cada node cont√©m v√°rios columns que representam cada coluna no treetable
 
-Para criar um node faÁa o seguinte:
-var node = new Node(id); //onde id pode ser um string que represente o nÛ na aplicacao (a api do treetable nao utiliza essa informacao)
+Para criar um node fa√ßa o seguinte:
+var node = new Node(id); //onde id pode ser um string que represente o n√≥ na aplicacao (a api do treetable nao utiliza essa informacao)
 
-Um node possui v·rios column que representam o td no treetable
-Para criar um column faÁa o seguinte:
+Um node possui v√°rios column que representam o td no treetable
+Para criar um column fa√ßa o seguinte:
 var column = node.newColumn();
 
-A primeira column de um node pode utilizar um Ìcone.. para configurar o Ìcone utilize
+A primeira column de um node pode utilizar um √≠cone.. para configurar o √≠cone utilize
 column.icon = 'url';
 
-O conte˙do do column È setado atravÈs da propriedade innerHTML
+O conte√∫do do column √© setado atrav√©s da propriedade innerHTML
 column.innerHTML = 'conteudo';
 
-Atributos do column ser„o copiados para o td respectivo. … possÌvel utilizar por exemplo:
+Atributos do column ser√£o copiados para o td respectivo. √â poss√≠vel utilizar por exemplo:
 column.width = '50';
 
-TanbÈm È possÌvel setar os estilos:
+Tanb√©m √© poss√≠vel setar os estilos:
 column.style.backGroundColor = 'red';
 
-Se um node tiver filhos, configure o node dessa forma (isso far· com que apareca um '+')
+Se um node tiver filhos, configure o node dessa forma (isso far√° com que apareca um '+')
 node.hasChild = true;
 
-Para configurar uma table para ser um treeTable faÁa o seguinte (uma table html deve ser configurada para ser um treeTable)
-var treeTable = installTreeTable('idDoTable', 'prefixo'); //prefixo È a url base onde ficam os arquivos do treetable
+Para configurar uma table para ser um treeTable fa√ßa o seguinte (uma table html deve ser configurada para ser um treeTable)
+var treeTable = installTreeTable('idDoTable', 'prefixo'); //prefixo √© a url base onde ficam os arquivos do treetable
 
-Para adicionar um node a tabela faÁa o seguinte:
+Para adicionar um node a tabela fa√ßa o seguinte:
 treeTable.addNode(node);
 
 Para adicionar um node filho de outro:
 node.addChild(child);
 
-IMPORTANTE: Ao utilizar o addChild o node pai j· deve ter sido adicionado ao treeTable
+IMPORTANTE: Ao utilizar o addChild o node pai j√° deve ter sido adicionado ao treeTable
 
 
  */
@@ -50,7 +50,7 @@ IMPORTANTE: Ao utilizar o addChild o node pai j· deve ter sido adicionado ao tre
 //CLASSES
 function Node(id){
 	if(id == null){
-		exception('N„o È possÌvel criar um node com id nulo');
+		exception('N√£o √© poss√≠vel criar um node com id nulo');
 	}
 	this.hasChild = false;
 	this.id = id;
@@ -74,7 +74,7 @@ function Node(id){
 
 function nodeAddChild(parent, child){
 	if(child == null){
-		exception('Erro ao adicionar child. child È nulo parent.id = '+parent.id);
+		exception('Erro ao adicionar child. child √© nulo parent.id = '+parent.id);
 	}
 	parent.children.push(child);
 	child.parent = parent;
@@ -122,7 +122,7 @@ function installTreeTable(tableId, prefix){
 	table.currentIndex = 0;
 	table.nodeOpened = new Array();
 	if(table == null){
-		exception('Nenhuma tabela com o id \''+tableId+'\' foi encontrada. N„o foi possÌvel criar o TreeTable');
+		exception('Nenhuma tabela com o id \''+tableId+'\' foi encontrada. N√£o foi poss√≠vel criar o TreeTable');
 	}
 	table.isTreeTable = function (){return true;};
 	table.startRowIndex = table.rows.length;
@@ -166,7 +166,7 @@ function treeTableGetNode(table, nodeid){
 }
 function treeTableAddNode(table, node){
 	if(node == null){
-		exception('Erro ao adicionar node. node È nulo');
+		exception('Erro ao adicionar node. node √© nulo');
 	}
 	node.level = 0;
 	node.table = table;				

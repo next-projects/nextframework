@@ -1,9 +1,9 @@
-/**
+Ôªø/**
  * Acessa a API do next framework
  */
 var next = {};
 if(typeof(NEXT_MODULES_DEFINED) == "undefined"){
-	alert('MÛdulos NEXT n„o carregados. FaÁa import do arquivo next-modules.js. (Antes do arquivo next.js)');
+	alert('M√≥dulos NEXT n√£o carregados. Fa√ßa import do arquivo next-modules.js. (Antes do arquivo next.js)');
 }
 
 next.util = new NextUtil();

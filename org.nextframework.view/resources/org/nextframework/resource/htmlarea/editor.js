@@ -1,5 +1,5 @@
-//	Altera�oes por Glauco
-//	remo�ao dos botoes insert_table , about, popupeditor, help
+//	Alterações por Glauco
+//	remoção dos botoes insert_table , about, popupeditor, help
 //  estao comentados caso possam vir a serem incluidos
 //
 //

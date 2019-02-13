@@ -1,4 +1,4 @@
-/* Log begin */
+ï»¿/* Log begin */
 function log(s){
 	var log = getLogConsole();
 	if(log){
@@ -115,7 +115,7 @@ function datagridEndResizeColumn(event, tableId){
 	
 	var lastColumn = readjustLastColumn(table, blockDiv, containerDiv);
 	if(resizingColumn == table.rows[0].cells.length -1){
-		//redimensionou a última coluna
+		//redimensionou a Ãºltima coluna
 		lastColumn.setAttribute("data-originalwidth", newWidth);
 	}
 	
@@ -142,7 +142,7 @@ function readjustLastColumn(table, blockDiv, containerDiv) {
 		resizeTableColumn(table, blockDiv, lastColumnIndex, containerWidth - tableWidth);
 	}
 	else {
-		//ultrapassou os limites.. reduzir a última coluna se possível
+		//ultrapassou os limites.. reduzir a Ãºltima coluna se possÃ­vel
 		var originalWidth = parseInt(lastColumn.getAttribute("data-originalwidth"));
 		if(originalWidth){
 			var overflow = tableWidth - containerWidth;
@@ -186,7 +186,7 @@ function fixDatagridContainerSize(tableId){
 	
 	var containerDivWidth=getWidthForStyling(containerDiv);
 	if(containerDivWidth <= 0){
-		//nao é possível definir o tamanho
+		//nao Ã© possÃ­vel definir o tamanho
 		return;
 	}
 	containerDiv.style.width = containerDivWidth + "px";
@@ -199,7 +199,7 @@ function reloadDatagridConfig(tableId){
 	
 	var containerDivWidth=getWidthForStyling(containerDiv);
 	if(containerDivWidth <= 0){
-		//se o tamanho do container não está definido, quer dizer que ele está escondido, então não é suportado o recarregamento dos widths via cookie
+		//se o tamanho do container nÃ£o estÃ¡ definido, quer dizer que ele estÃ¡ escondido, entÃ£o nÃ£o Ã© suportado o recarregamento dos widths via cookie
 		table.setAttribute("data-delaycontainerfixsize", true);
 		return;
 	}
@@ -311,8 +311,8 @@ function getWidthForStyling(el) {
 function datagridGetTableFromId(tableId){
 	var table = document.getElementById(tableId);
 	if(!table || table.tagName != 'TABLE'){
-		logError('O tableId "'+tableId+'" informado não existe ou não é uma tabela.');
-		throw 'O tableId "'+tableId+'" informado não existe ou não é uma tabela.';
+		logError('O tableId "'+tableId+'" informado nÃ£o existe ou nÃ£o Ã© uma tabela.');
+		throw 'O tableId "'+tableId+'" informado nÃ£o existe ou nÃ£o Ã© uma tabela.';
 	}
 	return table;
 }

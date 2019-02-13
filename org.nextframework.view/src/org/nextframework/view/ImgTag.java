@@ -33,7 +33,7 @@ public class ImgTag extends BaseTag {
 
 	public static final String RESOURCE_SERVLET_TYPE = ResourceProvider.RESOURCE;
 	
-	Object resource;
+	private Object resource;
 	
 	public Object getResource() {
 		return resource;

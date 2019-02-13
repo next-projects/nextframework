@@ -1,4 +1,4 @@
-var SelectManyPopup = function(element, style){
+ï»¿var SelectManyPopup = function(element, style){
 	element.selectManyPopup = this;
 	this.input = element;
 	this.styleObject = style;
@@ -70,8 +70,8 @@ SelectManyPopup.prototype.configure = function(){
 //		popupDiv.innerHTML = text;
 		
 		var buttonArea = next.dom.newElement('DIV', {className: 'select_many_popup_box_buttons', style: {clear:'both', textAlign: 'right'}});
-		var cancel = next.dom.newElement('BUTTON', {innerHTML: 'Cancelar', title: 'Cancela a operação.'});
-		var ok = next.dom.newElement('BUTTON', {innerHTML: 'Ok', title: 'Seleciona os itens visíveis marcados.'});
+		var cancel = next.dom.newElement('BUTTON', {innerHTML: 'Cancelar', title: 'Cancela a operaÃ§Ã£o.'});
+		var ok = next.dom.newElement('BUTTON', {innerHTML: 'Ok', title: 'Seleciona os itens visÃ­veis marcados.'});
 		ok.style.marginLeft = '6px';
 		
 		buttonArea.appendChild(cancel);
