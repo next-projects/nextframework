@@ -132,6 +132,12 @@ public class MethodNameResolverImpl {
 				//any return type will be valid
 //				if (method.getReturnType().equals(ModelAndView.class) || method.getReturnType().equals(void.class) || method.getReturnType().equals(String.class)) {
 					if(method.getAnnotation(DefaultAction.class) != null){
+						//Se já encontrou, mas o nome é diferente, não considera.
+						//Assim, é possível mudar o defaultAction herdado.
+						//É necessário subir a hierarquia para pegar o primeiro método de todos, cao sobrescrito.
+						if (result != null && !result.getName().equals(method.getName())) {
+							continue;
+						}
 						result = method;
 					}
 //				}
