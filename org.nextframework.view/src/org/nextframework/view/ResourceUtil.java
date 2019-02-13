@@ -23,68 +23,101 @@
  */
 package org.nextframework.view;
 
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
 import org.nextframework.controller.resource.Resource;
 
-//TODO TODOS OS RECURSOS SALVOS NA SESSAO SÓ SÃO ELIMINADOS QUANDO A SESSÃO EXPIRA
-// FAZER CÓDIGO PARA ELIMINAR EM DETERMINADO TEMPO
 public class ResourceUtil {
-	
-	private static final String RESOURCE_COUTER = "NEXT.RESOURCE.COUNTER";
+
 	private static final String RESOURCE_MAP = "NEXT.RESOURCE.MAP";
-	
-	
-	
-	@SuppressWarnings("unchecked")
-	public static Integer save(HttpSession session, Resource resource){
-		if(resource == null){
+	private static final String RESOURCE_COUTER = "NEXT.RESOURCE.COUNTER";
+	private static final String RESOURCE_DATE = "NEXT.RESOURCE.DATE";
+
+	public static Integer save(HttpSession session, Resource resource) {
+
+		if (resource == null) {
 			throw new NullPointerException("O recurso não foi informado.");
 		}
-		Integer number = null;
-		Map<Integer, Resource> map = null;
-		synchronized (session) {
-			//number
-			Object attribute = session.getAttribute(RESOURCE_COUTER);
-			if(attribute == null){
-				attribute = 1;
-				number = 1;
-				session.setAttribute(RESOURCE_COUTER, attribute);
-			} else {
-				number = (Integer) attribute;
-				number++;
-				session.setAttribute(RESOURCE_COUTER, number);
-			}
 
-			//resourcemap
-			map = (Map<Integer, Resource>) session.getAttribute(RESOURCE_MAP);
-			if(map == null){
-				map = new HashMap<Integer, Resource>();
-				session.setAttribute(RESOURCE_MAP, map);
-			}
+		Integer number = null;
+		synchronized (session) {
+
+			Map<Integer, Resource> map = getResourceMap(session);
+			number = getNextId(session);
+			map.put(number, resource);
+
+			Map<Integer, Calendar> dateMap = getResourceDateMap(session);
+			dateMap.put(number, Calendar.getInstance());
+
+			cleanOldResources(map, dateMap);
+
 		}
-		map.put(number, resource);
+
 		return number;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static Resource get(HttpSession session, Integer id){
-		Map<Integer, Resource> map = null;
-		synchronized (session) {
-			//resourcemap
-			map = (Map<Integer, Resource>) session.getAttribute(RESOURCE_MAP);
-			if(map == null){
-				map = new HashMap<Integer, Resource>();
-				session.setAttribute(RESOURCE_MAP, map);
+	private static Map<Integer, Resource> getResourceMap(HttpSession session) {
+		Map<Integer, Resource> map = (Map<Integer, Resource>) session.getAttribute(RESOURCE_MAP);
+		if (map == null) {
+			map = new HashMap<Integer, Resource>();
+			session.setAttribute(RESOURCE_MAP, map);
+		}
+		return map;
+	}
+
+	private static Integer getNextId(HttpSession session) {
+		Integer number = (Integer) session.getAttribute(RESOURCE_COUTER);
+		number = number == null ? 1 : number + 1;
+		session.setAttribute(RESOURCE_COUTER, number);
+		return number;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Map<Integer, Calendar> getResourceDateMap(HttpSession session) {
+		Map<Integer, Calendar> map = (Map<Integer, Calendar>) session.getAttribute(RESOURCE_DATE);
+		if (map == null) {
+			map = new HashMap<Integer, Calendar>();
+			session.setAttribute(RESOURCE_DATE, map);
+		}
+		return map;
+	}
+
+	private static void cleanOldResources(Map<Integer, Resource> map, Map<Integer, Calendar> dateMap) {
+
+		Calendar limite = Calendar.getInstance();
+		limite.add(Calendar.MINUTE, -10);
+
+		Set<Integer> idsMortos = new HashSet<Integer>();
+		for (Entry<Integer, Calendar> entry : dateMap.entrySet()) {
+			if (entry.getValue().before(limite)) {
+				idsMortos.add(entry.getKey());
 			}
 		}
-	
-		return map.remove(id);
+
+		for (Integer id : idsMortos) {
+			map.remove(id);
+			dateMap.remove(id);
+		}
+
 	}
-	
+
+	public static Resource get(HttpSession session, Integer id) {
+
+		Resource resource = null;
+		synchronized (session) {
+			Map<Integer, Resource> map = getResourceMap(session);
+			resource = map.remove(id);
+		}
+
+		return resource;
+	}
 
 }
-
