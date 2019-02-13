@@ -112,6 +112,18 @@
 		<body-content>empty</body-content>
 		<attribute>
 			<description></description>
+			<name>includeNormalizeCss</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>includeSystemCss</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>includeDefaultCss</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
