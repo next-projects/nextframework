@@ -1,4 +1,4 @@
-var ReportDesigner = //	ReportGeneratorSelectView filterArea;
+ï»¿var ReportDesigner = //	ReportGeneratorSelectView filterArea;
 //	private Button moveRightButton;
 function(divId, textAreaId) {
 
@@ -16,10 +16,11 @@ function(divId, textAreaId) {
     //		};
     this.labelInput = next.dom.getInnerElementById(this.mainDiv, "label");
     this.filterLabel = next.dom.getInnerElementById(this.mainDiv, "filterLabel");
-    this.filterSelectMultiple = next.dom.getInnerElementById(this.mainDiv, "filterSelectMultiple");
-    this.filterRequired = next.dom.getInnerElementById(this.mainDiv, "filterRequired");
+    this.filterFixedCriteria = next.dom.getInnerElementById(this.mainDiv, "filterFixedCriteria");
     this.filterPreSelectDate = next.dom.getInnerElementById(this.mainDiv, "filterPreSelectDate");
     this.filterPreSelectEntity = next.dom.getInnerElementById(this.mainDiv, "filterPreSelectEntity");
+    this.filterSelectMultiple = next.dom.getInnerElementById(this.mainDiv, "filterSelectMultiple");
+    this.filterRequired = next.dom.getInnerElementById(this.mainDiv, "filterRequired");
     this.patternDateInput = next.dom.getInnerElementById(this.mainDiv, "patternDate");
     this.patternNumberInput = next.dom.getInnerElementById(this.mainDiv, "patternNumber");
     this.patternDateInputGroup = next.dom.getInnerElementById(this.mainDiv, "patternDateGroup");
@@ -66,10 +67,11 @@ ReportDesigner.prototype.reportTitleInput = null;
 ReportDesigner.prototype.reportData = null;
 ReportDesigner.prototype.labelInput = null;
 ReportDesigner.prototype.filterLabel = null;
-ReportDesigner.prototype.filterSelectMultiple = null;
-ReportDesigner.prototype.filterRequired = null;
+ReportDesigner.prototype.filterFixedCriteria = null;
 ReportDesigner.prototype.filterPreSelectDate = null;
 ReportDesigner.prototype.filterPreSelectEntity = null;
+ReportDesigner.prototype.filterSelectMultiple = null;
+ReportDesigner.prototype.filterRequired = null;
 ReportDesigner.prototype.patternDateInput = null;
 ReportDesigner.prototype.patternNumberInput = null;
 ReportDesigner.prototype.patternDateInputGroup = null;
@@ -106,7 +108,7 @@ ReportDesigner.prototype.removeSelectedCalculatedProperty = function() {
         this.calculatedFieldsSelect.removeChild(this.calculatedFieldsSelect.options[selectedIndex]);
     }
     this.writeXml();
-    alert("O campo calculado foi removido. É necessário remover também (se houver) todas as referências para esse campo no relatório.");
+    alert("O campo calculado foi removido. Ã‰ necessÃ¡rio remover tambÃ©m (se houver) todas as referÃªncias para esse campo no relatÃ³rio.");
 };
 ReportDesigner.prototype.editCalculatedProperty = function() {
     var calculatedFields = next.dom.toElement("calculatedFields");
@@ -142,7 +144,7 @@ ReportDesigner.prototype.editCalculatedProperty = function() {
 };
 //		next.dom.getSelectedText(el)
 ReportDesigner.prototype.showAddCalculatedProperty = function() {
-    window.document.getElementById("calculatedPropertiesWizzard").style.visibility = "";
+    window.document.getElementById("calculatedPropertiesWizzard").style.display = "";
     var calculationExpression = next.dom.toElement("calculationExpression");
     var calculationDisplayName = next.dom.toElement("calculationDisplayName");
     var calculationName = next.dom.toElement("calculationName");
@@ -190,7 +192,7 @@ ReportDesigner.prototype.configureButtonAppendCalculatedVar = function(b, proper
 };
 ReportDesigner.prototype.appendNumberToExpression = function() {
     var bigThis = this;
-    var dialog = next.dialogs.showInputNumberDialog("Inserir Número", "Digite o número que deseja inserir na fórmula:");
+    var dialog = next.dialogs.showInputNumberDialog("Inserir NÃºmero", "Digite o nÃºmero que deseja inserir na fÃ³rmula:");
     dialog.setCallback((function(){
     var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
 
@@ -252,21 +254,21 @@ ReportDesigner.prototype.onChangeCalculationVarName = function(calculationDispla
     calculationName.value = result;
 };
 ReportDesigner.prototype.showConfigureProperties = function() {
-    window.document.getElementById("propertiesWizzard").style.visibility = "";
+    window.document.getElementById("propertiesWizzard").style.display = "";
     for (var key in this.avaiableProperties) {
         if (!(this.avaiableProperties).hasOwnProperty(key)) continue;
         var field = this.avaiableProperties[key];
         var checkbox = window.document.getElementById("selProp_" + field);
-        if (!checkbox.disabled) {
+        if (checkbox != null && !checkbox.disabled) {
             checkbox.checked = false;
         }
     }
 };
 ReportDesigner.prototype.hideConfigureProperties = function() {
-    window.document.getElementById("propertiesWizzard").style.visibility = "hidden";
+    window.document.getElementById("propertiesWizzard").style.display = "none";
 };
 ReportDesigner.prototype.hideAddCalculatedProperty = function() {
-    window.document.getElementById("calculatedPropertiesWizzard").style.visibility = "hidden";
+    window.document.getElementById("calculatedPropertiesWizzard").style.display = "none";
 };
 ReportDesigner.prototype.saveCalculatedProperty = function() {
     //		if(calculatedCustom.checked){
@@ -276,19 +278,19 @@ ReportDesigner.prototype.saveCalculatedProperty = function() {
     var calculationProcessor = next.dom.toElement("calculationProcessor");
     var calculationFormatAsNumber = next.dom.toElement("calculationFormatAsNumber");
     var calculationFormatAsTimeDetail = next.dom.toElement("calculationFormatAsTimeDetail");
-    var editing = calculationDisplayName.disabled;
+    var disabled = calculationDisplayName.disabled;
     var expressionMessage = this.getValidationErrorMessage(calculationExpression);
     if (expressionMessage != null) {
         alert(expressionMessage);
         return;
     }
     if (ReportPropertyConfigUtils.isEmpty(calculationName.value)) {
-        alert("É necessário dar um nome para a variável");
+        alert("Ã‰ necessÃ¡rio dar um nome para a variÃ¡vel");
         next.effects.blink(calculationDisplayName);
         calculationDisplayName.focus();
         return;
     }
-    if (!editing) {
+    if (!disabled) {
         this.addAvaiableProperty(calculationName.value);
     }
     var formatAs = calculationFormatAsNumber.checked ? "number" : "time";
@@ -301,7 +303,7 @@ ReportDesigner.prototype.saveCalculatedProperty = function() {
         "formatAs": formatAs, 
         "formatTimeDetail": formatTimeDetail, 
         "processors": next.util.join(next.dom.getSelectedValues(calculationProcessor), ",")};
-    if (!editing) {
+    if (!disabled) {
         this.addField(calculationName.value, calculationProperties);
     }
     this.addCalculation(calculationName.value, calculationProperties);
@@ -403,11 +405,9 @@ ReportDesigner.prototype.addField = function(name, properties) {
     }
     if (this.filterManager.accept(name, properties)) {
         this.filterSelect.add(name, properties);
-        if (ReportPropertyConfigUtils.isFilterRequired(properties)) {
-            this.filterSelect.select(name, null);
-        }
     }
 };
+//}
 ReportDesigner.prototype.setDataSourceHibernate = function(from) {
     this.reportData.dataSourceProvider = new HibernateDataSourceProvider(from);
 };
@@ -428,8 +428,53 @@ ReportDesigner.prototype.getChartsXmlString = function() {
     chartXml += "    </charts>\n";
     return chartXml;
 };
+ReportDesigner.prototype.showInputLabel = function() {
+    (this.labelInput.parentNode.parentNode).style.display = "";
+};
+ReportDesigner.prototype.hideInputLabel = function() {
+    (this.labelInput.parentNode.parentNode).style.display = "none";
+};
+ReportDesigner.prototype.showFilterLabel = function() {
+    (this.filterLabel.parentNode.parentNode).style.display = "";
+};
+ReportDesigner.prototype.hideFilterLabel = function() {
+    (this.filterLabel.parentNode.parentNode).style.display = "none";
+};
+ReportDesigner.prototype.showFilterFixedCriteria = function() {
+    (this.filterFixedCriteria.parentNode.parentNode).style.display = "";
+};
+ReportDesigner.prototype.hideFilterFixedCriteria = function() {
+    (this.filterFixedCriteria.parentNode.parentNode).style.display = "none";
+};
+ReportDesigner.prototype.showFilterPreSelectDate = function() {
+    (this.filterPreSelectDate.parentNode.parentNode).style.display = "";
+};
+ReportDesigner.prototype.hideFilterPreSelectDate = function() {
+    (this.filterPreSelectDate.parentNode.parentNode).style.display = "none";
+};
+ReportDesigner.prototype.showFilterPreSelectEntity = function() {
+    (this.filterPreSelectEntity.parentNode.parentNode).style.display = "";
+};
+ReportDesigner.prototype.hideFilterPreSelectEntity = function() {
+    (this.filterPreSelectEntity.parentNode.parentNode).style.display = "none";
+};
+ReportDesigner.prototype.showFilterSelectMultiple = function() {
+    (this.filterSelectMultiple.parentNode.parentNode).style.display = "";
+};
+ReportDesigner.prototype.hideFilterSelectMultiple = function() {
+    (this.filterSelectMultiple.parentNode.parentNode).style.display = "none";
+};
+ReportDesigner.prototype.showFilterRequired = function() {
+    (this.filterRequired.parentNode.parentNode).style.display = "";
+};
+ReportDesigner.prototype.hideFilterRequired = function() {
+    (this.filterRequired.parentNode.parentNode).style.display = "none";
+};
 ReportDesigner.prototype.showInputDatePattern = function() {
     ReportPropertyConfigUtils.showElement(this.patternDateInput);
+};
+ReportDesigner.prototype.hideInputDatePattern = function() {
+    (this.patternDateInput.parentNode.parentNode).style.display = "none";
 };
 ReportDesigner.prototype.showInputNumberPattern = function() {
     ReportPropertyConfigUtils.showElement(this.patternNumberInput);
@@ -437,47 +482,8 @@ ReportDesigner.prototype.showInputNumberPattern = function() {
 ReportDesigner.prototype.hideInputNumberPattern = function() {
     ReportPropertyConfigUtils.hideElement(this.patternNumberInput);
 };
-ReportDesigner.prototype.showInputLabel = function() {
-    (this.labelInput.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.showFilterSelectMultiple = function() {
-    (this.filterSelectMultiple.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.showFilterRequired = function() {
-    (this.filterRequired.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.showFilterPreSelectDate = function() {
-    (this.filterPreSelectDate.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.showFilterPreSelectEntity = function() {
-    (this.filterPreSelectEntity.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.showFilterLabel = function() {
-    (this.filterLabel.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.hideInputDatePattern = function() {
-    (this.patternDateInput.parentNode.parentNode).style.display = "none";
-};
 ReportDesigner.prototype.hideInputPatternGroup = function() {
     ReportPropertyConfigUtils.hideElement(this.patternDateInputGroup);
-};
-ReportDesigner.prototype.hideInputLabel = function() {
-    (this.labelInput.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.hideFilterSelectMultiple = function() {
-    (this.filterSelectMultiple.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.hideFilterRequired = function() {
-    (this.filterRequired.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.hideFilterPreSelectDate = function() {
-    (this.filterPreSelectDate.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.hideFilterPreSelectEntity = function() {
-    (this.filterPreSelectEntity.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.hideFilterLabel = function() {
-    (this.filterLabel.parentNode.parentNode).style.display = "none";
 };
 ReportDesigner.prototype.showAggregate = function() {
     (this.aggregateInput.parentNode.parentNode).style.display = "";
@@ -531,7 +537,7 @@ ReportDesigner.prototype.removeSelectedChart = function() {
     }
     this.writeXml();
 };
-ReportDesigner.$typeDescription={"instance":"ReportDesigner", "mainDiv":"Div", "outputXml":"TextArea", "fields":{name:"Map", arguments:[null,{name:"Map", arguments:[null,"Object"]}]}, "avaiableProperties":{name:"Array", arguments:[null]}, "fieldSelect":"ReportGeneratorSelectManyBoxView", "groupSelect":"ReportGeneratorSelectManyBoxView", "filterSelect":"ReportGeneratorSelectManyBoxView", "calculatedFieldsSelect":"Select", "definition":"ReportDefinition", "calculatedFieldsManager":"ReportCalculatedFieldsManager", "layoutManager":"ReportLayoutManager", "groupManager":"ReportGroupManager", "filterManager":"ReportFilterManager", "reportTitleInput":"Input", "reportData":"ReportData", "labelInput":"Input", "filterLabel":"Input", "filterSelectMultiple":"Input", "filterRequired":"Input", "filterPreSelectDate":"Select", "filterPreSelectEntity":"Select", "patternDateInput":"Select", "patternNumberInput":"Select", "patternDateInputGroup":"Select", "aggregateInput":"Input", "aggregateTypeInput":"Select", "charts":"Select", "selectables":{name:"Array", arguments:["Selectable"]}};
+ReportDesigner.$typeDescription={"instance":"ReportDesigner", "mainDiv":"Div", "outputXml":"TextArea", "fields":{name:"Map", arguments:[null,{name:"Map", arguments:[null,"Object"]}]}, "avaiableProperties":{name:"Array", arguments:[null]}, "fieldSelect":"ReportGeneratorSelectManyBoxView", "groupSelect":"ReportGeneratorSelectManyBoxView", "filterSelect":"ReportGeneratorSelectManyBoxView", "calculatedFieldsSelect":"Select", "definition":"ReportDefinition", "calculatedFieldsManager":"ReportCalculatedFieldsManager", "layoutManager":"ReportLayoutManager", "groupManager":"ReportGroupManager", "filterManager":"ReportFilterManager", "reportTitleInput":"Input", "reportData":"ReportData", "labelInput":"Input", "filterLabel":"Input", "filterFixedCriteria":"Select", "filterPreSelectDate":"Select", "filterPreSelectEntity":"Select", "filterSelectMultiple":"Input", "filterRequired":"Input", "patternDateInput":"Select", "patternNumberInput":"Select", "patternDateInputGroup":"Select", "aggregateInput":"Input", "aggregateTypeInput":"Select", "charts":"Select", "selectables":{name:"Array", arguments:["Selectable"]}};
 
 
 var ReportData = function(designer) {

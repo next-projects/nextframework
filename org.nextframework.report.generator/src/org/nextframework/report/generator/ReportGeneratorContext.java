@@ -18,11 +18,11 @@ class ReportGeneratorContext {
 
 
 	public static Class<IReportBuilder> getClassFor(ReportGenerator generator) {
-		WeakReference<Class<IReportBuilder>> ref = cache.get(generator.reportElement);
+		WeakReference<Class<IReportBuilder>> ref = cache.get(generator.getReportElement());
 		Class<IReportBuilder> class1;
 		if(ref == null || ((class1 = ref.get()) == null)){
 			class1 = createReportClass(generator);
-			cache.put(generator.reportElement, new WeakReference<Class<IReportBuilder>>(class1));
+			cache.put(generator.getReportElement(), new WeakReference<Class<IReportBuilder>>(class1));
 		}
 		return class1;
 	}

@@ -1,5 +1,8 @@
-var ReportPropertyConfigUtils = function(){};
+ï»¿var ReportPropertyConfigUtils = function(){};
 
+ReportPropertyConfigUtils.getDisplayName = function(properties) {
+    return properties["displayName"];
+};
 ReportPropertyConfigUtils.isAggregatable = function(properties) {
     return properties["numberType"];
 };
@@ -12,20 +15,26 @@ ReportPropertyConfigUtils.isExtended = function(properties) {
 ReportPropertyConfigUtils.isFilterable = function(properties) {
     return properties["filterable"];
 };
-ReportPropertyConfigUtils.isFilterRequired = function(properties) {
-    return properties["requiredFilter"];
-};
 ReportPropertyConfigUtils.isEntity = function(properties) {
     return properties["entity"];
+};
+ReportPropertyConfigUtils.isEnum = function(properties) {
+    return properties["enumType"];
+};
+ReportPropertyConfigUtils.isFilterSelectMultiple = function(properties) {
+    return properties["filterSelectMultiple"];
 };
 ReportPropertyConfigUtils.setFilterSelectMultiple = function(properties, checked) {
     properties["filterSelectMultiple"] = checked;
 };
+ReportPropertyConfigUtils.isFilterRequired = function(properties) {
+    return properties["requiredFilter"];
+};
 ReportPropertyConfigUtils.setFilterRequired = function(properties, checked) {
     properties["requiredFilter"] = checked;
 };
-ReportPropertyConfigUtils.isFilterSelectMultiple = function(properties) {
-    return properties["filterSelectMultiple"];
+ReportPropertyConfigUtils.getFilterPreSelectDate = function(properties) {
+    return properties["preSelectDate"];
 };
 ReportPropertyConfigUtils.setFilterPreSelectDate = function(properties, filterPreSelectDate) {
     if (("<null>" == filterPreSelectDate)) {
@@ -33,20 +42,23 @@ ReportPropertyConfigUtils.setFilterPreSelectDate = function(properties, filterPr
     }
     properties["preSelectDate"] = filterPreSelectDate;
 };
+ReportPropertyConfigUtils.getFilterPreSelectEntity = function(properties) {
+    return properties["preSelectEntity"];
+};
 ReportPropertyConfigUtils.setFilterPreSelectEntity = function(properties, filterPreSelectEntity) {
     if (("<null>" == filterPreSelectEntity)) {
         filterPreSelectEntity = null;
     }
     properties["preSelectEntity"] = filterPreSelectEntity;
 };
-ReportPropertyConfigUtils.getFilterPreSelectDate = function(properties) {
-    return properties["preSelectDate"];
+ReportPropertyConfigUtils.getFilterFixedCriteria = function(properties) {
+    return properties["fixedCriteria"];
 };
-ReportPropertyConfigUtils.getFilterPreSelectEntity = function(properties) {
-    return properties["preSelectEntity"];
-};
-ReportPropertyConfigUtils.setFilterDisplayName = function(properties, value) {
-    properties["filterDisplayName"] = value;
+ReportPropertyConfigUtils.setFilterFixedCriteria = function(properties, filterFixedCriteria) {
+    if (("<null>" == filterFixedCriteria)) {
+        filterFixedCriteria = null;
+    }
+    properties["fixedCriteria"] = filterFixedCriteria;
 };
 ReportPropertyConfigUtils.getFilterDisplayName = function(properties) {
     var fdn = properties["filterDisplayName"];
@@ -55,8 +67,8 @@ ReportPropertyConfigUtils.getFilterDisplayName = function(properties) {
     }
     return fdn;
 };
-ReportPropertyConfigUtils.getDisplayName = function(properties) {
-    return properties["displayName"];
+ReportPropertyConfigUtils.setFilterDisplayName = function(properties, value) {
+    properties["filterDisplayName"] = value;
 };
 ReportPropertyConfigUtils.getProcessors = function(properties) {
     var processors = properties["processors"];
@@ -229,7 +241,7 @@ ReportPropertyConfigUtils.validateExpression = function(expression) {
         if (token == ")") {
             parentesesStack--;
             if (parentesesStack < 0) {
-                return "Existem mais ')' do que '('. Verifique a expressão.";
+                return "Existem mais ')' do que '('. Verifique a expressÃ£o.";
             }
         }
         if (token == "(") {
@@ -245,12 +257,12 @@ ReportPropertyConfigUtils.validateExpression = function(expression) {
                     status = ReportPropertyConfigUtils.IN_VAR;
                 }
                 if (tokenType == ReportPropertyConfigUtils.CLOSE_PARENTHESIS) {
-                    return "Fecha parênteses inesperado [item " + (i + 1) + "]";
+                    return "Fecha parÃªnteses inesperado [item " + (i + 1) + "]";
                 }
                 break;
             case ReportPropertyConfigUtils.IN_VAR:
                 if (tokenType == ReportPropertyConfigUtils.VAR) {
-                    return "Variável inesperada '" + token + "'";
+                    return "VariÃ¡vel inesperada '" + token + "'";
                 }
                 if (tokenType == ReportPropertyConfigUtils.OPEN_PARENTHESIS) {
                     return "Operador esperado '(' [item " + (i + 1) + "]";
@@ -279,7 +291,7 @@ ReportPropertyConfigUtils.validateExpression = function(expression) {
         }
     }
     if (parentesesStack != 0) {
-        return "O número de '(' e ')' são diferentes. Verifique a expressão.";
+        return "O nÃºmero de '(' e ')' sÃ£o diferentes. Verifique a expressÃ£o.";
     }
     return null;
 };

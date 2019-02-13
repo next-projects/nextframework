@@ -255,11 +255,14 @@ public class JasperDesignBuilderImplComponentMapper {
 			case LEFT:
 				horizontalAlign = HorizontalAlignEnum.LEFT;
 				break;
+			case RIGHT:
+				horizontalAlign = HorizontalAlignEnum.RIGHT;
+				break;
 			case CENTER:
 				horizontalAlign = HorizontalAlignEnum.CENTER;
 				break;
-			case RIGHT:
-				horizontalAlign = HorizontalAlignEnum.RIGHT;
+			case JUSTIFIED:
+				horizontalAlign = HorizontalAlignEnum.JUSTIFIED;
 				break;
 		}
 		//jrDesignTextField.setFontSize(20);

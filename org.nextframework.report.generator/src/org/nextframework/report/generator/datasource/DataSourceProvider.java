@@ -7,7 +7,7 @@ import org.nextframework.report.generator.ReportElement;
 
 public interface DataSourceProvider<ROW> {
 
-	public List<ROW> getResult(ReportElement reportElement, Map<String, Object> filterMap, int limitResults);
+	public List<ROW> getResult(ReportElement reportElement, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults);
 	
 	public Class<ROW> getMainType();
 

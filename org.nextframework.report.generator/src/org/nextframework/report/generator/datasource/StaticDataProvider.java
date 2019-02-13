@@ -30,7 +30,7 @@ public class StaticDataProvider<TYPE> implements DataSourceProvider<TYPE> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<TYPE> getResult(ReportElement element, Map<String, Object> filterMap, int limitResults) {
+	public List<TYPE> getResult(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
 		try {
 			return (List<TYPE>) type.getMethod(method).invoke(null);
 		} catch (Exception e) {

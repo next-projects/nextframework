@@ -10,15 +10,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.controller.ClasspathModelAndView;
 import org.nextframework.controller.DefaultAction;
 import org.nextframework.controller.Input;
 import org.nextframework.controller.MultiActionController;
+import org.nextframework.controller.OnErrors;
 import org.nextframework.controller.ResourceModelAndView;
 import org.nextframework.controller.resource.Resource;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.core.web.WebRequestContext;
+import org.nextframework.exception.ApplicationException;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
@@ -28,29 +33,44 @@ import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.ReportGenerator;
 import org.nextframework.report.generator.ReportReader;
-import org.nextframework.report.generator.chart.ChartElement;
+import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
 import org.nextframework.report.generator.data.FilterElement;
-import org.nextframework.report.generator.data.GroupElement;
 import org.nextframework.report.generator.datasource.DataSourceProvider;
 import org.nextframework.report.generator.datasource.HibernateDataSourceProvider;
 import org.nextframework.report.generator.generated.ReportSpec;
 import org.nextframework.report.generator.layout.DynamicBaseReportDefinition;
-import org.nextframework.report.generator.layout.FieldDetailElement;
-import org.nextframework.report.generator.layout.LayoutItem;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
 import org.nextframework.util.Util;
+import org.nextframework.view.WebUtils;
+import org.nextframework.view.progress.IProgressMonitor;
+import org.nextframework.view.progress.ProgressMonitor;
+import org.nextframework.view.progress.ProgressTask;
+import org.nextframework.view.progress.ProgressTaskFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.ClassUtils;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.SAXException;
 
-public abstract class ReportDesignController extends MultiActionController {
+public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCustomBean> extends MultiActionController {
 	
 	ReportDesignControllerUtil util = new ReportDesignControllerUtil();
-
+	
+	protected Class<CUSTOM_BEAN> customBeanClass;
+	
+	@SuppressWarnings("all")
+	public ReportDesignController(){
+		Class[] classes =  GenericTypeResolver.resolveTypeArguments(this.getClass(), ReportDesignController.class);
+		this.customBeanClass = classes[0];
+	}
+	
+	/////////////////////////////////////////////// EDIT ///////////////////////////////////////////////
+	
 	@DefaultAction
 	public ModelAndView index(){
 		Class<?>[] entities = util.getAvaiableEntities();
@@ -68,7 +88,7 @@ public abstract class ReportDesignController extends MultiActionController {
 			reportElement = new ReportReader(model.getReportXml()).getReportElement();
 		}
 		Class<?> selectedGeneratedType = getReportType(model);
-		Set<String> avaiableProperties = util.getAvailablePropertiesForClass(selectedGeneratedType, 2);
+		Set<String> avaiableProperties = util.getAvailablePropertiesForClass(selectedGeneratedType, null, 3);
 		
 		if(!model.getProperties().contains("id")){
 			model.getProperties().add("id");
@@ -86,14 +106,15 @@ public abstract class ReportDesignController extends MultiActionController {
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("reportTypeDisplayName", BeanDescriptorFactory.forClass(ClassUtils.getUserClass(model.getSelectedType())).getDisplayName());
 		
-		for(String property: propertiesMetadata.keySet()){
-			Map<String, Object> map = propertiesMetadata.get(property);
-			if(map.get("requiredFilter") != null && Boolean.TRUE.equals(map.get("requiredFilter"))){
-				if(!model.getProperties().contains(property)){
-					model.getProperties().add(property);
-				}
-			}
-		}
+		//for(String property: propertiesMetadata.keySet()){
+		//	Map<String, Object> map = propertiesMetadata.get(property);
+		//	if(map.get("requiredFilter") != null && Boolean.TRUE.equals(map.get("requiredFilter"))){
+		//		if(!model.getProperties().contains(property)){
+		//			model.getProperties().add(property);
+		//		}
+		//	}
+		//}
+		
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.design2");
 	}
 
@@ -114,7 +135,6 @@ public abstract class ReportDesignController extends MultiActionController {
 		}
 	}
 
-
 	public ModelAndView designReport(ReportDesignModel model) throws SAXException, IOException{
 		ReportElement reportElement = null;
 		if(model.getReportXml() != null){
@@ -123,7 +143,7 @@ public abstract class ReportDesignController extends MultiActionController {
 		setAttribute("emptyList", new ArrayList<Object>());
 		setAttribute("model", model);
 		Class<?> reportType = getReportType(model);
-		Set<String> avaiablePropertiesForClass = util.getAvailablePropertiesForClass(reportType, 2);
+		Set<String> avaiablePropertiesForClass = util.getAvailablePropertiesForClass(reportType, null, 3);
 		Set<String> properties = new HashSet<String>();
 		properties.addAll(model.getProperties());
 		properties.addAll(avaiablePropertiesForClass);
@@ -144,6 +164,16 @@ public abstract class ReportDesignController extends MultiActionController {
 			model.getProperties().add(calculatedFieldElement.getName());
 		}
 		
+		try {
+			if (model != null && model.getId() != null) {
+				CUSTOM_BEAN customBean = loadPersistedReportById(model.getId()); //FIXME Está carregando 2 vezes
+				setAttribute("customBean", customBean);
+			}
+			setAttribute("customBeanClass", customBeanClass);
+		} catch (Exception e) {
+			throw new RuntimeException("Não foi possível carregar os dados customizados", e);
+		}
+		
 		setAttribute("reportTypeDisplayName", BeanDescriptorFactory.forClass(ClassUtils.getUserClass(reportType)).getDisplayName());
 		setAttribute("propertyMetadata", propertiesMetadata);
 		setAttribute("crudPath", getPathForReportCrud());
@@ -153,7 +183,7 @@ public abstract class ReportDesignController extends MultiActionController {
 	}
 
 	public ModelAndView editXMLOnError(){
-		ReportDesignModel model = loadDesignModelForId(new Integer(getParameter("id")));
+		ReportDesignModel model = loadDesignModel();
 		setAttribute("model", model);
 		setAttribute("crudPath", getPathForReportCrud());
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.editXML");
@@ -161,9 +191,7 @@ public abstract class ReportDesignController extends MultiActionController {
 
 	@Input("editXMLOnError")
 	public ModelAndView editDesignForId() throws SAXException, IOException {
-		ReportDesignModel model = loadDesignModelForId(new Integer(getParameter("id")));
-		
-		Set<String> properties = new HashSet<String>();
+		ReportDesignModel model = loadDesignModel();
 		
 		ReportReader reader = new ReportReader(model.getReportXml());
 		ReportElement reportElement = reader.getReportElement();		
@@ -171,52 +199,103 @@ public abstract class ReportDesignController extends MultiActionController {
 		model.setSelectedGeneratedType(reportElement.getData().getMainType());
 		model.setReportElement(reportElement);
 		
-		List<LayoutItem> items = reportElement.getLayout().getItems();
-		for (LayoutItem layoutItem : items) {
-			if(layoutItem instanceof FieldDetailElement){
-				String fieldName = ((FieldDetailElement) layoutItem).getName();
-				properties.add(fieldName);
-			}
-		}
-		List<GroupElement> groups = reportElement.getData().getGroups();
-		for (GroupElement groupElement : groups) {
-			properties.add(groupElement.getName());
-		}
-		
-		List<FilterElement> filters = reportElement.getData().getFilters();
-		for (FilterElement filterElement : filters) {
-			properties.add(filterElement.getName());
-		}
-		
-		List<ChartElement> charts = reportElement.getCharts().getItems();
-		for (ChartElement chartElement : charts) {
-			String groupProperty = chartElement.getGroupProperty();
-			String valueProperty = chartElement.getValueProperty();
-			if(groupProperty != null){
-				properties.add(groupProperty);
-			}
-			if(valueProperty != null && ! valueProperty.equals("count")){
-				properties.add(valueProperty);
-			}
-		}
-		
-		setAttribute("groups", groups);
-		setAttribute("filters", filters);
+		setAttribute("groups", reportElement.getData().getGroups());
+		setAttribute("filters", reportElement.getData().getFilters());
 		setAttribute("items", reportElement.getLayout().getItems());
 		setAttribute("charts", reportElement.getCharts() != null? reportElement.getCharts().getItems() : null);
 		
-		model.getProperties().addAll(properties);
+		model.getProperties().addAll(reportElement.getProperties());
 		model.setReportTitle(reportElement.getReportTitle());
 		
 		return designReport(model);
 	}
 
-	public ModelAndView showFilterView(ReportDesignModel model) throws SAXException, IOException {
+	@SuppressWarnings("all")
+	@OnErrors("editDesignForId")
+	public ModelAndView saveReport(WebRequestContext request, ReportDesignModel model) throws Exception{
+		CUSTOM_BEAN customBean = (CUSTOM_BEAN) customBeanClass.newInstance();
+		
+		//Faz o bind no bean customizado
+		ServletRequestDataBinder binder = bind(request, customBean, false);
+		BindException errors = new BindException(binder.getBindingResult());
+		if (errors.hasErrors()) {
+			throw new ApplicationException("Não foi possível fazer o bind dos dados customizados", errors);
+		}
+		
+		//Faz leitura da composição do relatório
 		ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
-		List<FilterElement> filters = reportElement.getData().getFilters();
+		
+		validateRequiredFields(model, reportElement);
+		
+		//Define atributos básicos do custombean
+		customBean.setId(model.getId());
+		customBean.setXml(model.getReportXml());
+		customBean.setReportPublic(model.getReportPublic());
+		
+		//salva!
+		persistReport(model, reportElement, customBean);
+		
+		return new ModelAndView("redirect:"+getPathForReportCrud());
+	}
+	
+	private void validateRequiredFields(ReportDesignModel model, ReportElement reportElement){
+		if (model.getSelectedType() == null) { //Se tiver no modo edição de XML
+			return;
+		}
+		Class<?> selectedGeneratedType = getReportType(model);
+		Set<String> avaiableProperties = util.getAvailablePropertiesForClass(selectedGeneratedType, null, 1);
+		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(selectedGeneratedType);
+		String camposRequired = "";
+		boolean possuiFiltro = false;
+		for(String property: avaiableProperties){
+			PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
+			ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
+			boolean filterable = util.isFilterable(beanDescriptor, property, reportField);
+			if (filterable) {
+				if(reportField != null && reportField.requiredFilter()){
+					String completeDisplayName = util.getCompleteDisplayName(beanDescriptor, propertyDescriptor, property);
+					camposRequired += (camposRequired.length() == 0 ? "" : ", ") + completeDisplayName;
+					FilterElement filter = reportElement.getData().getFilterByName(property);
+					if(filter != null && filter.isFilterRequired()){
+						possuiFiltro = true;
+						break;
+					}
+				}
+			}
+		}
+		if (!possuiFiltro && camposRequired.length() > 0) {
+			throw new ApplicationException("É necessário que pelo menos um dos filtros obrigatórios seja definido: " + camposRequired);
+		}
+	}
+
+	public ModelAndView showFilterViewForId(WebRequestContext request) {
+		ReportDesignModel model = loadDesignModel();
+		try {
+			return showFilterView(request, model);
+		} catch (Exception e) {
+			throw new RuntimeException("Não foi possível executar o relatório", e);
+		}
+	}
+	
+	protected ReportDesignModel loadDesignModel(){
+		CUSTOM_BEAN customBean = loadPersistedReportById(new Integer(getParameter("id")));
+		ReportDesignModel model = new ReportDesignModel();
+		model.setId(customBean.getId());
+		model.setReportXml(customBean.getXml());
+		model.setReportPublic(customBean.getReportPublic());
+		return model;
+	}
+	
+	/////////////////////////////////////////////// FILTER ///////////////////////////////////////////////
+
+	public ModelAndView showFilterView(WebRequestContext request, ReportDesignModel model) throws Exception {
+		
+		ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
+		
 		Map<String, Map<String, Object>> filterProperties = new LinkedHashMap<String, Map<String,Object>>();
+		List<FilterElement> filters = reportElement.getData().getFilters();
 		for (FilterElement filterElement : filters) {
-			HashMap<String, Object> properties = new HashMap<String, Object>();
+			Map<String, Object> properties = new HashMap<String, Object>();
 			if(Util.strings.isNotEmpty(filterElement.getFilterDisplayName())){
 				properties.put("displayName", filterElement.getFilterDisplayName());
 			}
@@ -232,68 +311,214 @@ public abstract class ReportDesignController extends MultiActionController {
 		setAttribute("model", model);
 		setAttribute("reportElement", reportElement);
 		setAttribute("crudPath", getPathForReportCrud());
+		setAttribute("reportPath", WebUtils.getFirstFullUrl());
 		
-		Map<String, Object> filterMap = (Map<String, Object>) getUserAttribute(ReportDesignController.class.getSimpleName()+"_"+reportElement.getName());
-		if(filterMap == null){
+		Map<String, Object> filterMap = getFilterMap(model, reportElement, false);
+		setAttribute("filterValuesMap", filterMap);
+		
+		Map<String, String> filterActions = getFilterActions(model);
+		setAttribute("filterActions", filterActions);
+		
+		ModelAndView mv = new ClasspathModelAndView("org.nextframework.report.generator.mvc.filter");
+		
+		//Obtem o objeto de controle do monitoramento
+		Map<Integer, ProgressMonitor> monitorMap = getMonitorMap(request);
+		synchronized (monitorMap) {
+			ProgressMonitor monitor = monitorMap.get(model.getId());
+			if (monitor != null) {
+				//Verifica se a tarefa concluiu
+				if (monitor.getDone() != null) {
+					//Se houver erro, apresenta
+					if (monitor.getError() != null) {
+						request.addError(monitor.getError());
+					}
+					//Se houver resultado válido, apresenta. É possível que o resultado seja um outro ModelAndView
+					if (monitor.getReturn() != null) {
+						ReportDesignTask task = getTaskMap(request).get(model.getId());
+						ModelAndView customResult = task.showResults(request, model, monitor.getReturn());
+						if (customResult != null) {
+							mv = customResult;
+						}
+					}else{
+						request.addMessage("Nenhum resultado encontrado. Verifique o filtro.", MessageType.WARN);
+					}
+					monitorMap.remove(model.getId());
+					getTaskMap(request).remove(model.getId());
+				}else{
+					//Caso não existe, simplesmente envia o monitor para a barra de rolagem ser apresentada
+					request.setAttribute("progressMonitor", monitor);
+				}
+			}
+		}
+		
+		return mv;
+	}
+	
+	@SuppressWarnings("all")
+	protected Map<String, Object> getFilterMap(ReportDesignModel model, ReportElement reportElement, boolean bind){
+		Map<String, Object> filterMap = null;
+		if (!bind) {
+			filterMap = (Map<String, Object>) getUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId());
+		}
+		if (filterMap == null) {
 			filterMap = util.getFilterMap(reportElement);
+			if (bind) {
+				String msg = validate(model, filterMap);
+				if (msg != null) {
+					throw new NextException(msg);
+				}
+			}
+			setUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId(), filterMap);
 		}
-		setAttribute("filterValuesMap", filterMap);
-		
-		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.filter");
+		return filterMap;
 	}
 	
-	
-	public ModelAndView downloadPdf(ReportDesignModel model) throws SAXException, IOException {
-		ReportDefinition definition = getDesignFromModel(model, getMaxResults());
-		if(definition.getData().isEmpty()){
-			getRequest().addMessage("Nenhum resultado encontrado. Verifique o filtro.", MessageType.WARN);
-			return showFilterView(model);
-		} else {
-			definition.getParameters().put("renderPDF", Boolean.TRUE);
-			onDownloadDefinitionPDF(definition);
-			return new ResourceModelAndView(new Resource("application/pdf", definition.getReportName()+".pdf", JasperReportsRenderer.renderAsPDF(definition)));
-		}
-	}
-
-	public ModelAndView showResults(final ReportDesignModel model) throws SAXException, IOException {
-		ReportDefinition definition = getDesignFromModel(model, getMaxResults());
-		
-		if(definition.getData().isEmpty()){
-			getRequest().addMessage("Nenhum resultado encontrado. Verifique o filtro.", MessageType.WARN);
-		} else {
-			setAttribute("html", HtmlReportRenderer.renderAsHtml(definition));
-		}
-		setAttribute("crudPath", getPathForReportCrud());
-		
-		return showFilterView(model);
+	protected String validate(ReportDesignModel model, Map<String, Object> filterMap){
+		return null;
 	}
 	
-	protected ReportDefinition getDesignFromModel(ReportDesignModel model, int limitResults) throws SAXException, IOException {
+	protected Map<String, String> getFilterActions(ReportDesignModel model){
+		Map<String, String> actions = new LinkedHashMap<String, String>();
+		actions.put("downloadPdf", "Gerar PDF");
+		return actions;
+	}
+	
+	/////////////////////////////////////////////// TASKS ///////////////////////////////////////////////
+	
+	@OnErrors("showFilterView")
+	@Input("showFilterView")
+	public ModelAndView downloadPdf(WebRequestContext request, ReportDesignModel model) throws Exception {
+		
+		ReportDesignTask task = new ReportDesignTask() {
+			@Override
+			public Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception {
+				progressMonitor.setTaskName("Gerando PDF");
+				DynamicBaseReportDefinition definition2 = (DynamicBaseReportDefinition) definition;
+				if(Util.collections.isNotEmpty(definition2.getSummarizedData().getItems())){
+					onDownloadDefinitionPDF(definition);
+					definition.getParameters().put("renderPDF", Boolean.TRUE);
+					byte[] pdfBytes = JasperReportsRenderer.renderAsPDF(definition);
+					return new Resource("application/pdf", definition.getReportName()+".pdf", pdfBytes);
+				}
+				return null;
+			}
+			@Override
+			public ModelAndView showResults(WebRequestContext request, ReportDesignModel model, Object data) throws Exception {
+				return new ResourceModelAndView((Resource)data);
+			}
+		};
+		
+		return executeTask(request, model, task);
+	}
+	
+	@OnErrors("showFilterView")
+	@Input("showFilterView")
+	public ModelAndView showResults(final WebRequestContext request, final ReportDesignModel model) throws Exception {
+		
+		ReportDesignTask task = new ReportDesignTask() {
+			@Override
+			public Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception {
+				progressMonitor.setTaskName("Gerando HTML");
+				DynamicBaseReportDefinition definition2 = (DynamicBaseReportDefinition) definition;
+				if(Util.collections.isNotEmpty(definition2.getSummarizedData().getItems())){
+					return HtmlReportRenderer.renderAsHtml(definition);
+				}
+				return null;
+			}
+			@Override
+			public ModelAndView showResults(WebRequestContext request, ReportDesignModel model, Object data) throws Exception {
+				request.setAttribute("html", data);
+				return null;
+			}
+		};
+		
+		return executeTask(request, model, task);
+	}
+	
+	/////////////////////////////////////////////// EXECUTE TASKS ///////////////////////////////////////////////
+	
+	public interface ReportDesignTask{
+		Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception;
+		ModelAndView showResults(WebRequestContext request, ReportDesignModel model, Object data) throws Exception;
+	}
+	
+	protected ModelAndView executeTask(WebRequestContext request, ReportDesignModel model, final ReportDesignTask task) throws Exception {
+		
+		//Faz a bindagem dos parâmetros
+		final ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
+		final Map<String, Object> filterMap = getFilterMap(model, reportElement, true);
+		
+		//Obtem o objeto de controle do monitoramento
+		Map<Integer, ProgressMonitor> monitorMap = getMonitorMap(request);
+		synchronized (monitorMap) {
+			
+			//Se já existir, dá bomba
+			ProgressMonitor monitor = monitorMap.get(model.getId());
+			if (monitor != null) {
+				request.addError("Não é possível executar o relatório, pois uma requisição ainda está em andamento");
+				return showFilterView(request, model);
+			}
+			
+			//Se não existir, inicia a thread e obtém o monitor
+			ProgressTask pTask = new ProgressTask() {
+				@Override
+				public Object run(IProgressMonitor progressMonitor) throws Exception {
+					progressMonitor.beginTask("Inicializando", 120);
+					ReportDefinition definition = getReportDefinition(reportElement, filterMap, getMaxResults(), progressMonitor);
+					progressMonitor.setTaskName("Foramatando");
+					Object converted = task.convertResults(definition, progressMonitor);
+					progressMonitor.worked(20);
+					return converted;
+				}
+			};
+			
+			monitor = ProgressTaskFactory.startTask(pTask, ReportDesignTask.class.getSimpleName() + " " + model.getId());
+			monitorMap.put(model.getId(), monitor);
+			getTaskMap(request).put(model.getId(), task);
+		}
+		
+		return continueOnAction("showFilterView", model);
+	}
+	
+	@Deprecated
+	protected ReportDefinition getReportDefinition(ReportDesignModel model) throws Exception {
 		ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
-		Map<String, Object> filterMap = util.getFilterMap(reportElement);
-		setUserAttribute(ReportDesignController.class.getSimpleName()+"_"+reportElement.getName(), filterMap);
-		setAttribute("filterValuesMap", filterMap);
+		Map<String, Object> filterMap = getFilterMap(model, reportElement, true);
+		ReportDefinition definition = getReportDefinition(reportElement, filterMap, getMaxResults(), null);
+		return definition;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<Integer, ProgressMonitor> getMonitorMap(WebRequestContext request) {
+		String attributeName = ReportDesignController.class.getSimpleName() + "_monitorMap";
+		Map<Integer, ProgressMonitor> monitorMap = (Map<Integer, ProgressMonitor>) request.getUserAttribute(attributeName);
+		if (monitorMap == null) {
+			monitorMap = new HashMap<Integer, ProgressMonitor>();
+			request.setUserAttribute(attributeName, monitorMap);
+		}
+		return monitorMap;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<Integer, ReportDesignTask> getTaskMap(WebRequestContext request) {
+		String attributeName = ReportDesignController.class.getSimpleName() + "_taskMap";
+		Map<Integer, ReportDesignTask> taskMap = (Map<Integer, ReportDesignTask>) request.getUserAttribute(attributeName);
+		if (taskMap == null) {
+			taskMap = new HashMap<Integer, ReportDesignTask>();
+			request.setUserAttribute(attributeName, taskMap);
+		}
+		return taskMap;
+	}
+	
+	private ReportDefinition getReportDefinition(ReportElement reportElement, Map<String, Object> filterMap, int maxResults, IProgressMonitor progressMonitor) {
 		
-		ReportGenerator rg = new ReportGenerator(reportElement);
-		
-		ReportSpec spec = rg.generateReportSpec(filterMap, limitResults);
-		
+		ReportGenerator rg = new ReportGenerator(reportElement, progressMonitor);
+		ReportSpec spec = rg.generateReportSpec(filterMap, maxResults);
 		if(debugMode()){
 			debugSource(rg.getSourceCode(), spec.getSummary().getSourceCode());
 		}
 		
 		ReportDefinition definition = spec.getReportBuilder().getDefinition();
-		
-		boolean avaiable = false;
-		for (Class<?> c : util.getAvaiableEntities()) {
-			if(ClassUtils.getUserClass(reportElement.getData().getMainType()).equals(c)){
-				avaiable = true;
-				break;
-			}
-		}
-		if(!avaiable){
-			throw new NextException("The type "+reportElement.getData().getMainType()+" is not avaiable for reports.");
-		}
 		
 		int total = definition.getData().size();
 		if (definition instanceof DynamicBaseReportDefinition) {
@@ -301,8 +526,8 @@ public abstract class ReportDesignController extends MultiActionController {
 			total = d2.getSummarizedData().getItems().size();
 		}
 		
-		if(total == getMaxResults()) {
-			ReportLabel label = new ReportLabel("Obs: Apenas os "+getMaxResults()+" primeiros registros estão sendo mostrados.");
+		if(total == maxResults) {
+			ReportLabel label = new ReportLabel("Obs: Apenas os "+maxResults+" primeiros registros estão sendo mostrados.");
 			label.getStyle().setForegroundColor(Color.RED);
 			label.getStyle().setFontSize(6);
 			label.getStyle().setItalic(true);
@@ -310,28 +535,18 @@ public abstract class ReportDesignController extends MultiActionController {
 			ReportSectionRow row = definition.getSectionFirstPageHeader().insertRow(0);
 			definition.addItem(label, row, 0);
 		}
+		
 		return definition;
 	}
-
+	
 	protected int getMaxResults() {
 		return HibernateDataSourceProvider.MAXIMUM_RESULTS;
 	}
+	
+	/////////////////////////////////////////////// AJAX ///////////////////////////////////////////////
 
-	public ModelAndView showFilterViewForId() {
-		ReportDesignModel model = loadDesignModelForId(new Integer(getParameter("id")));
-		try {
-			return showFilterView(model);
-		} catch (Exception e) {
-			throw new RuntimeException("Não foi possível executar o relatório", e);
-		}
-	}
-	
-	public ModelAndView saveReport(ReportDesignModel model){
-		persistReport(model);
-		return new ModelAndView("redirect:"+getPathForReportCrud());
-	}
-	
-	public List<Object[]> getFilterList(){
+	@SuppressWarnings("all")
+	public List<Object[]> getFilterList(){ //Ajax
 		ArrayList<Object[]> result = new ArrayList<Object[]>();
 		try {
 			Class type = Class.forName(getParameter("type"));
@@ -352,16 +567,25 @@ public abstract class ReportDesignController extends MultiActionController {
 		return result;
 	}
 	
-	public abstract void persistReport(ReportDesignModel model);
-	protected abstract ReportDesignModel loadDesignModelForId(Integer id);
+	/////////////////////////////////////////////// CUSTOM ///////////////////////////////////////////////
+	
 	public abstract String getPathForReportCrud();
 	
+	public abstract void persistReport(ReportDesignModel model, ReportElement reportElement, CUSTOM_BEAN customBean);
+	
+	protected abstract CUSTOM_BEAN loadPersistedReportById(Integer id);
+	
 	protected void onDownloadDefinitionPDF(ReportDefinition definition) {
+		
 	}
+	
+	/////////////////////////////////////////////// DEBUG ///////////////////////////////////////////////
 
 	protected boolean debugMode() {
 		return false;
 	}
+	
 	protected void debugSource(String sourceCodeReport, String sourceCodeSummary) {
-	}	
+	}
+	
 }

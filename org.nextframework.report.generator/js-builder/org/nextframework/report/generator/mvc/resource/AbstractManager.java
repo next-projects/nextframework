@@ -248,71 +248,82 @@ class ReportFilterManager extends AbstractManager {
 	}
 
 	protected void onSelectElement(final String value) {
-		final ReportFilterManager bigThis = this;
 		Map<String, Object> properties = getByName(value).value;
-		String filterLabel = ReportPropertyConfigUtils.getFilterDisplayName(properties);
+		
 		designer.showFilterLabel();
-		designer.filterLabel.value = filterLabel;
-		designer.filterLabel.onchange = new Function1<DOMEvent, Boolean>() {
-			public Boolean $invoke(DOMEvent p1) {
-				ReportPropertyConfigUtils.setFilterDisplayName(
-						bigThis.getByName(value).value, 
-						bigThis.designer.filterLabel.value);
-				
-				bigThis.designer.writeXml();
-				return true;
-			}
-		};
-		if(ReportPropertyConfigUtils.isDate(properties)) {
+		configureFilterLabel(properties);
+		
+		if (!ReportPropertyConfigUtils.isTransient(properties) && !ReportPropertyConfigUtils.isExtended(properties)) {
+			designer.showFilterFixedCriteria();
+			configureFilterFixedCriteria(properties, value);
+		}else{
+			designer.hideFilterFixedCriteria();
+		}
+		
+		boolean isFixedCriteria = ReportPropertyConfigUtils.getFilterFixedCriteria(properties) != null;
+		
+		if(ReportPropertyConfigUtils.isDate(properties) && !isFixedCriteria) {
 			designer.showFilterPreSelectDate();
 			configureFilterPreSelectDateCombo(properties);
 		} else {
 			designer.hideFilterPreSelectDate();
 		}
-		if(ReportPropertyConfigUtils.isEntity(properties)) {
+		
+		if(ReportPropertyConfigUtils.isEntity(properties) && !isFixedCriteria) {
 			designer.showFilterPreSelectEntity();
 			configureFilterPreSelectEntityCombo(properties);
 		} else {
 			designer.hideFilterPreSelectEntity();
 		}
 		
-		if(ReportPropertyConfigUtils.isEntity(properties)) {
+		if((ReportPropertyConfigUtils.isEntity(properties) || ReportPropertyConfigUtils.isEnum(properties)) && !isFixedCriteria) {
 			designer.showFilterSelectMultiple();
+			configureFilterSelectMultiple(properties);
  		} else {
  			designer.hideFilterSelectMultiple();
  		}
-		if(!ReportPropertyConfigUtils.isFilterRequired(properties)){
-		} else {
+		
+		if (!isFixedCriteria) {
+			designer.showFilterRequired();
+			configureFilterRequired(properties);
+		}else{
 			designer.hideFilterRequired();
 		}
-		designer.showFilterRequired();
-
-		designer.filterRequired.checked = ReportPropertyConfigUtils.isFilterRequired(properties);
-		designer.filterRequired.onchange = new Function1<DOMEvent, Boolean>() {
-			public Boolean $invoke(DOMEvent p1) {
-				ReportPropertyConfigUtils.setFilterRequired(
-						bigThis.getByName(value).value, 
-						bigThis.designer.filterRequired.checked);
-				
-				bigThis.designer.writeXml();
-				return true;
-			}
-		};
-		
-		designer.filterSelectMultiple.checked = ReportPropertyConfigUtils.isFilterSelectMultiple(properties);
-		designer.filterSelectMultiple.onchange = new Function1<DOMEvent, Boolean>() {
-			public Boolean $invoke(DOMEvent p1) {
-				ReportPropertyConfigUtils.setFilterSelectMultiple(
-						bigThis.getByName(value).value, 
-						bigThis.designer.filterSelectMultiple.checked);
-				
-				bigThis.designer.writeXml();
-				return true;
-			}
-		};
 		
 	}
+	
+	private void configureFilterLabel(final Map<String, Object> properties) {
+		final ReportFilterManager bigThis = this;
+		String filterLabel = ReportPropertyConfigUtils.getFilterDisplayName(properties);
+		designer.filterLabel.value = filterLabel;
+		designer.filterLabel.onchange = new Function1<DOMEvent, Boolean>() {
+			public Boolean $invoke(DOMEvent p1) {
+				ReportPropertyConfigUtils.setFilterDisplayName(properties, bigThis.designer.filterLabel.value);
+				bigThis.designer.writeXml();
+				return true;
+			}
+		};
+	}
 
+	private void configureFilterFixedCriteria(final Map<String, Object> properties, final String value) {
+		final ReportFilterManager bigThis = this;
+		designer.filterFixedCriteria.options.length = 0;
+		designer.filterFixedCriteria.add(new Option("", "<null>"));
+		designer.filterFixedCriteria.add(new Option("NULO", "ISNULL"));
+		designer.filterFixedCriteria.add(new Option("NÃO NULO", "NOTNULL"));
+		String selectedValue = ReportPropertyConfigUtils.getFilterFixedCriteria(properties);
+		next.dom.setSelectedValue(bigThis.designer.filterFixedCriteria, selectedValue);
+		designer.filterFixedCriteria.onchange = new Function1<DOMEvent, Boolean>() {
+			public Boolean $invoke(DOMEvent p1) {
+				String selectedValue = next.dom.getSelectedValue(bigThis.designer.filterFixedCriteria);
+				ReportPropertyConfigUtils.setFilterFixedCriteria(properties, selectedValue);
+				bigThis.designer.writeXml();
+				bigThis.onSelectElement(value); //Força redesenhar os controles para sumir ou aparecer os demais controles em função da seleção do critério
+				return true;
+			}
+		};
+	}
+	
 	public void configureFilterPreSelectDateCombo(final Map<String, Object> properties) {
 		final ReportFilterManager bigThis = this;
 		designer.filterPreSelectDate.selectedIndex = 0;
@@ -320,10 +331,7 @@ class ReportFilterManager extends AbstractManager {
 		designer.filterPreSelectDate.onchange = new Function1<DOMEvent, Boolean>() {
 			public Boolean $invoke(DOMEvent p1) {
 				String selectedValue = next.dom.getSelectedValue(bigThis.designer.filterPreSelectDate);
-				ReportPropertyConfigUtils.setFilterPreSelectDate(
-						properties, 
-						selectedValue);
-				
+				ReportPropertyConfigUtils.setFilterPreSelectDate(properties, selectedValue);
 				bigThis.designer.writeXml();
 				return true;
 			}
@@ -332,11 +340,8 @@ class ReportFilterManager extends AbstractManager {
 
 	private void configureFilterPreSelectEntityCombo(final Map<String, Object> properties) {
 		final ReportFilterManager bigThis = this;
-//		this.designer.filterPreSelectEntity
-		//do ajax
 		String type = ReportPropertyConfigUtils.getType(properties);
-		final String entityValue = ReportPropertyConfigUtils.getFilterPreSelectEntity(properties);
-		//boolean multiple = ReportPropertyConfigUtils.isFilterSelectMultiple(properties);
+		final String selectedValue = ReportPropertyConfigUtils.getFilterPreSelectEntity(properties);
 		String path = this.designer.controllerPath;
 		designer.filterPreSelectEntity.options.length = 0;
 		designer.filterPreSelectEntity.add(new Option("", "<null>"));
@@ -353,8 +358,8 @@ class ReportFilterManager extends AbstractManager {
 						String value = item.$get(1);
 						bigThis.designer.filterPreSelectEntity.add(new Option(value, id));
 					}
-					next.dom.setSelectedValue(bigThis.designer.filterPreSelectEntity, entityValue);
-					if(entityValue == null){
+					next.dom.setSelectedValue(bigThis.designer.filterPreSelectEntity, selectedValue);
+					if(selectedValue == null){
 						ReportPropertyConfigUtils.setFilterPreSelectEntity(properties, null);
 					}
 				}
@@ -363,16 +368,38 @@ class ReportFilterManager extends AbstractManager {
 		designer.filterPreSelectEntity.onchange = new Function1<DOMEvent, Boolean>() {
 			public Boolean $invoke(DOMEvent p1) {
 				String selectedValue = next.dom.getSelectedValue(bigThis.designer.filterPreSelectEntity);
-				ReportPropertyConfigUtils.setFilterPreSelectEntity(
-						properties, 
-						selectedValue);
-				
+				ReportPropertyConfigUtils.setFilterPreSelectEntity(properties, selectedValue);
+				bigThis.designer.writeXml();
+				return true;
+			}
+		};
+		
+	}
+	
+	private void configureFilterSelectMultiple(final Map<String, Object> properties) {
+		final ReportFilterManager bigThis = this;
+		designer.filterSelectMultiple.checked = ReportPropertyConfigUtils.isFilterSelectMultiple(properties);
+		designer.filterSelectMultiple.onchange = new Function1<DOMEvent, Boolean>() {
+			public Boolean $invoke(DOMEvent p1) {
+				ReportPropertyConfigUtils.setFilterSelectMultiple(properties, bigThis.designer.filterSelectMultiple.checked);
 				bigThis.designer.writeXml();
 				return true;
 			}
 		};
 	}
-
+	
+	private void configureFilterRequired(final Map<String, Object> properties) {
+		final ReportFilterManager bigThis = this;
+		designer.filterRequired.checked = ReportPropertyConfigUtils.isFilterRequired(properties);
+		designer.filterRequired.onchange = new Function1<DOMEvent, Boolean>() {
+			public Boolean $invoke(DOMEvent p1) {
+				ReportPropertyConfigUtils.setFilterRequired(properties, bigThis.designer.filterRequired.checked);
+				bigThis.designer.writeXml();
+				return true;
+			}
+		};
+	}
+	
 	@Override
 	protected boolean accept(String name, Map<String, Object> properties) {
 		return (!ReportPropertyConfigUtils.isTransient(properties) ||
@@ -393,14 +420,22 @@ class ReportFilterManager extends AbstractManager {
 	public String toString() {
 		String value = "        <filters>\n";
 		for (String key : objects) {
+			
 			SimpleNamedObject el = objects.$get(key);
 			String fdn = ReportPropertyConfigUtils.getFilterDisplayName(el.value);
+			String dn = ReportPropertyConfigUtils.getDisplayName(el.value);
+			String ffc = ReportPropertyConfigUtils.getFilterFixedCriteria(el.value);
 			String fpd = ReportPropertyConfigUtils.getFilterPreSelectDate(el.value);
 			String fpe = ReportPropertyConfigUtils.getFilterPreSelectEntity(el.value);
-			String dn = ReportPropertyConfigUtils.getDisplayName(el.value);
+			boolean fsm = ReportPropertyConfigUtils.isFilterSelectMultiple(el.value);
+			boolean fr = ReportPropertyConfigUtils.isFilterRequired(el.value);
+			
 			value += "            <filter name='"+el.name+"'";
 			if(fdn != dn){
 				value += " filterDisplayName='"+fdn+"'";
+			}
+			if(ffc != null){
+				value += " fixedCriteria='"+ffc+"'";
 			}
 			if(fpd != null){
 				value += " preSelectDate='"+fpd+"'";
@@ -408,13 +443,14 @@ class ReportFilterManager extends AbstractManager {
 			if(fpe != null){
 				value += " preSelectEntity='"+fpe+"'";
 			}
-			if(ReportPropertyConfigUtils.isFilterSelectMultiple(el.value)){
+			if(fsm){
 				value += " filterSelectMultiple='true'";
 			}
-			if(ReportPropertyConfigUtils.isFilterRequired(el.value)){
+			if(fr){
 				value += " requiredFilter='true'";
 			}
 			value += "/>\n";
+			
 		}
 		value += "        </filters>\n";
 		return value;

@@ -1,4 +1,4 @@
-var AbstractManager = function(designer, attachedView) {
+﻿var AbstractManager = function(designer, attachedView) {
 
     this.designer = designer;
     this.attachedView = attachedView;
@@ -176,48 +176,65 @@ var ReportFilterManager = function(designer, attachedView) {
 stjs.extend(ReportFilterManager, AbstractManager);
 
 ReportFilterManager.prototype.onSelectElement = function(value) {
-    var bigThis = this;
     var properties = this.getByName(value).value;
-    var filterLabel = ReportPropertyConfigUtils.getFilterDisplayName(properties);
     this.designer.showFilterLabel();
-    this.designer.filterLabel.value = filterLabel;
-    this.designer.filterLabel.onchange = function(p1) {
-        ReportPropertyConfigUtils.setFilterDisplayName(bigThis.getByName(value).value, bigThis.designer.filterLabel.value);
-        bigThis.designer.writeXml();
-        return true;
-    };
-    if (ReportPropertyConfigUtils.isDate(properties)) {
+    this.configureFilterLabel(properties);
+    if (!ReportPropertyConfigUtils.isTransient(properties) && !ReportPropertyConfigUtils.isExtended(properties)) {
+        this.designer.showFilterFixedCriteria();
+        this.configureFilterFixedCriteria(properties, value);
+    } else {
+        this.designer.hideFilterFixedCriteria();
+    }
+    var isFixedCriteria = ReportPropertyConfigUtils.getFilterFixedCriteria(properties) != null;
+    if (ReportPropertyConfigUtils.isDate(properties) && !isFixedCriteria) {
         this.designer.showFilterPreSelectDate();
         this.configureFilterPreSelectDateCombo(properties);
     } else {
         this.designer.hideFilterPreSelectDate();
     }
-    if (ReportPropertyConfigUtils.isEntity(properties)) {
+    if (ReportPropertyConfigUtils.isEntity(properties) && !isFixedCriteria) {
         this.designer.showFilterPreSelectEntity();
         this.configureFilterPreSelectEntityCombo(properties);
     } else {
         this.designer.hideFilterPreSelectEntity();
     }
-    if (ReportPropertyConfigUtils.isEntity(properties)) {
+    if ((ReportPropertyConfigUtils.isEntity(properties) || ReportPropertyConfigUtils.isEnum(properties)) && !isFixedCriteria) {
         this.designer.showFilterSelectMultiple();
+        this.configureFilterSelectMultiple(properties);
     } else {
         this.designer.hideFilterSelectMultiple();
     }
-    if (!ReportPropertyConfigUtils.isFilterRequired(properties)) {
+    if (!isFixedCriteria) {
+        this.designer.showFilterRequired();
+        this.configureFilterRequired(properties);
     } else {
         this.designer.hideFilterRequired();
     }
-    this.designer.showFilterRequired();
-    this.designer.filterRequired.checked = ReportPropertyConfigUtils.isFilterRequired(properties);
-    this.designer.filterRequired.onchange = function(p1) {
-        ReportPropertyConfigUtils.setFilterRequired(bigThis.getByName(value).value, bigThis.designer.filterRequired.checked);
+};
+ReportFilterManager.prototype.configureFilterLabel = function(properties) {
+    var bigThis = this;
+    var filterLabel = ReportPropertyConfigUtils.getFilterDisplayName(properties);
+    this.designer.filterLabel.value = filterLabel;
+    this.designer.filterLabel.onchange = function(p1) {
+        ReportPropertyConfigUtils.setFilterDisplayName(properties, bigThis.designer.filterLabel.value);
         bigThis.designer.writeXml();
         return true;
     };
-    this.designer.filterSelectMultiple.checked = ReportPropertyConfigUtils.isFilterSelectMultiple(properties);
-    this.designer.filterSelectMultiple.onchange = function(p1) {
-        ReportPropertyConfigUtils.setFilterSelectMultiple(bigThis.getByName(value).value, bigThis.designer.filterSelectMultiple.checked);
+};
+ReportFilterManager.prototype.configureFilterFixedCriteria = function(properties, value) {
+    var bigThis = this;
+    this.designer.filterFixedCriteria.options.length = 0;
+    this.designer.filterFixedCriteria.add(new Option("", "<null>"));
+    this.designer.filterFixedCriteria.add(new Option("NULO", "ISNULL"));
+    this.designer.filterFixedCriteria.add(new Option("NÃO NULO", "NOTNULL"));
+    var selectedValue = ReportPropertyConfigUtils.getFilterFixedCriteria(properties);
+    next.dom.setSelectedValue(bigThis.designer.filterFixedCriteria, selectedValue);
+    this.designer.filterFixedCriteria.onchange = function(p1) {
+        var selectedValue = next.dom.getSelectedValue(bigThis.designer.filterFixedCriteria);
+        ReportPropertyConfigUtils.setFilterFixedCriteria(properties, selectedValue);
         bigThis.designer.writeXml();
+        bigThis.onSelectElement(value);
+        //Força redesenhar os controles para sumir ou aparecer os demais controles em função da seleção do critério
         return true;
     };
 };
@@ -234,10 +251,8 @@ ReportFilterManager.prototype.configureFilterPreSelectDateCombo = function(prope
 };
 ReportFilterManager.prototype.configureFilterPreSelectEntityCombo = function(properties) {
     var bigThis = this;
-    //do ajax
     var type = ReportPropertyConfigUtils.getType(properties);
-    var entityValue = ReportPropertyConfigUtils.getFilterPreSelectEntity(properties);
-    //boolean multiple = ReportPropertyConfigUtils.isFilterSelectMultiple(properties);
+    var selectedValue = ReportPropertyConfigUtils.getFilterPreSelectEntity(properties);
     var path = this.designer.controllerPath;
     this.designer.filterPreSelectEntity.options.length = 0;
     this.designer.filterPreSelectEntity.add(new Option("", "<null>"));
@@ -249,14 +264,32 @@ ReportFilterManager.prototype.configureFilterPreSelectEntityCombo = function(pro
             var value = item[1];
             bigThis.designer.filterPreSelectEntity.add(new Option(value, id));
         }
-        next.dom.setSelectedValue(bigThis.designer.filterPreSelectEntity, entityValue);
-        if (entityValue == null) {
+        next.dom.setSelectedValue(bigThis.designer.filterPreSelectEntity, selectedValue);
+        if (selectedValue == null) {
             ReportPropertyConfigUtils.setFilterPreSelectEntity(properties, null);
         }
     }).send();
     this.designer.filterPreSelectEntity.onchange = function(p1) {
         var selectedValue = next.dom.getSelectedValue(bigThis.designer.filterPreSelectEntity);
         ReportPropertyConfigUtils.setFilterPreSelectEntity(properties, selectedValue);
+        bigThis.designer.writeXml();
+        return true;
+    };
+};
+ReportFilterManager.prototype.configureFilterSelectMultiple = function(properties) {
+    var bigThis = this;
+    this.designer.filterSelectMultiple.checked = ReportPropertyConfigUtils.isFilterSelectMultiple(properties);
+    this.designer.filterSelectMultiple.onchange = function(p1) {
+        ReportPropertyConfigUtils.setFilterSelectMultiple(properties, bigThis.designer.filterSelectMultiple.checked);
+        bigThis.designer.writeXml();
+        return true;
+    };
+};
+ReportFilterManager.prototype.configureFilterRequired = function(properties) {
+    var bigThis = this;
+    this.designer.filterRequired.checked = ReportPropertyConfigUtils.isFilterRequired(properties);
+    this.designer.filterRequired.onchange = function(p1) {
+        ReportPropertyConfigUtils.setFilterRequired(properties, bigThis.designer.filterRequired.checked);
         bigThis.designer.writeXml();
         return true;
     };
@@ -274,12 +307,18 @@ ReportFilterManager.prototype.toString = function() {
         if (!(this.objects).hasOwnProperty(key)) continue;
         var el = this.objects[key];
         var fdn = ReportPropertyConfigUtils.getFilterDisplayName(el.value);
+        var dn = ReportPropertyConfigUtils.getDisplayName(el.value);
+        var ffc = ReportPropertyConfigUtils.getFilterFixedCriteria(el.value);
         var fpd = ReportPropertyConfigUtils.getFilterPreSelectDate(el.value);
         var fpe = ReportPropertyConfigUtils.getFilterPreSelectEntity(el.value);
-        var dn = ReportPropertyConfigUtils.getDisplayName(el.value);
+        var fsm = ReportPropertyConfigUtils.isFilterSelectMultiple(el.value);
+        var fr = ReportPropertyConfigUtils.isFilterRequired(el.value);
         value += "            <filter name='" + el.name + "'";
         if (fdn != dn) {
             value += " filterDisplayName='" + fdn + "'";
+        }
+        if (ffc != null) {
+            value += " fixedCriteria='" + ffc + "'";
         }
         if (fpd != null) {
             value += " preSelectDate='" + fpd + "'";
@@ -287,10 +326,10 @@ ReportFilterManager.prototype.toString = function() {
         if (fpe != null) {
             value += " preSelectEntity='" + fpe + "'";
         }
-        if (ReportPropertyConfigUtils.isFilterSelectMultiple(el.value)) {
+        if (fsm) {
             value += " filterSelectMultiple='true'";
         }
-        if (ReportPropertyConfigUtils.isFilterRequired(el.value)) {
+        if (fr) {
             value += " requiredFilter='true'";
         }
         value += "/>\n";
@@ -353,14 +392,12 @@ ReportCalculatedFieldsManager.prototype.remove = function(name) {
     }
 };
 ReportCalculatedFieldsManager.prototype.getByName = function(name) {
-    var i = 0;
     for (var key in this.objects) {
         if (!(this.objects).hasOwnProperty(key)) continue;
         var el = this.objects[key];
         if ((el.name == name)) {
             return el;
         }
-        i++;
     }
     return null;
 };

@@ -80,6 +80,7 @@
 		</c:if>
 		<c:if test="${propertyMetadata[property]['calculated']}">
 			designer.addCalculation('${property}', ${propertyMetadata[property]['json']});
+			designer.addAvaiableProperty('${property}');
 		</c:if>
 	</c:forEach>
 	<c:forEach items="${items}" var="item">

@@ -61,7 +61,7 @@
 		</n:panel>
 		<n:panel title="Campos">
 			<div>
-				<div style="float:left; width: 620px">
+				<div style="float:left; width: 630px">
 					<n:input name="fields" type="select-many-box" itens="${emptyList}" useType="java.lang.String" inputWidth="300"/>
 					
 					<div style="padding-top: 5px;">
@@ -81,7 +81,7 @@
 								<td>
 									<select id="patternDate" style="text-transform: none;">
 										<option selected="selected" value="">Dia/Mês/Ano (padrão)</option>
-										<option value="dd/MM/yy HH:mm">Dia/Mês/Ano Hora:Minuto</option>
+										<option value="dd/MM/yyyy HH:mm">Dia/Mês/Ano Hora:Minuto</option>
 										<option value="dd/MM">Dia/Mês</option>
 										<option value="MM/yyyy">Mês/Ano</option>
 										<option value="MMM yyyy">Mês (abreviado) Ano</option>
@@ -131,7 +131,7 @@
 			</div>
 		</n:panel>		
 		<n:panel title="Grupos">
-			<div style="float: left; width: 620px">
+			<div style="float: left; width: 630px">
 				<n:input name="groups" type="select-many-box" itens="${emptyList}" useType="java.lang.String" inputWidth="300"/>
 			</div>
 			<div style="float:left; width: 400px; padding-top: 20px; padding-bottom: 20px;">
@@ -165,7 +165,7 @@
 			 --%>
 		</n:panel>
 		<n:panel title="Filtros">
-			<div style="float: left; width: 620px">
+			<div style="float: left; width: 630px">
 				<n:input name="filters" type="select-many-box" itens="${emptyList}" useType="java.lang.String" inputWidth="300"/>
 			</div>
 			<div style="float:left; width: 400px; padding-top: 20px; padding-bottom: 20px;">
@@ -173,6 +173,15 @@
 					<table>
 						<tr style="display:none">
 							<td><div style="width: 80px;">Legenda:</div></td><td><input id="filterLabel" size="60"/></td>
+						</tr>
+						<tr style="display:none">
+							<td>
+								Critério fixo:
+							</td>
+							<td>
+								<select id="filterFixedCriteria">
+								</select>
+							</td>
 						</tr>
 						<tr style="display:none">
 							<td>
@@ -262,7 +271,7 @@
 <button onclick="$('xml').style.display = 'none';">Hide xml</button>
  --%>
 
-<div id="calculatedPropertiesWizzard" class="propertiesWizzard" style="visibility: hidden;  ">
+<div id="calculatedPropertiesWizzard" class="propertiesWizzard" style="display: none;  ">
 	<div style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-color: white" class="blockview">
 	&nbsp;
 	</div>
@@ -351,7 +360,7 @@
 	</div>	
 </div>
 
-<div id="propertiesWizzard" class="propertiesWizzard" style="visibility: hidden;  ">
+<div id="propertiesWizzard" class="propertiesWizzard" style="display: none; ">
 	<div style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-color: white" class="blockview">
 	&nbsp;
 	</div>

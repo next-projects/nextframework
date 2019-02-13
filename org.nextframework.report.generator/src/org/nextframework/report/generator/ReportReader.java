@@ -3,9 +3,8 @@ package org.nextframework.report.generator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +46,9 @@ public class ReportReader {
 	private InputStream in;
 
 	public ReportReader(String xml){
-		try {
-			this.in = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			throw new NextException(e);
-		}
+		this.in = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
 	}
+	
 	public ReportReader(InputStream in){
 		this.in = in;
 	}
@@ -128,6 +124,7 @@ public class ReportReader {
 					getAttribute(filterNode, "filterSelectMultiple", true),
 					getAttribute(filterNode, "preSelectDate", true),
 					getAttribute(filterNode, "preSelectEntity", true),
+					getAttribute(filterNode, "fixedCriteria", true),
 					getAttribute(filterNode, "requiredFilter", true)
 					));
 		}
@@ -141,7 +138,7 @@ public class ReportReader {
 			if(filterNode.getNodeType() != Node.ELEMENT_NODE){
 				continue;
 			}
-			String formatWithDecimal = getAttribute(filterNode, "formatWithDecimal", true);
+			//String formatWithDecimal = getAttribute(filterNode, "formatWithDecimal", true);
 			calculatedFieldElements.add(new CalculatedFieldElement(
 						getAttribute(filterNode, "name"),
 						getAttribute(filterNode, "expression"),

@@ -23,6 +23,7 @@ import org.nextframework.exception.NextException;
 import org.nextframework.report.definition.builder.IReportBuilder;
 import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
+import org.nextframework.report.generator.data.FilterElement;
 import org.nextframework.report.generator.data.GroupElement;
 import org.nextframework.report.generator.generated.ReportSpec;
 import org.nextframework.report.generator.layout.FieldDetailElement;
@@ -35,22 +36,29 @@ import org.nextframework.summary.compilation.SummaryResult;
 import org.nextframework.summary.dynamic.DynamicSummary;
 import org.nextframework.summary.dynamic.DynamicVariable;
 import org.nextframework.summary.dynamic.DynamicVariableDecorator;
+import org.nextframework.view.progress.IProgressMonitor;
 import org.springframework.util.StringUtils;
 
 public class ReportGenerator {
 	
 	static WeakReference<ClassLoader> classLoaderReference = new WeakReference<ClassLoader>(new URLClassLoader(new URL[0], ReportGenerator.class.getClassLoader()));
 	
-	ReportElement reportElement;
+	private ReportElement reportElement;
 	private ReportBuilderSourceGenerator reportBuilderSourceGenerator;
+	private IProgressMonitor progressMonitor;
 	
 	private BeanDescriptor beanDescriptorCache = null;
 	
 	Map<String, Object> context = new HashMap<String, Object>();
 	
 	public ReportGenerator(ReportElement reportElement) {
+		this(reportElement, null);
+	}
+	
+	public ReportGenerator(ReportElement reportElement, IProgressMonitor progressMonitor) {
 		this.reportElement = reportElement;
 		this.reportBuilderSourceGenerator = new ReportBuilderSourceGenerator(this);
+		this.progressMonitor = progressMonitor;
 	}
 	
 	public String getReportQualifiedClassName() {
@@ -71,9 +79,21 @@ public class ReportGenerator {
 
 	@SuppressWarnings("unchecked")
 	public ReportSpec generateReportSpec(Map<String, Object> filterMap, int limitResults){
+		
 		ReportSpec spec = new ReportSpec();
 		IReportBuilder reportBuilder = createReportBuilder();
-		List<?> result = reportElement.getData().getDataSourceProvider().getResult(reportElement, filterMap, limitResults);
+		Map<String, Object> fixedCriteriaMap = getFixedCriteriaMap(reportElement);
+		
+		if (progressMonitor != null) {
+			progressMonitor.setTaskName("Obtendo registros");
+		}
+		
+		List<?> result = reportElement.getData().getDataSourceProvider().getResult(reportElement, filterMap, fixedCriteriaMap, limitResults);
+		
+		if (progressMonitor != null) {
+			progressMonitor.worked(60);
+			progressMonitor.setTaskName("Sumarizando resultados");
+		}
 		
 		List<GroupElement> groups = reportElement.getData().getGroups();
 		DynamicSummary summary = createSummary();
@@ -115,11 +135,27 @@ public class ReportGenerator {
 				});
 			}
 		}
+		
 		layoutBuilder.setData(summaryResult);
+		
+		if (progressMonitor != null) {
+			progressMonitor.worked(40);
+		}
 		
 		spec.setReportBuilder(reportBuilder);
 		spec.setSummary(summary);
 		return spec;
+	}
+	
+	private Map<String, Object> getFixedCriteriaMap(ReportElement reportElement) {
+		List<FilterElement> filters = reportElement.getData().getFilters();
+		Map<String, Object> parametersMap = new HashMap<String, Object>();
+		for (FilterElement filterElement : filters) {
+			if (filterElement.getFixedCriteria() != null) {
+				parametersMap.put(filterElement.getName(), filterElement.getFixedCriteria());
+			}
+		}
+		return parametersMap;
 	}
 
 	@SuppressWarnings("rawtypes")

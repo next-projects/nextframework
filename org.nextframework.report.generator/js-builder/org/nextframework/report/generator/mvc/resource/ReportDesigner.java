@@ -82,10 +82,11 @@ public class ReportDesigner {
 	
 	Input labelInput;
 	Input filterLabel;
-	Input filterSelectMultiple;
-	Input filterRequired;
+	Select filterFixedCriteria;
 	Select filterPreSelectDate;
 	Select filterPreSelectEntity;
+	Input filterSelectMultiple;
+	Input filterRequired;
 	Select patternDateInput;
 	Select patternNumberInput;
 	Select patternDateInputGroup;
@@ -157,10 +158,11 @@ public class ReportDesigner {
 		
 		labelInput = (Input) next.dom.getInnerElementById(mainDiv, "label");
 		filterLabel = (Input) next.dom.getInnerElementById(mainDiv, "filterLabel"); 
-		filterSelectMultiple = (Input) next.dom.getInnerElementById(mainDiv, "filterSelectMultiple"); 
-		filterRequired = (Input) next.dom.getInnerElementById(mainDiv, "filterRequired"); 
+		filterFixedCriteria = (Select) next.dom.getInnerElementById(mainDiv, "filterFixedCriteria");
 		filterPreSelectDate = (Select) next.dom.getInnerElementById(mainDiv, "filterPreSelectDate");
 		filterPreSelectEntity = (Select) next.dom.getInnerElementById(mainDiv, "filterPreSelectEntity");
+		filterSelectMultiple = (Input) next.dom.getInnerElementById(mainDiv, "filterSelectMultiple"); 
+		filterRequired = (Input) next.dom.getInnerElementById(mainDiv, "filterRequired"); 
 		patternDateInput = (Select) next.dom.getInnerElementById(mainDiv, "patternDate");
 		patternNumberInput = (Select) next.dom.getInnerElementById(mainDiv, "patternNumber");
 		patternDateInputGroup = (Select) next.dom.getInnerElementById(mainDiv, "patternDateGroup");
@@ -274,7 +276,7 @@ public class ReportDesigner {
 	}
 	
 	public void showAddCalculatedProperty(){
-		Global.window.document.getElementById("calculatedPropertiesWizzard").style.visibility = "";
+		Global.window.document.getElementById("calculatedPropertiesWizzard").style.display = "";
 		final Input calculationExpression = next.dom.toElement("calculationExpression");
 		final Input calculationDisplayName = next.dom.toElement("calculationDisplayName");
 		final Input calculationName = next.dom.toElement("calculationName");
@@ -302,9 +304,7 @@ public class ReportDesigner {
 			String property = avaiableProperties.$get(key);
 			Map<String, Object> options = fields.$get(property);
 			Global.console.info(property + " "+options);
-			if(options != null && 
-					(ReportPropertyConfigUtils.isNumber(options)
-							|| ReportPropertyConfigUtils.isDate(options))){
+			if(options != null && (ReportPropertyConfigUtils.isNumber(options) || ReportPropertyConfigUtils.isDate(options))){
 				Button b = next.dom.newElement("button");
 				b.className = "calculationButton calculationPropertyButton";
 				b.innerHTML = (String) options.$get("displayName");
@@ -397,22 +397,22 @@ public class ReportDesigner {
 	}
 	
 	public void showConfigureProperties() {
-		Global.window.document.getElementById("propertiesWizzard").style.visibility = "";
+		Global.window.document.getElementById("propertiesWizzard").style.display = "";
 		for(String key: avaiableProperties){
 			String field = avaiableProperties.$get(key);
 			Input checkbox = (Input) Global.window.document.getElementById("selProp_"+field);
-			if(!checkbox.disabled){
+			if(checkbox != null && !checkbox.disabled){
 				checkbox.checked = false;
 			}
 		}
 	}
 	
 	public void hideConfigureProperties(){
-		Global.window.document.getElementById("propertiesWizzard").style.visibility = "hidden";
+		Global.window.document.getElementById("propertiesWizzard").style.display = "none";
 	}
 	
 	public void hideAddCalculatedProperty(){
-		Global.window.document.getElementById("calculatedPropertiesWizzard").style.visibility = "hidden";
+		Global.window.document.getElementById("calculatedPropertiesWizzard").style.display = "none";
 	}
 	
 	public void saveCalculatedProperty(){
@@ -423,11 +423,10 @@ public class ReportDesigner {
 		Input calculationDisplayName = next.dom.toElement("calculationDisplayName");
 		Input calculationName = next.dom.toElement("calculationName");
 		Select calculationProcessor = next.dom.toElement("calculationProcessor");
-		
 		Input calculationFormatAsNumber = next.dom.toElement("calculationFormatAsNumber");
 		Select calculationFormatAsTimeDetail = next.dom.toElement("calculationFormatAsTimeDetail");
 		
-		boolean editing = calculationDisplayName.disabled;
+		boolean disabled = calculationDisplayName.disabled;
 		
 		String expressionMessage = getValidationErrorMessage(calculationExpression);
 		if(expressionMessage != null){
@@ -440,7 +439,7 @@ public class ReportDesigner {
 			calculationDisplayName.focus();
 			return;
 		}
-		if(!editing){
+		if(!disabled){
 			addAvaiableProperty(calculationName.value);
 		}
 		String formatAs = calculationFormatAsNumber.checked? "number" : "time";
@@ -454,7 +453,7 @@ public class ReportDesigner {
 									"formatAs",		formatAs,
 									"formatTimeDetail", formatTimeDetail,
 									"processors", 	next.util.join(next.dom.getSelectedValues(calculationProcessor), ","));
-		if(!editing){
+		if(!disabled){
 			addField(calculationName.value, calculationProperties);
 		}
 		addCalculation(calculationName.value, calculationProperties);
@@ -475,7 +474,7 @@ public class ReportDesigner {
 		calculatedFieldsManager.add(value, calculationProperties);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public void saveConfigureProperties(){
 		hideConfigureProperties();
 		for(String key: avaiableProperties){
@@ -617,9 +616,9 @@ public class ReportDesigner {
 		}
 		if(this.filterManager.accept(name, properties)){
 			this.filterSelect.add(name, properties);
-			if(ReportPropertyConfigUtils.isFilterRequired(properties)){
-				this.filterSelect.select(name, null);
-			}
+			//if(ReportPropertyConfigUtils.isFilterRequired(properties)){
+			//	this.filterSelect.select(name, null);
+			//}
 		}
 	}
 	
@@ -647,57 +646,80 @@ public class ReportDesigner {
 		return chartXml;
 	}
 
-	public void showInputDatePattern() {
-		ReportPropertyConfigUtils.showElement(patternDateInput);
-	}
-	public void showInputNumberPattern() {
-		ReportPropertyConfigUtils.showElement(patternNumberInput);
-	}
-	public void hideInputNumberPattern() {
-		ReportPropertyConfigUtils.hideElement(patternNumberInput);
-	}	
 	public void showInputLabel() {
-		((Element)labelInput.parentNode.parentNode).style.display = "";		
+		((Element)labelInput.parentNode.parentNode).style.display = "";
 	}
-	public void showFilterSelectMultiple() {
-		((Element)filterSelectMultiple.parentNode.parentNode).style.display = "";		
-	}
-	public void showFilterRequired() {
-		((Element)filterRequired.parentNode.parentNode).style.display = "";		
-	}
-	public void showFilterPreSelectDate() {
-		((Element)filterPreSelectDate.parentNode.parentNode).style.display = "";		
-	}
-	public void showFilterPreSelectEntity() {
-		((Element)filterPreSelectEntity.parentNode.parentNode).style.display = "";		
-	}
-	public void showFilterLabel() {
-		((Element)filterLabel.parentNode.parentNode).style.display = "";		
-	}
-	public void hideInputDatePattern() {
-		((Element)patternDateInput.parentNode.parentNode).style.display = "none";
-	}
-	public void hideInputPatternGroup() {
-		ReportPropertyConfigUtils.hideElement(patternDateInputGroup);
-	}
-
+	
 	public void hideInputLabel() {
 		((Element)labelInput.parentNode.parentNode).style.display = "none";
 	}
+	
+	public void showFilterLabel() {
+		((Element)filterLabel.parentNode.parentNode).style.display = "";
+	}
+	
+	public void hideFilterLabel() {
+		((Element)filterLabel.parentNode.parentNode).style.display = "none";
+	}
+	
+	public void showFilterFixedCriteria() {
+		((Element)filterFixedCriteria.parentNode.parentNode).style.display = "";
+	}
+	
+	public void hideFilterFixedCriteria() {
+		((Element)filterFixedCriteria.parentNode.parentNode).style.display = "none";
+	}
+	
+	public void showFilterPreSelectDate() {
+		((Element)filterPreSelectDate.parentNode.parentNode).style.display = "";
+	}
+	
+	public void hideFilterPreSelectDate() {
+		((Element)filterPreSelectDate.parentNode.parentNode).style.display = "none";
+	}
+	
+	public void showFilterPreSelectEntity() {
+		((Element)filterPreSelectEntity.parentNode.parentNode).style.display = "";
+	}
+	
+	public void hideFilterPreSelectEntity() {
+		((Element)filterPreSelectEntity.parentNode.parentNode).style.display = "none";
+	}
+	
+	public void showFilterSelectMultiple() {
+		((Element)filterSelectMultiple.parentNode.parentNode).style.display = "";
+	}
+	
 	public void hideFilterSelectMultiple() {
 		((Element)filterSelectMultiple.parentNode.parentNode).style.display = "none";
 	}
+	
+	public void showFilterRequired() {
+		((Element)filterRequired.parentNode.parentNode).style.display = "";
+	}
+	
 	public void hideFilterRequired() {
 		((Element)filterRequired.parentNode.parentNode).style.display = "none";
 	}
-	public void hideFilterPreSelectDate() {
-		((Element)filterPreSelectDate.parentNode.parentNode).style.display = "none";		
+	
+	public void showInputDatePattern() {
+		ReportPropertyConfigUtils.showElement(patternDateInput);
 	}
-	public void hideFilterPreSelectEntity() {
-		((Element)filterPreSelectEntity.parentNode.parentNode).style.display = "none";		
+	
+	public void hideInputDatePattern() {
+		((Element)patternDateInput.parentNode.parentNode).style.display = "none";
 	}
-	public void hideFilterLabel() {
-		((Element)filterLabel.parentNode.parentNode).style.display = "none";
+	
+	public void showInputNumberPattern() {
+		ReportPropertyConfigUtils.showElement(patternNumberInput);
+	}
+	
+	public void hideInputNumberPattern() {
+		ReportPropertyConfigUtils.hideElement(patternNumberInput);
+	}
+	
+	public void hideInputPatternGroup() {
+		ReportPropertyConfigUtils.hideElement(patternDateInputGroup);
 	}
 	
 	public void showAggregate() {

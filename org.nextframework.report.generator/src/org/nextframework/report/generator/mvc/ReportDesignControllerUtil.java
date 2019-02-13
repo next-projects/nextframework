@@ -20,7 +20,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
@@ -37,6 +36,8 @@ import org.nextframework.report.generator.data.FilterElement;
 import org.nextframework.util.Util;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.web.bind.ServletRequestParameterPropertyValues;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SuppressWarnings("rawtypes")
 public class ReportDesignControllerUtil {
@@ -68,34 +69,33 @@ public class ReportDesignControllerUtil {
 		return preview;
 	}
 
-	Set<String> getAvailablePropertiesForClass(Class<?> selectedType, int deepLevel) {
+	public Set<String> getAvailablePropertiesForClass(Class<?> selectedType, String parentProperty, int deepLevel) {
 		if(deepLevel < 0){
 			return new HashSet<String>();
 		}
 		List<Method> propertyGetters = Util.beans.getPropertyGetters(selectedType);
-		final BeanDescriptor bd = BeanDescriptorFactory.forClass(selectedType);
-		final Set<String> avaiableProperties = createPropertyListTreeSet();
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(selectedType);
+		Set<String> avaiableProperties = createPropertyListTreeSet(bd);
 		for (Method method : propertyGetters) {
-			String parentProperty = Util.beans.getPropertyFromGetter(method.getName());
+			String property = Util.beans.getPropertyFromGetter(method.getName());
+			if (parentProperty != null && parentProperty.equals(property)) {
+				continue;
+			}
 			ReportField reportField = method.getAnnotation(ReportField.class);
 			if(reportField != null || method.getAnnotation(Id.class) != null){
-				if(!"class".equals(parentProperty) && !Collection.class.isAssignableFrom(method.getReturnType())){
-					avaiableProperties.add(parentProperty);
+				if(!"class".equals(property) && !Collection.class.isAssignableFrom(method.getReturnType())){
+					avaiableProperties.add(property);
 					ManyToOne manyToOne = method.getAnnotation(ManyToOne.class);
 					Embedded embedded = method.getAnnotation(Embedded.class);
 					ExtendBean extendBean = method.getAnnotation(ExtendBean.class);
 					ReportEntity refereceReportEntity = method.getReturnType().getAnnotation(ReportEntity.class);
 					if(manyToOne != null || extendBean != null || embedded != null || refereceReportEntity != null){
 						Class<?> subPropertyClass = method.getReturnType();
-						Set<String> correctSubProperties = createPropertyListTreeSet();
-						Set<String> subProperties = getAvailablePropertiesForClass(subPropertyClass, deepLevel - 1);
+						Set<String> subProperties = getAvailablePropertiesForClass(subPropertyClass, property, deepLevel - 1);
 						for (String subProperty : subProperties) {
 							if(!subProperty.equals("id")){
-								correctSubProperties.add(parentProperty+"."+subProperty);
+								avaiableProperties.add(property+"."+subProperty);
 							}
-						}
-						if(correctSubProperties.size() > 1){
-							avaiableProperties.addAll(correctSubProperties);
 						}
 					}
 				}
@@ -104,32 +104,38 @@ public class ReportDesignControllerUtil {
 		return avaiableProperties;
 	}
 
-	private TreeSet<String> createPropertyListTreeSet() {
+	private TreeSet<String> createPropertyListTreeSet(final BeanDescriptor bd) {
 		return new TreeSet<String>(new Comparator<String>() {
-	
 			@Override
 			public int compare(String o1, String o2) {
-				if(o1.toLowerCase().equals("id")){
-					return -1;
-				}
-				if(o2.toLowerCase().equals("id")){
-					return 1;
-				}
-				if(o1.toLowerCase().startsWith("id")){
-					return -1;
-				}
-				if(o2.toLowerCase().startsWith("id")){
-					return 1;
-				}
-//				PropertyDescriptor pd1 = bd.getPropertyDescriptor(o1);
-//				PropertyDescriptor pd2 = bd.getPropertyDescriptor(o2);
-//				int cp = pd1.getType().toString().compareTo(pd2.getType().toString());
-//				if(cp == 0){
-//					return pd1.getDisplayName().compareTo(pd2.getDisplayName());
-//				}
-				return o1.compareTo(o2);
+				//Para subir o ID
+				if(o1.toLowerCase().equals("id")) return -1;
+				if(o2.toLowerCase().equals("id")) return 1;
+				if(o1.toLowerCase().startsWith("id")) return -1;
+				if(o2.toLowerCase().startsWith("id")) return 1;
+				//Restante ordena pela descrição
+				String o1Desc = toFullDescription(bd, o1);
+				String o2Desc = toFullDescription(bd, o2);
+				return o1Desc.compareTo(o2Desc);
 			}
-	
+			private String toFullDescription(final BeanDescriptor bd, String oX) {
+				String oDesc = "";
+				if (oX.indexOf(".") > -1) {
+					String[] oSplit = oX.split("\\.");
+					String oAcu = "";
+					for (String os : oSplit) {
+						oAcu += (oAcu.length() > 0 ? "." : "") + os;
+						oDesc += (oDesc.length() > 0 ? "-" : "") + bd.getPropertyDescriptor(oAcu).getDisplayName().toUpperCase();
+					}
+				}else{
+					oDesc = bd.getPropertyDescriptor(oX).getDisplayName().toUpperCase();
+				}
+				//Correção para item principal de 'subárvore' ficar próximo aos itens 'galhos'
+				if (bd.getPropertyDescriptor(oX).getAnnotation(ManyToOne.class) != null) {
+					oDesc += "-";
+				}
+				return oDesc;
+			}
 		});
 	}
 
@@ -148,7 +154,8 @@ public class ReportDesignControllerUtil {
 		return map;
 	}
 
-	@SuppressWarnings("unchecked") HashMap<String, Object> getMetadataForProperty(ReportElement report, BeanDescriptor beanDescriptor, String property) {
+	@SuppressWarnings("unchecked")
+	HashMap<String, Object> getMetadataForProperty(ReportElement report, BeanDescriptor beanDescriptor, String property) {
 		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
@@ -164,12 +171,13 @@ public class ReportDesignControllerUtil {
 				if(filter.getPreSelectEntity() != null){
 					map.put("preSelectEntity", filter.getPreSelectEntity());
 				}
+				if(filter.getFixedCriteria() != null){
+					map.put("fixedCriteria", filter.getFixedCriteria());
+				}
 				if(filter.getFilterDisplayName() != null){
 					map.put("filterDisplayName", filter.getFilterDisplayName());
 				}
-				if(filter.isFilterRequired()){
-					map.put("requiredFilter", filter.isFilterRequired());
-				}
+				map.put("requiredFilter", filter.isFilterRequired());
 			}
 		}
 		
@@ -184,8 +192,13 @@ public class ReportDesignControllerUtil {
 			map.put("entity", isEntity);
 			map.put("dateType", isDateType(propertyClass));
 			map.put("numberType", isNumberType(propertyClass));
-	
 			map.put("money", propertyClass.getName().contains("Money"));
+			map.put("enumType", propertyClass.isEnum());
+			if (propertyClass.isEnum()) {
+				String enumExample = Util.collections.join(Arrays.asList(propertyClass.getEnumConstants()), ", ");
+				enumExample = enumExample.length() > 100 ? enumExample.substring(0, 50) + "..." : enumExample;
+				map.put("enumExample", enumExample);
+			}
 		}
 		
 		map.put("type", propertyDescriptor.getType());
@@ -202,7 +215,7 @@ public class ReportDesignControllerUtil {
 		return map;
 	}
 
-	private Object getCompleteDisplayName(BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String property) {
+	public String getCompleteDisplayName(BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String property) {
 		String[] parts = property.split("\\.");
 		if(parts.length > 1){
 			StringBuilder buffer = new StringBuilder();
@@ -223,7 +236,7 @@ public class ReportDesignControllerUtil {
 		}
 	}
 
-	private boolean isFilterable(BeanDescriptor beanDescriptor, String property, ReportField reportField) {
+	public boolean isFilterable(BeanDescriptor beanDescriptor, String property, ReportField reportField) {
 		if(isExtendedProperty(beanDescriptor, property)){
 			return false;
 		}
@@ -231,12 +244,13 @@ public class ReportDesignControllerUtil {
 	}
 
 	private boolean isExtendedProperty(BeanDescriptor beanDescriptor, String property) {
+		String base = property;
 		if(countSubProperties(property) > 0){
-			String base = property.substring(0, property.indexOf('.'));
-			PropertyDescriptor basePD = beanDescriptor.getPropertyDescriptor(base);
-			if(basePD.getAnnotation(ExtendBean.class)!= null){
-				return true;
-			}
+			base = property.substring(0, property.indexOf('.'));
+		}
+		PropertyDescriptor basePD = beanDescriptor.getPropertyDescriptor(base);
+		if(basePD.getAnnotation(ExtendBean.class)!= null){
+			return true;
 		}
 		return false;
 	}
@@ -270,6 +284,9 @@ public class ReportDesignControllerUtil {
 		List<FilterElement> filters = reportElement.getData().getFilters();
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		for (FilterElement filterElement : filters) {
+			if (filterElement.getFixedCriteria() != null) {
+				continue;
+			}
 			String name = filterElement.getName();
 			Class type = (Class)bd.getPropertyDescriptor(filterElement.getName()).getType();
 			if(isDateType(type)){
@@ -291,15 +308,16 @@ public class ReportDesignControllerUtil {
 				parametersMap.put(keyEnd, valueEnd);
 			} else {
 				Object value = getValue(filterElement, dataBinder, mpvs, name, type);
-				String entityText = filterElement.getPreSelectEntity();
-				if(value == null && entityText != null){
-					value = ServletRequestDataBinderNext.translateObjectValue(entityText);
+				String entityStr = filterElement.getPreSelectEntity();
+				if(value == null && entityStr != null){
+					value = ServletRequestDataBinderNext.translateObjectValue(entityStr);
 				}
 				parametersMap.put(name, value);
 			}
 		}
+		
 		return parametersMap;
-	}	
+	}
 	
 	@SuppressWarnings("unchecked")
 	Object getValue(FilterElement filterElement, ServletRequestDataBinderNext dataBinder, MutablePropertyValues mpvs, String name, Class type) {
@@ -309,6 +327,13 @@ public class ReportDesignControllerUtil {
 				String[] parameterValues = NextWeb.getRequestContext().getServletRequest().getParameterValues(name);
 				if(ServletRequestDataBinderNext.isObjectValue(parameterValues)){
 					return ServletRequestDataBinderNext.translateObjectValue(name, parameterValues, mpvs);
+				}
+				if(parameterValues != null && parameterValues.length > 0 && type.isEnum()) {
+					Object[] parameterValues2 = new Object[parameterValues.length];
+					for (int i = 0; i < parameterValues.length; i++) {
+						parameterValues2[i] = dataBinder.convertIfNecessary(parameterValues[i], type);
+					}
+					return parameterValues2;
 				}
 				value = dataBinder.convertIfNecessary(parameterValues, type);
 			} else {
@@ -331,6 +356,7 @@ public class ReportDesignControllerUtil {
 		}
 		return getPropertiesMetadata(report, selectedType, propertyMetadata);
 	}
+	
 	Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Class selectedType, Map<String, Map<String, Object>> properties) {
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(selectedType);
 		Map<String, Map<String, Object>> propertyMetadata = new HashMap<String, Map<String,Object>>();

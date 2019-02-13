@@ -100,13 +100,16 @@ public class ReportGeneratorUtils {
 				//TODO CHECK THE RESULTING TYPE
 				
 				expressionParts[i] = convertExpressionPartToGetter(part);
+				boolean castToDouble = pd.getRawType().isPrimitive();
 				
 				//TODO MOVE THIS CHECK
 				if(Calendar.class.isAssignableFrom(rawType)){
 					expressionParts[i] += ".getTimeInMillis()";
+					castToDouble = true;
 				}
 				if(Date.class.isAssignableFrom(rawType)){
 					expressionParts[i] += ".getTime()";
+					castToDouble = true;
 				}
 				if(Number.class.isAssignableFrom(rawType)){
 					if(!rawType.getName().startsWith("java.lang")
@@ -115,7 +118,7 @@ public class ReportGeneratorUtils {
 						expressionParts[i] += ".doubleValue()";
 					}
 				}
-				if(pd.getRawType().isPrimitive()){
+				if(castToDouble){
 					expressionParts[i] = "(double) "+expressionParts[i];
 				}
 			}
@@ -178,7 +181,7 @@ public class ReportGeneratorUtils {
 					}
 					break;
 				case IN_VAR:
-					if(Character.isLetter(c) || Character.isDigit(c) || c == '.'){
+					if(Character.isLetter(c) || Character.isDigit(c) || c == '.' || c == '_'){
 						token += c;
 					} else {
 						if(Util.strings.isNotEmpty(token)){
@@ -221,7 +224,7 @@ public class ReportGeneratorUtils {
 //		
 //		System.out.println(codeBuilder.toString());
 		
-		System.out.println(Arrays.deepToString(parseExpression("-+asd +bas.dfd / asdf + ( asdf - asdf) / hhrr")));
+		System.out.println(Arrays.deepToString(parseExpression("-+asd +bas.dfd / asdf + ( asd_f - asd_g) / hhrr")));
 	}
 
 	public static String convertExpressionPartToGetter(String part) {

@@ -83,7 +83,7 @@ public class ReportBuilderSourceGenerator {
 			FieldDetailElement fieldDetail = (FieldDetailElement) layoutItem;
 			String fieldName = fieldDetail.getName();
 			if(generator.getReportElement().getData().isCalculated(fieldName)){
-				return 54;
+				return 50;
 			}
 			BeanDescriptor bd = BeanDescriptorFactory.forClass(getMainType());
 			PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(fieldName);
@@ -91,22 +91,17 @@ public class ReportBuilderSourceGenerator {
 			if(reportField != null && reportField.suggestedWidth() > 0){
 				return reportField.suggestedWidth();
 			}
-			String label = fieldDetail.getLabel();
-			if(label == null){
-				label = propertyDescriptor.getDisplayName();
-			}
-			int labelWidth = label.length() * 5;
 			Type type = propertyDescriptor.getType();
 			if(type instanceof Class<?>){
 				Class<?> c = (Class<?>) type;
-				if(isDate(c)){
-					if(fieldDetail.isDatePattern()){
-						return (int)Math.floor(fieldDetail.getPattern().length() * 7.65);
-					}
-					return 70;
-				}
+				//if(isDate(c)){
+				//	if(fieldDetail.isDatePattern()){
+				//		return (int)Math.floor(fieldDetail.getPattern().length() * 7.65);
+				//	}
+				//	return 70;
+				//}
 				if(isNumber(c)){
-					return 54;
+					return 50;
 				}
 				if(Cpf.class.isAssignableFrom(c)){
 					return 68;
@@ -120,9 +115,9 @@ public class ReportBuilderSourceGenerator {
 		return Number.class.isAssignableFrom(c) || c.getSimpleName().contains("Money");
 	}
 
-	private boolean isDate(Class<?> c) {
-		return Calendar.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
-	}
+	//private boolean isDate(Class<?> c) {
+	//	return Calendar.class.isAssignableFrom(c) || Date.class.isAssignableFrom(c);
+	//}
 
 	public String getSource(){
 		SourceCodeBuilder source = createSourceCodeBuilder();
@@ -349,7 +344,6 @@ public class ReportBuilderSourceGenerator {
 				if(reportElement.getData().isCalculated(property)){
 					CalculatedFieldElement calculatedField = reportElement.getData().getCalculatedFieldWithName(property);
 					String displayName = calculatedField.getDisplayName();
-					
 					boolean formatAsNumber = CalculatedFieldElement.FORMAT_AS_NUMBER.equals(calculatedField.getFormatAs());
 					String exp = ReportGeneratorUtils.reorganizeExpression(reportElement, getMainType(), calculatedField.getExpression(), calculatedField.getProcessors());
 					if(!formatAsNumber){
@@ -359,6 +353,7 @@ public class ReportBuilderSourceGenerator {
 					}
 					chartMethod.append("\t.addVariable(new DynamicVariable(\""+property+"\", \""+displayName+"\", CalculationType." + CalculationType.valueOf(chart.getValueAggregate()) + ", " +
 							"\"(double)("+exp+")\", Double.class))");
+					
 				} else {
 					chartMethod.append("\t.addVariable(\""+property+"\", CalculationType."+CalculationType.valueOf(chart.getValueAggregate())+")");
 				}

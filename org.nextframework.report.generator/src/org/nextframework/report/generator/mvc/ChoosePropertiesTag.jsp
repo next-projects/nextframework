@@ -4,13 +4,6 @@
 
 <script type="text/javascript" src="${app}/resource/org/nextframework/report/generator/mvc/resource/ChoosePropertiesTagUtil.js"></script>
 
-<script type="text/javascript">
-Util = ChoosePropertiesTagUtil;
-next.events.onLoad(function(){
-	Util.install('${application}');
-});
-</script>
-
 Escolha as propriedades que deseja usar no relatório:<BR/>
 <div style="border: 1px inset #CCCCCC">
 	<table cellspacing="0" cellpadding="2" id="propertiesTable">
@@ -18,50 +11,65 @@ Escolha as propriedades que deseja usar no relatório:<BR/>
 			<td style="min-width: 480px"></td>
 			<td></td>
 		</tr>
-	<c:forEach items="${avaiableProperties}" var="property">
-		<tr data-forProperty="${property}">
-		<n:property name="properties">
-			<td style="padding-left: ${propertyMetadata[property]['propertyDepth']*16}px; ">
-				<img id="openCloseBtn" 
-					 width="16px" height="16px"
-					 style="visibility: hidden;"
-					 src="${application}/resource/org/nextframework/report/renderer/html/resource/mais.gif" data-forProperty="${property}"/>
-				<n:input type="checklist" value="${property}" itens="${value}" id="selProp_${property}"/> <span title="${propertyMetadata[property]['displayName']}">${propertyMetadata[property]['displayNameSimple']}</span>
-				<script type="text/javascript">
-					document.getElementById("selProp_${property}").propertyMetadata = ${propertyMetadata[property]['json']};
-				</script>
-			</td>
-			<td>
-				<span style="color: #777">
-					<c:choose>
-						<c:when test="${propertyMetadata[property]['dateType']}">
-						Data
-						</c:when>
-						<c:when test="${propertyMetadata[property]['money']}">
-						Dinheiro
-						</c:when>
-						<c:when test="${propertyMetadata[property]['numberType']}">
-						Número
-						</c:when>
-						<c:when test="${propertyMetadata[property]['entity']}">
-						Entidade
-						</c:when>
-						<c:when test="${propertyMetadata[property]['type'].simpleName == 'String' }">
-						Texto
-						</c:when>
-						<c:otherwise>
-							Enumeração:
-							
-							<c:forEach var="field" items="${propertyMetadata[property]['type'].enumConstants}">
-								<n:output value="${field}"/> /
-							</c:forEach>
-							
-						</c:otherwise>
-					</c:choose>
-				</span>
-			</td>
-		</n:property>
-		</tr>
-	</c:forEach>
 	</table>
 </div>
+
+<script type="text/javascript">
+
+	Util = ChoosePropertiesTagUtil;
+	next.events.onLoad(function(){
+		Util.install('${application}');
+	});
+	
+	var avaiableProperties = {};
+	<c:forEach items="${avaiableProperties}" var="property">
+	avaiableProperties['${property}'] = ${propertyMetadata[property]['json']};</c:forEach>
+	
+	var propertiesTable = document.getElementById("propertiesTable");
+	for (var key in avaiableProperties) {
+		var options = avaiableProperties[key];
+		
+		var row = propertiesTable.insertRow(-1);
+		var td1 = row.insertCell(0);
+		var td2 = row.insertCell(1);
+		
+		row.setAttribute('data-forProperty', key);
+		td1.style="padding-left:" + (options.propertyDepth*16) + "px";
+		td2.style="color: #777";
+		
+		var img = document.createElement('img');
+		img.id = "openCloseBtn";
+		img.style = "width: 16px; height: 16px; visibility: hidden";
+		img.src = next.http.getApplicationContext() + "/resource/org/nextframework/report/renderer/html/resource/mais.gif";
+		td1.appendChild(img);
+		
+		var inputCheckbox = document.createElement("input");
+		inputCheckbox.id = "selProp_" + key;
+		inputCheckbox.type = "checkbox";
+		inputCheckbox.name = "properties";
+		inputCheckbox.value = key;
+		inputCheckbox.propertyMetadata = options;
+		td1.appendChild(inputCheckbox);
+		
+		var spanDesc = document.createElement("span");
+		spanDesc.title = options.displayName;
+		spanDesc.innerHTML = options.displayNameSimple;
+		td1.appendChild(spanDesc);
+		
+		if (options.dateType) {
+			td2.innerHTML = "Data";
+		}else if (options.money) {
+			td2.innerHTML = "Dinheiro";
+		}else if (options.numberType) {
+			td2.innerHTML = "Número";
+		}else if (options.entity) {
+			td2.innerHTML = "Entidade";
+		}else if (options.enumType) {
+			td2.innerHTML = "Enumeração: " + options.enumExample;
+		}else if (options.type == 'java.lang.String') {
+			td2.innerHTML = "Texto";
+		}
+		
+	}
+	
+</script>

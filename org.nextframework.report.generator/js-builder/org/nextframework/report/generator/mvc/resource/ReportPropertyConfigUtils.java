@@ -15,6 +15,10 @@ import org.stjs.javascript.functions.Function1;
 
 public class ReportPropertyConfigUtils {
 
+	public static String getDisplayName(Map<String, Object> properties) {
+		return (String) properties.$get("displayName");
+	}
+	
 	public static Boolean isAggregatable(Map<String, Object> properties) {
 		return (Boolean)properties.$get("numberType");
 	}
@@ -30,21 +34,33 @@ public class ReportPropertyConfigUtils {
 	public static boolean isFilterable(Map<String, Object> properties) {
 		return (Boolean)properties.$get("filterable");
 	}
-	public static boolean isFilterRequired(Map<String, Object> properties) {
-		return (Boolean)properties.$get("requiredFilter");
-	}
+	
 	public static boolean isEntity(Map<String, Object> properties) {
 		return (Boolean)properties.$get("entity");
+	}
+	
+	public static boolean isEnum(Map<String, Object> properties) {
+		return (Boolean)properties.$get("enumType");
+	}
+	
+	public static boolean isFilterSelectMultiple(Map<String, Object> properties) {
+		return (Boolean) properties.$get("filterSelectMultiple");
 	}
 	
 	public static void setFilterSelectMultiple(Map<String, Object> properties, boolean checked) {
 		properties.$put("filterSelectMultiple", checked);
 	}
+	
+	public static boolean isFilterRequired(Map<String, Object> properties) {
+		return (Boolean)properties.$get("requiredFilter");
+	}
+	
 	public static void setFilterRequired(Map<String, Object> properties, boolean checked) {
 		properties.$put("requiredFilter", checked);
 	}
-	public static boolean isFilterSelectMultiple(Map<String, Object> properties) {
-		return (Boolean)properties.$get("filterSelectMultiple");
+	
+	public static String getFilterPreSelectDate(Map<String, Object> properties) {
+		return (String)properties.$get("preSelectDate");
 	}
 	
 	public static void setFilterPreSelectDate(Map<String, Object> properties, String filterPreSelectDate) {
@@ -53,22 +69,29 @@ public class ReportPropertyConfigUtils {
 		}
 		properties.$put("preSelectDate", filterPreSelectDate);
 	}
+	
+	public static String getFilterPreSelectEntity(Map<String, Object> properties) {
+		return (String)properties.$get("preSelectEntity");
+	}
+	
 	public static void setFilterPreSelectEntity(Map<String, Object> properties, String filterPreSelectEntity) {
 		if("<null>".equals(filterPreSelectEntity)){
 			filterPreSelectEntity = null;
 		}
 		properties.$put("preSelectEntity", filterPreSelectEntity);
 	}
-	public static String getFilterPreSelectDate(Map<String, Object> properties) {
-		return (String)properties.$get("preSelectDate");
+
+	public static String getFilterFixedCriteria(Map<String, Object> properties) {
+		return (String)properties.$get("fixedCriteria");
 	}
-	public static String getFilterPreSelectEntity(Map<String, Object> properties) {
-		return (String)properties.$get("preSelectEntity");
+	
+	public static void setFilterFixedCriteria(Map<String, Object> properties, String filterFixedCriteria) {
+		if("<null>".equals(filterFixedCriteria)){
+			filterFixedCriteria = null;
+		}
+		properties.$put("fixedCriteria", filterFixedCriteria);
 	}
 
-	public static void setFilterDisplayName(Map<String, Object> properties, String value) {
-		properties.$put("filterDisplayName", value);
-	}
 	public static String getFilterDisplayName(Map<String, Object> properties) {
 		String fdn = (String) properties.$get("filterDisplayName");
 		if(fdn == null){
@@ -76,11 +99,11 @@ public class ReportPropertyConfigUtils {
 		}
 		return fdn;
 	}
-
-	public static String getDisplayName(Map<String, Object> properties) {
-		return (String) properties.$get("displayName");
-	}
 	
+	public static void setFilterDisplayName(Map<String, Object> properties, String value) {
+		properties.$put("filterDisplayName", value);
+	}
+
 	public static Array<String> getProcessors(Map<String, Object> properties) {
 		String processors = (String) properties.$get("processors");
 		if(processors == null){

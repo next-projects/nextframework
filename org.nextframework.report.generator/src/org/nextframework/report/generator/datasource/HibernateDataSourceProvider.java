@@ -58,17 +58,17 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 
 	@SuppressWarnings("all")
 	@Override
-	public List getResult(ReportElement element, Map<String, Object> filterMap, int limitResults) {
- 		QueryBuilder query = createQueryBuilder(element, filterMap, limitResults);
+	public List getResult(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
+ 		QueryBuilder query = createQueryBuilder(element, filterMap, fixedCriteriaMap, limitResults);
 		return query.list();
 	}
 
-	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, int limitResults) {
-		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(getMainType()));
-		List<String> properties = getProperties(element);
-		Set<String> pathsSet = new HashSet<String>();
-		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(getMainType());
+	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
 		
+		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(getMainType()));
+		List<String> properties = element.getProperties();
+		//Set<String> pathsSet = new HashSet<String>();
+		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(getMainType());
 		//properties.addAll(beans.getPropertiesWithAnnotation(getMainType(), ManyToOne.class));
 		JoinManager joinManager = new JoinManager(query.getAlias());
 		
@@ -126,6 +126,9 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 //						joinManager.put(currentAlias+"."+parts[i], newAlias);
 						joinManager.addJoin(currentPath);
 //						currentAlias = newAlias;
+						if (i == parts.length - 1) {
+							orderByProperties.add(currentPath);
+						}
 					} else {
 						if(propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0){
 							for(String field: propertyDescriptor.getAnnotation(ReportField.class).usingFields()){
@@ -135,6 +138,10 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 									path += ".";
 								}
 								joinManager.addJoin(path + field);
+							}
+						}else{
+							if (i == parts.length - 1) {
+								orderByProperties.add(currentPath);
 							}
 						}
 						break;
@@ -157,7 +164,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 					orderByProperties.add(property);
 //					joinManager.put(query.getAlias()+"."+property, query.getAlias()+"_"+property);
 				} else {
-					if(propertyDescriptor.getAnnotation(ExtendBean.class) == null){
+					if(propertyDescriptor.getAnnotation(ExtendBean.class) == null && propertyDescriptor.getAnnotation(Transient.class) == null){
 						orderByProperties.add(property);
 					}
 				}
@@ -169,7 +176,6 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			query.leftOuterJoinFetch(join+" "+joinMap.get(join));
 		}
 		BeanDescriptor db = BeanDescriptorFactory.forClass(getMainType());
-		Set<String> filters = filterMap.keySet();
 		final Set<String> filteredFields = new HashSet<String>();
 		Map<String, Object> transients = new HashMap<String, Object>(){
 			public Object get(Object key) {
@@ -177,7 +183,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 				return super.get(key);
 			}
 		};
-		for (String filter : filters) {
+		for (String filter : filterMap.keySet()) {
 			String filterNoSuffix = removeSuffix(filter);
 			PropertyDescriptor propertyDescriptor = db.getPropertyDescriptor(filterNoSuffix);
 			Object parameterValue = filterMap.get(filter);
@@ -191,11 +197,19 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			} else if(filter.contains("_end")){
 				query.where(query.getAlias()+"."+filterNoSuffix+" < ?", max(parameterValue));
 			} else if(String.class.equals(type)){
-				query.whereLikeIgnoreAll(query.getAlias()+"."+filter, (String) parameterValue);
+				query.whereLike(query.getAlias()+"."+filter, (String) parameterValue);
 			} else if(parameterValue != null && parameterValue.getClass().isArray()) {
 				query.whereIn(query.getAlias()+"."+filter, Arrays.asList((Object[])parameterValue));
 			} else {
 				query.where(query.getAlias()+"."+filter+" = ?", parameterValue);
+			}
+		}
+		for (String filter : fixedCriteriaMap.keySet()) {
+			Object criteriaValue = fixedCriteriaMap.get(filter);
+			if ("ISNULL".equals(criteriaValue)) {
+				query.where(query.getAlias()+"."+filter+" is null");
+			}else if ("NOTNULL".equals(criteriaValue)) {
+				query.where(query.getAlias()+"."+filter+" is not null");
 			}
 		}
 		GenericDAO dao = null;
@@ -220,14 +234,36 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		StringBuilder orderByBuffer = new StringBuilder("  ");
 		for (String property : orderByProperties) {
 			if(element.getData().isCalculated(property)){
-				//this is a calculated field
 				continue;
 			}
-			orderByBuffer.append(query.getAlias()+"."+property+", ");
+			String orderColumn = query.getAlias() + "." + property;
+			
+			int pIndex = -1;
+			do{
+				pIndex = orderColumn.indexOf(".", pIndex + 1);
+				if (pIndex > -1) {
+					String base = orderColumn.substring(0, pIndex);
+					String alias = joinMap.get(base);
+					if (alias != null) {
+						orderColumn = alias + orderColumn.substring(pIndex);
+						pIndex = 0;
+					}
+				}else{
+					String alias = joinMap.get(orderColumn);
+					if (alias != null) {
+						orderColumn = alias;
+						pIndex = -1;
+					}
+				}
+			}while(pIndex != -1);
+			
+			orderByBuffer.append(orderColumn + ", ");
 		}
 		orderByBuffer.setLength(orderByBuffer.length()-2);
 		query.orderBy(orderByBuffer.toString());
+		
 		updateQuery(query, element, filterMap);
+		
 		return query;
 	}
 

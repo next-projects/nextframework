@@ -117,10 +117,33 @@ public class DynamicReportLayoutBuilder extends LayoutReportBuilder {
 				&& !(data.get(0).getGroup() instanceof Number)){
 			Collections.sort(data, new Comparator<ChartRow>() {
 				public int compare(ChartRow o1, ChartRow o2) {
+					Object g1 = o1.getGroup();
+					Object g2 = o2.getGroup();
+					if((g1 != null && g2 != null && g1.equals(g2)) || (g1 == null && g2 == null)){
+						Number n1 = o1.getValues()[0];
+						Number n2 = o2.getValues()[0];
+						if(n1 == null && n2 == null){
+							return 0;
+						}
+						if(n1 == null){
+							return -1;
+						}
+						if(n2 == null){
+							return 1;
+						}
+						return (int) (n2.doubleValue() - n1.doubleValue());
+					}
+					if(g1 == null){
+						return -1;
+					}
+					if(g2 == null){
+						return 1;
+					}
+					return g1.toString().compareTo(g2.toString());
+					/*
 					Number n1 = o1.getValues()[0];
 					Number n2 = o2.getValues()[0];
-					if((n1 != null && n2 != null && n1.equals(n2))
-							|| (n1 == null && n2 == null)){
+					if((n1 != null && n2 != null && n1.equals(n2)) || (n1 == null && n2 == null)){
 						Object g1 = o1.getGroup();
 						Object g2 = o2.getGroup();
 						if(g1 == null && g2 == null){
@@ -141,6 +164,7 @@ public class DynamicReportLayoutBuilder extends LayoutReportBuilder {
 						return 1;
 					}
 					return (int) (n2.doubleValue() - n1.doubleValue());
+					*/
 				}
 			});
 		}
