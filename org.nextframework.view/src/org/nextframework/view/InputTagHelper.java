@@ -172,7 +172,9 @@ public class InputTagHelper {
 	}
 
 	public boolean isDateOrTime(Object value) {
-		return value instanceof Calendar || value instanceof Date; //FIXME
+		return 	value instanceof Calendar || 
+				value instanceof Date || 
+				value instanceof Class && (Date.class.isAssignableFrom((Class) value) || Calendar.class.isAssignableFrom((Class) value));
 	}
 
 }

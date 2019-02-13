@@ -26,7 +26,7 @@ public class InputTagHiddenComponent extends InputTagComponent {
 	}
 
 	public boolean isDateOrTime() {
-		return helper.isDateOrTime(inputTag.getValue());
+		return helper.isDateOrTime(inputTag.getValue()) || helper.isDateOrTime(inputTag.getAutowiredType());
 	}
 	
 	@Override
