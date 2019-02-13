@@ -18,7 +18,7 @@ ProgressBar = function(_progressId, _serverId, _ajaxurl, _onComplete, _onError){
 		alert("DIV ID: "+this.progressId);
 	};
 	this.syncInterval = null;
-	this.synchorizationDelay = 100;
+	this.synchorizationDelay = 1000;
 	this.onRecieveData = function(data){
 		alert(data);
 	};
