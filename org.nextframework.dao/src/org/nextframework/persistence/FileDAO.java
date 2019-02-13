@@ -115,28 +115,32 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 		return isTransient;
 	}
 	
-	protected String getNomeArquivo(File arquivo) {
-		if(arquivo == null) {
+	protected String getNomeArquivo(File file) {
+		if(file == null) {
 			throw new NullPointerException("Arquivo inválido (nulo)");
 		}
-		if(arquivo.getCdfile() == null) {
+		if(file.getCdfile() == null) {
 			throw new NullPointerException("Id do arquivo inválido (nulo)");
 		}
 		if(autoDetectTransient){
-			boolean isTransient = checkTransientContent(arquivo);
+			boolean isTransient = checkTransientContent(file);
 			if(!isTransient){
 				//se nao for transiente será salvo no banco de dados entao devemos sair do método
 				return null;
 			}
 		}
 		String saveDir = getSaveDir();
-		return saveDir + java.io.File.separator + "arquivo" + arquivo.getCdfile()+"."+getExtensao();
+		return saveDir + java.io.File.separator + getFilePrefix(file) + file.getCdfile() + "." + getExtensao(file);
 	}
 
-	protected String getExtensao() {
+	protected String getFilePrefix(File file) {
+		return "arquivo";
+	}
+
+	protected String getExtensao(File file) {
 		return "next";
 	}
-
+	
 	protected String getSaveDir() {
 		return System.getProperty("user.home")+java.io.File.separator+"dados"+java.io.File.separator+Next.getApplicationName()+java.io.File.separator+"arquivos";
 	}
