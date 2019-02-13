@@ -37,12 +37,18 @@ public class ResourceModelAndView extends ModelAndView {
 	private Resource resource;
 
 	public ResourceModelAndView(Resource res){
+		this(res, true);
+	}
+	
+	public ResourceModelAndView(Resource res, final boolean useAttachment){
 		this.resource = res;
 		setView(new View(){
 			
 			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 				response.setContentType(resource.getContentType());
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
+				if (useAttachment) {
+					response.setHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
+				}
 				response.getOutputStream().write(resource.getContents());
 			}
 
@@ -52,4 +58,5 @@ public class ResourceModelAndView extends ModelAndView {
 
 		});
 	}
+	
 }

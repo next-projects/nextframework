@@ -29,33 +29,38 @@ public class Resource {
 	protected String fileName;
 	protected byte[] contents;
 	protected int size;
-	
+
 	public Resource() {
-		super();
+		
 	}
 	
 	public Resource(String contentType, String fileName, byte[] contents) {
-		super();
 		this.contentType = contentType;
 		this.fileName = fileName;
 		this.contents = contents;
+		this.size = contents.length;
 	}
-	
+
 	public byte[] getContents() {
 		return contents;
 	}
+
 	public void setContents(byte[] contents) {
 		this.contents = contents;
 	}
+
 	public String getContentType() {
 		return contentType;
 	}
+
 	public void setContentType(String contextType) {
 		this.contentType = contextType;
 	}
+
 	public String getFileName() {
 		return fileName;
 	}
+
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
@@ -67,6 +72,5 @@ public class Resource {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	
 
 }
