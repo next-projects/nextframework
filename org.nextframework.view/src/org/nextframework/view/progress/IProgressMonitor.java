@@ -19,7 +19,7 @@ public interface IProgressMonitor {
 	/**
 	 * Notifies that the work is done; that is, either the main task is completed or the user canceled it. 
 	 */
-	void done(); 
+	void done(boolean success);
         
     /**
      * Returns whether cancelation of current operation has been requested.
@@ -57,4 +57,8 @@ public interface IProgressMonitor {
 
 	public String getError();
 	
+	public void setReturn(Object r);
+
+	public Object getReturn();
+
 }

@@ -25,25 +25,22 @@ public class ProgressBarCallback implements AjaxCallbackController {
 			if(progressMonitor == null){
 				progressMonitor = new ProgressMonitor();
 				progressMonitor.subTask("(...)");
-				progressMonitor.setError("Atualização de progresso não disponível...");
+				progressMonitor.setError("Atualização de progresso não disponível");
 			}
 			String progressBarId = request.getParameter("progressbarid");
 			
-			boolean done = progressMonitor.isDone();
 			int percentDone = progressMonitor.getPercentDone();
 			String subtask = Util.strings.escape(progressMonitor.getSubtask());
 			out.printf("var progressBar = ProgressBar.getById('%s');", progressBarId);
 			if(progressMonitor.getError() == null){
+				boolean done = progressMonitor.getDone() == ProgressMonitor.DONE_SUCCESS;
 				out.printf("progressBar.setInformation(%d, '%s', %b, %s);", percentDone, subtask, done, convertToJsArray(progressMonitor.getTasks()));
 			} else {
 				List<String> tasks = new ArrayList<String>(progressMonitor.getTasks());
 				tasks.add("<span class='progressInfoError'>"+progressMonitor.getError()+"</span>");
-				out.printf("progressBar.setError(%d, '%s', %b, %s);", percentDone, subtask, done, convertToJsArray(tasks));
-				done = true; // finalizar a barra de progresso
+				out.printf("progressBar.setError(%d, '%s', %b, %s);", percentDone, subtask, false, convertToJsArray(tasks));
 			}
-
-						
-			if(!done){
+			if(progressMonitor.getDone() == null){
 				out.println("progressBar.startSynchronization();");
 			} else {
 				getMonitors(Next.getRequestContext()).set(serverId, null);

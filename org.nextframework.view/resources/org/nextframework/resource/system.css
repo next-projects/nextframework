@@ -1,6 +1,6 @@
 .datagridcontainer {
 	width: 100%; 
-	overflow: auto;
+	/*overflow: auto; pra que isso?*/
 }
 
 .datagridblock {

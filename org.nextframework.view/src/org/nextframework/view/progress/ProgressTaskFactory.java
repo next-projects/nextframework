@@ -15,8 +15,10 @@ public class ProgressTaskFactory {
 	 * @param task
 	 * @return
 	 */
-	public static IProgressMonitor startTask(final ProgressTask task){
-		return startTask(new ProgressMonitor(), task);
+	public static ProgressMonitor startTask(ProgressTask task, String name){
+		ProgressMonitor monitor = new ProgressMonitor();
+		startTask(monitor, task, name);
+		return monitor;
 	}
 	
 	/**
@@ -25,36 +27,22 @@ public class ProgressTaskFactory {
 	 * @param task
 	 * @return
 	 */
-	public static IProgressMonitor startTask(final IProgressMonitor monitor, final ProgressTask task){
-		Thread t = new Thread(){
+	public static void startTask(final IProgressMonitor monitor, final ProgressTask task, String name){
+		Thread t = new Thread(Next.getApplicationName().toUpperCase() + " - " + ProgressTask.class.getSimpleName() + " - " + name){
 			public void run() {
 				monitor.subTask("Inicializando trabalho...");
 				try {
-					task.run(monitor);
-					if(monitor.getError() == null){ //se nao deu erro.. terminou
-						monitor.done();
-					}
+					Object r = task.run(monitor);
+					monitor.setReturn(r);
+					monitor.done(monitor.getError() == null);
 				} catch (Exception e) {
 					monitor.setError("Erro: "+e.getMessage());
-					e.printStackTrace();
+					monitor.done(false);
+					//e.printStackTrace();
 				}
 			};
 		};
 		t.start();
-		t.setName(t.getName() + " - ProgressTask");
-		return monitor;
 	}
 	
-	
-	/**
-	 * Executa uma tarefa e salva o progressMonitor no escopo de requisição com o nome informado
-	 * @param requestAttribute
-	 * @param task
-	 * @return
-	 */
-	public static IProgressMonitor startTask(String requestAttribute, final ProgressTask task){
-		IProgressMonitor pm = startTask(task);
-		Next.getRequestContext().setAttribute(requestAttribute, pm);
-		return pm;
-	}
 }

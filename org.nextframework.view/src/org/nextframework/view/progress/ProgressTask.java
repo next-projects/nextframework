@@ -7,6 +7,6 @@ package org.nextframework.view.progress;
  */
 public interface ProgressTask {
 
-	void run(IProgressMonitor progressMonitor) throws Exception;
+	Object run(IProgressMonitor progressMonitor) throws Exception;
 
 }

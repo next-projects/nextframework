@@ -8,40 +8,51 @@ import org.nextframework.exception.NextException;
 
 public class ProgressMonitor implements IProgressMonitor {
 	
+	public static String DONE_SUCCESS = "OK";
+	public static String DONE_ERROR = "ERROR";
+	
 	private List<String> tasks = new Vector<String>();
+	private String subtask = "";
 	private int totalWork = 1;
 	private int workDone = 0;
 	private boolean canceled = false;
-	private String subtask = "";
-	private boolean done = false;
 	
+	private String done = null;
 	String error = null;
+	Object retorno = null;
 
+	@Override
 	public void beginTask(String name, int totalWork) {
 		tasks.add(name);
 		this.totalWork = totalWork;
 	}
 
-	public void done() {
-		done = true;
+	@Override
+	public void done(boolean success) {
+		done = success ? DONE_SUCCESS : DONE_ERROR;
 	}
 
+	@Override
 	public boolean isCanceled() {
 		return canceled;
 	}
 
+	@Override
 	public void setCanceled(boolean value) {
 		canceled = value;
 	}
 
+	@Override
 	public void setTaskName(String name) {
 		tasks.add(name);
 	}
 
+	@Override
 	public void subTask(String name) {
 		this.subtask = name;
 	}
 
+	@Override
 	public void worked(int work) {
 		if(tasks.isEmpty()){
 			throw new NextException("O IProgressMonitor não foi inicializado. Chame o método beginTask");
@@ -49,16 +60,29 @@ public class ProgressMonitor implements IProgressMonitor {
 		workDone += work;
 	}
 	
+	@Override
 	public void setWorkDone(int workDone) {
 		this.workDone = workDone;
 	}
 	
+	@Override
 	public void setError(String error) {
 		this.error = error;
 	}
 	
+	@Override
 	public String getError() {
 		return error;
+	}
+	
+	@Override
+	public void setReturn(Object retorno) {
+		this.retorno = retorno;
+	}
+	
+	@Override
+	public Object getReturn() {
+		return retorno;
 	}
 	
 	/* Métodos da implementação */
@@ -74,7 +98,7 @@ public class ProgressMonitor implements IProgressMonitor {
 		return subtask;
 	}
 	
-	public boolean isDone() {
+	public String getDone() {
 		return done;
 	}
 	
