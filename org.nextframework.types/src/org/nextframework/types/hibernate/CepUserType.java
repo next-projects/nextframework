@@ -14,10 +14,12 @@ import org.nextframework.types.TypeUtils;
 
 public class CepUserType implements UserType {
 
+	@Override
 	public int[] sqlTypes() {
 		return new int[]{Types.VARCHAR};
 	}
 
+	@Override
 	public Class<Cep> returnedClass() {
 		return Cep.class;
 	}
@@ -31,20 +33,22 @@ public class CepUserType implements UserType {
 		return x.equals(y);
 	}
 
+	@Override
 	public int hashCode(Object x) throws HibernateException {
 		return x.hashCode();
 	}
 
+	@Override
 	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
 		String value = rs.getString(names[0]);
-		if(value == null){
-			return new Cep();
+		if(TypeUtils.isEmpty(value)){
+			//return new Cep(); //Pq retornava vazio?
+			return null;
 		}
-		Cep cep = new Cep();
-		cep.setValue(value);
-		return cep;
+		return new Cep(value);
 	}
 
+	@Override
 	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
 		if(value instanceof Cep){
 			String value2 = ((Cep)value).getValue();
@@ -53,34 +57,36 @@ public class CepUserType implements UserType {
 			} else {
 				st.setString(index, removeSymbols(value2));	
 			}
-				
+			
 		} else {
 			st.setNull(index, Types.VARCHAR);
 		}
 	}
-
+	
+	@Override
 	public Object deepCopy(Object value) throws HibernateException {
 		return value;
 	}
 
+	@Override
 	public boolean isMutable() {
 		return false;
 	}
 
 	public Serializable disassemble(Object value) throws HibernateException {
-		return (Cep)value;
+		return ((Cep)value).getValue();
 	}
 
 	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return cached;
+		return new Cep((String)cached);
 	}
 
 	public Object replace(Object original, Object target, Object owner) throws HibernateException {
 		return original;
 	}
 	
+
 	private String removeSymbols(String value2) {
 		return value2.replace(".", "").replace("-", "");
 	}
-
 }

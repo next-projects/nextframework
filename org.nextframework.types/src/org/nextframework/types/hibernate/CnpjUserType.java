@@ -14,10 +14,12 @@ import org.nextframework.types.TypeUtils;
 
 public class CnpjUserType implements UserType {
 
+	@Override
 	public int[] sqlTypes() {
 		return new int[]{Types.VARCHAR};
 	}
 
+	@Override
 	public Class<Cnpj> returnedClass() {
 		return Cnpj.class;
 	}
@@ -31,19 +33,21 @@ public class CnpjUserType implements UserType {
 		return x.equals(y);
 	}
 
+	@Override
 	public int hashCode(Object x) throws HibernateException {
 		return x.hashCode();
 	}
 
+	@Override
 	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
 		String value = rs.getString(names[0]);
-		if(value == null){
-			return new Cnpj();
+		if(TypeUtils.isEmpty(value)){
+			return null;
 		}
-		Cnpj cnpj = new Cnpj(value, false);
-		return cnpj;
+		return new Cnpj(value, Cnpj.AUTO_VALIDATION);
 	}
 
+	@Override
 	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
 		if(value instanceof Cnpj){
 			String value2 = ((Cnpj)value).getValue();
@@ -52,16 +56,18 @@ public class CnpjUserType implements UserType {
 			} else {
 				st.setString(index, removeSymbols(value2));	
 			}
-				
+			
 		} else {
 			st.setNull(index, Types.VARCHAR);
 		}
 	}
-
+	
+	@Override
 	public Object deepCopy(Object value) throws HibernateException {
 		return value;
 	}
 
+	@Override
 	public boolean isMutable() {
 		return false;
 	}

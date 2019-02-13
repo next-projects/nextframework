@@ -10,6 +10,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.UserType;
 import org.nextframework.types.Cpf;
+import org.nextframework.types.TypeUtils;
 
 public class CpfUserType implements UserType {
 
@@ -41,8 +42,8 @@ public class CpfUserType implements UserType {
 	@Override
 	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
 		String value = rs.getString(names[0]);
-		if(org.nextframework.types.TypeUtils.isEmpty(value)){
-			return new Cpf();
+		if(TypeUtils.isEmpty(value)){
+			return null;
 		}
 		return new Cpf(value, Cpf.AUTO_VALIDATION);
 	}
@@ -51,7 +52,7 @@ public class CpfUserType implements UserType {
 	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
 		if(value instanceof Cpf){
 			String value2 = ((Cpf)value).getValue();
-			if(value2 ==null){
+			if(TypeUtils.isEmpty(value2)){
 				st.setNull(index, Types.VARCHAR);
 			} else {
 				st.setString(index, removeSymbols(value2));	
@@ -74,12 +75,11 @@ public class CpfUserType implements UserType {
 
 	@Override
 	public Serializable disassemble(Object value) throws HibernateException {
-		return (Cpf)value;
+		return ((Cpf)value).getValue();
 	}
 
-	@Override
 	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return cached;
+		return new Cpf((String)cached, Cpf.AUTO_VALIDATION);
 	}
 
 	@Override
