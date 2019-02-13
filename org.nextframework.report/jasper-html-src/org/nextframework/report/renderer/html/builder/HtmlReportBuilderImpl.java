@@ -10,18 +10,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 
-import net.sf.jasperreports.engine.DefaultJasperReportsContext;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRPrintElement;
-import net.sf.jasperreports.engine.JRPrintFrame;
-import net.sf.jasperreports.engine.JRPrintImage;
-import net.sf.jasperreports.engine.Renderable;
-import net.sf.jasperreports.engine.fill.JRTemplatePrintFrame;
-import net.sf.jasperreports.engine.fill.JRTemplatePrintLine;
-import net.sf.jasperreports.engine.fill.JRTemplatePrintText;
-import net.sf.jasperreports.engine.type.ImageTypeEnum;
-import net.sf.jasperreports.engine.type.ModeEnum;
-
 import org.nextframework.chart.Chart;
 import org.nextframework.chart.ChartRendererFactory;
 import org.nextframework.chart.google.ChartRendererGoogleTools;
@@ -50,13 +38,28 @@ import org.w3c.dom.NodeList;
 import com.sun.imageio.plugins.png.PNGMetadata;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JRPrintElement;
+import net.sf.jasperreports.engine.JRPrintFrame;
+import net.sf.jasperreports.engine.JRPrintImage;
+import net.sf.jasperreports.engine.Renderable;
+import net.sf.jasperreports.engine.fill.JRTemplatePrintFrame;
+import net.sf.jasperreports.engine.fill.JRTemplatePrintLine;
+import net.sf.jasperreports.engine.fill.JRTemplatePrintText;
+import net.sf.jasperreports.engine.type.ImageTypeEnum;
+import net.sf.jasperreports.engine.type.ModeEnum;
+
 public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 	
 	private static long UID_SEQUENCE = 0;
 
 	@Override
 	public HtmlDesign getHtmlDesign(ReportDefinition definition) {
-		return createHtmlDesign(JasperReportsRenderer.renderAsMappedJasperPrint(definition));
+		definition.setParameter(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
+		MappedJasperPrint mappedJasperPrint = JasperReportsRenderer.renderAsMappedJasperPrint(definition);
+		return createHtmlDesign(mappedJasperPrint);
 	}
 	
 	@Override
@@ -78,10 +81,10 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		
 		return htmlDesign;
 	}
-
+	
 	private HtmlDesign createHtmlDesign(MappedJasperPrint mappedJasperPrint) {
 		HtmlDesign htmlDesign = new HtmlDesign(mappedJasperPrint);
-		UnpagedJasperPrint unpagedJasperPrint = new UnpagedJasperPrint(mappedJasperPrint);
+//		UnpagedJasperPrint unpagedJasperPrint = new UnpagedJasperPrint(mappedJasperPrint);
 		UnpagedJasperPrint2 unpagedJasperPrint2 = new UnpagedJasperPrint2(mappedJasperPrint);
 //		System.out.println(unpagedJasperPrint2.printElements);
 		List<PrintElement> elements = unpagedJasperPrint2.getPrintElements();
@@ -100,7 +103,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		linkJavascript.getAttributes().put("src", "./"+ mappedJasperPrint.getMappedJasperReport().getReportDefinition().getReportName()+".js");
 		
 //		tag.getChildren().add(linkJavascript);
-		//<link rel="StyleSheet"        href="${app}/resource/css/default.css" type="text/css">	
+		//<link rel="StyleSheet"        href="${application}/resource/css/default.css" type="text/css">	
 		//printElements2(tag, mappedJasperPrint.getMappedJasperReport().getReportDefinition(), elements);
 		printElements(tag, mappedJasperPrint.getMappedJasperReport().getReportDefinition(), elements);
 		

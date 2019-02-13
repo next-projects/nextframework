@@ -180,26 +180,33 @@ public class UnpagedJasperPrint2 {
 				lastY = lastPrintElement.getJrPrintElement().getY();
 				int currentY = printElement.getJrPrintElement().getY();
 				if(currentY < lastY){ //page flip
-					ReportSection lastSection = lastPrintElement.getReportItem().getRow().getSection();
-					ReportSection currentSection = printElement.getReportItem().getRow().getSection();
-					ReportSectionType lastSectionType = lastSection.getType();
-					ReportSectionType currentSessionType = currentSection.getType();
-					if((asList(GROUP_HEADER, GROUP_DETAIL).contains(lastSectionType) &&
-						asList(SUMARY_DATA_HEADER, SUMARY_DATA_DETAIL).contains(currentSessionType))
-						||
-						(asList(DETAIL).contains(lastSectionType) &&
-						asList(DETAIL_HEADER, SUMARY_DATA_HEADER, SUMARY_DATA_DETAIL).contains(currentSessionType))
-						){
+					ReportItem lastReportItem = lastPrintElement.getReportItem();
+					ReportItem reportItem = printElement.getReportItem();
+					if (lastReportItem.getRow() != null && reportItem.getRow() != null){
+						//A remoção dos itens caso mude de página só é possivel se o elemento conhece sua row.
+						//se nao conhecer, nao ha como comparar a sessao para remover
+						ReportSection lastSection = lastReportItem.getRow().getSection();
+						ReportSection currentSection = reportItem.getRow().getSection();
+						ReportSectionType lastSectionType = lastSection.getType();
+						ReportSectionType currentSessionType = currentSection.getType();
+						if((asList(GROUP_HEADER, GROUP_DETAIL).contains(lastSectionType) &&
+								asList(SUMARY_DATA_HEADER, SUMARY_DATA_DETAIL).contains(currentSessionType))
+								||
+								(asList(DETAIL).contains(lastSectionType) &&
+										asList(DETAIL_HEADER, SUMARY_DATA_HEADER, SUMARY_DATA_DETAIL).contains(currentSessionType))
+								){
 							if(lastPrintElement.getSource().equals(printElement.getSource())){
 								iterator.remove();
 								continue;
 							}
+						}
 					}
 				}
 				
 			}
 			lastPrintElement = printElement;
 		}
+		
 	}
 
 }
