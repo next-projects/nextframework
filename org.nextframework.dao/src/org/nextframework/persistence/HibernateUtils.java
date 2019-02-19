@@ -54,6 +54,16 @@ public class HibernateUtils {
 		return hibernateTemplate.getSessionFactory().getClassMetadata(class1).getEntityName();
 	}
 
+	@SuppressWarnings("all")
+	public static Class getRealClass(Object o) {
+		Class eClazz = o.getClass(); 
+		if(o instanceof HibernateProxy){
+			HibernateProxy p = (HibernateProxy) o;
+			eClazz = p.getHibernateLazyInitializer().getPersistentClass();
+		}
+		return eClazz;
+	}
+	
 	public static boolean isLazy(Object value) {
 		if(value instanceof HibernateProxy){
 			LazyInitializer hibernateLazyInitializer = ((HibernateProxy)value).getHibernateLazyInitializer();
