@@ -25,17 +25,11 @@ package org.nextframework.view;
 
 import javax.el.ExpressionFactory;
 import javax.el.ValueExpression;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.el.ELException;
 
-import org.nextframework.controller.crud.CrudController;
-import org.nextframework.core.config.ViewConfig;
-import org.nextframework.core.web.NextWeb;
-import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.exception.NextException;
-import org.nextframework.service.ServiceFactory;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -43,21 +37,11 @@ import org.nextframework.service.ServiceFactory;
  * @version 1.1
  */
 @SuppressWarnings("deprecation")
-public class WebUtils {
-	
-	/**
-	 * Usa o URL Rewriter para reescrever a URL
-	 * O urlRewriter default apenas retorna a url passada como parâmetro
-	 * @param url
-	 * @return
-	 */
-	public static String rewriteUrl(String url){
-		return ServiceFactory.getService(ViewConfig.class).getUrlRewriter().rewriteUrl(url);
-	}
-	
+public class ViewUtils {
+
 	@SuppressWarnings("unchecked")
 	public static <E> E evaluate(String expression, PageContext pageContext, Class<E> clazz) {
-		if(pageContext.getExpressionEvaluator() != null && pageContext.getVariableResolver() != null){
+		if (pageContext.getExpressionEvaluator() != null && pageContext.getVariableResolver() != null) {
 			//tentar a forma servlet 2
 			try {
 				return (E) pageContext.getExpressionEvaluator().evaluate(expression, clazz, pageContext.getVariableResolver(), null);
@@ -71,29 +55,6 @@ public class WebUtils {
 			E evaluate = (E) ve.getValue(pageContext.getELContext());
 			return evaluate;
 		}
-	}
-
-	@Deprecated
-	public static String getFullUrl(HttpServletRequest request){
-		String path = request.getServletPath()+request.getPathInfo();
-		return getFullUrl(request, path);
-	}
-
-	public static String getFullUrl(HttpServletRequest request, String path) {
-		//nao utilizar o nome do módulo igual ao nome da aplicacao
-		String contextPath = request.getContextPath();
-		if (!path.startsWith(contextPath)) {
-			return contextPath+path;
-		}
-		return path;
-	}
-	
-	public static String getFirstFullUrl(){
-		return ((WebRequestContext)NextWeb.getRequestContext()).getServletRequest().getContextPath()+getFirstUrl();
-	}
-	
-	public static String getFirstUrl(){
-		return ((WebRequestContext)NextWeb.getRequestContext()).getFirstRequestUrl();
 	}
 
 //	public static boolean isCrudRequest() {

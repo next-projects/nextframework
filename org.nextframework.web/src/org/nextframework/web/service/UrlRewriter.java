@@ -1,10 +1,12 @@
-package org.nextframework.core.config;
+package org.nextframework.web.service;
+
 /**
  * Reescreve URLs geradas
  * @author rogel
  *
  */
 public interface UrlRewriter {
-	
+
 	public String rewriteUrl(String url);
+
 }

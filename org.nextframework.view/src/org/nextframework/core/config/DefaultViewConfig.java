@@ -8,9 +8,7 @@ import org.nextframework.view.InputTagType;
 public class DefaultViewConfig implements ViewConfig {
 
 	HashMap<Class<?>, InputTagType> map = new HashMap<Class<?>, InputTagType>();
-	
-	protected UrlRewriter urlRewriter;
-	
+
 	protected boolean persistTemporaryFiles = true;
 
 	public Map<Class<?>, InputTagType> getCustomInputTypes() {
@@ -35,19 +33,6 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
-	public UrlRewriter getUrlRewriter() {
-		if(urlRewriter == null){
-			urlRewriter = new UrlRewriter() {
-				
-				public String rewriteUrl(String url) {
-					return url;
-				}
-			};
-		}
-		return urlRewriter;
-	}
-	
-	@Override
 	public boolean isPersistTemporaryFiles() {
 		return persistTemporaryFiles;
 	}
@@ -65,4 +50,5 @@ public class DefaultViewConfig implements ViewConfig {
 	public String getDefaultJSPCharset() {
 		return "iso-8859-1";
 	}
+
 }

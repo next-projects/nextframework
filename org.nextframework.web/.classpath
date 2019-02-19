@@ -6,7 +6,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.context"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-web-4.1.5.RELEASE.jar" sourcepath="lib/src/spring-web-4.1.5.RELEASE-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="provided/javax.servlet-api-3.1.0.jar" sourcepath="provided/src/javax.servlet-api-3.1.0-sources.jar"/>
-	<classpathentry kind="lib" path="provided/javax.el-api-2.2.1.jar" sourcepath="provided/src/javax.el-api-2.2.1-sources.jar"/>
-	<classpathentry kind="lib" path="provided/javax.servlet.jsp-api-2.2.1.jar" sourcepath="provided/src/javax.servlet.jsp-api-2.2.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="provided/javax.el-api-2.2.1.jar" sourcepath="provided/src/javax.el-api-2.2.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="provided/javax.servlet.jsp-api-2.2.1.jar" sourcepath="provided/src/javax.servlet.jsp-api-2.2.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

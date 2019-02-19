@@ -9,8 +9,8 @@ import org.nextframework.types.File;
 import org.nextframework.util.Util;
 import org.nextframework.view.DownloadFileServlet;
 import org.nextframework.view.TagUtils;
-import org.nextframework.view.WebUtils;
 import org.nextframework.view.template.PropertyConfigTag;
+import org.nextframework.web.WebUtils;
 
 public class InputTagFileComponent extends InputTagComponent {
 

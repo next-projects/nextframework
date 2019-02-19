@@ -26,6 +26,7 @@ package org.nextframework.view;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.util.Util;
+import org.nextframework.web.WebUtils;
 
 /**
  * @author rogelgarcia

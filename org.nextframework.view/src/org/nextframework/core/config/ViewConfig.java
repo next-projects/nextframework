@@ -10,18 +10,17 @@ public interface ViewConfig {
 	Map<Class<?>, InputTagType> getCustomInputTypes();
 
 	String getRequiredMarkString();
-	
+
 	boolean isDefaultShowCalendar();
-	
+
 	boolean isDefaultResizeDatagridColumns();
-	
+
 	boolean isDefaultHideDatagridWhileLoading();
 
 	boolean isAutoLoadOnView();
 
-	UrlRewriter getUrlRewriter();
-
 	boolean isPersistTemporaryFiles();
-	
+
 	String getDefaultJSPCharset();
+
 }

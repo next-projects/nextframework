@@ -25,10 +25,10 @@ package org.nextframework.view;
 
 import org.nextframework.authorization.Authorization;
 import org.nextframework.controller.MultiActionController;
-import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
 import org.nextframework.view.template.PropertyConfigTag;
+import org.nextframework.web.WebUtils;
 
 /**
  * @author rogelgarcia

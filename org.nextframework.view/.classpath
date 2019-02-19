@@ -7,8 +7,7 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.chart"/>
 	<classpathentry exported="true" kind="lib" path="lib/jstl-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/ognl-2.6.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="provided/javax.servlet.jsp-api-2.2.1.jar" sourcepath="provided/src/javax.servlet.jsp-api-2.2.1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="provided/javax.el-api-2.2.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.persistence"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.web"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

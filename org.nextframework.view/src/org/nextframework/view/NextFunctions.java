@@ -91,7 +91,7 @@ public class NextFunctions {
 
 
 	public static Object reevaluate(String expr, PageContext context) throws ELException{
-		return WebUtils.evaluate("${"+expr+"}", context, Object.class);
+		return ViewUtils.evaluate("${"+expr+"}", context, Object.class);
 	}
 
 	public static String descriptionToString(Object value){

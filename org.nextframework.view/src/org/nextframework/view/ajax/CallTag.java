@@ -27,7 +27,7 @@ import org.nextframework.controller.MultiActionController;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
-import org.nextframework.view.WebUtils;
+import org.nextframework.web.WebUtils;
 
 public class CallTag extends BaseTag {
 

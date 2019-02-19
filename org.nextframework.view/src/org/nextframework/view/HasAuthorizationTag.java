@@ -24,8 +24,8 @@
 package org.nextframework.view;
 
 import org.nextframework.authorization.Authorization;
-import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
+import org.nextframework.web.WebUtils;
 
 /**
  * Verifica se o usuário atual possui permissão para acessar a url especificada

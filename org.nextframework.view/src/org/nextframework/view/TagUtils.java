@@ -54,7 +54,7 @@ public class TagUtils {
 	
 
 	public static Object evaluate(String expression, JspContext pageContext) throws ELException {
-		return WebUtils.evaluate(expression, (PageContext) pageContext, Object.class);
+		return ViewUtils.evaluate(expression, (PageContext) pageContext, Object.class);
 	}
 
 	public static boolean hasId(Class<? extends Object> class1) {

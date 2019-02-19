@@ -58,7 +58,7 @@ public class BeanTag extends BaseTag implements LogicalTag {
 		if(Util.strings.isEmpty(name)){
 			throw new IllegalArgumentException("Attribute name of tag BeanTag is empty. ");
 		}	
-		bean = WebUtils.evaluate("${"+name+"}", getPageContext(), (valueType == null? Object.class : valueType) );
+		bean = ViewUtils.evaluate("${"+name+"}", getPageContext(), (valueType == null? Object.class : valueType) );
 		if(bean == null && getParent() instanceof DataGridTag){
 			DataGridTag dataGridTag = (DataGridTag) getParent();
 			if(dataGridTag.currentStatus == Status.DYNALINE){

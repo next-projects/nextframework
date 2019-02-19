@@ -33,7 +33,7 @@ import javax.servlet.jsp.JspException;
 import org.nextframework.authorization.Authorization;
 import org.nextframework.authorization.User;
 import org.nextframework.view.BaseTag;
-import org.nextframework.view.WebUtils;
+import org.nextframework.web.WebUtils;
 
 public class MenuTag extends BaseTag {
 	

@@ -5,8 +5,6 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
-		<dependency org="javax.servlet.jsp"		name="javax.servlet.jsp-api"	rev="2.2.1"		conf="provided" />
-		<dependency org="javax.el"				name="javax.el-api"				rev="2.2.1"		conf="provided" />
 		<dependency org="ognl"					name="ognl"						rev="2.6.7"		conf="lib" />
 		<dependency org="jstl"					name="jstl"						rev="1.2"		conf="lib" />
 	</dependencies>

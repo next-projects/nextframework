@@ -42,7 +42,7 @@ import org.nextframework.view.ComboReloadGroupTag;
 import org.nextframework.view.DataGridTag;
 import org.nextframework.view.PanelGridTag;
 import org.nextframework.view.PanelTag;
-import org.nextframework.view.WebUtils;
+import org.nextframework.web.WebUtils;
 
 /**
  * @author rogelgarcia

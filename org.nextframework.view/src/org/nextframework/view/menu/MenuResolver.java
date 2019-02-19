@@ -14,7 +14,7 @@ import org.nextframework.authorization.AuthorizationManager;
 import org.nextframework.authorization.Role;
 import org.nextframework.authorization.User;
 import org.nextframework.util.Util;
-import org.nextframework.view.WebUtils;
+import org.nextframework.web.WebUtils;
 import org.xml.sax.SAXException;
 
 public class MenuResolver {
