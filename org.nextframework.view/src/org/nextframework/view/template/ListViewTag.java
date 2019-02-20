@@ -96,7 +96,7 @@ public class ListViewTag extends TemplateTag {
 
 	@Override
 	protected void doComponent() throws Exception {
-		if(Util.strings.isEmpty(title)){
+		if(Util.strings.isEmpty(title) && CrudContext.getCurrentInstance() != null){
 //			titulo = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
 			title = CrudContext.getCurrentInstance().getDisplayName();
 		}
