@@ -101,13 +101,13 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 //						}
 //					}
 //				}
-				boolean jumpTransient = false;
+				boolean lastTransient = false;
 				String[] parts = property.split("\\.");
 //				String currentAlias = "";
 				String currentPath = "";
 				String basePath = "";
 				for (int i = 0; i < parts.length; i++) {
-					if(jumpTransient){
+					if(lastTransient){
 						break;
 					}
 					basePath = currentPath;
@@ -119,7 +119,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 //					query.leftOuterJoinFetch(currentAlias+"."+parts[i] + " "+newAlias);
 					propertyDescriptor = beanDescriptor.getPropertyDescriptor(currentPath);
 					if(propertyDescriptor.getAnnotation(Transient.class)!=null){
-						jumpTransient = true;
+						lastTransient = true;
 					}
 					ManyToOne manyToOne = propertyDescriptor.getAnnotation(ManyToOne.class);
 					if(manyToOne != null){
@@ -140,7 +140,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 								joinManager.addJoin(path + field);
 							}
 						}else{
-							if (i == parts.length - 1) {
+							if (i == parts.length - 1 && !lastTransient) {
 								orderByProperties.add(currentPath);
 							}
 						}
