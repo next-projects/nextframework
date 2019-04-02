@@ -32,22 +32,12 @@ public class JavascriptValidationItem {
 	private String fieldDisplayName;
 	private String fieldName;
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public JavascriptValidationItem(ValidationItem item) {
+		this.item = item;
 	}
-
-
-//	public ValidatorRegistry getValidatorRegistry() {
-//		return item.getValidatorRegistry();
-//	}
-
 
 	public String getFieldDisplayName() {
 		return fieldDisplayName;
-	}
-
-	public void setFieldDisplayName(String fieldDescription) {
-		this.fieldDisplayName = fieldDescription;
 	}
 
 	public String getFieldName() {
@@ -58,14 +48,16 @@ public class JavascriptValidationItem {
 		return item.getValidations();
 	}
 
-	public JavascriptValidationItem(ValidationItem item){
-		this.item = item;
-	}
-
-
 	public PropertyValidator getTypeValidator() {
 		return item.getTypeValidator();
 	}
-	
-	
+
+	public void setFieldDisplayName(String fieldDescription) {
+		this.fieldDisplayName = fieldDescription;
+	}
+
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+
 }

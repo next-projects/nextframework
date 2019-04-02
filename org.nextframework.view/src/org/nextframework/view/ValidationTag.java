@@ -38,9 +38,9 @@ import org.nextframework.validation.validators.JavascriptValidationFunctionBuild
  * @version 1.1
  */
 public class ValidationTag extends BaseTag {
-	
+
 	protected String functionName;
-	
+
 	protected JavascriptValidationFunctionBuilder functionBuilder;
 
 	List<JavascriptValidationItem> validationItens = new ArrayList<JavascriptValidationItem>();
@@ -55,8 +55,8 @@ public class ValidationTag extends BaseTag {
 		FormTag form = findParent(FormTag.class, true);
 		String formName = form.getName();
 		ValidatorRegistry validatorRegistry = ServiceFactory.getService(ValidatorRegistry.class);
-		if(functionName == null) {
-			functionName = "validate"+Util.strings.captalize(formName);
+		if (functionName == null) {
+			functionName = "validate" + Util.strings.captalize(formName);
 		}
 		functionBuilder = new JavascriptValidationFunctionBuilder(validationItens, formName, functionName, validatorRegistry, getServletContext());
 		String validationString = functionBuilder.buildValidation();
@@ -69,8 +69,12 @@ public class ValidationTag extends BaseTag {
 		return functionName;
 	}
 
+	public List<JavascriptValidationItem> getValidationItens() {
+		return validationItens;
+	}
+
 	public void setFunctionName(String functionName) {
 		this.functionName = functionName;
 	}
-	
+
 }
