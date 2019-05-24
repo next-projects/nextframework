@@ -107,7 +107,7 @@ public class DataGridTag extends BaseTag {
 	protected List<PanelRenderedBlock> blocks = new ArrayList<PanelRenderedBlock>();
 	
 	//configuracao dos rows
-	private Map<String, CyclicIterator> rowAttributes = new LinkedHashMap<String, CyclicIterator>();
+	private Map<String, CyclicIterator<String>> rowAttributes = new LinkedHashMap<String, CyclicIterator<String>>();
 	private String rowSeparator;
 	/**
 	 * Esse atributo nao é utilzado
@@ -261,7 +261,7 @@ public class DataGridTag extends BaseTag {
 		Set<String> daKeys = new LinkedHashSet<String>(getDynamicAttributesMap().keySet());
 		for (String daKey : daKeys) {
 			if(daKey.startsWith("row")){
-				CyclicIterator cyclicIterator = new CyclicIterator(toStringArray(getDynamicAttributesMap().get(daKey)));
+				CyclicIterator<String> cyclicIterator = new CyclicIterator<String>(toStringArray(getDynamicAttributesMap().get(daKey)));
 				rowAttributes.put(daKey.substring(3), cyclicIterator);
 				getDynamicAttributesMap().remove(daKey);
 			}
@@ -539,7 +539,7 @@ public class DataGridTag extends BaseTag {
 	}
 
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	private void iterate(Collection collection) throws ELException, IOException, JspException {
 		_isFirst = true;
 		Iterator iterator = collection.iterator();
@@ -625,14 +625,14 @@ public class DataGridTag extends BaseTag {
 		return null;
 	}
 
-	private CyclicIterator getBodyStyleClassesIterator() {
-		if(Util.strings.isEmpty(bodyStyleClasses)) return new CyclicIterator();
-		return new CyclicIterator(bodyStyleClasses.split(","));
+	private CyclicIterator<String> getBodyStyleClassesIterator() {
+		if(Util.strings.isEmpty(bodyStyleClasses)) return new CyclicIterator<String>();
+		return new CyclicIterator<String>(bodyStyleClasses.split(","));
 	}
 	
-	private CyclicIterator getBodyStylesIterator() {
-		if(Util.strings.isEmpty(bodyStyles)) return new CyclicIterator();
-		return new CyclicIterator(bodyStyles.split(","));
+	private CyclicIterator<String> getBodyStylesIterator() {
+		if(Util.strings.isEmpty(bodyStyles)) return new CyclicIterator<String>();
+		return new CyclicIterator<String>(bodyStyles.split(","));
 	}
 
 	public Status getCurrentStatus() {
@@ -986,8 +986,8 @@ public class DataGridTag extends BaseTag {
 				e.printStackTrace();
 			}
 			
-			((CyclicIterator) bodyStyleIterator).reset();
-			((CyclicIterator) bodyStyleClassIterator).reset();
+			((CyclicIterator<String>) bodyStyleIterator).reset();
+			((CyclicIterator<String>) bodyStyleClassIterator).reset();
 		}
 		
 		@Override

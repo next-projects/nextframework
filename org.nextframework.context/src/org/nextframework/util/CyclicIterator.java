@@ -5,33 +5,33 @@ package org.nextframework.util;
 
 import java.util.Iterator;
 
-public class CyclicIterator implements Iterator<String> {
+public class CyclicIterator<E> implements Iterator<E> {
 	
-	private String[] strings;
+	private E[] elements;
 	int i = 0;
 	
 	public CyclicIterator(){
-		this(new String[0]);
+		this(null);
 	}
 
-	public CyclicIterator(String[] strings){
-		this.strings = strings;
+	public CyclicIterator(E[] elements){
+		this.elements = elements;
 	}
 
 	public boolean hasNext() {
 		return true;
 	}
 
-	public String next() {
-		if(strings == null || strings.length == 0) return null;
-		if(i >= strings.length){
+	public E next() {
+		if(elements == null || elements.length == 0) return null;
+		if(i >= elements.length){
 			i = 0;
 		}
-		return strings[i++];
+		return elements[i++];
 	}
 
-	public String[] getStrings() {
-		return strings;
+	public E[] getElements() {
+		return elements;
 	}
 
 	public void remove() {
