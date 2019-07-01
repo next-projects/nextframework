@@ -465,7 +465,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				public Object run(IProgressMonitor progressMonitor) throws Exception {
 					progressMonitor.beginTask("Inicializando", 120);
 					ReportDefinition definition = getReportDefinition(reportElement, filterMap, getMaxResults(), progressMonitor);
-					progressMonitor.setTaskName("Foramatando");
+					progressMonitor.setTaskName("Formatando");
 					Object converted = task.convertResults(definition, progressMonitor);
 					progressMonitor.worked(20);
 					return converted;
