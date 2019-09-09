@@ -600,8 +600,11 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		String suffix = null;
 		boolean isEntity = false;
 		if(type instanceof Class<?>){
+			
 			Class<?> clazz = (Class<?>) type;
+			
 			if(Number.class.isAssignableFrom(clazz)){
+				
 				alignment = ReportAlignment.RIGHT;
 				if(clazz.getName().startsWith("java")){
 					//only use patterns with java classes (the formater only know about these)
@@ -610,13 +613,16 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 						pattern = "#,##0.00";
 					}
 				}
-			}
-			if(Date.class.isAssignableFrom(clazz)){
+				
+			}else if(Date.class.isAssignableFrom(clazz)){
+				
 				pattern = "dd/MM/yyyy";
-			}
-			if(Calendar.class.isAssignableFrom(clazz)){
+				
+			}else if(Calendar.class.isAssignableFrom(clazz)){
+				
 				suffix = ".time";
 				pattern = "dd/MM/yyyy";
+			
 			}
 			
 			Class entityClass = null;
@@ -625,20 +631,45 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			} catch (Exception e) {
 			}
 			
-			if(entityClass != null && clazz.isAnnotationPresent(entityClass)) {
-				isEntity = true;
-				BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBeanOrClass(propertyValue, clazz);
-				String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
-				if(descriptionPropertyName != null) {
-					suffix = "." + descriptionPropertyName;
-				}
-				if(propertyValue != null){
-					Object value = entityBeanDescriptor.getPropertyDescriptor(descriptionPropertyName).getValue();
-					if(value == null){
-						loadValue(propertyValue, descriptionPropertyName);
+			if (entityClass != null) {
+				
+				if(clazz.isArray()){
+					
+					Object[] propertyValueArray = (Object[]) propertyValue;
+					for (Object pv : propertyValueArray) {
+						
+						if(pv.getClass().isAnnotationPresent(entityClass)) {
+							BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBean(pv);
+							String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
+							Object value = entityBeanDescriptor.getPropertyDescriptor(descriptionPropertyName).getValue();
+							if(value == null){
+								loadValue(pv, descriptionPropertyName);
+							}
+						}
+						
 					}
+					
+				}else{
+					
+					if(clazz.isAnnotationPresent(entityClass)) {
+						isEntity = true;
+						BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBeanOrClass(propertyValue, clazz);
+						String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
+						if(descriptionPropertyName != null) {
+							suffix = "." + descriptionPropertyName;
+						}
+						if(propertyValue != null){
+							Object value = entityBeanDescriptor.getPropertyDescriptor(descriptionPropertyName).getValue();
+							if(value == null){
+								loadValue(propertyValue, descriptionPropertyName);
+							}
+						}
+					}
+					
 				}
+				
 			}
+			
 		}
 		return createFieldConfig(fieldName, fieldPreffix, label, pattern, alignment, suffix, isEntity, type);
 	}

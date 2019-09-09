@@ -190,6 +190,15 @@ public class StringUtils {
 			} else if(value instanceof Number){
 				NumberFormat numberFormat = new DecimalFormat(formatNumber);
 				return numberFormat.format(value);
+			} else if (value.getClass().isArray()) {
+				Object[] array = (Object[]) value;
+				String description = "";
+				if (array.length > 0) {
+					for (Object o : array) {
+						description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber);
+					}
+				}
+				return description;
 			}
 			try {
 				beanDescriptor = BeanDescriptorFactory.forBean(value);

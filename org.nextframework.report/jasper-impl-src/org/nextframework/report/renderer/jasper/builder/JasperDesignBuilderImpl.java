@@ -49,6 +49,7 @@ import org.nextframework.report.definition.ReportGroupSection;
 import org.nextframework.report.definition.ReportSection;
 import org.nextframework.report.definition.ReportSectionRow;
 import org.nextframework.report.definition.ReportSectionType;
+import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.definition.elements.ReportBlock;
 import org.nextframework.report.definition.elements.ReportChart;
 import org.nextframework.report.definition.elements.ReportComposite;
@@ -292,7 +293,11 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 	@SuppressWarnings("deprecation") JRDesignExpression createExpression(String expression, Class<?> class1) {
 		if(expression.startsWith("param.")){
 			JRDesignExpression expression2 = new JRDesignExpression();
-			expression2.setText("$P{"+expression.substring(6)+"}");
+			if (expression.contains(LayoutReportBuilder.FILTER_PARAMETER)) {
+				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($P{"+expression.substring(6)+"})");
+			}else{
+				expression2.setText("$P{"+expression.substring(6)+"}");
+			}
 			if(class1 != null){
 				expression2.setValueClass(class1);
 				expression2.setValueClassName(class1.getName());
