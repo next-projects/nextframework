@@ -195,11 +195,12 @@ public abstract class AbstractJFreeTypeRenderer implements JFreeTypeRenderer {
 		configurePlot(plot, chart);
 		configureCategoryPlotDetails(plot, chart);
 		
+		plot.getRangeAxis().setUpperMargin(0.1);
 		plot.getDomainAxis().setLowerMargin(0.01);
 		plot.getDomainAxis().setCategoryMargin(0.2);
-		AxisSpace space = new AxisSpace();
-		space.setBottom(50.0);
-		space.setTop(10.0);
+//		AxisSpace space = new AxisSpace();
+//		space.setBottom(50.0);
+//		space.setTop(10.0);
 //		plot.setFixedDomainAxisSpace(space);
 //		plot.getRangeAxis().setLowerMargin(0.5);
 		plot.getDomainAxis().setLabelInsets(new RectangleInsets(0, 0, 5, 5));
