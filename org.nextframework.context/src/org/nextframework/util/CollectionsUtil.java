@@ -37,14 +37,17 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.PropertyAccessorFactory;
 
 public class CollectionsUtil {
-	
+
 	public String join(Collection<?> list, String separator) {
 		String result = "";
-		for (Object o : list) {
-			if (o == null) {
-				continue;
+		if (list != null && !list.isEmpty()) {
+			Object first = list.iterator().next();
+			for (Object o : list) {
+				if (o == null) {
+					continue;
+				}
+				result += (o == first ? "" : separator) + Util.strings.toStringDescription(o);
 			}
-			result += (result.length() == 0 ? "" : separator) + Util.strings.toStringDescription(o);
 		}
 		return result;
 	}

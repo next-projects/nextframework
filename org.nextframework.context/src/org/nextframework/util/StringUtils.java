@@ -165,60 +165,53 @@ public class StringUtils {
 	}
 	
 	public String toStringDescription(Object value, String formatDate, String formatNumber) {
-		formatDate   = formatDate == null   ? "dd/MM/yyyy" : formatDate;
-		formatNumber = formatNumber == null ? "#,##0.##"   : formatNumber;
-		if(value instanceof Calendar){
-			value = ((Calendar)value).getTime();
+
+		if (value == null) {
+			return "";
 		}
-		BeanDescriptor beanDescriptor = null;
-		{
-			if (value == null) {
-				return "";
+
+		formatDate = formatDate == null ? "dd/MM/yyyy" : formatDate;
+		formatNumber = formatNumber == null ? "#,##0.##" : formatNumber;
+
+		if (value instanceof Calendar) {
+			value = ((Calendar) value).getTime();
+		}
+
+		if (value instanceof String) {
+			return (String) value;
+		} else if (value instanceof Date) { //FIXME
+			DateFormat dateFormat = new SimpleDateFormat(formatDate);
+			return dateFormat.format(value);
+		} else if (value instanceof Number) {
+			NumberFormat numberFormat = new DecimalFormat(formatNumber);
+			return numberFormat.format(value);
+		} else if (value.getClass().isArray()) {
+			Object[] array = (Object[]) value;
+			String description = "";
+			if (array.length > 0) {
+				for (Object o : array) {
+					description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber);
+				}
 			}
-			Class<?> horaClass = null;
-			try {
-				horaClass = Class.forName("org.nextframework.types.SimpleTime");
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-			
-			if(horaClass != null && horaClass.isAssignableFrom(value.getClass())){
+			return description;
+		}
+
+		try {
+			Class<?> horaClass = Class.forName("org.nextframework.types.SimpleTime");
+			if (horaClass != null && horaClass.isAssignableFrom(value.getClass())) {
 				return value.toString();
-			} else if(value instanceof Date){ //FIXME
-				DateFormat dateFormat = new SimpleDateFormat(formatDate);
-				return dateFormat.format(value);
-			} else if(value instanceof Number){
-				NumberFormat numberFormat = new DecimalFormat(formatNumber);
-				return numberFormat.format(value);
-			} else if (value.getClass().isArray()) {
-				Object[] array = (Object[]) value;
-				String description = "";
-				if (array.length > 0) {
-					for (Object o : array) {
-						description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber);
-					}
-				}
-				return description;
 			}
-			try {
-				beanDescriptor = BeanDescriptorFactory.forBean(value);
-			} catch (NotInNextContextException e) {
-				beanDescriptor = BeanDescriptorFactory.forBean(value);
-			}
-			Object description = beanDescriptor.getDescription();
-			if (description == null) {
-				//CÓDIGO ALTERADO EM 16 DE NOVEMBRO DE 2006
-				//description = value.toString();
-				// CÓDIGO ALTERADO EM 05 DE DEZEMBRO DE 2006
-				// MOTIVO: O CÓDIGO ANTERIOR IMPRIMIA:   br....Aluno@93CD21
-				if(beanDescriptor.getDescriptionPropertyName() == null){
-					description = value.toString();
-				} else {
-					description = "";	
-				}
-			}
-			return description.toString();
+		} catch (ClassNotFoundException e) {
+			//e.printStackTrace();
 		}
+
+		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
+		Object description = beanDescriptor.getDescription();
+		if (description == null && beanDescriptor.getDescriptionPropertyName() == null) {
+			description = value.toString();
+		}
+
+		return description != null ? description.toString() : "";
 	}
 
     public String removeAccents(String string) {
