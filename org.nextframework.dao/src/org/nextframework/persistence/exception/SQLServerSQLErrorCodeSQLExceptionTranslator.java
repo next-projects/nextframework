@@ -43,105 +43,103 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 
 public class SQLServerSQLErrorCodeSQLExceptionTranslator extends SQLErrorCodeSQLExceptionTranslator {
-	
+
 	static String errorRegex = "(.*) statement conflicted with COLUMN (?:SAME TABLE )?REFERENCE constraint '(.*?)'. The conflict occurred in database '(?:.*?)', table '(.*?)', column '(.*?)'.";
 	static String errorRegex2 = "The (.*) statement conflicted with the REFERENCE constraint \"(.*)\". The conflict occurred in database \"(?:.*)\", table \"(.*)\", column '(.*)'.";
 	static Pattern pattern = Pattern.compile(errorRegex);
 	static Pattern pattern2 = Pattern.compile(errorRegex2);
-	
+
 	static final Log log = LogFactory.getLog(SQLServerSQLErrorCodeSQLExceptionTranslator.class);
-	
+
 	private DataSource dataSource;
-	
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}
-	
+
 	@Override
 	public void setDataSource(DataSource dataSource) {
 		super.setDataSource(dataSource);
 		this.dataSource = dataSource;
 	}
-	
+
 	private String getTableName(Class<?> entityClass) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		Table table = reflectionCache.getAnnotation(entityClass, Table.class);
-		if(table != null){
+		if (table != null) {
 			return table.name().toUpperCase();
 		}
 		return entityClass.getSimpleName().toUpperCase();
 	}
-	
+
 	@Override
 	protected DataAccessException customTranslate(String task, String sql, SQLException sqlEx) {
 		//TODO ARRUMAR ESSA DESORDEM (FAZER HIGH COHESION.. LOW COUPLING)
-		//System.out.println(task+" - "+sql);
-//		boolean matcher2 = false;
-		if(sqlEx.getErrorCode() == 547){
-			//exceção de FK
+		if (sqlEx.getErrorCode() == 547) {
+
 			Matcher matcher = pattern.matcher(sqlEx.getMessage());
-			if(!matcher.find()){
-				//tentar segundo pattern
+			if (!matcher.find()) {
 				matcher = pattern2.matcher(sqlEx.getMessage());
-				if(!matcher.find()){
+				if (!matcher.find()) {
 					return null;
-				} else {
-//					matcher2 = true;
 				}
 			}
+
 			String fk_name = matcher.group(2);
 			String fk_table_name = matcher.group(3).toUpperCase();
-			if(fk_table_name.lastIndexOf('.') > 0){
-				fk_table_name = fk_table_name.substring(fk_table_name.lastIndexOf('.')+1);
+			if (fk_table_name.lastIndexOf('.') > 0) {
+				fk_table_name = fk_table_name.substring(fk_table_name.lastIndexOf('.') + 1);
 			}
 			String pk_table_name = null;
 			String fkTableDisplayName = null;
 			String pkTableDisplayName = null;
+
 			try {
 				DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
-				ResultSet importedKeys = metaData.getImportedKeys(null,null, fk_table_name);
-				
-				while(importedKeys.next()){
-					if(importedKeys.getString("FK_NAME").equals(fk_name)){
+				ResultSet importedKeys = metaData.getImportedKeys(null, null, fk_table_name);
+				while (importedKeys.next()) {
+					if (importedKeys.getString("FK_NAME").equals(fk_name)) {
 						pk_table_name = importedKeys.getString("PKTABLE_NAME");
-						if(pk_table_name != null){
+						if (pk_table_name != null) {
 							pk_table_name = pk_table_name.toUpperCase();
 						}
 					}
 				}
 			} catch (SQLException e) {
-				//se nao conseguir o metadata .. vazar
 				log.warn("Não foi possível conseguir o metadata do banco para ler informacoes de FK.");
 				return null;
 			}
-			
+
 			Class<?>[] entities = ClassManagerFactory.getClassManager().getClassesWithAnnotation(Entity.class);
 			pkTableDisplayName = pk_table_name;
 			fkTableDisplayName = fk_table_name;
 			for (Class<?> entityClass : entities) {
 				String tableName = getTableName(entityClass);
-				if(tableName.equals(pk_table_name)){
+				if (tableName.equals(pk_table_name)) {
 					pkTableDisplayName = BeanDescriptorFactory.forClass(entityClass).getDisplayName();
 				}
-				if(tableName.equals(fk_table_name)){
+				if (tableName.equals(fk_table_name)) {
 					fkTableDisplayName = BeanDescriptorFactory.forClass(entityClass).getDisplayName();
 				}
 			}
-			
-			String mensagem = null;
+
+			String defaultMensagem;
 			sql = matcher.group(1);
-			if(sql.toLowerCase().trim().startsWith("delete")){
-				mensagem = "Não foi possível remover "+pkTableDisplayName+". Existe(m) registro(s) vinculado(s) em "+fkTableDisplayName+".";
-			} else if(sql.toLowerCase().trim().startsWith("update")){
-				mensagem = "Não foi possível atualizar "+fkTableDisplayName+". A referência para "+pkTableDisplayName+" é inválida.";
-			} else if(sql.toLowerCase().trim().startsWith("insert")){
-				mensagem = "Não foi possível inserir "+fkTableDisplayName+". A referência para "+pkTableDisplayName+" é inválida.";
+			if (sql.toLowerCase().trim().startsWith("delete")) {
+				defaultMensagem = "Não foi possível remover " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
+			} else if (sql.toLowerCase().trim().startsWith("update")) {
+				defaultMensagem = "Não foi possível atualizar " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
+			} else if (sql.toLowerCase().trim().startsWith("insert")) {
+				defaultMensagem = "Não foi possível inserir " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
 			} else {
-				mensagem = "Não foi possível efetuar operação em "+pkTableDisplayName+". Existe(m) registro(s) vinculado(s) em "+fkTableDisplayName+".";
+				defaultMensagem = "Não foi possível efetuar operação em " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
 			}
-			return new ForeignKeyException(mensagem, new ForeignKeyException(task));
+
+			return new ForeignKeyException(defaultMensagem, new RuntimeException(task));
+
 		}
-		
+
 		return null;
 	}
+
 }

@@ -70,23 +70,22 @@ public class FirebirdSQLErrorCodesTranslator extends SQLErrorCodeSQLExceptionTra
 	static String errorRegex = "GDS Exception. 335544466. violation of FOREIGN KEY constraint \"(.*)?\" on table \"(.*)?\"";
 	static Pattern pattern = Pattern.compile(errorRegex);
 	static final Log log = LogFactory.getLog(FirebirdSQLErrorCodesTranslator.class);
-	
 	private DataSource dataSource;
-	
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}
-	
+
 	@Override
 	public void setDataSource(DataSource dataSource) {
 		super.setDataSource(dataSource);
 		this.dataSource = dataSource;
 	}
-	
+
 	private String getTableName(Class<?> entityClass) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		Table table = reflectionCache.getAnnotation(entityClass, Table.class);
-		if(table != null){
+		if (table != null) {
 			return table.name().toUpperCase();
 		}
 		return entityClass.getSimpleName().toUpperCase();
@@ -95,9 +94,9 @@ public class FirebirdSQLErrorCodesTranslator extends SQLErrorCodeSQLExceptionTra
 	@Override
 	protected DataAccessException customTranslate(String task, String sql, SQLException sqlEx) {
 		//TODO ARRUMAR (FAZER HIGH COHESION.. LOW COUPLING)
-		//System.out.println(task+" - "+sql);
-		if(sqlEx.getErrorCode() == 335544466){
-			//exceção de FK
+
+		if (sqlEx.getErrorCode() == 335544466) {
+
 			Matcher matcher = pattern.matcher(sqlEx.getMessage());
 			matcher.find();
 			String fk_name = matcher.group(1);
@@ -105,50 +104,52 @@ public class FirebirdSQLErrorCodesTranslator extends SQLErrorCodeSQLExceptionTra
 			String pk_table_name = null;
 			String fkTableDisplayName = null;
 			String pkTableDisplayName = null;
+
 			try {
 				DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
-				ResultSet importedKeys = metaData.getImportedKeys(null,null, fk_table_name);
-				
-				while(importedKeys.next()){
-					if(importedKeys.getString("FK_NAME").equals(fk_name)){
+				ResultSet importedKeys = metaData.getImportedKeys(null, null, fk_table_name);
+				while (importedKeys.next()) {
+					if (importedKeys.getString("FK_NAME").equals(fk_name)) {
 						pk_table_name = importedKeys.getString("PKTABLE_NAME");
-						if(pk_table_name != null){
+						if (pk_table_name != null) {
 							pk_table_name = pk_table_name.toUpperCase();
 						}
 					}
 				}
 			} catch (SQLException e) {
-				//se nao conseguir o metadata .. vazar
 				log.warn("Não foi possível conseguir o metadata do banco para ler informacoes de FK.");
 				return null;
 			}
-			
+
 			Class<?>[] entities = ClassManagerFactory.getClassManager().getClassesWithAnnotation(Entity.class);
 			pkTableDisplayName = pk_table_name;
 			fkTableDisplayName = fk_table_name;
 			for (Class<?> entityClass : entities) {
 				String tableName = getTableName(entityClass);
-				if(tableName.equals(pk_table_name)){
+				if (tableName.equals(pk_table_name)) {
 					pkTableDisplayName = BeanDescriptorFactory.forClass(entityClass).getDisplayName();
 				}
-				if(tableName.equals(fk_table_name)){
+				if (tableName.equals(fk_table_name)) {
 					fkTableDisplayName = BeanDescriptorFactory.forClass(entityClass).getDisplayName();
 				}
 			}
-			
-			String mensagem = null;
-			if(sql.toLowerCase().trim().startsWith("delete")){
-				mensagem = "Não foi possível remover "+pkTableDisplayName+". Existe(m) registro(s) vinculado(s) em "+fkTableDisplayName+".";
-			} else if(sql.toLowerCase().trim().startsWith("update")){
-				mensagem = "Não foi possível atualizar "+fkTableDisplayName+". A referência para "+pkTableDisplayName+" é inválida.";
-			} else if(sql.toLowerCase().trim().startsWith("insert")){
-				mensagem = "Não foi possível inserir "+fkTableDisplayName+". A referência para "+pkTableDisplayName+" é inválida.";
+
+			String defaultMensagem;
+			if (sql.toLowerCase().trim().startsWith("delete")) {
+				defaultMensagem = "Não foi possível remover " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
+			} else if (sql.toLowerCase().trim().startsWith("update")) {
+				defaultMensagem = "Não foi possível atualizar " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
+			} else if (sql.toLowerCase().trim().startsWith("insert")) {
+				defaultMensagem = "Não foi possível inserir " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
+			} else {
+				defaultMensagem = "Não foi possível efetuar operação em " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
 			}
-			return new ForeignKeyException(mensagem);
+
+			return new ForeignKeyException(defaultMensagem);
+
 		}
+
 		return null;
 	}
-	
-
 
 }
