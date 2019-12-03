@@ -23,6 +23,11 @@
  */
 package org.nextframework.core.standard;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import org.nextframework.message.MessageResolver;
 
 /**
  * @author rogelgarcia
@@ -30,57 +35,89 @@ package org.nextframework.core.standard;
  * @version 1.0
  */
 public class DefaultRequestContext implements RequestContext {
-	
+
 	private ApplicationContext applicationContext;
 
-	public DefaultRequestContext(ApplicationContext applicationContext){
+	public DefaultRequestContext(ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
 	}
 
+	@Override
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
 
-	public String getRequestQuery() {
+	@Override
+	public TimeZone getTimeZone() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Message[] getMessages() {
+	@Override
+	public Locale getLocale() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public MessageResolver getMessageResolver() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void addMessage(Object source) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void addMessage(Object source, MessageType type) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void addError(Object source) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public void addMessage(Message message) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void addAllMessages(List<Message> messageList) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Message[] getMessages() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void clearMessages() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String getParameter(String parameter) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void setAttribute(String name, Object value) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Object getAttribute(String name) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public Object getUserAttribute(String name) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public void setUserAttribute(String name, Object value) {
 		throw new UnsupportedOperationException();
 	}

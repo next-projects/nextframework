@@ -42,31 +42,34 @@ public interface WebRequestContext extends RequestContext {
 	String REQUEST_CONTEXT_ATTRIBUTE = WebRequestContext.class.getName();
 
 	Principal getUserPrincipal();
-	
+
 	HttpServletRequest getServletRequest();
+
 	HttpServletResponse getServletResponse();
+
 	HttpSession getSession();
 
 	String getContextPath();
+
 	String getRequestQuery();
-	String getRequestModule();
-	
+
 	String getFirstRequestUrl();
-	
+
 	WebApplicationContext getWebApplicationContext();
-	
+
 	BindException getBindException();
-	
+
 	/**
 	 * Informa qual o ultimo parametro ACTION foi pedido
 	 * Quando é feito um redirecionamento por qualquer motivo esse valor é atualizado
 	 * @return
 	 */
 	String getLastAction();
-	
+
 	void setLastAction(String action);
 
 	String getServletPath();
 
 	String getPathInfo();
+
 }
