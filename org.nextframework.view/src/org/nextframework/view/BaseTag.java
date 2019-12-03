@@ -53,8 +53,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.TagNotFoundException;
+import org.nextframework.message.MessageResolver;
 import org.nextframework.util.Util;
+import org.nextframework.web.WebUtils;
+import org.springframework.context.NoSuchMessageException;
 
 /**
  * @author rogelgarcia
@@ -63,22 +67,44 @@ import org.nextframework.util.Util;
  */
 @SuppressWarnings("deprecation")
 public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
-	
-	public static Class<? extends BaseTagPropertyEditorsManager> propertyEditorManagerClass = BaseTagPropertyEditorsManager.class;
-	
-	public static BaseTagTemplateManager templateManager = new BaseTagTemplateManager();
-	
+
 	protected static Log log = LogFactory.getLog(BaseTag.class);
-	
+
+	private String STACK_ATTRIBUTE_NAME = "TagStack";
+	public String TAG_ATTRIBUTE = "tag";
+
+	public static Class<? extends BaseTagPropertyEditorsManager> propertyEditorManagerClass = BaseTagPropertyEditorsManager.class;
+	public static BaseTagTemplateManager templateManager = new BaseTagTemplateManager();
+
 	/**atributo que existe em todas as tags*/
+
 	protected String id;
-	
 	protected Boolean rendered;
 	protected Boolean bypass;
-	
+	private BaseTag parent;
+	protected Map<String, Object> dynamicAttributesMap = new HashMap<String, Object>();
+
+	protected BaseTagPropertyEditorsManager baseTagPropertyEditorsManagerCache = null;
+
+	public BaseTag() {
+		initPropertyEditors();
+	}
+
+	private void initPropertyEditors() {
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public Boolean getBypass() {
 		return bypass;
 	}
+
 	public void setBypass(Boolean bypass) {
 		this.bypass = bypass;
 	}
@@ -90,72 +116,78 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	public void setRendered(Boolean printWhen) {
 		this.rendered = printWhen;
 	}
-	
-	
-	private String STACK_ATTRIBUTE_NAME = "TagStack";
-	
-	public String TAG_ATTRIBUTE = "tag";
-	
-	protected Map<String, Object> dynamicAttributesMap = new HashMap<String, Object>();
-	
-	private BaseTag parent;
-
-//	private static ThreadLocal<Boolean> editorsInitialized = new ThreadLocal<Boolean>();
-	
-	public String generateUniqueId(){
-		Integer idsequence = (Integer) getRequest().getAttribute("IDSEQUENCE");
-		if(idsequence == null){
-			idsequence = 0;
-		}
-		getRequest().setAttribute("IDSEQUENCE", idsequence + 1);
-		return ("GENERATED_") + idsequence;
-	}
-	
-	public BaseTag(){
-    	initPropertyEditors();
-	}
-
-	private void initPropertyEditors() {
-	}
 
 	public BaseTag getParent() {
 		return parent;
 	}
 
-	protected void pushAttribute(String name, Object value){
-		getStack(name+"_stack").push(value);
+	public Map<String, Object> getDynamicAttributesMap() {
+		return dynamicAttributesMap;
+	}
+
+	public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
+		if (localName != null) {
+			localName = localName.toLowerCase();
+		}
+		dynamicAttributesMap.put(localName, value);
+	}
+
+	public String getDynamicAttributesToString() {
+		return getDynamicAttributesToString(dynamicAttributesMap);
+	}
+
+	public void setDynamicAttributesMap(Map<String, Object> dynamicAttributesMap) {
+		this.dynamicAttributesMap.putAll(dynamicAttributesMap);
+	}
+
+	protected Map<Class<?>, PropertyEditor> getPropertyEditors() {
+		if (baseTagPropertyEditorsManagerCache == null) {
+			baseTagPropertyEditorsManagerCache = TagUtils.getPropertyEditorsManager();
+		}
+		return baseTagPropertyEditorsManagerCache.getPropertyEditors();
+	}
+
+	public String generateUniqueId() {
+		Integer idsequence = (Integer) getRequest().getAttribute("IDSEQUENCE");
+		if (idsequence == null) {
+			idsequence = 0;
+		}
+		getRequest().setAttribute("IDSEQUENCE", idsequence + 1);
+		return ("GENERATED_") + idsequence;
+	}
+
+	protected void pushAttribute(String name, Object value) {
+		getStack(name + "_stack").push(value);
 		getRequest().setAttribute(name, value);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private Stack<Object> getStack(String string) {
 		Stack<Object> stack = (Stack<Object>) getRequest().getAttribute(string);
-		if(stack == null){
+		if (stack == null) {
 			stack = new Stack<Object>();
 			getRequest().setAttribute(string, stack);
 		}
 		return stack;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected Object popAttribute(String name){
-		Stack stack = getStack(name+"_stack");
+	@SuppressWarnings("all")
+	protected Object popAttribute(String name) {
+		Stack stack = getStack(name + "_stack");
 		Object pop = stack.pop();
-		if(!stack.isEmpty()){
+		if (!stack.isEmpty()) {
 			getRequest().setAttribute(name, stack.peek());
 		} else {
 			getRequest().setAttribute(name, null);
 		}
 		return pop;
 	}
-	
+
 	/**
 	 * Renderiza o corpo da tag
-	 * @throws JspException
-	 * @throws IOException
 	 */
 	protected final void doBody() throws JspException, IOException {
-		if (getJspBody()!=null) {
+		if (getJspBody() != null) {
 			try {
 				getJspBody().invoke(getOut());
 			} catch (Exception e) {
@@ -166,43 +198,34 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	private void printException(Exception e) throws IOException {
 		String extype = "";
-		if(e.getClass().getName().startsWith("java.lang")){
+		if (e.getClass().getName().startsWith("java.lang")) {
 			extype = e.getClass().getSimpleName() + ": ";
 		}
-		getOut().println("<font class=\"exceptionitem\" color=\"red\">" + extype +"<b>"+ e.getMessage() +"</b>"+ "</font>");
+		getOut().println("<font class=\"exceptionitem\" color=\"red\">" + extype + "<b>" + e.getMessage() + "</b>" + "</font>");
 		Throwable cause = getNextException(e);
-		while(cause != null){
+		while (cause != null) {
 			getOut().println("<font class=\"exceptionitem\" color=\"red\">" + cause.getMessage() + "</font>");
 			cause = getNextException(cause);
 		}
 		e.printStackTrace();
 	}
-	
+
 	private Throwable getNextException(Throwable e) {
-		if(e == null){
+		if (e == null) {
 			return null;
 		}
-		if(e instanceof ServletException){
-			if(e.getCause() != null && e.getCause() != e){
+		if (e instanceof ServletException) {
+			if (e.getCause() != null && e.getCause() != e) {
 				return e.getCause();
 			} else {
-				return ((ServletException)e).getRootCause();	
+				return ((ServletException) e).getRootCause();
 			}
 		}
 		return e.getCause();
 	}
 
-	BaseTagPropertyEditorsManager baseTagPropertyEditorsManagerCache = null;
-	
-	protected Map<Class<?>, PropertyEditor> getPropertyEditors() {
-		if(baseTagPropertyEditorsManagerCache == null){
-			baseTagPropertyEditorsManagerCache = TagUtils.getPropertyEditorsManager();
-		}
-		return baseTagPropertyEditorsManagerCache.getPropertyEditors();
-	}
-
 	public String getBody() throws JspException, IOException {
-		if(getJspBody() != null){
+		if (getJspBody() != null) {
 			ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 			PrintWriter writer = new PrintWriter(arrayOutputStream);
 			getJspBody().invoke(writer);
@@ -212,29 +235,49 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			return "";
 		}
 	}
-	
+
+	protected String getDefaultViewLabel(String field, String defaultValue) {
+
+		String viewPrefix = WebUtils.getMessageCodeViewPrefix();
+		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
+
+		//Simple class name (from the tag) and field with viewCode prefix (Ex: module.Controller.view.FilterPanelTag.sectionTitle)
+		try {
+			return messageResolver.message(viewPrefix + "." + this.getClass().getSimpleName() + "." + field);
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		//Simple class name (from the tag) and field (Ex: FilterPanelTag.sectionTitle)
+		try {
+			return messageResolver.message(this.getClass().getSimpleName() + "." + field);
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		return defaultValue;
+	}
+
 	public JspWriter getOut() {
 		return getPageContext().getOut();
 	}
-	
+
 	public <E> E findParent(Class<E> tagClass) {
 		return findParent(tagClass, false);
 	}
-	
+
 	/**
 	 * Retorna a primeira tag encontrada que for de alguma das classes passadas
-	 * @param classes
-	 * @return
 	 */
-	public BaseTag findFirst(Class<? extends BaseTag>... classes){
+	public BaseTag findFirst(Class<? extends BaseTag>... classes) {
 		List<BaseTag> tags = getTagsFromTopToThis();
 		boolean found = false;
 		for (Iterator<?> iter = tags.iterator(); iter.hasNext();) {
 			BaseTag element = (BaseTag) iter.next();
-			if(element == this){
+			if (element == this) {
 				found = true;
 			}
-			if(found){
+			if (found) {
 				iter.remove();
 			}
 		}
@@ -242,7 +285,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		List<Class<? extends BaseTag>> asList = Arrays.asList(classes);
 		for (BaseTag tag : tags) {
 			for (Class<? extends BaseTag> class1 : asList) {
-				if(class1.isAssignableFrom(tag.getClass())){
+				if (class1.isAssignableFrom(tag.getClass())) {
 					return tag;
 				}
 			}
@@ -252,25 +295,24 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		}
 		return null;
 	}
-	
-	@SuppressWarnings("unchecked")
-	protected BaseTag findFirst2(Class... classes){
+
+	@SuppressWarnings("all")
+	protected BaseTag findFirst2(Class... classes) {
 		List<BaseTag> tags = getTagsFromThisToTop();
 		tags.remove(0);
 		List<Class> asList = Arrays.asList(classes);
 		for (BaseTag tag : tags) {
 			for (Class class1 : asList) {
-				if(class1.isAssignableFrom(tag.getClass())){
+				if (class1.isAssignableFrom(tag.getClass())) {
 					return tag;
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Retorna a lista de tags ordenadas dessa tag(primeira) até a ultima(topo das tags)
-	 * @return
 	 */
 	protected List<BaseTag> getTagsFromThisToTop() {
 		List<BaseTag> tags = new ArrayList<BaseTag>();
@@ -278,7 +320,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		Collections.reverse(tags);
 		return tags;
 	}
-	
+
 	protected List<BaseTag> getTagsFromTopToThis() {
 		List<BaseTag> tags = new ArrayList<BaseTag>();
 		tags.addAll(getTagStack());
@@ -288,63 +330,59 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	@SuppressWarnings("unchecked")
 	public <E> E findParent(Class<E> tagClass, boolean throwExceptionIfNotFound) throws TagNotFoundException {
 		Stack<BaseTag> tagStack = getTagStack();
-		for (int i = tagStack.size()-2; i >= 0; i--) {
+		for (int i = tagStack.size() - 2; i >= 0; i--) {
 			BaseTag baseTag = tagStack.get(i);
-			if(tagClass.equals(baseTag.getClass())){
-				return (E)baseTag;
+			if (tagClass.equals(baseTag.getClass())) {
+				return (E) baseTag;
 			}
 		}
-		if(throwExceptionIfNotFound){
-			throw new TagNotFoundException("A tag "+this.getClass().getName()+" tentou procurar uma tag "+tagClass.getName()+" mas não encontrou. Provavelmente é obrigatório a tag "+this.getClass().getName()+" estar aninhada a uma tag "+tagClass.getName());
+		if (throwExceptionIfNotFound) {
+			throw new TagNotFoundException("A tag " + this.getClass().getName() + " tentou procurar uma tag " + tagClass.getName() + " mas não encontrou. Provavelmente é obrigatório a tag " + this.getClass().getName() + " estar aninhada a uma tag " + tagClass.getName());
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Acha uma tag que for do tipo da classe passada ou subclasse. 
-	 * @param <E>
 	 * @param tagClass Classe da tag a ser encontrada. Pode ser passada uma tag pai ou interface que a tag possui.
-	 * @param throwExceptionIfNotFound
-	 * @return
-	 * @throws TagNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
 	public <E> E findParent2(Class<E> tagClass, boolean throwExceptionIfNotFound) throws TagNotFoundException {
 		Stack<BaseTag> tagStack = getTagStack();
-		for (int i = tagStack.size()-2; i >= 0; i--) {
+		for (int i = tagStack.size() - 2; i >= 0; i--) {
 			BaseTag baseTag = tagStack.get(i);
-			if(tagClass.isAssignableFrom(baseTag.getClass())){
-				return (E)baseTag;
+			if (tagClass.isAssignableFrom(baseTag.getClass())) {
+				return (E) baseTag;
 			}
 		}
-		if(throwExceptionIfNotFound){
-			throw new TagNotFoundException("A tag "+this.getClass().getName()+" tentou procurar uma tag "+tagClass.getName()+" mas não encontrou.");
+		if (throwExceptionIfNotFound) {
+			throw new TagNotFoundException("A tag " + this.getClass().getName() + " tentou procurar uma tag " + tagClass.getName() + " mas não encontrou.");
 		}
 		return null;
 	}
 
 	@Override
 	public final void doTag() throws JspException, IOException {
-		if(Boolean.FALSE.equals(rendered)){
+		if (Boolean.FALSE.equals(rendered)) {
 			return;
 		}
-		if(Boolean.TRUE.equals(bypass)){
+		if (Boolean.TRUE.equals(bypass)) {
 			//se for para pular a funcionalidade dessa tag.. e utilizar só as tags filhas
 			doBody();
 			return;
 		}
 		boolean registeringDataGrid = getRequest().getAttribute(ColumnTag.REGISTERING_DATAGRID) != null;
-		if(registeringDataGrid && !(this instanceof ColumnChildTag)){
+		if (registeringDataGrid && !(this instanceof ColumnChildTag)) {
 			//se estiver registrando o datagrid não precisa renderizar nada
 			return;
 		}
 		if (!getTagStack().isEmpty()) {
 			parent = getTagStack().peek();
 		}
-		try{
+		try {
 			//coloca a tag no escopo
 			pushTagOnStack();
-	
+
 			//verificar se está dentro de um panelGrid
 			//panelGrid tem um comportamento especial para poder suportar tags dentro dele sem utilizar a tag Panel
 			BaseTag parent = getParent();
@@ -373,27 +411,26 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 			//tira a tag do escopo
 		} finally {
-			popTagFromStack();	
+			popTagFromStack();
 		}
-		
-		
+
 	}
-	
+
 	private GetContentTag findParentGetContent() {
 		//TODO MELHORAR GETCONTENT TAG PERFORMANCE
 		Stack<BaseTag> tagStack = getTagStack();
-		for (int i = tagStack.size()-2; i >= 0; i--) {
+		for (int i = tagStack.size() - 2; i >= 0; i--) {
 			BaseTag baseTag = tagStack.get(i);
-			if(GetContentTag.class.equals(baseTag.getClass())){
+			if (GetContentTag.class.equals(baseTag.getClass())) {
 				GetContentTag contentTag = (GetContentTag) baseTag;
-				if(contentTag.getTag(this)){
+				if (contentTag.getTag(this)) {
 					return contentTag;
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	protected void doTagInGetContent(GetContentTag getContent) throws JspException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		PrintWriter printWriter = new PrintWriter(outputStream);
@@ -402,13 +439,13 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			doComponent();
 		} catch (JspException e) {
 			throw e;
-		} catch (Exception e){
+		} catch (Exception e) {
 			throw new JspException(e);
 		}
 		getPageContext().popBody();
 		printWriter.flush();
 		String body = outputStream.toString();
-		
+
 		getContent.register(body);
 	}
 
@@ -420,17 +457,17 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			doComponent();
 		} catch (JspException e) {
 			throw e;
-		} catch (Exception e){
+		} catch (Exception e) {
 			throw new JspException(e);
 		}
 		getPageContext().popBody();
 		printWriter.flush();
 		String body = outputStream.toString();
 		PanelRenderedBlock block = new PanelRenderedBlock();
-		Map<String, Object> properties =new HashMap<String, Object>();
+		Map<String, Object> properties = new HashMap<String, Object>();
 		addBasicPanelProperties(properties);
 		addPanelProperties(properties);
-		
+
 		block.setBody(body);
 		block.setProperties(properties);
 		panelGrid.addBlock(block);
@@ -439,18 +476,18 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	protected void addBasicPanelProperties(Map<String, Object> properties) {
 		Set<String> keySet = dynamicAttributesMap.keySet();
 		for (String string : keySet) {
-			if(string.startsWith("panel")){
+			if (string.startsWith("panel")) {
 				properties.put(string.substring("panel".length()), dynamicAttributesMap.get(string));
 			}
 		}
 	}
 
 	protected void addPanelProperties(Map<String, Object> properties) {
-		
+
 	}
 
-	protected void doComponent() throws Exception{
-		
+	protected void doComponent() throws Exception {
+
 	}
 
 	private void pushTagOnStack() {
@@ -464,7 +501,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	protected Stack<BaseTag> getTagStack() {
 		@SuppressWarnings("unchecked")
 		Stack<BaseTag> stack = (Stack<BaseTag>) getRequest().getAttribute(STACK_ATTRIBUTE_NAME);
-		if(stack == null){
+		if (stack == null) {
 			stack = new Stack<BaseTag>();
 			getRequest().setAttribute(STACK_ATTRIBUTE_NAME, stack);
 		}
@@ -472,11 +509,11 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	public HttpServletRequest getRequest() {
-		return (HttpServletRequest)(getPageContext()).getRequest();
+		return (HttpServletRequest) (getPageContext()).getRequest();
 	}
 
 	public HttpServletResponse getResponse() {
-		return (HttpServletResponse)getPageContext().getResponse();
+		return (HttpServletResponse) getPageContext().getResponse();
 	}
 
 	public ServletContext getServletContext() {
@@ -484,21 +521,21 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	public PageContext getPageContext() {
-		return (PageContext)getJspContext();
+		return (PageContext) getJspContext();
 	}
-	
-	protected void includeTextTemplate() throws ServletException, IOException, ELException, JspException{
-		String url = "/WEB-INF/classes/"+getTemplateName()+".jsp";
+
+	protected void includeTextTemplate() throws ServletException, IOException, ELException, JspException {
+		String url = "/WEB-INF/classes/" + getTemplateName() + ".jsp";
 		templateManager.checkTemplate(this, getTemplateName(), null);
 		includeTextTemplateFile(url);
 	}
 
-	protected void includeTextTemplate(String suffix) throws ServletException, IOException, ELException, JspException{
-		String url = "/WEB-INF/classes/"+getTemplateName()+"-"+suffix+".jsp";
+	protected void includeTextTemplate(String suffix) throws ServletException, IOException, ELException, JspException {
+		String url = "/WEB-INF/classes/" + getTemplateName() + "-" + suffix + ".jsp";
 		templateManager.checkTemplate(this, getTemplateName(), suffix);
 		includeTextTemplateFile(url);
 	}
-	
+
 	/**
 	 * Sobrescreva caso sua tag venha de um JAR diferente do JAR do next
 	 * @param resourcePath
@@ -507,9 +544,9 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	protected boolean isTagFromJar(String resourcePath) {
 		return resourcePath.contains("next");
 	}
-	
+
 	protected void includeJspTemplate() throws ServletException, IOException {
-		String url = "/WEB-INF/classes/"+getTemplateName()+".jsp";
+		String url = "/WEB-INF/classes/" + getTemplateName() + ".jsp";
 		templateManager.checkTemplate(this, getTemplateName(), null);
 		includeJspTemplateFile(url);
 	}
@@ -517,37 +554,36 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	protected String getTemplateName() {
 		return this.getClass().getName().replaceAll("\\.", "/");
 	}
-	
+
 	protected void includeJspTemplate(String suffix) throws ServletException, IOException {
-		String url = "/WEB-INF/classes/"+getTemplateName()+"-"+suffix+".jsp";
+		String url = "/WEB-INF/classes/" + getTemplateName() + "-" + suffix + ".jsp";
 		templateManager.checkTemplate(this, getTemplateName(), suffix);
 		includeJspTemplateFile(url);
 	}
-	
-	protected void includeTextTemplateFile(String template) throws ServletException, IOException, ELException, JspException{
+
+	protected void includeTextTemplateFile(String template) throws ServletException, IOException, ELException, JspException {
 		String[] text = templateManager.getTextFromTemplate(this, template);
 		Object last = getRequest().getAttribute(TAG_ATTRIBUTE);
 		getRequest().setAttribute(TAG_ATTRIBUTE, this);
-		
+
 		evaluateAndPrint(text[0]);
-		if(getJspBody()!= null){
+		if (getJspBody() != null) {
 			getJspBody().invoke(null);
 			//tirei o println talvez dê algum efeito colateral 31/08/2006 -> O println tava atrapalhando em determinadas tags
 			//getOut().println();
 		}
-		if(!text[1].trim().equals("")){
+		if (!text[1].trim().equals("")) {
 			evaluateAndPrint(text[1]);
 		}
-		
-		
+
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
 	}
-	
+
 	protected void evaluateAndPrint(String expression) throws ELException, IOException {
 		Object evaluate = TagUtils.evaluate(expression, getPageContext());
 		getOut().print(evaluate);
 	}
-	
+
 	protected Object evaluate(String expression) throws ELException {
 		PageContext pageContext = getPageContext();
 		return TagUtils.evaluate(expression, pageContext);
@@ -560,33 +596,33 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		getOut().print(evaluate);
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
 	}
-	
-	protected void includeJspTemplateFile(String template) throws ServletException, IOException{
+
+	protected void includeJspTemplateFile(String template) throws ServletException, IOException {
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		PrintWriter writer = new PrintWriter(arrayOutputStream);
 		//Object lastBody = getRequest().getAttribute(JSPFRAGMENT);
 		//getRequest().setAttribute(JSPFRAGMENT, getJspBody());
 		TagUtils.pushJspFragment(getRequest(), getJspBody());
-		
+
 		Object last = getRequest().getAttribute(TAG_ATTRIBUTE);
 		getRequest().setAttribute(TAG_ATTRIBUTE, this);
-		
+
 		String tagAttribute = Util.strings.uncaptalize(this.getClass().getSimpleName());
 		pushAttribute(tagAttribute, this);
-		
+
 		dispatchToTemplate(template, writer);
 
 		popAttribute(tagAttribute);
-		
+
 		writer.flush();
 		getOut().write(arrayOutputStream.toString());
 		//getOut().write(arrayOutputStream.toByteArray());
-		
+
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
 		//getRequest().setAttribute(JSPFRAGMENT, lastBody);
 		TagUtils.popJspFragment(getRequest());
 	}
-	
+
 	//Faz o dispatch para determinada url, coloca a saida no writer
 	private void dispatchToTemplate(String template, PrintWriter writer) throws ServletException, IOException {
 		WrappedWriterResponse response = new WrappedWriterResponse(getResponse(), writer);
@@ -594,60 +630,46 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		requestDispatcher = getRequest().getRequestDispatcher(template);
 		requestDispatcher.include(getRequest(), response);
 	}
-	
-	public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
-		if(localName != null){
-			localName = localName.toLowerCase();
-		}
-		dynamicAttributesMap.put(localName, value);
-	}
 
-	public Map<String, Object> getDynamicAttributesMap() {
-		return dynamicAttributesMap;
-	}
-
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	protected boolean isEntity(Class c) {
 		return TagUtils.hasId(c);
 	}
 
 	/**
 	 * Verifica a igualdade de dois objetos (analiza id)
-	 * @param value1
-	 * @param value2
-	 * @return
 	 */
 	public boolean areEqual(Object value1, Object value2) {
 		boolean id = true;
-		if(value1 == null){
+		if (value1 == null) {
 			return false;
 		} else {
 			id = TagUtils.hasId(value1.getClass()) && id;
 		}
 		Class<? extends Object> class1 = value1.getClass();
-		if(class1.getName().contains("$$")){
+		if (class1.getName().contains("$$")) {
 			class1 = class1.getSuperclass();
 		}
-		
-		if(value2 == null){
+
+		if (value2 == null) {
 			return false;
 		} else {
 			id = TagUtils.hasId(value2.getClass()) && id;
 		}
 		Class<? extends Object> class2 = value2.getClass();
-		if(class2.getName().contains("$$")){
+		if (class2.getName().contains("$$")) {
 			class2 = class2.getSuperclass();
 		}
-		if(id){
+		if (id) {
 			BeanDescriptor bd1 = BeanDescriptorFactory.forBean(value1);
 			BeanDescriptor bd2 = BeanDescriptorFactory.forBean(value2);
-			if(class1.equals(class2)){
-				if(bd1.getId().getClass().getName().startsWith("java")){ //native class type (if not native, check string equality)
+			if (class1.equals(class2)) {
+				if (bd1.getId().getClass().getName().startsWith("java")) { //native class type (if not native, check string equality)
 					return bd1.getId().equals(bd2.getId());
 				}
 			} else {
 				boolean oneInstanceofOther = class1.isAssignableFrom(class2) || class2.isAssignableFrom(class1);
-				if(oneInstanceofOther){
+				if (oneInstanceofOther) {
 					//tentar verificar pelo id.. quando uma classe extender a outra
 					return bd1.getId().equals(bd2.getId());
 				}
@@ -657,47 +679,42 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		return value1.equals(value2);
 	}
 
-	public String getDynamicAttributesToString() {
-		return getDynamicAttributesToString(dynamicAttributesMap);
-	}
-	
 	public String getDynamicAttributesToString(Map<String, Object> dynamicAttributesMap) {
 		StringBuilder builder = new StringBuilder(" ");
 		Set<String> keySet = dynamicAttributesMap.keySet();
 		for (String key : keySet) {
 			boolean inPanelGrid = findParent(PanelGridTag.class) != null;
-			if(inPanelGrid && key.startsWith("panel")){
+			if (inPanelGrid && key.startsWith("panel")) {
 				continue;//nao montar tags iniciadas com panel... provavelmente está configurando o panel externo
 			}
 			builder.append(" ");
 			builder.append(key);
 			builder.append("=");
 			builder.append("'");
-			
+
 			Object object = dynamicAttributesMap.get(key);
-			if(object != null){
-				if(object instanceof String && ((String)object).startsWith("ognl:")){
-					object = ((String)object).substring(5);
-					object = getOgnlValue((String)object);
+			if (object != null) {
+				if (object instanceof String && ((String) object).startsWith("ognl:")) {
+					object = ((String) object).substring(5);
+					object = getOgnlValue((String) object);
 				}
 				object = object.toString();
 			}
-			builder.append(TagUtils.escapeSingleQuotes((String)object));
+			builder.append(TagUtils.escapeSingleQuotes((String) object));
 			builder.append("'");
 		}
 		String toString = builder.toString();
 		return toString;
 	}
 
-	
 	public static OgnlEvaluator evaluator = new OgnlEvaluator() {
-		
+
 		@SuppressWarnings("unchecked")
 		@Override
 		public <E> E evaluate(String expression, Class<E> expectedType, BaseTag baseTag) {
 			WebContextMap contextMap = new WebContextMap(baseTag.getRequest());
-			E value; 
-			if(expectedType != null){
+			E value;
+			if (expectedType != null) {
 				value = OgnlExpressionParser.parse(expression, expectedType, contextMap);
 			} else {
 				value = (E) OgnlExpressionParser.parse(expression, contextMap);
@@ -706,35 +723,12 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		}
 	};
 
-	
-	
 	public Object getOgnlValue(String expression) {
 		return evaluator.evaluate(expression, null, this);
 	}
-	
+
 	protected <E> E getOgnlValue(String expression, Class<E> expectedType) {
 		return evaluator.evaluate(expression, expectedType, this);
 	}
 
-	/**
-	 * Atributo
-	 * @return
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Atributo
-	 * @return
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public void setDynamicAttributesMap(Map<String, Object> dynamicAttributesMap) {
-		this.dynamicAttributesMap.putAll(dynamicAttributesMap);
-	}
-	
 }
-

@@ -29,48 +29,48 @@ package org.nextframework.view.template;
  * @version 1.1
  */
 public class FilterTableTag extends TemplateTag {
-		
-	protected Integer columns = null;
-	
-	protected Boolean showSubmit = true;
-	protected String submitAction = null;
-	protected String submitUrl = null;
-	protected String submitLabel = null;
-	
+
+	protected Integer columns;
+	protected Integer colspan;
 	protected String width;
-	
-	protected String style = "";
 
 	protected String styleClass;
-
+	protected String style;
+	protected String columnStyleClasses;
+	protected String columnStyles;
 	protected String rowStyleClasses;
+	protected String rowStyles;
 
-	protected String rowStyles = "";
-	
-	protected String columnStyleClasses = "";
-
-	protected String columnStyles = "";
-	
-	protected Integer colspan;
-	
 	protected Boolean propertyRenderAsDouble;
 	protected Boolean propertyShowLabel;
+
+	protected Boolean showSubmit = true;
+	protected String submitUrl = null;
+	protected String submitAction = null;
 	protected Boolean validateForm = true;
+	protected String submitLabel = null;
 
-	public Boolean getValidateForm() {
-		return validateForm;
-	}
+	@Override
+	protected void doComponent() throws Exception {
 
-	public void setValidateForm(Boolean validateForm) {
-		this.validateForm = validateForm;
-	}
+		if (propertyShowLabel == null) {
+			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
+		}
 
-	public Boolean getPropertyShowLabel() {
-		return propertyShowLabel;
-	}
+		if (submitAction == null) {
+			if (findParent(ReportViewTag.class) != null) {
+				submitAction = "generate";
+			}
+		}
 
-	public void setPropertyShowLabel(Boolean propertyShowLabel) {
-		this.propertyShowLabel = propertyShowLabel;
+		if (submitLabel == null) {
+			submitLabel = getDefaultViewLabel("submitLabel", "Pesquisar");
+		}
+
+		pushAttribute("TabelaFiltroTag", this); //Legacy
+		includeJspTemplate();
+		popAttribute("TabelaFiltroTag");
+
 	}
 
 	public Integer getColumns() {
@@ -81,35 +81,36 @@ public class FilterTableTag extends TemplateTag {
 		this.columns = columns;
 	}
 
-	@Override
-	protected void doComponent() throws Exception {
-		if(propertyShowLabel == null){
-			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
-		}
-		if(submitAction == null){
-			if(findParent(ReportViewTag.class) != null){
-				submitAction = "generate";
-			}
-		}
-		pushAttribute("TabelaFiltroTag", this);
-		includeJspTemplate();
-		popAttribute("TabelaFiltroTag");
-	}
-
-	public Boolean getShowSubmit() {
-		return showSubmit;
-	}
-
-	public void setShowSubmit(Boolean showSubmit) {
-		this.showSubmit = showSubmit;
-	}
-
 	public Integer getColspan() {
 		return colspan;
 	}
 
 	public void setColspan(Integer colspan) {
 		this.colspan = colspan;
+	}
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	public String getColumnStyleClasses() {
@@ -128,14 +129,6 @@ public class FilterTableTag extends TemplateTag {
 		this.columnStyles = columnStyles;
 	}
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
-	}
-
-	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
-	}
-
 	public String getRowStyleClasses() {
 		return rowStyleClasses;
 	}
@@ -152,29 +145,36 @@ public class FilterTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public String getStyle() {
-		return style;
+	public Boolean getPropertyRenderAsDouble() {
+		return propertyRenderAsDouble;
 	}
 
-	public void setStyle(String style) {
-		this.style = style;
+	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
+		this.propertyRenderAsDouble = propertyRenderAsDouble;
 	}
 
-	public String getStyleClass() {
-		return styleClass;
+	public Boolean getPropertyShowLabel() {
+		return propertyShowLabel;
 	}
 
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
+	public void setPropertyShowLabel(Boolean propertyShowLabel) {
+		this.propertyShowLabel = propertyShowLabel;
 	}
 
-
-	public String getWidth() {
-		return width;
+	public Boolean getShowSubmit() {
+		return showSubmit;
 	}
 
-	public void setWidth(String width) {
-		this.width = width;
+	public void setShowSubmit(Boolean showSubmit) {
+		this.showSubmit = showSubmit;
+	}
+
+	public String getSubmitUrl() {
+		return submitUrl;
+	}
+
+	public void setSubmitUrl(String submitUrl) {
+		this.submitUrl = submitUrl;
 	}
 
 	public String getSubmitAction() {
@@ -185,20 +185,20 @@ public class FilterTableTag extends TemplateTag {
 		this.submitAction = submitAction;
 	}
 
+	public Boolean getValidateForm() {
+		return validateForm;
+	}
+
+	public void setValidateForm(Boolean validateForm) {
+		this.validateForm = validateForm;
+	}
+
 	public String getSubmitLabel() {
 		return submitLabel;
 	}
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
-	}
-
-	public String getSubmitUrl() {
-		return submitUrl;
-	}
-
-	public void setSubmitUrl(String submitUrl) {
-		this.submitUrl = submitUrl;
 	}
 
 }

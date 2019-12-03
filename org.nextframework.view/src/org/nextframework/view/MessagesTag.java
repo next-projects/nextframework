@@ -23,25 +23,20 @@
  */
 package org.nextframework.view;
 
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.nextframework.bean.BeanDescriptor;
-import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.controller.crud.CrudException;
 import org.nextframework.core.standard.Message;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
-import org.nextframework.persistence.exception.ForeignKeyException;
+import org.nextframework.message.MessageResolver;
 import org.nextframework.util.Util;
-import org.springframework.dao.ConcurrencyFailureException;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -52,26 +47,20 @@ import org.springframework.validation.ObjectError;
  * @version 1.1
  */
 public class MessagesTag extends BaseTag {
-
+ 
 	private Boolean renderAsHtml;
 
-	protected Set<String> printedErrors = new HashSet<String>();
+	protected String containerClass = "messagesContainer";
 
 	protected String titleClass = "messagetitle";
 
-	protected String itemClass = "messageitem";
-
-	protected String exceptionClass = "exceptionitem";
-
-	protected String exceptionCauseClass = "causeitem";
+	protected String globalErrorclass = "globalerror";
 
 	protected String fieldName = "fieldname";
 
 	protected String bindErrorClass = "binderror";
 
 	protected String validationErrorClass = "validationerror";
-
-	protected String globalErrorclass = "globalerror";
 
 	protected String debugClass = "debug";
 
@@ -83,26 +72,38 @@ public class MessagesTag extends BaseTag {
 
 	protected String errorClass = "error";
 
+	protected String exceptionClass = "exceptionitem";
+
+	protected String exceptionCauseClass = "causeitem";
+
+	private String title;
+	private String invalidValueLabel;
+	private String errorLabel;
+
 	@SuppressWarnings("all")
 	@Override
 	protected void doComponent() throws Exception {
 
 		WebRequestContext requestContext = NextWeb.getRequestContext();
-		Message[] messages = requestContext.getMessages();
-		BindException errors = requestContext.getBindException();
+		MessageResolver messageResolver = requestContext.getMessageResolver();
 		boolean renderAsHtml = Util.booleans.isTrue(this.renderAsHtml);
 
 		if (!renderAsHtml) {
-			getOut().println("<div id='messagesContainer' class='messagesContainer'></div><script type='text/javascript'>next.events.onLoad(function(){");
+			getOut().println("<div id='messagesContainer' class='" + containerClass + "'></div><script type='text/javascript'>next.events.onLoad(function(){");
 		}
 
+		BindException errors = requestContext.getBindException();
 		if (errors.hasErrors() && !"true".equalsIgnoreCase(getRequest().getParameter(MultiActionController.SUPPRESS_ERRORS))) {
+
+			title = getDefaultViewLabel("messagePanelTitle", "Valores incorretos encontrados em");
+			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
+			errorLabel = getDefaultViewLabel("errorLabel", "Erro");
 
 			if (renderAsHtml) {
 				getOut().println("<div class='bindblock' id='bindBlock'>");
-				getOut().println("<span id=\"bindTitle\" class=\"" + titleClass + "\">Valores incorretos encontrados em '" + errors.getObjectName() + "'</span>");
+				getOut().println("<span id=\"bindTitle\" class=\"" + titleClass + "\">" + title + " '" + errors.getObjectName() + "'</span>");
 			} else {
-				getOut().println(String.format("next.messages.setBindTitle(\"%s\");", "Valores incorretos encontrados em '" + errors.getObjectName() + "'"));
+				getOut().println(String.format("next.messages.setBindTitle(\"%s\");", title + " '" + errors.getObjectName() + "'"));
 			}
 
 			if (errors.getGlobalErrorCount() > 0) {
@@ -113,11 +114,16 @@ public class MessagesTag extends BaseTag {
 
 				List globalErrors = errors.getGlobalErrors();
 				for (Object object : globalErrors) {
+
+					ObjectError objectError = (ObjectError) object;
+					String msg = resolveMessage(messageResolver, objectError);
+
 					if (renderAsHtml) {
-						getOut().println("<li class=\"" + globalErrorclass + "\">" + ((ObjectError) object).getDefaultMessage() + "</li>");
+						getOut().println("<li class=\"" + globalErrorclass + "\">" + msg + "</li>");
 					} else {
-						getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", ((ObjectError) object).getDefaultMessage(), globalErrorclass));
+						getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg, globalErrorclass));
 					}
+
 				}
 
 				if (renderAsHtml) {
@@ -136,31 +142,24 @@ public class MessagesTag extends BaseTag {
 				for (Object object : allErrors) {
 					if (object instanceof FieldError) {
 
-						// TODO MELHORAR A MENSAGEM
 						FieldError fieldError = (FieldError) object;
-						BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(errors.getTarget());
-						String field = fieldError.getField();
-						field = beanDescriptor.getPropertyDescriptor(field).getDisplayName();
+						String field = Util.beans.getDisplayName(messageResolver, errors.getTarget().getClass(), fieldError.getField());
+						String msg = resolveMessage(messageResolver, fieldError);
 
 						if (fieldError.isBindingFailure()) {
-
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + bindErrorClass + "\"> <span class=\"" + fieldName + "\" title=\"" + removeQuotes(fieldError.getDefaultMessage()) + "\">" + field + ": </span> Valor inválido: " + fieldError.getRejectedValue() + "</li>");
+								getOut().println("<li class=\"" + bindErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + ": </span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " " + errorLabel + ": " + msg + "</li>");
 							} else {
-								//TODO REMOVER PARENTESES
-								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');",
-										escapeText("<span class=\"" + fieldName + "\" title=\"" + removeQuotes(fieldError.getDefaultMessage()) + "\">" + field + ": </span> Valor inválido: " + fieldError.getRejectedValue()), bindErrorClass));
+								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " " + errorLabel + ": " + msg);
+								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, bindErrorClass));
 							}
-
 						} else {
-
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + validationErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + "</span> " + fieldError.getDefaultMessage() + "</li>");
+								getOut().println("<li class=\"" + validationErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + "</span> " + errorLabel + ": " + msg + "</li>");
 							} else {
-								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');",
-										escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + fieldError.getDefaultMessage()), validationErrorClass));
+								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + errorLabel + ": " + msg);
+								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, validationErrorClass));
 							}
-
 						}
 
 					}
@@ -178,6 +177,7 @@ public class MessagesTag extends BaseTag {
 
 		}
 
+		Message[] messages = requestContext.getMessages();
 		if (messages.length > 0) {
 
 			if (renderAsHtml) {
@@ -186,33 +186,11 @@ public class MessagesTag extends BaseTag {
 			}
 
 			for (Message message : messages) {
-
-				String clazz = "";
-				switch (message.getType()) {
-					case DEBUG:
-						clazz = debugClass;
-						break;
-					case TRACE:
-						clazz = traceClass;
-						break;
-					case INFO:
-						clazz = infoClass;
-						break;
-					case WARN:
-						clazz = warnClass;
-						break;
-					case ERROR:
-						clazz = errorClass;
-						break;
-					default:
-						clazz = message.getType().name().toLowerCase();
-				}
-
 				if (message.getSource() != null) {
-					String convertToMessage = convertToMessage(message.getSource());
+					String clazz = getMessageStyleClass(message);
+					String convertToMessage = convertToMessage(messageResolver, message.getSource());
 					if (Util.strings.isNotEmpty(convertToMessage)) {
 						convertToMessage = escapeText(convertToMessage);
-
 						if (renderAsHtml) {
 							getOut().println("<li class=\"" + clazz + "\">" + convertToMessage + "</li>");
 						} else {
@@ -222,10 +200,8 @@ public class MessagesTag extends BaseTag {
 								getOut().println(String.format("next.messages.addMessage(\"%s\", \"%s\");", convertToMessage, clazz));
 							}
 						}
-
 					}
 				}
-
 			}
 
 			if (renderAsHtml) {
@@ -246,263 +222,206 @@ public class MessagesTag extends BaseTag {
 
 	}
 
+	private String resolveMessage(MessageResolver messageResolver, MessageSourceResolvable msr) {
+		try {
+			return messageResolver.message(msr);
+		} catch (NoSuchMessageException e) {
+			return Util.objects.getExceptionDescription(messageResolver, e, true, true);
+		}
+	}
+
 	private String escapeText(String string) {
 		return string.replace("\\", "\\\\").replace("\"", "\\\"").replace('\r', ' ').replace('\n', ' ');
 	}
 
-	private String removeQuotes(String str) {
-		if (str != null) {
-			return str.replace('"', ' ');
-		}
-		return null;
-	}
+	protected String convertToMessage(MessageResolver messageResolver, Object source) {
 
-	protected String convertToMessage(Object source) {
-		if (source instanceof String) {
-			return source.toString();
+		if (source instanceof MessageSourceResolvable) {
+
+			String msg = resolveMessage(messageResolver, (MessageSourceResolvable) source);
+			return msg;
+
 		} else if (source instanceof Throwable) {
-			//TODO FAZER ARVORE DE EXCECOES
 
-			Throwable exception = (Throwable) source;
 			StringBuilder builder = new StringBuilder();
-			//getResumedStack(exception, true);
+			Throwable exception = (Throwable) source;
 			if (exception instanceof CrudException) {
 				exception = ((CrudException) exception).getCause();
 			}
 
-			if (exception instanceof DataAccessException) {
-				if (exception instanceof ForeignKeyException) {
-					ForeignKeyException fkException = (ForeignKeyException) exception;
-					builder.append("<span class=\"" + exceptionClass + "\">" + fkException.getOriginalMessage() + "</span>");
-					Throwable mostSpecificCause = fkException.getMostSpecificCause();
-					if (mostSpecificCause != null) {
-						String message = mostSpecificCause.getMessage();
-						printedErrors.add(message);
-						builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + message + "</li></ul>");
-					}
-				} else if (exception instanceof DataIntegrityViolationException) {
-					builder.append("<span class=\"" + exceptionClass + "\">Integridade de dados violada</span>");
-					String message = exception.getMessage();
-					printedErrors.add(message);
-					builder.append("<ul><li><span class=\"" + exceptionCauseClass + "\">" + message + "</span></li></ul>");
-				} else if (exception instanceof DataRetrievalFailureException) {
-					builder.append("<span class=\"" + exceptionClass + "\">Erro ao ler dados</span>");
-					String message = exception.getMessage();
-					printedErrors.add(message);
-					builder.append("<ul><li><span class=\"" + exceptionCauseClass + "\">" + message + "</span></li></ul>");
-				} else if (exception instanceof ConcurrencyFailureException) {
-					builder.append("<span class=\"" + exceptionClass + "\">Problema com uso concorrente de dados</span>");
-					String message = exception.getMessage();
-					printedErrors.add(message);
-					//builder.append("<ul><li><span class=\""+exceptionCauseClass+"\">"+message+"</span></li></ul>");
-				} else {
-					String message = exception.getMessage();
-					printedErrors.add(message);
-					builder.append("<span class=\"" + exceptionClass + "\">" + message + "</span>");
-				}
-			} else if (exception.getClass().getName().startsWith("java.lang")) {
-				String message = exception.getMessage();
-				printedErrors.add(message);
-				builder.append("<span class=\"" + exceptionClass + "\"> " + exception.getClass().getSimpleName() + ": " + message + "</span>");
-			} else {
-				String message = exception.getMessage();
-				printedErrors.add(message);
-				builder.append("<span class=\"" + exceptionClass + "\">" + message + "</span>");
+			String exceptionName = Util.objects.getExceptionDescription(messageResolver, exception, true, false);
+			builder.append("<span class=\"" + exceptionClass + "\">" + exceptionName + "</span>");
+
+			Set<Throwable> allCauses = new HashSet<Throwable>();
+			allCauses.add(exception);
+			Throwable cause = exception.getCause();
+			while (cause != null && !allCauses.contains(cause)) {
+
+				exceptionName = Util.objects.getExceptionDescription(messageResolver, cause, true, false);
+				builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + exceptionName + "</li></ul>");
+
+				allCauses.add(cause);
+				cause = cause.getCause();
 			}
 
-			Throwable cause = exception;
-			boolean first = true;
-			while ((cause = cause.getCause()) != null) {
-				if (first) {
-					//getResumedStack(cause, true);
-					first = false;
-				}
-				if (cause instanceof DataAccessException) {
-					if (cause instanceof DataIntegrityViolationException) {
-						builder.append("<ul><li class=\"" + exceptionCauseClass + "\">Integridade de dados violada</li></ul>");
-					}
-					if (cause instanceof DataRetrievalFailureException) {
-						builder.append("<ul><li class=\"" + exceptionCauseClass + "\">Erro ao ler dados</li></ul>");
-					}
-					if (cause instanceof ConcurrencyFailureException) {
-						builder.append("<ul><li class=\"" + exceptionCauseClass + "\">Problema com uso concorrente de dados</li></ul>");
-					}
-				}
-
-				if (cause instanceof SQLException) {
-					SQLException exception2 = (SQLException) cause;
-					if (exception2.getNextException() != null) {
-						String message = cause.getMessage();
-						String message2 = exception2.getNextException().getMessage();
-						if (!printedErrors.contains(message)) {
-							printedErrors.add(message);
-							builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + message + "</li></ul>");
-						}
-						if (!printedErrors.contains(message2)) {
-							printedErrors.add(message2);
-							builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + message2 + "</li></ul>");
-						}
-					} else if (cause.getCause() == null) {
-						String message = cause.getMessage();
-						if (!printedErrors.contains(message)) {
-							printedErrors.add(message);
-							builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + message + "</li></ul>");
-						}
-					} else {
-						String message = cause.getMessage();
-						if (!printedErrors.contains(message)) {
-							printedErrors.add(message);
-							builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + message + "</li></ul>");
-						}
-					}
-				} else if (cause.getClass().getName().startsWith("java.lang")) {
-					String message = cause.getMessage();
-					if (!printedErrors.contains(message) || message == null) {
-						printedErrors.add(message);
-						builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + cause.getClass().getSimpleName() + ": " + message + "</li></ul>");
-						//printApplicationStack(builder, cause);
-					}
-				} else {
-					String message = cause.getMessage();
-					if (!printedErrors.contains(message)) {
-						printedErrors.add(message);
-						builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + message + "</li></ul>");
-					}
-
-				}
-			}
 			return builder.toString();
+
 		}
-		return source.toString();
+
+		return Util.strings.toString(source);
 	}
 
-	/*
-	private void printApplicationStack(StringBuilder builder, Throwable cause) {
-		List<StackTraceElement> elementsToPrint = getResumedStack(cause, false);
-		
-		builder.append("<ul> ");
-	
-		for (StackTraceElement element : elementsToPrint) {
-			builder.append("<ul><li class=\"" + exceptionCauseClass + "\">"+element+"</li></ul>");
+	private String getMessageStyleClass(Message message) {
+		switch (message.getType()) {
+			case DEBUG:
+				return debugClass;
+			case TRACE:
+				return traceClass;
+			case INFO:
+				return infoClass;
+			case WARN:
+				return warnClass;
+			case ERROR:
+				return errorClass;
+			default:
+				return message.getType().name().toLowerCase();
 		}
-		builder.append("</ul>");
 	}
-	*/
-
-	/*
-	private List<StackTraceElement> getResumedStack(Throwable cause, boolean printResume) {
-		List<StackTraceElement> elementsToPrint = new ArrayList<StackTraceElement>();
-		StackTraceElement[] stackTrace = cause.getStackTrace();
-		List<String> fromClasses = new ArrayList<String>();
-		for (int i = stackTrace.length-1; i >= 0; i--) {
-			StackTraceElement element = stackTrace[i];
-			if(!( //tentar colocar o stackTrace somente da aplicação
-					element.getClassName().startsWith("org.nextframework") ||
-					element.getClassName().startsWith("org.apache") ||
-					element.getClassName().startsWith("org.jboss") ||
-					element.getClassName().startsWith("java") ||
-					element.getClassName().startsWith("org.springframework") ||
-					element.getClassName().startsWith("sun") ||
-					element.getClassName().startsWith("org.hibernate") ||
-					element.getClassName().startsWith("net.sf") 
-				)){
-				if (fromClasses.contains(element.getClassName())) {
-					int indexOf = fromClasses.indexOf(element.getClassName());
-					fromClasses.remove(indexOf);
-					elementsToPrint.remove(indexOf);
-				}
-				elementsToPrint.add(element);
-				fromClasses.add(element.getClassName());
-			}
-		}
-	
-		if (printResume) {
-			log.error(cause.getMessage(), cause);
-			StackTraceElement[] last = cause.getStackTrace();
-			Throwable exception = cause;
-			StackTraceElement[] toArray = elementsToPrint.toArray(new StackTraceElement[elementsToPrint.size()]);
-			exception.setStackTrace(toArray);
-			//log.error("\n", exception);
-			//log.error("\n"+cause.getClass().getName()+": "+cause.getMessage());
-	//			for (StackTraceElement element : elementsToPrint) {
-	//				log.error("Stack Resumido:\t"+element);
-	//			}
-			exception.setStackTrace(last);
-		}
-		return elementsToPrint;
-	}
-	*/
 
 	public Boolean getRenderAsHtml() {
 		return renderAsHtml;
-	}
-
-	public String getBindErrorClass() {
-		return bindErrorClass;
-	}
-
-	public String getDebugClass() {
-		return debugClass;
-	}
-
-	public String getErrorClass() {
-		return errorClass;
-	}
-
-	public String getGlobalErrorclass() {
-		return globalErrorclass;
-	}
-
-	public String getInfoClass() {
-		return infoClass;
-	}
-
-	public String getTraceClass() {
-		return traceClass;
-	}
-
-	public String getValidationErrorClass() {
-		return validationErrorClass;
-	}
-
-	public String getWarnClass() {
-		return warnClass;
 	}
 
 	public void setRenderAsHtml(Boolean renderAsHtml) {
 		this.renderAsHtml = renderAsHtml;
 	}
 
-	public void setBindErrorClass(String bindErrorClass) {
-		this.bindErrorClass = bindErrorClass;
+	public String getContainerClass() {
+		return containerClass;
 	}
 
-	public void setDebugClass(String debugClass) {
-		this.debugClass = debugClass;
+	public void setContainerClass(String containerClass) {
+		this.containerClass = containerClass;
 	}
 
-	public void setErrorClass(String errorClass) {
-		this.errorClass = errorClass;
+	public String getTitleClass() {
+		return titleClass;
+	}
+
+	public void setTitleClass(String titleClass) {
+		this.titleClass = titleClass;
+	}
+
+	public String getGlobalErrorclass() {
+		return globalErrorclass;
 	}
 
 	public void setGlobalErrorclass(String globalErrorclass) {
 		this.globalErrorclass = globalErrorclass;
 	}
 
-	public void setInfoClass(String infoClass) {
-		this.infoClass = infoClass;
+	public String getFieldName() {
+		return fieldName;
 	}
 
-	public void setTraceClass(String traceClass) {
-		this.traceClass = traceClass;
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+
+	public String getBindErrorClass() {
+		return bindErrorClass;
+	}
+
+	public void setBindErrorClass(String bindErrorClass) {
+		this.bindErrorClass = bindErrorClass;
+	}
+
+	public String getValidationErrorClass() {
+		return validationErrorClass;
 	}
 
 	public void setValidationErrorClass(String validationErrorClass) {
 		this.validationErrorClass = validationErrorClass;
 	}
 
+	public String getDebugClass() {
+		return debugClass;
+	}
+
+	public void setDebugClass(String debugClass) {
+		this.debugClass = debugClass;
+	}
+
+	public String getTraceClass() {
+		return traceClass;
+	}
+
+	public void setTraceClass(String traceClass) {
+		this.traceClass = traceClass;
+	}
+
+	public String getInfoClass() {
+		return infoClass;
+	}
+
+	public void setInfoClass(String infoClass) {
+		this.infoClass = infoClass;
+	}
+
+	public String getWarnClass() {
+		return warnClass;
+	}
+
 	public void setWarnClass(String warnClass) {
 		this.warnClass = warnClass;
+	}
+
+	public String getErrorClass() {
+		return errorClass;
+	}
+
+	public void setErrorClass(String errorClass) {
+		this.errorClass = errorClass;
+	}
+
+	public String getExceptionClass() {
+		return exceptionClass;
+	}
+
+	public void setExceptionClass(String exceptionClass) {
+		this.exceptionClass = exceptionClass;
+	}
+
+	public String getExceptionCauseClass() {
+		return exceptionCauseClass;
+	}
+
+	public void setExceptionCauseClass(String exceptionCauseClass) {
+		this.exceptionCauseClass = exceptionCauseClass;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getInvalidValueLabel() {
+		return invalidValueLabel;
+	}
+
+	public void setInvalidValueLabel(String invalidValueLabel) {
+		this.invalidValueLabel = invalidValueLabel;
+	}
+
+	public String getErrorLabel() {
+		return errorLabel;
+	}
+
+	public void setErrorLabel(String errorLabel) {
+		this.errorLabel = errorLabel;
 	}
 
 }

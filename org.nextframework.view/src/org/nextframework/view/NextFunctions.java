@@ -34,10 +34,13 @@ import javax.servlet.jsp.el.ELException;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.annotation.DescriptionProperty;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.message.MessageResolver;
 import org.nextframework.persistence.HibernateUtils;
 import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
+import org.nextframework.web.WebUtils;
+import org.springframework.context.NoSuchMessageException;
 
 /**
  * @author rogelgarcia
@@ -46,9 +49,9 @@ import org.nextframework.util.Util;
  */
 @SuppressWarnings("deprecation")
 public class NextFunctions {
-	
-	public static Integer size(Collection<?> collection){
-		if(collection == null){
+
+	public static Integer size(Collection<?> collection) {
+		if (collection == null) {
 			return null;
 		}
 		collection = HibernateUtils.getLazyValue(collection);
@@ -62,25 +65,25 @@ public class NextFunctions {
 	public static String hierarchy(Class<?> clazz) {
 		StringBuilder sb = new StringBuilder();
 		Class<?> parent = clazz;
-		while(!Object.class.equals(parent)){
-			sb.append("'"+parent.getName()+"', ");
+		while (!Object.class.equals(parent)) {
+			sb.append("'" + parent.getName() + "', ");
 			parent = parent.getSuperclass();
 		}
-		return sb.substring(0, sb.length()-2).toString();
+		return sb.substring(0, sb.length() - 2).toString();
 	}
-	
-	public static Boolean isId(Annotation[] annotations){
+
+	public static Boolean isId(Annotation[] annotations) {
 		for (Annotation annotation : annotations) {
-			if(annotation instanceof Id){
+			if (annotation instanceof Id) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	public static Object chooseDefault(Object def, Object opt){
-		if(opt != null){
-			if(opt instanceof String && ((String)opt).length() == 0){
+
+	public static Object chooseDefault(Object def, Object opt) {
+		if (opt != null) {
+			if (opt instanceof String && ((String) opt).length() == 0) {
 				return def;
 			} else {
 				return opt;
@@ -89,12 +92,11 @@ public class NextFunctions {
 		return def;
 	}
 
-
-	public static Object reevaluate(String expr, PageContext context) throws ELException{
-		return ViewUtils.evaluate("${"+expr+"}", context, Object.class);
+	public static Object reevaluate(String expr, PageContext context) throws ELException {
+		return ViewUtils.evaluate("${" + expr + "}", context, Object.class);
 	}
 
-	public static String descriptionToString(Object value){
+	public static String descriptionToString(Object value) {
 		try {
 			if (value == null)
 				return "";
@@ -107,93 +109,166 @@ public class NextFunctions {
 			throw new RuntimeException("Erro ao ler a descrição do objeto. Talvez o problema esteja na propriedade com @DescriptionProperty.", e);
 		}
 	}
-	
-	public static String valueToString(Object value){
-		if(value == null) return "";
-		if(hasId(value.getClass())){
+
+	public static String valueToString(Object value) {
+		if (value == null)
+			return "";
+		if (hasId(value.getClass())) {
 			return Util.strings.toStringIdStyled(value, true);
 		}
 		return value.toString();
 	}
-	
-	public static String valueToString(Object value, Boolean includeDescription){
-		if(includeDescription == null){
+
+	public static String valueToString(Object value, Boolean includeDescription) {
+		if (includeDescription == null) {
 			includeDescription = true;
 		}
-		if(value == null) return "";
-		if(hasId(value.getClass())){
+		if (value == null)
+			return "";
+		if (hasId(value.getClass())) {
 			return Util.strings.toStringIdStyled(value, includeDescription);
 		}
 		return value.toString();
 	}
-	
-	public static Object id(Object value){
-		if(value == null){
+
+	public static Object id(Object value) {
+		if (value == null) {
 			return null;
 		}
-		if(hasId(value.getClass())){
+		if (hasId(value.getClass())) {
 			return BeanDescriptorFactory.forBean(value).getId();
 		} else {
 			return null;
 		}
 	}
-	
-	public static String idProperty(Object value){
-		if(value == null){
+
+	public static String idProperty(Object value) {
+		if (value == null) {
 			return null;
 		}
-		if(hasId(value.getClass())){
+		if (hasId(value.getClass())) {
 			return BeanDescriptorFactory.forBean(value).getIdPropertyName();
 		} else {
 			return null;
 		}
 	}
-	
+
 	private static boolean hasDescriptionProperty(Class<? extends Object> class1) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		Method[] methods = reflectionCache.getMethods(class1);
 		for (Method method : methods) {
-			if(reflectionCache.isAnnotationPresent(method, DescriptionProperty.class)){
+			if (reflectionCache.isAnnotationPresent(method, DescriptionProperty.class)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	private static boolean hasId(Class<? extends Object> class1) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		Method[] methods = reflectionCache.getMethods(class1);
 		for (Method method : methods) {
-			if(reflectionCache.isAnnotationPresent(method, Id.class)){
+			if (reflectionCache.isAnnotationPresent(method, Id.class)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public static Object ognl(String expression) {
-		WebContextMap contextMap = new WebContextMap(NextWeb.getRequestContext().getServletRequest());			
+		WebContextMap contextMap = new WebContextMap(NextWeb.getRequestContext().getServletRequest());
 		Object value = OgnlExpressionParser.parse(expression, contextMap);
 		return value;
 	}
-	
-	public static String escape(String s){
-		if(s==null) return null;
-		
+
+	public static String escape(String s) {
+		if (s == null)
+			return null;
+
 		return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"");
 	}
-	
-	public static Boolean isDetailProperty(String name){
-		if(name == null){
+
+	public static Boolean isDetailProperty(String name) {
+		if (name == null) {
 			return false;
 		}
 		return name.contains("[");
 	}
-	
-	public static Object printStackTrace(Throwable t){
-		if(t != null){
+
+	public static Object printStackTrace(Throwable t) {
+		if (t != null) {
 			t.printStackTrace();
 		}
 		return null;
 	}
+
+	public static String messageViewPrefix(String field) {
+
+		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
+
+		try {
+			return messageResolver.message(WebUtils.getMessageCodeViewPrefix() + "." + field);
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		return messageResolver.message(field);
+	}
+
+	public static String messageViewPrefixArgs(String field, Object arguments) {
+
+		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
+		Object[] argumentsArray = resolveArguments(arguments);
+
+		try {
+			return messageResolver.message(WebUtils.getMessageCodeViewPrefix() + "." + field, argumentsArray);
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		return messageResolver.message(field, argumentsArray);
+	}
+
+	public static String message(String code) {
+		return NextWeb.getRequestContext().getMessageResolver().message(code);
+	}
+
+	public static String messageArgs(String code, Object arguments) {
+		Object[] argumentsArray = resolveArguments(arguments);
+		return NextWeb.getRequestContext().getMessageResolver().message(code, argumentsArray);
+	}
+
+	public static String messageDefault(String code, Object arguments, String defaultValue) {
+		Object[] argumentsArray = resolveArguments(arguments);
+		return NextWeb.getRequestContext().getMessageResolver().message(code, argumentsArray, defaultValue);
+	}
+
+	private static Object[] resolveArguments(Object arguments) {
+		if (arguments instanceof String) {
+			String[] stringArray = org.springframework.util.StringUtils.delimitedListToStringArray((String) arguments, ",");
+			if (stringArray.length == 1) {
+				Object argument = stringArray[0];
+				if (argument != null && argument.getClass().isArray()) {
+					return org.springframework.util.ObjectUtils.toObjectArray(argument);
+				} else {
+					return new Object[] { argument };
+				}
+			} else {
+				return stringArray;
+			}
+		} else if (arguments instanceof Object[]) {
+			return (Object[]) arguments;
+		} else if (arguments instanceof Collection) {
+			return ((Collection<?>) arguments).toArray();
+		} else if (arguments != null) {
+			return new Object[] { arguments };
+		} else {
+			return null;
+		}
+	}
+
+	public static String messageReplace(String original) {
+		return Util.strings.replaceString(NextWeb.getRequestContext().getMessageResolver(), original);
+	}
+
 }

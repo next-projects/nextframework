@@ -29,18 +29,32 @@ package org.nextframework.view.template;
  * @version 1.1
  */
 public class FormPanelTag extends TemplateTag {
-	
+
 	protected boolean showSubmit = true;
-	protected String submitLabel = "Salvar";
+	protected String updateLinkLabel = null;
 	protected String submitAction = "save";
 	protected String submitConfirmationScript;
+	protected String submitLabel = null;
 
-	public String getSubmitConfirmationScript() {
-		return submitConfirmationScript;
+	@Override
+	protected void doComponent() throws Exception {
+
+		if (updateLinkLabel == null) {
+			updateLinkLabel = getDefaultViewLabel("updateLinkLabel", "Editar");
+		}
+
+		if (submitLabel == null) {
+			submitLabel = getDefaultViewLabel("submitLabel", "Salvar");
+		}
+
+		pushAttribute("janelaEntradaTag", this); //Legacy
+		includeJspTemplate();
+		popAttribute("janelaEntradaTag");
+
 	}
 
-	public void setSubmitConfirmationScript(String submitConfirmationScript) {
-		this.submitConfirmationScript = submitConfirmationScript;
+	public String getUniqueId() {
+		return generateUniqueId();
 	}
 
 	public boolean isShowSubmit() {
@@ -51,23 +65,12 @@ public class FormPanelTag extends TemplateTag {
 		this.showSubmit = showSubmit;
 	}
 
-	@Override
-	protected void doComponent() throws Exception {
-		pushAttribute("janelaEntradaTag", this);
-		includeJspTemplate();
-		popAttribute("janelaEntradaTag");
-	}
-	
-	public String getUniqueId(){
-		return generateUniqueId();
+	public String getUpdateLinkLabel() {
+		return updateLinkLabel;
 	}
 
-	public String getSubmitLabel() {
-		return submitLabel;
-	}
-
-	public void setSubmitLabel(String submitLabel) {
-		this.submitLabel = submitLabel;
+	public void setUpdateLinkLabel(String updateLinkLabel) {
+		this.updateLinkLabel = updateLinkLabel;
 	}
 
 	public String getSubmitAction() {
@@ -76,6 +79,22 @@ public class FormPanelTag extends TemplateTag {
 
 	public void setSubmitAction(String submitAction) {
 		this.submitAction = submitAction;
+	}
+
+	public String getSubmitConfirmationScript() {
+		return submitConfirmationScript;
+	}
+
+	public void setSubmitConfirmationScript(String submitConfirmationScript) {
+		this.submitConfirmationScript = submitConfirmationScript;
+	}
+
+	public String getSubmitLabel() {
+		return submitLabel;
+	}
+
+	public void setSubmitLabel(String submitLabel) {
+		this.submitLabel = submitLabel;
 	}
 
 }

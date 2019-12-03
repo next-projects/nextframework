@@ -35,7 +35,7 @@ import org.nextframework.view.PanelGridTag;
  * @version 1.1
  */
 public class PropertyConfigTag extends TemplateTag {
-	
+
 	public static final String INPUT = "input";
 
 	public static final String OUTPUT = "output";
@@ -45,82 +45,88 @@ public class PropertyConfigTag extends TemplateTag {
 	public static final String SINGLE = "single";
 
 	public static final String DOUBLE = "double";
-	
+
 	public static final String DOUBLELINE = "doubleline";
-	
+
 	protected String mode = null;
 	protected String renderAs = null;
 	protected Boolean showLabel = null;
-	
 	protected Boolean disabled = null;
-	
-	public Boolean getShowLabel() {
-		return showLabel;
-	}
-
-	public void setShowLabel(Boolean showLabel) {
-		this.showLabel = showLabel;
-	}
-
-	public String getMode() {
-		return mode;
-	}
-
-	public String getRenderAs() {
-		return renderAs;
-	}
-
-	public void setMode(String mode) {
-		this.mode = mode;
-	}
-
-	public void setRenderAs(String renderAs) {
-		this.renderAs = renderAs;
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doComponent() throws Exception {
+
 		PropertyConfigTag parent = findParent(PropertyConfigTag.class);
-		BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class, DataGridTag.class);
+
 		if (Util.strings.isNotEmpty(mode)) {
 			mode = mode.toLowerCase();
 			if (!INPUT.equals(mode) && !OUTPUT.equals(mode)) {
 				throw new NextException("A tag propertyConfig só aceita no atributo 'mode' os seguintes valores: input ou output. Valor encontrado: " + mode);
 			}
 		} else {
-			if(parent != null){
+			if (parent != null) {
 				this.mode = parent.getMode();
 			}
 		}
+
 		if (Util.strings.isNotEmpty(renderAs)) {
 			renderAs = renderAs.toLowerCase();
 			if (!COLUMN.equals(renderAs) && !SINGLE.equals(renderAs) && !DOUBLE.equals(renderAs) && !DOUBLELINE.equals(renderAs)) {
 				throw new NextException("A tag propertyConfig só aceita no atributo 'renderAs' os seguintes valores: column, single, double ou doubleline. Valor encontrado: " + renderAs);
 			}
 		} else {
-			if(findFirst != null){
-				if(findFirst instanceof PropertyConfigTag){
-					this.renderAs = ((PropertyConfigTag)findFirst).getRenderAs();	
-				} else if(findFirst instanceof PanelGridTag){
-					Boolean propertyRenderAsDouble = ((PanelGridTag)findFirst).getPropertyRenderAsDouble();
-					this.renderAs = propertyRenderAsDouble != null? (propertyRenderAsDouble? DOUBLE : SINGLE) : null;
-				} else if(findFirst instanceof DataGridTag){
+			BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class, DataGridTag.class);
+			if (findFirst != null) {
+				if (findFirst instanceof PropertyConfigTag) {
+					this.renderAs = ((PropertyConfigTag) findFirst).getRenderAs();
+				} else if (findFirst instanceof PanelGridTag) {
+					Boolean propertyRenderAsDouble = ((PanelGridTag) findFirst).getPropertyRenderAsDouble();
+					this.renderAs = propertyRenderAsDouble != null ? (propertyRenderAsDouble ? DOUBLE : SINGLE) : null;
+				} else if (findFirst instanceof DataGridTag) {
 					this.renderAs = COLUMN;
 				}
 			}
 		}
-		if(showLabel == null && DOUBLE.equals(renderAs)){
+
+		if (showLabel == null && DOUBLE.equals(renderAs)) {
 			showLabel = false;
 		}
-		if(showLabel == null && parent != null){
+		if (showLabel == null && parent != null) {
 			showLabel = parent.getShowLabel();
 		}
-		if(disabled == null && parent != null){
+
+		if (disabled == null && parent != null) {
 			disabled = parent.getDisabled();
 		}
+
 		getRequest().setAttribute("propertyConfigDisabled", disabled);
 		doBody();
+
+	}
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+
+	public String getRenderAs() {
+		return renderAs;
+	}
+
+	public void setRenderAs(String renderAs) {
+		this.renderAs = renderAs;
+	}
+
+	public Boolean getShowLabel() {
+		return showLabel;
+	}
+
+	public void setShowLabel(Boolean showLabel) {
+		this.showLabel = showLabel;
 	}
 
 	public Boolean getDisabled() {
@@ -130,5 +136,5 @@ public class PropertyConfigTag extends TemplateTag {
 	public void setDisabled(Boolean disabled) {
 		this.disabled = disabled;
 	}
-	
+
 }

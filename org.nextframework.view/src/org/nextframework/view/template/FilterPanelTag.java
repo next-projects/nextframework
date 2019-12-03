@@ -34,7 +34,28 @@ import org.nextframework.persistence.PageAndOrder;
 public class FilterPanelTag extends TemplateTag {
 
 	protected String name = "filter";
-	
+	protected String sectionTitle;
+
+	@Override
+	protected void doComponent() throws Exception {
+
+		if (sectionTitle == null) {
+			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+		}
+
+		CrudContext crudContext = CrudContext.getCurrentInstance();
+
+		PageAndOrder filter = crudContext != null && getRequest().getAttribute(name) == null ? crudContext.getListModel().getFilter() : null;
+		if (filter != null) {
+			pushAttribute(name, filter);
+		}
+		includeJspTemplate();
+		if (filter != null) {
+			popAttribute(name);
+		}
+
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -43,17 +64,12 @@ public class FilterPanelTag extends TemplateTag {
 		this.name = name;
 	}
 
-	@Override
-	protected void doComponent() throws Exception {
-		CrudContext crudContext = CrudContext.getCurrentInstance();
-		PageAndOrder filter = crudContext != null && getRequest().getAttribute(name) == null ? crudContext.getListModel().getFilter() : null;
-		if(filter != null){
-			pushAttribute(name, filter);
-		}
-		includeJspTemplate();
-		if(filter != null){
-			popAttribute(name);
-		}
+	public String getSectionTitle() {
+		return sectionTitle;
+	}
+
+	public void setSectionTitle(String sectionTitle) {
+		this.sectionTitle = sectionTitle;
 	}
 
 }

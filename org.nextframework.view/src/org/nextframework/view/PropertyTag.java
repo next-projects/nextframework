@@ -32,6 +32,7 @@ import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.util.Util;
+import org.nextframework.web.WebUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -42,7 +43,7 @@ import org.springframework.validation.FieldError;
  * @version 1.1
  */
 public class PropertyTag extends BaseTag implements LogicalTag {
-	
+
 	protected String name;
 	protected String varValue = "value";
 	protected String varError = "error";
@@ -53,12 +54,11 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	protected String varPropertySetter = "propertySetter";
 	protected String varAnnotations = "annotations";
 	protected String varPropertyDescriptor = "propertyDescriptor";
-	
+
 	/** Name para ser utilizado no input completo */
 	//protected String fullName;  //nome do input
 	/** nome da propriedade começando do bean */
 	//protected String fullNestedName; //nome da propriedade começando do bean
-
 
 	public String getFullNestedName() {
 		return montarFullNestedName(this, name);
@@ -68,29 +68,28 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	protected void doComponent() throws Exception {
 		String fullName = montarFullPropertyName();
 		final String fullNestedName = montarFullNestedName(this, name);
-		
+
 		final BeanDescriptor beanDescriptor = getBeanDescriptor(this);
-		
 
 		PropertyDescriptor propertyDescriptor = getPropertyDescriptor(fullNestedName, beanDescriptor);
 		FieldError error = NextWeb.getRequestContext().getBindException().getFieldError(fullName);
-		
+
 		setTypeAndValue(beanDescriptor, propertyDescriptor, error);
 		setLabel(beanDescriptor, propertyDescriptor);
 		setNameAttribute(fullName);
 		setPropertySetter(fullNestedName, beanDescriptor, propertyDescriptor);
 		setAnnotations(propertyDescriptor);
 		setPropertyDescriptor(propertyDescriptor);
-		
+
 		doBody();
-		
+
 		popAttributes(propertyDescriptor, checkErrors(beanDescriptor, error));
-		
+
 	}
 
 	public static PropertyDescriptor getPropertyDescriptor(String fullNestedName, final BeanDescriptor beanDescriptor) {
 		PropertyDescriptor propertyDescriptor = null;
-		if(!"".equals(fullNestedName)){
+		if (!"".equals(fullNestedName)) {
 			propertyDescriptor = beanDescriptor.getPropertyDescriptor(fullNestedName);
 		}
 		return propertyDescriptor;
@@ -101,21 +100,21 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	private void setPropertySetter(final String fullNestedName, final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor) {
-		if(propertyDescriptor != null){
-			
-			PropertySetter propertySetter = new PropertySetter(){
+		if (propertyDescriptor != null) {
+
+			PropertySetter propertySetter = new PropertySetter() {
 
 				public void set(Object value) {
 					Object targetBean = beanDescriptor.getTargetBean();
-					if(targetBean == null){
+					if (targetBean == null) {
 						log.error("TargetBean is null, cannot set property");
 					}
 					BeanWrapperImpl beanWrapperImpl = new BeanWrapperImpl(targetBean);
 					beanWrapperImpl.setPropertyValue(fullNestedName, value);
 				}
-				
+
 			};
-			pushAttribute(varPropertySetter, propertySetter);	
+			pushAttribute(varPropertySetter, propertySetter);
 		}
 	}
 
@@ -132,11 +131,11 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	private void popAttributes(PropertyDescriptor propertyDescriptor, boolean containError) {
-		if(containError){
+		if (containError) {
 			popAttribute(varError);
 		}
-		if(propertyDescriptor != null){
-			popAttribute(varPropertySetter);	
+		if (propertyDescriptor != null) {
+			popAttribute(varPropertySetter);
 		}
 		popAttribute(varPropertyDescriptor);
 		popAttribute(varValue);
@@ -152,19 +151,17 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	public static String getLabel(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor) {
-		String label;
+		String viewCode = WebUtils.getMessageCodeViewPrefix();
 		if (propertyDescriptor != null) {
-			label = propertyDescriptor.getDisplayName();
-		} else {
-			label = beanDescriptor.getDisplayName();
+			return Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), propertyDescriptor, viewCode);
 		}
-		return label;
+		return Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), beanDescriptor, viewCode);
 	}
 
 	public void setTypeAndValue(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, FieldError error) {
 		Object value = getPropertyValue(beanDescriptor, propertyDescriptor, error);
 		pushAttribute(varValue, value);
-		
+
 		Type type;
 		if (propertyDescriptor != null) {
 			type = propertyDescriptor.getType();
@@ -172,20 +169,20 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 			type = beanDescriptor.getTargetClass();
 		}
 		Type[] actualTypeArguments = new Type[0];
-		if(checkErrors(beanDescriptor, error)){
+		if (checkErrors(beanDescriptor, error)) {
 			pushAttribute(varError, error.getDefaultMessage());
 			pushAttribute(varType, type);
-			if(type instanceof ParameterizedType){
-				actualTypeArguments = ((ParameterizedType)type).getActualTypeArguments();
+			if (type instanceof ParameterizedType) {
+				actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
 			}
 			pushAttribute(varParameterizedTypes, actualTypeArguments);
 		} else {
 			try {
 				pushAttribute(varType, type);
-				if(type instanceof ParameterizedType){
-					actualTypeArguments = ((ParameterizedType)type).getActualTypeArguments();
-				} else if(type instanceof Class<?> && ((Class<?>)type).isArray()){
-					actualTypeArguments = new Type[]{((Class<?>)type).getComponentType()};
+				if (type instanceof ParameterizedType) {
+					actualTypeArguments = ((ParameterizedType) type).getActualTypeArguments();
+				} else if (type instanceof Class<?> && ((Class<?>) type).isArray()) {
+					actualTypeArguments = new Type[] { ((Class<?>) type).getComponentType() };
 				}
 				pushAttribute(varParameterizedTypes, actualTypeArguments);
 			} catch (LazyInitializationException e) {
@@ -196,7 +193,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 
 	public static Object getPropertyValue(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, FieldError error) {
 		Object value;
-		if(checkErrors(beanDescriptor, error)){
+		if (checkErrors(beanDescriptor, error)) {
 			value = error.getRejectedValue();// se tiver algum valor.. vale o valor setado
 		} else {
 			try {
@@ -206,7 +203,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 					value = beanDescriptor.getTargetBean();
 				}
 			} catch (LazyInitializationException e) {
-				value = "[Could not initializate proxy] "+propertyDescriptor.getName();
+				value = "[Could not initializate proxy] " + propertyDescriptor.getName();
 			}
 		}
 		return value;
@@ -220,13 +217,13 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	private static boolean checkErrors(BeanDescriptor beanDescriptor, FieldError error) {
-		if(error == null){
+		if (error == null) {
 			return false;
 		}
 		BindException errors = NextWeb.getRequestContext().getBindException();
 		return errors.hasErrors() && errors.getTarget().getClass().equals(beanDescriptor.getTargetClass());
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static String montarFullNestedName(BaseTag fromTag, String name) {
 //		PropertyTag propertyTag = findParent(PropertyTag.class);
@@ -245,9 +242,9 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 //		}
 		String fullNestedName;
 		BaseTag firstParent = fromTag.findFirst(ForEachBeanTag.class, PropertyTag.class, BeanTag.class);
-		String separator = name.startsWith("[")?"":".";
-		if(firstParent instanceof PropertyTag){
-			fullNestedName = ((PropertyTag)firstParent).getFullNestedName()+separator+name;
+		String separator = name.startsWith("[") ? "" : ".";
+		if (firstParent instanceof PropertyTag) {
+			fullNestedName = ((PropertyTag) firstParent).getFullNestedName() + separator + name;
 		} else {
 			fullNestedName = name;
 		}
@@ -258,40 +255,39 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	protected String montarFullPropertyName() {
 		String fullName;
 		BaseTag firstParent = findFirst(ForEachBeanTag.class, PropertyTag.class, BeanTag.class);
-		String separator = name.startsWith("[")?"":".";
-		if(firstParent instanceof PropertyTag){
-			fullName = ((PropertyTag)firstParent).getFullName()+separator+name;
+		String separator = name.startsWith("[") ? "" : ".";
+		if (firstParent instanceof PropertyTag) {
+			fullName = ((PropertyTag) firstParent).getFullName() + separator + name;
 		} else {
-			BeanTag parentBean = ((BeanTag)firstParent);
-			if(parentBean == null){
-				throw new NullPointerException("Tag property (name=\""+name+"\") não está aninhada a uma outra tag Property ou Bean");
+			BeanTag parentBean = ((BeanTag) firstParent);
+			if (parentBean == null) {
+				throw new NullPointerException("Tag property (name=\"" + name + "\") não está aninhada a uma outra tag Property ou Bean");
 			}
 			String propertyPrefix = parentBean.getPropertyPrefix();
 			String propertyIndex = parentBean.getPropertyIndex();
 			String prefix = "";
-			if(Util.strings.isNotEmpty(propertyPrefix)){
+			if (Util.strings.isNotEmpty(propertyPrefix)) {
 				prefix = propertyPrefix;
-			} 
-			if(Util.strings.isNotEmpty(propertyIndex)){
-				prefix += "["+propertyIndex+"]";
-			} 
-			if(prefix.length()!=0 && name != null && !name.equals("this")){
+			}
+			if (Util.strings.isNotEmpty(propertyIndex)) {
+				prefix += "[" + propertyIndex + "]";
+			}
+			if (prefix.length() != 0 && name != null && !name.equals("this")) {
 				prefix += ".";
 			}
-			if("this".equals(name) || name == null){
+			if ("this".equals(name) || name == null) {
 				fullName = prefix;
 				return fullName;
 			}
-			fullName = prefix+name;
+			fullName = prefix + name;
 		}
 		return fullName;
 	}
 
-
 	public String getFullName() {
 		return montarFullPropertyName();
 	}
-	
+
 	public String getVarAnnotations() {
 		return varAnnotations;
 	}

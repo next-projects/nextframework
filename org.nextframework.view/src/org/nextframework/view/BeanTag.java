@@ -25,6 +25,7 @@ package org.nextframework.view;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.BeanDescriptorCreationException;
 import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
@@ -36,101 +37,95 @@ import org.nextframework.view.DataGridTag.Status;
  * @version 1.1
  */
 public class BeanTag extends BaseTag implements LogicalTag {
-	
+
 	protected String name;
 	protected String propertyPrefix;
 	protected String propertyIndex;
 	protected Class<?> valueType;
 	protected String varLabel = "label";
-	
+
 	//extras
 	protected Object bean;
 	protected BeanDescriptor beanDescriptor;
 
-	public BeanDescriptor getBeanDescriptor() {
-		return beanDescriptor;
-	}
-
-
 	@Override
 	@SuppressWarnings("unchecked")
 	protected void doComponent() throws Exception {
-		if(Util.strings.isEmpty(name)){
+
+		if (Util.strings.isEmpty(name)) {
 			throw new IllegalArgumentException("Attribute name of tag BeanTag is empty. ");
-		}	
-		bean = ViewUtils.evaluate("${"+name+"}", getPageContext(), (valueType == null? Object.class : valueType) );
-		if(bean == null && getParent() instanceof DataGridTag){
+		}
+
+		bean = ViewUtils.evaluate("${" + name + "}", getPageContext(), (valueType == null ? Object.class : valueType));
+		if (bean == null && getParent() instanceof DataGridTag) {
 			DataGridTag dataGridTag = (DataGridTag) getParent();
-			if(dataGridTag.currentStatus == Status.DYNALINE){
+			if (dataGridTag.currentStatus == Status.DYNALINE) {
 				//if dynaline and there is no bean on scope.. instantiate one
 				bean = valueType.newInstance();
 			}
 		}
+
 		try {
 			if (bean == null && valueType == null) {
 				throw new NextException("bean and valueType cannot be both null for BeanTag. Object with name=" + name + ", not found in scope. ");
 			}
-			beanDescriptor = BeanDescriptorFactory.forBeanOrClass(bean, (Class<Object>)valueType);
+			beanDescriptor = BeanDescriptorFactory.forBeanOrClass(bean, (Class<Object>) valueType);
 		} catch (BeanDescriptorCreationException e) {
-			String msg = "Error in tag bean (name='"+name+"'). ";
-			if(valueType == null){
+			String msg = "Error in tag bean (name='" + name + "'). ";
+			if (valueType == null) {
 				msg += "You may need to set attribute valueType. ";
 			}
-			throw new NextException(msg+e.getMessage(), e);
+			throw new NextException(msg + e.getMessage(), e);
 		}
-		pushAttribute(varLabel, beanDescriptor.getDisplayName());
+
+		pushAttribute(varLabel, Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), beanDescriptor));
 		doBody();
 		popAttribute(varLabel);
-	}
 
+	}
 
 	public String getName() {
 		return name;
 	}
 
-
-	public String getPropertyIndex() {
-		return propertyIndex;
+	public void setName(String name) {
+		this.name = name;
 	}
-
 
 	public String getPropertyPrefix() {
 		return propertyPrefix;
 	}
 
-
-	public Class<?> getValueType() {
-		return valueType;
+	public void setPropertyPrefix(String propertyPrefix) {
+		this.propertyPrefix = propertyPrefix;
 	}
 
-
-	public void setName(String name) {
-		this.name = name;
+	public String getPropertyIndex() {
+		return propertyIndex;
 	}
-
 
 	public void setPropertyIndex(String propertyIndex) {
 		this.propertyIndex = propertyIndex;
 	}
 
-
-	public void setPropertyPrefix(String propertyPrefix) {
-		this.propertyPrefix = propertyPrefix;
+	public Class<?> getValueType() {
+		return valueType;
 	}
-
 
 	public void setValueType(Class<?> valueType) {
 		this.valueType = valueType;
 	}
 
-
 	public String getVarLabel() {
 		return varLabel;
 	}
 
-
 	public void setVarLabel(String varLabel) {
 		this.varLabel = varLabel;
+	}
+
+	public BeanDescriptor getBeanDescriptor() {
+		return beanDescriptor;
 	}
 
 }

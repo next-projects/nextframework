@@ -171,7 +171,6 @@ INPUT {
 }
 
 .messageOuterDiv {
-	position: relative;
 	width: 1000px;
 	margin: auto auto;
 	padding-left: 400px;
@@ -197,35 +196,30 @@ INPUT {
 	font-weight: 600;
 }
 
-.messageCloseIcon {
-	float: right;
-	position: relative;
-	padding: 5px;
-	padding-top: 0px;
-	cursor: pointer;
-}
-
 .messageblock LI.error {
 	background-color: #e57563;
 	color: #FFFFFF;
 	border-color: #bd3520
 }
+
 .messageblock LI.warn {
 	background-color: #e5bf63;
 	color: #FFFFFF;
 	border-color: #bd9320
 }
+
 .messageblock LI.info {
 	background-color: #3edd3e;
 	color: #FFFFFF;
 	border-color: #229b22
 }
 
-
 .messageblock LI.error UL {
 }
+
 .messageblock LI.error UL LI {
 }
+
 .messageblock LI.causeitem {
 	background-color: transparent;
 	width: 650px;
@@ -240,6 +234,7 @@ INPUT {
 	z-index: 1000;
 	width: 100%;
 }
+
 .messagetoast div{
 	margin: auto;
 	display: block;
@@ -252,6 +247,14 @@ INPUT {
 	padding: 8px;
 	font-weight: 500;
 	opacity: 0.95;
+}
+
+.messageCloseIcon {
+	position: relative;
+	float: right;
+	padding: 5px;
+	padding-top: 0px;
+	cursor: pointer;
 }
 
 .requiredMark {

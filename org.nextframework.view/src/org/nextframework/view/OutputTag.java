@@ -33,12 +33,14 @@ import java.util.Date;
 import java.util.Formattable;
 import java.util.Formatter;
 
-import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.core.standard.Message;
+import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.HibernateUtils;
 import org.nextframework.types.File;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
+import org.springframework.context.MessageSourceResolvable;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -46,21 +48,196 @@ import org.nextframework.web.WebUtils;
  * @version 1.1
  */
 public class OutputTag extends BaseTag {
-	
+
 	protected Object value;
-	//quando value for number ou date
 	protected String pattern;
-	protected String itemSeparator;
+	protected boolean escapeHTML = false;
+	protected boolean replaceMessagesCodes = false;
 	protected String styleClass;
 	protected String style;
-	protected String trueFalseNullLabels = "Sim,Não,";
-	protected boolean printMarkerWhenEmpty = true;
-	protected boolean searchValueWhenNull = true; 
 	protected String forProperty;
-	
-	protected boolean escapeHTML = false;
-	private PropertyDescriptor propertyDescriptor;
-	
+	protected boolean searchValueWhenNull = true;
+	protected String trueFalseNullLabels;
+	protected boolean printMarkerWhenEmpty = true;
+
+	@Override
+	public void doComponent() throws Exception {
+
+		if (value == null && searchValueWhenNull) {
+			value = getPageContext().findAttribute("value");
+		}
+
+		String bodyToPrint = getStringBody();
+		if (Util.strings.isEmpty(bodyToPrint) && printMarkerWhenEmpty) {
+			bodyToPrint = "&nbsp;";
+		}
+
+		boolean createSpan = Util.strings.isNotEmpty(styleClass) || Util.strings.isNotEmpty(style) || Util.strings.isNotEmpty(forProperty);
+		if (createSpan) {
+			getOut().print("<span");
+			if (styleClass != null) {
+				getOut().print(" class='" + styleClass + "'");
+			}
+			if (style != null) {
+				getOut().print(" style='" + style + "'");
+			}
+			if (Util.strings.isNotEmpty(forProperty)) {
+				getOut().print(" forproperty='" + forProperty + "'");
+			}
+			getOut().print(">");
+		}
+
+		getOut().print(bodyToPrint);
+
+		if (createSpan) {
+			getOut().print("</span>");
+		}
+
+	}
+
+	public String getStringBody() {
+
+		String bodyToPrint = null;
+
+		if (value == null) {
+			escapeHTML = false;
+			String[] split = getResolvedTrueFalseNullLabels();
+			value = split[2];
+		} else if (value instanceof Boolean) {
+			escapeHTML = false;
+			String[] split = getResolvedTrueFalseNullLabels();
+			if (((Boolean) value)) {
+				value = split[0];
+			} else {
+				value = split[1];
+			}
+		} else if (value instanceof Formattable) {
+			Formatter fmt = new Formatter();
+			((Formattable) value).formatTo(fmt, 0, -1, -1);
+			value = fmt.out().toString();
+		} else if (value instanceof Message) {
+			value = ((Message) value).getSource();
+		}
+
+		if ((value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) && Util.strings.isEmpty(pattern)) {
+			if (value instanceof Time) {
+				pattern = "HH:mm";
+			} else {
+				pattern = "dd/MM/yyyy";
+			}
+		}
+
+		if (value instanceof Number && Util.strings.isEmpty(pattern)) {
+			if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
+				pattern = "#,##0.00";
+			} else {
+				pattern = "#,##0.##";
+			}
+		}
+
+		if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
+			String valueToString = new SimpleDateFormat(pattern).format(value);
+			bodyToPrint = valueToString;
+		} else if (value instanceof Calendar) {
+			Calendar data = (Calendar) value;
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			bodyToPrint = dateFormat.format(data.getTime());
+		} else if (value instanceof Number) {
+			Number number = (Number) value;
+			String valueToString = new DecimalFormat(pattern).format(number);
+			if (valueToString.startsWith(",")) {
+				valueToString = "0" + valueToString;
+			}
+			bodyToPrint = valueToString;
+		} else if (value instanceof File) {
+			File file = (File) HibernateUtils.getLazyValue(value);
+			DownloadFileServlet.addCdfile(getRequest().getSession(), file.getCdfile());
+			String link = getRequest().getContextPath() + DownloadFileServlet.DOWNLOAD_FILE_PATH + "/" + file.getCdfile();
+			link = WebUtils.rewriteUrl(link); //URL Sufix
+			bodyToPrint = "<a href=\"" + link + "\" class=\"filelink\">" + file.getName() + "</a>";
+		} else if (value instanceof Throwable) {
+			bodyToPrint = Util.objects.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value, true, true);
+		} else if (value instanceof MessageSourceResolvable) {
+			bodyToPrint = NextWeb.getRequestContext().getMessageResolver().message((MessageSourceResolvable) value);
+		} else {
+			String objectDescriptionToString = TagUtils.getObjectDescriptionToString(value);
+			if (objectDescriptionToString != null) {
+				if (escapeHTML) {
+					bodyToPrint = objectDescriptionToString.replace("<", "&lt;").replace("\n", "<BR>");
+				} else {
+					bodyToPrint = objectDescriptionToString;
+				}
+				if (replaceMessagesCodes) {
+					bodyToPrint = Util.strings.replaceString(NextWeb.getRequestContext().getMessageResolver(), bodyToPrint);
+				}
+			}
+		}
+
+		return bodyToPrint;
+	}
+
+	private String[] getResolvedTrueFalseNullLabels() {
+		if (Util.strings.isEmpty(trueFalseNullLabels)) {
+			String trueString = getDefaultViewLabel("trueLabel", "Sim");
+			String falseString = getDefaultViewLabel("falseLabel", "Não");
+			String nullString = getDefaultViewLabel("nullLabel", "");
+			return new String[] { trueString, falseString, nullString };
+		}
+		String[] split = trueFalseNullLabels.split(",");
+		if (split.length != 3) {
+			throw new NextException("trueFalseNullLabels inválido " + trueFalseNullLabels + ". Esse atributo deve ser uma string separada por vírgula indicando o valor de TRUE FALSE e NULL. ex.: sim,não,vazio");
+		}
+		return split;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public void setValue(Object value) {
+		this.value = value;
+	}
+
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
+	public boolean isEscapeHTML() {
+		return escapeHTML;
+	}
+
+	public void setEscapeHTML(boolean escapeHTML) {
+		this.escapeHTML = escapeHTML;
+	}
+
+	public boolean isReplaceMessagesCodes() {
+		return replaceMessagesCodes;
+	}
+
+	public void setReplaceMessagesCodes(boolean replaceMessagesCodes) {
+		this.replaceMessagesCodes = replaceMessagesCodes;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
+
 	public String getForProperty() {
 		return forProperty;
 	}
@@ -77,191 +254,12 @@ public class OutputTag extends BaseTag {
 		this.searchValueWhenNull = searchValueWhenNull;
 	}
 
-	public boolean isEscapeHTML() {
-		return escapeHTML;
-	}
-
-	public void setEscapeHTML(boolean escapeHTML) {
-		this.escapeHTML = escapeHTML;
-	}
-
 	public String getTrueFalseNullLabels() {
 		return trueFalseNullLabels;
 	}
 
 	public void setTrueFalseNullLabels(String trueFalseNullLabels) {
 		this.trueFalseNullLabels = trueFalseNullLabels;
-	}
-
-	@Override
-	public void doComponent() throws Exception {
-		if(value == null && searchValueWhenNull){
-			value = getPageContext().findAttribute("value");
-		}
-		if(propertyDescriptor == null){
-			propertyDescriptor = (PropertyDescriptor)getPageContext().findAttribute("propertyDescriptor");
-		}
-
-		String bodyToPrint = getStringBody();
-		
-		if(Util.strings.isNotEmpty(style) || Util.strings.isNotEmpty(styleClass) || Util.strings.isNotEmpty(forProperty)){
-			getOut().print("<span");
-			if(style != null){
-				getOut().print(" style='"+style+"'");
-			}
-			if(styleClass != null){
-				getOut().print(" class='"+styleClass+"'");
-			}
-			if(Util.strings.isNotEmpty(forProperty)){
-				getOut().print(" forproperty='"+forProperty+"'");
-			}
-			getOut().print(">");
-		}
-		if(Util.strings.isEmpty(bodyToPrint) && printMarkerWhenEmpty){
-			getOut().print("&nbsp;");
-		} else {
-			getOut().print(bodyToPrint);
-		}
-		
-		if(Util.strings.isNotEmpty(style) || Util.strings.isNotEmpty(styleClass) || Util.strings.isNotEmpty(forProperty)){
-			getOut().print("</span>");
-		}
-	}
-
-	public String getStringBody() {
-		String bodyToPrint = null;
-		try {
-			if ((value instanceof Boolean || value == null) && Util.strings.isNotEmpty(trueFalseNullLabels)) {
-				escapeHTML = false;
-				String[] split = trueFalseNullLabels.split(",");
-				String trueString = split[0];
-				String falseString = split[1];
-				String nullString = "";
-				if (split.length == 3) {
-					nullString = split[2];
-				}
-				if (value == null) {
-					value = nullString;
-				} else if (value instanceof Boolean) {
-					if (((Boolean) value)) {
-						value = trueString;
-					} else {
-						value = falseString;
-					}
-				}
-			} else if(value instanceof Boolean) {
-				if (((Boolean) value)) {
-					value = "Sim";
-				} else {
-					value = "Não";
-				}
-			}
-		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new NextException("trueFalseNullLabels inválido "+trueFalseNullLabels+". Esse atributo deve ser uma string separada por vírgula indicando o valor de TRUE FALSE e NULL. ex.: sim,não,vazio");
-		}
-		if(value instanceof Formattable){
-			Formatter fmt = new Formatter();
-			((Formattable)value).formatTo(fmt, 0, -1, -1);
-			value = fmt.out().toString();
-		}
-		if((value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) && Util.strings.isEmpty(pattern)){
-			if(value instanceof Time){//FIXME
-				pattern = "HH:mm"; //BUG: 000047
-			} else {
-				pattern = "dd/MM/yyyy";
-			}
-		}
-		if(value instanceof Number && Util.strings.isEmpty(pattern)){
-			if(value instanceof Double || value instanceof Float || value instanceof BigDecimal){
-				pattern = "#,##0.00";
-			} else {
-				pattern = "#,##0.##";
-			}
-		}
-		if(pattern != null && (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar || value instanceof Number)){
-			//FIXME
-			if(value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp){
-				String valueToString = new SimpleDateFormat(pattern).format(value);
-				bodyToPrint = valueToString;
-			} else if(value instanceof Calendar){
-				Calendar data = (Calendar) value;
-				SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-				bodyToPrint = dateFormat.format(data.getTime());	
-			} else {// o valor obrigatoriamente deve ser do tipo Number
-				Number number = (Number) value;
-				String valueToString = new DecimalFormat(pattern).format(number);
-				if (valueToString.startsWith(",")) {
-					valueToString = "0" + valueToString;
-				}
-				bodyToPrint = valueToString;
-			}
-		} else if(value instanceof File){
-				File file = (File) HibernateUtils.getLazyValue(value);
-				DownloadFileServlet.addCdfile(getRequest().getSession(), file.getCdfile());
-				String link = getRequest().getContextPath()+DownloadFileServlet.DOWNLOAD_FILE_PATH+"/"+file.getCdfile();
-				
-				//Verifica URL Sufix
-				link = WebUtils.rewriteUrl(link);
-				
-				bodyToPrint = "<a href=\"" + link + "\" class=\"filelink\">" + file.getName() + "</a>";
-		} else {
-//			if(HibernateUtils.isLazy(value) && WebUtils.isCrudRequest() && propertyDescriptor != null){
-//				Class<?> classType = WebUtils.getCrudClass();
-//				GenericDAO<?> daoForClass = DAOUtils.getDAOForClass(classType);
-//				//se for um CRUD vamos auxiliar o DAO para carregar esse objeto da proxima vez
-////				daoForClass.suggestLoadForListagem(propertyDescriptor.getName());
-//			}
-			String objectDescriptionToString = TagUtils.getObjectDescriptionToString(value);
-			if(objectDescriptionToString!=null){
-				if(escapeHTML){
-					bodyToPrint = objectDescriptionToString.replace("<", "&lt;").replace("\n","<BR>");	
-				} else {
-					bodyToPrint = objectDescriptionToString;
-				}
-			}
-				
-		}
-		return bodyToPrint;
-	}
-	
-	public String getItemSeparator() {
-		return itemSeparator;
-	}
-
-	public String getPattern() {
-		return pattern;
-	}
-
-	public String getStyle() {
-		return style;
-	}
-
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public Object getValue() {
-		return value;
-	}
-
-	public void setItemSeparator(String itemSeparator) {
-		this.itemSeparator = itemSeparator;
-	}
-
-	public void setPattern(String pattern) {
-		this.pattern = pattern;
-	}
-
-	public void setStyle(String style) {
-		this.style = style;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
-	public void setValue(Object value) {
-		this.value = value;
 	}
 
 	public boolean isPrintMarkerWhenEmpty() {

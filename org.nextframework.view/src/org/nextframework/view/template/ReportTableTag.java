@@ -29,44 +29,32 @@ package org.nextframework.view.template;
  * @version 1.1
  */
 public class ReportTableTag extends TemplateTag {
-	
-	protected int columns = 2;
-	
-	//panel
-	protected String title;
-	
-	//panelGrid
-	protected String style;
 
-	protected String styleClass;
-
-	protected String rowStyleClasses = "entrada1";
-
-	protected String rowStyles;
-	
-	protected String columnStyleClasses;
-
-	protected String columnStyles;
-	
+	protected Integer columns;
 	protected Integer colspan;
-	
+	protected String styleClass;
+	protected String style;
+	protected String columnStyleClasses;
+	protected String columnStyles;
+	protected String rowStyleClasses;
+	protected String rowStyles;
 	protected Boolean propertyRenderAsDouble;
-
-	public int getColumns() {
-		return columns;
-	}
-
-	public void setColumns(int columns) {
-		this.columns = columns;
-	}
 
 	@Override
 	protected void doComponent() throws Exception {
-		pushAttribute("TtabelaRelatorio", this);
-		getDynamicAttributesMap().put("width", "100%");
-		getDynamicAttributesMap().put("cellpadding", 1);
+
+		pushAttribute("TtabelaRelatorio", this); //Legacy
 		includeJspTemplate();
 		popAttribute("TtabelaRelatorio");
+
+	}
+
+	public Integer getColumns() {
+		return columns;
+	}
+
+	public void setColumns(Integer columns) {
+		this.columns = columns;
 	}
 
 	public Integer getColspan() {
@@ -75,6 +63,22 @@ public class ReportTableTag extends TemplateTag {
 
 	public void setColspan(Integer colspan) {
 		this.colspan = colspan;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	public String getColumnStyleClasses() {
@@ -93,14 +97,6 @@ public class ReportTableTag extends TemplateTag {
 		this.columnStyles = columnStyles;
 	}
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
-	}
-
-	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
-	}
-
 	public String getRowStyleClasses() {
 		return rowStyleClasses;
 	}
@@ -117,28 +113,12 @@ public class ReportTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public String getStyle() {
-		return style;
+	public Boolean getPropertyRenderAsDouble() {
+		return propertyRenderAsDouble;
 	}
 
-	public void setStyle(String style) {
-		this.style = style;
-	}
-
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
+		this.propertyRenderAsDouble = propertyRenderAsDouble;
 	}
 
 }

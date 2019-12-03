@@ -29,10 +29,48 @@ package org.nextframework.view.template;
  * @version 1.1
  */
 public class ReportPanelTag extends TemplateTag {
-	
-	String submitLabel = "Gerar relatório";
-	String submitAction = "generate";
-	String submitConfirmationScript = "true";
+
+	private String sectionTitle;
+	private String submitAction = "generate";
+	private String submitConfirmationScript = "true";
+	private String submitLabel;
+
+	@Override
+	protected void doComponent() throws Exception {
+
+		if (sectionTitle == null) {
+			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+		}
+
+		if (submitLabel == null) {
+			submitLabel = getDefaultViewLabel("submitLabel", "Gerar relatório");
+		}
+
+		pushAttribute("TJanelaRelatorio", this);
+		includeJspTemplate();
+		popAttribute("TJanelaRelatorio");
+
+	}
+
+	public String getUniqueId() {
+		return generateUniqueId();
+	}
+
+	public String getSectionTitle() {
+		return sectionTitle;
+	}
+
+	public void setSectionTitle(String sectionTitle) {
+		this.sectionTitle = sectionTitle;
+	}
+
+	public String getSubmitAction() {
+		return submitAction;
+	}
+
+	public void setSubmitAction(String submitAction) {
+		this.submitAction = submitAction;
+	}
 
 	public String getSubmitConfirmationScript() {
 		return submitConfirmationScript;
@@ -48,25 +86,6 @@ public class ReportPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
-	}
-
-	@Override
-	protected void doComponent() throws Exception {
-		pushAttribute("TJanelaRelatorio", this);
-		includeJspTemplate();
-		popAttribute("TJanelaRelatorio");
-	}
-	
-	public String getUniqueId(){
-		return generateUniqueId();
-	}
-
-	public String getSubmitAction() {
-		return submitAction;
-	}
-
-	public void setSubmitAction(String submitAction) {
-		this.submitAction = submitAction;
 	}
 
 }

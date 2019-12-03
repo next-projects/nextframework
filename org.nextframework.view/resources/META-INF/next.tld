@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-	version="2.0">
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
 
 	<description>Next 2.0 core library</description>
 	<display-name>Next Core</display-name>
@@ -27,13 +24,13 @@
 			<name>method</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>enctype</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>url</name>
@@ -63,7 +60,7 @@
 			<name>bypass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Indica que esse formulário será utilizado para um determinado bean que estiver no escopo. Se esse atributo for configurado, será criada uma tag n:bean implicita.</description>
 			<name>forBean</name>
@@ -76,7 +73,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>		
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -84,7 +81,7 @@
 		<tag-class>org.nextframework.view.DoBodyTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
-	
+
 	<tag>
 		<name>chart</name>
 		<tag-class>org.nextframework.view.ChartTag</tag-class>
@@ -101,10 +98,10 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description>Inclui javascripts e css do next</description>
 		<name>head</name>
@@ -151,7 +148,7 @@
 			<name>includeThemeCss</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>searchCssDir</name>
@@ -170,7 +167,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>		
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -222,7 +219,7 @@
 			<name>confirmationMessage</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -242,7 +239,7 @@
 			<name>confirmationScript</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>action</name>
@@ -334,13 +331,13 @@
 			<name>varLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Ignora a funcionalidade dessa tag. Apenas renderizando as tags filhas, como se essa tag não existisse.</description>
 			<name>bypass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 	</tag>
 
 	<tag>
@@ -389,9 +386,9 @@
 			<name>varParameterizedTypes</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description>Um for para iteragir sobre os itens de um collection</description>
 		<name>forEachBean</name>
@@ -417,7 +414,7 @@
 		</attribute>
 	</tag>
 
-	<tag>	
+	<tag>
 		<description>
 		</description>
 		<name>img</name>
@@ -430,11 +427,11 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
-	<tag>	
+	<tag>
 		<description>
 			Renderiza um input. Os tipos permitidos são:
 			BUTTON, CHECKBOX, FILE, HIDDEN, IMAGE, PASSWORD, RADIO, RESET,
@@ -452,7 +449,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description></description>			
+			<description></description>
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -462,19 +459,19 @@
 			<name>forceValidation</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>autoSugestUniqueItem</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>holdValue</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>useAjax</name>
@@ -486,8 +483,8 @@
 			<name>onLoadItens</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		
+		</attribute>
+
 		<attribute>
 			<description>
 			BUTTON, CHECKBOX, FILE, HIDDEN, 
@@ -508,13 +505,13 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<attribute>
 			<description></description>
 			<name>selectLabelProperty</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>label</name>
@@ -538,7 +535,7 @@
 			<name>optionalParams</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>cols</name>
@@ -556,7 +553,7 @@
 			<name>showLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>includeBlank</name>
@@ -580,66 +577,66 @@
 			<name>reloadOnChange</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>trueFalseNullLabels</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>write</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>dynamicAttributesMap</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
-		
+		</attribute>
+
 		<attribute>
 			<description></description>
 			<name>labelStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>labelStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 
 		<attribute>
 			<description>Se um arquivo é transiente não existe a opção para fazer download</description>
 			<name>transientFile</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		
-		
+		</attribute>
+
+
 		<attribute>
 			<description>Indica de deve ser mostrado o botão remover para tipos FILE</description>
 			<name>showDeleteButton</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
-		
+		</attribute>
+
 		<attribute>
 			<description></description>
 			<name>pattern</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>selectOnePathParameters</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description>
 				Determina os atributos width, height, top e left, da janela que será utilizada por um select one button.
@@ -649,16 +646,16 @@
 			<name>selectOneWindowSize</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>insertPath</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description>Output</description>
 		<name>output</name>
@@ -681,10 +678,10 @@
 			<name>escapeHTML</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
-			<name>itemSeparator</name>
+			<name>replaceMessagesCodes</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -702,19 +699,25 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>forProperty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>trueFalseNullLabels</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Determina se deve ser impresso um &amp; nbsp; quando o valor for nulo (default: true)</description>
 			<name>printMarkerWhenEmpty</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
-	</tag>	
-	
+	</tag>
+
 
 	<tag>
 		<description></description>
@@ -733,7 +736,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<!-- Atributos para configurar agrupamento -->
 		<attribute>
 			<description></description>
@@ -753,13 +756,13 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-				
+
 		<attribute>
 			<description>Coloca no escopo qual é a classe dos itens desse dataGrid para tags property que estiverem dentro desse datagrid usarem</description>
 			<name>itemType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>itens</name>
@@ -819,13 +822,13 @@
 			<name>varStatus</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>var</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>dynaLine</name>
@@ -837,21 +840,21 @@
 			<name>varIndex</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
-		
+		</attribute>
+
 		<attribute>
 			<description>Indica qual caracter deve ser utilizado para separar os valores dos rows. (Expressao regular)</description>
 			<name>rowSeparator</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-			
+
 		<attribute>
 			<description>O attributo row na verdade não existe. 
 			Deve na verdade ser utilizado row[attributo da linha]. 
@@ -863,10 +866,10 @@
 			<name>row</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
-		<dynamic-attributes>true</dynamic-attributes>		
-	</tag>	
-	
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
 	<tag>
 		<description>Renderiza uma coluna (atributos que começem com header só serão atribuidos ao header, atributos começados com body só serão atribuidos ao body)</description>
 		<name>column</name>
@@ -883,10 +886,10 @@
 			<name>order</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description>Enables optional columsn for datagrids</description>
 		<name>dataGridOptionalColumns</name>
@@ -900,23 +903,23 @@
 		</attribute>
 		<dynamic-attributes>false</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description></description>
 		<name>header</name>
 		<tag-class>org.nextframework.view.HeaderTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>		
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description></description>
 		<name>body</name>
 		<tag-class>org.nextframework.view.BodyTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>		
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description></description>
 		<name>footer</name>
@@ -924,7 +927,7 @@
 		<body-content>scriptless</body-content>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description></description>
 		<name>panelGrid</name>
@@ -964,40 +967,40 @@
 			<name>columnStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Utilizado para determinar se os property que estiverem dentro desse panelGrid devem ser renderizados com 2 colunas</description>
 			<name>propertyRenderAsDouble</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>					
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>dynamicAttributesMap</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description>Informa se esse panelGrid deve herdar as propriedades de estilo do panelGrid pai (se existir) default = true</description>
 			<name>useParentPanelGridProperties</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description></description>
 		<name>group</name>
@@ -1037,7 +1040,7 @@
 			<name>columnStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<name>colspan</name>
 			<required>false</required>
@@ -1061,8 +1064,7 @@
 		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
-	
+
 	<tag>
 		<description></description>
 		<name>panel</name>
@@ -1074,39 +1076,39 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<attribute>
 			<description>Utilizado quando esse panel estiver dentro de um tagPanel</description>
 			<name>title</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description>Utilizado para determinar se os property que estiverem dentro desse panel devem ser renderizados com 2 colunas</description>
 			<name>propertyRenderAsDouble</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		
+		</attribute>
+
 		<attribute>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>						
+		</attribute>
 		<attribute>
 			<name>onSelectTab</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>								
-		
-		<dynamic-attributes>true</dynamic-attributes>		
+		</attribute>
+
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
-	
+
 	<tag>
 		<description></description>
 		<name>tabPanel</name>
@@ -1124,8 +1126,8 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
-	</tag>	
-	
+	</tag>
+
 	<tag>
 		<description></description>
 		<name>validation</name>
@@ -1142,20 +1144,20 @@
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Ignora a funcionalidade dessa tag. Apenas renderizando as tags filhas, como se essa tag não existisse.</description>
 			<name>bypass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
-	</tag>	
-	
+		</attribute>
+	</tag>
+
 	<tag>
 		<description>Monta um menu</description>
 		<name>menu</name>
 		<tag-class>org.nextframework.view.menu.MenuTag</tag-class>
-		<body-content>empty</body-content>	
+		<body-content>empty</body-content>
 		<attribute>
 			<description>Path onde se encontra o menu</description>
 			<name>menupath</name>
@@ -1176,7 +1178,6 @@
 		</attribute>
 	</tag>
 
-	
 	<tag>
 		<name>pagging</name>
 		<tag-class>org.nextframework.view.PaggingTag</tag-class>
@@ -1190,7 +1191,7 @@
 			<name>totalNumberOfPages</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<name>selectedClass</name>
 			<required>false</required>
@@ -1200,14 +1201,14 @@
 			<name>unselectedClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<name>parameters</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
-	</tag>	
-	
+		</attribute>
+	</tag>
+
 	<tag>
 		<description></description>
 		<name>messages</name>
@@ -1218,8 +1219,8 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-	</tag>	
-	
+	</tag>
+
 	<tag>
 		<description></description>
 		<name>getContent</name>
@@ -1234,7 +1235,7 @@
 			<name>vars</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description>
 				Variável que conterá o corpo. Quando utilizado, os atributos devem ser usados depois do fechamento da tag.
@@ -1242,8 +1243,8 @@
 			<name>bodyVar</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
-	</tag>	
+		</attribute>
+	</tag>
 	<tag>
 		<description></description>
 		<name>content</name>
@@ -1254,20 +1255,20 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-	</tag>	
-	
+	</tag>
+
 	<tag>
 		<description></description>
 		<name>comboReloadGroup</name>
 		<tag-class>org.nextframework.view.ComboReloadGroupTag</tag-class>
-		<body-content>scriptless</body-content>	
+		<body-content>scriptless</body-content>
 		<attribute>
 			<name>useAjax</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-	</tag>	
-		
+	</tag>
+
 	<tag>
 		<description>Include</description>
 		<name>include</name>
@@ -1280,19 +1281,19 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description>Verifica se existem mensagens</description>
 		<name>hasMessages</name>
 		<tag-class>org.nextframework.view.HasMessagesTag</tag-class>
-		<body-content>scriptless</body-content>	
+		<body-content>scriptless</body-content>
 	</tag>
-	
+
 	<tag>
 		<description>Verifica se existem mensagens</description>
 		<name>hasAuthorization</name>
 		<tag-class>org.nextframework.view.HasAuthorizationTag</tag-class>
-		<body-content>scriptless</body-content>	
+		<body-content>scriptless</body-content>
 		<attribute>
 			<description></description>
 			<name>url</name>
@@ -1306,7 +1307,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description>
 			Renderiza um progress bar para um determinado ProgressMonitor.
@@ -1326,7 +1327,7 @@
 			<name>progressMonitor</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Javascript que irá executar quando um erro ocorrer.
 			Existirá uma variável chamada 'element' com as informações da barra de progresso.
@@ -1336,7 +1337,7 @@
 			<name>onError</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Javascript que irá executar quando o processo terminar.
 			Existirá uma variável chamada 'element' com as informações da barra de progresso.
@@ -1345,9 +1346,9 @@
 			<name>onComplete</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description>Creates a datasource provider to be used with suggest inputs.</description>
 		<name>suggestProvider</name>
@@ -1366,7 +1367,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description>Importa arquivos Javascript em algum pacote, ou pelo nome completo do arquivo</description>
 		<name>importJS</name>
@@ -1392,31 +1393,31 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<function>
 		<name>printStackTrace</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Object printStackTrace(java.lang.Throwable)</function-signature>
 	</function>
-	
+
 	<function>
 		<name>id</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Object id(java.lang.Object)</function-signature>
 	</function>
-	
+
 	<function>
 		<name>isId</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Boolean isId(java.lang.annotation.Annotation[])</function-signature>
 	</function>
-	
+
 	<function>
 		<name>idProperty</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.String idProperty(java.lang.Object)</function-signature>
 	</function>
-	
+
 	<function>
 		<name>descriptionToString</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
@@ -1427,53 +1428,90 @@
 		<name>valueToString</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.String valueToString(java.lang.Object)</function-signature>
-	</function>	
-	
+	</function>
+
 	<function>
 		<name>reevaluate</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Object reevaluate(java.lang.String, javax.servlet.jsp.PageContext)</function-signature>
-	</function>	
-	
+	</function>
+
 	<function>
 		<name>default</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Object chooseDefault(java.lang.Object, java.lang.Object)</function-signature>
-	</function>		
-	
+	</function>
+
 	<function>
 		<name>ognl</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Object ognl(java.lang.String)</function-signature>
-	</function>			
-	
+	</function>
+
 	<function>
 		<name>hierarchy</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.String hierarchy(java.lang.Class)</function-signature>
-	</function>		
-	
+	</function>
+
 	<function>
 		<name>escape</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.String escape(java.lang.String)</function-signature>
-	</function>	
-	
+	</function>
+
 	<function>
 		<name>size</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Integer size(java.util.Collection)</function-signature>
 	</function>
-	
+
 	<function>
 		<name>contains</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>boolean contains(java.util.Collection, java.lang.Object)</function-signature>
 	</function>
-	
+
 	<function>
 		<name>isDetailProperty</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Boolean isDetailProperty(java.lang.String)</function-signature>
-	</function>		
+	</function>
+
+	<function>
+		<name>messageViewPrefix</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String messageViewPrefix(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>messageViewPrefixArgs</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String messageViewPrefixArgs(java.lang.String, java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<name>message</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String message(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>messageArgs</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String messageArgs(java.lang.String, java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<name>messageDefault</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String messageDefault(java.lang.String, java.lang.Object, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>messageReplace</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String messageReplace(java.lang.String)</function-signature>
+	</function>
+
 </taglib>
