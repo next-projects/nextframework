@@ -666,12 +666,6 @@
 		</attribute>		
 		<attribute>
 			<description></description>
-			<name>itemSeparator</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
 			<name>styleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

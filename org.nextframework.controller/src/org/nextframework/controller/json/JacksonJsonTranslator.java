@@ -4,7 +4,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
-import org.nextframework.exception.ApplicationException;
+import org.nextframework.exception.NextException;
 import org.nextframework.types.Cep;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -39,7 +39,7 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		try {
 			mapper.writeValue(strWriter, o);
 		} catch (Exception e) {
-			throw new ApplicationException("Error transforming object to json.", e);
+			throw new NextException("Error transforming object to json.", e);
 		}
 		return strWriter.toString();
 	}
@@ -49,7 +49,7 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		try {
 			return mapper.readValue(json, type);
 		} catch (Exception e) {
-			throw new ApplicationException("Error transforming json to object.", e);
+			throw new NextException("Error transforming json to object.", e);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class JacksonJsonTranslator implements JsonTranslator {
 			CollectionType ctype = mapper.getTypeFactory().constructCollectionType(List.class, type);
 			return mapper.readValue(json, ctype);
 		} catch (Exception e) {
-			throw new ApplicationException("Error transforming json to object.", e);
+			throw new NextException("Error transforming json to object.", e);
 		}
 	}
 

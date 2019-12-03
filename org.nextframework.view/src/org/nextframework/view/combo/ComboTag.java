@@ -55,39 +55,42 @@ import org.nextframework.view.TagUtils;
 @SuppressWarnings("deprecation")
 public class ComboTag extends BaseTag implements LogicalTag {
 
-
-	protected void invoke(TagHolder holder) throws JspException, IOException{
+	protected void invoke(TagHolder holder) throws JspException, IOException {
 		TagHolderFragment fragment = new TagHolderFragment(getJspContext(), Arrays.asList(holder), this);
 		fragment.invoke(getOut());
 	}
-	
+
 	public static class TagHolder {
+
 		protected BaseTag baseTag;
 		protected List<TagHolder> children = new ArrayList<TagHolder>();
 		protected Map<String, String> rtexprs = new HashMap<String, String>();
-		
+
 		public TagHolder(BaseTag tag) {
-			if(tag == null){
+			if (tag == null) {
 				throw new NullPointerException("baseTag null");
 			}
 			baseTag = tag;
 		}
-		
+
 		public TagHolder(BaseTag tag, String... exprs) {
 			this(tag);
-			if(exprs.length % 2 != 0){
-				throw new IllegalArgumentException("exprs invalidos "+exprs);
+			if (exprs.length % 2 != 0) {
+				throw new IllegalArgumentException("exprs invalidos " + exprs);
 			}
-			for (int i = 0; i < exprs.length; i+=2) {
-				rtexprs.put(exprs[i], exprs[i+1]);
+			for (int i = 0; i < exprs.length; i += 2) {
+				rtexprs.put(exprs[i], exprs[i + 1]);
 			}
 		}
+
 		public boolean addChild(TagHolder o) {
 			return children.add(o);
 		}
+
 		public BaseTag getBaseTag() {
 			return baseTag;
 		}
+
 		public List<TagHolder> getChildren() {
 			return children;
 		}
@@ -95,17 +98,18 @@ public class ComboTag extends BaseTag implements LogicalTag {
 		public void setBaseTag(BaseTag baseTag) {
 			this.baseTag = baseTag;
 		}
+
 		public void setChildren(List<TagHolder> children) {
 			this.children = children;
 		}
 
 	}
-	
+
 	public static class TagHolderFragment extends JspFragment {
-		
-		JspContext jspContext;
-		List<TagHolder> tagHolders = new ArrayList<TagHolder>();
-		BaseTag parent;
+
+		protected JspContext jspContext;
+		protected List<TagHolder> tagHolders = new ArrayList<TagHolder>();
+		protected BaseTag parent;
 
 		public TagHolderFragment(JspContext context, List<TagHolder> holders, BaseTag parent) {
 			jspContext = context;
@@ -127,16 +131,16 @@ public class ComboTag extends BaseTag implements LogicalTag {
 					try {
 						setProperty(holder.baseTag, propertyName, TagUtils.evaluate(expr, jspContext));
 					} catch (ELException e) {
-						throw new NextException("Cannot set property " + propertyName + " of tag " + holder.baseTag + " value " + expr+". Parsing problem");
+						throw new NextException("Cannot set property " + propertyName + " of tag " + holder.baseTag + " value " + expr + ". Parsing problem");
 					}
 				}
-				if(holder.getChildren().size() > 0){
+				if (holder.getChildren().size() > 0) {
 					holder.baseTag.setJspBody(new TagHolderFragment(getJspContext(), holder.getChildren(), holder.baseTag));
 				}
 				jspContext.pushBody(out);
 				holder.baseTag.doTag();
 				jspContext.popBody();
-			}			
+			}
 		}
 
 		private void setProperty(BaseTag baseTag, String property, Object object) {
@@ -159,15 +163,15 @@ public class ComboTag extends BaseTag implements LogicalTag {
 						} catch (SecurityException e2) {
 							throw new NextException("Cannot set property " + property + " of tag " + baseTag + " value " + object);
 						} catch (NoSuchMethodException e2) {
-							throw new NextException("Cannot set property " + property + " of tag " + baseTag + " value " + object+"  "+e.getMessage(), e);
+							throw new NextException("Cannot set property " + property + " of tag " + baseTag + " value " + object + "  " + e.getMessage(), e);
 						}
-						
+
 					}
 				}
 				try {
 					//System.out.println("Setting property "+property+" value "+object);
 					setter.invoke(baseTag, object);
-					
+
 				} catch (IllegalArgumentException e) {
 					throw new NextException("Cannot set property " + property + " of tag " + baseTag + " value " + object);
 				} catch (IllegalAccessException e) {
@@ -182,8 +186,6 @@ public class ComboTag extends BaseTag implements LogicalTag {
 		public JspContext getJspContext() {
 			return jspContext;
 		}
-		
+
 	}
 }
-
-

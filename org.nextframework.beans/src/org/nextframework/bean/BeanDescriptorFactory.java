@@ -35,43 +35,43 @@ import org.nextframework.service.ServiceFactory;
  *
  */
 public class BeanDescriptorFactory {
-	
-	public static IBeanDescriptorFactory getFactory(){
+
+	private static IBeanDescriptorFactory getFactory() {
 		return ServiceFactory.getService(IBeanDescriptorFactory.class);
 	}
-	
+
 	/**
 	 * Creates a BeanDescriptor for the class.<BR>
 	 * It uses a factory configured with ServiceFactory API.
 	 * @param clazz
 	 * @return
 	 */
-	public static BeanDescriptor forClass(Class<?> clazz){
+	public static BeanDescriptor forClass(Class<?> clazz) {
 		return getFactory().forClass(clazz);
 	}
-	
+
 	/**
 	 * Creates a BeanDescriptor for the object.<BR>
 	 * It uses a factory configured with ServiceFactory API.
 	 * @param bean
 	 * @return
 	 */
-	public static BeanDescriptor forBean(Object bean){
+	public static BeanDescriptor forBean(Object bean) {
 		return getFactory().forBean(bean);
 	}
-	
+
 	/**
 	 * Creates a BeanDescriptor for the object or the class (if the bean is null).<BR>
 	 * It uses a factory configured with ServiceFactory API.
 	 * @param bean
 	 * @return
 	 */
-	public static BeanDescriptor forBeanOrClass(Object bean, Class<?> clazz){
-		if(bean != null){
+	public static BeanDescriptor forBeanOrClass(Object bean, Class<?> clazz) {
+		if (bean != null) {
 			return forBean(bean);
 		} else {
 			return forClass(clazz);
 		}
 	}
-	
+
 }

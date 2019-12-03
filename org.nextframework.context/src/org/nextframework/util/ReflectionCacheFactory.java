@@ -23,12 +23,12 @@
  */
 package org.nextframework.util;
 
-
 public class ReflectionCacheFactory {
 
 	protected static ReflectionCache reflectionCache = new ReflectionCacheImpl();
-	
+
 	public static ReflectionCache getReflectionCache() {
 		return reflectionCache;
 	}
+
 }

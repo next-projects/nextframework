@@ -14,5 +14,5 @@ public class DefaultBeanDescriptorFactory implements IBeanDescriptorFactory {
 	public BeanDescriptor forClass(Class<?> clazz) {
 		return new org.nextframework.bean.internal.BeanDescriptorImpl(clazz);
 	}
-	
+
 }
