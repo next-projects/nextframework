@@ -2,6 +2,7 @@ package org.nextframework.controller.crud;
 
 import java.util.List;
 
+import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.persistence.PageAndOrder;
@@ -15,18 +16,21 @@ import org.nextframework.util.Util;
  */
 public class CrudContext {
 
-	private String displayName;
-	private String beanName;
 	private Class<?> beanClass;
+	private String beanName;
 	private String idPropertyName;
+
+	private String displayName;
+	private boolean customDisplayName;
 
 	private ListModel listModel = new ListModel();
 
 	public CrudContext(Class<?> beanClass) {
 		this.beanClass = beanClass;
-		this.displayName = BeanDescriptorFactory.forClass(beanClass).getDisplayName();
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(beanClass);
+		this.displayName = Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), bd);
 		this.beanName = Util.strings.uncaptalize(beanClass.getSimpleName());
-		this.idPropertyName = BeanDescriptorFactory.forClass(beanClass).getIdPropertyName();
+		this.idPropertyName = bd.getIdPropertyName();
 	}
 
 	public static CrudContext getCurrentInstance() {
@@ -37,12 +41,12 @@ public class CrudContext {
 		NextWeb.getRequestContext().setAttribute(CrudContext.class.getName(), context);
 	}
 
-	public String getDisplayName() {
-		return displayName;
+	public Class<?> getBeanClass() {
+		return beanClass;
 	}
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+	public void setBeanClass(Class<?> beanClass) {
+		this.beanClass = beanClass;
 	}
 
 	public String getBeanName() {
@@ -53,20 +57,25 @@ public class CrudContext {
 		this.beanName = beanName;
 	}
 
-	public Class<?> getBeanClass() {
-		return beanClass;
-	}
-
-	public void setBeanClass(Class<?> beanClass) {
-		this.beanClass = beanClass;
-	}
-
 	public String getIdPropertyName() {
 		return idPropertyName;
 	}
 
 	public void setIdPropertyName(String idPropertyName) {
 		this.idPropertyName = idPropertyName;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+		this.customDisplayName = true;
+	}
+
+	public boolean hasCustomDisplayName() {
+		return customDisplayName;
 	}
 
 	public ListModel getListModel() {
@@ -103,4 +112,5 @@ public class CrudContext {
 		}
 
 	}
+
 }
