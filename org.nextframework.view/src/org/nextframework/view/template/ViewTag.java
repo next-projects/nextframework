@@ -29,94 +29,42 @@ package org.nextframework.view.template;
  * @version 1.1
  */
 public class ViewTag extends TemplateTag {
-	
+
+	protected String formName;
+	protected String formMethod = "POST";
+	protected String formAction;
 	protected boolean includeForm = true;
 	protected boolean validateForm = true;
-	protected String formAction;
-	protected String formMethod = "POST";
-	protected String formName;
-	protected String propertyMode;
 
+	protected String title;
 
 	protected String useBean;
 	protected Class<?> beanType;
-	
-	protected String title;
-	
-	
-	public String getPropertyMode() {
-		return propertyMode;
-	}
-
-	public void setPropertyMode(String propertyMode) {
-		this.propertyMode = propertyMode;
-	}
-	public String getUseBean() {
-		return useBean;
-	}
-
-	public Class<?> getBeanType() {
-		return beanType;
-	}
-
-	public void setUseBean(String beanName) {
-		this.useBean = beanName;
-	}
-
-	public void setBeanType(Class<?> beanType) {
-		this.beanType = beanType;
-	}
+	protected String propertyMode;
 
 	@Override
 	protected void doComponent() throws Exception {
-		if(formName == null && useBean != null){
+
+		if (formName == null && useBean != null) {
 			formName = useBean;
 		}
-		pushAttribute("Ttela", this);
-		pushAttribute("viewTag", this);
+
+		if (title == null) {
+			title = getDefaultViewLabel("title", null);
+		}
+
+		pushAttribute("Ttela", this); //Legacy
 		includeJspTemplate();
 		popAttribute("Ttela");
-		popAttribute("viewTag");
+
 	}
-	
+
 	public String getFormName() {
 		return formName;
 	}
 
 	public void setFormName(String formName) {
 		this.formName = formName;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String name) {
-		this.title = name;
-	}
-	@Deprecated
-	public String getTitulo() {
-		return title;
-	}
-	@Deprecated
-	public void setTitulo(String titulo) {
-		this.title = titulo;
-	}
-
-	public boolean isIncludeForm() {
-		return includeForm;
-	}
-
-	public void setIncludeForm(boolean includeForm) {
-		this.includeForm = includeForm;
-	}
-
-	public String getFormAction() {
-		return formAction;
-	}
-
-	public void setFormAction(String formAction) {
-		this.formAction = formAction;
 	}
 
 	public String getFormMethod() {
@@ -127,12 +75,70 @@ public class ViewTag extends TemplateTag {
 		this.formMethod = formMethod;
 	}
 
+	public String getFormAction() {
+		return formAction;
+	}
+
+	public void setFormAction(String formAction) {
+		this.formAction = formAction;
+	}
+
+	public boolean isIncludeForm() {
+		return includeForm;
+	}
+
+	public void setIncludeForm(boolean includeForm) {
+		this.includeForm = includeForm;
+	}
+
 	public boolean isValidateForm() {
 		return validateForm;
 	}
 
 	public void setValidateForm(boolean validateForm) {
 		this.validateForm = validateForm;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String name) {
+		this.title = name;
+	}
+
+	@Deprecated
+	public String getTitulo() {
+		return title;
+	}
+
+	@Deprecated
+	public void setTitulo(String titulo) {
+		this.title = titulo;
+	}
+
+	public String getUseBean() {
+		return useBean;
+	}
+
+	public void setUseBean(String beanName) {
+		this.useBean = beanName;
+	}
+
+	public Class<?> getBeanType() {
+		return beanType;
+	}
+
+	public void setBeanType(Class<?> beanType) {
+		this.beanType = beanType;
+	}
+
+	public String getPropertyMode() {
+		return propertyMode;
+	}
+
+	public void setPropertyMode(String propertyMode) {
+		this.propertyMode = propertyMode;
 	}
 
 }

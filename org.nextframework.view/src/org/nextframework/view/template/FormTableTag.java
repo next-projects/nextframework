@@ -31,37 +31,61 @@ import org.nextframework.controller.crud.CrudContext;
  * @version 1.1
  */
 public class FormTableTag extends TemplateTag {
-	
-	protected int columns = 2;
-	
-	//panel
+
 	protected String title;
-	
-	//panelGrid
-	protected String style;
-
-	protected String styleClass = "inputTable";
-
-	protected String rowStyleClasses = "entrada1";
-
-	protected String rowStyles;
-	
-	protected String columnStyleClasses = "labelColumn, propertyColumn";
-
-	protected String columnStyles;
-	
 	protected Integer colspan;
-	
+
+	protected int columns = 2;
+
+	protected String styleClass;
+	protected String style;
+	protected String columnStyleClasses;
+	protected String columnStyles;
+	protected String rowStyleClasses;
+	protected String rowStyles;
+
 	protected Boolean propertyRenderAsDouble = true;
 	protected Boolean propertyShowLabel;
-	
-	
-	public Boolean getPropertyShowLabel() {
-		return propertyShowLabel;
+
+	@Override
+	protected void doComponent() throws Exception {
+
+		CrudContext crudContext = CrudContext.getCurrentInstance();
+
+		if (title == null && crudContext != null && crudContext.hasCustomDisplayName()) {
+			title = crudContext.getDisplayName();
+		}
+		if (title == null) {
+			title = getDefaultViewLabel("title", null);
+		}
+		if (title == null && crudContext != null) {
+			title = crudContext.getDisplayName();
+		}
+
+		if (propertyShowLabel == null) {
+			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
+		}
+
+		pushAttribute("TtabelaEntrada", this); //Legacy
+		includeJspTemplate();
+		popAttribute("TtabelaEntrada");
+
 	}
 
-	public void setPropertyShowLabel(Boolean propertyShowLabel) {
-		this.propertyShowLabel = propertyShowLabel;
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public Integer getColspan() {
+		return colspan;
+	}
+
+	public void setColspan(Integer colspan) {
+		this.colspan = colspan;
 	}
 
 	public int getColumns() {
@@ -72,28 +96,20 @@ public class FormTableTag extends TemplateTag {
 		this.columns = columns;
 	}
 
-	@Override
-	protected void doComponent() throws Exception {
-		//title = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
-		if(title == null && CrudContext.getCurrentInstance() != null){
-			title = CrudContext.getCurrentInstance().getDisplayName();
-		}
-		if(propertyShowLabel == null){
-			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
-		}
-		pushAttribute("TtabelaEntrada", this);
-		//getDynamicAttributesMap().put("width", "100%");
-		//getDynamicAttributesMap().put("cellpadding", 1);
-		includeJspTemplate();
-		popAttribute("TtabelaEntrada");
+	public String getStyleClass() {
+		return styleClass;
 	}
 
-	public Integer getColspan() {
-		return colspan;
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
 	}
 
-	public void setColspan(Integer colspan) {
-		this.colspan = colspan;
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	public String getColumnStyleClasses() {
@@ -112,14 +128,6 @@ public class FormTableTag extends TemplateTag {
 		this.columnStyles = columnStyles;
 	}
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
-	}
-
-	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
-	}
-
 	public String getRowStyleClasses() {
 		return rowStyleClasses;
 	}
@@ -136,28 +144,20 @@ public class FormTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public String getStyle() {
-		return style;
+	public Boolean getPropertyRenderAsDouble() {
+		return propertyRenderAsDouble;
 	}
 
-	public void setStyle(String style) {
-		this.style = style;
+	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
+		this.propertyRenderAsDouble = propertyRenderAsDouble;
 	}
 
-	public String getStyleClass() {
-		return styleClass;
+	public Boolean getPropertyShowLabel() {
+		return propertyShowLabel;
 	}
 
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	public void setPropertyShowLabel(Boolean propertyShowLabel) {
+		this.propertyShowLabel = propertyShowLabel;
 	}
 
 }

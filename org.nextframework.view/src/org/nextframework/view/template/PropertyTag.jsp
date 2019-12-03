@@ -1,94 +1,98 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="next"%>
+<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="combo" uri="combo"%>
-<%@ taglib prefix="t" uri="template"%>
+<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <%-- Ao utilizar PropertyTagFastRenderer, o renderizador pode renderizar a tag apenas em código java e o template não ser chamado nesse caso.
      As modificações nesse arquivo devem ser refletidas no fastRenderer para manter a coerencia na renderização --%>
 
-<n:property name="${Tproperty.name}">
-	${Tproperty.idConfig} <%-- Le os atributos da propriedade para saber se é ID --%>
+<n:property name="${propertyTag.name}">
+	${propertyTag.idConfig} <%-- Le os atributos da propriedade para saber se é ID --%>
 	<c:choose>
-		<c:when test="${Tproperty.renderAs == 'column'}">
-			<%-- column --%>		
+
+		<%-- id --%>
+		<c:when test="${propertyTag.entityId && empty value}">
+			<%-- Se a propriedade for ID e for nula, não escrever nada... Se for ID mas tiver valor, cai nas outras opções
+			<c:if test="${propertyTag.mode == 'input'}">
+				<n:input pattern="${propertyTag.pattern}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}"  showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="false" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+					includeBlank="${propertyTag.includeBlank}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
+					<n:doBody />
+				</n:input>
+			</c:if>
+			<c:if test="${propertyTag.mode == 'output'}">
+				<n:output trueFalseNullLabels="${propertyTag.trueFalseNullLabels}"/>
+			</c:if>
+			--%>
+		</c:when>
+
+		<%-- column --%>
+		<c:when test="${propertyTag.renderAs == 'column'}">
 			<n:column>
-				<c:if test="${Tproperty.entityId}">
-					<n:header style="width: 1%; padding-right: 3px;${Tproperty.headerStyle}" class="${Tproperty.headerStyleClass}">
-						${Tproperty.header}
+				<c:if test="${propertyTag.entityId}">
+					<n:header style="width: 1%; padding-right: 3px;${propertyTag.headerStyle}" class="${propertyTag.headerStyleClass}">
+						${propertyTag.header}
 					</n:header>
 				</c:if>
-				<c:if test="${!Tproperty.entityId}">
-					<n:header style="${Tproperty.headerStyle}" class="${Tproperty.headerStyleClass}">
-						${n:default(Tproperty.header, label)}
+				<c:if test="${!propertyTag.entityId}">
+					<n:header style="${propertyTag.headerStyle}" class="${propertyTag.headerStyleClass}">
+						${n:default(label, propertyTag.header)}
 					</n:header>
-				</c:if>				
-				<n:body align="${Tproperty.columnAlign}" style="${Tproperty.bodyStyle}" class="${Tproperty.bodyStyleClass}">
-					<c:if test="${Tproperty.mode == 'input'}">
-						
-						<n:input pattern="${Tproperty.pattern}" selectOneWindowSize="${Tproperty.selectOneWindowSize}" selectOnePathParameters="${Tproperty.selectOnePathParameters}" insertPath="${Tproperty.insertPath}" holdValue="${Tproperty.holdValue}" showDeleteButton="${Tproperty.showDeleteButton}" optionalParams="${Tproperty.optionalParams}" transientFile="${Tproperty.transientFile}" autoSugestUniqueItem="${Tproperty.autoSugestUniqueItem}" onLoadItens="${Tproperty.onLoadItens}" useAjax="${Tproperty.useAjax}" showLabel="${Tproperty.showLabel}"  type="${Tproperty.type}" reloadOnChange="${Tproperty.reloadOnChange}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" selectOnePath="${Tproperty.selectOnePath}" itens="${Tproperty.itens}"
-							label="${n:default(label, Tproperty.label)}" selectLabelProperty="${Tproperty.selectLabelProperty}" includeBlank="${Tproperty.includeBlank}" blankLabel="${Tproperty.blankLabel}" cols="${Tproperty.cols}" rows="${Tproperty.rows}" write="${Tproperty.write}" dynamicAttributesMap="${Tproperty.dynamicAttributesMap}"
+				</c:if>
+				<n:body align="${propertyTag.columnAlign}" style="${propertyTag.bodyStyle}" class="${propertyTag.bodyStyleClass}">
+					<c:if test="${propertyTag.mode == 'input'}">
+						<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}"  type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+							label="${n:default(label, propertyTag.label)}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}"
 							id="${compId}">
 							<n:doBody />
 						</n:input>
 					</c:if>
-					<c:if test="${Tproperty.mode == 'output'}">
-						<n:output pattern="${Tproperty.pattern}" style="${Tproperty.dynamicAttributesMap['style']}" styleClass="${Tproperty.dynamicAttributesMap['styleclass']}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" escapeHTML="true"/>
+					<c:if test="${propertyTag.mode == 'output'}">
+						<n:output pattern="${propertyTag.pattern}" style="${propertyTag.dynamicAttributesMap['style']}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="true"/>
 					</c:if>
 				</n:body>
 			</n:column>
 		</c:when>
-		<c:when test="${Tproperty.entityId && empty value}">
-			<%-- id --%>
-			<%-- Se a propriedade for ID e for nula, não escrever nada... Se for ID mas tiver valor, cai nas outras opções
-			<c:if test="${Tproperty.mode == 'input'}">
-				<n:input pattern="${Tproperty.pattern}" selectOnePathParameters="${Tproperty.selectOnePathParameters}" insertPath="${Tproperty.insertPath}"  holdValue="${Tproperty.holdValue}"  showDeleteButton="${Tproperty.showDeleteButton}" optionalParams="${Tproperty.optionalParams}"  transientFile="${Tproperty.transientFile}" autoSugestUniqueItem="${Tproperty.autoSugestUniqueItem}" onLoadItens="${Tproperty.onLoadItens}" useAjax="${Tproperty.useAjax}" showLabel="false" type="${Tproperty.type}" reloadOnChange="${Tproperty.reloadOnChange}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" selectOnePath="${Tproperty.selectOnePath}" itens="${Tproperty.itens}"
-					includeBlank="${Tproperty.includeBlank}" cols="${Tproperty.cols}" rows="${Tproperty.rows}" write="${Tproperty.write}" dynamicAttributesMap="${Tproperty.dynamicAttributesMap}">
-					<n:doBody />
-				</n:input>
-			</c:if>
-			<c:if test="${Tproperty.mode == 'output'}">
-				<n:output trueFalseNullLabels="${Tproperty.trueFalseNullLabels}"/>
-			</c:if>
-			--%>
-		</c:when>
-		<c:when test="${Tproperty.renderAs == 'double'}">
-			<%-- double --%>		
-			<n:panel style="${Tproperty.labelStyle}" class="${Tproperty.labelStyleClass}" >
-					<label for="${compId}"><n:output pattern="${Tproperty.pattern}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" value="${n:default(label, Tproperty.label)}" /></label> 
+
+		<%-- double --%>
+		<c:when test="${propertyTag.renderAs == 'double'}">
+			<n:panel style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" >
+					<label for="${compId}"><n:output value="${n:default(label, propertyTag.label)}" pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" /></label>
 			</n:panel>
-			<n:panel colspan="${Tproperty.colspan}" style="${Tproperty.panelStyle}" class="${Tproperty.panelStyleClass}">
-				<c:if test="${Tproperty.mode == 'input'}">
-					<n:input pattern="${Tproperty.pattern}"  selectOneWindowSize="${Tproperty.selectOneWindowSize}"  selectOnePathParameters="${Tproperty.selectOnePathParameters}" insertPath="${Tproperty.insertPath}"  holdValue="${Tproperty.holdValue}" showDeleteButton="${Tproperty.showDeleteButton}" optionalParams="${Tproperty.optionalParams}"  transientFile="${Tproperty.transientFile}" autoSugestUniqueItem="${Tproperty.autoSugestUniqueItem}" onLoadItens="${Tproperty.onLoadItens}" useAjax="${Tproperty.useAjax}" showLabel="${Tproperty.showLabel}" type="${Tproperty.type}" reloadOnChange="${Tproperty.reloadOnChange}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" selectOnePath="${Tproperty.selectOnePath}" itens="${Tproperty.itens}"
-						label="${n:default(Tproperty.label, label)}" id="${compId}" selectLabelProperty="${Tproperty.selectLabelProperty}" includeBlank="${Tproperty.includeBlank}" blankLabel="${Tproperty.blankLabel}" cols="${Tproperty.cols}" rows="${Tproperty.rows}" write="${Tproperty.write}" dynamicAttributesMap="${Tproperty.dynamicAttributesMap}">
+			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
+				<c:if test="${propertyTag.mode == 'input'}">
+					<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+						label="${n:default(label, propertyTag.label)}" id="${compId}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
 						<n:doBody />
 					</n:input>
 				</c:if>
-				<c:if test="${Tproperty.mode == 'output'}">
-					<n:output  pattern="${Tproperty.pattern}" styleClass="${Tproperty.dynamicAttributesMap['styleclass']}" style="${Tproperty.dynamicAttributesMap['style']}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" escapeHTML="${Tproperty.type=='html'? false: true}"/>
+				<c:if test="${propertyTag.mode == 'output'}">
+					<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="true"/>
 				</c:if>
 			</n:panel>
 		</c:when>
+
+		<%-- single --%>
 		<c:otherwise>
-			<%-- single --%>
-			<n:panel colspan="${Tproperty.colspan}" style="${Tproperty.panelStyle}" class="${Tproperty.panelStyleClass}">
-				<c:if test="${Tproperty.mode == 'input'}">
-					<n:input pattern="${Tproperty.pattern}" selectOneWindowSize="${Tproperty.selectOneWindowSize}"  selectOnePathParameters="${Tproperty.selectOnePathParameters}" insertPath="${Tproperty.insertPath}"  holdValue="${Tproperty.holdValue}" showDeleteButton="${Tproperty.showDeleteButton}" optionalParams="${Tproperty.optionalParams}"  transientFile="${Tproperty.transientFile}" autoSugestUniqueItem="${Tproperty.autoSugestUniqueItem}" onLoadItens="${Tproperty.onLoadItens}" useAjax="${Tproperty.useAjax}" labelStyle="${Tproperty.labelStyle}" labelStyleClass="${Tproperty.labelStyleClass}" showLabel="${Tproperty.showLabel}" type="${Tproperty.type}" reloadOnChange="${Tproperty.reloadOnChange}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" selectOnePath="${Tproperty.selectOnePath}" itens="${Tproperty.itens}"
-						label="${n:default(label, Tproperty.label)}&nbsp;${labelseparator}" selectLabelProperty="${Tproperty.selectLabelProperty}" includeBlank="${Tproperty.includeBlank}" blankLabel="${Tproperty.blankLabel}" cols="${Tproperty.cols}" rows="${Tproperty.rows}" write="${Tproperty.write}" id="${compId}" dynamicAttributesMap="${Tproperty.dynamicAttributesMap}">
+			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
+				<c:if test="${propertyTag.mode == 'input'}">
+					<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}"  selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" labelStyle="${propertyTag.labelStyle}" labelStyleClass="${propertyTag.labelStyleClass}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+						label="${n:default(label, propertyTag.label)}&nbsp;${labelseparator}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" id="${compId}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
 						<n:doBody />
 		 			</n:input>
 				</c:if>
-				<c:if test="${Tproperty.mode == 'output' && (empty Tproperty.write || Tproperty.write)}">
-					<c:if test="${Tproperty.showLabel}">
+				<c:if test="${propertyTag.mode == 'output' && (empty propertyTag.write || propertyTag.write)}">
+					<c:if test="${propertyTag.showLabel}">
 						<n:panel>
-						<n:output pattern="${Tproperty.pattern}" value="${n:default(label, Tproperty.label)} ${labelseparator}" style="${Tproperty.labelStyle}" styleClass="${Tproperty.labelStyleClass}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" escapeHTML="false"/>															
-						<n:output pattern="${Tproperty.pattern}" styleClass="${Tproperty.dynamicAttributesMap['styleclass']}" style="${Tproperty.dynamicAttributesMap['style']}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" escapeHTML="true"/>										
+							<n:output value="${n:default(label, propertyTag.label)} ${labelseparator}" pattern="${propertyTag.pattern}" style="${propertyTag.labelStyle}" styleClass="${propertyTag.labelStyleClass}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" escapeHTML="false"/>
+							<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="true"/>
 						</n:panel>
 					</c:if>
-					<c:if test="${!Tproperty.showLabel}">
-						<n:output pattern="${Tproperty.pattern}" styleClass="${Tproperty.dynamicAttributesMap['styleclass']}" style="${Tproperty.dynamicAttributesMap['style']}" trueFalseNullLabels="${Tproperty.trueFalseNullLabels}" escapeHTML="${Tproperty.type=='html'? false: true}"/>					
-					</c:if>					
+					<c:if test="${!propertyTag.showLabel}">
+						<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
+					</c:if>
 				</c:if>
 			</n:panel>
 		</c:otherwise>
+
 	</c:choose>
 </n:property>

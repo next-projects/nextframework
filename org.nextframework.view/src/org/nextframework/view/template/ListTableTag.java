@@ -32,32 +32,93 @@ import org.nextframework.util.Util;
  * @version 1.1
  */
 public class ListTableTag extends TemplateTag {
-	
-	protected boolean showEditLink = true;
-	protected boolean showDeleteLink = true;
-	protected boolean showViewLink = false;
-	
+
 	protected Object itens;
 	protected String name;
 	protected Class<?> valueType;
-	
+	protected String groupProperty;
+
+	protected boolean showViewLink = false;
+	protected boolean showEditLink = true;
+	protected boolean showDeleteLink = true;
+
+	protected String selectLinkLabel;
+	protected String viewLinkLabel;
+	protected String updateLinkLabel;
+	protected String deleteLinkLabel;
+
 	protected Number currentPage;
 	protected Number numberOfPages;
 
-	public Class<?> getValueType() {
-		return valueType;
+	@Override
+	protected void doComponent() throws Exception {
+
+		autowireValues();
+
+		if (selectLinkLabel == null) {
+			selectLinkLabel = getDefaultViewLabel("selectLinkLabel", "Selecionar");
+		}
+
+		if (viewLinkLabel == null) {
+			viewLinkLabel = getDefaultViewLabel("viewLinkLabel", "Consultar");
+		}
+
+		if (updateLinkLabel == null) {
+			updateLinkLabel = getDefaultViewLabel("updateLinkLabel", "Editar");
+		}
+
+		if (deleteLinkLabel == null) {
+			deleteLinkLabel = getDefaultViewLabel("deleteLinkLabel", "Excluir");
+		}
+
+		if (name == null) {
+			throw new IllegalArgumentException("O atributo name da tag TabelaResultados não foi informado, e também não foi configurado por um CrudController. " +
+					"Se estiver utilizando um controller do tipo CrudController verifique se os atributos estão sendo colocados no escopo corretamente " +
+					"ou se você não sobrescreveu a funcionalidade padrão do controller.");
+		}
+
+		pushAttribute("TtabelaResultados", this);
+		includeJspTemplate();
+		popAttribute("TtabelaResultados");
+
 	}
 
-	public void setValueType(Class<?> valueType) {
-		this.valueType = valueType;
-	}
+	private void autowireValues() {
 
-	public String getName() {
-		return name;
-	}
+		CrudContext crudContext = CrudContext.getCurrentInstance();
 
-	public void setName(String name) {
-		this.name = name;
+		if (itens == null) {
+			itens = getRequest().getAttribute("lista");
+			if (itens == null && crudContext != null) {
+				itens = crudContext.getListModel().getList();
+			}
+		}
+
+		if (Util.strings.isEmpty(name) && crudContext != null) {
+			name = crudContext.getBeanName();
+			if (Util.strings.isEmpty(name) && Util.objects.isNotEmpty(valueType)) {
+				name = Util.strings.uncaptalize(valueType.getSimpleName());
+			}
+		}
+
+		if (valueType == null && crudContext != null) {
+			valueType = crudContext.getBeanClass();
+		}
+
+		if (currentPage == null) {
+			currentPage = (Number) getRequest().getAttribute("currentPage");
+			if (currentPage == null && crudContext != null && crudContext.getListModel().getFilter() != null) {
+				currentPage = crudContext.getListModel().getFilter().getCurrentPage();
+			}
+		}
+
+		if (numberOfPages == null) {
+			numberOfPages = (Number) getRequest().getAttribute("numberOfPages");
+			if (numberOfPages == null && crudContext != null && crudContext.getListModel().getFilter() != null) {
+				numberOfPages = crudContext.getListModel().getFilter().getNumberOfPages();
+			}
+		}
+
 	}
 
 	public Object getItens() {
@@ -68,6 +129,48 @@ public class ListTableTag extends TemplateTag {
 		this.itens = itens;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Class<?> getValueType() {
+		return valueType;
+	}
+
+	public void setValueType(Class<?> valueType) {
+		this.valueType = valueType;
+	}
+
+	public String getGroupProperty() {
+		return groupProperty;
+	}
+
+	public void setGroupProperty(String groupProperty) {
+		this.groupProperty = groupProperty;
+	}
+
+	public boolean isShowViewLink() {
+		return showViewLink;
+	}
+
+	public void setShowViewLink(boolean showConsultarLink) {
+		this.showViewLink = showConsultarLink;
+	}
+
+	@Deprecated
+	public boolean isShowConsultarLink() {
+		return showViewLink;
+	}
+
+	@Deprecated
+	public void setShowConsultarLink(boolean showConsultarLink) {
+		this.showViewLink = showConsultarLink;
+	}
+
 	public boolean isShowEditLink() {
 		return showEditLink;
 	}
@@ -75,12 +178,12 @@ public class ListTableTag extends TemplateTag {
 	public void setShowEditLink(boolean showEditarLink) {
 		this.showEditLink = showEditarLink;
 	}
-	
+
 	@Deprecated
 	public boolean isShowEditarLink() {
 		return showEditLink;
 	}
-	
+
 	@Deprecated
 	public void setShowEditarLink(boolean showEditarLink) {
 		this.showEditLink = showEditarLink;
@@ -93,89 +196,59 @@ public class ListTableTag extends TemplateTag {
 	public void setShowDeleteLink(boolean showExcluirLink) {
 		this.showDeleteLink = showExcluirLink;
 	}
-	
+
 	@Deprecated
 	public boolean isShowExcluirLink() {
 		return showDeleteLink;
 	}
-	
+
 	@Deprecated
 	public void setShowExcluirLink(boolean showExcluirLink) {
 		this.showDeleteLink = showExcluirLink;
 	}
 
-	@Override
-	protected void doComponent() throws Exception {
-		autowireValues();
-		pushAttribute("TtabelaResultados", this);
-		if(name == null){
-			throw new IllegalArgumentException("O atributo name da tag TabelaResultados não foi informado, e também não foi configurado por um CrudController. " +
-					"Se estiver utilizando um controller do tipo CrudController verifique se os atributos estão sendo colocados no escopo corretamente " +
-					"ou se você não sobrescreveu a funcionalidade padrão do controller.");
-		}
-		includeJspTemplate();
-		popAttribute("TtabelaResultados");
+	public String getSelectLinkLabel() {
+		return selectLinkLabel;
 	}
 
-	private void autowireValues() {
-		CrudContext crudContext = CrudContext.getCurrentInstance();
-		if(itens == null){
-			itens = getRequest().getAttribute("lista");
-			if(itens == null && crudContext != null){
-				itens = crudContext.getListModel().getList();
-			}
-		}
-		if(valueType == null && crudContext != null){
-//			valueType = (Class<?>) getRequest().getAttribute("TEMPLATE_beanClass");
-			valueType = crudContext.getBeanClass();
-		}
-		if(Util.strings.isEmpty(name) && crudContext != null){
-//			name = (String) getRequest().getAttribute("TEMPLATE_beanNameUncaptalized");
-			name = crudContext.getBeanName();
-			if(Util.strings.isEmpty(name) && Util.objects.isNotEmpty(valueType)){
-				name = Util.strings.uncaptalize(valueType.getSimpleName());
-			}
-		}
-		if(numberOfPages == null){
-			numberOfPages = (Number) getRequest().getAttribute("numberOfPages");
-			if(numberOfPages == null && crudContext != null && crudContext.getListModel().getFilter() != null){
-				numberOfPages = crudContext.getListModel().getFilter().getNumberOfPages();
-			}
-		}
-		if(currentPage == null){
-			currentPage = (Number) getRequest().getAttribute("currentPage");
-			if(currentPage == null && crudContext != null && crudContext.getListModel().getFilter() != null){
-				currentPage = crudContext.getListModel().getFilter().getCurrentPage();
-			}
-		}
+	public void setSelectLinkLabel(String selectLinkLabel) {
+		this.selectLinkLabel = selectLinkLabel;
 	}
 
-	public boolean isShowViewLink() {
-		return showViewLink;
+	public String getViewLinkLabel() {
+		return viewLinkLabel;
 	}
-	public void setShowViewLink(boolean showConsultarLink) {
-		this.showViewLink = showConsultarLink;
+
+	public void setViewLinkLabel(String viewLinkLabel) {
+		this.viewLinkLabel = viewLinkLabel;
 	}
-	
-	@Deprecated
-	public boolean isShowConsultarLink() {
-		return showViewLink;
+
+	public String getUpdateLinkLabel() {
+		return updateLinkLabel;
 	}
-	@Deprecated
-	public void setShowConsultarLink(boolean showConsultarLink) {
-		this.showViewLink = showConsultarLink;
+
+	public void setUpdateLinkLabel(String updateLinkLabel) {
+		this.updateLinkLabel = updateLinkLabel;
+	}
+
+	public String getDeleteLinkLabel() {
+		return deleteLinkLabel;
+	}
+
+	public void setDeleteLinkLabel(String deleteLinkLabel) {
+		this.deleteLinkLabel = deleteLinkLabel;
 	}
 
 	public Number getCurrentPage() {
 		return currentPage;
 	}
 
-	public Number getNumberOfPages() {
-		return numberOfPages;
-	}
-
 	public void setCurrentPage(Number currentPage) {
 		this.currentPage = currentPage;
+	}
+
+	public Number getNumberOfPages() {
+		return numberOfPages;
 	}
 
 	public void setNumberOfPages(Number numberOfPages) {

@@ -10,7 +10,7 @@
 	<c:set var="_form_enctype" scope="page" value="${Tproperty.dynamicAttributesMap['enctype']}" />
 </c:if>
 
-<n:form name="${viewTag.formName}" enctype="${_form_enctype}" validate="${viewTag.validateForm}" method="${viewTag.formMethod}" action="${viewTag.formAction}" validateFunction="validarFormulario" bypass="${!viewTag.includeForm}">
+<n:form name="${viewTag.formName}" enctype="${_form_enctype}" method="${viewTag.formMethod}" action="${viewTag.formAction}" validate="${viewTag.validateForm}" validateFunction="validarFormulario" bypass="${!viewTag.includeForm}" >
 
 	<n:validation functionName="validateForm" bypass="${!viewTag.includeForm || !viewTag.validateForm}">
 		<script language="javascript">
@@ -27,12 +27,10 @@
 				return valido;
 			}
 		</script>
-		
+
 		<c:if test="${! empty viewTag.title }">
 			<div class="pageTitleBar">
-				<div class="pageTitle">
-					${viewTag.title}
-				</div>
+				<div class="pageTitle">${viewTag.title}</div>
 			</div>
 		</c:if>
 
