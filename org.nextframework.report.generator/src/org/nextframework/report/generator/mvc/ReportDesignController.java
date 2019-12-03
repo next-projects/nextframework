@@ -23,7 +23,6 @@ import org.nextframework.controller.resource.Resource;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
-import org.nextframework.exception.ApplicationException;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
@@ -219,7 +218,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		ServletRequestDataBinder binder = bind(request, customBean, false);
 		BindException errors = new BindException(binder.getBindingResult());
 		if (errors.hasErrors()) {
-			throw new ApplicationException("Não foi possível fazer o bind dos dados customizados", errors);
+			throw new NextException("Não foi possível fazer o bind dos dados customizados", errors);
 		}
 
 		//Faz leitura da composição do relatório
@@ -264,7 +263,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			}
 		}
 		if (!possuiFiltro && camposRequired.length() > 0) {
-			throw new ApplicationException("É necessário que pelo menos um dos filtros obrigatórios seja definido: " + camposRequired);
+			throw new NextException("É necessário que pelo menos um dos filtros obrigatórios seja definido: " + camposRequired);
 		}
 	}
 
