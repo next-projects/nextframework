@@ -34,7 +34,10 @@ import java.util.Set;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.message.MessageResolver;
 import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.context.NoSuchMessageException;
 
 /**
  * @author rogelgarcia
@@ -74,20 +77,6 @@ public class BeanUtils {
 		return null;
 	}
 
-//	public String getName(Class<?> clazz, AnnotatedBeanRegister[] beanRegisters){
-//		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-//		Annotation[] annotations = reflectionCache.getAnnotations(clazz);
-//		for (Annotation annotation : annotations) {
-//			for (AnnotatedBeanRegister beanRegister : beanRegisters) {
-//				if(annotation.annotationType().equals(beanRegister.getAnnotationClass())){
-//					return beanRegister.getName(clazz);
-//				}
-//			}
-//		}
-//		//throw new NextException("A classe "+clazz.getName()+" não possui uma anotação que represente um bean. Ex: @Bean, @CrudBean");
-//		return Util.strings.uncaptalize(clazz.getSimpleName());
-//	}
-
 	public String getGetterFromProperty(String propertyName) {
 		return "get" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
 	}
@@ -106,12 +95,6 @@ public class BeanUtils {
 			prop[0] = Character.toLowerCase(prop[0]);
 			return new String(prop);
 		}
-//		return Util.strings.uncaptalize(getterMethodName.startsWith("is")? 
-//				getterMethodName.substring("is".length(), getterMethodName.length())
-//				:
-//				getterMethodName.substring("get".length(), getterMethodName.length())
-//				)
-//				;
 	}
 
 	public Set<String> getPropertiesWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
@@ -186,6 +169,103 @@ public class BeanUtils {
 
 	public Collection<?> getPropertyValue(Object owner, String role) {
 		return (Collection<?>) PropertyAccessorFactory.forBeanPropertyAccess(owner).getPropertyValue(role);
+	}
+
+	public String getDisplayName(MessageResolver resolver, Class<?> beanClass) {
+		return getDisplayName(resolver, BeanDescriptorFactory.forClass(beanClass), null);
+	}
+
+	public String getDisplayName(MessageResolver resolver, BeanDescriptor beanDescriptor) {
+		return getDisplayName(resolver, beanDescriptor, null);
+	}
+
+	public String getDisplayName(MessageResolver resolver, BeanDescriptor beanDescriptor, String optionalPrefix) {
+
+		Class<?> beanClass = beanDescriptor.getTargetClass();
+
+		if (optionalPrefix != null && optionalPrefix.length() > 0) {
+
+			//Fully-qualified class name with prefix (Ex: prefix.com.app.pack.ClassName)
+			try {
+				return resolver.message(optionalPrefix + "." + beanClass.getName());
+			} catch (NoSuchMessageException e) {
+				//Não encontrado...
+			}
+
+			//Simple class name with prefix (Ex: prefix.ClassName)
+			try {
+				return resolver.message(optionalPrefix + "." + beanClass.getSimpleName());
+			} catch (NoSuchMessageException e) {
+				//Não encontrado...
+			}
+
+		}
+
+		//Fully-qualified class name (Ex: com.app.pack.ClassName)
+		try {
+			return resolver.message(beanClass.getName());
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		//Simple class name (Ex: ClassName)
+		try {
+			return resolver.message(beanClass.getSimpleName());
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		return beanDescriptor.getDisplayName();
+	}
+
+	public String getDisplayName(MessageResolver resolver, Class<?> beanClass, String property) {
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(beanClass);
+		PropertyDescriptor propertyDescriptorBegin = bd.getPropertyDescriptor(property);
+		return getDisplayName(resolver, propertyDescriptorBegin, null);
+	}
+
+	public String getDisplayName(MessageResolver resolver, PropertyDescriptor propertyDescriptor) {
+		return getDisplayName(resolver, propertyDescriptor, null);
+	}
+
+	public String getDisplayName(MessageResolver resolver, PropertyDescriptor propertyDescriptor, String optionalPrefix) {
+
+		Class<?> ownerClass = propertyDescriptor.getOwnerClass();
+		String prop = propertyDescriptor.getName();
+
+		if (optionalPrefix != null && optionalPrefix.length() > 0) {
+
+			//Fully-qualified class name and property with prefix (Ex: prefix.com.app.pack.ClassName.name)
+			try {
+				return resolver.message(optionalPrefix + "." + ownerClass.getName() + "." + prop);
+			} catch (NoSuchMessageException e) {
+				//Não encontrado...
+			}
+
+			//Simple class name and property  with prefix (Ex: prefix.ClassName.name)
+			try {
+				return resolver.message(optionalPrefix + "." + ownerClass.getSimpleName() + "." + prop);
+			} catch (NoSuchMessageException e) {
+				//Não encontrado...
+			}
+
+		}
+
+		//Fully-qualified class name and property (Ex: com.app.pack.ClassName.name)
+		try {
+			return resolver.message(ownerClass.getName() + "." + prop);
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		//Simple class name and property (Ex: ClassName.name)
+		try {
+			return resolver.message(ownerClass.getSimpleName() + "." + prop);
+		} catch (NoSuchMessageException e) {
+			//Não encontrado...
+		}
+
+		return propertyDescriptor.getDisplayName();
 	}
 
 }

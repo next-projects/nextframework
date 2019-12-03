@@ -28,7 +28,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import org.nextframework.exception.ApplicationException;
+import org.nextframework.exception.BusinessException;
+import org.nextframework.message.MessageResolver;
+import org.nextframework.message.NextMessageSourceResolvable;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 
 /**
  * @author rogelgarcia
@@ -51,9 +60,7 @@ public class ObjectUtils {
 			return Array.getLength(o) == 0;
 		} else if (o instanceof String) {
 			return ((String) o).length() == 0;
-		} else /*if(o instanceof HibernateProxy)*/ {
-			//HibernateProxy proxy = (HibernateProxy)o;
-			//se for um proxy do hibernate não está inicilizado
+		} else {
 			return false;
 		}
 	}
@@ -62,7 +69,7 @@ public class ObjectUtils {
 		return !isEmpty(type);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public Method findMethod(Object object, String methodName, Class... arguments) {
 		if (object == null) {
 			throw new NullPointerException("Não foi possível encontrar método " + methodName + ": objeto nulo ");
@@ -155,6 +162,79 @@ public class ObjectUtils {
 		} catch (InvocationTargetException e) {
 			throw new RuntimeException("Método " + methodName + " lançou exeção " + e.getTargetException().getClass().getSimpleName(), e.getTargetException());
 		}
+	}
+
+	public MessageSourceResolvable newMessage(String code) {
+		return new NextMessageSourceResolvable(code);
+	}
+
+	public MessageSourceResolvable newMessage(String code, String defaultMessage) {
+		return new NextMessageSourceResolvable(code, defaultMessage);
+	}
+
+	public MessageSourceResolvable newMessage(String code, Object... args) {
+		return new NextMessageSourceResolvable(code, args);
+	}
+
+	public MessageSourceResolvable newMessage(String code, Object[] args, String defaultMessage) {
+		return new NextMessageSourceResolvable(code, args, defaultMessage);
+	}
+
+	public ApplicationException getApplicationException(MessageResolver resolver, BusinessException exception) {
+		String txt = Util.objects.getExceptionDescription(resolver, exception, true, false);
+		throw new ApplicationException(txt, exception.getCause());
+	}
+
+	public String getExceptionDescription(MessageResolver resolver, Throwable exception, boolean includeMessage, boolean includeCauses) {
+
+		String allDesc = "";
+
+		Set<Throwable> allCauses = new HashSet<Throwable>();
+		Throwable cause = exception;
+		while (cause != null && !allCauses.contains(cause)) {
+
+			String exDesc = null;
+
+			Class<?> clazz = cause.getClass();
+			do {
+				try {
+					exDesc = resolver.message(clazz.getName());
+				} catch (NoSuchMessageException e) {
+					//Não encontrado...
+				}
+				clazz = clazz.getSuperclass();
+			} while (exDesc == null && clazz != Object.class);
+
+			if (exDesc == null) {
+				exDesc = cause.getClass().getSimpleName();
+			}
+
+			if (includeMessage) {
+				if (cause instanceof MessageSourceResolvable) {
+					exDesc += ": " + resolver.message((MessageSourceResolvable) cause);
+				} else {
+					String m = cause.getMessage();
+					if (m != null) {
+						int nestedIndex = m.indexOf("; nested exception is");
+						if (nestedIndex > -1) {
+							m = m.substring(0, nestedIndex);
+						}
+						exDesc += ": " + m;
+					}
+				}
+			}
+
+			allDesc += (allDesc.length() == 0 ? "" : " -> ") + exDesc;
+
+			if (!includeCauses) {
+				break;
+			}
+
+			allCauses.add(cause);
+			cause = cause.getCause();
+		}
+
+		return allDesc;
 	}
 
 	static ThreadLocal<Long> timestamp = new ThreadLocal<Long>();
