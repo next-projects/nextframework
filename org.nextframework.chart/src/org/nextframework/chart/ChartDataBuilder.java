@@ -12,6 +12,7 @@ import java.util.TreeSet;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.summary.SummaryRow;
 import org.nextframework.view.chart.aggregate.ChartAggregateFunction;
 import org.nextframework.view.chart.aggregate.ChartExceptionAggregateFunction;
@@ -78,9 +79,11 @@ public class ChartDataBuilder {
 	
 	@SuppressWarnings("all")
 	public ChartData buildFromListPropertiesAsSeries(List<?> objects, String groupProperty, String... serieProperties) {
+		
 		if(objects.size() == 0){
 			return new ChartData();
 		}
+		
 		ChartData data = new ChartData();
 		List<String> serieTitles = new ArrayList<String>();
 		
@@ -89,12 +92,15 @@ public class ChartDataBuilder {
 			//TODO TRY TO REMOVE THIS DEPENDENCY 2012-08-07
 			if(objects.get(0).getClass().isAssignableFrom(SummaryRow.class) && serieProperty.startsWith("summary.")){
 				SummaryRow<?, ?> summaryRow = (SummaryRow<?, ?>)objects.get(0);
-				BeanDescriptor bdSummary = BeanDescriptorFactory.forClass((Class)summaryRow.getSummary().getClass().getSuperclass());//get SummaryClass not the compiled one
-				serieTitles.add(bdSummary.getPropertyDescriptor(serieProperty.substring("summary.".length())).getDisplayName());
+				Class<?> superclass = summaryRow.getSummary().getClass().getSuperclass();
+				BeanDescriptor bdSummary = BeanDescriptorFactory.forClass(superclass);//get SummaryClass not the compiled one
+				PropertyDescriptor propertyDescriptor = bdSummary.getPropertyDescriptor(serieProperty.substring("summary.".length()));
+				serieTitles.add(propertyDescriptor.getDisplayName());
 			} else {
 				serieTitles.add(bd.getPropertyDescriptor(serieProperty).getDisplayName());
 			}
 		}
+		
 		data.setSeries(serieTitles.toArray(new String[serieTitles.size()]));
 		
 		for (Object object : objects) {

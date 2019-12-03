@@ -23,7 +23,6 @@
  */
 package org.nextframework.core.standard;
 
-
 /**
  * @author rogelgarcia
  * @since 21/01/2006
@@ -32,19 +31,20 @@ package org.nextframework.core.standard;
 public interface ApplicationContext {
 
 	String getApplicationName();
-	
+
 	String getApplicationDir();
-	
+
 //	Object getBean(String string);
 //	<E> E getBean(Class<E> clazz);
-	
+
 //	ClassManager getClassManager();
 //	Config getConfig();
-	
+
 //	BeanDescriptor getBeanDescriptor(Object bean);
-	
+
 //	BeanDescriptor getBeanDescriptor(Object bean, Class<?> clazz);
 
 //	void setAttribute(String s, Object value);
 //	Object getAttribute(String s);
+
 }

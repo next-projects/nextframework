@@ -32,7 +32,7 @@ package org.nextframework.view.template;
  *
  */
 public interface PropertyTagFastRenderer {
-	
+
 	/**
 	 * Renderiza a tag, caso não seja possível fazer a renderização o retorno deve ser falso.
 	 * Se for possível fazer a renderização o retorno deve ser true.

@@ -7,13 +7,13 @@ import java.lang.reflect.Type;
 import org.nextframework.bean.PropertyDescriptor;
 
 public class PropertyDescriptorIndexedImpl implements PropertyDescriptor {
-	
+
 	String name;
-	
+
 	Type type;
 
 	Object value;
-	
+
 	public PropertyDescriptorIndexedImpl(String name, Type type, Object value) {
 		this.name = name;
 		this.type = type;
@@ -46,18 +46,23 @@ public class PropertyDescriptorIndexedImpl implements PropertyDescriptor {
 	}
 
 	private Class<?> convertToRawType(Type type) {
-		if(type instanceof Class<?>){
+		if (type instanceof Class<?>) {
 			return (Class<?>) type;
 		}
-		if(type instanceof ParameterizedType){
-			return convertToRawType((ParameterizedType)type);
+		if (type instanceof ParameterizedType) {
+			return convertToRawType((ParameterizedType) type);
 		}
-		throw new RuntimeException("Cannot determine raw type of "+this.type);
+		throw new RuntimeException("Cannot determine raw type of " + this.type);
 	}
 
 	@Override
 	public Type getType() {
 		return type;
+	}
+
+	@Override
+	public Class<?> getOwnerClass() {
+		return null;
 	}
 
 	@Override

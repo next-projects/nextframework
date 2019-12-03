@@ -33,16 +33,21 @@ package org.nextframework.bean;
 public interface BeanDescriptor {
 
 	String getDescriptionPropertyName();
+
 	String getIdPropertyName();
+
 	Object getDescription();
+
 	Object getId();
-	
+
 	String getDisplayName();
-	
+
 	Object getTargetBean();
+
 	Class<?> getTargetClass();
-	
+
 	PropertyDescriptor[] getPropertyDescriptors();
+
 	PropertyDescriptor getPropertyDescriptor(String propertyName);
-	
+
 }

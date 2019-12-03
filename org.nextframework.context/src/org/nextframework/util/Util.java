@@ -29,27 +29,15 @@ package org.nextframework.util;
  * @version 1.1
  */
 public class Util {
-	
+
 	public static BooleanUtils booleans = new BooleanUtils();
-//	public static NumberUtils numbers = new NumberUtils();
 	public static StringUtils strings = new StringUtils();
 	public static DateUtils dates = new DateUtils();
 	public static TimeZoneUtils timeZone = new TimeZoneUtils();
 	public static CollectionsUtil collections = new CollectionsUtil();
-	
-//	public static LocaleUtils locale = new LocaleUtils();
-//	public static BeanFacotryUtils beanFacotries = new BeanFacotryUtils();
-	
+
 	public static ObjectUtils objects = new ObjectUtils();
 	public static BeanUtils beans = new BeanUtils();
 	public static GenericsUtils generics = new GenericsUtils();
-	
-//	@Deprecated
-//	/**
-//	 * Use WebUtils static methods
-//	 * 
-//	 * @deprecated
-//	 */
-//	public static WebUtils web = new WebUtils();
-	
+
 }
