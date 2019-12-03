@@ -10,6 +10,71 @@
 
 	<tag>
 		<description></description>
+		<name>tela</name>
+		<tag-class>org.nextframework.view.template.ViewTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>formName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>formMethod</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>formAction</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>includeForm</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>validateForm</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>titulo</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				Nome do bean que será utilizado por essa tela. Será utilizado em uma tag n:bean. Se não for informado a tag n:bean não será utilizada. 
+				Se algum bean foi colocado no escopo, basta utilizar esse atributo para informar o nome do bean. Um formulário com validação será incluido automaticamente.	
+			</description>
+			<name>useBean</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Tipo do bean definido pelo atributo useBean.</description>
+			<name>beanType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Modo (input ou output) das tags t:property dessa tela.</description>
+			<name>propertyMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>
+		<description></description>
 		<name>listagem</name>
 		<tag-class>org.nextframework.view.template.ListViewTag</tag-class>
 		<body-content>scriptless</body-content>
@@ -24,14 +89,14 @@
 			<name>showNewLink</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>linkArea</name>
 			<required>false</required>
 			<fragment>true</fragment>
-		</attribute>			
-		<dynamic-attributes>true</dynamic-attributes>			
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -50,82 +115,14 @@
 			<name>showListagemLink</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>linkArea</name>
 			<required>false</required>
 			<fragment>true</fragment>
-		</attribute>	
-		<dynamic-attributes>true</dynamic-attributes>					
-	</tag>
-
-	<tag>
-		<description></description>
-		<name>tela</name>
-		<tag-class>org.nextframework.view.template.ViewTag</tag-class>
-		<body-content>scriptless</body-content>
-		<attribute>
-			<description></description>
-			<name>titulo</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<attribute>
-			<description></description>
-			<name>formName</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
-		<attribute>
-			<description></description>
-			<name>formMethod</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
-		<attribute>
-			<description></description>
-			<name>formAction</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>includeForm</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>validateForm</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		
-		<attribute>
-			<description>
-				Nome do bean que será utilizado por essa tela. Será utilizado em uma tag n:bean. Se não for informado a tag n:bean não será utilizada. 
-				Se algum bean foi colocado no escopo, basta utilizar esse atributo para informar o nome do bean. Um formulário com validação será incluido automaticamente.	
-			</description>
-			<name>useBean</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		
-		<attribute>
-			<description>Tipo do bean definido pelo atributo useBean.</description>
-			<name>beanType</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description>Modo (input ou output) das tags t:property dessa tela.</description>
-			<name>propertyMode</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		
-		<dynamic-attributes>true</dynamic-attributes>		
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -139,7 +136,7 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>			
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -152,8 +149,8 @@
 			<name>name</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
-		<dynamic-attributes>true</dynamic-attributes>			
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -166,26 +163,26 @@
 			<name>showSubmit</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
-		<attribute>
-			<description></description>
-			<name>submitLabel</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>submitAction</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>					
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>submitConfirmationScript</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
-		<dynamic-attributes>true</dynamic-attributes>				
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>submitLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -195,7 +192,94 @@
 		<body-content>scriptless</body-content>
 		<attribute>
 			<description></description>
+			<name>submitAction</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>submitConfirmationScript</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>submitLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>
+		<description></description>
+		<name>janelaResultados</name>
+		<tag-class>org.nextframework.view.template.ListPanelTag</tag-class>
+		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>
+		<description></description>
+		<name>tabelaFiltro</name>
+		<tag-class>org.nextframework.view.template.FilterTableTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>width</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>columnStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>columnStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rowStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rowStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Utilizado para determinar se os property que estiverem dentro desse panelGrid devem ser renderizados com 2 colunas</description>
+			<name>propertyRenderAsDouble</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>showSubmit</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -204,22 +288,155 @@
 			<name>submitAction</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
-			<description></description>
-			<name>submitConfirmationScript</name>
+			<name>validateForm</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>			
+		<attribute>
+			<description></description>
+			<name>submitLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>dynamicAttributesMap</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
 		<description></description>
-		<name>janelaResultados</name>
-		<tag-class>org.nextframework.view.template.ListPanelTag</tag-class>
+		<name>tabelaEntrada</name>
+		<tag-class>org.nextframework.view.template.FormTableTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>			
+		<attribute>
+			<description>Atributo que vai para o panel</description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>columnStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>columnStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rowStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rowStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>propertyRenderAsDouble</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>
+		<description></description>
+		<name>tabelaRelatorio</name>
+		<tag-class>org.nextframework.view.template.ReportTableTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rowStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rowStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>columnStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>columnStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>propertyRenderAsDouble</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -227,25 +444,6 @@
 		<name>tabelaResultados</name>
 		<tag-class>org.nextframework.view.template.ListTableTag</tag-class>
 		<body-content>scriptless</body-content>
-		<attribute>
-			<description></description>
-			<name>showConsultarLink</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description></description>
-			<name>showEditarLink</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>showExcluirLink</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		
 		<attribute>
 			<description></description>
 			<name>itens</name>
@@ -263,8 +461,26 @@
 			<name>valueType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
-		<dynamic-attributes>true</dynamic-attributes>					
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>showConsultarLink</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>showEditarLink</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>showExcluirLink</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -272,234 +488,6 @@
 		<name>acao</name>
 		<tag-class>org.nextframework.view.template.ActionPanelTag</tag-class>
 		<body-content>scriptless</body-content>
-	</tag>
-
-	<tag>
-		<description></description>
-		<name>tabelaFiltro</name>
-		<tag-class>org.nextframework.view.template.FilterTableTag</tag-class>
-		<body-content>scriptless</body-content>
-		<attribute>
-			<description></description>
-			<name>columns</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>width</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description></description>
-			<name>showSubmit</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description></description>
-			<name>submitAction</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
-	
-		<attribute>
-			<name>styleClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>style</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>rowStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>rowStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>columnStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>columnStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<name>colspan</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description>Utilizado para determinar se os property que estiverem dentro desse panelGrid devem ser renderizados com 2 colunas</description>
-			<name>propertyRenderAsDouble</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<name>validateForm</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description></description>
-			<name>dynamicAttributesMap</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
-		<attribute>
-			<description></description>
-			<name>submitLabel</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
-		<dynamic-attributes>true</dynamic-attributes>
-	</tag>
-
-	<tag>
-		<description></description>
-		<name>tabelaEntrada</name>
-		<tag-class>org.nextframework.view.template.FormTableTag</tag-class>
-		<body-content>scriptless</body-content>
-		<attribute>
-			<description></description>
-			<name>columns</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>Atributo que vai para o panel</description>
-			<name>title</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>style</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>styleClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>rowStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>rowStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>columnStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>columnStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>colspan</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>propertyRenderAsDouble</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>	
-	</tag>
-
-
-	<tag>
-		<description></description>
-		<name>tabelaRelatorio</name>
-		<tag-class>org.nextframework.view.template.ReportTableTag</tag-class>
-		<body-content>scriptless</body-content>
-		<attribute>
-			<description></description>
-			<name>columns</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>Atributo que vai para o panel</description>
-			<name>title</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>style</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>styleClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>rowStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>rowStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>columnStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>columnStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>colspan</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>propertyRenderAsDouble</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>			
 	</tag>
 
 	<tag>
@@ -512,7 +500,7 @@
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>name</name>
@@ -522,6 +510,30 @@
 		<attribute>
 			<description>Indica por qual propriedade a lista deve ser ordenada</description>
 			<name>indexProperty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>beforeNewLine</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>onNewLine</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Evento chamado ao remover um item da lista, deve resultar em um valor boolean.
+			Exemplo: return a == 3
+			Ou
+			return myFunction() (E myFuncion() deve retornar um boolean)
+			Pode ser utilizado a variável button (referente ao botão de exclusão)
+			return myFunciont(button) 
+			</description>
+			<name>onRemove</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -548,38 +560,14 @@
 			<name>showBotaoNovaLinha</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description></description>
-			<name>onNewLine</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description>Evento chamado ao remover um item da lista, deve resultar em um valor boolean.
-			Exemplo: return a == 3
-			Ou
-			return myFunction() (E myFuncion() deve retornar um boolean)
-			Pode ser utilizado a variável button (referente ao botão de exclusão)
-			return myFunciont(button) 
-			</description>
-			<name>onRemove</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<attribute>
-			<description></description>
-			<name>beforeNewLine</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		<dynamic-attributes>true</dynamic-attributes>								
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -604,13 +592,13 @@
 			<name>autoSugestUniqueItem</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>holdValue</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>useAjax</name>
@@ -622,7 +610,7 @@
 			<name>onLoadItens</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>order</name>
@@ -646,7 +634,7 @@
 			<name>selectLabelProperty</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>label</name>
@@ -664,7 +652,7 @@
 			<name>optionalParams</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>cols</name>
@@ -737,7 +725,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<attribute>
 			<description></description>
 			<name>headerStyle</name>
@@ -761,8 +749,8 @@
 			<name>labelStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>						
-		
+		</attribute>
+
 		<attribute>
 			<description></description>
 			<name>headerStyleClass</name>
@@ -786,39 +774,39 @@
 			<name>labelStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 
 		<attribute>
 			<description>Se um arquivo é transiente não existe a opção para fazer download</description>
 			<name>transientFile</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
-		
+		</attribute>
+
 		<attribute>
 			<description>Indica de deve ser mostrado o botão remover</description>
 			<name>showRemoverButton</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>pattern</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>selectOnePathParameters</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description>
 				Determina os atributos width, height, top e left, da janela que será utilizada por um select one button.
@@ -828,13 +816,13 @@
 			<name>selectOneWindowSize</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>insertPath</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -843,12 +831,6 @@
 		<name>propertyConfig</name>
 		<tag-class>org.nextframework.view.template.PropertyConfigTag</tag-class>
 		<body-content>scriptless</body-content>
-		<attribute>
-			<description></description>
-			<name>disabled</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
 		<attribute>
 			<description></description>
 			<name>mode</name>
@@ -868,10 +850,17 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
+			<name>disabled</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Ignora a funcionalidade dessa tag. Apenas renderizando as tags filhas, como se essa tag não existisse.</description>
 			<name>bypass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 	</tag>
+
 </taglib>

@@ -29,7 +29,6 @@ import javax.servlet.jsp.tagext.JspFragment;
 
 import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.exception.NextException;
-import org.nextframework.util.Util;
 
 /**
  * @author rogelgarcia
@@ -37,52 +36,41 @@ import org.nextframework.util.Util;
  * @version 1.1
  */
 public class ListViewTag extends TemplateTag {
-	
+
 	protected String title;
 	protected boolean showNewLink = true;
+	protected String newLinkLabel = null;
 	protected JspFragment linkArea;
 
-	public JspFragment getLinkArea() {
-		return linkArea;
-	}
+	@Override
+	protected void doComponent() throws Exception {
 
+		CrudContext crudContext = CrudContext.getCurrentInstance();
 
-	public void setLinkArea(JspFragment linkArea) {
-		this.linkArea = linkArea;
-	}
+		if (title == null && crudContext != null && crudContext.hasCustomDisplayName()) {
+			title = crudContext.getDisplayName();
+		}
+		if (title == null) {
+			title = getDefaultViewLabel("title", null);
+		}
+		if (title == null && crudContext != null) {
+			title = crudContext.getDisplayName();
+		}
 
+		if (newLinkLabel == null) {
+			newLinkLabel = getDefaultViewLabel("newLinkLabel", "Novo");
+		}
 
-	public boolean isShowNewLink() {
-		return showNewLink;
-	}
+		pushAttribute("listagemTag", this); //Legacy
+		includeJspTemplate();
+		popAttribute("listagemTag");
 
-
-	public void setShowNewLink(boolean showNewLink) {
-		this.showNewLink = showNewLink;
-	}
-
-
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	@Deprecated
-	public String getTitulo() {
-		return title;
-	}
-	@Deprecated
-	public void setTitulo(String titulo) {
-		this.title = titulo;
 	}
 
 	/**
 	 * método para ser chamado do template
-	 * @return
 	 */
-	public String getInvokeLinkArea(){
+	public String getInvokeLinkArea() {
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
 		try {
 			if (linkArea != null) {
@@ -94,15 +82,46 @@ public class ListViewTag extends TemplateTag {
 		return charArrayWriter.toString();
 	}
 
-	@Override
-	protected void doComponent() throws Exception {
-		if(Util.strings.isEmpty(title) && CrudContext.getCurrentInstance() != null){
-//			titulo = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
-			title = CrudContext.getCurrentInstance().getDisplayName();
-		}
-		pushAttribute("listagemTag", this);
-		includeJspTemplate();
-		popAttribute("listagemTag");
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Deprecated
+	public String getTitulo() {
+		return title;
+	}
+
+	@Deprecated
+	public void setTitulo(String titulo) {
+		this.title = titulo;
+	}
+
+	public boolean isShowNewLink() {
+		return showNewLink;
+	}
+
+	public void setShowNewLink(boolean showNewLink) {
+		this.showNewLink = showNewLink;
+	}
+
+	public String getNewLinkLabel() {
+		return newLinkLabel;
+	}
+
+	public void setNewLinkLabel(String newLinkLabel) {
+		this.newLinkLabel = newLinkLabel;
+	}
+
+	public JspFragment getLinkArea() {
+		return linkArea;
+	}
+
+	public void setLinkArea(JspFragment linkArea) {
+		this.linkArea = linkArea;
 	}
 
 }

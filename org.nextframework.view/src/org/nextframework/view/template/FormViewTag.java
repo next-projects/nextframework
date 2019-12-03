@@ -29,7 +29,6 @@ import javax.servlet.jsp.tagext.JspFragment;
 
 import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.exception.NextException;
-import org.nextframework.util.Util;
 
 /**
  * @author rogelgarcia
@@ -40,74 +39,44 @@ public class FormViewTag extends TemplateTag {
 
 	protected String title;
 	protected boolean showListLink = true;
+	protected String listLinkLabel = null;
 	protected JspFragment linkArea;
-
-	public JspFragment getLinkArea() {
-		return linkArea;
-	}
-
-	public void setLinkArea(JspFragment linkArea) {
-		this.linkArea = linkArea;
-	}
-
-	public boolean isShowListLink() {
-		return showListLink;
-	}
-
-	public void setShowListLink(boolean showListLink) {
-		this.showListLink = showListLink;
-	}
-	
-	@Deprecated
-	public boolean isShowListagemLink() {
-		return showListLink;
-	}
-	
-	@Deprecated
-	public void setShowListagemLink(boolean showListLink) {
-		this.showListLink = showListLink;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String titulo) {
-		this.title = titulo;
-	}
-	
-	@Deprecated
-	public String getTitulo() {
-		return title;
-	}
-	@Deprecated
-	public void setTitulo(String titulo) {
-		this.title = titulo;
-	}
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		CrudContext crudContext = CrudContext.getCurrentInstance();
-		//titulo = (String) getPageContext().findAttribute("TEMPLATE_beanDisplayName");
-		if(Util.strings.isEmpty(title) && crudContext != null){
+
+		if (title == null && crudContext != null && crudContext.hasCustomDisplayName()) {
 			title = crudContext.getDisplayName();
 		}
-		if (crudContext != null){
+		if (title == null) {
+			title = getDefaultViewLabel("title", null);
+		}
+		if (title == null && crudContext != null) {
+			title = crudContext.getDisplayName();
+		}
+
+		if (listLinkLabel == null) {
+			listLinkLabel = getDefaultViewLabel("listLinkLabel", "Listagem");
+		}
+
+		if (crudContext != null) {
 			pushAttribute("crudContext", crudContext);
 		}
-		pushAttribute("entradaTag", this);
+		pushAttribute("entradaTag", this); //Legacy
 		includeJspTemplate();
 		popAttribute("entradaTag");
-		if (crudContext != null){
+		if (crudContext != null) {
 			popAttribute("crudContext");
 		}
+
 	}
-	
+
 	/**
 	 * método para ser chamado do template
-	 * @return
 	 */
-	public String getInvokeLinkArea(){
+	public String getInvokeLinkArea() {
 		CharArrayWriter charArrayWriter = new CharArrayWriter();
 		try {
 			if (linkArea != null) {
@@ -117,6 +86,58 @@ public class FormViewTag extends TemplateTag {
 			throw new NextException(e);
 		}
 		return charArrayWriter.toString();
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String titulo) {
+		this.title = titulo;
+	}
+
+	@Deprecated
+	public String getTitulo() {
+		return title;
+	}
+
+	@Deprecated
+	public void setTitulo(String titulo) {
+		this.title = titulo;
+	}
+
+	public boolean isShowListLink() {
+		return showListLink;
+	}
+
+	public void setShowListLink(boolean showListLink) {
+		this.showListLink = showListLink;
+	}
+
+	@Deprecated
+	public boolean isShowListagemLink() {
+		return showListLink;
+	}
+
+	@Deprecated
+	public void setShowListagemLink(boolean showListLink) {
+		this.showListLink = showListLink;
+	}
+
+	public String getListLinkLabel() {
+		return listLinkLabel;
+	}
+
+	public void setListLinkLabel(String listLinkLabel) {
+		this.listLinkLabel = listLinkLabel;
+	}
+
+	public JspFragment getLinkArea() {
+		return linkArea;
+	}
+
+	public void setLinkArea(JspFragment linkArea) {
+		this.linkArea = linkArea;
 	}
 
 }

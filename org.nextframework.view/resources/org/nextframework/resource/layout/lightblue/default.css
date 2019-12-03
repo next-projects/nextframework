@@ -113,6 +113,7 @@ div.body {
 }
 
 .messageOuterDiv {
+	position: relative;
 	padding-top: 2px;
 	min-height: 80px;
 	padding-bottom: 3px;
@@ -131,6 +132,7 @@ div.body {
 }
 
 .messageblock LI {
+	position: relative;
 	list-style: none;
 	list-style-position: outside;
 	border: 1px solid;
@@ -141,6 +143,15 @@ div.body {
 	border-radius: 6px;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
+}
+
+.messageCloseIcon {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding: 5px;
+	padding-top: 0px;
+	cursor: pointer;
 }
 
 .bindblock {
@@ -180,6 +191,30 @@ div.body {
 	padding-left: 2px;
 }
 
+LI.binderror {
+	background-color: #FFCCCC;
+	color: #993333;
+	border-color: #993333;
+}
+
+LI.debug {
+	background-image: url("debug.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #CCFFFF;
+	color: #003333;
+	border-color: #003333;
+}
+
+LI.trace {
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #FFFFFF;
+	color: #333366;
+	border-color: #333366;
+}
+
 LI.info {
 	background-image: url("ok.png");
 	background-repeat: no-repeat;
@@ -189,6 +224,15 @@ LI.info {
 	border-color: #006633;
 }
 
+LI.warn {
+	background-image: url("warn.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #fcedb9;
+	color: #ab6622;
+	border-color: #996633;
+}
+
 LI.error {
 	background-image: url("error.png");
 	background-repeat: no-repeat;
@@ -196,6 +240,15 @@ LI.error {
 	background-color: #fddada;
 	color: #b40404;
 	border-color: #b40404;
+}
+
+LI.redirect {
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #FFFFFF;
+	color: #333366;
+	border-color: #333366;
 }
 
 LI.event {
@@ -209,48 +262,7 @@ LI.event {
 
 LI.causeitem {
 	border: 0px;
-}
-
-LI.warn {
-	background-image: url("warn.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #fcedb9;
-	color: #ab6622;
-	border-color: #996633;
-}
-
-LI.debug {
-	background-image: url("debug.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #CCFFFF;
-	color: #003333;
-	border-color: #003333;
-}
-
-LI.redirect {
-	background-image: url("trace.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #FFFFFF;
-	color: #333366;
-	border-color: #333366;
-}
-
-LI.trace {
-	background-image: url("trace.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #FFFFFF;
-	color: #333366;
-	border-color: #333366;
-}
-
-LI.binderror {
-	background-color: #FFCCCC;
-	color: #993333;
-	border-color: #993333;
+	font-weight: normal;
 }
 
 .resultWindow {
