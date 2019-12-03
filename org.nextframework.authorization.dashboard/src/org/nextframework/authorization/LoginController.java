@@ -9,6 +9,7 @@ import org.nextframework.controller.Controller;
 import org.nextframework.controller.DefaultAction;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.core.standard.MessageType;
+import org.nextframework.web.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 
@@ -44,7 +45,7 @@ public class LoginController extends MultiActionController implements Authentica
 		if (!loginChecked) {
 			loginChecked = true;
 			// consider the next default behavior for page redirecting
-			String module = getRequest().getRequestModule();
+			String module = WebUtils.getRequestModule();
 			String dir = "/WEB-INF/jsp" + module;
 			String pageResource = dir + "/login.jsp";
 			if (getServletContext().getResourceAsStream(pageResource) == null) {

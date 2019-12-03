@@ -25,9 +25,9 @@ package org.nextframework.view.template;
 
 public class ActionPanelTag extends TemplateTag {
 
-	
 	@Override
 	protected void doComponent() throws Exception {
 		doBody();
 	}
+
 }

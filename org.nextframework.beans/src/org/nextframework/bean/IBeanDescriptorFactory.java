@@ -32,7 +32,7 @@ package org.nextframework.bean;
 public interface IBeanDescriptorFactory {
 
 	BeanDescriptor forClass(Class<?> clazz);
-	
+
 	BeanDescriptor forBean(Object bean);
-	
+
 }

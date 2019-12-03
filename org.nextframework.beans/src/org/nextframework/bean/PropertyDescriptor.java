@@ -38,21 +38,21 @@ public interface PropertyDescriptor {
 	String getName();
 
 	Object getValue();
-	
+
 	String getDisplayName();
 
 	Annotation[] getAnnotations();
-	
+
 	<E extends Annotation> E getAnnotation(Class<E> annotationClass);
 
 	Type getType();
-	
+
 	Class<?> getRawType();
 
+	Class<?> getOwnerClass();
 
 //	BeanDescriptor getBeanDescriptor();
 
 //	PropertyInfo getPropertyInfo();
 
-	
 }

@@ -34,8 +34,8 @@ public class Message implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	MessageType type;
-	Object source;
+	private MessageType type;
+	private Object source;
 
 	public Message(MessageType type, Object source) {
 		this.type = type;
@@ -50,17 +50,9 @@ public class Message implements Serializable {
 		return type;
 	}
 
-	public void setSource(Object source) {
-		this.source = source;
-	}
-
-	public void setType(MessageType type) {
-		this.type = type;
-	}
-
 	@Override
 	public String toString() {
 		return "(" + type + ") " + source.toString();
 	}
-	
+
 }
