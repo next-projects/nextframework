@@ -34,6 +34,7 @@ import java.util.Map;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.message.MessageResolver;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -111,7 +112,7 @@ public class StringUtils {
 		return toStringIdStyled(o, false);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public String toStringIdStyled(Object o, boolean includeDescription) {
 		if (o == null) {
 			return "<null>";
@@ -343,6 +344,30 @@ public class StringUtils {
 
 	public String emptyIfNull(String propertyPrefix) {
 		return propertyPrefix != null ? propertyPrefix : "";
+	}
+
+	private static final String REPLACE_OPEN = "${";
+	private static final String REPLACE_CLOSE = "}";
+
+	public String replaceString(MessageResolver resolver, String original) {
+		if (Util.strings.isEmpty(original)) {
+			return original;
+		}
+		String nova = original;
+		int indexBegin = -1;
+		int indexEnd = -1;
+		do {
+			indexBegin = nova.indexOf(REPLACE_OPEN, indexBegin + 1);
+			if (indexBegin > -1) {
+				indexEnd = nova.indexOf(REPLACE_CLOSE, indexBegin + REPLACE_OPEN.length());
+				if (indexEnd > -1) {
+					String code = nova.substring(indexBegin + REPLACE_OPEN.length(), indexEnd);
+					String message = resolver.message(code);
+					nova = nova.substring(0, indexBegin) + message + nova.substring(indexEnd + REPLACE_CLOSE.length(), nova.length());
+				}
+			}
+		} while (indexBegin > -1 && indexEnd > -1);
+		return nova;
 	}
 
 }
