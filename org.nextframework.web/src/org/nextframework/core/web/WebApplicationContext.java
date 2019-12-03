@@ -27,15 +27,15 @@ import javax.servlet.ServletContext;
 
 import org.nextframework.core.standard.ApplicationContext;
 
-
 /**
  * @author rogelgarcia
  * @since 21/01/2006
  * @version 1.1
  */
-public interface WebApplicationContext extends ApplicationContext{
+public interface WebApplicationContext extends ApplicationContext {
 
 	String APPLICATION_CONTEXT_ATTRIBUTE = WebApplicationContext.class.getName();
-	
+
 	ServletContext getServletContext();
+
 }

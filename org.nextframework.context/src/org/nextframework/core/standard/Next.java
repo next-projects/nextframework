@@ -27,6 +27,7 @@ import org.nextframework.context.NotInNextContextException;
 import org.nextframework.service.ServiceFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.util.StringUtils;
 
 /**
@@ -35,29 +36,28 @@ import org.springframework.util.StringUtils;
  * @version 1.1
  */
 public class Next {
-	
+
 	protected static final InheritableThreadLocal<RequestContext> requestContext;
 	protected static final InheritableThreadLocal<ApplicationContext> applicationContext;
-	
+
 	static {
 		requestContext = new InheritableThreadLocal<RequestContext>();
 		applicationContext = new InheritableThreadLocal<ApplicationContext>();
-		
 	}
-	
-	public static boolean isInApplicationContext(){
+
+	public static boolean isInApplicationContext() {
 		return applicationContext.get() != null;
 	}
 
-	public static void setRequestContext(RequestContext context){
+	public static void setRequestContext(RequestContext context) {
 		requestContext.set(context);
 		applicationContext.set(context.getApplicationContext());
 	}
-	
-	public static void setApplicationContext(ApplicationContext context){
+
+	public static void setApplicationContext(ApplicationContext context) {
 		applicationContext.set(context);
 	}
-	
+
 	/**
 	 * Retorna um objeto registrado no Spring de determinada classe 
 	 * <B>IMPORTANTE:</B>
@@ -69,23 +69,18 @@ public class Next {
 		E bean = null;
 		String beanName = StringUtils.uncapitalize(clazz.getSimpleName());
 		DefaultListableBeanFactory beanFactory = getBeanFactory();
-		try{
+		try {
 			bean = (E) beanFactory.getBean(beanName);
-		} catch(NoSuchBeanDefinitionException ex) {
-			try{
+		} catch (NoSuchBeanDefinitionException ex) {
+			try {
 				bean = beanFactory.getBean(clazz);
-			} catch(NoSuchBeanDefinitionException ex2) {
-				throw new NoSuchBeanDefinitionException(beanName, "And, no unique bean of type [" + clazz.getName() + "] is defined: Cannot find bean "+clazz.getName()+" by class neither by name.");
+			} catch (NoSuchBeanDefinitionException ex2) {
+				throw new NoSuchBeanDefinitionException(beanName, "And, no unique bean of type [" + clazz.getName() + "] is defined: Cannot find bean " + clazz.getName() + " by class neither by name.");
 			}
 		}
 		return bean;
 	}
 
-	public static DefaultListableBeanFactory getBeanFactory() {
-		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) ServiceFactory.getService(org.springframework.context.ApplicationContext.class).getAutowireCapableBeanFactory();
-		return beanFactory;
-	}
-	
 	/**
 	 * Retorna determinado objeto registrado no Spring	
 	 * @param string
@@ -94,46 +89,55 @@ public class Next {
 	public static Object getObject(String beanName) {
 		return getBeanFactory().getBean(beanName);
 	}
-	
+
+	public static DefaultListableBeanFactory getBeanFactory() {
+		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) ServiceFactory.getService(org.springframework.context.ApplicationContext.class).getAutowireCapableBeanFactory();
+		return beanFactory;
+	}
+
+	public static MessageSource getMessageSource() {
+		return ServiceFactory.getService(org.springframework.context.ApplicationContext.class);
+	}
+
 //	public static User getUser(){
 //		return Authorization.getUserLocator().getUser();
 ////		return Authorization.getUserLocator().getUser();
 //	}
-	
+
 //	public static Config getConfig(){
 //		return Next.getApplicationContext().getConfig();
 //	}
-	
+
 	/**
 	 * Retorna o contexto NEXT
 	 * @return
 	 * @throws NotInNextContextException se não existir um contexto Next nessa Thread
 	 */
-	public static RequestContext getRequestContext() throws NotInNextContextException{
+	public static RequestContext getRequestContext() throws NotInNextContextException {
 		RequestContext nextContext = requestContext.get();
-		if(nextContext == null){
+		if (nextContext == null) {
 			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 			throw new NotInNextContextException("The code is not running in a NEXT context! " +
-							"\nClass: "+stackTrace[3].getClassName()+" " +
-							"\nMethod: "+stackTrace[3].getMethodName()+" " +
-							"\nLine: "+stackTrace[3].getLineNumber() );
+					"\nClass: " + stackTrace[3].getClassName() + " " +
+					"\nMethod: " + stackTrace[3].getMethodName() + " " +
+					"\nLine: " + stackTrace[3].getLineNumber());
 		}
 		return nextContext;
 	}
-	
-	public static ApplicationContext getApplicationContext() throws NotInNextContextException{
+
+	public static ApplicationContext getApplicationContext() throws NotInNextContextException {
 		ApplicationContext nextApplicationContext = applicationContext.get();
-		if(nextApplicationContext == null){
+		if (nextApplicationContext == null) {
 			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 			throw new NotInNextContextException("The code is not running in a NEXT context! " +
-							"\nClass: "+stackTrace[3].getClassName()+" " +
-							"\nMethod: "+stackTrace[3].getMethodName()+" " +
-							"\nLine: "+stackTrace[3].getLineNumber());
+					"\nClass: " + stackTrace[3].getClassName() + " " +
+					"\nMethod: " + stackTrace[3].getMethodName() + " " +
+					"\nLine: " + stackTrace[3].getLineNumber());
 		}
 		return nextApplicationContext;
 	}
-	
-	public static String getApplicationName(){
+
+	public static String getApplicationName() {
 		return Next.getApplicationContext().getApplicationName();
 	}
 

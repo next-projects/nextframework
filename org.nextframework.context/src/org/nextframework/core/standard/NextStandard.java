@@ -40,17 +40,18 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  * @version 1.1
  */
 public class NextStandard extends Next {
-	
+
 	public static boolean AUTO_LOAD_APPLICATION_CONFIG_XML = true;
 	public static boolean INIT_LOGGING = true;
-	
+
 	static Log logger = LogFactory.getLog(NextStandard.class);
-	
-	public static void start(){
+
+	public static void start() {
 		createNextContext();
 	}
-	
-	public static RequestContext createNextContext(String... fileLocations){
+
+	public static RequestContext createNextContext(String... fileLocations) {
+
 		ApplicationContext applicationContext = createApplicationContext(fileLocations);
 		DefaultRequestContext defaultRequestContext = new DefaultRequestContext(applicationContext);
 		
@@ -58,35 +59,37 @@ public class NextStandard extends Next {
 		
 		return defaultRequestContext;
 	}
-	
-	public static ApplicationContext createApplicationContext(String... fileLocations){
-		if(INIT_LOGGING){
+
+	public static ApplicationContext createApplicationContext(String... fileLocations) {
+
+		if (INIT_LOGGING) {
 			initLog4J();
 		}
+
 		NextStandardApplicationContext applicationContext = new NextStandardApplicationContext();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(applicationContext);
-		
+
 		Next.applicationContext.set(new DefaultApplicationContext());
-		
-		if(AUTO_LOAD_APPLICATION_CONFIG_XML){
+
+		if (AUTO_LOAD_APPLICATION_CONFIG_XML) {
 			PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(applicationContext);
 			try {
 				Resource[] resources = pathMatchingResourcePatternResolver.getResources("**/applicationConfig.xml");
 				for (Resource resource : resources) {
-					System.err.println("Found applicationConfig.xml in "+resource);
+					System.err.println("Found applicationConfig.xml in " + resource);
 					reader.loadBeanDefinitions(resource);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 		for (String location : fileLocations) {
 			reader.loadBeanDefinitions(new FileSystemResource(location));
 		}
-		
+
 		applicationContext.refresh();
-		
+
 		return Next.applicationContext.get();
 	}
 
@@ -100,8 +103,8 @@ public class NextStandard extends Next {
 		//TODO CONFIGURE LOG4J 2
 //		PropertyConfigurator.configure(properties);
 	}
-	
-	public static RequestContext createNextContext(){
+
+	public static RequestContext createNextContext() {
 		return createNextContext(new String[0]);
 	}
 
@@ -109,6 +112,5 @@ public class NextStandard extends Next {
 //		DefaultRequestContext requestContext2 = (DefaultRequestContext)Next.getRequestContext();
 //		requestContext2.setUser(user);
 //	}
-	
-}
 
+}

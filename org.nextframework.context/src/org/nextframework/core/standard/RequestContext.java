@@ -23,7 +23,11 @@
  */
 package org.nextframework.core.standard;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
+import org.nextframework.message.MessageResolver;
 
 /**
  * @author rogelgarcia
@@ -33,21 +37,23 @@ package org.nextframework.core.standard;
 public interface RequestContext {
 
 	ApplicationContext getApplicationContext();
-	
-	Message[] getMessages();
-	void addMessage(Object source);
-	void addMessage(Object source, MessageType type);
-	void addError(Object source);
-	void clearMessages();
-	
+
+	TimeZone getTimeZone();
+
+	Locale getLocale();
+
+	MessageResolver getMessageResolver();
+
 	String getParameter(String parameter);
 
 	void setAttribute(String name, Object value);
+
 	Object getAttribute(String name);
-	
+
 	void setUserAttribute(String name, Object value);
+
 	Object getUserAttribute(String name);
-	
+
 	/**
 	 * Sets an user attribute that must be persistent.
 	 * 
@@ -63,6 +69,7 @@ public interface RequestContext {
 	 * @param value
 	 */
 	void setUserPersistentAttribute(String name, String value);
+
 	/**
 	 * Reads a persistent attribute.
 	 * 
@@ -72,9 +79,19 @@ public interface RequestContext {
 	 * @return
 	 */
 	String getUserPersistentAttribute(String name);
+
+	void addMessage(Object source);
+
+	void addMessage(Object source, MessageType type);
+
+	void addError(Object source);
+
+	void addMessage(Message message);
 	
-//	User getUser();
-	
-//	boolean hasRole(String role);
-	
+	void addAllMessages(List<Message> messageList);
+
+	Message[] getMessages();
+
+	void clearMessages();
+
 }
