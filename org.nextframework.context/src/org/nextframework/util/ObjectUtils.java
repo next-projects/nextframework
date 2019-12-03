@@ -28,7 +28,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import org.nextframework.exception.ApplicationException;
+import org.nextframework.exception.BusinessException;
+import org.nextframework.message.MessageResolver;
+import org.nextframework.message.NextMessageSourceResolvable;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 
 /**
  * @author rogelgarcia
@@ -37,23 +46,21 @@ import java.util.Map;
  */
 public class ObjectUtils {
 
-	public boolean isEmpty(Object o){
-		if(o == null){
+	public boolean isEmpty(Object o) {
+		if (o == null) {
 			return true;
 		}
-		if(o instanceof Map<?, ?>){
-			Map<?, ?> map = (Map<?, ?>)o;
+		if (o instanceof Map<?, ?>) {
+			Map<?, ?> map = (Map<?, ?>) o;
 			return map.isEmpty();
-		} else if(o instanceof Collection<?>){
-			Collection<?> c = (Collection<?>)o;
+		} else if (o instanceof Collection<?>) {
+			Collection<?> c = (Collection<?>) o;
 			return c.isEmpty();
-		} else if (o.getClass().isArray()){
+		} else if (o.getClass().isArray()) {
 			return Array.getLength(o) == 0;
-		} else if (o instanceof String){
-			return ((String)o).length() == 0;
-		} else /*if(o instanceof HibernateProxy)*/{
-			//HibernateProxy proxy = (HibernateProxy)o;
-			//se for um proxy do hibernate não está inicilizado
+		} else if (o instanceof String) {
+			return ((String) o).length() == 0;
+		} else {
 			return false;
 		}
 	}
@@ -61,22 +68,22 @@ public class ObjectUtils {
 	public boolean isNotEmpty(Object type) {
 		return !isEmpty(type);
 	}
-	
-	@SuppressWarnings("unchecked")
-	public Method findMethod(Object object, String methodName, Class... arguments){
-		if(object == null){
-			throw new NullPointerException("Não foi possível encontrar método "+methodName+": objeto nulo ");
+
+	@SuppressWarnings("all")
+	public Method findMethod(Object object, String methodName, Class... arguments) {
+		if (object == null) {
+			throw new NullPointerException("Não foi possível encontrar método " + methodName + ": objeto nulo ");
 		}
 		try {
 			Method[] methods = object.getClass().getMethods();
 			for (Method method : methods) {
 				Class<?>[] parameterTypes = method.getParameterTypes();
-				if(method.getName().equals(methodName)){
-					if(Arrays.deepEquals(parameterTypes, arguments)){
+				if (method.getName().equals(methodName)) {
+					if (Arrays.deepEquals(parameterTypes, arguments)) {
 						return method;
-					}	
+					}
 				}
-				
+
 			}
 			for (Method method : methods) {
 				if (method.getName().equals(methodName)) {
@@ -86,7 +93,7 @@ public class ObjectUtils {
 						for (int i = 0; i < parameterTypes.length; i++) {
 							Class class1 = parameterTypes[i];
 							Class class2 = arguments[i];
-							if(class2.equals(Void.class)){//void as parameter represents an unknown type
+							if (class2.equals(Void.class)) {//void as parameter represents an unknown type
 								continue;
 							} else if (isBoolean(class1) && isBoolean(class2)) {
 								continue;
@@ -99,64 +106,137 @@ public class ObjectUtils {
 							return method;
 						}
 					}
-				}				
+				}
 			}
 			throw new NoSuchMethodException();
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException("Método "+methodName +" não encontrado na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Método " + methodName + " não encontrado na classe " + object.getClass().getSimpleName(), e);
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private boolean isBoolean(Class<?> class2) {
 		return class2.equals(boolean.class) || class2.equals(Boolean.class);
 	}
 
-	public Object findAndInvokeMethod(Object object, String methodName, Object... params){
+	public Object findAndInvokeMethod(Object object, String methodName, Object... params) {
 		Class<?>[] argumentTypes = new Class[params.length];
 		for (int i = 0; i < argumentTypes.length; i++) {
 			if (params[i] != null) {
 				argumentTypes[i] = params[i].getClass();
-			}			
+			}
 		}
 		Method findMethod = findMethod(object, methodName, argumentTypes);
 		try {
 			return findMethod.invoke(object, params);
 		} catch (IllegalArgumentException e) {
-			throw new RuntimeException("Argumentos inválidos ao chamar método "+ methodName + " na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Argumentos inválidos ao chamar método " + methodName + " na classe " + object.getClass().getSimpleName(), e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException("Acesso ilegal ao chamar método "+ methodName + " da classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Acesso ilegal ao chamar método " + methodName + " da classe " + object.getClass().getSimpleName(), e);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException("Método "+methodName+" lançou exeção "+e.getClass().getSimpleName(), e);
+			throw new RuntimeException("Método " + methodName + " lançou exeção " + e.getClass().getSimpleName(), e);
 		}
 	}
-	
-	
-	public Object findAndInvokeMethod(Object object, String methodName, Object[] params, Class<?>[] classes){
+
+	public Object findAndInvokeMethod(Object object, String methodName, Object[] params, Class<?>[] classes) {
 		Method findMethod = findMethod(object, methodName, classes);
 		try {
 			return findMethod.invoke(object, params);
 		} catch (IllegalArgumentException e) {
-			throw new RuntimeException("Argumentos inválidos ao chamar método "+methodName + " na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Argumentos inválidos ao chamar método " + methodName + " na classe " + object.getClass().getSimpleName(), e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException("Acesso ilegal ao chamar método "+methodName + " na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Acesso ilegal ao chamar método " + methodName + " na classe " + object.getClass().getSimpleName(), e);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException("Método "+methodName+" lançou exeção "+e.getTargetException().getClass().getSimpleName(), e.getTargetException());
+			throw new RuntimeException("Método " + methodName + " lançou exeção " + e.getTargetException().getClass().getSimpleName(), e.getTargetException());
 		}
 	}
-	
+
+	public MessageSourceResolvable newMessage(String code) {
+		return new NextMessageSourceResolvable(code);
+	}
+
+	public MessageSourceResolvable newMessage(String code, String defaultMessage) {
+		return new NextMessageSourceResolvable(code, defaultMessage);
+	}
+
+	public MessageSourceResolvable newMessage(String code, Object... args) {
+		return new NextMessageSourceResolvable(code, args);
+	}
+
+	public MessageSourceResolvable newMessage(String code, Object[] args, String defaultMessage) {
+		return new NextMessageSourceResolvable(code, args, defaultMessage);
+	}
+
+	public ApplicationException getApplicationException(MessageResolver resolver, BusinessException exception) {
+		String txt = Util.objects.getExceptionDescription(resolver, exception, true, false);
+		throw new ApplicationException(txt, exception.getCause());
+	}
+
+	public String getExceptionDescription(MessageResolver resolver, Throwable exception, boolean includeMessage, boolean includeCauses) {
+
+		String allDesc = "";
+
+		Set<Throwable> allCauses = new HashSet<Throwable>();
+		Throwable cause = exception;
+		while (cause != null && !allCauses.contains(cause)) {
+
+			String exDesc = null;
+
+			Class<?> clazz = cause.getClass();
+			do {
+				try {
+					exDesc = resolver.message(clazz.getName());
+				} catch (NoSuchMessageException e) {
+					//Não encontrado...
+				}
+				clazz = clazz.getSuperclass();
+			} while (exDesc == null && clazz != Object.class);
+
+			if (exDesc == null) {
+				exDesc = cause.getClass().getSimpleName();
+			}
+
+			if (includeMessage) {
+				if (cause instanceof MessageSourceResolvable) {
+					exDesc += ": " + resolver.message((MessageSourceResolvable) cause);
+				} else {
+					String m = cause.getMessage();
+					if (m != null) {
+						int nestedIndex = m.indexOf("; nested exception is");
+						if (nestedIndex > -1) {
+							m = m.substring(0, nestedIndex);
+						}
+						exDesc += ": " + m;
+					}
+				}
+			}
+
+			allDesc += (allDesc.length() == 0 ? "" : " -> ") + exDesc;
+
+			if (!includeCauses) {
+				break;
+			}
+
+			allCauses.add(cause);
+			cause = cause.getCause();
+		}
+
+		return allDesc;
+	}
+
 	static ThreadLocal<Long> timestamp = new ThreadLocal<Long>();
-	static{
+	static {
 		timestamp.set(System.currentTimeMillis());
 	}
-	public void beginTimestamp(){
+
+	public void beginTimestamp() {
 		timestamp.set(System.currentTimeMillis());
 	}
-	
-	public long endTimestamp(){
+
+	public long endTimestamp() {
 		return System.currentTimeMillis() - timestamp.get();
 	}
 }
