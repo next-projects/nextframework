@@ -47,7 +47,7 @@ import org.springframework.validation.ObjectError;
  * @version 1.1
  */
 public class MessagesTag extends BaseTag {
- 
+
 	private Boolean renderAsHtml;
 
 	protected String containerClass = "messagesContainer";
