@@ -46,7 +46,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.authorization.Authorization;
 import org.nextframework.authorization.User;
-import org.nextframework.bean.annotation.DisplayName;
 import org.nextframework.context.DeprecatedLogger;
 import org.nextframework.controller.json.JsonTranslator;
 import org.nextframework.controller.mvt.ModelAndViewTranslator;
@@ -164,20 +163,20 @@ import org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResol
  * @version 1.1
  */
 public class MultiActionController extends AbstractController {
-	
+
 	/**
 	 * Parametro que indica que é para limpar o filtro asntes de setar as propriedades, mesmo se já existir um command na sessão<BR><BR>
 	 * Tem que passar o valor "true".
 	 * Força a criação de um novo command
 	 */
 	public static final String CLEAR_FILTER = "clearFilter";
-	
+
 	public static final String SUPPRESS_ERRORS = "suppressErrors";
 
 	private static final String SUPPRESS_VALIDATION = "suppressValidation";
 
 	public static final String ACTION_PARAMETER = "ACTION";
-	
+
 	@Deprecated
 	private static final String ACTION_PARAMETER_DEPRECATED = "ACAO";
 
@@ -216,21 +215,21 @@ public class MultiActionController extends AbstractController {
 
 	/** Methods, keyed by exception class */
 	private Map<Class<Throwable>, Method> exceptionHandlerMap;
-	
+
 	List<BinderConfigurer> binderConfigurers;
-	
+
 	public static String getRequestAction(HttpServletRequest request) {
 		String parameter = request.getParameter(MultiActionController.ACTION_PARAMETER);
-		if(parameter == null){
+		if (parameter == null) {
 			//check deprecated parameter
 			parameter = request.getParameter(MultiActionController.ACTION_PARAMETER_DEPRECATED);
-			if(parameter != null){
-				DeprecatedLogger.warn(MultiActionController.ACTION_PARAMETER_DEPRECATED +" is deprecated. Use "+MultiActionController.ACTION_PARAMETER+". Defined in constant MultiActionController.ACTION_PARAMETER");
+			if (parameter != null) {
+				DeprecatedLogger.warn(MultiActionController.ACTION_PARAMETER_DEPRECATED + " is deprecated. Use " + MultiActionController.ACTION_PARAMETER + ". Defined in constant MultiActionController.ACTION_PARAMETER");
 			}
 		}
 		return parameter;
 	}
-	
+
 	/**
 	 * O Spring irá injetar todos os binderConfigurers para essa aplicação
 	 * @param binderConfigurers
@@ -266,7 +265,6 @@ public class MultiActionController extends AbstractController {
 		setDelegate(delegate);
 	}
 
-
 	/**
 	 * Set the Validators for this controller. The Validator must support the
 	 * specified command class.
@@ -274,7 +272,7 @@ public class MultiActionController extends AbstractController {
 	public final void setValidators(Validator[] validators) {
 		this.validators = validators;
 	}
-	
+
 	/**
 	 * Return the Validators for this controller.
 	 */
@@ -385,7 +383,6 @@ public class MultiActionController extends AbstractController {
 	// Implementation of LastModified
 	// ---------------------------------------------------------------------
 
-
 	// ---------------------------------------------------------------------
 	// Implementation of Controller
 	// ---------------------------------------------------------------------
@@ -396,7 +393,7 @@ public class MultiActionController extends AbstractController {
 			Method method = this.methodNameResolver.getHandlerMethod(request);
 			request.setAttribute("firstAction", requestContext.getLastAction());
 			ModelAndView result = invokeNamedMethod(method, requestContext, null);
-			
+
 			while (result != null && result.getViewName() != null && result.getViewName().startsWith("action:")) {
 				String actionName = result.getViewName().substring("action:".length(), result.getViewName().length());
 
@@ -419,13 +416,13 @@ public class MultiActionController extends AbstractController {
 	protected ModelAndView noSuchMethodHandler(HttpServletRequest request, HttpServletResponse response, NoSuchRequestHandlingMethodException ex)
 			throws IOException {
 		String parameter = request.getParameter(ACTION_PARAMETER);
-		pageNotFoundLogger.warn(ex.getMessage()+", ACTION="+parameter+". " +
+		pageNotFoundLogger.warn(ex.getMessage() + ", ACTION=" + parameter + ". " +
 				"Checar se o método possui uma assinatura no seguinte padrão: public <nome do método>(WebRequestContext request, <Classe do Command> <nome do command>). " +
 				"O método pode opcionalmente lançar exceções. A classe do command pode ser qualquer uma.");
-		if(parameter == null){
+		if (parameter == null) {
 			pageNotFoundLogger.warn("Verifique se algum método do controller possui a anotação @DefaultAction");
 		}
-		response.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage()+".\n Verifique o log para mais informações");
+		response.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage() + ".\n Verifique o log para mais informações");
 		return null;
 	}
 
@@ -437,10 +434,10 @@ public class MultiActionController extends AbstractController {
 	 * @return
 	 */
 	protected ModelAndView goToAction(String action) {
-		((DefaultWebRequestContext)NextWeb.getRequestContext()).setLastAction(action);
+		((DefaultWebRequestContext) NextWeb.getRequestContext()).setLastAction(action);
 		return new ModelAndView("action:" + action);
 	}
-	
+
 	/**
 	 * Continua o processamento em outra action, utilizando o mesmo command. 
 	 * @param action
@@ -449,12 +446,12 @@ public class MultiActionController extends AbstractController {
 	 */
 	protected ModelAndView continueOnAction(String action, Object command) {
 		WebRequestContext request = NextWeb.getRequestContext();
-		((DefaultWebRequestContext)request).setLastAction(action);
-		
+		((DefaultWebRequestContext) request).setLastAction(action);
+
 		HttpServletResponse servletResponse = request.getServletResponse();
 		try {
 			Method method = this.methodNameResolver.getHandlerMethod(action);
-			
+
 			ModelAndView result = invokeNamedMethod(method, NextWeb.getRequestContext(request.getServletRequest(), servletResponse), command);
 			request.setAttribute("firstAction", request.getLastAction());
 			while (result != null && result.getViewName() != null && result.getViewName().startsWith("action:")) {
@@ -485,9 +482,9 @@ public class MultiActionController extends AbstractController {
 		WebRequestContext requestContext = NextWeb.getRequestContext();
 		String requestQuery = requestContext.getRequestQuery();
 		String query = "?" + ACTION_PARAMETER + "=" + action;
-		return new ModelAndView("redirect:" + requestQuery + (action == null ? "" : query) );
+		return new ModelAndView("redirect:" + requestQuery + (action == null ? "" : query));
 	}
-	
+
 	/**
 	 * Efetua sendRedirect para determinada action.
 	 */
@@ -497,14 +494,14 @@ public class MultiActionController extends AbstractController {
 		String query = "?" + ACTION_PARAMETER + "=" + action;
 		return "redirect:" + requestQuery + (action == null ? "" : query);
 	}
-	
+
 	/**
 	 * Efetua sendRedirect para determinada action.
 	 */
 	protected String redirectToActionWithParams(String action, String params) {
 		WebRequestContext requestContext = NextWeb.getRequestContext();
 		String requestQuery = requestContext.getRequestQuery();
-		String query = "?" + ACTION_PARAMETER + "=" + action + "&" +params;
+		String query = "?" + ACTION_PARAMETER + "=" + action + "&" + params;
 		return "redirect:" + requestQuery + (action == null ? "" : query);
 	}
 
@@ -515,7 +512,6 @@ public class MultiActionController extends AbstractController {
 	 * unchecked exception; wrap a checked exception or Throwable.
 	 * @param useCommand 
 	 */
-	@SuppressWarnings("deprecation")
 	protected final ModelAndView invokeNamedMethod(Method method, WebRequestContext request, Object useCommand) throws Exception {
 		//TODO TRATAMENTO DE LOOP ETERNO (REFERENCIA CIRCULAR)
 
@@ -524,18 +520,17 @@ public class MultiActionController extends AbstractController {
 			boolean fromErrors = false;
 			try {
 				List<Object> params = new ArrayList<Object>(2);
-				boolean hasRequestParameter = 
-					method.getParameterTypes().length > 0 && 
-					method.getParameterTypes()[0].isAssignableFrom(WebRequestContext.class) &&
-					!method.getParameterTypes()[0].equals(Object.class);
-				if(hasRequestParameter){
+				boolean hasRequestParameter = method.getParameterTypes().length > 0 &&
+						method.getParameterTypes()[0].isAssignableFrom(WebRequestContext.class) &&
+						!method.getParameterTypes()[0].equals(Object.class);
+				if (hasRequestParameter) {
 					params.add(request);
 				}
 
 				if (useCommand == null) {
 					input = getAnnotation(method, Input.class);//modificado em 22/10/2010, esse código ficava dentro do if.. e só funcionava caso existissem commands
 					if ((hasRequestParameter && method.getParameterTypes().length == 2) || (!hasRequestParameter && method.getParameterTypes().length == 1)) {
-						Class<?> commandClass = getCommandClass(method, hasRequestParameter? 1 : 0);
+						Class<?> commandClass = getCommandClass(method, hasRequestParameter ? 1 : 0);
 						CommandInfo commandInfo = getCommandInfo(method);
 
 						Object command;
@@ -554,13 +549,13 @@ public class MultiActionController extends AbstractController {
 
 						if (binder.getBindingResult().hasErrors()) {
 							String inputAction = null;
-							
-							if(input != null){
+
+							if (input != null) {
 								inputAction = input.value();
 							} else {
-								logger.warn("No @Input specified for method "+method.getDeclaringClass().getName()+"."+method.getName()+". Bind errors.");
+								logger.warn("No @Input specified for method " + method.getDeclaringClass().getName() + "." + method.getName() + ". Bind errors.");
 								new BindException(binder.getBindingResult()).printStackTrace();
-								if(commandInfo.session){
+								if (commandInfo.session) {
 									//should reset the command
 									command = instantiateNewSessionCommand(request, commandClass, getSessionCommandName(commandClass, commandInfo));
 									inputAction = method.getName();
@@ -585,20 +580,20 @@ public class MultiActionController extends AbstractController {
 				}
 				Object result = method.invoke(this.delegate, params.toArray(new Object[params.size()]));
 				return convertActionResultToModelAndView(method, result);
-			} catch (NoSuchRequestHandlingMethodException e){
+			} catch (NoSuchRequestHandlingMethodException e) {
 				throw e;
-			} catch (NextException e){
+			} catch (NextException e) {
 				throw e;
 			} catch (InvocationTargetException ex) {
 				// the invoked method threw exception
-				if(input == null ) {
+				if (input == null) {
 					OnErrors onErrors = getAnnotation(method, OnErrors.class);
-					if(onErrors != null){
+					if (onErrors != null) {
 						fromErrors = true;
-						((DefaultWebRequestContext)request).setLastAction(onErrors.value());
+						((DefaultWebRequestContext) request).setLastAction(onErrors.value());
 						Method methodErrors = this.methodNameResolver.getHandlerMethod(onErrors.value());
 						request.addError(ex.getTargetException());
-						logger.error("Erro ao invocar método "+method.getName()+" da classe "+this.getClass().getName()+". Redirecionando para onErrors: "+onErrors.value(), ex.getTargetException());
+						logger.error("Erro ao invocar método " + method.getName() + " da classe " + this.getClass().getName() + ". Redirecionando para onErrors: " + onErrors.value(), ex.getTargetException());
 						method = methodErrors;
 						continue;
 					} else {
@@ -608,21 +603,21 @@ public class MultiActionController extends AbstractController {
 					//se tem input.. redirecionar para input
 					boolean sameMethod = false;
 					String inputName = input.value();
-					
+
 					Method handlerMethod = this.methodNameResolver.getHandlerMethod(inputName);
 					sameMethod = handlerMethod.getName().equals(method.getName());
-					
+
 					//	se for o mesmo método.. deixar a excecao vazar (se mandar para o método denovo vai dar loop eterno porque a excecao vai ocorrer novamente
-					if(!sameMethod){ 
+					if (!sameMethod) {
 						// se nao for o mesmo método.. redirecionar
 						// poderiamos mandar um flag já que o método a ser invocado tem o mesmo command .. nesse caso economizariamos o bind
 						// mas vamos deixar fazer o bind novamente porque já pode ter ocorrido algum processamento que alterou os valores do command 
 						method = handlerMethod;
 						request.addError(ex.getTargetException());
-						((DefaultWebRequestContext)request).setLastAction(inputName);
-						logger.error("Erro ao invocar método "+method.getName()+" da classe "+this.getClass().getName()+". Redirecionando para input: "+inputName, ex.getTargetException());
+						((DefaultWebRequestContext) request).setLastAction(inputName);
+						logger.error("Erro ao invocar método " + method.getName() + " da classe " + this.getClass().getName() + ". Redirecionando para input: " + inputName, ex.getTargetException());
 						continue;
-					}					
+					}
 				}
 				return handleException(request, ex.getTargetException());
 			} catch (IllegalArgumentException ex) {
@@ -636,21 +631,20 @@ public class MultiActionController extends AbstractController {
 
 	@SuppressWarnings("unchecked")
 	public ModelAndView convertActionResultToModelAndView(Method method, Object result) {
-		if(result == null){
+		if (result == null) {
 			return null;
 		}
-		if(result instanceof ModelAndView){
+		if (result instanceof ModelAndView) {
 			return (ModelAndView) result;
 		}
 		ModelAndViewTranslator<Object>[] translators = ServiceFactory.loadServices(ModelAndViewTranslator.class);
 		for (ModelAndViewTranslator<Object> modelAndViewTranslator : translators) {
-			if(translatorIsSuitable(modelAndViewTranslator, result)){
+			if (translatorIsSuitable(modelAndViewTranslator, result)) {
 				return modelAndViewTranslator.translateActionResultToModelAndView(result, method);
 			}
 		}
-		throw new RuntimeException("No ModelAndViewTranslator found for "+result);
+		throw new RuntimeException("No ModelAndViewTranslator found for " + result);
 	}
-
 
 	private boolean translatorIsSuitable(ModelAndViewTranslator<?> modelAndViewTranslator, Object result) {
 		Class<?> type = GenericTypeResolver.resolveTypeArgument(modelAndViewTranslator.getClass(), ModelAndViewTranslator.class);
@@ -660,7 +654,7 @@ public class MultiActionController extends AbstractController {
 	private CommandInfo getCommandInfo(Method method) {
 		CommandInfo commandInfo = new CommandInfo();
 		Command commandInfoAnnotation = getAnnotation(method, Command.class);
-		if(commandInfoAnnotation == null){
+		if (commandInfoAnnotation == null) {
 			return commandInfo;
 		}
 		commandInfo.name = commandInfoAnnotation.name();
@@ -671,12 +665,12 @@ public class MultiActionController extends AbstractController {
 
 	@SuppressWarnings("unused")
 	private Method firstMethod(Class<?> ofClass, Method expectedMethod) {
-		if(ofClass.equals(expectedMethod.getDeclaringClass())){
+		if (ofClass.equals(expectedMethod.getDeclaringClass())) {
 			return expectedMethod;
 		}
 		Method[] methods = ofClass.getDeclaredMethods();
 		for (Method method : methods) {
-			if(method.getName().equals(expectedMethod.getName()) && Arrays.deepEquals(method.getParameterTypes(), expectedMethod.getParameterTypes())){
+			if (method.getName().equals(expectedMethod.getName()) && Arrays.deepEquals(method.getParameterTypes(), expectedMethod.getParameterTypes())) {
 				return method;
 			}
 		}
@@ -686,7 +680,7 @@ public class MultiActionController extends AbstractController {
 	private <A extends Annotation> A getAnnotation(Method method, Class<A> annotation) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		A result = null;
-		if(reflectionCache.isAnnotationPresent(method, annotation)){
+		if (reflectionCache.isAnnotationPresent(method, annotation)) {
 			result = method.getAnnotation(annotation);
 		} else {
 			Method superMethod = getSuperClassMethod(method);
@@ -700,11 +694,11 @@ public class MultiActionController extends AbstractController {
 	private Method getSuperClassMethod(Method method) {
 		Class<?> superclass = method.getDeclaringClass().getSuperclass();
 		Method superMethod = null;
-		if(!MultiActionController.class.equals(superclass)){
+		if (!MultiActionController.class.equals(superclass)) {
 			ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 			Method[] methods = reflectionCache.getMethods(superclass);
 			for (Method method2 : methods) {
-				if(method2.getName().equals(method.getName())){
+				if (method2.getName().equals(method.getName())) {
 					superMethod = method2;
 					break;
 				}
@@ -713,7 +707,6 @@ public class MultiActionController extends AbstractController {
 		return superMethod;
 	}
 
-
 	protected Class<?> getCommandClass(Method method, int commandIndex) {
 		//TODO TENTAR DESCOBRIR O COMMAND MESMO QUANDO UTILIZAR GENERICS
 		Class<?> commandClass = null;
@@ -721,32 +714,33 @@ public class MultiActionController extends AbstractController {
 		do {
 			Type[] genericParameterTypes = method.getGenericParameterTypes();
 			Type type = genericParameterTypes[commandIndex];
-			if (type instanceof TypeVariable<?>){
+			if (type instanceof TypeVariable<?>) {
 				TypeVariable<?> typeVariable = (TypeVariable<?>) type;
 				String typeVariableName = typeVariable.getName();
-				
+
 				TypeVariable<?>[] typeParameters = this.getClass().getTypeParameters();
-				if(typeParameters.length != 0){
+				if (typeParameters.length != 0) {
 					throw new NextException("Implementar achar tipo de command por genericTypeParameters");
 				}
 				Type genericSuperclass = this.getClass().getGenericSuperclass();
-				if(genericSuperclass instanceof ParameterizedType){
+				if (genericSuperclass instanceof ParameterizedType) {
 					TypeVariable<?>[] typeParametersMethodClass = method.getDeclaringClass().getTypeParameters();
 					int i = 0;
 					for (TypeVariable<?> variable : typeParametersMethodClass) {
-						if(variable.getName().equals(typeVariableName)){
-							commandClass = (Class<?>)((ParameterizedType)genericSuperclass).getActualTypeArguments()[i];
+						if (variable.getName().equals(typeVariableName)) {
+							commandClass = (Class<?>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[i];
 						}
 						i++;
 					}
 				}
 				break;
-			} if(type instanceof Object){
+			}
+			if (type instanceof Object) {
 				method = getSuperClassMethod(method);
 			}
-		} while(commandClass == null && method != null);
-		if(commandClass == null){
-			commandClass = metodoOriginal.getParameterTypes()[metodoOriginal.getParameterTypes().length - 1];	
+		} while (commandClass == null && method != null);
+		if (commandClass == null) {
+			commandClass = metodoOriginal.getParameterTypes()[metodoOriginal.getParameterTypes().length - 1];
 		}
 //		if(commandClass.equals(Object.class)){
 //			logger.warn("Utilizando classe java.lang.Object como command");
@@ -790,14 +784,14 @@ public class MultiActionController extends AbstractController {
 
 	public <E> String getSessionCommandName(Class<E> clazz, CommandInfo commandInfo) {
 		String name = commandInfo.name;
-		if(Util.strings.isEmpty(name)){
+		if (Util.strings.isEmpty(name)) {
 			name = getDefaultSessionCommandName(clazz);
 		}
 		return name;
 	}
 
 	public <E> String getDefaultSessionCommandName(Class<E> clazz) {
-		return this.getClass().getSimpleName()+"CONTROLLER"+clazz.getName();
+		return this.getClass().getSimpleName() + "CONTROLLER" + clazz.getName();
 	}
 
 	private <E> E getCommand(WebRequestContext request, Class<E> clazz, String name) throws Exception {
@@ -809,7 +803,7 @@ public class MultiActionController extends AbstractController {
 	@SuppressWarnings("unchecked")
 	protected <E> E getSessionCommand(WebRequestContext request, Class<E> clazz, String name) {
 		E sessionCommand = (E) request.getSession().getAttribute(name);
-		if (sessionCommand == null 
+		if (sessionCommand == null
 				|| "true".equalsIgnoreCase(request.getParameter(CLEAR_FILTER))
 				|| "true".equals(request.getAttribute(CLEAR_FILTER))
 				|| Boolean.TRUE.equals(request.getAttribute(CLEAR_FILTER))) {
@@ -825,14 +819,14 @@ public class MultiActionController extends AbstractController {
 		onInstantiateNewCommand(sessionCommand, name, true);
 		return sessionCommand;
 	}
-	
-	protected void onInstantiateNewCommand(Object command, String name, boolean session){
+
+	protected void onInstantiateNewCommand(Object command, String name, boolean session) {
 		CommandEventListener[] commandListeners = getCommandListeners();
 		for (CommandEventListener commandListener : commandListeners) {
 			commandListener.onInstantiateNewCommand(this, command, name, session);
 		}
 	}
-	
+
 	protected void onCreateBinderForCommand(ServletRequestDataBinder binder, Object command) {
 		CommandEventListener[] commandListeners = getCommandListeners();
 		for (CommandEventListener commandListener : commandListeners) {
@@ -846,7 +840,7 @@ public class MultiActionController extends AbstractController {
 			commandListener.onCommandBind(this, command, binder);
 		}
 	}
-	
+
 	protected void onCommandValidation(ServletRequestDataBinder binder, Object command) {
 		CommandEventListener[] commandListeners = getCommandListeners();
 		for (CommandEventListener commandListener : commandListeners) {
@@ -868,25 +862,24 @@ public class MultiActionController extends AbstractController {
 	 * @throws Exception
 	 *             in case of invalid state or arguments
 	 */
-	@SuppressWarnings("deprecation")
 	protected ServletRequestDataBinder bind(WebRequestContext request, Object command, boolean validate) throws Exception {
 		logger.debug("Binding request parameters onto MultiActionController command");
 
 		ServletRequestDataBinder binder = createBinder(request.getServletRequest(), command, getCommandName(command));
 		onCreateBinderForCommand(binder, command);
-		if(command.getClass().equals(Object.class)){
+		if (command.getClass().equals(Object.class)) {
 			return binder;
 		}
 		binder.bind(request.getServletRequest());
 		onCommandBind(binder, command);
-		
+
 		if (validate) {
 			validate(request, command, binder);
 		}
 		String acao = request.getParameter(ACTION_PARAMETER);
 		customValidation(request, command, new BindException(binder.getBindingResult()), acao);
 		onCommandValidation(binder, command);
-		
+
 		return binder;
 	}
 
@@ -898,14 +891,14 @@ public class MultiActionController extends AbstractController {
 	 * @param acao
 	 */
 	protected void customValidation(WebRequestContext request, Object command, BindException errors, String acao) {
-		
+
 	}
 
 	protected void validate(WebRequestContext request, Object command, ServletRequestDataBinder binder) {
-		
+
 		if (!suppressValidation(request, command)) {
 			BindException errors = new BindException(binder.getBindingResult());
-			if(request.getAttribute(NextCommonsMultipartResolver.MAXUPLOADEXCEEDED) != null){
+			if (request.getAttribute(NextCommonsMultipartResolver.MAXUPLOADEXCEEDED) != null) {
 				errors.reject("", "O tamanho máximo de upload de arquivos (10M) foi excedido");
 			}
 			ObjectAnnotationValidator objectAnnotationValidator = new ObjectAnnotationValidator(ServiceFactory.getService(ValidatorRegistry.class), request.getServletRequest());
@@ -928,12 +921,12 @@ public class MultiActionController extends AbstractController {
 	 * @param errors
 	 */
 	protected void validate(Object obj, BindException errors, String action) {
-		
+
 	}
 
 	protected boolean suppressValidation(WebRequestContext request, Object command) {
 		String suppress = request.getParameter(SUPPRESS_VALIDATION);
-		if("true".equalsIgnoreCase(suppress)){
+		if ("true".equalsIgnoreCase(suppress)) {
 			return true;
 		}
 		return false;
@@ -963,7 +956,7 @@ public class MultiActionController extends AbstractController {
 	protected ServletRequestDataBinder createBinder(ServletRequest request, Object command, String commandDisplayName) throws Exception {
 		ServletRequestDataBinder binder = new ServletRequestDataBinderNext(command, commandDisplayName);
 		initBinder(request, binder);
-		if(binderConfigurers != null){
+		if (binderConfigurers != null) {
 			for (BinderConfigurer binderConfigurer : binderConfigurers) {
 				binderConfigurer.configureBinder(binder, request, command);
 			}
@@ -981,9 +974,7 @@ public class MultiActionController extends AbstractController {
 	 * @see #DEFAULT_COMMAND_NAME
 	 */
 	protected String getCommandName(Object command) {
-		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-		DisplayName displayName = reflectionCache.getAnnotation(command.getClass(), DisplayName.class);
-		return displayName != null ? displayName.value() : command.getClass().getSimpleName();
+		return Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), command.getClass());
 	}
 
 	/**
@@ -1064,7 +1055,7 @@ public class MultiActionController extends AbstractController {
 			throw (Exception) ex;
 		}
 		if (ex instanceof Error) {
-			request.getServletResponse().addHeader("EX-ERROR-MESSAGE", ex.getClass().getSimpleName()+": "+ex.getMessage());
+			request.getServletResponse().addHeader("EX-ERROR-MESSAGE", ex.getClass().getSimpleName() + ": " + ex.getMessage());
 			throw (Error) ex;
 		}
 		// Should never happen!
@@ -1118,32 +1109,32 @@ public class MultiActionController extends AbstractController {
 
 		@Override
 		public String toString() {
-			return "name: "+name+", validate: "+validate+", session: "+session;
+			return "name: " + name + ", validate: " + validate + ", session: " + session;
 		}
 	}
 
 	public Map<String, Method> getHandlerMethodMap() {
 		return handlerMethodMap;
 	}
-	
+
 	/* Métodos utilitários */
-	
+
 	/**
 	 * Retorna o request atual
 	 * @return
 	 */
-	public WebRequestContext getRequest(){
+	public WebRequestContext getRequest() {
 		return NextWeb.getRequestContext();
 	}
-	
-	public User getUser(){
+
+	public User getUser() {
 		return Authorization.getUserLocator().getUser();
 	}
-	
-	public void setAttribute(String name, Object value){
+
+	public void setAttribute(String name, Object value) {
 		getRequest().setAttribute(name, value);
 	}
-	
+
 	/**
 	 * Transforms a collection attribute in a TypedCollection.<BR>
 	 * The TypedCollection is recognized by datagrids, so it is possible to set only one attribute to configure a datagrid.
@@ -1152,30 +1143,30 @@ public class MultiActionController extends AbstractController {
 	 * @param type
 	 */
 	@SuppressWarnings("all")
-	public void setAttributeTyped(String name, Object value, Class type){
-		if(!(value instanceof Collection)){
+	public void setAttributeTyped(String name, Object value, Class type) {
+		if (!(value instanceof Collection)) {
 			throw new IllegalArgumentException("Only collections can be typed");
 		}
 		TypedCollectionImpl<?> typedCollection = new TypedCollectionImpl((Collection) value, type);
 		getRequest().setAttribute(name, typedCollection);
 	}
-	
-	public Object getAttribute(String name){
+
+	public Object getAttribute(String name) {
 		return getRequest().getAttribute(name);
 	}
-	
-	public void setUserAttribute(String name, Object value){
+
+	public void setUserAttribute(String name, Object value) {
 		getRequest().setUserAttribute(name, value);
 	}
-	
-	public Object getUserAttribute(String name){
+
+	public Object getUserAttribute(String name) {
 		return getRequest().getUserAttribute(name);
 	}
-	
-	public String getParameter(String name){
+
+	public String getParameter(String name) {
 		return getRequest().getParameter(name);
 	}
-	
+
 	/**
 	 * Transforms the object to JSON notation
 	 * @param object

@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.core.web.NextWeb;
+import org.nextframework.util.Util;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.validation.Errors;
@@ -108,7 +110,8 @@ public class ObjectAnnotationValidator extends WebApplicationObjectSupport imple
 		for (Annotation annotation : annotations) {
 			PropertyValidator propertyValidator = validatorRegistry.getPropertyValidator(annotation.annotationType());
 			if(propertyValidator != null){
-				propertyValidator.validate(obj, propertyDescriptor.getValue(), parametro, propertyDescriptor.getDisplayName(), annotation, errors, this);
+				String displayName = Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), propertyDescriptor);
+				propertyValidator.validate(obj, propertyDescriptor.getValue(), parametro, displayName, annotation, errors, this);
 			}
 		}
 	}
