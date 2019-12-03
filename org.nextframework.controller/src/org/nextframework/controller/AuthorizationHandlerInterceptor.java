@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.nextframework.authorization.Authorization;
 import org.nextframework.authorization.AuthorizationManager;
-import org.nextframework.core.web.DefaultWebRequestContext;
+import org.nextframework.web.WebUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -36,8 +36,8 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		AuthorizationManager authorizationManager = Authorization.getAuthorizationManager();
-		boolean autorized = authorizationManager.isAuthorized(DefaultWebRequestContext.getController(), DefaultWebRequestContext.getAction());
-		if(!autorized){
+		boolean autorized = authorizationManager.isAuthorized(WebUtils.getRequestModuleAndController(), WebUtils.getRequestAction());
+		if (!autorized) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Sem permissão para acessar conteúdo");
 			return false;
 		}

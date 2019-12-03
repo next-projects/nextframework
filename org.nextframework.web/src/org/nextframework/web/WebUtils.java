@@ -2,8 +2,8 @@ package org.nextframework.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.nextframework.core.web.DefaultWebRequestContext;
 import org.nextframework.core.web.NextWeb;
-import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.web.service.UrlRewriter;
 
@@ -40,11 +40,50 @@ public class WebUtils {
 	}
 
 	public static String getFirstFullUrl() {
-		return ((WebRequestContext) NextWeb.getRequestContext()).getServletRequest().getContextPath() + getFirstUrl();
+		return NextWeb.getRequestContext().getServletRequest().getContextPath() + getFirstUrl();
 	}
 
 	public static String getFirstUrl() {
-		return ((WebRequestContext) NextWeb.getRequestContext()).getFirstRequestUrl();
+		return NextWeb.getRequestContext().getFirstRequestUrl();
+	}
+
+	public static String getRequestModule() {
+		return NextWeb.getRequestContext().getServletPath().substring(1);
+	}
+
+	public static String getRequestController() {
+		String pathInfo = NextWeb.getRequestContext().getPathInfo();
+		if (pathInfo.length() > 0) {
+			return pathInfo.substring(1);
+		}
+		return null;
+	}
+
+	public static String getRequestModuleAndController() {
+		String controller = getRequestController();
+		return getRequestModule() + (controller != null ? controller : "");
+	}
+
+	public static String getModelAndViewName() {
+		String view = (String) NextWeb.getRequestContext().getAttribute("bodyPage");
+		if (view != null) {
+			view = view.substring(view.lastIndexOf("/") + 1);
+			int dot = view.lastIndexOf(".");
+			if (dot > -1) {
+				view = view.substring(0, dot);
+			}
+		}
+		return view;
+	}
+
+	public static String getMessageCodeViewPrefix() {
+		String view = getModelAndViewName();
+		return getRequestModule() + "." + getRequestController() + "." + (view != null ? view : "view");
+	}
+
+	public static String getRequestAction() {
+		HttpServletRequest httpServletRequest = WebContext.getRequest();
+		return httpServletRequest.getParameter(DefaultWebRequestContext.ACTION_PARAMETER);
 	}
 
 }
