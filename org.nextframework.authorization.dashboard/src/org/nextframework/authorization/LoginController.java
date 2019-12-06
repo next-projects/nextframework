@@ -45,8 +45,7 @@ public class LoginController extends MultiActionController implements Authentica
 		if (!loginChecked) {
 			loginChecked = true;
 			// consider the next default behavior for page redirecting
-			String module = WebUtils.getRequestModule();
-			String dir = "/WEB-INF/jsp" + module;
+			String dir = "/WEB-INF/jsp/" + WebUtils.getRequestModule();
 			String pageResource = dir + "/login.jsp";
 			if (getServletContext().getResourceAsStream(pageResource) == null) {
 				String realPath = getServletContext().getRealPath(pageResource);

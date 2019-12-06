@@ -59,9 +59,9 @@ public class WebUtils {
 		return null;
 	}
 
-	public static String getRequestModuleAndController() {
+	public static String getRequestModuleAndControllerURL() {
 		String controller = getRequestController();
-		return getRequestModule() + (controller != null ? controller : "");
+		return NextWeb.getRequestContext().getServletPath() + "/" + (controller != null ? controller : "");
 	}
 
 	public static String getModelAndViewName() {
