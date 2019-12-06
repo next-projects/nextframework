@@ -32,14 +32,12 @@ public class NextWebApplicationContext extends AnnotationConfigWebApplicationCon
 	@Override
 	public void setServletContext(ServletContext servletContext) {
 		super.setServletContext(servletContext);
-		// configure the spring application context as a service
 		ServletContextServiceProvider.registerService(servletContext, ApplicationContext.class, this);
 		ServletContextServiceProvider.registerService(servletContext, ConfigurableApplicationContext.class, this);
 		ServletContextServiceProvider.registerService(servletContext, WebApplicationContext.class, this);
 		ServletContextServiceProvider.registerService(servletContext, ResourceLoader.class, this);
 		ServletContextServiceProvider.registerService(servletContext, ListableBeanFactory.class, this);
 		ServletContextServiceProvider.registerService(servletContext, BeanFactory.class, this);
-		
 		ServletContextServiceProvider.registerService(servletContext, ApplicationScanPathsProvider.class, this);
 	}
 
@@ -50,23 +48,24 @@ public class NextWebApplicationContext extends AnnotationConfigWebApplicationCon
 
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException {
+
 		setConfigLocations(new String[0]);//config locations will not be scan paths or registered classes in super class
 		String[] applicationScanPaths = getApplicationScanPaths();
 		scan(applicationScanPaths);//will automatically scan the application paths
-		
+
 		super.loadBeanDefinitions(beanFactory);
-		
+
 		// next specific functionality
-		
+
 		//apply AUTOWIRE_BY_TYPE for all application beans
 		String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
 		for (String beanDefinitionName : beanDefinitionNames) {
 			BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanDefinitionName);
-			if(isApplicationComponent(beanDefinition, applicationScanPaths)){
-				((AbstractBeanDefinition)beanDefinition).setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
+			if (isApplicationComponent(beanDefinition, applicationScanPaths)) {
+				((AbstractBeanDefinition) beanDefinition).setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 			}
 		}
-		
+
 		for (BeanDefinitionLoader beanDefinitionLoader : ServiceFactory.loadServices(BeanDefinitionLoader.class)) {
 			beanDefinitionLoader.setApplicationScanPaths(applicationScanPaths);
 			beanDefinitionLoader.loadBeanDefinitions(this, beanFactory);
@@ -75,25 +74,25 @@ public class NextWebApplicationContext extends AnnotationConfigWebApplicationCon
 
 	private boolean isApplicationComponent(BeanDefinition beanDefinition, String[] applicationScanPaths) {
 		String beanClassName = beanDefinition.getBeanClassName();
-		if(beanClassName.startsWith("org.springframework")){
+		if (beanClassName.startsWith("org.springframework")) {
 			return false;
 		}
 		for (String appPath : applicationScanPaths) {
-			if(beanClassName.startsWith(appPath)){
+			if (beanClassName.startsWith(appPath)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	
 	String[] paths = null;
+
 	public String[] getApplicationScanPaths() {
-		if(paths == null){
+		if (paths == null) {
 			paths = WebInitUtils.findScanPaths(getServletContext());
-			if(paths.length == 0){
+			if (paths.length == 0) {
 				logger.warn("No packages found in application");
-				paths = new String[]{"no.packages.found"};//avoid exeption
+				paths = new String[] { "no.packages.found" };//avoid exeption
 			}
 		}
 		return paths;

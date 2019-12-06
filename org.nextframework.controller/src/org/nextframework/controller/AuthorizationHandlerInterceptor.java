@@ -36,7 +36,7 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		AuthorizationManager authorizationManager = Authorization.getAuthorizationManager();
-		boolean autorized = authorizationManager.isAuthorized(WebUtils.getRequestModuleAndController(), WebUtils.getRequestAction());
+		boolean autorized = authorizationManager.isAuthorized(WebUtils.getRequestModuleAndControllerURL(), WebUtils.getRequestAction());
 		if (!autorized) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Sem permissão para acessar conteúdo");
 			return false;
