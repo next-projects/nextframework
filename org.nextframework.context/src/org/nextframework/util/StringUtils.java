@@ -344,8 +344,8 @@ public class StringUtils {
 		return propertyPrefix != null ? propertyPrefix : "";
 	}
 
-	private static final String REPLACE_OPEN = "${";
-	private static final String REPLACE_CLOSE = "}";
+	public static final String REPLACE_OPEN = "{";
+	public static final String REPLACE_CLOSE = "}";
 
 	public String replaceString(MessageResolver resolver, String original) {
 		if (Util.strings.isEmpty(original)) {
