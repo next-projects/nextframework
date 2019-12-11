@@ -32,78 +32,62 @@ public class ListViewFilter implements PageAndOrder, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String FILTER = "FILTER";
-	
+
 	protected String EVENT = "";
-	
+
+	protected boolean notFirstTime = false;
+
 	protected String orderBy = "";
+	protected boolean asc = true;
+
 	protected int pageSize = 30;
 	protected int currentPage = 0;
 	protected int numberOfPages = 1;
 	protected int numberOfResults = 0;
-	
-	protected boolean asc = true;
-	
-	protected boolean notFirstTime = false;
-	
-	public boolean isNotFirstTime() {
-		return notFirstTime;
-	}
-
-	public void setNotFirstTime(boolean notFirstTime) {
-		this.notFirstTime = notFirstTime;
-	}
-
-	public boolean isAsc() {
-		return asc;
-	}
-
-	public int getNumberOfResults() {
-		return numberOfResults;
-	}
-
-	public void setNumberOfResults(int numberOfResults) {
-		this.numberOfResults = numberOfResults;
-	}
-
-	public int getNumberOfPages() {
-		return numberOfPages;
-	}
-
-	public void setNumberOfPages(int numberOfPages) {
-		this.numberOfPages = numberOfPages;
-	}
-
-	public void setEVENT(String list_event) {
-		EVENT = list_event;
-	}
-
-	public int getCurrentPage() {
-		return currentPage;
-	}
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public void setCurrentPage(int currentPage) {
-		this.currentPage = currentPage;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
 
 	public String getEVENT() {
 		return EVENT;
+	}
+
+	public boolean isNotFirstTime() {
+		return notFirstTime;
 	}
 
 	public String getOrderBy() {
 		return orderBy;
 	}
 
+	public boolean isAsc() {
+		return asc;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	public int getNumberOfPages() {
+		return numberOfPages;
+	}
+
+	public int getNumberOfResults() {
+		return numberOfResults;
+	}
+
+	public void setEVENT(String list_event) {
+		EVENT = list_event;
+	}
+
+	public void setNotFirstTime(boolean notFirstTime) {
+		this.notFirstTime = notFirstTime;
+	}
+
 	public void setOrderBy(String orderBy) {
-		if(this.orderBy != null && orderBy != null){
-			if(orderBy.equals(this.orderBy) && orderBy.length() > 0){
+		if (this.orderBy != null && orderBy != null) {
+			if (orderBy.equals(this.orderBy) && orderBy.length() > 0) {
 				asc = !asc;
 			}
 		}
@@ -111,18 +95,29 @@ public class ListViewFilter implements PageAndOrder, Serializable {
 		this.orderBy = orderBy;
 	}
 
-	/**
-	 * Configure order <BR>
-	 * true = asc
-	 * false = desc
-	 * @param asc
-	 */
 	public void setAsc(boolean asc) {
 		this.asc = asc;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	public void setNumberOfPages(int numberOfPages) {
+		this.numberOfPages = numberOfPages;
+	}
+
+	public void setNumberOfResults(int numberOfResults) {
+		this.numberOfResults = numberOfResults;
 	}
 
 	@Override
 	public boolean resetPage() {
 		return getEVENT().equals(ListViewFilter.FILTER);
 	}
+
 }
