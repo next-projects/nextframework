@@ -30,6 +30,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.nextframework.message.MessageResolver;
+import org.nextframework.util.StringUtils;
+import org.nextframework.util.Util;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -39,10 +42,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class MenuParser {
-	
+
 	protected static final String DTD_LOCATION = "org/nextframework/view/menu/menu.dtd";
 	protected ClassLoader classLoader = this.getClass().getClassLoader();
-	
+	protected MessageResolver messageResolver;
+
+	public MenuParser(MessageResolver messageResolver) {
+		this.messageResolver = messageResolver;
+	}
+
 	public ClassLoader getClassLoader() {
 		return classLoader;
 	}
@@ -50,21 +58,21 @@ public class MenuParser {
 	public void setClassLoader(ClassLoader classLoader) {
 		this.classLoader = classLoader;
 	}
-	
-	public Menu parse(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException{
-		if(inputStream == null){
+
+	public Menu parse(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
+		if (inputStream == null) {
 			throw new NullPointerException("O arquivo de menu não foi encontrado");
 		}
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		documentBuilder.setEntityResolver(new MenuEntityResolver(classLoader));
-		
+
 		Document document = documentBuilder.parse(inputStream);
-		
+
 		Menu menu = new Menu();
 		createMenu(document.getDocumentElement(), menu);
-		
+
 		return menu;
 	}
 
@@ -72,50 +80,56 @@ public class MenuParser {
 		NodeList childNodes = basenode.getChildNodes();
 		for (int i = 0; i < childNodes.getLength(); i++) {
 			Node node = childNodes.item(i);
-			if(node.getNodeType() == Node.ELEMENT_NODE){
-				Menu menu = new Menu();
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				Menu menu = createMenu(node);
 				basemenu.addMenu(menu);
-				NamedNodeMap map = node.getAttributes();
-				fillMenuAttributes(menu, map);
 				createMenu(node, menu);
 			}
 		}
 	}
 
-	private void fillMenuAttributes(Menu menu, NamedNodeMap map) {
+	private Menu createMenu(Node node) {
+
+		NamedNodeMap map = node.getAttributes();
 		String icon = map.getNamedItem("icon").getNodeValue();
 		String title = map.getNamedItem("title").getNodeValue();
-		
-		//I18N
-//		String bundleKey = Util.locale.getBundleKey("menu."+title);
-//		if (bundleKey != null){
-//			title = bundleKey;
-//		}
-
+		String description = map.getNamedItem("description").getNodeValue();
 		String url = map.getNamedItem("url").getNodeValue();
 		String target = map.getNamedItem("target").getNodeValue();
-		String description = map.getNamedItem("description").getNodeValue();
 
+		if (icon.contains(StringUtils.REPLACE_OPEN)) {
+			icon = Util.strings.replaceString(messageResolver, icon);
+		}
+		if (title.contains(StringUtils.REPLACE_OPEN)) {
+			title = Util.strings.replaceString(messageResolver, title);
+		}
+		if (description.contains(StringUtils.REPLACE_OPEN)) {
+			description = Util.strings.replaceString(messageResolver, description);
+		}
+
+		Menu menu = new Menu();
 		menu.setIcon(icon);
 		menu.setTitle(title);
 		menu.setUrl(url);
 		menu.setTarget(target);
 		menu.setDescription(description);
-	}
-}
 
-
-class MenuEntityResolver implements EntityResolver{
-	
-	protected ClassLoader classLoader;
-
-	public MenuEntityResolver(ClassLoader loader) {
-		super();
-		classLoader = loader;
+		return menu;
 	}
 
-	public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-		return new InputSource(classLoader.getResourceAsStream(MenuParser.DTD_LOCATION));
+	class MenuEntityResolver implements EntityResolver {
+
+		protected ClassLoader classLoader;
+
+		public MenuEntityResolver(ClassLoader loader) {
+			super();
+			classLoader = loader;
+		}
+
+		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+			return new InputSource(classLoader.getResourceAsStream(MenuParser.DTD_LOCATION));
+		}
+
 	}
-	
+
 }
