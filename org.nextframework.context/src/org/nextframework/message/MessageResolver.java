@@ -1,8 +1,12 @@
 package org.nextframework.message;
 
+import java.util.Locale;
+
 import org.springframework.context.MessageSourceResolvable;
 
 public interface MessageResolver {
+
+	public Locale getLocale();
 
 	public String message(String code);
 
