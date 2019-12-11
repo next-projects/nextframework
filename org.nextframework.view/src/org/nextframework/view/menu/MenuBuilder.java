@@ -28,56 +28,52 @@ import java.util.Iterator;
 import org.nextframework.util.Util;
 
 public class MenuBuilder {
-	
+
 	public static final String ICONE_PADRAO = "&nbsp;&nbsp;&nbsp;&nbsp;";
-	
-	protected int identation;
+
 	protected String urlPrefix;
+	protected int identation;
 
-	public String getUrlPrefix() {
-		return urlPrefix;
-	}
-
-	public void setUrlPrefix(String urlPrefix) {
+	public MenuBuilder(String urlPrefix) {
 		this.urlPrefix = urlPrefix;
 	}
-	
-	public String build(Menu menu){
+
+	public String build(Menu menu) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append('[').append('\n');
 		identation = 1;
 		for (Iterator<Menu> iter = menu.getSubmenus().iterator(); iter.hasNext();) {
 			Menu submenu = iter.next();
-			build(submenu, stringBuilder,iter.hasNext(), false);
+			build(submenu, stringBuilder, iter.hasNext(), false);
 		}
 		stringBuilder.append(']');
 		return stringBuilder.toString();
 	}
 
 	private void build(Menu menu, StringBuilder stringBuilder, boolean hasNext, boolean iconePadrao) {
+
 		ident(stringBuilder);
-		if(menu.getTitle()!= null && menu.getTitle().startsWith("---")){
+		if (menu.getTitle() != null && menu.getTitle().startsWith("---")) {
 			stringBuilder.append("_cmSplit");
-			if(hasNext){
+			if (hasNext) {
 				stringBuilder.append(',');
 			}
 			return;
 		}
 		openMenu(stringBuilder);
-		
+
 		String icon = menu.getIcon();
-		if(iconePadrao && Util.strings.isEmpty(icon)){
+		if (iconePadrao && Util.strings.isEmpty(icon)) {
 			icon = ICONE_PADRAO;
-		} else if (Util.strings.isNotEmpty(icon)){
-			icon = "<img src=\""+icon+"\" align=\"absmiddle\">";
+		} else if (Util.strings.isNotEmpty(icon)) {
+			icon = "<img src=\"" + icon + "\" align=\"absmiddle\">";
 		}
 		printItem(icon, stringBuilder);
 		stringBuilder.append(',');
-		
-		printItem(menu.getTitle(), stringBuilder);		
+
+		printItem(menu.getTitle(), stringBuilder);
 		stringBuilder.append(',');
-		
-		
+
 		/*
 		 * Esse código foi inserido por causa do internet explorer
 		 * Quando se tentava fazer download de algum arquivo (relatorio por exemplo)
@@ -92,15 +88,15 @@ public class MenuBuilder {
 //		} else {
 //			url += "?NEXT_forceReload=";
 //		}
-		
-		if(urlPrefix != null && Util.strings.isNotEmpty(url) && !url.startsWith("javascript:")) {
+
+		if (urlPrefix != null && Util.strings.isNotEmpty(url) && !url.startsWith("javascript:")) {
 			url = urlPrefix + url;
 		}
+
 		//Verifica URL Sufix
-		//url = BaseTag.applyUrlSufix(Next.getRequestContext(), url, null);
 		printItem(url, stringBuilder);
 		stringBuilder.append(',');
-		
+
 		printItem(menu.getTarget(), stringBuilder);
 		stringBuilder.append(',');
 		printItem(menu.getDescription(), stringBuilder);
@@ -109,7 +105,7 @@ public class MenuBuilder {
 			identation++;
 			for (Iterator<Menu> iter = menu.getSubmenus().iterator(); iter.hasNext();) {
 				Menu submenu = iter.next();
-				build(submenu, stringBuilder,iter.hasNext(), true);
+				build(submenu, stringBuilder, iter.hasNext(), true);
 			}
 			identation--;
 			ident(stringBuilder);
@@ -117,11 +113,12 @@ public class MenuBuilder {
 		} else {
 			closeMenu(stringBuilder, hasNext);
 		}
+
 	}
 
 	private void closeMenu(StringBuilder stringBuilder, boolean hasNext) {
 		stringBuilder.append(']');
-		if(hasNext){
+		if (hasNext) {
 			stringBuilder.append(',');
 		}
 		stringBuilder.append('\n');
@@ -141,6 +138,6 @@ public class MenuBuilder {
 		for (int i = 0; i < identation; i++) {
 			stringBuilder.append("    ");
 		}
-		
 	}
+
 }
