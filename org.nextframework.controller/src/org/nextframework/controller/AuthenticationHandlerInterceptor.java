@@ -12,6 +12,7 @@ import org.nextframework.authorization.Authorization;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.service.ServiceFactory;
+import org.nextframework.util.Util;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,7 +37,7 @@ public class AuthenticationHandlerInterceptor implements HandlerInterceptor {
 			} else {
 				//TODO VERIFY INFINITE LOOP
 				logger.debug("Redirecting user to login page.");
-				NextWeb.getRequestContext().addMessage("O recurso que deseja acessar requer autenticação.", MessageType.WARN);
+				NextWeb.getRequestContext().addMessage(Util.objects.newMessage("next.authentication.acessDenied", null, "O recurso que deseja acessar requer autenticação."), MessageType.WARN);
 				AuthenticationController authenticationController = authenticationControllers.iterator().next();
 				String path = request.getContextPath() + authenticationController.getPath() + "?ar=1";
 				response.sendRedirect(path);
