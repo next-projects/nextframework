@@ -381,10 +381,6 @@ FORM {
 	line-height: 19px;
 }
 
-SELECT {
-	min-width: 120px;
-}
-
 /* Tabs */
 #tabPanelClear {
 	background-color: white;
