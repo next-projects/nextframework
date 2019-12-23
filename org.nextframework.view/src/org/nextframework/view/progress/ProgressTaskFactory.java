@@ -1,5 +1,6 @@
 package org.nextframework.view.progress;
 
+import org.apache.commons.logging.Log;
 import org.nextframework.core.standard.Next;
 
 /**
@@ -15,20 +16,20 @@ public class ProgressTaskFactory {
 	 * @param task
 	 * @return
 	 */
-	public static ProgressMonitor startTask(ProgressTask task, String name){
+	public static ProgressMonitor startTask(ProgressTask task, String name, Log logger) {
 		ProgressMonitor monitor = new ProgressMonitor();
-		startTask(monitor, task, name);
+		startTask(monitor, task, name, logger);
 		return monitor;
 	}
-	
+
 	/**
 	 * Executa a tarefa definida por ProgressTask em uma outra thread.
 	 * O monitor usado deve ser passado como parâmetro. 
 	 * @param task
 	 * @return
 	 */
-	public static void startTask(final IProgressMonitor monitor, final ProgressTask task, String name){
-		Thread t = new Thread(Next.getApplicationName().toUpperCase() + " - " + ProgressTask.class.getSimpleName() + " - " + name){
+	public static void startTask(final IProgressMonitor monitor, final ProgressTask task, String name, final Log logger) {
+		Thread t = new Thread(Next.getApplicationName().toUpperCase() + " - " + ProgressTask.class.getSimpleName() + " - " + name) {
 			public void run() {
 				monitor.subTask("Inicializando trabalho...");
 				try {
@@ -36,13 +37,15 @@ public class ProgressTaskFactory {
 					monitor.setReturn(r);
 					monitor.done(monitor.getError() == null);
 				} catch (Exception e) {
-					monitor.setError("Erro: "+e.getMessage());
+					monitor.setError("Erro: " + e.getMessage());
 					monitor.done(false);
-					//e.printStackTrace();
+					if (logger != null) {
+						logger.error(e);
+					}
 				}
 			};
 		};
 		t.start();
 	}
-	
+
 }
