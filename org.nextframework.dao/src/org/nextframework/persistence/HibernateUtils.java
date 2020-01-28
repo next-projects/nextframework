@@ -30,25 +30,26 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
+import org.nextframework.util.Util;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 
 public class HibernateUtils {
-	
+
 	static Log log = LogFactory.getLog(HibernateUtils.class);
 
-	public static Object getId(HibernateTemplate hibernateTemplate, Object bean){
+	public static Object getId(HibernateTemplate hibernateTemplate, Object bean) {
 		return PersistenceUtils.getId(bean, hibernateTemplate.getSessionFactory());
 	}
-	
-	public static String getIdAttribute(HibernateTemplate hibernateTemplate, Class<? extends Object> class1){
-		while(class1.getName().contains("$$")){
+
+	public static String getIdAttribute(HibernateTemplate hibernateTemplate, Class<? extends Object> class1) {
+		while (class1.getName().contains("$$")) {
 			class1 = class1.getSuperclass();
 		}
 		return hibernateTemplate.getSessionFactory().getClassMetadata(class1).getIdentifierPropertyName();
 	}
-	
-	public static String getEntityName(HibernateTemplate hibernateTemplate, Class<? extends Object> class1){
-		while(class1.getName().contains("$$")){
+
+	public static String getEntityName(HibernateTemplate hibernateTemplate, Class<? extends Object> class1) {
+		while (class1.getName().contains("$$")) {
 			class1 = class1.getSuperclass();
 		}
 		return hibernateTemplate.getSessionFactory().getClassMetadata(class1).getEntityName();
@@ -56,29 +57,29 @@ public class HibernateUtils {
 
 	@SuppressWarnings("all")
 	public static Class getRealClass(Object o) {
-		Class eClazz = o.getClass(); 
-		if(o instanceof HibernateProxy){
+		Class eClazz = o.getClass();
+		if (o instanceof HibernateProxy) {
 			HibernateProxy p = (HibernateProxy) o;
 			eClazz = p.getHibernateLazyInitializer().getPersistentClass();
 		}
 		return eClazz;
 	}
-	
+
 	public static boolean isLazy(Object value) {
-		if(value instanceof HibernateProxy){
-			LazyInitializer hibernateLazyInitializer = ((HibernateProxy)value).getHibernateLazyInitializer();
+		if (value instanceof HibernateProxy) {
+			LazyInitializer hibernateLazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
 			return hibernateLazyInitializer.isUninitialized();
-		} else if(value instanceof PersistentCollection){
-			return !((PersistentCollection)value).wasInitialized();
+		} else if (value instanceof PersistentCollection) {
+			return !((PersistentCollection) value).wasInitialized();
 		}
 		return false;
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <E> E getLazyValue(E value) {
-		if(value instanceof HibernateProxy){
-			LazyInitializer hibernateLazyInitializer = ((HibernateProxy)value).getHibernateLazyInitializer();
-			if(hibernateLazyInitializer.isUninitialized()){
+		if (value instanceof HibernateProxy) {
+			LazyInitializer hibernateLazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
+			if (hibernateLazyInitializer.isUninitialized()) {
 				try {
 					Class<?> superclass = value.getClass().getSuperclass();
 					Serializable identifier = hibernateLazyInitializer.getIdentifier();
@@ -88,7 +89,7 @@ public class HibernateUtils {
 				} catch (SecurityException e) {
 				}
 			}
-		} else if(value instanceof PersistentCollection){
+		} else if (value instanceof PersistentCollection) {
 			try {
 				PersistentCollection collection = (PersistentCollection) value;
 				if (!collection.wasInitialized()) {
@@ -109,13 +110,48 @@ public class HibernateUtils {
 			GenericDAO<?> daoForClass = DAOUtils.getDAOForClass(superclass);
 			Object newValue = daoForClass.loadById(identifier);
 			//new QueryBuilder(Next.getObject(HibernateTemplate.class)).from(superclass).idEq(identifier).unique();
-			if(newValue != null){
+			if (newValue != null) {
 				value = (E) newValue;
 			} else {
-				log.warn("Cannot find "+superclass.getSimpleName()+" with id "+identifier+" in database.");										
+				log.warn("Cannot find " + superclass.getSimpleName() + " with id " + identifier + " in database.");
 			}
 			log.warn("Loading object of " + superclass + " lazily. Use leftOuterJoinFetch on query to avoid this.");
 		}
 		return value;
 	}
+
+	public static boolean equals(Object v1, Object v2) {
+
+		if (v1 == null && v2 == null) {
+			return true;
+		}
+
+		if (v1 == null || v2 == null) {
+			return false;
+		}
+
+		if (HibernateUtils.isLazy(v1) || HibernateUtils.isLazy(v2)) {
+
+			//Se forem duas entidades, verifica os ids
+			if (v1 instanceof HibernateProxy || v2 instanceof HibernateProxy) {
+				Object v1Id = obtemId(v1);
+				Object v2Id = obtemId(v2);
+				return Util.objects.equals(v1Id, v2Id);
+			}
+
+			//Se não conseguiu comparar os ids, verifica se as instâncias são iguais
+			return v1 == v2;
+		}
+
+		return Util.objects.equals(v1, v2);
+	}
+
+	private static Object obtemId(Object v) {
+		if (v instanceof HibernateProxy) {
+			HibernateProxy hp = (HibernateProxy) v;
+			return hp.getHibernateLazyInitializer().getIdentifier();
+		}
+		return Util.beans.getId(v);
+	}
+
 }
