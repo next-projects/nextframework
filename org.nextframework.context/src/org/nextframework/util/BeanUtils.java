@@ -35,8 +35,11 @@ import java.util.Set;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.exception.NextException;
 import org.nextframework.message.MessageResolver;
+import org.nextframework.message.NextMessageSourceResolvable;
 import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 
 /**
@@ -266,6 +269,35 @@ public class BeanUtils {
 		}
 
 		return propertyDescriptor.getDisplayName();
+	}
+
+	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
+		try {
+			Method method = enumClass.getMethod("values");
+			Enum<?>[] enumValues = (Enum[]) method.invoke(null);
+			return enumValues;
+		} catch (Exception ex) {
+			throw new NextException("Erro ao obter itens do enum " + enumClass + ".");
+		}
+	}
+
+	public <T extends Enum<T>> T getEnumItem(Class<T> enumClass, String name, T defaultValue) {
+		if (Util.strings.isEmpty(name)) {
+			return defaultValue != null ? defaultValue : null;
+		}
+		try {
+			return Enum.valueOf(enumClass, name);
+		} catch (IllegalStateException ex) {
+			if (defaultValue != null) {
+				return defaultValue;
+			}
+			throw ex;
+		}
+	}
+
+	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property) {
+		String code = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
+		return new NextMessageSourceResolvable(code);
 	}
 
 }
