@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.Formattable;
 import java.util.Formatter;
 
+import org.nextframework.bean.BeanDescriptor;
+import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.core.standard.Message;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
@@ -96,15 +98,28 @@ public class OutputTag extends BaseTag {
 	}
 
 	public String getStringBody() {
+		String body = getStringBody(value, pattern);
+		if (body != null) {
+			if (escapeHTML) {
+				body = body.replace("<", "&lt;").replace("\n", "<BR>");
+			}
+			if (replaceMessagesCodes) {
+				body = Util.strings.replaceString(NextWeb.getRequestContext().getMessageResolver(), body);
+			}
+		}
+		return body;
+	}
 
-		String bodyToPrint = null;
+	public String getStringBody(Object value, String pattern) {
+
+		if (value instanceof Message) {
+			value = ((Message) value).getSource();
+		}
 
 		if (value == null) {
-			escapeHTML = false;
 			String[] split = getResolvedTrueFalseNullLabels();
 			value = split[2];
 		} else if (value instanceof Boolean) {
-			escapeHTML = false;
 			String[] split = getResolvedTrueFalseNullLabels();
 			if (((Boolean) value)) {
 				value = split[0];
@@ -115,8 +130,6 @@ public class OutputTag extends BaseTag {
 			Formatter fmt = new Formatter();
 			((Formattable) value).formatTo(fmt, 0, -1, -1);
 			value = fmt.out().toString();
-		} else if (value instanceof Message) {
-			value = ((Message) value).getSource();
 		}
 
 		if ((value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) && Util.strings.isEmpty(pattern)) {
@@ -125,9 +138,7 @@ public class OutputTag extends BaseTag {
 			} else {
 				pattern = "dd/MM/yyyy";
 			}
-		}
-
-		if (value instanceof Number && Util.strings.isEmpty(pattern)) {
+		} else if (value instanceof Number && Util.strings.isEmpty(pattern)) {
 			if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
 				pattern = "#,##0.00";
 			} else {
@@ -135,45 +146,45 @@ public class OutputTag extends BaseTag {
 			}
 		}
 
-		if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
-			String valueToString = new SimpleDateFormat(pattern).format(value);
-			bodyToPrint = valueToString;
-		} else if (value instanceof Calendar) {
-			Calendar data = (Calendar) value;
-			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-			bodyToPrint = dateFormat.format(data.getTime());
+		String body = null;
+
+		if (value instanceof String) {
+			body = (String) value;
 		} else if (value instanceof Number) {
 			Number number = (Number) value;
 			String valueToString = new DecimalFormat(pattern).format(number);
 			if (valueToString.startsWith(",")) {
 				valueToString = "0" + valueToString;
 			}
-			bodyToPrint = valueToString;
+			body = valueToString;
+		} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
+			String valueToString = new SimpleDateFormat(pattern).format(value);
+			body = valueToString;
+		} else if (value instanceof Calendar) {
+			Calendar data = (Calendar) value;
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			body = dateFormat.format(data.getTime());
 		} else if (value instanceof File) {
 			File file = (File) HibernateUtils.getLazyValue(value);
 			DownloadFileServlet.addCdfile(getRequest().getSession(), file.getCdfile());
 			String link = getRequest().getContextPath() + DownloadFileServlet.DOWNLOAD_FILE_PATH + "/" + file.getCdfile();
 			link = WebUtils.rewriteUrl(link); //URL Sufix
-			bodyToPrint = "<a href=\"" + link + "\" class=\"filelink\">" + file.getName() + "</a>";
+			body = "<a href=\"" + link + "\" class=\"filelink\">" + file.getName() + "</a>";
 		} else if (value instanceof Throwable) {
-			bodyToPrint = Util.objects.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value, true, true);
+			body = Util.objects.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value, true, true);
 		} else if (value instanceof MessageSourceResolvable) {
-			bodyToPrint = NextWeb.getRequestContext().getMessageResolver().message((MessageSourceResolvable) value);
+			body = NextWeb.getRequestContext().getMessageResolver().message((MessageSourceResolvable) value);
 		} else {
-			String objectDescriptionToString = TagUtils.getObjectDescriptionToString(value);
-			if (objectDescriptionToString != null) {
-				if (escapeHTML) {
-					bodyToPrint = objectDescriptionToString.replace("<", "&lt;").replace("\n", "<BR>");
-				} else {
-					bodyToPrint = objectDescriptionToString;
-				}
-				if (replaceMessagesCodes) {
-					bodyToPrint = Util.strings.replaceString(NextWeb.getRequestContext().getMessageResolver(), bodyToPrint);
-				}
+			BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
+			Object description = beanDescriptor.getDescription();
+			if (description != null) {
+				body = getStringBody(description, pattern);
+			} else {
+				body = TagUtils.getObjectDescriptionToString(value);
 			}
 		}
 
-		return bodyToPrint;
+		return body;
 	}
 
 	private String[] getResolvedTrueFalseNullLabels() {
