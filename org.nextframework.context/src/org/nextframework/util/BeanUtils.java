@@ -300,4 +300,9 @@ public class BeanUtils {
 		return new NextMessageSourceResolvable(code);
 	}
 
+	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property, Object... arguments) {
+		String code = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
+		return new NextMessageSourceResolvable(code, arguments);
+	}
+
 }
