@@ -40,7 +40,6 @@ import org.nextframework.message.MessageResolver;
 import org.nextframework.message.NextMessageSourceResolvable;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.NoSuchMessageException;
 
 /**
  * @author rogelgarcia
@@ -183,42 +182,39 @@ public class BeanUtils {
 	}
 
 	public String getDisplayName(MessageResolver resolver, BeanDescriptor beanDescriptor, String optionalPrefix) {
+		MessageSourceResolvable resolvable = getDisplayNameResolvable(beanDescriptor, optionalPrefix);
+		return resolver.message(resolvable);
+	}
+
+	public MessageSourceResolvable getDisplayNameResolvable(Class<?> beanClass) {
+		return getDisplayNameResolvable(BeanDescriptorFactory.forClass(beanClass), null);
+	}
+
+	public MessageSourceResolvable getDisplayNameResolvable(BeanDescriptor beanDescriptor) {
+		return getDisplayNameResolvable(beanDescriptor, null);
+	}
+
+	public MessageSourceResolvable getDisplayNameResolvable(BeanDescriptor beanDescriptor, String optionalPrefix) {
 
 		Class<?> beanClass = beanDescriptor.getTargetClass();
 
-		if (optionalPrefix != null && optionalPrefix.length() > 0) {
+		boolean usePrefix = optionalPrefix != null && optionalPrefix.length() > 0;
+		String[] codes = new String[usePrefix ? 4 : 2];
 
+		int index = 0;
+		if (usePrefix) {
 			//Fully-qualified class name with prefix (Ex: prefix.com.app.pack.ClassName)
-			try {
-				return resolver.message(optionalPrefix + "." + beanClass.getName());
-			} catch (NoSuchMessageException e) {
-				//Não encontrado...
-			}
-
+			codes[index++] = optionalPrefix + "." + beanClass.getName();
 			//Simple class name with prefix (Ex: prefix.ClassName)
-			try {
-				return resolver.message(optionalPrefix + "." + beanClass.getSimpleName());
-			} catch (NoSuchMessageException e) {
-				//Não encontrado...
-			}
-
+			codes[index++] = optionalPrefix + "." + beanClass.getSimpleName();
 		}
 
 		//Fully-qualified class name (Ex: com.app.pack.ClassName)
-		try {
-			return resolver.message(beanClass.getName());
-		} catch (NoSuchMessageException e) {
-			//Não encontrado...
-		}
-
+		codes[index++] = beanClass.getName();
 		//Simple class name (Ex: ClassName)
-		try {
-			return resolver.message(beanClass.getSimpleName());
-		} catch (NoSuchMessageException e) {
-			//Não encontrado...
-		}
+		codes[index++] = beanClass.getSimpleName();
 
-		return beanDescriptor.getDisplayName();
+		return new NextMessageSourceResolvable(codes, beanDescriptor.getDisplayName());
 	}
 
 	public String getDisplayName(MessageResolver resolver, Class<?> beanClass, String property) {
@@ -232,43 +228,53 @@ public class BeanUtils {
 	}
 
 	public String getDisplayName(MessageResolver resolver, PropertyDescriptor propertyDescriptor, String optionalPrefix) {
+		MessageSourceResolvable resolvable = getDisplayNameResolvable(propertyDescriptor, optionalPrefix);
+		return resolver.message(resolvable);
+	}
+
+	public MessageSourceResolvable getDisplayNameResolvable(Class<?> beanClass, String property) {
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(beanClass);
+		PropertyDescriptor propertyDescriptorBegin = bd.getPropertyDescriptor(property);
+		return getDisplayNameResolvable(propertyDescriptorBegin, null);
+	}
+
+	public MessageSourceResolvable getDisplayNameResolvable(PropertyDescriptor propertyDescriptor) {
+		return getDisplayNameResolvable(propertyDescriptor, null);
+	}
+
+	public MessageSourceResolvable getDisplayNameResolvable(PropertyDescriptor propertyDescriptor, String optionalPrefix) {
 
 		Class<?> ownerClass = propertyDescriptor.getOwnerClass();
 		String prop = propertyDescriptor.getName();
 
-		if (optionalPrefix != null && optionalPrefix.length() > 0) {
+		boolean usePrefix = optionalPrefix != null && optionalPrefix.length() > 0;
+		String[] codes = new String[usePrefix ? 4 : 2];
 
+		int index = 0;
+		if (usePrefix) {
 			//Fully-qualified class name and property with prefix (Ex: prefix.com.app.pack.ClassName.name)
-			try {
-				return resolver.message(optionalPrefix + "." + ownerClass.getName() + "." + prop);
-			} catch (NoSuchMessageException e) {
-				//Não encontrado...
-			}
-
+			codes[index++] = optionalPrefix + "." + ownerClass.getName() + "." + prop;
 			//Simple class name and property  with prefix (Ex: prefix.ClassName.name)
-			try {
-				return resolver.message(optionalPrefix + "." + ownerClass.getSimpleName() + "." + prop);
-			} catch (NoSuchMessageException e) {
-				//Não encontrado...
-			}
-
+			codes[index++] = optionalPrefix + "." + ownerClass.getSimpleName() + "." + prop;
 		}
 
 		//Fully-qualified class name and property (Ex: com.app.pack.ClassName.name)
-		try {
-			return resolver.message(ownerClass.getName() + "." + prop);
-		} catch (NoSuchMessageException e) {
-			//Não encontrado...
-		}
-
+		codes[index++] = ownerClass.getName() + "." + prop;
 		//Simple class name and property (Ex: ClassName.name)
-		try {
-			return resolver.message(ownerClass.getSimpleName() + "." + prop);
-		} catch (NoSuchMessageException e) {
-			//Não encontrado...
-		}
+		codes[index++] = ownerClass.getSimpleName() + "." + prop;
 
-		return propertyDescriptor.getDisplayName();
+		return new NextMessageSourceResolvable(codes, propertyDescriptor.getDisplayName());
+	}
+
+	public MessageSourceResolvable getCustomFieldResolvable(Class<?> beanClass, String field) {
+
+		String[] codes = new String[2];
+		//Fully-qualified class name and property (Ex: com.app.pack.ClassName.name)
+		codes[0] = beanClass.getName() + "." + field;
+		//Simple class name and property (Ex: ClassName.name)
+		codes[1] = beanClass.getSimpleName() + "." + field;
+
+		return new NextMessageSourceResolvable(codes, field);
 	}
 
 	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
