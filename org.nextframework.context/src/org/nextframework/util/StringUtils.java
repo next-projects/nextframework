@@ -35,6 +35,7 @@ import java.util.Map;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.message.MessageResolver;
+import org.springframework.context.MessageSourceResolvable;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -160,10 +161,14 @@ public class StringUtils {
 	}
 
 	public String toStringDescription(Object value) {
-		return toStringDescription(value, null, null);
+		return toStringDescription(value, null, null, null);
 	}
 
 	public String toStringDescription(Object value, String formatDate, String formatNumber) {
+		return toStringDescription(value, formatDate, formatNumber, null);
+	}
+
+	public String toStringDescription(Object value, String formatDate, String formatNumber, MessageResolver resolver) {
 
 		if (value == null) {
 			return "";
@@ -184,6 +189,8 @@ public class StringUtils {
 		} else if (value instanceof Number) {
 			NumberFormat numberFormat = new DecimalFormat(formatNumber);
 			return numberFormat.format(value);
+		} else if (value instanceof MessageSourceResolvable) {
+			return resolver.message((MessageSourceResolvable) value);
 		} else if (value.getClass().isArray()) {
 			Object[] array = (Object[]) value;
 			String description = "";
