@@ -112,79 +112,79 @@ public class OutputTag extends BaseTag {
 
 	public String getStringBody(Object value, String pattern) {
 
+		//Unbox
 		if (value instanceof Message) {
 			value = ((Message) value).getSource();
 		}
 
+		//Verify pattern
+		if (Util.strings.isEmpty(pattern)) {
+			if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) {
+				if (value instanceof Time) {
+					pattern = "HH:mm";
+				} else {
+					pattern = "dd/MM/yyyy";
+				}
+			} else if (value instanceof Number) {
+				if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
+					pattern = "#,##0.00";
+				} else {
+					pattern = "#,##0.##";
+				}
+			}
+		}
+
+		//Convert simple types
 		if (value == null) {
 			String[] split = getResolvedTrueFalseNullLabels();
-			value = split[2];
+			return split[2];
 		} else if (value instanceof Boolean) {
 			String[] split = getResolvedTrueFalseNullLabels();
 			if (((Boolean) value)) {
-				value = split[0];
-			} else {
-				value = split[1];
+				return split[0];
 			}
-		} else if (value instanceof Formattable) {
-			Formatter fmt = new Formatter();
-			((Formattable) value).formatTo(fmt, 0, -1, -1);
-			value = fmt.out().toString();
-		}
-
-		if ((value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) && Util.strings.isEmpty(pattern)) {
-			if (value instanceof Time) {
-				pattern = "HH:mm";
-			} else {
-				pattern = "dd/MM/yyyy";
-			}
-		} else if (value instanceof Number && Util.strings.isEmpty(pattern)) {
-			if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
-				pattern = "#,##0.00";
-			} else {
-				pattern = "#,##0.##";
-			}
-		}
-
-		String body = null;
-
-		if (value instanceof String) {
-			body = (String) value;
+			return split[1];
+		} else if (value instanceof String) {
+			return (String) value;
 		} else if (value instanceof Number) {
 			Number number = (Number) value;
 			String valueToString = new DecimalFormat(pattern).format(number);
 			if (valueToString.startsWith(",")) {
 				valueToString = "0" + valueToString;
 			}
-			body = valueToString;
+			return valueToString;
 		} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
 			String valueToString = new SimpleDateFormat(pattern).format(value);
-			body = valueToString;
+			return valueToString;
 		} else if (value instanceof Calendar) {
 			Calendar data = (Calendar) value;
 			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-			body = dateFormat.format(data.getTime());
+			return dateFormat.format(data.getTime());
+		} else if (value instanceof Formattable) {
+			Formatter fmt = new Formatter();
+			((Formattable) value).formatTo(fmt, 0, -1, -1);
+			return fmt.out().toString();
+		} else if (value instanceof Throwable) {
+			return Util.objects.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value, true, true);
+		} else if (value instanceof MessageSourceResolvable) {
+			return NextWeb.getRequestContext().getMessageResolver().message((MessageSourceResolvable) value);
 		} else if (value instanceof File) {
 			File file = (File) HibernateUtils.getLazyValue(value);
 			DownloadFileServlet.addCdfile(getRequest().getSession(), file.getCdfile());
 			String link = getRequest().getContextPath() + DownloadFileServlet.DOWNLOAD_FILE_PATH + "/" + file.getCdfile();
 			link = WebUtils.rewriteUrl(link); //URL Sufix
-			body = "<a href=\"" + link + "\" class=\"filelink\">" + file.getName() + "</a>";
-		} else if (value instanceof Throwable) {
-			body = Util.objects.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value, true, true);
-		} else if (value instanceof MessageSourceResolvable) {
-			body = NextWeb.getRequestContext().getMessageResolver().message((MessageSourceResolvable) value);
-		} else {
-			BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
-			Object description = beanDescriptor.getDescription();
-			if (description != null) {
-				body = getStringBody(description, pattern);
-			} else {
-				body = TagUtils.getObjectDescriptionToString(value);
-			}
+			return "<a href=\"" + link + "\" class=\"filelink\">" + file.getName() + "</a>";
 		}
 
-		return body;
+		//Convert beans
+		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
+		Object description = beanDescriptor.getDescription();
+		if (description != null) {
+			return getStringBody(description, pattern);
+		}
+
+		//Convert other objects
+		return TagUtils.getObjectDescriptionToString(value);
 	}
 
 	private String[] getResolvedTrueFalseNullLabels() {
