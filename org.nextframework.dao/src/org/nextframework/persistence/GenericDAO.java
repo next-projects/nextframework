@@ -251,33 +251,32 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		return true;
 	}
 
+	protected QueryBuilder<BEAN> queryWithOrderBy() {
+		QueryBuilder<BEAN> query = query();
+		if(this.orderBy != null){
+			query.orderBy(orderBy);
+		}
+		return query;
+	}
+
 	/**
 	 * Cria um QueryBuilder para esse DAO já com o from configurado
 	 * (O From pode ser alterado)
 	 * @return
 	 */
 	protected QueryBuilder<BEAN> query() {
-		return newQueryBuilder(beanClass)
-					.from(beanClass);
+		return query(beanClass);
 	}
-	
+
+	protected <E> QueryBuilder<E> query(Class<E> clazz) {
+		return newQueryBuilder(clazz).from(clazz);
+	}
+
 	/**
-	 * Cria um query builder para ser utilizado pelo DAO
-	 * @param <E>
-	 * @param clazz
-	 * @return
+	 * Cria um query builder no devido 'PersistenceContext' para ser utilizado pelo DAO
 	 */
 	public <E> QueryBuilder<E> newQueryBuilder(Class<E> clazz){
 		return new QueryBuilder<E>(getPersistenceContext());
-	}
-	
-	protected QueryBuilder<BEAN> queryWithOrderBy() {
-		QueryBuilder<BEAN> query = newQueryBuilder(beanClass)
-					.from(beanClass);
-		if(this.orderBy != null){
-			query.orderBy(orderBy);
-		}
-		return query;
 	}
 
 	/* (non-Javadoc)
@@ -358,8 +357,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		if(bean == null){
 			return null;
 		}
-		QueryBuilder<BEAN> query = newQueryBuilder(beanClass)
-			.from(beanClass)
+		QueryBuilder<BEAN> query = query()
 			.entity(bean);
 		//é provavel que se existir uma propriedade do tipo File ela deva ser carregada
 		if(autoManageFileProperties() && fileDAO != null){
@@ -423,14 +421,14 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	}
 	
 	public List<BEAN> findByProperty(String propertyName, Object o){
-		QueryBuilder<BEAN> query = query();
+		QueryBuilder<BEAN> query = queryWithOrderBy();
 		return query
 				.where(query.getAlias()+"."+propertyName+" = ?", o)
 				.list();
 	}
 	
 	public BEAN findByPropertyUnique(String propertyName, Object o){
-		QueryBuilder<BEAN> query = query();
+		QueryBuilder<BEAN> query = queryWithOrderBy();
 		return query
 				.where(query.getAlias()+"."+propertyName+" = ?", o)
 				.unique();
@@ -708,11 +706,9 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	 * @see org.nextframework.persistence.DAO#findForListagem(org.nextframework.controller.crud.ListingFilter)
 	 */
 	public ResultList<BEAN> loadListModel(ListViewFilter filter){
-		QueryBuilder<BEAN> query = query();
+		QueryBuilder<BEAN> query = queryWithOrderBy();
 		if(orderBy == null){//ordenação default para telas de listagem de dados
 			query.orderBy(Util.strings.uncaptalize(beanClass.getSimpleName())+".id");
-		} else {
-			query.orderBy(orderBy);
 		}
 		updateListQuery(query, filter);
 		QueryBuilder<BEAN> queryBuilder = query;
@@ -795,7 +791,6 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		String descriptionPropertyName = beanDescriptor.getDescriptionPropertyName();
 		BEAN newValue = query()
 			.select(getSelectClauseForIdAndDescription())
-			.from(beanClass)
 			.entity(object)
 			.unique();
 		

@@ -584,7 +584,7 @@ public class SaveOrUpdateStrategy {
 				throw new RuntimeException("Não foi possível usar o saveOrUpdateManaged(String) para entidade nula ", e);
 			}
 			throw new RuntimeException("Não foi possível usar o saveOrUpdateManaged(String) para "+entity.getClass().getName()+"! Possíveis causas: " +
-					"A os itens do collection não possuem referencia para o pai, O path estava incorreto. O path leva a uma coleção que não tem classe persistente", e);
+					"Os itens do collection não possuem referencia para o pai, O path estava incorreto. O path leva a uma coleção que não tem classe persistente", e);
 		}
 		return this;
 	}
