@@ -24,7 +24,6 @@
 package org.nextframework.persistence;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -57,29 +56,26 @@ import org.nextframework.service.ServiceFactory;
  */
 @SuppressWarnings("unchecked")
 public class SaveOrUpdateStrategy {
-	
+
 	private Object entity;
-	
+
 	private HibernateTransactionSessionProvider<?> hibernateTemplate;
-	
-	//private Session session;
+
 	private List<HibernateCommand> firstCallbacks = new ArrayList<HibernateCommand>();
 	private List<HibernateCommand> callbacks = new ArrayList<HibernateCommand>();
-
 	private List<HibernateCommand> attachments = new ArrayList<HibernateCommand>();
 	private List<HibernateCommand> attachmentsBefore = new ArrayList<HibernateCommand>();
-	
 	private List<HibernateCommand> attachmentsOnError = new ArrayList<HibernateCommand>();
-	
+
 	/**
 	 * @param hibernateTemplate
 	 * @param entity Entity that will be persisted
 	 */
-	public SaveOrUpdateStrategy(HibernateTransactionSessionProvider<?> hibernateTemplate, Object entity){
+	public SaveOrUpdateStrategy(HibernateTransactionSessionProvider<?> hibernateTemplate, Object entity) {
 		this.hibernateTemplate = hibernateTemplate;
 		this.entity = entity;
 	}
-	
+
 	/**
 	 * Create a SaveOrUpdateStrategy, retrieving from Next context the HibernateTemplate and TransactionTemplate objects avaiable.
 	 * The name of the beans must be hibernateTemplate and transactionTemplate, if they not exist an exception will be thrown.
@@ -91,10 +87,10 @@ public class SaveOrUpdateStrategy {
 	 * @param hibernateTemplate
 	 * @param entity Entidade que será salva
 	 */
-	public SaveOrUpdateStrategy(Object entity){
+	public SaveOrUpdateStrategy(Object entity) {
 		this(PersistenceConfiguration.DEFAULT_CONFIG, entity);
 	}
-	
+
 	/**
 	 * Create a SaveOrUpdateStrategy, retrieving from Next context the HibernateTemplate and TransactionTemplate objects avaiable.
 	 * The name of the beans must be hibernateTemplate and transactionTemplate, if they not exist an exception will be thrown.
@@ -106,11 +102,11 @@ public class SaveOrUpdateStrategy {
 	 * @param hibernateTemplate
 	 * @param entity Entidade que será salva
 	 */
-	public SaveOrUpdateStrategy(String persitenceContext, Object entity){
+	public SaveOrUpdateStrategy(String persitenceContext, Object entity) {
 		this.hibernateTemplate = (HibernateTransactionSessionProvider<?>) PersistenceUtils.getSessionProvider(persitenceContext);
 		this.entity = entity;
 	}
-	
+
 	/**
 	 * Returns the entity that is being saved.
 	 * 
@@ -159,7 +155,7 @@ public class SaveOrUpdateStrategy {
 	 * @param parentProperty is the name of the property in each bean in the collection that refers to the entity being saved. The name of the property in the detail bean that refers to the master bean. 
 	 * @return
 	 */
-	public SaveOrUpdateStrategy setParent(String path, String parentProperty){
+	public SaveOrUpdateStrategy setParent(String path, String parentProperty) {
 		try {
 			Collection<?> collection = (Collection<?>) PersistenceUtils.getProperty(entity, path);
 			if (collection != null) {
@@ -172,21 +168,21 @@ public class SaveOrUpdateStrategy {
 			throw new RuntimeException("Error in setParent call. ", e);
 		}
 	}
-	
+
 	/**
 	 * Save the entity
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveEntity(){
+	public SaveOrUpdateStrategy saveEntity() {
 		return saveEntity(true);
 	}
-	
+
 	/**
 	 * Save the entity
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveEntity(final boolean clearSession){
-		HibernateCommand callback = new HibernateCommand(){
+	public SaveOrUpdateStrategy saveEntity(final boolean clearSession) {
+		HibernateCommand callback = new HibernateCommand() {
 			public Object doInHibernate(Session session) throws HibernateException {
 				if (clearSession) {
 					session.clear();
@@ -198,13 +194,13 @@ public class SaveOrUpdateStrategy {
 		callbacks.add(callback);
 		return this;
 	}
-	
+
 	/**
 	 * Inserts the entity
 	 * @return
 	 */
-	public SaveOrUpdateStrategy insertEntity(){
-		HibernateCommand callback = new HibernateCommand(){
+	public SaveOrUpdateStrategy insertEntity() {
+		HibernateCommand callback = new HibernateCommand() {
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.clear();
 				session.save(entity);
@@ -214,14 +210,14 @@ public class SaveOrUpdateStrategy {
 		callbacks.add(callback);
 		return this;
 	}
-	
+
 	/**
 	 * Force the executtion of the operations required until now.
 	 * 
 	 * Excecuta as operações pedidas até o momento
 	 * @return
 	 */
-	public SaveOrUpdateStrategy flush(){
+	public SaveOrUpdateStrategy flush() {
 		return flush(false);
 	}
 
@@ -231,13 +227,11 @@ public class SaveOrUpdateStrategy {
 	 * @return
 	 */
 	private SaveOrUpdateStrategy flush(boolean insertFirst) {
-		HibernateCommand callback = new HibernateCommand(){
-			
+		HibernateCommand callback = new HibernateCommand() {
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.flush();
 				return null;
 			}
-			
 		};
 		if (insertFirst) {
 			firstCallbacks.add(callback);
@@ -246,9 +240,9 @@ public class SaveOrUpdateStrategy {
 		}
 		return this;
 	}
-	
+
 	public SaveOrUpdateStrategy clear() {
-		HibernateCommand callback = new HibernateCommand(){
+		HibernateCommand callback = new HibernateCommand() {
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.clear();
 				return null;
@@ -257,7 +251,7 @@ public class SaveOrUpdateStrategy {
 		callbacks.add(callback);
 		return this;
 	}
-	
+
 	/**
 	 * <p>
 	 * Save the objects in the collection.
@@ -267,35 +261,34 @@ public class SaveOrUpdateStrategy {
 	 * path é o nome da propriedade na entidade que possui a coleçao a ser salva
 	 * @param path is the property that has reference to the collection.
 	 */
-	public SaveOrUpdateStrategy saveCollection(String path){
+	public SaveOrUpdateStrategy saveCollection(String path) {
 		return saveCollection(path, null);
 	}
+
 	/**
 	 * Salva todos os objetos da coleçao determinado por path
 	 * path é o nome da propriedade na entidade que possui a coleçao a ser salva
 	 * @param path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveCollection(String path, final CollectionItemSaveOrUpdateListener collectionItemSaveOrUpdateListener){
+	@SuppressWarnings("rawtypes")
+	public SaveOrUpdateStrategy saveCollection(String path, final CollectionItemSaveOrUpdateListener collectionItemSaveOrUpdateListener) {
 		try {
-//			ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-//			Method method = reflectionCache.getMethod(entity.getClass(), "get"+StringUtils.capitalize(path));
-			
-			final Collection<?> collection = (Collection)PersistenceUtils.getProperty(entity, path);
-			callbacks.add(new HibernateCommand(){
+			final Collection<?> collection = (Collection) PersistenceUtils.getProperty(entity, path);
+			callbacks.add(new HibernateCommand() {
 				public Object doInHibernate(final Session session) throws HibernateException {
-					if(collection == null){
+					if (collection == null) {
 						//se a colecao é nula nao devemos salvá-la
 						return null;
 					}
 					for (Iterator<?> it = collection.iterator(); it.hasNext();) {
 						final Object next = it.next();
-						SaveOrUpdateStrategyChain chain = new SaveOrUpdateStrategyChain(){
+						SaveOrUpdateStrategyChain chain = new SaveOrUpdateStrategyChain() {
 							public void execute() {
 								session.saveOrUpdate(next);
 							}
 						};
-						if(collectionItemSaveOrUpdateListener != null){
+						if (collectionItemSaveOrUpdateListener != null) {
 							collectionItemSaveOrUpdateListener.onSaveOrUpdate(next, chain);
 						} else {
 							chain.execute();
@@ -307,9 +300,9 @@ public class SaveOrUpdateStrategy {
 			return this;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} 
+		}
 	}
-	
+
 	/**
 	 * Deleta do banco as propriedades que nao foram encontrados no objeto
 	 * 
@@ -318,7 +311,7 @@ public class SaveOrUpdateStrategy {
 	 * @param itemClass Classe dos itens da colecao indicada por path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass){
+	public SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass) {
 		return deleteNotInEntity(path, parentProperty, itemClass, false);
 	}
 
@@ -330,26 +323,23 @@ public class SaveOrUpdateStrategy {
 	 * @param itemClass Classe dos itens da colecao indicada por path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass, CollectionItemDeleteListener<?> listener){
+	public SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass, CollectionItemDeleteListener<?> listener) {
 		return deleteNotInEntity(path, parentProperty, itemClass, false, listener);
 	}
 
 	public SaveOrUpdateStrategy deleteNotInEntity(String path) {
 		return deleteNotInEntity(path, null);
 	}
-	
+
+	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy deleteNotInEntity(String path, CollectionItemDeleteListener<?> listener) {
 		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
-
 		InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(sessionFactory, entity.getClass(), path);
-		
 		Class itemClass = inverseCollectionProperty.type;
-
 		String parentProperty = inverseCollectionProperty.property;
-		
 		return deleteNotInEntity(path, parentProperty, itemClass, listener);
 	}
-	
+
 	/**
 	 * Deleta do banco as propriedades que nao foram encontrados no objeto
 	 * 
@@ -362,7 +352,7 @@ public class SaveOrUpdateStrategy {
 	private SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass, boolean insertFirst) {
 		return deleteNotInEntity(path, parentProperty, itemClass, insertFirst, null);
 	}
-	
+
 	/**
 	 * Deleta do banco as propriedades que nao foram encontrados no objeto
 	 * 
@@ -373,30 +363,26 @@ public class SaveOrUpdateStrategy {
 	 * @param collectionItemDeleteListener Listener que será executado para cada objeto excluido (Não será feita exclusão em batch se listener != null)
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	private SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass, boolean insertFirst, final CollectionItemDeleteListener collectionItemDeleteListener) {
 		try {
 			Serializable entityid = PersistenceUtils.getId(entity, hibernateTemplate.getSessionFactory());
-			if(entityid == null){
-				// se a entidade ainda nao está no banco nao existe nenhuma entidade no banco que nao esteje 
-				// na propriedade
+			if (entityid == null) {
 				return this;
 			}
-			
-//			ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-//			Method method = reflectionCache.getMethod(entity.getClass(), "get"+StringUtils.capitalize(path));
-			final Collection<?> collection = (Collection<?>)PersistenceUtils.getProperty(entity, path);
-			//Query deleteQuery = null;
+
+			final Collection<?> collection = (Collection<?>) PersistenceUtils.getProperty(entity, path);
 			HibernateCommand deleteCallback;
-			if((collection == null || collection.size() == 0) && collectionItemDeleteListener == null){
+			if ((collection == null || collection.size() == 0) && collectionItemDeleteListener == null) {
 				final String deleteQueryString = new StringBuilder()
-				.append("delete ")
-				.append(itemClass.getName())
-				.append(" where ")
-				.append(parentProperty)
-				.append(" = :")
-				.append(entity.getClass().getSimpleName())
-				.toString();
-				deleteCallback = new HibernateCommand(){
+						.append("delete ")
+						.append(itemClass.getName())
+						.append(" where ")
+						.append(parentProperty)
+						.append(" = :")
+						.append(entity.getClass().getSimpleName())
+						.toString();
+				deleteCallback = new HibernateCommand() {
 					public Object doInHibernate(Session session) throws HibernateException {
 						Query queryObject = session.createQuery(deleteQueryString);
 						queryObject.setEntity(entity.getClass().getSimpleName(), entity);
@@ -404,38 +390,29 @@ public class SaveOrUpdateStrategy {
 						return null;
 					}
 				};
-				
+
 			} else {
-//				final ClassMetadata metadata = hibernateTemplate.getSessionFactory().getClassMetadata(itemClass);
-				//final List<Serializable> ids = new ArrayList<Serializable>();
 				final List<?> toDelete = findItensToDelete(parentProperty, itemClass, collection);
-				if(toDelete.size() == 0){
+				if (toDelete.size() == 0) {
 					return this;
 				}
-				deleteCallback = new HibernateCommand(){
+				deleteCallback = new HibernateCommand() {
 					public Object doInHibernate(final Session session) throws HibernateException {
-						//session = session.getSession(EntityMode.POJO);
-						//Transaction transaction = session.beginTransaction();
-						
 						for (final Object object : toDelete) {
-							SaveOrUpdateStrategyChain chain = new SaveOrUpdateStrategyChain(){
+							SaveOrUpdateStrategyChain chain = new SaveOrUpdateStrategyChain() {
 								public void execute() {
 									session.delete(object);
 								}
 							};
-							if(collectionItemDeleteListener != null){
+							if (collectionItemDeleteListener != null) {
 								collectionItemDeleteListener.onDelete(object, chain);
 							} else {
 								chain.execute();
 							}
-							//session.flush();
 						}
-						//session.flush();
-						//transaction.commit();
 						return null;
 					}
 				};
-
 			}
 			if (insertFirst) {
 				firstCallbacks.add(deleteCallback);
@@ -450,88 +427,85 @@ public class SaveOrUpdateStrategy {
 
 	private List<?> findItensToDelete(final String parentProperty, final Class<?> itemClass, final Collection<?> collection) {
 		final List<?> toDelete = (List<?>) hibernateTemplate.execute(new HibernateCommand() {
-				public Object doInHibernate(Session session) {
-					
-					// remover dessa lista os objetos transientes
-					Collection<Object> itens = new ArrayList<Object>(collection == null? new ArrayList<Object>() : collection);
-					for (Iterator<Object> iter = itens.iterator(); iter.hasNext();) {
-						Object entity = iter.next();
-						Serializable id = PersistenceUtils.getId(entity, hibernateTemplate.getSessionFactory());
-						if(id == null){
-							iter.remove();
-						}
+			public Object doInHibernate(Session session) {
+
+				// remover dessa lista os objetos transientes
+				Collection<Object> itens = new ArrayList<Object>(collection == null ? new ArrayList<Object>() : collection);
+				for (Iterator<Object> iter = itens.iterator(); iter.hasNext();) {
+					Object entity = iter.next();
+					Serializable id = PersistenceUtils.getId(entity, hibernateTemplate.getSessionFactory());
+					if (id == null) {
+						iter.remove();
 					}
-					if(itens.size() == 0){
-						// se nao tiver itens remover os que estiverem no banco
-						final String findQueryString = new StringBuilder()
-						.append("from ")
-						.append(itemClass.getName())
-						.append(" ")
-						.append(uncapitalize(itemClass.getSimpleName()))
-						.append(" where ")
-						.append(uncapitalize(itemClass.getSimpleName()))
-						.append('.')
-						.append(parentProperty)
-						.append(" = :")
-						.append(entity.getClass().getSimpleName())
-						.toString();
-						
-						Query q = session.createQuery(findQueryString);
-						q.setEntity(entity.getClass().getSimpleName(), entity);
-						return q.list();
-					} else {
-						boolean compositeParentProperty = parentProperty.indexOf('.') > 0;
-						if(compositeParentProperty) {
-							// remover apenas os que nao estao na lista
-							// when the property is composite.. 
-							// must load all details and find manually the ones to delete 
-							final String findQueryString = new StringBuilder()
-							.append("from ")
-							.append(itemClass.getName())
-							.append(" ")
-							.append(uncapitalize(itemClass.getSimpleName()))
-							.append(" where ")
-							.append(uncapitalize(itemClass.getSimpleName()))
-							.append('.')
-							.append(parentProperty)
-							.append(" = :")
-							.append(entity.getClass().getSimpleName())
-							.toString();
-							
-							Query q = session.createQuery(findQueryString);
-							q.setEntity(entity.getClass().getSimpleName(), entity);
-							List<?> databaseItems = q.list();
-							return PersistenceUtils.removeFromCollectionUsingId(session.getSessionFactory(), databaseItems, itens);
-						} else {
-							// remover apenas os que nao estao na lista
-							final String findQueryString = new StringBuilder()
-							.append("from ")
-							.append(itemClass.getName())
-							.append(" ")
-							.append(uncapitalize(itemClass.getSimpleName()))
-							.append(" where ")
-							.append(uncapitalize(itemClass.getSimpleName()))
-							.append(" not in (:collection)  and ")
-							.append(uncapitalize(itemClass.getSimpleName()))
-							.append('.')
-							.append(parentProperty)
-							.append(" = :")
-							.append(entity.getClass().getSimpleName())
-							.toString();
-							
-							Query q = session.createQuery(findQueryString);
-							q.setParameterList("collection", itens);
-							q.setEntity(entity.getClass().getSimpleName(), entity);
-							return q.list();
-						}
-					}
-					
 				}
 
+				// se nao tiver itens remover os que estiverem no banco
+				if (itens.size() == 0) {
+					final String findQueryString = new StringBuilder()
+							.append("from ")
+							.append(itemClass.getName())
+							.append(" ")
+							.append(uncapitalize(itemClass.getSimpleName()))
+							.append(" where ")
+							.append(uncapitalize(itemClass.getSimpleName()))
+							.append('.')
+							.append(parentProperty)
+							.append(" = :")
+							.append(entity.getClass().getSimpleName())
+							.toString();
+					Query q = session.createQuery(findQueryString);
+					q.setEntity(entity.getClass().getSimpleName(), entity);
+					return q.list();
+				} else {
+					boolean compositeParentProperty = parentProperty.indexOf('.') > 0;
+					if (compositeParentProperty) {
+						// remover apenas os que nao estao na lista
+						// when the property is composite.. 
+						// must load all details and find manually the ones to delete 
+						final String findQueryString = new StringBuilder()
+								.append("from ")
+								.append(itemClass.getName())
+								.append(" ")
+								.append(uncapitalize(itemClass.getSimpleName()))
+								.append(" where ")
+								.append(uncapitalize(itemClass.getSimpleName()))
+								.append('.')
+								.append(parentProperty)
+								.append(" = :")
+								.append(entity.getClass().getSimpleName())
+								.toString();
+						Query q = session.createQuery(findQueryString);
+						q.setEntity(entity.getClass().getSimpleName(), entity);
+						List<?> databaseItems = q.list();
+						return PersistenceUtils.removeFromCollectionUsingId(session.getSessionFactory(), databaseItems, itens);
+					} else {
+						// remover apenas os que nao estao na lista
+						final String findQueryString = new StringBuilder()
+								.append("from ")
+								.append(itemClass.getName())
+								.append(" ")
+								.append(uncapitalize(itemClass.getSimpleName()))
+								.append(" where ")
+								.append(uncapitalize(itemClass.getSimpleName()))
+								.append(" not in (:collection)  and ")
+								.append(uncapitalize(itemClass.getSimpleName()))
+								.append('.')
+								.append(parentProperty)
+								.append(" = :")
+								.append(entity.getClass().getSimpleName())
+								.toString();
+						Query q = session.createQuery(findQueryString);
+						q.setParameterList("collection", itens);
+						q.setEntity(entity.getClass().getSimpleName(), entity);
+						return q.list();
+					}
+				}
+
+			}
 		});
 		return toDelete;
 	}
-	
+
 	/**
 	 * Salva cada objeto novo na coleçao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
@@ -541,11 +515,11 @@ public class SaveOrUpdateStrategy {
 	 * @param itemClass
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveOrUpdateManaged(String path, String parentProperty, Class<?> itemClass){
+	public SaveOrUpdateStrategy saveOrUpdateManaged(String path, String parentProperty, Class<?> itemClass) {
 		executeManagedSaving(path, itemClass, parentProperty);
 		return this;
 	}
-	
+
 	/**
 	 * Deleta do banco os itens nao encontrados na coleçao e dá um flush na conexao
 	 * 
@@ -555,9 +529,10 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveOrUpdateManagedDeleteFirst(String path){
+	public SaveOrUpdateStrategy saveOrUpdateManagedDeleteFirst(String path) {
 		return saveOrUpdateManagedDeleteFirst(path, null);
 	}
+
 	/**
 	 * Deleta do banco os itens nao encontrados na coleçao e dá um flush na conexao
 	 * 
@@ -567,23 +542,19 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveOrUpdateManagedDeleteFirst(String path, SaveOrUpdateStrategyListener<?> listener){
+	@SuppressWarnings("rawtypes")
+	public SaveOrUpdateStrategy saveOrUpdateManagedDeleteFirst(String path, SaveOrUpdateStrategyListener<?> listener) {
 		try {
 			SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
-
 			InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(sessionFactory, entity.getClass(), path);
-			
 			Class itemClass = inverseCollectionProperty.type;
-
 			String parentProperty = inverseCollectionProperty.property;
-
 			executeManagedSavingDeleteFirst(path, itemClass, parentProperty, listener);
-			
 		} catch (Exception e) {
-			if(entity == null){
+			if (entity == null) {
 				throw new RuntimeException("Não foi possível usar o saveOrUpdateManaged(String) para entidade nula ", e);
 			}
-			throw new RuntimeException("Não foi possível usar o saveOrUpdateManaged(String) para "+entity.getClass().getName()+"! Possíveis causas: " +
+			throw new RuntimeException("Não foi possível usar o saveOrUpdateManaged(String) para " + entity.getClass().getName() + "! Possíveis causas: " +
 					"Os itens do collection não possuem referencia para o pai, O path estava incorreto. O path leva a uma coleção que não tem classe persistente", e);
 		}
 		return this;
@@ -607,7 +578,7 @@ public class SaveOrUpdateStrategy {
 		flush(true);
 		saveCollection(path, listener);
 	}
-	
+
 	/**
 	 * Deleta do banco os itens nao encontrados na coleçao e dá um flush na conexao
 	 * 
@@ -617,11 +588,11 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveOrUpdateManaged(String path){
+	public SaveOrUpdateStrategy saveOrUpdateManaged(String path) {
 		flush();
 		return saveOrUpdateManagedDeleteFirst(path);
 	}
-	
+
 	/**
 	 * Deleta do banco os itens nao encontrados na coleçao e dá um flush na conexao
 	 * 
@@ -632,15 +603,15 @@ public class SaveOrUpdateStrategy {
 	 * @param delegateToEntityDAO
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveOrUpdateManaged(String path, boolean delegateToEntityDAO){
-		if(delegateToEntityDAO){
+	public SaveOrUpdateStrategy saveOrUpdateManaged(String path, boolean delegateToEntityDAO) {
+		if (delegateToEntityDAO) {
 			flush();
 			return saveOrUpdateManaged(path, ServiceFactory.getService(DAODelegateListener.class));
 		} else {
 			return saveOrUpdateManaged(path);
 		}
 	}
-	
+
 	/**
 	 * Deleta do banco os itens nao encontrados na coleçao e dá um flush na conexao
 	 * 
@@ -650,7 +621,8 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveOrUpdateManaged(String path, SaveOrUpdateStrategyListener listener){
+	@SuppressWarnings("rawtypes")
+	public SaveOrUpdateStrategy saveOrUpdateManaged(String path, SaveOrUpdateStrategyListener listener) {
 		flush();
 		return saveOrUpdateManagedDeleteFirst(path, listener);
 	}
@@ -664,100 +636,39 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	public SaveOrUpdateStrategy saveOrUpdateManagedNormal(String path){
+	@SuppressWarnings("rawtypes")
+	public SaveOrUpdateStrategy saveOrUpdateManagedNormal(String path) {
 		try {
 			SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
-
 			InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(sessionFactory, entity.getClass(), path);
-			
 			Class itemClass = inverseCollectionProperty.type;
-
 			String parentProperty = inverseCollectionProperty.property;
-
 			executeManagedSaving(path, itemClass, parentProperty);
-			
 		} catch (Exception e) {
-			throw new RuntimeException("Não foi possível usar o saveOrUpdateManaged(String) para "+entity.getClass().getName()+"! Possíveis causas: " +
+			throw new RuntimeException("Não foi possível usar o saveOrUpdateManaged(String) para " + entity.getClass().getName() + "! Possíveis causas: " +
 					"Os itens do collection não possuem referencia para o pai, O path estava incorreto. O path leva a uma coleção que não tem classe persistente", e);
 		}
 		return this;
 	}
-	
-//	@Deprecated
-//	private String getParentProperty(SessionFactory sessionFactory, String path, Class itemClass) {
-//		
-//		//Tenta obter a annotation sobre @OneToMany(mappedBy = "transportadora")
-//		
-//		if (this.entity != null && path != null ) {
-//			
-//			Method getterMethod = Util.beans.getGetterMethod(this.entity.getClass(), path);
-//			if (getterMethod != null) {
-//				OneToMany otm = ReflectionCacheFactory.getReflectionCache().getAnnotation(getterMethod, OneToMany.class);
-//				if (otm != null && Util.strings.isNotEmpty(otm.mappedBy())) {
-//					return otm.mappedBy();
-//				}
-//			}
-//		}
-//		
-//		//Caso não ache, procura pelo tipo do atributo
-//		
-//		AbstractEntityPersister persister = (AbstractEntityPersister) sessionFactory.getClassMetadata(itemClass);
-//
-//		int i = 0;
-//		List<Integer> propriedadesPai = new ArrayList<Integer>();
-//		for (Type ptype : persister.getPropertyTypes()) {
-//			if (ptype instanceof ManyToOneType) {
-//				ManyToOneType manyToOneType = ((ManyToOneType) ptype);
-//				Class returnedClass = manyToOneType.getReturnedClass();
-//				if (returnedClass.isAssignableFrom(entity.getClass())) {
-//					manyToOneType.getName();
-//					propriedadesPai.add(i);
-//					//break;
-//				}
-//			}
-//			i++;
-//		}
-//		if(propriedadesPai.size() > 1){
-//			throw new RuntimeException("Não é possível determinar a classe pai para a propriedade. " +
-//							"Existem "+propriedadesPai.size()+" referencias da classe "+itemClass.getSimpleName()+" para a classe "+entity.getClass().getSimpleName());
-//		}
-//		if(propriedadesPai.size() == 0){
-//			throw new RuntimeException("Não é possível determinar a classe pai para a propriedade. " +
-//							"Não existem referencias da classe "+itemClass.getSimpleName()+" para a classe "+entity.getClass().getSimpleName());
-//		}
-//		String parentProperty = persister.getPropertyNames()[propriedadesPai.get(0)];
-//		return parentProperty;
-//	}
 
-//	@Deprecated
-//	private Class getItemClass(String path, SessionFactory sessionFactory) {
-//		AbstractEntityPersister metadata = (AbstractEntityPersister) sessionFactory.getClassMetadata(entity.getClass());
-//		CollectionType type = (CollectionType) metadata.getPropertyType(path);
-//		String role = type.getRole();
-//		CollectionMetadata collectionMetadata = sessionFactory.getCollectionMetadata(role);
-//		Type collectionElementType = collectionMetadata.getElementType();
-//		Class itemClass = collectionElementType.getReturnedClass();
-//		return itemClass;
-//	}
-
+	@SuppressWarnings("rawtypes")
 	private void executeManagedSaving(String path, Class itemClass, String parentProperty) {
 		setParent(path, parentProperty);
 		deleteNotInEntity(path, parentProperty, itemClass);
 		saveCollection(path);
 	}
-	
+
 	/**
 	 * Excecuta as os comandos desse saveOrUpdateStrategy<BR>
 	 * E dos saveOrUpdateStrategy anexados
-	 *
 	 */
 	@SuppressWarnings("rawtypes")
-	public void execute(){
-		hibernateTemplate.executeInTransaction(new HibernateTransactionCommand(){
+	public void execute() {
+		flush();
+		hibernateTemplate.executeInTransaction(new HibernateTransactionCommand() {
 			@Override
 			public Object doInHibernate(Session session, Object transactionStatus) {
 				List<HibernateCommand> callbacks = getCallbacks();
-
 				for (HibernateCommand callback : callbacks) {
 					try {
 						callback.doInHibernate(session);
@@ -772,127 +683,15 @@ public class SaveOrUpdateStrategy {
 				}
 				return null;
 			}
-			
+
 			private void executeOnError(Session session) {
 				for (HibernateCommand hibernateCallback : attachmentsOnError) {
 					hibernateCallback.doInHibernate(session);
 				}
 			}
 		});
-		/*
-		Session session = SessionFactoryUtils.getSession(hibernateTemplate.getSessionFactory(), null /*TODO REBUILD ENTITY INTERCEPTOR/, null/*TODO EXCEPTION TRANSLATOR hibernateTemplate.getJdbcExceptionTranslator()/);
-		Transaction transaction = session.getTransaction();
-		boolean intransaction = true;
-		if(!transaction.isActive()){
-			transaction = session.beginTransaction();	
-			intransaction = false;
-		}
-		try {
-			transactionTemplate.execute(new TransactionCallback(){
-
-				public Object doInTransaction(TransactionStatus status) {
-					hibernateTemplate.execute(new HibernateCommand() {
-						@SuppressWarnings("rawtypes")
-						public Object doInSession(Session session) {
-
-							List<HibernateCallback> callbacks = getCallbacks();
-
-							for (HibernateCallback callback : callbacks) {
-								try {
-									try {
-										callback.doInHibernate(session);
-									} catch (HibernateException e) {
-										executeOnError(session);
-										throw e;
-									} catch (SQLException e) {
-										executeOnError(session);
-										throw e;
-									} catch (RuntimeException e) {
-										executeOnError(session);
-										throw e;
-									}
-								} catch (Exception e) {
-									throw new RuntimeException(e);
-								}
-							}
-							return null;
-						}
-
-						private void executeOnError(Session session) throws SQLException {
-							for (HibernateCallback hibernateCallback : attachmentsOnError) {
-								try {
-									hibernateCallback.doInHibernate(session);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}
-
-					});
-					return null;
-				}});
-			
-			if (!intransaction) {
-				transaction.commit();
-			}
-		} catch (RuntimeException e) {
-			if (!intransaction) {
-				transaction.rollback();
-			}
-			throw e;
-		} catch (Exception e){
-			if (!intransaction) {
-				transaction.rollback();
-			}
-			throw new RuntimeException(e);
-		} finally {
-			SessionFactoryUtils.releaseSession(session, hibernateTemplate.getSessionFactory());
-				
-		}
-		*/
 	}
-	
-//	/**
-//	 * Utilizar esse método se existir uma transação sendo executada
-//	 * @deprecated O método execute já sabe se existe uma transação ativa.
-//	 */
-//	@Deprecated
-//	public void executeInTransaction(){
-//		hibernateTemplate.execute(new HibernateCallback(){
-//
-//			public Object doInHibernate(Session session) throws HibernateException, SQLException {
-//				List<HibernateCallback> callbacks = getCallbacks();
-//				
-//				for (HibernateCallback callback : callbacks) {
-//					callback.doInHibernate(session);
-//				}
-//				return null;
-//			}
-//			
-//		}
-//		);
-//	}
-	
-	/*
-	 * Excecuta as os comandos desse saveOrUpdateStrategy<BR>
-	 * E dos saveOrUpdateStrategy anexados
-	 * Recebe a sessão onde devem ser executados os comandos. O controle de transação
-	 * é de responsabilidade de quem utilizar esse código
-	 *//*
-	public void execute(Session session){
-		
-		List<HibernateCallback> callbacks = getCallbacks();
-		
-		for (HibernateCallback callback : callbacks) {
-			try {
-				callback.doInHibernate(session);
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
-	}
-	*/
+
 	/**
 	 * Anexa um outro save ou update a esse.<BR>
 	 * Depois que esse saveOrUpdate tiver concluido suas tarefas ele executará
@@ -904,11 +703,13 @@ public class SaveOrUpdateStrategy {
 	 *  
 	 * @param strategy
 	 */
-	public SaveOrUpdateStrategy attach(SaveOrUpdateStrategy strategy){
-		if(strategy == null) throw new NullPointerException("SaveOrUpdateStrategy null");
+	public SaveOrUpdateStrategy attach(SaveOrUpdateStrategy strategy) {
+		if (strategy == null)
+			throw new NullPointerException("SaveOrUpdateStrategy null");
 		attachments.addAll(strategy.getCallbacks());
 		return this;
 	}
+
 	/**
 	 * Anexa um outro save ou update a esse.<BR>
 	 * Antes que esse saveOrUpdate execute suas tarefas ele executará
@@ -920,13 +721,14 @@ public class SaveOrUpdateStrategy {
 	 *  
 	 * @param strategy
 	 */
-	public SaveOrUpdateStrategy attachBefore(SaveOrUpdateStrategy strategy){
-		if(strategy == null) throw new NullPointerException("SaveOrUpdateStrategy null");
+	public SaveOrUpdateStrategy attachBefore(SaveOrUpdateStrategy strategy) {
+		if (strategy == null)
+			throw new NullPointerException("SaveOrUpdateStrategy null");
 		attachmentsBefore.addAll(strategy.getCallbacks());
 		return this;
 	}
-	
-	public SaveOrUpdateStrategy attachFlushBefore(){
+
+	public SaveOrUpdateStrategy attachFlushBefore() {
 		this.attachmentsBefore.add(new HibernateCommand() {
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.flush();
@@ -935,7 +737,7 @@ public class SaveOrUpdateStrategy {
 		});
 		return this;
 	}
-	
+
 	/**
 	 * Anexa uma tarefa a essa estratégia.<BR>
 	 * Depois que esse saveOrUpdate tiver concluido suas tarefas ele executará
@@ -945,12 +747,13 @@ public class SaveOrUpdateStrategy {
 	 * @param callback
 	 * @return
 	 */
-	public SaveOrUpdateStrategy attach(HibernateCommand callback){
-		if(callback == null) throw new NullPointerException("HibernateCallback null");
+	public SaveOrUpdateStrategy attach(HibernateCommand callback) {
+		if (callback == null)
+			throw new NullPointerException("HibernateCallback null");
 		attachments.add(callback);
 		return this;
 	}
-	
+
 	/**
 	 * Anexa uma tarefa a essa estratégia.<BR>
 	 * Antes que esse saveOrUpdate execute suas tarefas ele executará
@@ -960,12 +763,13 @@ public class SaveOrUpdateStrategy {
 	 * @param callback
 	 * @return
 	 */
-	public SaveOrUpdateStrategy attachBefore(HibernateCommand callback){
-		if(callback == null) throw new NullPointerException("HibernateCallback null");
+	public SaveOrUpdateStrategy attachBefore(HibernateCommand callback) {
+		if (callback == null)
+			throw new NullPointerException("HibernateCallback null");
 		attachmentsBefore.add(callback);
 		return this;
 	}
-	
+
 	/**
 	 * Anexa uma tarefa a essa estratégia.<BR>
 	 * Caso ocorra alguma exceção em alguma tarefa desse saveOrUpdate esse callback será executado.<BR>
@@ -973,18 +777,19 @@ public class SaveOrUpdateStrategy {
 	 * @param callback
 	 * @return
 	 */
-	public SaveOrUpdateStrategy attachOnError(HibernateCommand callback){
-		if(callback == null) throw new NullPointerException("HibernateCallback null");
+	public SaveOrUpdateStrategy attachOnError(HibernateCommand callback) {
+		if (callback == null)
+			throw new NullPointerException("HibernateCallback null");
 		attachmentsOnError.add(callback);
 		return this;
 	}
-	
+
 	/**
 	 * Arruma os callbacks na ordem que devem ser chamados
 	 * Inclui os callbacks dos saveorupdatestrategys anexados
 	 * @return
 	 */
-	private List<HibernateCommand> getCallbacks(){
+	private List<HibernateCommand> getCallbacks() {
 		List<HibernateCommand> callbacks = new ArrayList<HibernateCommand>();
 		callbacks.addAll(this.firstCallbacks);
 		callbacks.addAll(this.attachmentsBefore);
@@ -992,8 +797,9 @@ public class SaveOrUpdateStrategy {
 		callbacks.addAll(this.attachments);
 		return callbacks;
 	}
-	
+
 	private static String uncapitalize(String name) {
 		return Character.toLowerCase(name.charAt(0)) + name.substring(1);
 	}
+
 }

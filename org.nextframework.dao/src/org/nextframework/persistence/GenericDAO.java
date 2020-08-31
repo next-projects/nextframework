@@ -285,7 +285,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	public void saveOrUpdate(final BEAN bean) {
 		SaveOrUpdateStrategy save = getSaveOrUpdateCompleteStrategy(bean);
 		save.execute();
-		getHibernateTemplate().flush();
+		//getHibernateTemplate().flush();
 	}
 
 	protected SaveOrUpdateStrategy getSaveOrUpdateCompleteStrategy(final BEAN bean) {
@@ -325,7 +325,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 			saveFull.attach(save);
 		}
 		saveFull.execute();
-		getHibernateTemplate().flush();
+		//getHibernateTemplate().flush();
 	}
 	
 	/* (non-Javadoc)
