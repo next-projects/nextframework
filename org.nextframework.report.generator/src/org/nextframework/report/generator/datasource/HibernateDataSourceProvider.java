@@ -17,12 +17,14 @@ import javax.persistence.Transient;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.controller.crud.ListViewFilter;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
 import org.nextframework.persistence.QueryBuilder;
+import org.nextframework.persistence.ResultListImpl;
 import org.nextframework.persistence.TransientsFilter;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.annotation.ExtendBean;
@@ -37,12 +39,11 @@ import org.springframework.util.StringUtils;
 
 @SuppressWarnings("unchecked")
 public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
-	
+
 //	private static BeanFacotryUtils beanFacotries = new BeanFacotryUtils();
-	
-	public static final int MAXIMUM_RESULTS = 2000;
+
 	String fromClass;
-	
+
 	public void setFromClass(String fromClass) {
 		this.fromClass = fromClass;
 	}
@@ -59,24 +60,41 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 	@SuppressWarnings("all")
 	@Override
 	public List getResult(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
- 		QueryBuilder query = createQueryBuilder(element, filterMap, fixedCriteriaMap, limitResults);
-		return query.list();
+
+		ListViewFilter filter = new ListViewFilter();
+		filter.setPageSize(500);
+
+		List fullResult = new ArrayList();
+		QueryBuilder query = createQueryBuilder(element, filterMap, fixedCriteriaMap);
+		ResultListImpl rs = new ResultListImpl(query, filter);
+
+		while (true) {
+			List subResult = rs.list();
+			fullResult.addAll(subResult);
+			if (rs.hasNextPage() && fullResult.size() < limitResults) {
+				rs.nextPage();
+			} else {
+				break;
+			}
+		}
+
+		return fullResult;
 	}
 
-	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
-		
+	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
+
 		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(getMainType()));
 		List<String> properties = element.getProperties();
 		//Set<String> pathsSet = new HashSet<String>();
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(getMainType());
 		//properties.addAll(beans.getPropertiesWithAnnotation(getMainType(), ManyToOne.class));
 		JoinManager joinManager = new JoinManager(query.getAlias());
-		
+
 		LinkedHashSet<String> orderByProperties = new LinkedHashSet<String>();
-		
+
 		for (String property : properties) {
-			
-			if(element.getData().isCalculated(property)){
+
+			if (element.getData().isCalculated(property)) {
 				//this is a calculated field
 				continue;
 			}
@@ -86,8 +104,8 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 ////				joinMap.put(query.getAlias()+"."+property, query.getAlias()+"_"+property);
 //			}
 			//TODO IMPROVE ALIAS CONCATENATION (REUSE ALIAS)
-			
-			if(property.contains(".")){
+
+			if (property.contains(".")) {
 //				String[] path = property.substring(0, property.lastIndexOf(".")).split("\\.");
 //				String currentPath = "";
 ////				String lastPath = "";
@@ -107,22 +125,22 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 				String currentPath = "";
 				String basePath = "";
 				for (int i = 0; i < parts.length; i++) {
-					if(lastTransient){
+					if (lastTransient) {
 						break;
 					}
 					basePath = currentPath;
-					if(i > 0){
+					if (i > 0) {
 						currentPath += ".";
 					}
 					currentPath += parts[i];
 //					String newAlias = currentAlias+"_"+parts[i];
 //					query.leftOuterJoinFetch(currentAlias+"."+parts[i] + " "+newAlias);
 					propertyDescriptor = beanDescriptor.getPropertyDescriptor(currentPath);
-					if(propertyDescriptor.getAnnotation(Transient.class)!=null){
+					if (propertyDescriptor.getAnnotation(Transient.class) != null) {
 						lastTransient = true;
 					}
 					ManyToOne manyToOne = propertyDescriptor.getAnnotation(ManyToOne.class);
-					if(manyToOne != null){
+					if (manyToOne != null) {
 //						joinManager.put(currentAlias+"."+parts[i], newAlias);
 						joinManager.addJoin(currentPath);
 //						currentAlias = newAlias;
@@ -130,16 +148,16 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 							orderByProperties.add(currentPath);
 						}
 					} else {
-						if(propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0){
-							for(String field: propertyDescriptor.getAnnotation(ReportField.class).usingFields()){
+						if (propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0) {
+							for (String field : propertyDescriptor.getAnnotation(ReportField.class).usingFields()) {
 //								treatReportField(currentPath, query, joinManager, field);
 								String path = basePath;
-								if(path.length() > 0){
+								if (path.length() > 0) {
 									path += ".";
 								}
 								joinManager.addJoin(path + field);
 							}
-						}else{
+						} else {
 							if (i == parts.length - 1 && !lastTransient) {
 								orderByProperties.add(currentPath);
 							}
@@ -154,17 +172,17 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 //						joinManager.addJoin(field);
 //					}
 //				}
-				if(propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0){
-					for(String field: propertyDescriptor.getAnnotation(ReportField.class).usingFields()){
+				if (propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0) {
+					for (String field : propertyDescriptor.getAnnotation(ReportField.class).usingFields()) {
 //						treatReportField(currentPath, query, joinManager, field);
 						joinManager.addJoin(field);
 					}
-				} else if(propertyDescriptor.getAnnotation(ManyToOne.class) != null){
+				} else if (propertyDescriptor.getAnnotation(ManyToOne.class) != null) {
 					joinManager.addJoin(property);
 					orderByProperties.add(property);
 //					joinManager.put(query.getAlias()+"."+property, query.getAlias()+"_"+property);
 				} else {
-					if(propertyDescriptor.getAnnotation(ExtendBean.class) == null && propertyDescriptor.getAnnotation(Transient.class) == null){
+					if (propertyDescriptor.getAnnotation(ExtendBean.class) == null && propertyDescriptor.getAnnotation(Transient.class) == null) {
 						orderByProperties.add(property);
 					}
 				}
@@ -173,13 +191,13 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		Map<String, String> joinMap = joinManager.getJoinMap();
 		Set<String> joins = joinMap.keySet();
 		for (String join : joins) {
-			query.leftOuterJoinFetch(join+" "+joinMap.get(join));
+			query.leftOuterJoinFetch(join + " " + joinMap.get(join));
 		}
 		BeanDescriptor db = BeanDescriptorFactory.forClass(getMainType());
 		final Set<String> filteredFields = new HashSet<String>();
-		Map<String, Object> transients = new HashMap<String, Object>(){
+		Map<String, Object> transients = new HashMap<String, Object>() {
 			public Object get(Object key) {
-				filteredFields.add((String)key);
+				filteredFields.add((String) key);
 				return super.get(key);
 			}
 		};
@@ -187,59 +205,58 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			String filterNoSuffix = removeSuffix(filter);
 			PropertyDescriptor propertyDescriptor = db.getPropertyDescriptor(filterNoSuffix);
 			Object parameterValue = filterMap.get(filter);
-			if(propertyDescriptor.getAnnotation(Transient.class) != null){
+			if (propertyDescriptor.getAnnotation(Transient.class) != null) {
 				transients.put(filterNoSuffix, parameterValue);
 				continue;
 			}
 			Type type = propertyDescriptor.getType();
-			if(filter.contains("_begin")){
-				query.where(query.getAlias()+"."+filterNoSuffix+" >= ?", parameterValue);
-			} else if(filter.contains("_end")){
-				query.where(query.getAlias()+"."+filterNoSuffix+" < ?", max(parameterValue));
-			} else if(String.class.equals(type)){
-				query.whereLike(query.getAlias()+"."+filter, (String) parameterValue);
-			} else if(parameterValue != null && parameterValue.getClass().isArray()) {
-				query.whereIn(query.getAlias()+"."+filter, Arrays.asList((Object[])parameterValue));
+			if (filter.contains("_begin")) {
+				query.where(query.getAlias() + "." + filterNoSuffix + " >= ?", parameterValue);
+			} else if (filter.contains("_end")) {
+				query.where(query.getAlias() + "." + filterNoSuffix + " < ?", max(parameterValue));
+			} else if (String.class.equals(type)) {
+				query.whereLike(query.getAlias() + "." + filter, (String) parameterValue);
+			} else if (parameterValue != null && parameterValue.getClass().isArray()) {
+				query.whereIn(query.getAlias() + "." + filter, Arrays.asList((Object[]) parameterValue));
 			} else {
-				query.where(query.getAlias()+"."+filter+" = ?", parameterValue);
+				query.where(query.getAlias() + "." + filter + " = ?", parameterValue);
 			}
 		}
 		for (String filter : fixedCriteriaMap.keySet()) {
 			Object criteriaValue = fixedCriteriaMap.get(filter);
 			if ("ISNULL".equals(criteriaValue)) {
-				query.where(query.getAlias()+"."+filter+" is null");
-			}else if ("NOTNULL".equals(criteriaValue)) {
-				query.where(query.getAlias()+"."+filter+" is not null");
+				query.where(query.getAlias() + "." + filter + " is null");
+			} else if ("NOTNULL".equals(criteriaValue)) {
+				query.where(query.getAlias() + "." + filter + " is not null");
 			}
 		}
 		GenericDAO dao = null;
 		try {
 			dao = DAOUtils.getDAOForClass(getMainType());
-		} catch(NoSuchBeanDefinitionException e){
+		} catch (NoSuchBeanDefinitionException e) {
 			//if no DAO no problem...
 		}
-		if(dao instanceof TransientsFilter){
-			((TransientsFilter)dao).filterQueryForTransients(query, transients);
+		if (dao instanceof TransientsFilter) {
+			((TransientsFilter) dao).filterQueryForTransients(query, transients);
 			Set<String> keySet = transients.keySet();
 			keySet.removeAll(filteredFields);
-			if(keySet.size() > 0){
-				Next.getRequestContext().addMessage("Not all the fields where filtered. Non filtered fields are: "+keySet, MessageType.WARN);
+			if (keySet.size() > 0) {
+				Next.getRequestContext().addMessage("Not all the fields where filtered. Non filtered fields are: " + keySet, MessageType.WARN);
 			}
-		} else if(transients.size() > 0){
-			throw new NextException("There are transient fields "+transients+" for filtering, but the "+dao.getClass().getSimpleName()+" does not implement "+TransientsFilter.class.getSimpleName()+".");
+		} else if (transients.size() > 0) {
+			throw new NextException("There are transient fields " + transients + " for filtering, but the " + dao.getClass().getSimpleName() + " does not implement " + TransientsFilter.class.getSimpleName() + ".");
 		}
-		query.setMaxResults(limitResults);
-		
+
 		//TODO order deeper properties (property of property)
 		StringBuilder orderByBuffer = new StringBuilder("  ");
 		for (String property : orderByProperties) {
-			if(element.getData().isCalculated(property)){
+			if (element.getData().isCalculated(property)) {
 				continue;
 			}
 			String orderColumn = query.getAlias() + "." + property;
-			
+
 			int pIndex = -1;
-			do{
+			do {
 				pIndex = orderColumn.indexOf(".", pIndex + 1);
 				if (pIndex > -1) {
 					String base = orderColumn.substring(0, pIndex);
@@ -248,22 +265,22 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 						orderColumn = alias + orderColumn.substring(pIndex);
 						pIndex = 0;
 					}
-				}else{
+				} else {
 					String alias = joinMap.get(orderColumn);
 					if (alias != null) {
 						orderColumn = alias;
 						pIndex = -1;
 					}
 				}
-			}while(pIndex != -1);
-			
+			} while (pIndex != -1);
+
 			orderByBuffer.append(orderColumn + ", ");
 		}
-		orderByBuffer.setLength(orderByBuffer.length()-2);
+		orderByBuffer.setLength(orderByBuffer.length() - 2);
 		query.orderBy(orderByBuffer.toString());
-		
+
 		updateQuery(query, element, filterMap);
-		
+
 		return query;
 	}
 
@@ -285,11 +302,11 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 //	}
 
 	protected void updateQuery(QueryBuilder<?> query, ReportElement element, Map<String, Object> filterMap) {
-		
+
 	}
 
 	private Object max(Object object) {
-		if(object instanceof Calendar){
+		if (object instanceof Calendar) {
 			Calendar c = (Calendar) object;
 			Calendar instance = Calendar.getInstance();
 			instance.setTime(c.getTime());
@@ -300,10 +317,10 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 	}
 
 	protected String removeSuffix(String filter) {
-		if(filter.endsWith("_begin")){
+		if (filter.endsWith("_begin")) {
 			return filter.substring(0, filter.length() - "_begin".length());
 		}
-		if(filter.endsWith("_end")){
+		if (filter.endsWith("_end")) {
 			return filter.substring(0, filter.length() - "_end".length());
 		}
 		return filter;
@@ -312,7 +329,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 	public List<String> getProperties(ReportElement element) {
 		List<String> properties = new ArrayList<String>();
 		for (LayoutItem layoutItem : element.getLayout().getItems()) {
-			if(layoutItem instanceof FieldDetailElement){
+			if (layoutItem instanceof FieldDetailElement) {
 				properties.add(((FieldDetailElement) layoutItem).getName());
 			}
 		}
@@ -325,13 +342,13 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			String groupProperty = chartElement.getGroupProperty();
 			String seriesProperty = chartElement.getSeriesProperty();
 			String valueProperty = chartElement.getValueProperty();
-			if(groupProperty != null){
+			if (groupProperty != null) {
 				properties.add(groupProperty);
 			}
-			if(StringUtils.hasText(seriesProperty)){
+			if (StringUtils.hasText(seriesProperty)) {
 				properties.add(seriesProperty);
 			}
-			if(valueProperty != null && ! valueProperty.equals("count")){
+			if (valueProperty != null && !valueProperty.equals("count")) {
 				properties.add(valueProperty);
 			}
 		}

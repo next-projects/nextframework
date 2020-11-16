@@ -37,7 +37,6 @@ import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
 import org.nextframework.report.generator.data.FilterElement;
 import org.nextframework.report.generator.datasource.DataSourceProvider;
-import org.nextframework.report.generator.datasource.HibernateDataSourceProvider;
 import org.nextframework.report.generator.generated.ReportSpec;
 import org.nextframework.report.generator.layout.DynamicBaseReportDefinition;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
@@ -542,9 +541,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		return definition;
 	}
 
-	protected int getMaxResults() {
-		return HibernateDataSourceProvider.MAXIMUM_RESULTS;
-	}
+	protected abstract int getMaxResults();
 
 	/////////////////////////////////////////////// AJAX ///////////////////////////////////////////////
 

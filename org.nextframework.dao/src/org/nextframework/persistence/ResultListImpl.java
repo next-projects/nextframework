@@ -27,49 +27,42 @@ import java.util.List;
 
 import org.nextframework.persistence.QueryBuilder.GroupBy;
 
-
 /**
  * Cria um resultSet para ser usado na listagem
  * Atualiza o listingFilter com o número de paginas e a página atual
  */
 public class ResultListImpl<E> implements ResultList<E> {
-	
+
+	protected QueryBuilder<E> queryBuilder;
+	protected PageAndOrder pageAndOrder;
 	protected List<E> lista = null;
-	
-	public ResultListImpl(QueryBuilder<E> queryBuilder, PageAndOrder pageAndOrder){
-		init(queryBuilder, pageAndOrder);
+
+	public ResultListImpl(QueryBuilder<E> queryBuilder, PageAndOrder pageAndOrder) {
+		this.queryBuilder = queryBuilder;
+		this.pageAndOrder = pageAndOrder;
+		init();
+		this.lista = getList();
 	}
 
-	protected void init(QueryBuilder<E> queryBuilder, PageAndOrder pageAndOrder) {		
-		int numeroResultados = getCount(queryBuilder);
+	protected void init() {
+
+		int numeroResultados = getCount();
 		pageAndOrder.setNumberOfResults(numeroResultados);
-		
+
 		int i = numeroResultados / pageAndOrder.getPageSize();
-		if(numeroResultados % pageAndOrder.getPageSize() != 0){
+		if (numeroResultados % pageAndOrder.getPageSize() != 0) {
 			i++;
 		}
 		pageAndOrder.setNumberOfPages(i);
-		
-		int page = pageAndOrder.getCurrentPage();
-		if(pageAndOrder.resetPage()){
-			//se estiver filtrando novamente voltar para a primeira página
-			page = 0;
-		}else{
-			//se a pagina atual do filtro tiver maior que o total de resultados, puxa pra tras
-			page = pageAndOrder.getCurrentPage() > i-1 ? i-1 : pageAndOrder.getCurrentPage();
-			page = page < 0 ? 0 : page;
-		}
-		pageAndOrder.setCurrentPage(page);
-		
-		queryBuilder.setPageNumberAndSize(page, pageAndOrder.getPageSize());
+
 		if (pageAndOrder.getOrderBy() != null && pageAndOrder.getOrderBy().trim().length() > 0) {
-			queryBuilder.orderBy(pageAndOrder.getOrderBy()+" "+(pageAndOrder.isAsc()?"ASC":"DESC"));
+			queryBuilder.orderBy(pageAndOrder.getOrderBy() + " " + (pageAndOrder.isAsc() ? "ASC" : "DESC"));
 		}
-		
-		lista = queryBuilder.list();
+
 	}
 
-	private int getCount(QueryBuilder<E> queryBuilder) {
+	private int getCount() {
+
 		QueryBuilder<Number> countQueryBuilder = queryBuilder.createNew(Number.class);
 
 		String select = queryBuilder.getSelect().getValue().trim();
@@ -88,26 +81,52 @@ public class ResultListImpl<E> implements ResultList<E> {
 		}
 		QueryBuilder.Where where = queryBuilder.getWhere();
 		countQueryBuilder.where(where);
-		
+
 		//Se houver group by, deve retornar a quantidade de grupos
 		GroupBy groupBy = queryBuilder.getGroupBy();
 		if (groupBy != null) {
-			
+
 			//Os grupos devem ser concatenados no select para o Hibernate nao retirar os itens iguais
 			String selectGroupBy = countQueryBuilder.getSelect().getValue() + ", " + groupBy.getValue();
 			countQueryBuilder.select(selectGroupBy);
 			countQueryBuilder.setUseTranslator(false);
-			
+
 			countQueryBuilder.setGroupBy(groupBy);
 			List<Number> numerosResultados = countQueryBuilder.list();
 			return numerosResultados.size();
 		}
-		
+
 		int numeroResultados = countQueryBuilder.unique().intValue();
 		return numeroResultados;
 	}
-	
-	public List<E> list(){
+
+	private List<E> getList() {
+
+		int page = pageAndOrder.getCurrentPage();
+		if (pageAndOrder.resetPage()) {
+			page = 0;
+		} else {
+			page = page > pageAndOrder.getNumberOfPages() - 1 ? pageAndOrder.getNumberOfPages() - 1 : page;
+			page = page < 0 ? 0 : page;
+		}
+		pageAndOrder.setCurrentPage(page);
+
+		queryBuilder.setPageNumberAndSize(page, pageAndOrder.getPageSize());
+
+		return queryBuilder.list();
+	}
+
+	public boolean hasNextPage() {
+		return pageAndOrder.getCurrentPage() < pageAndOrder.getNumberOfPages() - 1;
+	}
+
+	public void nextPage() {
+		pageAndOrder.setCurrentPage(pageAndOrder.getCurrentPage() + 1);
+		this.lista = getList();
+	}
+
+	public List<E> list() {
 		return lista;
 	}
+
 }
