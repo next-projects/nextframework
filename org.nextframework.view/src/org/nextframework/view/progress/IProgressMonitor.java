@@ -53,9 +53,9 @@ public interface IProgressMonitor {
 	
 	void setWorkDone(int workDone);
 
-	public void setError(String error);
+	public void setError(Throwable error);
 
-	public String getError();
+	public Throwable getError();
 	
 	public void setReturn(Object r);
 

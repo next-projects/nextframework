@@ -37,7 +37,7 @@ public class ProgressTaskFactory {
 					monitor.setReturn(r);
 					monitor.done(monitor.getError() == null);
 				} catch (Exception e) {
-					monitor.setError("Erro: " + e.getMessage());
+					monitor.setError(e);
 					monitor.done(false);
 					if (logger != null) {
 						logger.error(e);
