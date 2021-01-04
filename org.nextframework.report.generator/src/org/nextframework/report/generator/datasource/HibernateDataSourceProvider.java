@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.nextframework.bean.BeanDescriptor;
@@ -139,8 +140,9 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 					if (propertyDescriptor.getAnnotation(Transient.class) != null) {
 						lastTransient = true;
 					}
-					ManyToOne manyToOne = propertyDescriptor.getAnnotation(ManyToOne.class);
-					if (manyToOne != null) {
+					ManyToOne mto = propertyDescriptor.getAnnotation(ManyToOne.class);
+					OneToOne oto = propertyDescriptor.getAnnotation(OneToOne.class);
+					if (mto != null || oto != null) {
 //						joinManager.put(currentAlias+"."+parts[i], newAlias);
 						joinManager.addJoin(currentPath);
 //						currentAlias = newAlias;
@@ -177,7 +179,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 //						treatReportField(currentPath, query, joinManager, field);
 						joinManager.addJoin(field);
 					}
-				} else if (propertyDescriptor.getAnnotation(ManyToOne.class) != null) {
+				} else if (propertyDescriptor.getAnnotation(ManyToOne.class) != null || propertyDescriptor.getAnnotation(OneToOne.class) != null) {
 					joinManager.addJoin(property);
 					orderByProperties.add(property);
 //					joinManager.put(query.getAlias()+"."+property, query.getAlias()+"_"+property);

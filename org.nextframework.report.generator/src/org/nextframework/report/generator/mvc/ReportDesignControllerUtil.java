@@ -18,6 +18,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import org.nextframework.bean.BeanDescriptor;
@@ -86,10 +87,11 @@ public class ReportDesignControllerUtil {
 				if(!"class".equals(property) && !Collection.class.isAssignableFrom(method.getReturnType())){
 					avaiableProperties.add(property);
 					ManyToOne manyToOne = method.getAnnotation(ManyToOne.class);
+					OneToOne oneToOne = method.getAnnotation(OneToOne.class);
 					Embedded embedded = method.getAnnotation(Embedded.class);
 					ExtendBean extendBean = method.getAnnotation(ExtendBean.class);
 					ReportEntity refereceReportEntity = method.getReturnType().getAnnotation(ReportEntity.class);
-					if(manyToOne != null || extendBean != null || embedded != null || refereceReportEntity != null){
+					if(manyToOne != null || oneToOne != null || extendBean != null || embedded != null || refereceReportEntity != null){
 						Class<?> subPropertyClass = method.getReturnType();
 						Set<String> subProperties = getAvailablePropertiesForClass(subPropertyClass, property, deepLevel - 1);
 						for (String subProperty : subProperties) {
@@ -131,7 +133,7 @@ public class ReportDesignControllerUtil {
 					oDesc = bd.getPropertyDescriptor(oX).getDisplayName().toUpperCase();
 				}
 				//Correção para item principal de 'subárvore' ficar próximo aos itens 'galhos'
-				if (bd.getPropertyDescriptor(oX).getAnnotation(ManyToOne.class) != null) {
+				if (bd.getPropertyDescriptor(oX).getAnnotation(ManyToOne.class) != null || bd.getPropertyDescriptor(oX).getAnnotation(OneToOne.class) != null) {
 					oDesc += "-";
 				}
 				return oDesc;
@@ -405,6 +407,8 @@ public class ReportDesignControllerUtil {
 		Class<?> type1 = ((Class<?>)p1.getType());
 		Class<?> type2 = ((Class<?>)p2.getType());
 		Set<Method> methods = Util.beans.getPropertiesAsGettersWithAnnotation(type1, ManyToOne.class);
+		Set<Method> methods2 = Util.beans.getPropertiesAsGettersWithAnnotation(type1, OneToOne.class);
+		methods.addAll(methods2);
 		for (Method method : methods) {
 			if(method.getReturnType().isAssignableFrom(type2)){
 				return true;
