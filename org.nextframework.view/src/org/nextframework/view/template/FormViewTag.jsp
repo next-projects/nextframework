@@ -21,7 +21,6 @@
 			<n:bean name="${crudContext.beanName}">
 				<c:if test="${param.ACTION=='view'}">
 					<c:set var="modeView" value="output" scope="request"/>
-					<t:property name="${crudContext.idPropertyName}" mode="input" write="false"/>
 				</c:if>
 				<t:propertyConfig mode="${n:default('input', modeView)}">
 					<n:doBody />

@@ -7,7 +7,7 @@
 		formProperties = new Array();
 		for (var j = 0; j < form.elements.length; j+=1){
 			element = form.elements[j];
-			if(element.name == null || element.name == '') {continue;}
+			if(element.name == null || element.name == '' || element.disabled == false) {continue;}
 			if(formProperties[element.name]){
 				if(formProperties[element.name].isArray){
 					//já é lista			
@@ -1858,13 +1858,13 @@
 		oRequired = eval('new ' + formName.value + '_required()');
 
 		for (x in oRequired) {
+			
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
 			//var field = form[oRequired[x][0]];
 			//alert('required loop');
 			var field = null;
 			var radiofields = new Array();
-			
 			
 			var fprox = formProperties[oRequired[x][0]];
 			if(fprox){
@@ -1874,6 +1874,7 @@
 					field = fprox;
 				}
 			}
+			
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				//alert('required loop item  '+j+' de '+form.elements.length);
@@ -1886,19 +1887,20 @@
 					}
 				}
 			}*/
+			
 			if(radiofields.length > 0){
+				var hasenabled = false;
 				var haschecked = false;
 				for(var r = 0; r < radiofields.length; r++){
-					//alert('loop radios');
 					var radio = radiofields[r];
+					if(radio.disabled == false){
+						hasenabled = true;
+					}
 					if(radio.checked){
 						haschecked = true;
-						//alert('selected: '+radio.value+'  '+radio.name);
-					} //else {
-						//alert('not selected: '+radio.value+'  '+radio.name);
-					//}
+					}
 				}
-				if(!haschecked){
+				if(hasenabled && !haschecked){
 					fields[i++] = oRequired[x][1];
 					fieldObjs[i] = radiofields[0];
 					isValid = false; 	
