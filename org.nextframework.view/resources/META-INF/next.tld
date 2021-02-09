@@ -1213,6 +1213,11 @@
 		<name>messages</name>
 		<tag-class>org.nextframework.view.MessagesTag</tag-class>
 		<body-content>empty</body-content>
+		<attribute>
+			<name>renderAsHtml</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>	
 	
 	<tag>
