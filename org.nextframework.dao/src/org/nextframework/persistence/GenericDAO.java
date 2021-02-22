@@ -787,22 +787,34 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	}
 
 	public void loadDescriptionProperty(BEAN object) {
-		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(object);
-		String descriptionPropertyName = beanDescriptor.getDescriptionPropertyName();
-		BEAN newValue = query()
-			.select(getSelectClauseForIdAndDescription())
-			.entity(object)
-			.unique();
-		
-		try {
-			Object value = PropertyAccessorFactory.forBeanPropertyAccess(newValue).getPropertyValue(descriptionPropertyName);
-			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(object);
-			bw.setPropertyValue(descriptionPropertyName, value);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
 
+		String properties = getSelectClauseForIdAndDescription();
+
+		BEAN newValue = query()
+				.select(properties)
+				.entity(object)
+				.unique();
+
+		if (newValue == null) {
+			throw new RuntimeException("Bean não encontrado!");
+		}
+
+		BeanWrapper pafOld = PropertyAccessorFactory.forBeanPropertyAccess(object);
+		BeanWrapper pafNew = PropertyAccessorFactory.forBeanPropertyAccess(newValue);
+
+		String alias = Util.strings.uncaptalize(beanClass.getSimpleName()) + ".";
+		String[] propertiesArray = properties.split("\\s*[,|;]\\s*");
+		for (String propertyFull : propertiesArray) {
+			try {
+				String property = propertyFull.replace(alias, "");
+				Object value = pafNew.getPropertyValue(property);
+				pafOld.setPropertyValue(property, value);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+	}
 
 	public static CollectionFetcher getDAODelegateCollectionFetcher(){
 		return new CollectionFetcher() {
