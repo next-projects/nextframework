@@ -46,6 +46,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
+import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
 
 /**
  * @author rogelgarcia
@@ -143,7 +144,6 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 			NextAnnotationHandlerMapping handlerMapping = new NextAnnotationHandlerMapping();
 			handlerMapping.setModule(getServletName());
 			handlerMapping.setInterceptors(getInterceptors());
-
 			handlerMapping.setApplicationContext(context);
 			defaultStrategies.add(0, handlerMapping);
 		}
@@ -184,6 +184,15 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 
 	boolean isSecured() {
 		return "true".equalsIgnoreCase(this.getInitParameter("secured"));
+	}
+	
+	@Override
+	protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
+		Object bean = super.createDefaultStrategy(context, clazz);
+		if (bean instanceof AnnotationMethodHandlerAdapter) {
+			((AnnotationMethodHandlerAdapter)bean).setAlwaysUseFullPath(true); //Para @Controller padrão do Spring fazer mapeamento completo declarado em @RequestMapping
+		}
+		return bean;
 	}
 	
 	@Override
