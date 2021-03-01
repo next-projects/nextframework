@@ -8,21 +8,28 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonModelAndView extends ModelAndView {
-	
+
 	public JsonModelAndView(Object obj) {
+
 		MappingJackson2JsonView view = new MappingJackson2JsonView();
-		//Se o JsonTranslator é do tipo JacksonJsonTranslator, substitui as configurações padrão do Spring
+		view.setExtractValueFromSingleKeyModel(true);
+
 		JsonTranslator jsonTranslator = ServiceFactory.getService(JsonTranslator.class);
 		if (jsonTranslator != null && jsonTranslator instanceof JacksonJsonTranslator) {
-			JacksonJsonTranslator jacksonJsonTranslator = (JacksonJsonTranslator) jsonTranslator;
-			view.setObjectMapper(jacksonJsonTranslator.getObjectMapper());
+			ObjectMapper objectMapper = ((JacksonJsonTranslator) jsonTranslator).createObjectMapper();
+			view.setObjectMapper(objectMapper);
 		}
-		//Utiliza a view no modo Jackson como objeto único
-		view.setExtractValueFromSingleKeyModel(true);
+
+		//USE JsonJSDateModelAndView
+		//SimpleModule nextModule = new SimpleModule("JsonJSDateSerializer", new Version(1, 0, 0, null, "org.nextframework", "next-controller"));
+		//nextModule.addSerializer(Date.class, new JsonJSDateSerializer());
+		//objectMapper.registerModule(nextModule);
+
 		setView(view);
 		this.addObject("jsonObject", obj);
+
 	}
-	
+
 	public JsonModelAndView(Object obj, ObjectMapper objectMapper) {
 		this(obj);
 		if (objectMapper != null) {
@@ -30,7 +37,7 @@ public class JsonModelAndView extends ModelAndView {
 			view.setObjectMapper(objectMapper);
 		}
 	}
-	
+
 	public JsonModelAndView(Object obj, Module module) {
 		this(obj);
 		if (module != null) {

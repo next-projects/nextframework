@@ -9,8 +9,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/spring-webmvc-4.1.5.RELEASE.jar" sourcepath="lib/src/spring-webmvc-4.1.5.RELEASE-sources.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.web"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.authorization"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.7.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.7.4.jar" sourcepath="lib/src/jackson-annotations-2.7.4-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.7.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.7.4.jar" sourcepath="lib/jackson-core-2.7.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.7.4.jar" sourcepath="lib/src/jackson-databind-2.7.4-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
