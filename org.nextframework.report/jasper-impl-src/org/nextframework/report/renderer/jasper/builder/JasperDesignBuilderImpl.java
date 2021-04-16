@@ -433,7 +433,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				destinyBand.addElement(createSeparatorLine(height));
 			}
 		}
-		destinyBand.setHeight(originBand.getHeight() + destinyBand.getHeight());
+		destinyBand.setHeight(originBand.getHeight() + destinyBand.getHeight() + 1);
 	}
 	
 	private void configureSection(ReportSection section, ItemConfigurer configurer) throws JRException {
