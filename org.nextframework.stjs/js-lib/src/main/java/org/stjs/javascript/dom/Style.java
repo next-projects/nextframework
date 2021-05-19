@@ -15,52 +15,53 @@
  */
 package org.stjs.javascript.dom;
 
-import org.stjs.javascript.TimeoutHandler;
-
 abstract public class Style extends Node {
-	
+
 	public boolean disabled;
 	public String media;
 	public String type;
-	
+
 	public String cursor;
-	
+
 	public String background;
 	public String backgroundColor;
-	
+
 	public String border;
-	
+
 	public String padding;
 	public String paddingLeft;
 	public String paddingRight;
 	public String paddingTop;
 	public String paddingBottom;
-	
+
 	public String margin;
 	public String marginLeft;
 	public String marginRight;
 	public String marginTop;
 	public String marginBottom;
-	
+
 	public String display;
 	public String visibility;
 	public String position;
-	
+
 	public String top;
 	public String left;
 	public String width;
 	public String height;
-	
+
 	public String minWidth;
-	
+
 	public String textAlign;
 	public String textTransform;
-	
+
 	public int zIndex;
-	
+
 	public java.lang.Object fontSize;
 	public java.lang.Object fontFamily;
 	public java.lang.Object lineHeight;
 	public java.lang.Object opacity;
 	public String verticalAlign;
+
+	public String whiteSpace;
+
 }
