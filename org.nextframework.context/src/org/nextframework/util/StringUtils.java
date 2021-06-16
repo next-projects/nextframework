@@ -271,35 +271,35 @@ public class StringUtils {
 
 	/**
 	 * Faz o escape de aspas simples
-	 * @param string
-	 * @return
 	 */
 	public String escape(String string) {
-		if (string == null) {
-			return "";
-		}
-		return string.replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n");
+		return escape(string, true, true, false, true);
 	}
 
 	/**
 	 * Faz o escape de aspas duplas
-	 * @param string
-	 * @return
 	 */
 	public String escapeQuotes(String string) {
+		return escape(string, true, false, true, true);
+	}
+
+	public String escape(String string, boolean backslash, boolean singleQuote, boolean doubleQuotes, boolean newLine) {
 		if (string == null) {
 			return "";
 		}
-		return string.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r\n", "\\n").replace("\n", "\\n");
-	}
-
-	/**
-	 * Faz escape de aspas duplas e remove new lines
-	 * @param string
-	 * @return
-	 */
-	public String escapeText(String string) {
-		return string.replace("\\", "\\\\").replace("\"", "\\\"").replace('\r', ' ').replace('\n', ' ');
+		if (backslash) {
+			string = string.replace("\\", "\\\\");
+		}
+		if (singleQuote) {
+			string = string.replace("'", "\\'");
+		}
+		if (doubleQuotes) {
+			string = string.replace("\"", "\\\"");
+		}
+		if (newLine) {
+			string = string.replace("\n", "\\n").replace("\r", "");
+		}
+		return string;
 	}
 
 	public static String onlyNumbers(String s) {

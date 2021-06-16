@@ -52,7 +52,7 @@ public class ProgressBarCallback implements AjaxCallbackController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			out.println("alert(\"Erro no servidor: " + Util.strings.escape(e.getMessage()) + "\")");
+			out.println("alert(\"Erro no servidor: " + Util.strings.escapeQuotes(e.getMessage()) + "\")");
 		}
 	}
 
@@ -64,7 +64,7 @@ public class ProgressBarCallback implements AjaxCallbackController {
 				task = "";
 			}
 			builder.append("\"");
-			builder.append(Util.strings.escape(task.replace('\n', ' ').replace('\r', ' ')));
+			builder.append(Util.strings.escapeQuotes(task.replace('\n', ' ').replace('\r', ' ')));
 			builder.append("\"");
 			if (i + 1 < tasks.size()) {
 				builder.append(",");
