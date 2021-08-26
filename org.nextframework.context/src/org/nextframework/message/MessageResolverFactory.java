@@ -61,7 +61,7 @@ public class MessageResolverFactory {
 		@Override
 		public String message(MessageSourceResolvable resolvable) {
 			Object[] stringArgs = convertArgs(resolvable.getArguments());
-			MessageSourceResolvable resolvable2 = Util.objects.newMessage(resolvable.getCodes()[0], stringArgs, resolvable.getDefaultMessage());
+			MessageSourceResolvable resolvable2 = Util.objects.newMessage(resolvable.getCodes(), stringArgs, resolvable.getDefaultMessage());
 			return messageSource.getMessage(resolvable2, locale);
 		}
 

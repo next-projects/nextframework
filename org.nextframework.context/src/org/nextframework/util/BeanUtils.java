@@ -173,6 +173,10 @@ public class BeanUtils {
 		return (Collection<?>) PropertyAccessorFactory.forBeanPropertyAccess(owner).getPropertyValue(role);
 	}
 
+	public String getDisplayName(Class<?> beanClass) {
+		return BeanDescriptorFactory.forClass(beanClass).getDisplayName();
+	}
+
 	public String getDisplayName(MessageResolver resolver, Class<?> beanClass) {
 		return getDisplayName(resolver, BeanDescriptorFactory.forClass(beanClass), null);
 	}

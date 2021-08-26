@@ -165,7 +165,7 @@ public class OutputTag extends BaseTag {
 			((Formattable) value).formatTo(fmt, 0, -1, -1);
 			return fmt.out().toString();
 		} else if (value instanceof Throwable) {
-			return Util.objects.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value, true, true);
+			return Util.objects.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value);
 		} else if (value instanceof MessageSourceResolvable) {
 			return NextWeb.getRequestContext().getMessageResolver().message((MessageSourceResolvable) value);
 		} else if (value instanceof File) {

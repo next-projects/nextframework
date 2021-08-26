@@ -168,24 +168,44 @@ public class ObjectUtils {
 		return new NextMessageSourceResolvable(code);
 	}
 
+	public MessageSourceResolvable newMessage(String[] codes) {
+		return new NextMessageSourceResolvable(codes);
+	}
+
 	public MessageSourceResolvable newMessage(String code, String defaultMessage) {
 		return new NextMessageSourceResolvable(code, defaultMessage);
+	}
+
+	public MessageSourceResolvable newMessage(String[] codes, String defaultMessage) {
+		return new NextMessageSourceResolvable(codes, defaultMessage);
 	}
 
 	public MessageSourceResolvable newMessage(String code, Object... args) {
 		return new NextMessageSourceResolvable(code, args);
 	}
 
+	public MessageSourceResolvable newMessage(String[] codes, Object[] args) {
+		return new NextMessageSourceResolvable(codes, args);
+	}
+
 	public MessageSourceResolvable newMessage(String code, Object[] args, String defaultMessage) {
 		return new NextMessageSourceResolvable(code, args, defaultMessage);
 	}
 
+	public MessageSourceResolvable newMessage(String[] codes, Object[] args, String defaultMessage) {
+		return new NextMessageSourceResolvable(codes, args, defaultMessage);
+	}
+
 	public ApplicationException getApplicationException(MessageResolver resolver, BusinessException exception) {
-		String txt = Util.objects.getExceptionDescription(resolver, exception, true, false);
+		String txt = getExceptionDescription(resolver, exception, false);
 		throw new ApplicationException(txt, exception.getCause());
 	}
 
-	public String getExceptionDescription(MessageResolver resolver, Throwable exception, boolean includeMessage, boolean includeCauses) {
+	public String getExceptionDescription(MessageResolver resolver, Throwable exception) {
+		return getExceptionDescription(resolver, exception, true);
+	}
+
+	public String getExceptionDescription(MessageResolver resolver, Throwable exception, boolean includeCauses) {
 
 		String allDesc = "";
 
@@ -209,18 +229,19 @@ public class ObjectUtils {
 				exDesc = cause.getClass().getSimpleName();
 			}
 
-			if (includeMessage) {
-				if (cause instanceof MessageSourceResolvable) {
-					exDesc += ": " + resolver.message((MessageSourceResolvable) cause);
-				} else {
-					String m = cause.getMessage();
-					if (m != null) {
-						int nestedIndex = m.indexOf("; nested exception is");
-						if (nestedIndex > -1) {
-							m = m.substring(0, nestedIndex);
-						}
-						exDesc += ": " + m;
+			if (cause instanceof MessageSourceResolvable) {
+				exDesc += ": " + resolver.message((MessageSourceResolvable) cause);
+			} else {
+				String m = cause.getMessage();
+				if (m == null) {
+					m = cause.toString();
+				}
+				if (m != null) {
+					int nestedIndex = m.indexOf("; nested exception is");
+					if (nestedIndex > -1) {
+						m = m.substring(0, nestedIndex);
 					}
+					exDesc += ": " + m;
 				}
 			}
 
