@@ -5,7 +5,9 @@ import java.io.Writer;
 import java.util.List;
 
 import org.nextframework.exception.NextException;
+import org.nextframework.message.MessageResolver;
 import org.nextframework.types.Cep;
+import org.springframework.context.MessageSourceResolvable;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser;
@@ -18,6 +20,10 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 public class JacksonJsonTranslator implements JsonTranslator {
 
 	public ObjectMapper createObjectMapper() {
+		return createObjectMapper(null);
+	}
+
+	public ObjectMapper createObjectMapper(MessageResolver messageResolver) {
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -28,6 +34,9 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		nextModule.addSerializer(Cep.class, new CepSerializer());
 		nextModule.addDeserializer(Cep.class, new CepDeserializer());
 		nextModule.addSerializer(Throwable.class, new ThrowableSerializer());
+		if (messageResolver != null) {
+			nextModule.addSerializer(MessageSourceResolvable.class, new MessageSourceResolvableSerializer(messageResolver));
+		}
 		mapper.registerModule(nextModule);
 
 		return mapper;

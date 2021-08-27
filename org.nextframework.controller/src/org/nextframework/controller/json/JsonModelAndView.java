@@ -1,5 +1,7 @@
 package org.nextframework.controller.json;
 
+import org.nextframework.core.web.NextWeb;
+import org.nextframework.message.MessageResolver;
 import org.nextframework.service.ServiceFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -16,7 +18,8 @@ public class JsonModelAndView extends ModelAndView {
 
 		JsonTranslator jsonTranslator = ServiceFactory.getService(JsonTranslator.class);
 		if (jsonTranslator != null && jsonTranslator instanceof JacksonJsonTranslator) {
-			ObjectMapper objectMapper = ((JacksonJsonTranslator) jsonTranslator).createObjectMapper();
+			MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
+			ObjectMapper objectMapper = ((JacksonJsonTranslator) jsonTranslator).createObjectMapper(messageResolver);
 			view.setObjectMapper(objectMapper);
 		}
 
