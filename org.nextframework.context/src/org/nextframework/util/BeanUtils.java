@@ -37,7 +37,6 @@ import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.exception.NextException;
 import org.nextframework.message.MessageResolver;
-import org.nextframework.message.NextMessageSourceResolvable;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -218,7 +217,7 @@ public class BeanUtils {
 		//Simple class name (Ex: ClassName)
 		codes[index++] = beanClass.getSimpleName();
 
-		return new NextMessageSourceResolvable(codes, beanDescriptor.getDisplayName());
+		return Util.objects.newMessage(codes, beanDescriptor.getDisplayName());
 	}
 
 	public String getDisplayName(MessageResolver resolver, Class<?> beanClass, String property) {
@@ -267,7 +266,7 @@ public class BeanUtils {
 		//Simple class name and property (Ex: ClassName.name)
 		codes[index++] = ownerClass.getSimpleName() + "." + prop;
 
-		return new NextMessageSourceResolvable(codes, propertyDescriptor.getDisplayName());
+		return Util.objects.newMessage(codes, propertyDescriptor.getDisplayName());
 	}
 
 	public MessageSourceResolvable getCustomFieldResolvable(Class<?> beanClass, String field) {
@@ -278,7 +277,21 @@ public class BeanUtils {
 		//Simple class name and property (Ex: ClassName.name)
 		codes[1] = beanClass.getSimpleName() + "." + field;
 
-		return new NextMessageSourceResolvable(codes, field);
+		return Util.objects.newMessage(codes, field);
+	}
+
+	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property) {
+		String[] codes = new String[2];
+		//Fully-qualified class name and property (Ex: com.app.pack.ClassName.name)
+		codes[0] = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
+		//Simple class name and property (Ex: ClassName.name)
+		codes[1] = enumItem.getClass().getSimpleName() + "." + enumItem.name() + "." + property;
+		return Util.objects.newMessage(codes);
+	}
+
+	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property, Object... arguments) {
+		String code = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
+		return Util.objects.newMessage(code, arguments);
 	}
 
 	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
@@ -303,16 +316,6 @@ public class BeanUtils {
 			}
 			throw ex;
 		}
-	}
-
-	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property) {
-		String code = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
-		return new NextMessageSourceResolvable(code);
-	}
-
-	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property, Object... arguments) {
-		String code = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
-		return new NextMessageSourceResolvable(code, arguments);
 	}
 
 }

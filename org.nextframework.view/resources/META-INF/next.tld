@@ -1509,6 +1509,12 @@
 	</function>
 
 	<function>
+		<name>messageResolvable</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String messageResolvable(org.springframework.context.MessageSourceResolvable)</function-signature>
+	</function>
+
+	<function>
 		<name>messageReplace</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.String messageReplace(java.lang.String)</function-signature>

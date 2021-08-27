@@ -40,6 +40,7 @@ import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 
 /**
@@ -241,6 +242,10 @@ public class NextFunctions {
 	public static String messageDefault(String code, Object arguments, String defaultValue) {
 		Object[] argumentsArray = resolveArguments(arguments);
 		return NextWeb.getRequestContext().getMessageResolver().message(code, argumentsArray, defaultValue);
+	}
+
+	public static String messageResolvable(MessageSourceResolvable resolvable) {
+		return NextWeb.getRequestContext().getMessageResolver().message(resolvable);
 	}
 
 	private static Object[] resolveArguments(Object arguments) {
