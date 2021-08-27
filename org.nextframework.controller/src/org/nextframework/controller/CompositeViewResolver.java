@@ -36,63 +36,59 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 public class CompositeViewResolver extends InternalResourceViewResolver {
-	
 
 	private static final Log log = org.apache.commons.logging.LogFactory.getLog(CompositeViewResolver.class);
-	
+
 	private String baseView;
 	private Boolean useBase = null;
-	
 	private String parameterName;
 
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
+
 		boolean direct = false;
-		if(viewName.startsWith("direct:")){
+		if (viewName.startsWith("direct:")) {
 			direct = true;
 			viewName = viewName.substring("direct:".length());
 		}
-		
+
 		String classpathView = null;
-		
-		if(viewName.startsWith("classpath:")){
+
+		if (viewName.startsWith("classpath:")) {
 			viewName = viewName.substring("classpath:".length());
-			
 			String path = viewName.substring(0, viewName.lastIndexOf('.'));
-			
-			
-			URL resource = getServletContext().getResource("/WEB-INF/classes/"+viewName.replace('.', '/')+".jsp");
-			if(resource == null){
-				InputStream in = getClass().getClassLoader().getResourceAsStream(viewName.replace('.', '/')+".jsp");
-				if(in == null){
-					throw new RuntimeException("view not found "+viewName);
+			URL resource = getServletContext().getResource("/WEB-INF/classes/" + viewName.replace('.', '/') + ".jsp");
+			if (resource == null) {
+				InputStream in = getClass().getClassLoader().getResourceAsStream(viewName.replace('.', '/') + ".jsp");
+				if (in == null) {
+					throw new RuntimeException("view not found " + viewName);
 				}
-				File dir = new File(getServletContext().getRealPath("/WEB-INF/classes/"+path.replace('.', '/')));
+				File dir = new File(getServletContext().getRealPath("/WEB-INF/classes/" + path.replace('.', '/')));
 				dir.mkdirs();
-				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(getServletContext().getRealPath("/WEB-INF/classes/"+viewName.replace('.', '/')+".jsp")));
+				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(getServletContext().getRealPath("/WEB-INF/classes/" + viewName.replace('.', '/') + ".jsp")));
 				int data;
-				while(((data = in.read()) >= 0)){
+				while (((data = in.read()) >= 0)) {
 					out.write(data);
 				}
 				out.flush();
 			}
-			classpathView = "/WEB-INF/classes/"+viewName.replace('.', '/')+".jsp";
+			classpathView = "/WEB-INF/classes/" + viewName.replace('.', '/') + ".jsp";
 		}
-		
+
 		AbstractUrlBasedView view = (AbstractUrlBasedView) super.loadView(viewName, locale);
-		
-		if(direct){
+
+		if (direct) {
 			return view;
 		}
-		
-		if(classpathView != null){
+
+		if (classpathView != null) {
 			view.setUrl(classpathView);
 		}
-		
-		if(useBase == null){
+
+		if (useBase == null) {
 			String[] bases = baseView.split(",");
 			for (String base : bases) {
-				if(getServletContext().getResourceAsStream(base) == null){
+				if (getServletContext().getResourceAsStream(base) == null) {
 					useBase = false;
 				} else {
 					useBase = true;
@@ -101,28 +97,28 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 				}
 			}
 		}
-		if(!useBase){
-			return super.loadView(viewName, locale);
-		}
-		
-		if(baseView == null){
-			throw new RuntimeException(CompositeViewResolver.class.getName()+": property baseView não pode ser null");
-		}
-		
-		if(parameterName == null){
-			throw new RuntimeException(CompositeViewResolver.class.getName()+": property parameterName não pode ser null");
+
+		if (!useBase) {
+			return view;
 		}
 
-		
+		if (baseView == null) {
+			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property baseView não pode ser null");
+		}
+
+		if (parameterName == null) {
+			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property parameterName não pode ser null");
+		}
+
 		//url q seria usada
 		String previousURL = view.getUrl();
 		view.addStaticAttribute(parameterName, previousURL);
-		//log.info(baseView+" > "+parameterName+" = "+previousURL);
-		if(getServletContext().getResourceAsStream(previousURL) == null){
-			log.warn("Página não existente: "+previousURL);
+		if (getServletContext().getResourceAsStream(previousURL) == null) {
+			log.warn("Página não existente: " + previousURL);
 		}
+
 		view.setUrl(baseView);
-		
+
 		return view;
 	}
 
@@ -141,4 +137,5 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 	public void setBaseView(String resource) {
 		this.baseView = resource;
 	}
+
 }

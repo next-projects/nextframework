@@ -65,9 +65,15 @@ public class WebUtils {
 	}
 
 	public static String getModelAndViewName() {
-		String view = (String) NextWeb.getRequestContext().getAttribute("bodyPage");
+		String view = (String) NextWeb.getRequestContext().getAttribute("viewName");
+		if (view == null) {
+			view = (String) NextWeb.getRequestContext().getAttribute("bodyPage");
+		}
 		if (view != null) {
-			view = view.substring(view.lastIndexOf("/") + 1);
+			int slash = view.lastIndexOf("/");
+			if (slash > -1) {
+				view = view.substring(slash + 1);
+			}
 			int dot = view.lastIndexOf(".");
 			if (dot > -1) {
 				view = view.substring(0, dot);

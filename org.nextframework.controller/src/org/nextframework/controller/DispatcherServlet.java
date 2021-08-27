@@ -28,6 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.util.Set;
 
 import org.nextframework.classmanager.ClassManager;
@@ -44,6 +48,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
@@ -224,6 +229,19 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 		} else {
 			return contextAttribute;
 		}
+	}
+	
+	@Override
+	protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (mv.isReference()) {
+			String viewName = mv.getViewName();
+			int i = viewName.indexOf(":");
+			if (i > -1) {
+				viewName = viewName.substring(i+1); 
+			}
+			request.setAttribute("viewName", viewName); //See WebUtils.getModelAndViewName
+		}
+		super.render(mv, request, response);
 	}
 	
 }
