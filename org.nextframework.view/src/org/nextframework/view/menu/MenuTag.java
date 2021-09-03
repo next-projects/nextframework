@@ -23,16 +23,20 @@
  */
 package org.nextframework.view.menu;
 
+import java.util.HashMap;
 import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import org.nextframework.authorization.Authorization;
+import org.nextframework.authorization.Role;
 import org.nextframework.authorization.User;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
 
 public class MenuTag extends BaseTag {
+
+	private static final String MENU_CACHE_MAP = MenuTag.class.getName() + "_cache";
 
 	private String menupath;
 	private Menu menu;
@@ -46,10 +50,10 @@ public class MenuTag extends BaseTag {
 		}
 
 		String cachedCode = null;
-		if (menupath != null) {
-			cachedCode = getMenuCodeFromPath();
-		} else if (menu != null) {
+		if (menu != null) {
 			cachedCode = getMenuCodeFromMenu();
+		} else if (menupath != null) {
+			cachedCode = getMenuCodeFromPath();
 		}
 
 		String menuId = generateUniqueId();
@@ -66,32 +70,67 @@ public class MenuTag extends BaseTag {
 		getOut().println("</script>");
 	}
 
+	private String getMenuCodeFromMenu() {
+		MenuBuilder menuBuilder = new MenuBuilder(getRequest().getContextPath());
+		return menuBuilder.build(menu);
+	}
+
 	private String getMenuCodeFromPath() throws Exception {
 
-		HttpServletRequest request = getRequest();
 		User user = Authorization.getUserLocator().getUser();
 		Locale locale = NextWeb.getRequestContext().getLocale();
 
-		String menuCode = (String) MenuCacheResolver.getMenu(request, menupath, user, locale);
+		String menuCode = getCachedMenuCode(menupath, user, locale);
 		if (menuCode != null) {
-			log.debug("Using cached menu... " + menupath);
 			return menuCode;
 		}
 
-		Menu menu = MenuResolver.carregaMenu(request, menupath, user, locale);
+		Menu menu = MenuResolver.carregaMenu(menupath, user, locale);
 
 		MenuBuilder menuBuilder = new MenuBuilder(getRequest().getContextPath());
 		menuCode = menuBuilder.build(menu);
 
-		MenuCacheResolver.setMenu(request, menuCode, menupath, user, locale);
+		setCachedMenuCode(menupath, user, locale, menuCode);
 
 		return menuCode;
 	}
 
-	private String getMenuCodeFromMenu() {
-		MenuBuilder menuBuilder = new MenuBuilder(getRequest().getContextPath());
-		String menuCode = menuBuilder.build(menu);
-		return menuCode;
+	public String getCachedMenuCode(String menupath, User user, Locale locale) {
+		MenuCache menuCache = getCacheMap().get(menupath);
+		if (menuCache != null && !resetMenu(menuCache, user, locale)) {
+			return menuCache.menuCode;
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, MenuCache> getCacheMap() {
+		Map<String, MenuCache> menuCacheMap = (Map<String, MenuCache>) getRequest().getSession().getAttribute(MENU_CACHE_MAP);
+		if (menuCacheMap == null) {
+			menuCacheMap = new HashMap<String, MenuCache>();
+			getRequest().getSession().setAttribute(MENU_CACHE_MAP, menuCacheMap);
+		}
+		return menuCacheMap;
+	}
+
+	private boolean resetMenu(MenuCache menuCache, User user, Locale locale) {
+		if (!Util.objects.equals(menuCache.user, user) || !Util.objects.equals(menuCache.locale, locale)) {
+			return true;
+		}
+		if (Authorization.getAuthorizationDAO().getLastUpdateTime() > menuCache.time) {
+			Role[] roles = Authorization.getAuthorizationDAO().findUserRoles(user);
+			for (Role role : roles) {
+				if (Authorization.getAuthorizationDAO().getLastUpdateTime(role) > menuCache.time) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public void setCachedMenuCode(String menupath, User user, Locale locale, String menuCode) {
+		MenuCache menuCache = new MenuCache(user, locale, menuCode, System.currentTimeMillis());
+		getCacheMap().put(menupath, menuCache);
 	}
 
 	public String getMenupath() {
@@ -116,6 +155,22 @@ public class MenuTag extends BaseTag {
 
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
+	}
+
+	private class MenuCache {
+
+		private String menuCode;
+		private User user;
+		private Locale locale;
+		private long time;
+
+		public MenuCache(User user, Locale locale, String menuCode, long time) {
+			this.menuCode = menuCode;
+			this.user = user;
+			this.locale = locale;
+			this.time = time;
+		}
+
 	}
 
 }

@@ -4,27 +4,26 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.nextframework.authorization.Authorization;
 import org.nextframework.authorization.User;
+import org.nextframework.core.web.NextWeb;
 import org.nextframework.message.MessageResolver;
 import org.nextframework.message.MessageResolverFactory;
 import org.nextframework.util.Util;
 
 public class MenuResolver {
 
-	public static Menu carregaMenu(HttpServletRequest request, String caminho, User user, Locale locale) throws Exception {
+	public static Menu carregaMenu(String caminho, User user, Locale locale) throws Exception {
 		MessageResolver messageResolver = MessageResolverFactory.get(locale);
 		MenuParser menuParser = new MenuParser(messageResolver);
-		InputStream resourceStream = request.getSession().getServletContext().getResourceAsStream(caminho);
+		InputStream resourceStream = NextWeb.getRequestContext().getSession().getServletContext().getResourceAsStream(caminho);
 		Menu menu = menuParser.parse(resourceStream);
-		verificaMenu(request, user, menu);
+		verificaMenu(user, menu);
 		return menu;
 	}
 
-	private static void verificaMenu(HttpServletRequest request, User user, Menu menu) {
-		String app = request.getContextPath();
+	private static void verificaMenu(User user, Menu menu) {
+		String app = NextWeb.getRequestContext().getContextPath();
 		verificarAutorizacao(app, menu, user);
 		removeEmptyMenus(menu);
 	}
