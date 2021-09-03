@@ -89,11 +89,13 @@ public abstract class AbstractBeanDescriptor implements BeanDescriptor {
 			}
 			return nestedBeanDescriptor.getPropertyDescriptor(nestedPath);
 		} else {
-			if (propertyPath.indexOf('[') > 0) {
+			if (propertyPath.contains(BeanWrapper.PROPERTY_KEY_PREFIX)) {
 				//it is an indexed property there's no java.beans.PropertyDescriptor
 				TypeDescriptor propertyTypeDescriptor = typeWrapper.getPropertyTypeDescriptor(propertyPath);
 				if (propertyTypeDescriptor != null) {
-					return new PropertyDescriptorIndexedImpl(propertyPath, propertyTypeDescriptor.getType(), bean != null ? wrapper.getPropertyValue(propertyPath) : null);
+					String propertyName = propertyPath.substring(0, propertyPath.indexOf(BeanWrapper.PROPERTY_KEY_PREFIX));
+					java.beans.PropertyDescriptor propertyDescriptor = typeWrapper.getPropertyDescriptor(propertyName);
+					return new PropertyDescriptorIndexedImpl(propertyDescriptor, propertyPath, propertyTypeDescriptor.getType(), bean != null ? wrapper.getPropertyValue(propertyPath) : null);
 				}
 			}
 			java.beans.PropertyDescriptor propertyDescriptor = typeWrapper.getPropertyDescriptor(propertyPath);

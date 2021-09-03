@@ -5,39 +5,57 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.bean.annotation.DisplayName;
+import org.springframework.util.StringUtils;
 
 public class PropertyDescriptorIndexedImpl implements PropertyDescriptor {
 
-	String name;
+	private java.beans.PropertyDescriptor internalPropertyDescriptor;
+	private String name;
+	private Type type;
+	private Object value;
 
-	Type type;
-
-	Object value;
-
-	public PropertyDescriptorIndexedImpl(String name, Type type, Object value) {
+	public PropertyDescriptorIndexedImpl(java.beans.PropertyDescriptor internalPropertyDescriptor, String name, Type type, Object value) {
+		this.internalPropertyDescriptor = internalPropertyDescriptor;
 		this.name = name;
 		this.type = type;
 		this.value = value;
 	}
 
 	@Override
-	public <E extends Annotation> E getAnnotation(Class<E> annotationClass) {
-		return null;
+	public Annotation[] getAnnotations() {
+		if (internalPropertyDescriptor.getReadMethod() == null) {
+			return new Annotation[0];
+		}
+		return internalPropertyDescriptor.getReadMethod().getAnnotations();
 	}
 
 	@Override
-	public Annotation[] getAnnotations() {
-		return new Annotation[0];
+	public <E extends Annotation> E getAnnotation(Class<E> annotationClass) {
+		if (internalPropertyDescriptor.getReadMethod() == null) {
+			return null;
+		}
+		return internalPropertyDescriptor.getReadMethod().getAnnotation(annotationClass);
 	}
 
 	@Override
 	public String getDisplayName() {
-		return name;
+		DisplayName annotation = getAnnotation(DisplayName.class);
+		if (annotation != null) {
+			return annotation.value();
+		}
+		String nameOk = StringUtils.capitalize(getName()).replace('_', ' ');
+		return AbstractBeanDescriptor.separateOnCase(nameOk);
 	}
 
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public Type getType() {
+		return type;
 	}
 
 	@Override
@@ -56,18 +74,18 @@ public class PropertyDescriptorIndexedImpl implements PropertyDescriptor {
 	}
 
 	@Override
-	public Type getType() {
-		return type;
-	}
-
-	@Override
 	public Class<?> getOwnerClass() {
-		return null;
+		return internalPropertyDescriptor.getReadMethod().getDeclaringClass();
 	}
 
 	@Override
 	public Object getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		return "Indexed property " + getName() + " of type " + getType();
 	}
 
 }

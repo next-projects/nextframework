@@ -94,4 +94,5 @@ public class PropertyDescriptorImpl implements PropertyDescriptor {
 	public String toString() {
 		return "Property " + getName() + " of type " + getType();
 	}
+
 }
