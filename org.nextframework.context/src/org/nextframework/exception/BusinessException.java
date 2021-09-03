@@ -35,21 +35,29 @@ public class BusinessException extends ApplicationException implements MessageSo
 	private String mensagem;
 
 	public BusinessException(String code) {
-		this((Throwable) null, code, (Object[]) null);
+		this(null, code, null, null);
 	}
 
-	public BusinessException(String code, Object... args) {
-		this((Throwable) null, code, args);
+	public BusinessException(String code, Object[] arguments) {
+		this(null, code, arguments, null);
+	}
+
+	public BusinessException(String code, Object[] arguments, String defaultMessage) {
+		this(null, code, arguments, defaultMessage);
 	}
 
 	public BusinessException(Throwable cause, String code) {
-		this(cause, code, (Object[]) null);
+		this(cause, code, null, null);
 	}
 
-	public BusinessException(Throwable cause, String code, Object... args) {
+	public BusinessException(Throwable cause, String code, Object[] arguments) {
+		this(cause, code, arguments, null);
+	}
+
+	public BusinessException(Throwable cause, String code, Object[] arguments, String defaultMessage) {
 		super(cause);
-		this.resolvable = Util.objects.newMessage(code, args);
-		this.mensagem = "code [" + code + "]; arguments [" + (args != null ? StringUtils.arrayToDelimitedString(args, ",") : null) + "]";
+		this.resolvable = Util.objects.newMessage(code, arguments, defaultMessage);
+		this.mensagem = "code [" + code + "]; arguments [" + (arguments != null ? StringUtils.arrayToDelimitedString(arguments, ",") : null) + "]; default message [" + defaultMessage + "]";
 	}
 
 	@Override

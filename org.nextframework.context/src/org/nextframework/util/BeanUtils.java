@@ -217,7 +217,7 @@ public class BeanUtils {
 		//Simple class name (Ex: ClassName)
 		codes[index++] = beanClass.getSimpleName();
 
-		return Util.objects.newMessage(codes, beanDescriptor.getDisplayName());
+		return Util.objects.newMessage(codes, null, beanDescriptor.getDisplayName());
 	}
 
 	public String getDisplayName(MessageResolver resolver, Class<?> beanClass, String property) {
@@ -266,7 +266,7 @@ public class BeanUtils {
 		//Simple class name and property (Ex: ClassName.name)
 		codes[index++] = ownerClass.getSimpleName() + "." + prop;
 
-		return Util.objects.newMessage(codes, propertyDescriptor.getDisplayName());
+		return Util.objects.newMessage(codes, null, propertyDescriptor.getDisplayName());
 	}
 
 	public MessageSourceResolvable getCustomFieldResolvable(Class<?> beanClass, String field) {
@@ -277,7 +277,7 @@ public class BeanUtils {
 		//Simple class name and property (Ex: ClassName.name)
 		codes[1] = beanClass.getSimpleName() + "." + field;
 
-		return Util.objects.newMessage(codes, field);
+		return Util.objects.newMessage(codes, null, field);
 	}
 
 	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property) {
@@ -289,7 +289,7 @@ public class BeanUtils {
 		return Util.objects.newMessage(codes);
 	}
 
-	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property, Object... arguments) {
+	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property, Object[] arguments) {
 		String code = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
 		return Util.objects.newMessage(code, arguments);
 	}

@@ -238,24 +238,22 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	protected String getDefaultViewLabel(String field, String defaultValue) {
 
-		String viewPrefix = WebUtils.getMessageCodeViewPrefix();
-		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
-
+		String[] codes = new String[2];
 		//Simple class name (from the tag) and field with viewCode prefix (Ex: module.Controller.view.FilterPanelTag.sectionTitle)
-		try {
-			return messageResolver.message(viewPrefix + "." + this.getClass().getSimpleName() + "." + field);
-		} catch (NoSuchMessageException e) {
-			//Não encontrado...
-		}
-
+		codes[0] = WebUtils.getMessageCodeViewPrefix() + "." + this.getClass().getSimpleName() + "." + field;
 		//Simple class name (from the tag) and field (Ex: FilterPanelTag.sectionTitle)
+		codes[1] = this.getClass().getSimpleName() + "." + field;
+
+		String message = null;
+
 		try {
-			return messageResolver.message(this.getClass().getSimpleName() + "." + field);
+			MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
+			message = messageResolver.message(Util.objects.newMessage(codes, null, defaultValue));
 		} catch (NoSuchMessageException e) {
-			//Não encontrado...
+			//Se não foi encontrado, não dispara o erro, pois, nas tags, os atributos são opcionais
 		}
 
-		return defaultValue;
+		return message;
 	}
 
 	public JspWriter getOut() {

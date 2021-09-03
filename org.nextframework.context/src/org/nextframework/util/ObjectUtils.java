@@ -172,15 +172,7 @@ public class ObjectUtils {
 		return new NextMessageSourceResolvable(codes);
 	}
 
-	public MessageSourceResolvable newMessage(String code, String defaultMessage) {
-		return new NextMessageSourceResolvable(code, defaultMessage);
-	}
-
-	public MessageSourceResolvable newMessage(String[] codes, String defaultMessage) {
-		return new NextMessageSourceResolvable(codes, defaultMessage);
-	}
-
-	public MessageSourceResolvable newMessage(String code, Object... args) {
+	public MessageSourceResolvable newMessage(String code, Object[] args) {
 		return new NextMessageSourceResolvable(code, args);
 	}
 
@@ -213,39 +205,43 @@ public class ObjectUtils {
 		Throwable cause = exception;
 		while (cause != null && !allCauses.contains(cause)) {
 
-			String exDesc = null;
+			String exTipo = null;
 
 			Class<?> clazz = cause.getClass();
 			do {
 				try {
-					exDesc = resolver.message(clazz.getName());
+					exTipo = resolver.message(clazz.getName());
 				} catch (NoSuchMessageException e) {
 					//Não encontrado...
 				}
 				clazz = clazz.getSuperclass();
-			} while (exDesc == null && clazz != Object.class);
+			} while (exTipo == null && clazz != Object.class);
 
-			if (exDesc == null) {
-				exDesc = cause.getClass().getSimpleName();
+			if (exTipo == null && !(cause instanceof RuntimeException) && !(cause instanceof ApplicationException) && !(cause instanceof BusinessException)) {
+				exTipo = cause.getClass().getSimpleName();
 			}
+
+			String exMsg = null;
 
 			if (cause instanceof MessageSourceResolvable) {
-				exDesc += ": " + resolver.message((MessageSourceResolvable) cause);
+				exMsg = resolver.message((MessageSourceResolvable) cause);
 			} else {
-				String m = cause.getMessage();
-				if (m == null) {
-					m = cause.toString();
+				exMsg = cause.getMessage();
+				if (exMsg == null) {
+					exMsg = cause.toString();
 				}
-				if (m != null) {
-					int nestedIndex = m.indexOf("; nested exception is");
+				if (exMsg != null) {
+					int nestedIndex = exMsg.indexOf("; nested exception is");
 					if (nestedIndex > -1) {
-						m = m.substring(0, nestedIndex);
+						exMsg = exMsg.substring(0, nestedIndex);
 					}
-					exDesc += ": " + m;
 				}
 			}
 
-			allDesc += (allDesc.length() == 0 ? "" : " -> ") + exDesc;
+			allDesc += (allDesc.length() == 0 ? "" : " -> ") +
+					(exTipo != null ? exTipo : "") +
+					(exTipo != null && exMsg != null ? ": " : "") +
+					(exMsg != null ? exMsg : "");
 
 			if (!includeCauses) {
 				break;

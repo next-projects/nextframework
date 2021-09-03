@@ -1479,18 +1479,6 @@
 	</function>
 
 	<function>
-		<name>messageViewPrefix</name>
-		<function-class>org.nextframework.view.NextFunctions</function-class>
-		<function-signature>java.lang.String messageViewPrefix(java.lang.String)</function-signature>
-	</function>
-
-	<function>
-		<name>messageViewPrefixArgs</name>
-		<function-class>org.nextframework.view.NextFunctions</function-class>
-		<function-signature>java.lang.String messageViewPrefixArgs(java.lang.String, java.lang.Object)</function-signature>
-	</function>
-
-	<function>
 		<name>message</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.String message(java.lang.String)</function-signature>
@@ -1499,13 +1487,19 @@
 	<function>
 		<name>messageArgs</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
-		<function-signature>java.lang.String messageArgs(java.lang.String, java.lang.Object)</function-signature>
+		<function-signature>java.lang.String messageArgs(java.lang.String, java.lang.Object, java.lang.String)</function-signature>
 	</function>
 
 	<function>
-		<name>messageDefault</name>
+		<name>messageView</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
-		<function-signature>java.lang.String messageDefault(java.lang.String, java.lang.Object, java.lang.String)</function-signature>
+		<function-signature>java.lang.String messageView(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>messageViewArgs</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String messageViewArgs(java.lang.String, java.lang.Object, java.lang.String)</function-signature>
 	</function>
 
 	<function>

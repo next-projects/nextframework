@@ -41,7 +41,6 @@ import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.NoSuchMessageException;
 
 /**
  * @author rogelgarcia
@@ -203,45 +202,26 @@ public class NextFunctions {
 		return null;
 	}
 
-	public static String messageViewPrefix(String field) {
-
-		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
-
-		try {
-			return messageResolver.message(WebUtils.getMessageCodeViewPrefix() + "." + field);
-		} catch (NoSuchMessageException e) {
-			//Não encontrado...
-		}
-
-		return messageResolver.message(field);
-	}
-
-	public static String messageViewPrefixArgs(String field, Object arguments) {
-
-		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
-		Object[] argumentsArray = resolveArguments(arguments);
-
-		try {
-			return messageResolver.message(WebUtils.getMessageCodeViewPrefix() + "." + field, argumentsArray);
-		} catch (NoSuchMessageException e) {
-			//Não encontrado...
-		}
-
-		return messageResolver.message(field, argumentsArray);
-	}
-
 	public static String message(String code) {
-		return NextWeb.getRequestContext().getMessageResolver().message(code);
+		return messageArgs(code, null, null);
 	}
 
-	public static String messageArgs(String code, Object arguments) {
-		Object[] argumentsArray = resolveArguments(arguments);
-		return NextWeb.getRequestContext().getMessageResolver().message(code, argumentsArray);
-	}
-
-	public static String messageDefault(String code, Object arguments, String defaultValue) {
+	public static String messageArgs(String code, Object arguments, String defaultValue) {
 		Object[] argumentsArray = resolveArguments(arguments);
 		return NextWeb.getRequestContext().getMessageResolver().message(code, argumentsArray, defaultValue);
+	}
+
+	public static String messageView(String field) {
+		return messageViewArgs(field, null, null);
+	}
+
+	public static String messageViewArgs(String field, Object arguments, String defaultValue) {
+		String[] codes = new String[2];
+		codes[0] = WebUtils.getMessageCodeViewPrefix() + "." + field;
+		codes[1] = field;
+		Object[] argumentsArray = resolveArguments(arguments);
+		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
+		return messageResolver.message(Util.objects.newMessage(codes, argumentsArray, defaultValue));
 	}
 
 	public static String messageResolvable(MessageSourceResolvable resolvable) {
