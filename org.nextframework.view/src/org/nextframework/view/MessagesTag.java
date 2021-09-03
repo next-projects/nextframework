@@ -78,7 +78,6 @@ public class MessagesTag extends BaseTag {
 
 	private String title;
 	private String invalidValueLabel;
-	private String errorLabel;
 
 	@SuppressWarnings("all")
 	@Override
@@ -97,7 +96,6 @@ public class MessagesTag extends BaseTag {
 
 			title = getDefaultViewLabel("messagePanelTitle", "Valores incorretos encontrados em");
 			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
-			errorLabel = getDefaultViewLabel("errorLabel", "Erro");
 
 			if (renderAsHtml) {
 				getOut().println("<div class='bindblock' id='bindBlock'>");
@@ -148,16 +146,16 @@ public class MessagesTag extends BaseTag {
 
 						if (fieldError.isBindingFailure()) {
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + bindErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + ": </span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " " + errorLabel + ": " + msg + "</li>");
+								getOut().println("<li class=\"" + bindErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + ": </span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg + "</li>");
 							} else {
-								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " " + errorLabel + ": " + msg);
+								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg);
 								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, bindErrorClass));
 							}
 						} else {
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + validationErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + "</span> " + errorLabel + ": " + msg + "</li>");
+								getOut().println("<li class=\"" + validationErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + "</span> " + msg + "</li>");
 							} else {
-								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + errorLabel + ": " + msg);
+								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + msg);
 								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, validationErrorClass));
 							}
 						}
@@ -414,14 +412,6 @@ public class MessagesTag extends BaseTag {
 
 	public void setInvalidValueLabel(String invalidValueLabel) {
 		this.invalidValueLabel = invalidValueLabel;
-	}
-
-	public String getErrorLabel() {
-		return errorLabel;
-	}
-
-	public void setErrorLabel(String errorLabel) {
-		this.errorLabel = errorLabel;
 	}
 
 }

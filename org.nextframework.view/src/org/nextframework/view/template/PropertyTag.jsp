@@ -10,21 +10,6 @@
 	${propertyTag.idConfig} <%-- Le os atributos da propriedade para saber se é ID --%>
 	<c:choose>
 
-		<%-- id --%>
-		<c:when test="${propertyTag.entityId && empty value}">
-			<%-- Se a propriedade for ID e for nula, não escrever nada... Se for ID mas tiver valor, cai nas outras opções
-			<c:if test="${propertyTag.mode == 'input'}">
-				<n:input pattern="${propertyTag.pattern}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}"  showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="false" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
-					includeBlank="${propertyTag.includeBlank}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
-					<n:doBody />
-				</n:input>
-			</c:if>
-			<c:if test="${propertyTag.mode == 'output'}">
-				<n:output trueFalseNullLabels="${propertyTag.trueFalseNullLabels}"/>
-			</c:if>
-			--%>
-		</c:when>
-
 		<%-- column --%>
 		<c:when test="${propertyTag.renderAs == 'column'}">
 			<n:column>
@@ -35,7 +20,7 @@
 				</c:if>
 				<c:if test="${!propertyTag.entityId}">
 					<n:header style="${propertyTag.headerStyle}" class="${propertyTag.headerStyleClass}">
-						${n:default(label, propertyTag.header)}
+						${n:default(propertyTag.header, label)}
 					</n:header>
 				</c:if>
 				<n:body align="${propertyTag.columnAlign}" style="${propertyTag.bodyStyle}" class="${propertyTag.bodyStyleClass}">
@@ -53,10 +38,25 @@
 			</n:column>
 		</c:when>
 
+		<%-- id --%>
+		<c:when test="${propertyTag.entityId && empty value}">
+			<%-- Se a propriedade for ID e for nula, não escrever nada... Se for ID mas tiver valor, cai nas outras opções
+			<c:if test="${propertyTag.mode == 'input'}">
+				<n:input pattern="${propertyTag.pattern}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}"  showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="false" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+					includeBlank="${propertyTag.includeBlank}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
+					<n:doBody />
+				</n:input>
+			</c:if>
+			<c:if test="${propertyTag.mode == 'output'}">
+				<n:output trueFalseNullLabels="${propertyTag.trueFalseNullLabels}"/>
+			</c:if>
+			--%>
+		</c:when>
+
 		<%-- double --%>
 		<c:when test="${propertyTag.renderAs == 'double'}">
 			<n:panel style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" >
-					<label for="${compId}"><n:output value="${n:default(label, propertyTag.label)}" pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" /></label>
+					<label for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 			</n:panel>
 			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
 				<c:if test="${propertyTag.mode == 'input'}">
@@ -66,7 +66,7 @@
 					</n:input>
 				</c:if>
 				<c:if test="${propertyTag.mode == 'output'}">
-					<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="true"/>
+					<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${Tproperty.type=='html'? false: true}"/>
 				</c:if>
 			</n:panel>
 		</c:when>
@@ -83,7 +83,7 @@
 				<c:if test="${propertyTag.mode == 'output' && (empty propertyTag.write || propertyTag.write)}">
 					<c:if test="${propertyTag.showLabel}">
 						<n:panel>
-							<n:output value="${n:default(label, propertyTag.label)} ${labelseparator}" pattern="${propertyTag.pattern}" style="${propertyTag.labelStyle}" styleClass="${propertyTag.labelStyleClass}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" escapeHTML="false"/>
+							<n:output pattern="${propertyTag.pattern}" value="${n:default(label, propertyTag.label)} ${labelseparator}" style="${propertyTag.labelStyle}" styleClass="${propertyTag.labelStyleClass}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" escapeHTML="false"/>
 							<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="true"/>
 						</n:panel>
 					</c:if>

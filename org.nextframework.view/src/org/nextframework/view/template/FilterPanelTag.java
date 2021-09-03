@@ -40,7 +40,7 @@ public class FilterPanelTag extends TemplateTag {
 	protected void doComponent() throws Exception {
 
 		if (sectionTitle == null) {
-			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+			sectionTitle = getDefaultViewLabel("sectionTitle", "Pesquisar");
 		}
 
 		CrudContext crudContext = CrudContext.getCurrentInstance();

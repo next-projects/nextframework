@@ -3,7 +3,7 @@
 <%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<t:view titulo="${formViewTag.title}">
+<t:view title="${formViewTag.title}">
 
 	<c:if test="${param.fromInsertOne == 'true'}">
 		<input type="hidden" name="fromInsertOne" value="true" />
