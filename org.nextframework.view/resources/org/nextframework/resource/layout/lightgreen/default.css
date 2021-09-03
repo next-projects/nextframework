@@ -237,6 +237,15 @@ LI.redirect {
 	border-color: #333366;
 }
 
+LI.validation {
+	background-image: url("validation.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #CCFFCC;
+	color: #004400;
+	border-color: #006633;
+}
+
 LI.trace {
 	background-image: url("trace.png");
 	background-repeat: no-repeat;
