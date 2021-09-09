@@ -26,8 +26,11 @@ package org.nextframework.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.nextframework.message.NextMessageSourceResolvable;
@@ -61,6 +64,22 @@ public class ObjectUtils {
 
 	public boolean isNotEmpty(Object type) {
 		return !isEmpty(type);
+	}
+	
+	/**
+	 * Dado um array de classes, retorna um array apenas com as classes concretas
+	 * @param allClassesOfType
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <E> Class<E>[] removeInterfaces(Class<E>[] allClassesOfType) {
+		List<Class<E>> list = new ArrayList<Class<E>>();
+		for (Class<E> class1 : allClassesOfType) {
+			if (!Modifier.isAbstract(class1.getModifiers())) {
+				list.add(class1);
+			}
+		}
+		return list.toArray(new Class[list.size()]);
 	}
 
 	@SuppressWarnings("all")

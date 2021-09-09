@@ -101,7 +101,7 @@ public class DownloadFileProvider {
 		
 		if(beansOfType.size() == 0){
 			//se nao tem FileDAO.. criar um default se só tiver um tipo de arquivo
-			Class<?>[] classes = Util.beans.removeInterfaces(ClassManagerFactory.getClassManager().getAllClassesOfType(File.class));
+			Class<?>[] classes = Util.objects.removeInterfaces(ClassManagerFactory.getClassManager().getAllClassesOfType(File.class));
 			if(classes.length == 1){
 				//TODO REFATORAR ESSE CÓDIGO, ELE SE REPETE NO GENERICDAO
 				FileDAO<?> fileDAO = new FileDAO(classes[0], true);
@@ -119,7 +119,7 @@ public class DownloadFileProvider {
 			return returnFile(file);
 		} else if(beansOfType.size() == 1){
 			FileDAO<?> fileDAO = (FileDAO<?>) beansOfType.values().iterator().next();
-			Class<?>[] allClassesOfTypeFile = Util.beans.removeInterfaces(ClassManagerFactory.getClassManager().getAllClassesOfType(File.class));
+			Class<?>[] allClassesOfTypeFile = Util.objects.removeInterfaces(ClassManagerFactory.getClassManager().getAllClassesOfType(File.class));
 			if(allClassesOfTypeFile.length == 1){
 				File file;
 				try {

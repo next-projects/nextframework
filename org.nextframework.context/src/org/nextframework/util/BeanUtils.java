@@ -25,7 +25,6 @@ package org.nextframework.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -46,22 +45,6 @@ import org.springframework.context.MessageSourceResolvable;
  * @version 1.1
  */
 public class BeanUtils {
-
-	/**
-	 * Dado um array de classes, retorna um array apenas com as classes concretas
-	 * @param allClassesOfType
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public <E> Class<E>[] removeInterfaces(Class<E>[] allClassesOfType) {
-		List<Class<E>> list = new ArrayList<Class<E>>();
-		for (Class<E> class1 : allClassesOfType) {
-			if (!Modifier.isAbstract(class1.getModifiers())) {
-				list.add(class1);
-			}
-		}
-		return list.toArray(new Class[list.size()]);
-	}
 
 	public Method getSetterMethod(Class<?> clazz, String property) {
 		ReflectionCache cache = ReflectionCacheFactory.getReflectionCache();
@@ -170,6 +153,30 @@ public class BeanUtils {
 
 	public Collection<?> getPropertyValue(Object owner, String role) {
 		return (Collection<?>) PropertyAccessorFactory.forBeanPropertyAccess(owner).getPropertyValue(role);
+	}
+
+	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
+		try {
+			Method method = enumClass.getMethod("values");
+			Enum<?>[] enumValues = (Enum[]) method.invoke(null);
+			return enumValues;
+		} catch (Exception ex) {
+			throw new NextException("Erro ao obter itens do enum " + enumClass + ".");
+		}
+	}
+
+	public <T extends Enum<T>> T getEnumItem(Class<T> enumClass, String name, T defaultValue) {
+		if (Util.strings.isEmpty(name)) {
+			return defaultValue != null ? defaultValue : null;
+		}
+		try {
+			return Enum.valueOf(enumClass, name);
+		} catch (IllegalStateException ex) {
+			if (defaultValue != null) {
+				return defaultValue;
+			}
+			throw ex;
+		}
 	}
 
 	public String getDisplayName(Class<?> beanClass) {
@@ -292,30 +299,6 @@ public class BeanUtils {
 	public MessageSourceResolvable getEnumResolvable(Enum<?> enumItem, String property, Object[] arguments) {
 		String code = enumItem.getClass().getName() + "." + enumItem.name() + "." + property;
 		return Util.objects.newMessage(code, arguments);
-	}
-
-	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
-		try {
-			Method method = enumClass.getMethod("values");
-			Enum<?>[] enumValues = (Enum[]) method.invoke(null);
-			return enumValues;
-		} catch (Exception ex) {
-			throw new NextException("Erro ao obter itens do enum " + enumClass + ".");
-		}
-	}
-
-	public <T extends Enum<T>> T getEnumItem(Class<T> enumClass, String name, T defaultValue) {
-		if (Util.strings.isEmpty(name)) {
-			return defaultValue != null ? defaultValue : null;
-		}
-		try {
-			return Enum.valueOf(enumClass, name);
-		} catch (IllegalStateException ex) {
-			if (defaultValue != null) {
-				return defaultValue;
-			}
-			throw ex;
-		}
 	}
 
 }

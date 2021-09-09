@@ -57,7 +57,7 @@ public class AjaxServlet extends HttpServlet {
 		
 		ClassManager classManager = ClassManagerFactory.getClassManager();
 		Class<AjaxCallbackController>[] callbackClasses = classManager.getAllClassesOfType(AjaxCallbackController.class);
-		callbackClasses = Util.beans.removeInterfaces(callbackClasses);
+		callbackClasses = Util.objects.removeInterfaces(callbackClasses);
 		
 		for (Class<AjaxCallbackController> class1 : callbackClasses) {
 			String simpleName = class1.getSimpleName().toLowerCase();
