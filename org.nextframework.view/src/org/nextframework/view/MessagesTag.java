@@ -224,7 +224,7 @@ public class MessagesTag extends BaseTag {
 		try {
 			return messageResolver.message(msr);
 		} catch (NoSuchMessageException e) {
-			return Util.objects.getExceptionDescription(messageResolver, e);
+			return Util.exceptions.getExceptionDescription(messageResolver, e);
 		}
 	}
 
@@ -247,7 +247,7 @@ public class MessagesTag extends BaseTag {
 				exception = ((CrudException) exception).getCause();
 			}
 
-			String exceptionName = Util.objects.getExceptionDescription(messageResolver, exception, false);
+			String exceptionName = Util.exceptions.getExceptionDescription(messageResolver, exception, false);
 			builder.append("<span class=\"" + exceptionClass + "\">" + exceptionName + "</span>");
 
 			Set<Throwable> allCauses = new HashSet<Throwable>();
@@ -255,7 +255,7 @@ public class MessagesTag extends BaseTag {
 			Throwable cause = exception.getCause();
 			while (cause != null && !allCauses.contains(cause)) {
 
-				exceptionName = Util.objects.getExceptionDescription(messageResolver, cause, false);
+				exceptionName = Util.exceptions.getExceptionDescription(messageResolver, cause, false);
 				builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + exceptionName + "</li></ul>");
 
 				allCauses.add(cause);

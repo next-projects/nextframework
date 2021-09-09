@@ -39,5 +39,6 @@ public class Util {
 	public static ObjectUtils objects = new ObjectUtils();
 	public static BeanUtils beans = new BeanUtils();
 	public static GenericsUtils generics = new GenericsUtils();
+	public static ExceptionUtils exceptions = new ExceptionUtils();
 
 }
