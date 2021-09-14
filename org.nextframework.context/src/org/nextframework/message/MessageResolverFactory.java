@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.nextframework.core.standard.Next;
-import org.nextframework.util.Util;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -17,7 +16,7 @@ public class MessageResolverFactory {
 		return get(Locale.getDefault());
 	}
 
-	public static synchronized MessageResolver get(Locale locale) {
+	public static MessageResolver get(Locale locale) {
 		MessageResolver resolver = cache.get(locale);
 		if (resolver == null) {
 			resolver = new MessageResolverImpl(Next.getMessageSource(), locale);
@@ -48,35 +47,17 @@ public class MessageResolverFactory {
 
 		@Override
 		public String message(String code, Object[] args) {
-			Object[] args2 = convertArgs(args);
-			return messageSource.getMessage(code, args2, locale);
+			return messageSource.getMessage(code, args, locale);
 		}
 
 		@Override
 		public String message(String code, Object[] args, String defaultValue) {
-			Object[] args2 = convertArgs(args);
-			return messageSource.getMessage(code, args2, defaultValue, locale);
+			return messageSource.getMessage(code, args, defaultValue, locale);
 		}
 
 		@Override
 		public String message(MessageSourceResolvable resolvable) {
-			if (resolvable != null) {
-				Object[] args2 = convertArgs(resolvable.getArguments());
-				MessageSourceResolvable resolvable2 = Util.objects.newMessage(resolvable.getCodes(), args2, resolvable.getDefaultMessage());
-				return messageSource.getMessage(resolvable2, locale);
-			}
-			return null;
-		}
-
-		private Object[] convertArgs(Object[] args) {
-			if (args == null || args.length == 0) {
-				return args;
-			}
-			Object[] stringArgs = new Object[args.length];
-			for (int i = 0; i < args.length; i++) {
-				stringArgs[i] = Util.strings.toStringDescription(args[i], "dd/MM/yyyy HH:mm:ss", null);
-			}
-			return stringArgs;
+			return messageSource.getMessage(resolvable, locale);
 		}
 
 	}

@@ -28,12 +28,14 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.exception.NextException;
 import org.nextframework.message.MessageResolver;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -75,7 +77,7 @@ public class StringUtils {
 		for (String string : split) {
 			String[] split2 = string.split("=");
 			if (split2.length != 2) {
-				throw new RuntimeException("Parametros inválidos: " + parameters);
+				throw new NextException("Parametros inválidos: " + parameters);
 			}
 			hashMap.put(split2[0], split2[1]);
 		}
@@ -168,6 +170,7 @@ public class StringUtils {
 		return toStringDescription(value, formatDate, formatNumber, null);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public String toStringDescription(Object value, String formatDate, String formatNumber, MessageResolver resolver) {
 
 		if (value == null) {
@@ -179,6 +182,8 @@ public class StringUtils {
 
 		if (value instanceof Calendar) {
 			value = ((Calendar) value).getTime();
+		} else if (Collection.class.isAssignableFrom(value.getClass())) {
+			value = ((Collection) value).toArray();
 		}
 
 		if (value instanceof String) {
@@ -190,13 +195,16 @@ public class StringUtils {
 			NumberFormat numberFormat = new DecimalFormat(formatNumber);
 			return numberFormat.format(value);
 		} else if (value instanceof MessageSourceResolvable) {
+			if (resolver == null) {
+				throw new NextException("Nenhum " + MessageResolver.class.getSimpleName() + " foi informado!");
+			}
 			return resolver.message((MessageSourceResolvable) value);
 		} else if (value.getClass().isArray()) {
 			Object[] array = (Object[]) value;
 			String description = "";
 			if (array.length > 0) {
 				for (Object o : array) {
-					description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber);
+					description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber, resolver);
 				}
 			}
 			return description;

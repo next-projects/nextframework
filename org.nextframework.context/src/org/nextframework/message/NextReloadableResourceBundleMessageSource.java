@@ -1,11 +1,13 @@
 package org.nextframework.message;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.nextframework.util.Util;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
@@ -110,6 +112,19 @@ public class NextReloadableResourceBundleMessageSource extends ReloadableResourc
 	public void clearCache() {
 		super.clearCache();
 		this.cachedClasspathProperties.clear();
+	}
+
+	@Override
+	protected Object[] resolveArguments(Object[] args, Locale locale) {
+		if (args == null || args.length == 0) {
+			return args;
+		}
+		Object[] stringArgs = new Object[args.length];
+		MessageResolver resolver = MessageResolverFactory.get(locale);
+		for (int i = 0; i < args.length; i++) {
+			stringArgs[i] = Util.strings.toStringDescription(args[i], "dd/MM/yyyy HH:mm:ss", null, resolver);
+		}
+		return stringArgs;
 	}
 
 	public String[] getOptionalPrefixes() {
