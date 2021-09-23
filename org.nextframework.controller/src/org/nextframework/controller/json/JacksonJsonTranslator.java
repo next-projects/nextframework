@@ -3,6 +3,7 @@ package org.nextframework.controller.json;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.nextframework.exception.NextException;
 import org.nextframework.message.MessageResolver;
@@ -26,9 +27,11 @@ public class JacksonJsonTranslator implements JsonTranslator {
 	public ObjectMapper createObjectMapper(MessageResolver messageResolver) {
 
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		mapper.setTimeZone(TimeZone.getDefault());
+		//mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
 
 		SimpleModule nextModule = new SimpleModule("NextModule", new Version(1, 0, 0, null, "org.nextframework", "next-controller"));
 		nextModule.addSerializer(Cep.class, new CepSerializer());
@@ -37,6 +40,7 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		if (messageResolver != null) {
 			nextModule.addSerializer(MessageSourceResolvable.class, new MessageSourceResolvableSerializer(messageResolver));
 		}
+
 		mapper.registerModule(nextModule);
 
 		return mapper;
