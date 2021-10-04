@@ -2,15 +2,11 @@ package org.nextframework.report.renderer.jasper;
 
 import java.util.ArrayList;
 import java.util.Formattable;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
@@ -18,9 +14,7 @@ import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.ReportGroup;
 import org.nextframework.report.definition.ReportParent;
-import org.nextframework.report.definition.elements.ReportBlock;
 import org.nextframework.report.definition.elements.ReportChart;
-import org.nextframework.report.definition.elements.ReportComposite;
 import org.nextframework.report.definition.elements.ReportImage;
 import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.definition.elements.ReportItemIterator;
@@ -28,7 +22,11 @@ import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.definition.elements.style.ReportDefinitionStyle;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
+import org.nextframework.summary.SummaryRow;
 import org.springframework.util.StringUtils;
+
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 
 public class JasperDataConverter {
 
@@ -115,7 +113,15 @@ public class JasperDataConverter {
 				mapa.putAll((Map) registro);
 			} else {
 				for (ReportItem reportItem : reportItens) {
-					addItemToMap(mapa, reportItem, bd);
+					try {
+						addItemToMap(mapa, reportItem, bd);
+					} catch (Exception e) {
+						Object bean = registro;
+						if (bean instanceof SummaryRow) {
+							bean = ((SummaryRow)bean).getRow();
+						}
+						throw new RuntimeException("Cannot get report item " + reportItem + " of " + bean.toString() + " of class " + bean.getClass(), e);
+					}
 				}
 			}
 			for (ReportGroup group: report.getGroups()) {
