@@ -6,11 +6,7 @@ var READY_STATE_COMPLETE=4;
 var req;
 
 function getInputValue(input){
-	if(input && input.type == 'checkbox'){
-		return input.checked;
-	} else {
-		return input.value;
-	}
+	return next.dom.getInputValue(input);
 }
 
 function ajaxcallerrorcallback(request){

@@ -23,6 +23,8 @@
  */
 package org.nextframework.view.ajax;
 
+import java.util.List;
+
 import org.nextframework.authorization.Authorization;
 import org.nextframework.controller.ExtendedBeanWrapper;
 import org.nextframework.controller.ServletRequestDataBinderNext;
@@ -62,6 +64,10 @@ public class ComboFilter {
 		for (int i = 0; i < split.length; i++) {
 			Object value = split[i];
 			if(ServletRequestDataBinderNext.isObjectValue(value)){
+				//Quando chega uma string "com.app.Bean[id=1],com.app.Bean[id=2]", quebra em um array
+				if (List.class.isAssignableFrom(classes[i]) && value instanceof String && ((String)value).contains(",") ) {
+					value = ((String)value).split(",");
+				}
 				value = ServletRequestDataBinderNext.translateObjectValue("[?]", value, null);
 			}
 			if("user".equals(value)){

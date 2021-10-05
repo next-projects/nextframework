@@ -196,7 +196,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 			//também é possível dar um translate com o mpvs null, neste caso apenas retorna o objeto como null.
 			
 			if(mpvs == null) {
-				System.out.println("Found null MPVS in translateObjectValue");
+				//System.out.println("Found null MPVS in translateObjectValue");
 				return null;
 			}
 			

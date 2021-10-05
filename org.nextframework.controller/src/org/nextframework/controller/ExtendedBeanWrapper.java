@@ -1331,7 +1331,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 			}
 		}
 		
-		if(requiredType != null && List.class.isAssignableFrom(requiredType)){ //treat conventions of enum lists
+		if(fullPropertyName != null && requiredType != null && List.class.isAssignableFrom(requiredType)){ //treat conventions of enum lists
 			Type genericReturnType = getPropertyDescriptorInternal(fullPropertyName).getReadMethod().getGenericReturnType();
 			if(genericReturnType instanceof ParameterizedType){
 				Type actualType = ((ParameterizedType) genericReturnType).getActualTypeArguments()[0];

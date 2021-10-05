@@ -14,104 +14,107 @@ SelectManyPopup.prototype.configure = function(){
 	this.button = next.dom.getInnerElementByClass(this.container, 'select_many_popup_button');
 	this.labels = next.dom.getInnerElementByClass(this.container, 'select_many_popup_labels');
 	this.setLabels();
-	var bigThis = this;
-	next.events.attachEvent(this.button, 'click', function(){
-		var popupDiv = next.dom.getNewPopupDiv();
-		popupDiv.style.cssText = bigThis.styleObject+';'+popupDiv.style.cssText;
-//		for(k in bigThis.styleObject){
-//			alert(k);
-//			popupDiv.style[k] = bigThis.styleObject[k];
-//		}
-		var options = bigThis.input.options;
-		var checkList = new Array();
-		
-		var controlArea = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls'});
-		var controlArea_buttons = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls_buttons', style: {cssFloat: 'left'}});
-		var controlArea_filter = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls_filter', style: {clear:'right', cssFloat: 'right'}});
-		
-		var markAll = next.dom.newElement('BUTTON', {innerHTML: 'Marcar Todos'});
-		var unmarkAll = next.dom.newElement('BUTTON', {innerHTML: 'Desmarcar Todos'});
-		unmarkAll.style.marginLeft = '6px';
-		
-		controlArea_buttons.appendChild(markAll);
-		controlArea_buttons.appendChild(unmarkAll);
-		
-		var filter = next.dom.newInput('text', '', 'Filtrar ', {title:'Apresenta apenas os itens com o filtro digitado.', id: next.dom.generateUniqueId()});
-		controlArea_filter.appendChild(filter);
-		
-		popupDiv.appendChild(controlArea);
-		controlArea.appendChild(controlArea_buttons);
-		controlArea.appendChild(controlArea_filter);
-		
-		var divOptionsBlock = next.dom.newElement('DIV', {style: {clear: 'both', maxHeight: '600px', overflow: 'auto'}});
-		popupDiv.appendChild(divOptionsBlock);
-		
-//		var text = '';
-		for(var i = 0; i < options.length; i++){
-			var op = options[i];
-			var divOp = next.dom.newElement('DIV', {className: 'select_many_popup_box_opdiv'});
-			var check = next.dom.newInput('checkbox', '', op.text, {id: next.dom.generateUniqueId()});
-			check.childNodes[0].value = op.value;
-			check.childNodes[0].checked = op.selected;
+	if (this.button != null) {
+		var bigThis = this;
+		next.events.attachEvent(this.button, 'click', function(){
+			var popupDiv = next.dom.getNewPopupDiv();
+			popupDiv.style.cssText = bigThis.styleObject+';'+popupDiv.style.cssText;
+			//for(k in bigThis.styleObject){
+				//alert(k);
+				//popupDiv.style[k] = bigThis.styleObject[k];
+			//}
+			var options = bigThis.input.options;
+			var checkList = new Array();
 			
-			divOp.appendChild(check);
+			var controlArea = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls'});
+			var controlArea_buttons = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls_buttons', style: {cssFloat: 'left'}});
+			var controlArea_filter = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls_filter', style: {clear:'right', cssFloat: 'right'}});
 			
-			checkList.push(check.childNodes[0]);
+			var markAll = next.dom.newElement('BUTTON', {innerHTML: 'Marcar Todos'});
+			var unmarkAll = next.dom.newElement('BUTTON', {innerHTML: 'Desmarcar Todos'});
+			unmarkAll.style.marginLeft = '6px';
 			
-//			if(i == 0){
-//				divOp.style.clear = 'both';
-//			}
-//				text += '<div style="float:left; width: 200px"> <input type="checkbox" checked="checked">'+op.text + '</div>';
-//			} else {
-//				text += '<div style="float:left; width: 200px"> <input type="checkbox"> '+op.text + '</div>';
-//			}
-			divOptionsBlock.appendChild(divOp);
-		}
-//		popupDiv.innerHTML = text;
-		
-		var buttonArea = next.dom.newElement('DIV', {className: 'select_many_popup_box_buttons', style: {clear:'both', textAlign: 'right'}});
-		var cancel = next.dom.newElement('BUTTON', {innerHTML: 'Cancelar', title: 'Cancela a operação.'});
-		var ok = next.dom.newElement('BUTTON', {innerHTML: 'Ok', title: 'Seleciona os itens visíveis marcados.'});
-		ok.style.marginLeft = '6px';
-		
-		buttonArea.appendChild(cancel);
-		buttonArea.appendChild(ok);
-		
-		next.events.attachEvent(cancel, 'click', function(){
-			popupDiv.close();
-		});
-		next.events.attachEvent(ok, 'click', function(){
-			bigThis.checkItems(checkList, options);
-			popupDiv.close();
-		});
-		next.events.attachEvent(markAll, 'click', function(){
-			bigThis.markAll(checkList, options);
-		});
-		next.events.attachEvent(unmarkAll, 'click', function(){
-			bigThis.unmarkAll(checkList, options);
-		});
-		next.events.attachEvent(filter.childNodes[1], 'keyup', function(e){
-			var filter = this.value; 
-			bigThis.filter(filter, checkList, options);
+			controlArea_buttons.appendChild(markAll);
+			controlArea_buttons.appendChild(unmarkAll);
 			
-			//this will force IE to re-render the block
-			if(popupDiv.style.marginLeft == '0px'){
-				popupDiv.style.marginLeft = '';
-				popupDiv.style.marginRight = '0px';
-			} else {
-				popupDiv.style.marginLeft = '0px';
-				popupDiv.style.marginRight = '';
+			var filter = next.dom.newInput('text', '', 'Filtrar ', {title:'Apresenta apenas os itens com o filtro digitado.', id: next.dom.generateUniqueId()});
+			controlArea_filter.appendChild(filter);
+			
+			popupDiv.appendChild(controlArea);
+			controlArea.appendChild(controlArea_buttons);
+			controlArea.appendChild(controlArea_filter);
+			
+			var divOptionsBlock = next.dom.newElement('DIV', {style: {clear: 'both', maxHeight: '600px', overflow: 'auto'}});
+			popupDiv.appendChild(divOptionsBlock);
+			
+			//var text = '';
+			for(var i = 0; i < options.length; i++){
+				var op = options[i];
+				var divOp = next.dom.newElement('DIV', {className: 'select_many_popup_box_opdiv'});
+				var check = next.dom.newInput('checkbox', '', op.text, {id: next.dom.generateUniqueId()});
+				check.childNodes[0].value = op.value;
+				check.childNodes[0].checked = op.selected;
+				
+				divOp.appendChild(check);
+				
+				checkList.push(check.childNodes[0]);
+				
+				//if(i == 0){
+				//	divOp.style.clear = 'both';
+				//}
+				//	text += '<div style="float:left; width: 200px"> <input type="checkbox" checked="checked">'+op.text + '</div>';
+				//} else {
+				//	text += '<div style="float:left; width: 200px"> <input type="checkbox"> '+op.text + '</div>';
+				//}
+				divOptionsBlock.appendChild(divOp);
 			}
-//			popupDiv.style.width = '650px';
+			//popupDiv.innerHTML = text;
+			
+			var buttonArea = next.dom.newElement('DIV', {className: 'select_many_popup_box_buttons', style: {clear:'both', textAlign: 'right'}});
+			var cancel = next.dom.newElement('BUTTON', {innerHTML: 'Cancelar', title: 'Cancela a operação.'});
+			var ok = next.dom.newElement('BUTTON', {innerHTML: 'Ok', title: 'Seleciona os itens visíveis marcados.'});
+			ok.style.marginLeft = '6px';
+			
+			buttonArea.appendChild(cancel);
+			buttonArea.appendChild(ok);
+			
+			next.events.attachEvent(cancel, 'click', function(){
+				popupDiv.close();
+			});
+			next.events.attachEvent(ok, 'click', function(){
+				bigThis.checkItems(checkList, options);
+				popupDiv.close();
+			});
+			next.events.attachEvent(markAll, 'click', function(){
+				bigThis.markAll(checkList, options);
+			});
+			next.events.attachEvent(unmarkAll, 'click', function(){
+				bigThis.unmarkAll(checkList, options);
+			});
+			next.events.attachEvent(filter.childNodes[1], 'keyup', function(e){
+				var filter = this.value; 
+				bigThis.filter(filter, checkList, options);
+				
+				//this will force IE to re-render the block
+				if(popupDiv.style.marginLeft == '0px'){
+					popupDiv.style.marginLeft = '';
+					popupDiv.style.marginRight = '0px';
+				} else {
+					popupDiv.style.marginLeft = '0px';
+					popupDiv.style.marginRight = '';
+				}
+				//popupDiv.style.width = '650px';
+			});
+			
+			popupDiv.appendChild(buttonArea);
+			
+			next.style.centralizeHorizontal(popupDiv);
+			popupDiv.style.top = '160px';
+			
+			filter.childNodes[1].focus();
 		});
-		
-		popupDiv.appendChild(buttonArea);
-		
-		next.style.centralizeHorizontal(popupDiv);
-		popupDiv.style.top = '160px';
-		
-		filter.childNodes[1].focus();
-	});
+	}
+	
 }
 
 SelectManyPopup.prototype.filter = function(filter, checkList, options){
@@ -155,6 +158,9 @@ SelectManyPopup.prototype.checkItems = function(checkList, options){
 		}
 	}
 	this.setLabels();
+	if(this.input.onchange){
+		this.input.onchange();
+	}
 }
 
 SelectManyPopup.prototype.setLabels = function(){
