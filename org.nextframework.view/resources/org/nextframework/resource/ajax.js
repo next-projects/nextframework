@@ -6,7 +6,8 @@ var READY_STATE_COMPLETE=4;
 var req;
 
 function getInputValue(input){
-	return next.dom.getInputValue(input);
+	var value = next.dom.getInputValue(input);
+	return value != null ? value : "<null>";
 }
 
 function ajaxcallerrorcallback(request){
