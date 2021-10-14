@@ -868,7 +868,7 @@ public class QueryBuilder<E> {
 				qbt = resultTranslatorClass.newInstance();
 				qbt.init(getSessionFactory(), this);
 			} catch (Exception e) {
-				throw new QueryBuilderException("Não foi possível inicializar o " + resultTranslatorClass.getSimpleName());
+				throw new QueryBuilderException("Não foi possível inicializar o " + resultTranslatorClass.getSimpleName(), e);
 			}
 			
 			//os extra fields são campos que o QueryBuilderResultTranslator necessita
