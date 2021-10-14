@@ -75,9 +75,10 @@ public class QueryBuilder<E> {
 	 * Utilizará o tradutor quando o resultado for do tipo array
 	 */
 	protected boolean useTranslator = true;
-
+	protected Class<? extends QueryBuilderResultTranslator> resultTranslatorClass = QueryBuilderResultTranslatorImpl.class;
 	protected String translatorAlias;
-
+	private Set<String> ignoreJoinPaths = new HashSet<String>();
+	
 	private String persistenceContext;
 	
 	
@@ -113,8 +114,29 @@ public class QueryBuilder<E> {
 		return this;
 	}
 	
+	public QueryBuilder<E> setResultTranslatorClass(Class<? extends QueryBuilderResultTranslator> resultTranslatorClass) {
+		this.resultTranslatorClass = resultTranslatorClass;
+		return this;
+	}
+	
+	public String getTranslatorAlias() {
+		return translatorAlias;
+	}
+	
 	public QueryBuilder<E> setTranslatorAlias(String alias) {
 		this.translatorAlias = alias;
+		return this;
+	}
+	
+	public Set<String> getIgnoreJoinPaths() {
+		return ignoreJoinPaths;
+	}
+	
+	/**
+	 * Faz com que o resultTranslator ignore joins com determinados alias
+	 */
+	public QueryBuilder<E> ignoreJoin(String alias){
+		ignoreJoinPaths.add(alias);
 		return this;
 	}
 
@@ -673,7 +695,7 @@ public class QueryBuilder<E> {
 	/**
 	 * Executa a query e retorna a lista
 	 */
-	@SuppressWarnings("unchecked")	 
+	@SuppressWarnings("all")	 
 	public List<E> list(){
 		if(from == null){
 			throw new NullPointerException("Query criada sem cláusula from");
@@ -821,94 +843,44 @@ public class QueryBuilder<E> {
 
 
 	protected Object organizeUniqueResultWithTranslator(QueryBuilderResultTranslator qbt, Object[] execute) {
-		Object[] resultado = execute;
-		Object novoResultado = qbt.translate((Object[]) resultado);
-		return novoResultado;
+		return qbt.translate(execute);
 	}
 
 
 	protected List<?> organizeListWithResultTranslator(QueryBuilderResultTranslator qbt, List<?> execute) {
-		List<?> resultado = execute;
-		List<Object> novoResultado = new ArrayList<Object>(resultado.size());
-		for (int j = 0; j < resultado.size(); j++) {
-			Object translate = qbt.translate((Object[]) resultado.get(j));
+		List<Object> novoResultado = new ArrayList<Object>(execute.size());
+		for (int j = 0; j < execute.size(); j++) {
+			Object translate = qbt.translate((Object[]) execute.get(j));
 			if(translate != null){
 				novoResultado.add(translate);
 			}
 		}
-		execute = novoResultado;
-		return execute;
+		return novoResultado;
 	}
 
-	/**
-	 * Joins que serão ignorados pelo translator
-	 */
-	private Set<String> ignoreJoinPaths = new HashSet<String>();
-	
-	/**
-	 * Faz com que o resultTranslator ignore joins com determinados alias
-	 * @param alias
-	 */
-	public void ignoreJoin(String alias){
-		ignoreJoinPaths.add(alias);
-	}
-	
 	protected QueryBuilderResultTranslator getQueryBuilderResultTranslator() {
+		
 		QueryBuilderResultTranslator qbt = null;
-		if(useTranslator){//ORGANIZAR TEM 2 LUGARES COM CÓDIGO IGUAL
-			String selectString = select.select;
-			if(selectString.contains(".")){
-				//utilizar o query builder translator
-				qbt = new QueryBuilderResultTranslatorImpl();
-				if(translatorAlias != null){
-					qbt.setResultAlias(translatorAlias);
-				}
-				List<AliasMap> aliasMaps = new ArrayList<AliasMap>();
-				aliasMaps.add(new AliasMap(from.getAlias(), null, from.getFromClass()));
-				for (Join join : joins) {
-					String[] joinpath = join.path.split(" +");
-					if(join.fetch){
-						throw new QueryBuilderException("É necessário utilizar joins sem Fetch quando especificar os campos a serem selecionados. Erro no join: "+join);
-					}
-					if(joinpath.length < 2){
-						throw new QueryBuilderException("É necessário informar um alias para todos os joins quando especificar os campos a serem selecionados. Erro no join: "+join);
-					}
-					if(ignoreJoinPaths.contains(joinpath[1])){
-						//se o alias deve ser ignorado.. nao adicionar o aliasmap
-						continue;
-					}
-					aliasMaps.add(new AliasMap(joinpath[1], joinpath[0], null));
-				}
-				int indexOfDistinct = selectString.indexOf("distinct ");
-				if(indexOfDistinct >= 0){
-					if(selectString.substring(0, indexOfDistinct).trim().equals("")){//verificando se distinct é a primeira palavra
-						selectString = selectString.substring(indexOfDistinct+9);	
-					}
-				}
-				String[] properties = selectString.split("( )*?,( )*?");
-				for (int j = 0; j < properties.length; j++) {
-					String property = properties[j];
-					if(!property.trim().matches("[^ ]+\\.[^ ]+( +as +[^ ]+)?")){
-						throw new RuntimeException("O campo \"" + property + "\" do select não é válido.");
-					}
-					int indexOfAs = property.indexOf(" as");
-					if(indexOfAs > 0){
-						properties[j] = property.substring(0, indexOfAs);
-					}   
-					properties[j] = properties[j].trim();
-				}
-				qbt.init(getSessionFactory(), properties, aliasMaps.toArray(new AliasMap[aliasMaps.size()]));
-				//os extra fields são campos que o QueryBuilderResultTranslator necessita
-				String[] extraFields = qbt.getExtraFields();
-				String extraFieldsSelect = "";
-				for (int j = 0; j < extraFields.length; j++) {
-					String extra = extraFields[j];
-					extraFieldsSelect += ", ";
-					extraFieldsSelect += extra;
-				}
-				select.select += extraFieldsSelect;
+		
+		if(useTranslator && resultTranslatorClass != null && select.select.contains(".")){
+			
+			try {
+				qbt = resultTranslatorClass.newInstance();
+				qbt.init(getSessionFactory(), this);
+			} catch (Exception e) {
+				throw new QueryBuilderException("Não foi possível inicializar o " + resultTranslatorClass.getSimpleName());
 			}
+			
+			//os extra fields são campos que o QueryBuilderResultTranslator necessita
+			String extraFieldsSelect = "";
+			for (String extra : qbt.getExtraFields()) {
+				extraFieldsSelect += ", " + extra;
+			}
+			
+			select.select += extraFieldsSelect;
+			
 		}
+		
 		return qbt;
 	}
 

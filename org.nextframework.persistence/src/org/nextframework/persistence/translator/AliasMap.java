@@ -25,7 +25,6 @@ package org.nextframework.persistence.translator;
 
 import java.util.Set;
 
-
 public class AliasMap {
 
 	String alias;
@@ -34,7 +33,7 @@ public class AliasMap {
 	Class<?> collectionType;
 	int pkPropertyIndex = -1;
 	Set<AliasMap> dependencias;
-	
+
 	public AliasMap(String alias, String path, Class<?> type) {
 		this.alias = alias;
 		this.path = path;
@@ -51,49 +50,46 @@ public class AliasMap {
 	public String getAlias() {
 		return alias;
 	}
-	
+
 	public String getPath() {
 		return path;
 	}
-	
+
 	public Class<?> getType() {
 		return type;
 	}
-	
+
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
-	
+
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	public void setType(Class<?> type) {
 		this.type = type;
 	}
 
-	@Override
-	public String toString() {
-		return "alias: "+alias+"   type:"+type.getName()+"   path: "+path;
-	}
-
-	
 	public Class<?> getCollectionType() {
 		return collectionType;
 	}
 
-	
 	public int getPkPropertyIndex() {
 		return pkPropertyIndex;
 	}
 
-	
 	public void setCollectionType(Class<?> collectionType) {
 		this.collectionType = collectionType;
 	}
 
-	
 	public void setPkPropertyIndex(int pkPropertyIndex) {
 		this.pkPropertyIndex = pkPropertyIndex;
 	}
+
+	@Override
+	public String toString() {
+		return "alias: " + alias + "   type:" + (type != null ? type.getName() : "-") + "   path: " + path;
+	}
+
 }

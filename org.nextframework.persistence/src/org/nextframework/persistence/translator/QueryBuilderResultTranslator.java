@@ -26,13 +26,14 @@ package org.nextframework.persistence.translator;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
-
-
+import org.nextframework.persistence.QueryBuilder;
 
 public interface QueryBuilderResultTranslator {
 
+	public void init(SessionFactory sessionFactory, QueryBuilder<?> queryBuilder);
+
 	public void init(SessionFactory sessionFactory, String[] selectedProperties, AliasMap[] aliasMaps);
-	
+
 	/**
 	 * Não Thread-Safe a chamada deve ser synchronizada
 	 * Recomendação: utilizar translate(List) que é Thread Safe
@@ -40,15 +41,14 @@ public interface QueryBuilderResultTranslator {
 	 * @return
 	 */
 	public Object translate(Object[] values);
-	
+
 	/**
 	 * Thread-Safe
 	 * @param values
 	 * @return
 	 */
 	public List<?> translate(List<?> values);
-		
+
 	public String[] getExtraFields();
-	
-	public void setResultAlias(String resultAlias);
+
 }
