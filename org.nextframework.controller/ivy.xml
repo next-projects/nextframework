@@ -5,14 +5,16 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
-		<dependency org="org.springframework"			name="spring-webmvc"		rev="4.1.5.RELEASE" 	conf="lib" />
+		<dependency org="org.springframework"			name="spring-webmvc"					rev="4.1.5.RELEASE" 	conf="lib" />
 		
-		<dependency org="commons-fileupload"			name="commons-fileupload"	rev="1.2.2" 			conf="lib" />
-		<dependency org="commons-io" 					name="commons-io" 			rev="1.4" 				conf="lib" />
+		<dependency org="commons-fileupload"			name="commons-fileupload"				rev="1.2.2" 			conf="lib" />
+		<dependency org="commons-io" 					name="commons-io" 						rev="1.4" 				conf="lib" />
 		
-		<dependency org="com.fasterxml.jackson.core" 	name="jackson-core" 		rev="2.7.4"				conf="lib"/>
-		<dependency org="com.fasterxml.jackson.core" 	name="jackson-databind"		rev="2.7.4"				conf="lib"/>
-		<dependency org="com.fasterxml.jackson.core" 	name="jackson-annotations" 	rev="2.7.4"				conf="lib"/>
+		<dependency org="com.fasterxml.jackson.core" 	name="jackson-core" 					rev="2.7.4"				conf="lib"/>
+		<dependency org="com.fasterxml.jackson.core" 	name="jackson-databind"					rev="2.7.4"				conf="lib"/>
+		<dependency org="com.fasterxml.jackson.core" 	name="jackson-annotations" 				rev="2.7.4"				conf="lib"/>
+		
+		<dependency org="com.github.jonpeterson" 		name="jackson-module-model-versioning"	rev="1.2.2"				conf="lib"/>
 		
 	</dependencies>
 </ivy-module>

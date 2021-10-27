@@ -10,7 +10,8 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.web"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.authorization"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.7.4.jar" sourcepath="lib/src/jackson-annotations-2.7.4-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.7.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.7.4.jar" sourcepath="lib/src/jackson-core-2.7.4-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.7.4.jar" sourcepath="lib/src/jackson-databind-2.7.4-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-module-model-versioning-1.2.2.jar" sourcepath="lib/src/jackson-module-model-versioning-1.2.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

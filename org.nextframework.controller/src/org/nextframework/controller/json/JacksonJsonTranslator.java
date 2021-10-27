@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.github.jonpeterson.jackson.module.versioning.VersioningModule;
 
 public class JacksonJsonTranslator implements JsonTranslator {
 
@@ -32,6 +33,9 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.setTimeZone(TimeZone.getDefault());
 		//mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
+
+		//See https://github.com/jonpeterson/jackson-module-model-versioning
+		mapper.registerModule(new VersioningModule());
 
 		SimpleModule nextModule = new SimpleModule("NextModule", new Version(1, 0, 0, null, "org.nextframework", "next-controller"));
 		nextModule.addSerializer(Cep.class, new CepSerializer());
