@@ -26,7 +26,6 @@ package org.nextframework.view;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,9 +45,8 @@ public class WebContextMap extends HashMap<String, Object> {
 	 */
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest httpRequest;
-	
 
-	public WebContextMap(HttpServletRequest request){
+	public WebContextMap(HttpServletRequest request) {
 		this.httpRequest = request;
 	}
 
@@ -70,15 +68,14 @@ public class WebContextMap extends HashMap<String, Object> {
 
 	public Object get(Object key) {
 		//precedencia: request, session, application, beans do spring
-		Object object; 
-		object = httpRequest.getAttribute(key.toString());
-		if(object == null){
+		Object object = httpRequest.getAttribute(key.toString());
+		if (object == null) {
 			object = httpRequest.getSession().getAttribute(key.toString());
 		}
-		if(object == null){
+		if (object == null) {
 			object = httpRequest.getSession().getServletContext().getAttribute(key.toString());
 		}
-		if(object == null){
+		if (object == null) {
 			try {
 				//TODO PROCURAR BEANS
 				object = Next.getBeanFactory().getBean(key.toString());
@@ -96,18 +93,20 @@ public class WebContextMap extends HashMap<String, Object> {
 	}
 
 	public Object remove(Object key) {
-		throw new UnsupportedOperationException("Método não implementado");
+		Object attribute = httpRequest.getAttribute(key.toString());
+		httpRequest.removeAttribute(key.toString());
+		return attribute;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public void putAll(Map t) {
 		throw new UnsupportedOperationException("Método não implementado");
-		
+
 	}
 
 	public void clear() {
 		throw new UnsupportedOperationException("Método não implementado");
-		
+
 	}
 
 	public Set<String> keySet() {
