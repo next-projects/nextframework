@@ -96,8 +96,10 @@ public class DetailTag extends TemplateTag {
 
 		detailDysplayName = Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), propertyDescriptor);
 		itens = propertyDescriptor.getValue();
-		detailVar = Util.strings.uncaptalize(detailClass.getSimpleName());
-		tableId = (Util.strings.isNotEmpty(id) ? id : "detalhe_" + detailVar + "_" + generateUniqueId());
+		if (Util.strings.isEmpty(detailVar)) {
+			detailVar = Util.strings.uncaptalize(detailClass.getSimpleName());
+		}
+		tableId = (Util.strings.isNotEmpty(id) ? id : "detalhe_" + Util.strings.uncaptalize(detailClass.getSimpleName()) + "_" + generateUniqueId());
 
 		beforeNewLine = beforeNewLine == null ? "" : beforeNewLine.trim();
 		if (!beforeNewLine.endsWith(";")) {

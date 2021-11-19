@@ -544,6 +544,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
+			<name>detailVar</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Indica por qual propriedade a lista deve ser ordenada</description>
 			<name>indexProperty</name>
 			<required>false</required>
