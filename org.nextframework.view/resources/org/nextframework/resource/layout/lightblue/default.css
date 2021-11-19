@@ -197,7 +197,7 @@ LI.binderror {
 	border-color: #993333;
 }
 
-LI.debug {
+LI.debug, .debug {
 	background-image: url("debug.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -206,7 +206,7 @@ LI.debug {
 	border-color: #003333;
 }
 
-LI.trace {
+LI.trace, .trace {
 	background-image: url("trace.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -215,7 +215,7 @@ LI.trace {
 	border-color: #333366;
 }
 
-LI.info {
+LI.info, .info {
 	background-image: url("ok.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -224,7 +224,7 @@ LI.info {
 	border-color: #006633;
 }
 
-LI.warn {
+LI.warn, .warn {
 	background-image: url("warn.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -233,7 +233,7 @@ LI.warn {
 	border-color: #996633;
 }
 
-LI.error {
+LI.error, .error {
 	background-image: url("error.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -242,7 +242,7 @@ LI.error {
 	border-color: #b40404;
 }
 
-LI.redirect {
+LI.redirect, .redirect {
 	background-image: url("trace.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -251,7 +251,7 @@ LI.redirect {
 	border-color: #333366;
 }
 
-LI.validation {
+LI.validation, .validation {
 	background-image: url("validation.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -260,7 +260,7 @@ LI.validation {
 	border-color: #006633;
 }
 
-LI.event {
+LI.event, .event {
 	background-image: url("event.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;

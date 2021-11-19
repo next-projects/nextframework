@@ -6,7 +6,7 @@
  * ../resource/css/layout/alternate/
  * Exemplo: onde tiver url("header-background.jpg"); terá que ser url("../resource/css/layout/alternate/header-background.jpg");
  *
- * Você poderá excluir o conteúdo desse arquivo e importar o CSS se desejar, para isso basta ter um arquivo com o seguinte conteúdo:
+ * Você poderá excluir o conteúdo desse arquivo e importar outro CSS se desejar, para isso basta ter um arquivo com o seguinte conteúdo:
  *
  * @IMPORT url("../resource/css/layout/alternate/default.css");
  *
@@ -37,6 +37,7 @@ BODY {
 	top: 14px;
 	left: 14px;
 	font-size: 12px;
+	display: none;
 }
 
 div.body {
@@ -119,6 +120,7 @@ div.body {
 }
 
 .messageOuterDiv {
+	position: relative;
 	padding-top: 2px;
 	min-height: 80px;
 	padding-bottom: 3px;
@@ -137,6 +139,7 @@ div.body {
 }
 
 .messageblock LI {
+	position: relative;
 	list-style: none;
 	list-style-position: outside;
 	border: 1px solid;
@@ -144,6 +147,18 @@ div.body {
 	margin-top: 1px;
 	padding: 4px;
 	padding-left: 28px;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+}
+
+.messageCloseIcon {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding: 5px;
+	padding-top: 0px;
+	cursor: pointer;
 }
 
 .bindblock {
@@ -183,38 +198,13 @@ div.body {
 	padding-left: 2px;
 }
 
-LI.info {
-	background-image: url("ok.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #CCFFCC;
-	color: #004400;
-	border-color: #006633;
+LI.binderror {
+	background-color: #FFCCCC;
+	color: #993333;
+	border-color: #993333;
 }
 
-LI.error {
-	background-image: url("error.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #fddada;
-	color: #b40404;
-	border-color: #b40404;
-}
-
-LI.causeitem {
-	border: 0px;
-}
-
-LI.warn {
-	background-image: url("warn.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #fcedb9;
-	color: #ab6622;
-	border-color: #996633;
-}
-
-LI.debug {
+LI.debug, .debug {
 	background-image: url("debug.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -223,7 +213,7 @@ LI.debug {
 	border-color: #003333;
 }
 
-LI.trace {
+LI.trace, .trace {
 	background-image: url("trace.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -232,10 +222,63 @@ LI.trace {
 	border-color: #333366;
 }
 
-LI.binderror {
-	background-color: #FFCCCC;
-	color: #993333;
-	border-color: #993333;
+LI.info, .info {
+	background-image: url("ok.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #CCFFCC;
+	color: #004400;
+	border-color: #006633;
+}
+
+LI.warn, .warn {
+	background-image: url("warn.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #fcedb9;
+	color: #ab6622;
+	border-color: #996633;
+}
+
+LI.error, .error {
+	background-image: url("error.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #fddada;
+	color: #b40404;
+	border-color: #b40404;
+}
+
+LI.redirect, .redirect {
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #FFFFFF;
+	color: #333366;
+	border-color: #333366;
+}
+
+LI.validation, .validation {
+	background-image: url("validation.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #CCFFCC;
+	color: #004400;
+	border-color: #006633;
+}
+
+LI.event, .event {
+	background-image: url("event.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #f4fef4;
+	color: #004400;
+	border-color: #006633;
+}
+
+LI.causeitem {
+	border: 0px;
+	font-weight: normal;
 }
 
 .resultWindow {
@@ -268,10 +311,6 @@ LI.binderror {
 
 .dataGrid THEAD * {
 	border-bottom: 1px solid #CCCCCC;
-}
-
-.dataGrid THEAD A {
-	border-bottom: 0px solid #CCCCCC;
 }
 
 .dataGrid TBODY TD {
@@ -343,6 +382,17 @@ A:HOVER {
 
 FORM {
 	display: inline;
+}
+
+.labelColumn {
+	min-width: 80px;
+	min-height: 20px;
+	line-height: 20px;
+}
+
+.propertyColumn {
+	min-height: 20px;
+	line-height: 20px;
 }
 
 /* Tabs */
@@ -496,4 +546,7 @@ DIV.progressOverlay div.progressbarBody {
 	-webkit-box-shadow: 6px 8px 16px 0px #AAA;
 	-moz-box-shadow: 6px 8px 16px 0px #AAA;
 	box-shadow: 6px 8px 16px 0px #AAA;
+}
+button.calendarbutton {
+	line-height: 12px;
 }

@@ -113,7 +113,8 @@ div.body {
 }
 
 .messageOuterDiv {
-	padding-top: 0px;
+	position: relative;
+	padding-top: 2px;
 	min-height: 80px;
 	padding-bottom: 3px;
 }
@@ -131,6 +132,7 @@ div.body {
 }
 
 .messageblock LI {
+	position: relative;
 	list-style: none;
 	list-style-position: outside;
 	border: 1px solid;
@@ -138,8 +140,18 @@ div.body {
 	margin-top: 1px;
 	padding: 4px;
 	padding-left: 28px;
+	border-radius: 6px;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
+}
+
+.messageCloseIcon {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding: 5px;
+	padding-top: 0px;
+	cursor: pointer;
 }
 
 .bindblock {
@@ -179,7 +191,31 @@ div.body {
 	padding-left: 2px;
 }
 
-LI.info {
+LI.binderror {
+	background-color: #FFCCCC;
+	color: #993333;
+	border-color: #993333;
+}
+
+LI.debug, .debug {
+	background-image: url("debug.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #CCFFFF;
+	color: #003333;
+	border-color: #003333;
+}
+
+LI.trace, .trace {
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #FFFFFF;
+	color: #333366;
+	border-color: #333366;
+}
+
+LI.info, .info {
 	background-image: url("ok.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -188,7 +224,16 @@ LI.info {
 	border-color: #006633;
 }
 
-LI.error {
+LI.warn, .warn {
+	background-image: url("warn.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #fcedb9;
+	color: #ab6622;
+	border-color: #996633;
+}
+
+LI.error, .error {
 	background-image: url("error.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -197,7 +242,25 @@ LI.error {
 	border-color: #b40404;
 }
 
-LI.event {
+LI.redirect, .redirect {
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #FFFFFF;
+	color: #333366;
+	border-color: #333366;
+}
+
+LI.validation, .validation {
+	background-image: url("validation.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	background-color: #CCFFCC;
+	color: #004400;
+	border-color: #006633;
+}
+
+LI.event, .event {
 	background-image: url("event.png");
 	background-repeat: no-repeat;
 	background-position: 5px 4px;
@@ -208,57 +271,7 @@ LI.event {
 
 LI.causeitem {
 	border: 0px;
-}
-
-LI.warn {
-	background-image: url("warn.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #fcedb9;
-	color: #ab6622;
-	border-color: #996633;
-}
-
-LI.debug {
-	background-image: url("debug.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #CCFFFF;
-	color: #003333;
-	border-color: #003333;
-}
-
-LI.redirect {
-	background-image: url("trace.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #FFFFFF;
-	color: #333366;
-	border-color: #333366;
-}
-
-LI.validation {
-	background-image: url("validation.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #CCFFCC;
-	color: #004400;
-	border-color: #006633;
-}
-
-LI.trace {
-	background-image: url("trace.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #FFFFFF;
-	color: #333366;
-	border-color: #333366;
-}
-
-LI.binderror {
-	background-color: #FFCCCC;
-	color: #993333;
-	border-color: #993333;
+	font-weight: normal;
 }
 
 .resultWindow {
@@ -290,11 +303,7 @@ LI.binderror {
 	background-color: #d4e8b0;
 }
 
-.dataGrid THEAD TH {
-	border-bottom: 1px solid #ABABAB;
-}
-
-.dataGrid THEAD TD {
+.dataGrid THEAD * {
 	border-bottom: 1px solid #ABABAB;
 }
 
@@ -381,13 +390,13 @@ FORM {
 
 .labelColumn {
 	min-width: 80px;
-	min-height: 19px;
-	line-height: 19px;
+	min-height: 20px;
+	line-height: 20px;
 }
 
 .propertyColumn {
-	min-height: 19px;
-	line-height: 19px;
+	min-height: 20px;
+	line-height: 20px;
 }
 
 /* Tabs */
@@ -505,4 +514,43 @@ div.progressTasks {
 
 div.progressTasks *.progressInfoError {
 	color: red;
+}
+/* PROGRESS BAR EVENT */
+DIV.progressOverlay {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	text-align: center;
+	visibility: hidden;
+}
+
+DIV.progressOverlay div.progressbarBox {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 500px;
+	z-index: 1020;
+}
+
+DIV.progressOverlay div.progressbarBody {
+	position: relative;
+	top: -100px;
+	left: -250px;
+	font-size: 11px;
+	text-align: left;
+	padding: 20px;
+	border: 1px solid #eeeeee;
+	background-color: #FFFFFF;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 6px 8px 16px 0px #AAA;
+	-moz-box-shadow: 6px 8px 16px 0px #AAA;
+	box-shadow: 6px 8px 16px 0px #AAA;
+}
+
+button.calendarbutton {
+	line-height: 12px;
 }
