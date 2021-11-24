@@ -91,7 +91,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		//properties.addAll(beans.getPropertiesWithAnnotation(getMainType(), ManyToOne.class));
 		JoinManager joinManager = new JoinManager(query.getAlias());
 
-		LinkedHashSet<String> orderByProperties = new LinkedHashSet<String>();
+		//LinkedHashSet<String> orderByProperties = new LinkedHashSet<String>();
 
 		for (String property : properties) {
 
@@ -146,9 +146,9 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 //						joinManager.put(currentAlias+"."+parts[i], newAlias);
 						joinManager.addJoin(currentPath);
 //						currentAlias = newAlias;
-						if (i == parts.length - 1) {
-							orderByProperties.add(currentPath);
-						}
+						//if (i == parts.length - 1) {
+							//orderByProperties.add(currentPath);
+						//}
 					} else {
 						if (propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0) {
 							for (String field : propertyDescriptor.getAnnotation(ReportField.class).usingFields()) {
@@ -159,10 +159,10 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 								}
 								joinManager.addJoin(path + field);
 							}
-						} else {
-							if (i == parts.length - 1 && !lastTransient) {
-								orderByProperties.add(currentPath);
-							}
+						//} else {
+							//if (i == parts.length - 1 && !lastTransient) {
+							//	orderByProperties.add(currentPath);
+							//}
 						}
 						break;
 					}
@@ -181,12 +181,12 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 					}
 				} else if (propertyDescriptor.getAnnotation(ManyToOne.class) != null || propertyDescriptor.getAnnotation(OneToOne.class) != null) {
 					joinManager.addJoin(property);
-					orderByProperties.add(property);
+					//orderByProperties.add(property);
 //					joinManager.put(query.getAlias()+"."+property, query.getAlias()+"_"+property);
-				} else {
-					if (propertyDescriptor.getAnnotation(ExtendBean.class) == null && propertyDescriptor.getAnnotation(Transient.class) == null) {
-						orderByProperties.add(property);
-					}
+				//} else {
+					//if (propertyDescriptor.getAnnotation(ExtendBean.class) == null && propertyDescriptor.getAnnotation(Transient.class) == null) {
+					//	orderByProperties.add(property);
+					//}
 				}
 			}
 		}
@@ -250,6 +250,8 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		}
 
 		//TODO order deeper properties (property of property)
+		//Melhor reaordenar fora do BD para ordenar pelos atributos
+		/*
 		StringBuilder orderByBuffer = new StringBuilder("  ");
 		for (String property : orderByProperties) {
 			if (element.getData().isCalculated(property)) {
@@ -280,6 +282,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		}
 		orderByBuffer.setLength(orderByBuffer.length() - 2);
 		query.orderBy(orderByBuffer.toString());
+		*/
 
 		updateQuery(query, element, filterMap);
 

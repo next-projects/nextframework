@@ -7,6 +7,7 @@ import java.net.URLClassLoader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,31 +37,32 @@ import org.nextframework.summary.compilation.SummaryResult;
 import org.nextframework.summary.dynamic.DynamicSummary;
 import org.nextframework.summary.dynamic.DynamicVariable;
 import org.nextframework.summary.dynamic.DynamicVariableDecorator;
+import org.nextframework.util.Util;
 import org.nextframework.view.progress.IProgressMonitor;
 import org.springframework.util.StringUtils;
 
 public class ReportGenerator {
-	
+
 	static WeakReference<ClassLoader> classLoaderReference = new WeakReference<ClassLoader>(new URLClassLoader(new URL[0], ReportGenerator.class.getClassLoader()));
-	
+
 	private ReportElement reportElement;
 	private ReportBuilderSourceGenerator reportBuilderSourceGenerator;
 	private IProgressMonitor progressMonitor;
-	
+
 	private BeanDescriptor beanDescriptorCache = null;
-	
+
 	Map<String, Object> context = new HashMap<String, Object>();
-	
+
 	public ReportGenerator(ReportElement reportElement) {
 		this(reportElement, null);
 	}
-	
+
 	public ReportGenerator(ReportElement reportElement, IProgressMonitor progressMonitor) {
 		this.reportElement = reportElement;
 		this.reportBuilderSourceGenerator = new ReportBuilderSourceGenerator(this);
 		this.progressMonitor = progressMonitor;
 	}
-	
+
 	public String getReportQualifiedClassName() {
 		return reportBuilderSourceGenerator.getQualifiedClassName();
 	}
@@ -72,39 +74,41 @@ public class ReportGenerator {
 	public String getSourceCode() {
 		return reportBuilderSourceGenerator.getSource();
 	}
-	
+
 	public SourceCodeBuilder createSourceCodeBuilder() {
 		return reportBuilderSourceGenerator.createSourceCodeBuilder();
 	}
 
 	@SuppressWarnings("unchecked")
-	public ReportSpec generateReportSpec(Map<String, Object> filterMap, int limitResults){
-		
+	public ReportSpec generateReportSpec(Map<String, Object> filterMap, int limitResults) {
+
 		ReportSpec spec = new ReportSpec();
 		IReportBuilder reportBuilder = createReportBuilder();
 		Map<String, Object> fixedCriteriaMap = getFixedCriteriaMap(reportElement);
-		
+
 		if (progressMonitor != null) {
 			progressMonitor.setTaskName("Obtendo registros");
 		}
-		
+
 		List<?> result = reportElement.getData().getDataSourceProvider().getResult(reportElement, filterMap, fixedCriteriaMap, limitResults);
-		
+
 		if (progressMonitor != null) {
 			progressMonitor.worked(60);
 			progressMonitor.setTaskName("Sumarizando resultados");
 		}
-		
+
+		reorderResult(result);
+
 		List<GroupElement> groups = reportElement.getData().getGroups();
 		DynamicSummary summary = createSummary();
-		LayoutReportBuilder layoutBuilder = (LayoutReportBuilder)reportBuilder;
+		LayoutReportBuilder layoutBuilder = (LayoutReportBuilder) reportBuilder;
 		layoutBuilder.setFilter(createFilter(filterMap, layoutBuilder));
 		SummaryResult summaryResult = summary.getSummaryResult(result);
 		for (final GroupElement groupElement : groups) {
-			if(isDateType(getTypeForProperty(groupElement.getName()))){
-				String pattern = groupElement.getPattern() != null? groupElement.getPattern() : "MM/yyyy";
+			if (isDateType(getTypeForProperty(groupElement.getName()))) {
+				String pattern = groupElement.getPattern() != null ? groupElement.getPattern() : "MM/yyyy";
 				final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-				
+
 				final String groupProperty = getCompositeGroupName(groupElement.getName());
 				summaryResult.reorderGroup(groupProperty, new Comparator<SummaryRow<?, Summary<?>>>() {
 
@@ -116,13 +120,13 @@ public class ReportGenerator {
 						BeanDescriptor bd2 = BeanDescriptorFactory.forBean(summary2);
 						String ds1 = (String) bd1.getPropertyDescriptor(groupProperty).getValue();
 						String ds2 = (String) bd2.getPropertyDescriptor(groupProperty).getValue();
-						if(ds1.equals("")){
-							if(ds2.equals("")){
-								return 0; 
+						if (ds1.equals("")) {
+							if (ds2.equals("")) {
+								return 0;
 							}
 							return -1;
 						}
-						if(ds2.equals("")){
+						if (ds2.equals("")) {
 							return 1;
 						}
 						try {
@@ -135,18 +139,55 @@ public class ReportGenerator {
 				});
 			}
 		}
-		
+
 		layoutBuilder.setData(summaryResult);
-		
+
 		if (progressMonitor != null) {
 			progressMonitor.worked(40);
 		}
-		
+
 		spec.setReportBuilder(reportBuilder);
 		spec.setSummary(summary);
 		return spec;
 	}
-	
+
+	protected void reorderResult(final List<?> result) {
+
+		Collections.sort(result, new Comparator<Object>() {
+
+			@SuppressWarnings("all")
+			@Override
+			public int compare(Object o1, Object o2) {
+				BeanDescriptor bd1 = BeanDescriptorFactory.forBean(o1);
+				BeanDescriptor bd2 = BeanDescriptorFactory.forBean(o2);
+				for (String property : reportElement.getProperties()) {
+					Object ds1 = bd1.getPropertyDescriptor(property).getValue();
+					Object ds2 = bd2.getPropertyDescriptor(property).getValue();
+					if ((ds1 == null && ds2 == null) || (ds1 != null && ds1.equals(ds2))) {
+						continue;
+					}
+					if (ds1 != null && ds2 == null) {
+						return 1;
+					}
+					if (ds1 == null && ds2 != null) {
+						return -1;
+					}
+					Comparable c1 = ds1 instanceof Comparable ? (Comparable<?>) ds1 : Util.strings.toStringDescription(ds1);
+					Comparable c2 = ds2 instanceof Comparable ? (Comparable<?>) ds2 : Util.strings.toStringDescription(ds2);
+					c1 = c1.getClass().isEnum() ? ((Enum) c1).toString() : c1;
+					c2 = c2.getClass().isEnum() ? ((Enum) c2).toString() : c2;
+					int diference = c1.compareTo(c2);
+					if (diference != 0) {
+						return diference;
+					}
+				}
+				return 0;
+			}
+
+		});
+
+	}
+
 	private Map<String, Object> getFixedCriteriaMap(ReportElement reportElement) {
 		List<FilterElement> filters = reportElement.getData().getFilters();
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
@@ -173,7 +214,7 @@ public class ReportGenerator {
 		StringBuilder builder = new StringBuilder();
 		boolean includeUnderscore = false;
 		for (String var : names) {
-			if(includeUnderscore){
+			if (includeUnderscore) {
 				builder.append("_");
 				var = StringUtils.capitalize(var);
 			}
@@ -188,7 +229,6 @@ public class ReportGenerator {
 		Object filterObject = filterUtils.transformToObject(layoutBuilder.getClass().getClassLoader(), reportElement, layoutBuilder.getClass().getName(), filterMap);
 		return filterObject;
 	}
-	
 
 	private void configureExpressions(ReportElement reportElement, List<CalculatedFieldElement> calculatedFields, DynamicSummary summary) {
 		for (CalculatedFieldElement calculatedField : calculatedFields) {
@@ -200,10 +240,10 @@ public class ReportGenerator {
 			String formatTimeDetail = calculatedField.getFormatTimeDetail();
 			LayoutItem itemWithName = this.reportElement.getLayout().getItemWithName(name);
 			CalculationType calculation = CalculationType.SUM;
-			if(itemWithName instanceof FieldDetailElement){
+			if (itemWithName instanceof FieldDetailElement) {
 				FieldDetailElement fieldElement = (FieldDetailElement) itemWithName;
 				String aggregateType = fieldElement.getAggregateType();
-				if(aggregateType != null){
+				if (aggregateType != null) {
 					calculation = CalculationType.valueOf(aggregateType);
 				}
 			}
@@ -215,22 +255,25 @@ public class ReportGenerator {
 		String b = ReportGeneratorUtils.reorganizeExpression(reportElement, summary.getReferenceClass(), expression, processors);
 		//TODO TYPE IS FORCED... TRY TO DETECT TYPE
 		String timeDiv = "";
-		if(!formatAsNumber){
+		if (!formatAsNumber) {
 			timeDiv = convertToTimeFormula(formatTimeDetail);
 		}
-		summary.addVariable(new DynamicVariable(name, displayName, 
-					calculation, "(double)(("+b+")"+timeDiv+")", Double.class));
+		summary.addVariable(new DynamicVariable(name, displayName,
+				calculation, "(double)((" + b + ")" + timeDiv + ")", Double.class));
 	}
 
 	@SuppressWarnings("serial")
-	private static Map<String, String> formatTimeMap = new HashMap<String, String>(){{
-		put("minutes", 	" / (1000.0 * 60)");
-		put("hours", 	" / (1000.0 * 60 * 60)");
-		put("days", 	" / (1000.0 * 60 * 60 * 24)");
-	}};
+	private static Map<String, String> formatTimeMap = new HashMap<String, String>() {
+		{
+			put("minutes", " / (1000.0 * 60)");
+			put("hours", " / (1000.0 * 60 * 60)");
+			put("days", " / (1000.0 * 60 * 60 * 24)");
+		}
+	};
+
 	public static String convertToTimeFormula(String formatTimeDetail) {
 		String result = formatTimeMap.get(formatTimeDetail);
-		if(result == null){
+		if (result == null) {
 			return formatTimeMap.get("hours");//TODO this default value is in a lot of places
 		}
 		return result;
@@ -238,14 +281,14 @@ public class ReportGenerator {
 
 	private void configureVariables(ReportElement reportElement, List<LayoutItem> items, DynamicSummary<?> summary) {
 		for (LayoutItem layoutItem : items) {
-			if(layoutItem instanceof FieldDetailElement){
+			if (layoutItem instanceof FieldDetailElement) {
 				FieldDetailElement fieldDetailElement = (FieldDetailElement) layoutItem;
 				String name = fieldDetailElement.getName();
 				String displayName;
-				if(!reportElement.getData().isCalculated(fieldDetailElement.getName())){
+				if (!reportElement.getData().isCalculated(fieldDetailElement.getName())) {
 					displayName = getBeanDescriptorForMainType().getPropertyDescriptor(name).getDisplayName();
-					if(fieldDetailElement.isAggregateField() || fieldDetailElement.isCustomPattern()){
-						if(fieldDetailElement.getAggregateType() == null){
+					if (fieldDetailElement.isAggregateField() || fieldDetailElement.isCustomPattern()) {
+						if (fieldDetailElement.getAggregateType() == null) {
 							summary.addVariable(name, displayName, CalculationType.SUM);
 						} else {
 							String aggregateType = fieldDetailElement.getAggregateType();
@@ -256,13 +299,13 @@ public class ReportGenerator {
 				} else {
 					CalculatedFieldElement calc = reportElement.getData().getCalculatedFieldWithName(name);
 					displayName = calc.getDisplayName();
-					if(fieldDetailElement.isCustomPattern() && !fieldDetailElement.isAggregateField()){
+					if (fieldDetailElement.isCustomPattern() && !fieldDetailElement.isAggregateField()) {
 						summary.addVariable(name, displayName, CalculationType.NONE);
 					}
 				}
-				if(fieldDetailElement.isCustomPattern()){
+				if (fieldDetailElement.isCustomPattern()) {
 					String cpe = fieldDetailElement.getCustomPatternExpression();
-					summary.addVariable(new DynamicVariableDecorator(name+"Formatted", displayName, name, 
+					summary.addVariable(new DynamicVariableDecorator(name + "Formatted", displayName, name,
 							cpe, String.class));
 				}
 			}
@@ -273,19 +316,19 @@ public class ReportGenerator {
 	private void configureGroups(List<GroupElement> groups, DynamicSummary summary) {
 		for (GroupElement groupElement : groups) {
 			Type type = getTypeForProperty(groupElement.getName());
-			if(isEntityType(type)){
-				BeanDescriptor bdp = BeanDescriptorFactory.forClass((Class)type);
+			if (isEntityType(type)) {
+				BeanDescriptor bdp = BeanDescriptorFactory.forClass((Class) type);
 				String property = "class";
-				if(bdp.getDescriptionPropertyName() != null){
+				if (bdp.getDescriptionPropertyName() != null) {
 					property = bdp.getDescriptionPropertyName();
-				} else if(bdp.getIdPropertyName() != null){
+				} else if (bdp.getIdPropertyName() != null) {
 					property = bdp.getIdPropertyName();
 				}
-				summary.addGroup(groupElement.getName()+"."+property);
+				summary.addGroup(groupElement.getName() + "." + property);
 				continue;
 			}
-			
-			if(isDateType(type)	&& groupElement.getPattern() == null){
+
+			if (isDateType(type) && groupElement.getPattern() == null) {
 				summary.addGroup(groupElement.getName(), "MM/yyyy");
 				continue;
 			}
@@ -294,21 +337,21 @@ public class ReportGenerator {
 	}
 
 	private boolean isEntityType(Type type) {
-		if(type instanceof Class<?>){
-			return ((Class<?>)type).isAnnotationPresent(Entity.class);
+		if (type instanceof Class<?>) {
+			return ((Class<?>) type).isAnnotationPresent(Entity.class);
 		} else {
 			return false;
 		}
 	}
 
 	private boolean isDateType(Type type) {
-		if(type instanceof Class<?>){
+		if (type instanceof Class<?>) {
 			return (Calendar.class.isAssignableFrom((Class<?>) type) || Date.class.isAssignableFrom((Class<?>) type));
 		} else {
 			return false;
 		}
 	}
-	
+
 	private Class<?> getMainType() {
 		return reportElement.getData().getMainType();
 	}
@@ -320,10 +363,10 @@ public class ReportGenerator {
 	}
 
 	private BeanDescriptor getBeanDescriptorForMainType() {
-		if(beanDescriptorCache == null){
-			beanDescriptorCache = BeanDescriptorFactory.forClass(getMainType()); 
+		if (beanDescriptorCache == null) {
+			beanDescriptorCache = BeanDescriptorFactory.forClass(getMainType());
 		}
-		return beanDescriptorCache; 
+		return beanDescriptorCache;
 	}
 
 	private IReportBuilder createReportBuilder() {
@@ -335,7 +378,7 @@ public class ReportGenerator {
 			throw new NextException(e);
 		}
 	}
-	
+
 	public Map<String, Object> getContext() {
 		return context;
 	}
@@ -347,5 +390,5 @@ public class ReportGenerator {
 	public ReportElement getReportElement() {
 		return reportElement;
 	}
-	
+
 }
