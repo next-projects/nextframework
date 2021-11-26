@@ -30,6 +30,7 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
 		mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+		mapper.configure(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID, true);
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		mapper.setTimeZone(TimeZone.getDefault());
 		//mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
