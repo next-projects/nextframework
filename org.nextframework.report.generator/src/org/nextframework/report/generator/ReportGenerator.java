@@ -39,6 +39,7 @@ import org.nextframework.summary.dynamic.DynamicVariable;
 import org.nextframework.summary.dynamic.DynamicVariableDecorator;
 import org.nextframework.util.Util;
 import org.nextframework.view.progress.IProgressMonitor;
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.util.StringUtils;
 
 public class ReportGenerator {
@@ -161,8 +162,14 @@ public class ReportGenerator {
 				BeanDescriptor bd1 = BeanDescriptorFactory.forBean(o1);
 				BeanDescriptor bd2 = BeanDescriptorFactory.forBean(o2);
 				for (String property : reportElement.getProperties()) {
-					Object ds1 = bd1.getPropertyDescriptor(property).getValue();
-					Object ds2 = bd2.getPropertyDescriptor(property).getValue();
+					Object ds1 = null;
+					Object ds2 = null;
+					try {
+						ds1 = bd1.getPropertyDescriptor(property).getValue();
+						ds2 = bd2.getPropertyDescriptor(property).getValue();
+					}catch(InvalidPropertyException ex) {
+						continue;
+					}
 					if ((ds1 == null && ds2 == null) || (ds1 != null && ds1.equals(ds2))) {
 						continue;
 					}
