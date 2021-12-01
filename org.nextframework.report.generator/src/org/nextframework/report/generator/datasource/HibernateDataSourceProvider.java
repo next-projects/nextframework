@@ -195,7 +195,6 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		for (String join : joins) {
 			query.leftOuterJoinFetch(join + " " + joinMap.get(join));
 		}
-		BeanDescriptor db = BeanDescriptorFactory.forClass(getMainType());
 		final Set<String> filteredFields = new HashSet<String>();
 		Map<String, Object> transients = new HashMap<String, Object>() {
 			public Object get(Object key) {
@@ -205,7 +204,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		};
 		for (String filter : filterMap.keySet()) {
 			String filterNoSuffix = removeSuffix(filter);
-			PropertyDescriptor propertyDescriptor = db.getPropertyDescriptor(filterNoSuffix);
+			PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(filterNoSuffix);
 			Object parameterValue = filterMap.get(filter);
 			if (propertyDescriptor.getAnnotation(Transient.class) != null) {
 				transients.put(filterNoSuffix, parameterValue);
@@ -249,8 +248,10 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			throw new NextException("There are transient fields " + transients + " for filtering, but the " + dao.getClass().getSimpleName() + " does not implement " + TransientsFilter.class.getSimpleName() + ".");
 		}
 
-		//TODO order deeper properties (property of property)
-		//Melhor reaordenar fora do BD para ordenar pelos atributos
+		//Melhor reaordenar fora do BD para ordenar pelos atributos calculados também.
+		//Porém, é necessário que haja pelo menos 1 critério de ordenação, para garantir a paginação.
+		query.orderBy(query.getAlias() + "." + beanDescriptor.getIdPropertyName());
+
 		/*
 		StringBuilder orderByBuffer = new StringBuilder("  ");
 		for (String property : orderByProperties) {
