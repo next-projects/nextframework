@@ -202,7 +202,7 @@ public class TagUtils {
 				propertyEditor.setValue(value);
 				return propertyEditor.getAsText();
 			}
-			return Util.strings.toStringDescription(value);
+			return Util.strings.toStringDescription(value, null, null, NextWeb.getRequestContext().getMessageResolver());
 		} catch (LazyInitializationException e) {
 			return value.getClass().getSimpleName() + " [Não foi possível fazer toString LazyInicializationException]";
 		} catch (InvalidPropertyException e1) {

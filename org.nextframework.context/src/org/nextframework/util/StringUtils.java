@@ -220,12 +220,13 @@ public class StringUtils {
 		}
 
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
-		Object description = beanDescriptor.getDescription();
-		if (description == null && beanDescriptor.getDescriptionPropertyName() == null) {
-			description = value.toString();
+		if (beanDescriptor.getDescriptionPropertyName() != null) {
+			value = beanDescriptor.getDescription();
+		}else {
+			value = value.toString();
 		}
 
-		return description != null ? description.toString() : "";
+		return toStringDescription(value, formatDate, formatNumber, resolver);
 	}
 
 	public String removeAccents(String string) {

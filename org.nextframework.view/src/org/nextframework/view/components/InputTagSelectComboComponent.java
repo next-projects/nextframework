@@ -188,12 +188,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				try {
 					method = getRawClassType().getMethod("values");
 					Enum<?>[] enumValues = (Enum[]) method.invoke(null);
-					Map<Object, Object> values = new LinkedHashMap<Object, Object>();
-					for (Enum<?> enumValue : enumValues) {
-						values.put(Enum.valueOf((Class)getRawClassType(), enumValue.name()), enumValue.toString());
-					}
-					//organizeItens = organizeItens(inputTag, values);
-					itemsValue = values;
+					itemsValue = Arrays.asList(enumValues);
 				} catch (Exception e) {
 					throw new NextException(e);
 				}
