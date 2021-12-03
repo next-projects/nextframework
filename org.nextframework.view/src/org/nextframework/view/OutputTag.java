@@ -23,18 +23,10 @@
  */
 package org.nextframework.view;
 
-import java.math.BigDecimal;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Formattable;
-import java.util.Formatter;
 
-import org.nextframework.bean.BeanDescriptor;
-import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.core.standard.Message;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
@@ -42,7 +34,6 @@ import org.nextframework.persistence.HibernateUtils;
 import org.nextframework.types.File;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
-import org.springframework.context.MessageSourceResolvable;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -110,31 +101,21 @@ public class OutputTag extends BaseTag {
 		return body;
 	}
 
-	public String getStringBody(Object value, String pattern) {
+	private String getStringBody(Object value, String pattern) {
 
 		//Unbox
 		if (value instanceof Message) {
 			value = ((Message) value).getSource();
 		}
 
-		//Verify pattern
-		if (Util.strings.isEmpty(pattern)) {
-			if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) {
-				if (value instanceof Time) {
-					pattern = "HH:mm";
-				} else {
-					pattern = "dd/MM/yyyy";
-				}
-			} else if (value instanceof Number) {
-				if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
-					pattern = "#,##0.00";
-				} else {
-					pattern = "#,##0.##";
-				}
-			}
+		//Simple types
+		if (value instanceof String || value instanceof Number ||
+				value instanceof Date || value instanceof java.sql.Date ||
+				value instanceof Timestamp || value instanceof Calendar) {
+			return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getMessageResolver());
 		}
 
-		//Convert simple types
+		//Special types
 		if (value == null) {
 			String[] split = getResolvedTrueFalseNullLabels();
 			return split[2];
@@ -144,30 +125,6 @@ public class OutputTag extends BaseTag {
 				return split[0];
 			}
 			return split[1];
-		} else if (value instanceof String) {
-			return (String) value;
-		} else if (value instanceof Number) {
-			Number number = (Number) value;
-			String valueToString = new DecimalFormat(pattern).format(number);
-			if (valueToString.startsWith(",")) {
-				valueToString = "0" + valueToString;
-			}
-			return valueToString;
-		} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
-			String valueToString = new SimpleDateFormat(pattern).format(value);
-			return valueToString;
-		} else if (value instanceof Calendar) {
-			Calendar data = (Calendar) value;
-			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-			return dateFormat.format(data.getTime());
-		} else if (value instanceof Formattable) {
-			Formatter fmt = new Formatter();
-			((Formattable) value).formatTo(fmt, 0, -1, -1);
-			return fmt.out().toString();
-		} else if (value instanceof Throwable) {
-			return Util.exceptions.getExceptionDescription(NextWeb.getRequestContext().getMessageResolver(), (Throwable) value);
-		} else if (value instanceof MessageSourceResolvable) {
-			return NextWeb.getRequestContext().getMessageResolver().message((MessageSourceResolvable) value);
 		} else if (value instanceof File) {
 			File file = (File) HibernateUtils.getLazyValue(value);
 			DownloadFileServlet.addCdfile(getRequest().getSession(), file.getCdfile());
@@ -176,15 +133,8 @@ public class OutputTag extends BaseTag {
 			return "<a href=\"" + link + "\" class=\"filelink\">" + file.getName() + "</a>";
 		}
 
-		//Convert beans
-		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
-		Object description = beanDescriptor.getDescription();
-		if (description != null) {
-			return getStringBody(description, pattern);
-		}
-
-		//Convert other objects
-		return TagUtils.getObjectDescriptionToString(value);
+		//Others
+		return TagUtils.getObjectDescriptionToString(value, pattern, pattern);
 	}
 
 	private String[] getResolvedTrueFalseNullLabels() {

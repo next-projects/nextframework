@@ -266,7 +266,7 @@ public class MessagesTag extends BaseTag {
 
 		}
 
-		return Util.strings.toString(source);
+		return Util.strings.toStringDescription(source);
 	}
 
 	private String getMessageStyleClass(Message message) {

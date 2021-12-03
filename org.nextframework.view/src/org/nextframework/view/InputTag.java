@@ -272,8 +272,11 @@ public class InputTag extends BaseTag {
 		if (reloadOnChange != null && reloadOnChange) {
 			// MODIFICADO EM 10/08/2006
 			FormTag form = findParent(FormTag.class, true);
-			onchangestring = form.getName() + ".validate = 'false'; " + form.getName() + ".suppressErrors.value = 'true';" + form.getName() + "." + MultiActionController.ACTION_PARAMETER + ".value = '" + Util.strings.toString(((WebRequestContext) Next.getRequestContext()).getLastAction(), "") + "';"
-					+ form.getName() + ".suppressValidation.value = 'true';" + form.getSubmitFunction() + "()";
+			String lastAction = ((WebRequestContext) Next.getRequestContext()).getLastAction();
+			onchangestring = form.getName() + ".validate = 'false';" +
+					form.getName() + ".suppressErrors.value = 'true';" +
+					form.getName() + "." + MultiActionController.ACTION_PARAMETER + ".value = '" + (lastAction != null ? lastAction : "") + "';" +
+					form.getName() + ".suppressValidation.value = 'true';" + form.getSubmitFunction() + "()";
 		} else {
 			ComboReloadGroupTag comboReloadGroupTag = findParent(ComboReloadGroupTag.class);
 			if (comboReloadGroupTag != null) {
@@ -318,7 +321,7 @@ public class InputTag extends BaseTag {
 		}
 		String opValue;
 		if (selectedType == InputTagType.TEXT && TagUtils.hasId(value.getClass())) {
-			opValue = TagUtils.getObjectDescriptionToString(value);
+			opValue = TagUtils.getObjectDescriptionToString(value, pattern, pattern);
 		} else {
 			opValue = TagUtils.getObjectValueToString(value, false, null);
 		}
@@ -348,7 +351,7 @@ public class InputTag extends BaseTag {
 	}
 
 	public String getDescriptionToString() {
-		return TagUtils.getObjectDescriptionToString(value);
+		return TagUtils.getObjectDescriptionToString(value, pattern, pattern);
 	}
 
 	public String getChecked() {

@@ -56,7 +56,7 @@ public class InputTagSelectComponent extends InputTagComponent {
 	}
 	
 	protected boolean isSelectAll() {
-		return "all".equalsIgnoreCase(Util.strings.toString(inputTag.getItens()));
+		return inputTag.getItens() instanceof String && "all".equalsIgnoreCase((String) inputTag.getItens());
 	}
 
 	private boolean cacheFunctionCallExecuted = false;

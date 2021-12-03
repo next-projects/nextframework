@@ -15,7 +15,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.nextframework.authorization.User;
+import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
@@ -321,7 +323,9 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 
 	private String getSelectLabel(Object value) {
 		if (inputTag.getSelectLabelProperty() != null && inputTag.getSelectLabelProperty().trim().length() != 0 && value != null) {
-			return TagUtils.getObjectDescriptionToString(BeanDescriptorFactory.forBean(value).getPropertyDescriptor(inputTag.getSelectLabelProperty()).getValue());
+			BeanDescriptor bd = BeanDescriptorFactory.forBean(value);
+			PropertyDescriptor pd = bd.getPropertyDescriptor(inputTag.getSelectLabelProperty());
+			return TagUtils.getObjectDescriptionToString(pd.getValue());
 		} else {
 			return TagUtils.getObjectDescriptionToString(value);
 		}

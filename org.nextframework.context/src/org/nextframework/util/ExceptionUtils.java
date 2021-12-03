@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.nextframework.exception.ApplicationException;
 import org.nextframework.exception.BusinessException;
+import org.nextframework.exception.NextException;
 import org.nextframework.message.MessageResolver;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
@@ -52,17 +53,17 @@ public class ExceptionUtils {
 		while (cause != null && !allCauses.contains(cause)) {
 
 			String exTipo = null;
-
-			Class<?> clazz = cause.getClass();
-			do {
-				try {
-					exTipo = resolver.message(clazz.getName());
-				} catch (NoSuchMessageException e) {
-					//Não encontrado...
-				}
-				clazz = clazz.getSuperclass();
-			} while (exTipo == null && clazz != Object.class);
-
+			if (resolver != null) {
+				Class<?> clazz = cause.getClass();
+				do {
+					try {
+						exTipo = resolver.message(clazz.getName());
+					} catch (NoSuchMessageException e) {
+						//Não encontrado...
+					}
+					clazz = clazz.getSuperclass();
+				} while (exTipo == null && clazz != Object.class);
+			}
 			if (exTipo == null && !(cause instanceof RuntimeException) && !(cause instanceof ApplicationException) && !(cause instanceof BusinessException)) {
 				exTipo = cause.getClass().getSimpleName();
 			}
@@ -70,6 +71,9 @@ public class ExceptionUtils {
 			String exMsg = null;
 
 			if (cause instanceof MessageSourceResolvable) {
+				if (resolver == null) {
+					throw new NextException("Nenhum " + MessageResolver.class.getSimpleName() + " foi informado!");
+				}
 				exMsg = resolver.message((MessageSourceResolvable) cause);
 			} else {
 				exMsg = cause.getMessage();

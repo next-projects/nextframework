@@ -23,6 +23,9 @@
  */
 package org.nextframework.util;
 
+import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -30,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Formattable;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -162,6 +167,13 @@ public class StringUtils {
 		return stringBuilder.toString();
 	}
 
+	public String toString(Object o) {
+		if (o == null) {
+			return null;
+		}
+		return toStringDescription(o, null, null, null);
+	}
+	
 	public String toStringDescription(Object value) {
 		return toStringDescription(value, null, null, null);
 	}
@@ -177,8 +189,20 @@ public class StringUtils {
 			return "";
 		}
 
-		formatDate = formatDate == null ? "dd/MM/yyyy" : formatDate;
-		formatNumber = formatNumber == null ? "#,##0.##" : formatNumber;
+		if (Util.strings.isEmpty(formatDate)) {
+			if (value instanceof Time) {
+				formatDate = "HH:mm";
+			} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) {
+				formatDate = "dd/MM/yyyy";
+			}
+		}
+		if (Util.strings.isEmpty(formatNumber)) {
+			if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
+				formatNumber = "#,##0.00";
+			} else if (value instanceof Number) {
+				formatNumber = "#,##0.##";
+			}
+		}
 
 		if (value instanceof Calendar) {
 			value = ((Calendar) value).getTime();
@@ -188,17 +212,27 @@ public class StringUtils {
 
 		if (value instanceof String) {
 			return (String) value;
-		} else if (value instanceof Date) { //FIXME
+		} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
 			DateFormat dateFormat = new SimpleDateFormat(formatDate);
 			return dateFormat.format(value);
 		} else if (value instanceof Number) {
 			NumberFormat numberFormat = new DecimalFormat(formatNumber);
-			return numberFormat.format(value);
+			String valueToString = numberFormat.format(value);
+			if (valueToString.startsWith(",")) {
+				valueToString = "0" + valueToString;
+			}
+			return valueToString;
+		} else if (value instanceof Formattable) {
+			Formatter fmt = new Formatter();
+			((Formattable) value).formatTo(fmt, 0, -1, -1);
+			return fmt.out().toString();
 		} else if (value instanceof MessageSourceResolvable) {
 			if (resolver == null) {
 				throw new NextException("Nenhum " + MessageResolver.class.getSimpleName() + " foi informado!");
 			}
 			return resolver.message((MessageSourceResolvable) value);
+		} else if (value instanceof Throwable) {
+			return Util.exceptions.getExceptionDescription(resolver, (Throwable) value);
 		} else if (value.getClass().isArray()) {
 			Object[] array = (Object[]) value;
 			String description = "";
@@ -222,7 +256,7 @@ public class StringUtils {
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
 		if (beanDescriptor.getDescriptionPropertyName() != null) {
 			value = beanDescriptor.getDescription();
-		}else {
+		} else {
 			value = value.toString();
 		}
 
@@ -258,30 +292,6 @@ public class StringUtils {
 		}
 		return str;
 //        return org.apache.commons.lang.StringUtils.replaceChars(string, "¡…Õ”⁄¿»Ã“Ÿ¬ Œ‘€ƒÀœ÷‹√’«·ÈÌÛ˙‡ËÏÚ˘‚ÍÓÙ˚‰ÎÔˆ¸„ıÁ", "AEIOUAEIOUAEIOUAEIOUAOCaeiouaeiouaeiouaeiouaoc");
-	}
-
-	public String toString(Object o) {
-		if (o == null) {
-			return null;
-		} else {
-			if (o instanceof String) {
-				return (String) o;
-			} else if (o instanceof Date) {
-				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				return dateFormat.format(o);
-			} else if (o instanceof Double) {
-				return new DecimalFormat("#,##0.00").format((Double) o);
-			}
-			return o.toString();
-		}
-	}
-
-	public String toString(Object o, String def) {
-		if (o == null) {
-			return def;
-		} else {
-			return o.toString();
-		}
 	}
 
 	/**

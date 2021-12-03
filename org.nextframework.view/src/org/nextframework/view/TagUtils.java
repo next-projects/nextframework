@@ -3,8 +3,6 @@ package org.nextframework.view;
 import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -128,39 +126,40 @@ public class TagUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static String getObjectValueToString(Object value, boolean includeDescription, String pattern) {
+
 		if (value == null)
 			return "";
-		PropertyEditor propertyEditor = TagUtils.getPropertyEditorsFromRequest().get(value.getClass());
+
 		try {
-			if (Util.strings.isNotEmpty(pattern)) { //TODO REVER ESSA LÓGICA DE FORMATAÇÃO, ESTÁ EM VÁRIOS LUGARES DO FRAMEWORK, UNIFICAR
-				if (value instanceof Calendar) {
-					value = ((Calendar) value).getTime();
-				}
-				if (value instanceof Date) { //FIXME
-					SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-					return sdf.format(value);
-				} else if (value instanceof Number) {
-					DecimalFormat df = new DecimalFormat(pattern);
-					return df.format(value);
+
+			if (Util.strings.isNotEmpty(pattern)) {
+				if (value instanceof Number || value instanceof Date || value instanceof Calendar) {
+					return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getMessageResolver());
 				}
 			}
+
+			PropertyEditor propertyEditor = TagUtils.getPropertyEditorsFromRequest().get(value.getClass());
 			if (propertyEditor != null) {
 				propertyEditor.setValue(value);
 				return propertyEditor.getAsText();
-			} else if (hasId(value.getClass())) {
+			}
+
+			if (hasId(value.getClass())) {
 				return Util.strings.toStringIdStyled(value, includeDescription);
 			} else if (value instanceof Enum) {
 				return ((Enum) value).name();
 			} else if (value instanceof Class) {
 				return ((Class) value).getName();
 			}
+
 			return value.toString();
+
 		} catch (LazyInitializationException e) {
 			String id = "";
 			try {
 				id = Util.strings.toStringIdStyled(value, false);
 			} catch (LazyInitializationException e2) {
-
+				//Nada...
 			}
 			return value.getClass().getSimpleName() + " [Não foi possível fazer toString LazyInicializationException] " + id;
 		} catch (InvalidPropertyException e1) {
@@ -183,29 +182,38 @@ public class TagUtils {
 				throw e1;
 			}
 		}
+
 	}
 
 	public static String getObjectDescriptionToString(Object value) {
-		if (value == null) return "";
-		PropertyEditor propertyEditor = getPropertyEditorsFromRequest().get(value.getClass());
-		return getObjectDescriptionToString(value, propertyEditor);
+		return getObjectDescriptionToString(value, null, null);
 	}
 
-	@SuppressWarnings("unchecked")
-	public static String getObjectDescriptionToString(Object value, PropertyEditor propertyEditor) {
-		if (value == null) return "";
+	public static String getObjectDescriptionToString(Object value, String formatDate, String formatNumber) {
+
+		if (value == null)
+			return "";
+
 		try {
+
 			if (HibernateUtils.isLazy(value)) {
 				value = HibernateUtils.getLazyValue(value);
 			}
+
+			PropertyEditor propertyEditor = getPropertyEditorsFromRequest().get(value.getClass());
 			if (propertyEditor != null) {
 				propertyEditor.setValue(value);
 				return propertyEditor.getAsText();
 			}
-			return Util.strings.toStringDescription(value, null, null, NextWeb.getRequestContext().getMessageResolver());
+
+			return Util.strings.toStringDescription(value, formatDate, formatNumber, NextWeb.getRequestContext().getMessageResolver());
+
 		} catch (LazyInitializationException e) {
+
 			return value.getClass().getSimpleName() + " [Não foi possível fazer toString LazyInicializationException]";
+
 		} catch (InvalidPropertyException e1) {
+
 			if (ServiceFactory.getService(ViewConfig.class).isAutoLoadOnView()) {
 				//TENTANDO CARREGAR O OBJETO LAZY
 				BaseTag.log.warn("Perda de performance! Carregando objeto sob demanda " + value.getClass());
@@ -214,7 +222,7 @@ public class TagUtils {
 						GenericDAO daoForClass = DAOUtils.getDAOForClass(value.getClass().getSuperclass());
 						value = daoForClass.load(value);
 						//value = new QueryBuilder(Next.getObject(HibernateTemplate.class)).from(value.getClass().getSuperclass()).entity(value).unique();
-						return getObjectDescriptionToString(value);
+						return getObjectDescriptionToString(value, formatDate, formatNumber);
 					} else {
 						throw e1;
 					}
@@ -228,9 +236,10 @@ public class TagUtils {
 				} else {
 					throw e1;
 				}
-
 			}
+
 		}
+
 	}
 
 	/*

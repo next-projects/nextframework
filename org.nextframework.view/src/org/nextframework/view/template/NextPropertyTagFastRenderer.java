@@ -70,8 +70,8 @@ public class NextPropertyTagFastRenderer implements PropertyTagFastRenderer {
 				outputTag.setPattern(tag.getPattern() != null ? tag.getPattern() : "");
 				outputTag.setEscapeHTML(true);
 				outputTag.setReplaceMessagesCodes(tag.isReplaceMessagesCodes());
-				outputTag.setStyleClass(Util.strings.toString(tag.getDynamicAttributesMap().get("styleclass")));
-				outputTag.setStyle(Util.strings.toString(tag.getDynamicAttributesMap().get("style")));
+				outputTag.setStyleClass(Util.strings.toStringDescription(tag.getDynamicAttributesMap().get("styleclass")));
+				outputTag.setStyle(Util.strings.toStringDescription(tag.getDynamicAttributesMap().get("style")));
 				outputTag.setForProperty(tag.getName());
 				outputTag.setSearchValueWhenNull(false);
 				if (tag.getTrueFalseNullLabels() != null) {
