@@ -393,10 +393,8 @@ public class MultiActionController extends AbstractController {
 			Method method = this.methodNameResolver.getHandlerMethod(request);
 			request.setAttribute("firstAction", requestContext.getLastAction());
 			ModelAndView result = invokeNamedMethod(method, requestContext, null);
-
 			while (result != null && result.getViewName() != null && result.getViewName().startsWith("action:")) {
 				String actionName = result.getViewName().substring("action:".length(), result.getViewName().length());
-
 				method = this.methodNameResolver.getHandlerMethod(actionName);
 				result = invokeNamedMethod(method, requestContext, null);
 			}
@@ -895,11 +893,10 @@ public class MultiActionController extends AbstractController {
 	}
 
 	protected void validate(WebRequestContext request, Object command, ServletRequestDataBinder binder) {
-
 		if (!suppressValidation(request, command)) {
 			BindException errors = new BindException(binder.getBindingResult());
 			if (request.getAttribute(NextCommonsMultipartResolver.MAXUPLOADEXCEEDED) != null) {
-				errors.reject("", "O tamanho máximo de upload de arquivos (10M) foi excedido");
+				errors.reject("org.nextframework.controller.MultiActionController.maxUploadExceeded", "O tamanho máximo de upload de arquivos (10M) foi excedido");
 			}
 			ObjectAnnotationValidator objectAnnotationValidator = new ObjectAnnotationValidator(ServiceFactory.getService(ValidatorRegistry.class), request.getServletRequest());
 			objectAnnotationValidator.validate(command, errors);
