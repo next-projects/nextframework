@@ -273,10 +273,12 @@ public class InputTag extends BaseTag {
 			// MODIFICADO EM 10/08/2006
 			FormTag form = findParent(FormTag.class, true);
 			String lastAction = ((WebRequestContext) Next.getRequestContext()).getLastAction();
-			onchangestring = form.getName() + ".validate = 'false';" +
-					form.getName() + ".suppressErrors.value = 'true';" +
+			onchangestring = 
 					form.getName() + "." + MultiActionController.ACTION_PARAMETER + ".value = '" + (lastAction != null ? lastAction : "") + "';" +
-					form.getName() + ".suppressValidation.value = 'true';" + form.getSubmitFunction() + "()";
+					form.getName() + ".validate = 'false';" +
+					form.getName() + ".suppressErrors.value = 'true';" +
+					form.getName() + ".suppressValidation.value = 'true';" + 
+					form.getSubmitFunction() + "()";
 		} else {
 			ComboReloadGroupTag comboReloadGroupTag = findParent(ComboReloadGroupTag.class);
 			if (comboReloadGroupTag != null) {
