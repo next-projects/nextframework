@@ -173,13 +173,17 @@ public class StringUtils {
 		}
 		return toStringDescription(o, null, null, null);
 	}
-	
+
 	public String toStringDescription(Object value) {
 		return toStringDescription(value, null, null, null);
 	}
 
 	public String toStringDescription(Object value, String formatDate, String formatNumber) {
 		return toStringDescription(value, formatDate, formatNumber, null);
+	}
+
+	public String toStringDescription(Object value, MessageResolver resolver) {
+		return toStringDescription(value, null, null, resolver);
 	}
 
 	@SuppressWarnings("rawtypes")

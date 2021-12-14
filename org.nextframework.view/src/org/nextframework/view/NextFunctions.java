@@ -101,11 +101,10 @@ public class NextFunctions {
 			if (value == null)
 				return "";
 			if (hasDescriptionProperty(value.getClass())) {
-				return Util.strings.toStringDescription(value);
+				return Util.strings.toStringDescription(value, NextWeb.getRequestContext().getMessageResolver());
 			}
 			return value.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RuntimeException("Erro ao ler a descrição do objeto. Talvez o problema esteja na propriedade com @DescriptionProperty.", e);
 		}
 	}
@@ -225,6 +224,9 @@ public class NextFunctions {
 	}
 
 	public static String messageResolvable(MessageSourceResolvable resolvable) {
+		if (resolvable == null) {
+			return null;
+		}
 		return NextWeb.getRequestContext().getMessageResolver().message(resolvable);
 	}
 
