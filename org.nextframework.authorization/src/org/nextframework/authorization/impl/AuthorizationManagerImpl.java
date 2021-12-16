@@ -49,20 +49,19 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.AntPathMatcher;
 
 /**
- */  
+ */
 public class AuthorizationManagerImpl implements AuthorizationManager {
-
 
 	protected Properties authorizationProperties = new Properties();
 	protected UserLocator userLocator;
 	protected PermissionLocator permissionLocator;
 	protected ResourceAuthorizationMapper authorizationMapper;
 	protected AuthorizationDAO authorizationDAO;
-	
+
 	public void setAuthorizationDAO(AuthorizationDAO authorizationDAO) {
 		this.authorizationDAO = authorizationDAO;
 	}
-	
+
 	public void setPermissionLocator(PermissionLocator permissionLocator) {
 		this.permissionLocator = permissionLocator;
 	}
@@ -70,12 +69,11 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 	public void setUserLocator(UserLocator userLocator) {
 		this.userLocator = userLocator;
 	}
-	
+
 	public void setAuthorizationMapper(ResourceAuthorizationMapper authorizationMapper) {
 		this.authorizationMapper = authorizationMapper;
 	}
-	
-	
+
 	public UserLocator getUserLocator() {
 		return userLocator;
 	}
@@ -88,105 +86,71 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 		return authorizationMapper;
 	}
 
-	public boolean isAuthorized(String path, String actionParameter){
+	public boolean isAuthorized(String path, String actionParameter) {
 		init();
 		User user = userLocator.getUser();
 		return isAuthorized(path, actionParameter, user);
 	}
-	
+
 	public boolean isAuthorized(String path, String actionParameter, User usuario) {
 		init();
 		// pega o localizadorControl no contexto do framework
 		AuthorizationModule authorizationModule = authorizationMapper.getAuthorizationModule(path);
 		return isAuthorized(actionParameter, usuario, path, authorizationModule, false);
 	}
-	
+
 	public boolean isAuthorized(String actionParameter, User usuario, String resource, AuthorizationModule authorizationModule) {
 		init();
 		return isAuthorized(actionParameter, usuario, resource, authorizationModule, false);
 	}
-	
+
 	private boolean isAuthorized(String actionParameter, User user, String resource, AuthorizationModule authorizationModule, boolean saveAuthorization) {
 		init();
 		boolean isAuthorized;
 		//first check static authorization
 		isAuthorized = checkStaticAuthorization(user, resource, actionParameter, authorizationModule);
-		
-		if(!isAuthorized){ //if the static authorization has denied access.. let's not check the 
+
+		if (!isAuthorized) { //if the static authorization has denied access.. let's not check the 
 			return false;
 		}
 		//check dynamic authorization
-		if(authorizationModule == null || authorizationModule instanceof HasAccessAuthorizationModule){
-            isAuthorized = true;
-		} else if(authorizationModule instanceof RequiresAuthenticationAuthorizationModule && user == null){
-			isAuthorized = false;
-		} else if(authorizationModule instanceof RequiresAuthenticationAuthorizationModule && user != null){
+		if (authorizationModule == null || authorizationModule instanceof HasAccessAuthorizationModule) {
 			isAuthorized = true;
-        } else {
-            UserAuthorization autorizacao = createAuthorization(user, resource, authorizationModule);
-
+		} else if (authorizationModule instanceof RequiresAuthenticationAuthorizationModule && user == null) {
+			isAuthorized = false;
+		} else if (authorizationModule instanceof RequiresAuthenticationAuthorizationModule && user != null) {
+			isAuthorized = true;
+		} else {
+			UserAuthorization autorizacao = createAuthorization(user, resource, authorizationModule);
 			if (authorizationModule.isAuthorized(actionParameter, autorizacao)) {
-                isAuthorized = true;
-            } else {
-                isAuthorized = false;
-            }
-			if(saveAuthorization){
+				isAuthorized = true;
+			} else {
+				isAuthorized = false;
+			}
+			if (saveAuthorization) {
 				//salva a autorizacao na requisicao
 				//TODO FIXME NOT DOESNT WORK ANYMORE
-//				Next.getRequestContext().setAttribute(Authorization.AUTHORIZATION_ATTRIBUTE, autorizacao);
+				//Next.getRequestContext().setAttribute(Authorization.AUTHORIZATION_ATTRIBUTE, autorizacao);
 			}
-        }
+		}
 		return isAuthorized;
 	}
 
-	protected Map<String, List<String>> cacheResourceRoles = new HashMap<String, List<String>>();
-	
-	protected boolean checkStaticAuthorization(User user, String resource, String actionParameter, AuthorizationModule authorizationModule) {
-		List<String> roles = cacheResourceRoles.get(resource);
-		if(roles == null){
-			roles = new ArrayList<String>();
-			cacheResourceRoles.put(resource, roles);
-			AntPathMatcher antPathMatcher = new AntPathMatcher();
-			@SuppressWarnings("all")
-			Enumeration<String> keys = (Enumeration<String>)authorizationProperties.propertyNames();
-			while(keys.hasMoreElements()){
-				String resourceKey = keys.nextElement();
-				if(antPathMatcher.match(resourceKey, resource)){
-					String rolesValue = authorizationProperties.getProperty(resourceKey);
-					roles.addAll(Arrays.asList(rolesValue.split(",")));
-				}
-			}
-		}
-		if(roles.isEmpty()){
-			return true;
-		}
-		if(user == null){
-			return false;
-		}
-		Role[] userRoles = authorizationDAO.findUserRoles(user);
-		for (Role role : userRoles) {
-			if(roles.contains(role.getName().toLowerCase())){
-				return true;
-			}
-		}
-		return false;
-	}
-
 	protected boolean initialized = false;
-	
+
 	protected void init() {
-		if(!initialized){ 
+		if (!initialized) {
 			//get the dependencies
-			if(userLocator == null){
+			if (userLocator == null) {
 				userLocator = Authorization.getUserLocator();
 			}
-			if(permissionLocator == null){
+			if (permissionLocator == null) {
 				permissionLocator = Authorization.getPermissionLocator();
 			}
-			if(authorizationMapper == null){
+			if (authorizationMapper == null) {
 				authorizationMapper = Authorization.getAuthorizationMapper();
 			}
-			if(authorizationDAO == null){
+			if (authorizationDAO == null) {
 				authorizationDAO = Authorization.getAuthorizationDAO();
 			}
 			initStaticAuthorization();
@@ -199,12 +163,45 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 			authorizationProperties = PropertiesLoaderUtils.loadAllProperties("authorization.properties");
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
+	}
+
+	protected Map<String, List<String>> cacheResourceRoles = new HashMap<String, List<String>>();
+
+	protected boolean checkStaticAuthorization(User user, String resource, String actionParameter, AuthorizationModule authorizationModule) {
+		List<String> roles = cacheResourceRoles.get(resource);
+		if (roles == null) {
+			roles = new ArrayList<String>();
+			cacheResourceRoles.put(resource, roles);
+			AntPathMatcher antPathMatcher = new AntPathMatcher();
+			@SuppressWarnings("all")
+			Enumeration<String> keys = (Enumeration<String>) authorizationProperties.propertyNames();
+			while (keys.hasMoreElements()) {
+				String resourceKey = keys.nextElement();
+				if (antPathMatcher.match(resourceKey, resource)) {
+					String rolesValue = authorizationProperties.getProperty(resourceKey);
+					roles.addAll(Arrays.asList(rolesValue.split(",")));
+				}
+			}
+		}
+		if (roles.isEmpty()) {
+			return true;
+		}
+		if (user == null) {
+			return false;
+		}
+		Role[] userRoles = authorizationDAO.findUserRoles(user);
+		for (Role role : userRoles) {
+			if (roles.contains(role.getName().toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private UserAuthorization createAuthorization(User usuario, String resource, AuthorizationModule authorizationModule) {
 		Permission[] permissoes;
-		if(usuario != null){
+		if (usuario != null) {
 			permissoes = permissionLocator.getPermissions(usuario, resource);
 		} else {
 			permissoes = new Permission[0];
