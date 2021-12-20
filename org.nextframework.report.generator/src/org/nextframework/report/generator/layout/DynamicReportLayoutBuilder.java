@@ -173,6 +173,7 @@ public class DynamicReportLayoutBuilder extends LayoutReportBuilder {
 	public DynamicReportLayoutBuilder createSubReportPart(ReportCycle cycle) {
 		DynamicReportLayoutBuilder r = newInstance();
 		r.setData((SummaryResult) this.summaryResult);
+		r.setLocale(locale);
 		r.cycle = cycle;
 		return r;
 	}

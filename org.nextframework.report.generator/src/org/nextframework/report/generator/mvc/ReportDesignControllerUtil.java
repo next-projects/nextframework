@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -109,6 +110,7 @@ public class ReportDesignControllerUtil {
 
 	private TreeSet<String> createPropertyListTreeSet(final BeanDescriptor bd) {
 		return new TreeSet<String>(new Comparator<String>() {
+			
 			@Override
 			public int compare(String o1, String o2) {
 				//Para subir o ID
@@ -144,6 +146,7 @@ public class ReportDesignControllerUtil {
 				}
 				return oDesc;
 			}
+			
 		});
 	}
 
@@ -163,7 +166,8 @@ public class ReportDesignControllerUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	HashMap<String, Object> getMetadataForProperty(ReportElement report, BeanDescriptor beanDescriptor, String property) {
+	HashMap<String, Object> getMetadataForProperty(ReportElement report, Locale locale, BeanDescriptor beanDescriptor, String property) {
+
 		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
@@ -203,7 +207,8 @@ public class ReportDesignControllerUtil {
 			map.put("money", propertyClass.getName().contains("Money"));
 			map.put("enumType", propertyClass.isEnum());
 			if (propertyClass.isEnum()) {
-				String enumExample = Util.collections.join(Arrays.asList(propertyClass.getEnumConstants()), ", ");
+				List<Object> enumsList = Arrays.asList(propertyClass.getEnumConstants());
+				String enumExample = Util.collections.join(enumsList, ", ", locale);
 				enumExample = enumExample.length() > 100 ? enumExample.substring(0, 50) + "..." : enumExample;
 				map.put("enumExample", enumExample);
 			}
@@ -211,8 +216,8 @@ public class ReportDesignControllerUtil {
 
 		map.put("type", propertyDescriptor.getType());
 		map.put("extended", isExtendedProperty(beanDescriptor, property));
-		map.put("displayName", getCompleteDisplayName(beanDescriptor, propertyDescriptor, property));
-		map.put("displayNameSimple", propertyDescriptor.getDisplayName());
+		map.put("displayName", getCompleteDisplayName(locale, beanDescriptor, propertyDescriptor, property));
+		map.put("displayNameSimple", Util.beans.getDisplayName(locale, propertyDescriptor));
 		map.put("transient", propertyDescriptor.getAnnotation(Transient.class) != null);
 		ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
 		map.put("filterable", isFilterable(beanDescriptor, property, reportField));
@@ -223,7 +228,7 @@ public class ReportDesignControllerUtil {
 		return map;
 	}
 
-	public String getCompleteDisplayName(BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String property) {
+	public String getCompleteDisplayName(Locale locale, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String property) {
 		String[] parts = property.split("\\.");
 		if (parts.length > 1) {
 			StringBuilder buffer = new StringBuilder();
@@ -231,7 +236,8 @@ public class ReportDesignControllerUtil {
 			for (int i = 0; i < parts.length; i++) {
 				String part = parts[i];
 				currentPart += part;
-				String displayName = beanDescriptor.getPropertyDescriptor(currentPart).getDisplayName();
+				PropertyDescriptor pd2 = beanDescriptor.getPropertyDescriptor(currentPart);
+				String displayName = Util.beans.getDisplayName(locale, pd2);
 				currentPart += ".";
 				buffer.append(displayName);
 				if (i + 1 < parts.length) {
@@ -356,19 +362,19 @@ public class ReportDesignControllerUtil {
 		return value;
 	}
 
-	Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Class selectedType, Collection<String> properties) {
+	Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Collection<String> properties) {
 		Map<String, Map<String, Object>> propertyMetadata = new HashMap<String, Map<String, Object>>();
 		for (String property : properties) {
 			propertyMetadata.put(property, new HashMap<String, Object>());
 		}
-		return getPropertiesMetadata(report, selectedType, propertyMetadata);
+		return getPropertiesMetadata(report, locale, selectedType, propertyMetadata);
 	}
 
-	Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Class selectedType, Map<String, Map<String, Object>> properties) {
+	Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Map<String, Map<String, Object>> properties) {
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(selectedType);
 		Map<String, Map<String, Object>> propertyMetadata = new HashMap<String, Map<String, Object>>();
 		for (String property : properties.keySet()) {
-			HashMap<String, Object> metadataForProperty = getMetadataForProperty(report, beanDescriptor, property);
+			HashMap<String, Object> metadataForProperty = getMetadataForProperty(report, locale, beanDescriptor, property);
 			metadataForProperty.putAll(properties.get(property));
 			setJsonMetadata(metadataForProperty);
 			propertyMetadata.put(property, metadataForProperty);

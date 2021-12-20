@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,6 +40,10 @@ import org.springframework.beans.PropertyAccessorFactory;
 public class CollectionsUtil {
 
 	public String join(Collection<?> list, String separator) {
+		return join(list, separator, null);
+	}
+
+	public String join(Collection<?> list, String separator, Locale locale) {
 		String result = "";
 		if (list != null && !list.isEmpty()) {
 			Object first = list.iterator().next();
@@ -46,7 +51,7 @@ public class CollectionsUtil {
 				if (o == null) {
 					continue;
 				}
-				result += (o == first ? "" : separator) + Util.strings.toStringDescription(o);
+				result += (o == first ? "" : separator) + Util.strings.toStringDescription(o, locale);
 			}
 		}
 		return result;

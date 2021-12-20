@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +53,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	
 	protected boolean sumarizedData = false;
 	protected List<?> data;
+	protected Locale locale;
 
 	@SuppressWarnings("unchecked")
 	public void setData(List<?> items) {
@@ -65,6 +67,14 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			}
 		}
 		this.data = items;
+	}
+	
+	public Locale getLocale() {
+		return locale;
+	}
+	
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -124,6 +134,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		if(setupGroups){
 			setupGroups();
 		}
+		getDefinition().setParameter("LOCALE", locale);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -282,6 +293,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				reportTextField.getStyle().setAlignment(config.alignment);
 			}
 			reportTextField.setPattern(config.pattern);
+			reportTextField.setCallToString(config.callToString);
 		}
 		return reportTextField;
 	}
@@ -550,6 +562,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 
 	public static class FieldConfig {
+		
 		String label;
 		String originalExpression;
 		String reportExpression;
@@ -557,7 +570,9 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		ReportAlignment alignment;
 		String pattern;
 		boolean entity;
-		public FieldConfig(String label, String originalExpression, String reportExpression, String suffix, ReportAlignment alignment, String pattern, boolean isEntity) {
+		boolean callToString;
+		
+		public FieldConfig(String label, String originalExpression, String reportExpression, String suffix, ReportAlignment alignment, String pattern, boolean isEntity, boolean callToString) {
 			super();
 			this.label = label;
 			this.originalExpression = originalExpression;
@@ -566,6 +581,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			this.alignment = alignment;
 			this.pattern = pattern;
 			this.entity = isEntity;
+			this.callToString = callToString;
 		}
 		
 	}
@@ -588,17 +604,21 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	@SuppressWarnings("unchecked")
 	protected FieldConfig getConfigForBeanDescriptor(String fieldName, String fieldPreffix, BeanDescriptor beanDescriptor, Object object) {
+		
 		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(fieldName);
 		String label = propertyDescriptor.getDisplayName();
 		Type type = propertyDescriptor.getType();
-		Object propertyValue = null;
-		if(object != null){
-			propertyValue = BeanDescriptorFactory.forBean(object).getPropertyDescriptor(fieldName).getValue();
-		}
 		String pattern = null;
 		ReportAlignment alignment = null;
 		String suffix = null;
 		boolean isEntity = false;
+		boolean callToString = false; //Definido nas configurações dos projetos
+		
+		Object propertyValue = null;
+		if(object != null){
+			propertyValue = BeanDescriptorFactory.forBean(object).getPropertyDescriptor(fieldName).getValue();
+		}
+		
 		if(type instanceof Class<?>){
 			
 			Class<?> clazz = (Class<?>) type;
@@ -633,7 +653,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			
 			if (entityClass != null) {
 				
-				if(clazz.isArray()){
+				if(clazz.isArray() && propertyValue != null){
 					
 					Object[] propertyValueArray = (Object[]) propertyValue;
 					for (Object pv : propertyValueArray) {
@@ -649,15 +669,16 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 						
 					}
 					
-				}else{
+				}else if (clazz.getPackage() != null && !clazz.getPackage().getName().startsWith("java")) {
+					
+					BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBeanOrClass(propertyValue, clazz);
+					String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
+					if(descriptionPropertyName != null) {
+						suffix = "." + descriptionPropertyName;
+					}
 					
 					if(clazz.isAnnotationPresent(entityClass)) {
 						isEntity = true;
-						BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBeanOrClass(propertyValue, clazz);
-						String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
-						if(descriptionPropertyName != null) {
-							suffix = "." + descriptionPropertyName;
-						}
 						if(propertyValue != null){
 							Object value = entityBeanDescriptor.getPropertyDescriptor(descriptionPropertyName).getValue();
 							if(value == null){
@@ -671,11 +692,11 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			}
 			
 		}
-		return createFieldConfig(fieldName, fieldPreffix, label, pattern, alignment, suffix, isEntity, type);
+		return createFieldConfig(this, beanDescriptor, fieldName, fieldPreffix, label, pattern, alignment, suffix, isEntity, callToString);
 	}
 
-	protected FieldConfig createFieldConfig(String fieldName, String fieldPreffix, String label, String pattern, ReportAlignment alignment, String suffix, boolean isEntity, Type type) {
-		return getConfigurator().createFieldConfig(fieldName, fieldPreffix, label, pattern, alignment, suffix, isEntity, type);
+	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, String fieldName, String fieldPreffix, String label, String pattern, ReportAlignment alignment, String suffix, boolean isEntity, boolean callToString) {
+		return getConfigurator().createFieldConfig(builder, beanDescriptor, fieldName, fieldPreffix, label, pattern, alignment, suffix, isEntity, callToString);
 	}
 
 	protected void loadValue(Object propertyValue, String descriptionPropertyName) {

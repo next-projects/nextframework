@@ -40,6 +40,10 @@ public class MessageResolverFactory {
 			return locale;
 		}
 
+		public MessageSource getMessageSource() {
+			return messageSource;
+		}
+
 		@Override
 		public String message(String code) {
 			return messageSource.getMessage(code, null, locale);

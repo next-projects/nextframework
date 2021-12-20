@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.nextframework.bean.BeanDescriptor;
@@ -36,6 +37,7 @@ import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.exception.NextException;
 import org.nextframework.message.MessageResolver;
+import org.nextframework.message.MessageResolverFactory;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -183,12 +185,27 @@ public class BeanUtils {
 		return BeanDescriptorFactory.forClass(beanClass).getDisplayName();
 	}
 
+	public String getDisplayName(Locale locale, Class<?> beanClass) {
+		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
+		return getDisplayName(resolver, beanClass);
+	}
+
 	public String getDisplayName(MessageResolver resolver, Class<?> beanClass) {
 		return getDisplayName(resolver, BeanDescriptorFactory.forClass(beanClass), null);
 	}
 
+	public String getDisplayName(Locale locale, BeanDescriptor beanDescriptor) {
+		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
+		return getDisplayName(resolver, beanDescriptor);
+	}
+
 	public String getDisplayName(MessageResolver resolver, BeanDescriptor beanDescriptor) {
 		return getDisplayName(resolver, beanDescriptor, null);
+	}
+
+	public String getDisplayName(Locale locale, BeanDescriptor beanDescriptor, String optionalPrefix) {
+		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
+		return getDisplayName(resolver, beanDescriptor, optionalPrefix);
 	}
 
 	public String getDisplayName(MessageResolver resolver, BeanDescriptor beanDescriptor, String optionalPrefix) {
@@ -227,14 +244,29 @@ public class BeanUtils {
 		return Util.objects.newMessage(codes, null, beanDescriptor.getDisplayName());
 	}
 
+	public String getDisplayName(Locale locale, Class<?> beanClass, String property) {
+		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
+		return getDisplayName(resolver, beanClass, property);
+	}
+
 	public String getDisplayName(MessageResolver resolver, Class<?> beanClass, String property) {
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(beanClass);
 		PropertyDescriptor propertyDescriptorBegin = bd.getPropertyDescriptor(property);
 		return getDisplayName(resolver, propertyDescriptorBegin, null);
 	}
 
+	public String getDisplayName(Locale locale, PropertyDescriptor propertyDescriptor) {
+		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
+		return getDisplayName(resolver, propertyDescriptor);
+	}
+
 	public String getDisplayName(MessageResolver resolver, PropertyDescriptor propertyDescriptor) {
 		return getDisplayName(resolver, propertyDescriptor, null);
+	}
+
+	public String getDisplayName(Locale locale, PropertyDescriptor propertyDescriptor, String optionalPrefix) {
+		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
+		return getDisplayName(resolver, propertyDescriptor, optionalPrefix);
 	}
 
 	public String getDisplayName(MessageResolver resolver, PropertyDescriptor propertyDescriptor, String optionalPrefix) {

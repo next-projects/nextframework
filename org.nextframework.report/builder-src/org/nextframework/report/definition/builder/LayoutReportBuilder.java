@@ -223,6 +223,7 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		
 		ReportTextField fieldElement = new ReportTextField("param."+configForFilterField.reportExpression);
 		fieldElement.setPattern(configForFilterField.pattern);
+		fieldElement.setCallToString(configForFilterField.callToString);
 		fieldElement.getStyle().setAlignment(ReportAlignment.LEFT);
 		fieldElement.getStyle().setPaddingRight(4);
 		

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,6 +82,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	public ModelAndView selectProperties(ReportDesignModel model) throws SAXException, IOException {
+		
 		ReportElement reportElement = null;
 		if (model.getReportXml() != null) {
 			reportElement = new ReportReader(model.getReportXml()).getReportElement();
@@ -97,9 +99,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			setAttribute("preview", preview);
 		}
 
+		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), selectedGeneratedType, avaiableProperties);
+		
 		setAttribute("model", model);
 		setAttribute("avaiableProperties", avaiableProperties);
-		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, selectedGeneratedType, avaiableProperties);
 		setAttribute("propertyMetadata", propertiesMetadata);
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("reportTypeDisplayName", BeanDescriptorFactory.forClass(ClassUtils.getUserClass(model.getSelectedType())).getDisplayName());
@@ -134,16 +137,16 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	public ModelAndView designReport(ReportDesignModel model) throws SAXException, IOException {
+
 		ReportElement reportElement = null;
 		if (model.getReportXml() != null) {
 			reportElement = new ReportReader(model.getReportXml()).getReportElement();
 		}
-		setAttribute("emptyList", new ArrayList<Object>());
-		setAttribute("model", model);
-		Class<?> reportType = getReportType(model);
-		Set<String> avaiablePropertiesForClass = util.getAvailablePropertiesForClass(reportType, null, 3);
+
 		Set<String> properties = new HashSet<String>();
 		properties.addAll(model.getProperties());
+		Class<?> reportType = getReportType(model);
+		Set<String> avaiablePropertiesForClass = util.getAvailablePropertiesForClass(reportType, null, 3);
 		properties.addAll(avaiablePropertiesForClass);
 
 		List<CalculatedFieldElement> calculatedFields = new ArrayList<CalculatedFieldElement>();
@@ -153,11 +156,11 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				properties.remove(calculatedFieldElement.getName());
 			}
 		}
-		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, reportType, properties);
+		
+		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), reportType, properties);
 		//complete metadata with calculated fields
 		for (CalculatedFieldElement calculatedFieldElement : calculatedFields) {
 			Map<String, Object> map = util.getPropertiesMapForCalculatedField(calculatedFieldElement);
-
 			propertiesMetadata.put(calculatedFieldElement.getName(), map);
 			model.getProperties().add(calculatedFieldElement.getName());
 		}
@@ -172,11 +175,14 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			throw new RuntimeException("Não foi possível carregar os dados customizados", e);
 		}
 
+		setAttribute("emptyList", new ArrayList<Object>());
+		setAttribute("model", model);
 		setAttribute("reportTypeDisplayName", BeanDescriptorFactory.forClass(ClassUtils.getUserClass(reportType)).getDisplayName());
 		setAttribute("propertyMetadata", propertiesMetadata);
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("avaiableProperties", avaiablePropertiesForClass);
 		setAttribute("controllerPath", "/" + NextWeb.getApplicationContext().getApplicationName() + NextWeb.getRequestContext().getFirstRequestUrl());
+
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.design3");
 	}
 
@@ -237,12 +243,16 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	private void validateRequiredFields(ReportDesignModel model, ReportElement reportElement) {
+
 		if (model.getSelectedType() == null) { //Se tiver no modo edição de XML
 			return;
 		}
+
+		Locale locale = getLocale();
 		Class<?> selectedGeneratedType = getReportType(model);
 		Set<String> avaiableProperties = util.getAvailablePropertiesForClass(selectedGeneratedType, null, 1);
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(selectedGeneratedType);
+
 		String camposRequired = "";
 		boolean possuiFiltro = false;
 		for (String property : avaiableProperties) {
@@ -251,7 +261,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			boolean filterable = util.isFilterable(beanDescriptor, property, reportField);
 			if (filterable) {
 				if (reportField != null && reportField.requiredFilter()) {
-					String completeDisplayName = util.getCompleteDisplayName(beanDescriptor, propertyDescriptor, property);
+					String completeDisplayName = util.getCompleteDisplayName(locale, beanDescriptor, propertyDescriptor, property);
 					camposRequired += (camposRequired.length() == 0 ? "" : ", ") + completeDisplayName;
 					FilterElement filter = reportElement.getData().getFilterByName(property);
 					if (filter != null && filter.isFilterRequired()) {
@@ -261,9 +271,11 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				}
 			}
 		}
+
 		if (!possuiFiltro && camposRequired.length() > 0) {
 			throw new NextException("É necessário que pelo menos um dos filtros obrigatórios seja definido: " + camposRequired);
 		}
+
 	}
 
 	public ModelAndView showFilterViewForId(WebRequestContext request) {
@@ -304,8 +316,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		model.setReportTitle(reportElement.getReportTitle());
 
 		Class<?> mainType = reportElement.getData().getMainType();
+		Object propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), mainType, filterProperties);
+
 		setAttribute("filters", util.reorganizeFilters(mainType, filterProperties.keySet()));
-		setAttribute("filterMetadata", util.getPropertiesMetadata(reportElement, mainType, filterProperties));
+		setAttribute("filterMetadata", propertiesMetadata);
 		setAttribute("model", model);
 		setAttribute("reportElement", reportElement);
 		setAttribute("crudPath", getPathForReportCrud());
@@ -388,6 +402,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	public ModelAndView downloadPdf(WebRequestContext request, ReportDesignModel model) throws Exception {
 
 		ReportDesignTask task = new ReportDesignTask() {
+
 			@Override
 			public Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception {
 				progressMonitor.setTaskName("Gerando PDF");
@@ -405,6 +420,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			public ModelAndView showResults(WebRequestContext request, ReportDesignModel model, Object data) throws Exception {
 				return new ResourceModelAndView((Resource) data);
 			}
+
 		};
 
 		return executeTask(request, model, task);
@@ -415,6 +431,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	public ModelAndView showResults(final WebRequestContext request, final ReportDesignModel model) throws Exception {
 
 		ReportDesignTask task = new ReportDesignTask() {
+
 			@Override
 			public Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception {
 				progressMonitor.setTaskName("Gerando HTML");
@@ -430,6 +447,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				request.setAttribute("html", data);
 				return null;
 			}
+
 		};
 
 		return executeTask(request, model, task);
@@ -465,7 +483,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				@Override
 				public Object run(IProgressMonitor progressMonitor) throws Exception {
 					progressMonitor.beginTask("Inicializando", 120);
-					ReportDefinition definition = getReportDefinition(reportElement, filterMap, getMaxResults(), progressMonitor);
+					ReportDefinition definition = getReportDefinition(reportElement, filterMap, getLocale(), getMaxResults(), progressMonitor);
 					progressMonitor.setTaskName("Formatando");
 					Object converted = task.convertResults(definition, progressMonitor);
 					progressMonitor.worked(20);
@@ -485,7 +503,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	protected ReportDefinition getReportDefinition(ReportDesignModel model) throws Exception {
 		ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
 		Map<String, Object> filterMap = getFilterMap(model, reportElement, true);
-		ReportDefinition definition = getReportDefinition(reportElement, filterMap, getMaxResults(), null);
+		ReportDefinition definition = getReportDefinition(reportElement, filterMap, getLocale(), getMaxResults(), null);
 		return definition;
 	}
 
@@ -511,10 +529,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		return taskMap;
 	}
 
-	private ReportDefinition getReportDefinition(ReportElement reportElement, Map<String, Object> filterMap, int maxResults, IProgressMonitor progressMonitor) {
+	private ReportDefinition getReportDefinition(ReportElement reportElement, Map<String, Object> filterMap, Locale locale, int maxResults, IProgressMonitor progressMonitor) {
 
 		ReportGenerator rg = new ReportGenerator(reportElement, progressMonitor);
-		ReportSpec spec = rg.generateReportSpec(filterMap, maxResults);
+		ReportSpec spec = rg.generateReportSpec(filterMap, locale, maxResults);
 		if (debugMode()) {
 			debugSource(rg.getSourceCode(), spec.getSummary().getSourceCode());
 		}
@@ -538,6 +556,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 
 		return definition;
+	}
+
+	protected Locale getLocale() {
+		return NextWeb.getRequestContext().getLocale();
 	}
 
 	protected abstract int getMaxResults();

@@ -36,12 +36,14 @@ import java.util.Date;
 import java.util.Formattable;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.exception.NextException;
 import org.nextframework.message.MessageResolver;
+import org.nextframework.message.MessageResolverFactory;
 import org.springframework.context.MessageSourceResolvable;
 
 /**
@@ -183,6 +185,11 @@ public class StringUtils {
 	}
 
 	public String toStringDescription(Object value, MessageResolver resolver) {
+		return toStringDescription(value, null, null, resolver);
+	}
+
+	public String toStringDescription(Object value, Locale locale) {
+		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
 		return toStringDescription(value, null, null, resolver);
 	}
 

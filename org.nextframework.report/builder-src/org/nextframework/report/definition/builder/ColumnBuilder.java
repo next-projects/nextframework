@@ -222,6 +222,7 @@ public class ColumnBuilder {
 		}
 		fieldElement = baseReportBuilder.field(reportExpression, false);
 		fieldElement.setPattern(configForRowField.pattern);
+		fieldElement.setCallToString(configForRowField.callToString);
 		fieldElement.getStyle().setAlignment(configForRowField.alignment);
 		fieldElement.getStyle().setPaddingRight(4);
 		return fieldElement;

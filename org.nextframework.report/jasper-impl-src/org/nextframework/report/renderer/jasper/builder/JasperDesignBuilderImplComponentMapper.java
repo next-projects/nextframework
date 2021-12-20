@@ -5,6 +5,21 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.nextframework.chart.Chart;
+import org.nextframework.report.definition.ReportParent;
+import org.nextframework.report.definition.ReportSection;
+import org.nextframework.report.definition.ReportSectionType;
+import org.nextframework.report.definition.elements.ReportChart;
+import org.nextframework.report.definition.elements.ReportConstants;
+import org.nextframework.report.definition.elements.ReportImage;
+import org.nextframework.report.definition.elements.ReportItem;
+import org.nextframework.report.definition.elements.ReportLabel;
+import org.nextframework.report.definition.elements.ReportTextElement;
+import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.definition.elements.Subreport;
+import org.nextframework.report.definition.elements.style.ReportAlignment;
+import org.nextframework.report.definition.elements.style.ReportBasicStyle;
+
 import net.sf.jasperreports.engine.JRBoxContainer;
 import net.sf.jasperreports.engine.JRChild;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -26,21 +41,6 @@ import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.OnErrorTypeEnum;
 import net.sf.jasperreports.engine.type.PositionTypeEnum;
-
-import org.nextframework.chart.Chart;
-import org.nextframework.report.definition.ReportParent;
-import org.nextframework.report.definition.ReportSection;
-import org.nextframework.report.definition.ReportSectionType;
-import org.nextframework.report.definition.elements.ReportChart;
-import org.nextframework.report.definition.elements.ReportConstants;
-import org.nextframework.report.definition.elements.ReportImage;
-import org.nextframework.report.definition.elements.ReportItem;
-import org.nextframework.report.definition.elements.ReportLabel;
-import org.nextframework.report.definition.elements.ReportTextElement;
-import org.nextframework.report.definition.elements.ReportTextField;
-import org.nextframework.report.definition.elements.Subreport;
-import org.nextframework.report.definition.elements.style.ReportAlignment;
-import org.nextframework.report.definition.elements.style.ReportBasicStyle;
 
 public class JasperDesignBuilderImplComponentMapper {
 	
@@ -72,7 +72,7 @@ public class JasperDesignBuilderImplComponentMapper {
 			}
 			JRDesignElement returnElement = section.getType() != ReportSectionType.TITLE? (JRDesignElement) jasperDesignBuilderImpl.findTextFieldInList(reportTextField, jasperDesignBuilderImpl.compileItemsFromOriginalTemplate(section)).clone():  new JRDesignTextField();
 			JRDesignTextField jrDesignTextField = jasperDesignBuilderImpl.getInnerTextField(returnElement);
-			JRDesignExpression jrExpr = jasperDesignBuilderImpl.createFieldOrParameterExpression(expression, null);
+			JRDesignExpression jrExpr = jasperDesignBuilderImpl.createFieldOrParameterExpression(expression, null, reportTextField.isCallToString());
 			jrDesignTextField.setExpression(jrExpr);
 			if(reportTextField.getPatternExpression() != null){
 				String originalExpressionText = jrExpr.getText();
@@ -101,9 +101,9 @@ public class JasperDesignBuilderImplComponentMapper {
 			image.setEvaluationTime(EvaluationTimeEnum.AUTO);
 			image.setOnErrorType(OnErrorTypeEnum.BLANK);
 			if(reportImage.isRendered()){
-				image.setExpression(jasperDesignBuilderImpl.createFieldOrParameterExpression("param.image"+jasperDesignBuilderImpl.definition.getImageIndex(reportImage), InputStream.class));
+				image.setExpression(jasperDesignBuilderImpl.createFieldOrParameterExpression("param.image"+jasperDesignBuilderImpl.definition.getImageIndex(reportImage), InputStream.class, false));
 			} else {
-				JRDesignExpression fieldExpression = jasperDesignBuilderImpl.createFieldOrParameterExpression(reportImage.getReference(), InputStream.class);
+				JRDesignExpression fieldExpression = jasperDesignBuilderImpl.createFieldOrParameterExpression(reportImage.getReference(), InputStream.class, false);
 				image.setExpression(fieldExpression);
 				image.setUsingCache(false);
 			}
@@ -145,7 +145,7 @@ public class JasperDesignBuilderImplComponentMapper {
 				String chartRendererExpression = "new "+ChartDrawRenderer.class.getName()+"("+fieldReference+", "+computeWidth+", "+chartHeight+")";
 				JRDesignExpression fieldExpression = new JRDesignExpression(chartRendererExpression);
 				
-				jasperDesignBuilderImpl.createFieldOrParameterExpression(reportChart.getReference(), Chart.class);
+				jasperDesignBuilderImpl.createFieldOrParameterExpression(reportChart.getReference(), Chart.class, false);
 				image.setExpression(fieldExpression);
 				image.setUsingCache(false);
 			}
@@ -159,13 +159,13 @@ public class JasperDesignBuilderImplComponentMapper {
 				jrSubreport.setHeight(subreport.getHeight());
 			}
 			String subreportIndex = jasperDesignBuilderImpl.definition.getSubreportIndex(subreport);
-			jrSubreport.setExpression(jasperDesignBuilderImpl.createFieldOrParameterExpression("param.subreport"+subreportIndex, JasperReport.class));
-			jrSubreport.setParametersMapExpression(jasperDesignBuilderImpl.createExpression("param.subreport"+subreportIndex+"_params", Map.class));
+			jrSubreport.setExpression(jasperDesignBuilderImpl.createFieldOrParameterExpression("param.subreport"+subreportIndex, JasperReport.class, false));
+			jrSubreport.setParametersMapExpression(jasperDesignBuilderImpl.createExpression("param.subreport"+subreportIndex+"_params", Map.class, false));
 			if(subreport.getExpression() == null){
-				jrSubreport.setDataSourceExpression(jasperDesignBuilderImpl.createExpression("param.subreport"+subreportIndex+"_ds", JRDataSource.class));
+				jrSubreport.setDataSourceExpression(jasperDesignBuilderImpl.createExpression("param.subreport"+subreportIndex+"_ds", JRDataSource.class, false));
 			} else {
-				jasperDesignBuilderImpl.createFieldOrParameterExpression(subreport.getExpression(), List.class);
-				jrSubreport.setDataSourceExpression(jasperDesignBuilderImpl.createExpression("$P{subreport"+subreportIndex+"_ds_map}.get($F{"+subreport.getExpression()+"})", JRDataSource.class));
+				jasperDesignBuilderImpl.createFieldOrParameterExpression(subreport.getExpression(), List.class, false);
+				jrSubreport.setDataSourceExpression(jasperDesignBuilderImpl.createExpression("$P{subreport"+subreportIndex+"_ds_map}.get($F{"+subreport.getExpression()+"})", JRDataSource.class, false));
 			}
 			result = jrSubreport;
 		} else {

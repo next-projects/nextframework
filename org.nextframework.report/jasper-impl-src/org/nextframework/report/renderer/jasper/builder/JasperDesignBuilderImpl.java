@@ -197,7 +197,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		for (ReportGroup reportGroup : groups) {
 			String expression = reportGroup.getExpression();
 			JRDesignGroup jrGroup = new JRDesignGroup();
-			jrGroup.setExpression(createFieldOrParameterExpression(expression, null));
+			jrGroup.setExpression(createFieldOrParameterExpression(expression, null, true));
 			jrGroup.setName(createGroupName(expression));
 			
 			jrGroup.setMinHeightToStartNewPage((groups.size() - template.getGroups().length + 2)*16);
@@ -250,7 +250,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		return "group: "+expression;
 	}
 
-	JRDesignExpression createFieldOrParameterExpression(String expression, Class<?> class1) throws JRException {
+	JRDesignExpression createFieldOrParameterExpression(String expression, Class<?> class1, boolean callToString) throws JRException {
 		//verificar se existe um field para a expression
 		if(!expression.startsWith("param.") && !isLiteral(expression)){
 			JRDesignField field = getField(expression);
@@ -282,7 +282,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				template.addParameter(param);
 			}
 		}
-		JRDesignExpression expression2 = createExpression(expression, class1);
+		JRDesignExpression expression2 = createExpression(expression, class1, callToString);
 		return expression2;
 	}
 
@@ -290,11 +290,11 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		return expression.contains("\"") || expression.contains("\'");
 	}
 
-	@SuppressWarnings("deprecation") JRDesignExpression createExpression(String expression, Class<?> class1) {
+	@SuppressWarnings("deprecation") JRDesignExpression createExpression(String expression, Class<?> class1, boolean callToString) {
 		if(expression.startsWith("param.")){
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (expression.contains(LayoutReportBuilder.FILTER_PARAMETER)) {
-				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($P{"+expression.substring(6)+"})");
+				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($P{"+expression.substring(6)+"}, (java.util.Locale) $P{LOCALE})");
 			}else{
 				expression2.setText("$P{"+expression.substring(6)+"}");
 			}
@@ -326,7 +326,11 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 			return expression2;
 		} else {
 			JRDesignExpression expression2 = new JRDesignExpression();
-			expression2.setText("$F{"+expression+"}");
+			if (callToString) {
+				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($F{"+expression+"}, (java.util.Locale) $P{LOCALE})");
+			}else{
+				expression2.setText("$F{"+expression+"}");
+			}
 			if(class1 != null){
 				expression2.setValueClass(class1);
 				expression2.setValueClassName(class1.getName());
@@ -870,8 +874,9 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 					JRDesignStaticText staticText = getInnerStaticText(findStaticTextInList((ReportLabel) child, list));
 					staticText.setText(((ReportLabel) child).getText());
 				} else if(child instanceof ReportTextField) {
-					JRDesignTextField textField = getInnerTextField(findTextFieldInList((ReportTextField) child, list));
-					textField.setExpression(createFieldOrParameterExpression(((ReportTextField) child).getExpression(), null));
+					ReportTextField tf = (ReportTextField) child;
+					JRDesignTextField textField = getInnerTextField(findTextFieldInList(tf, list));
+					textField.setExpression(createFieldOrParameterExpression(tf.getExpression(), null, tf.isCallToString()));
 				} else {
 					throw new RuntimeException("element not supported in blocks "+child);
 				}
@@ -1215,7 +1220,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 	private void replaceTextElement(List<JRChild> allChildren, String element, String value) {
 		JRDesignTextElement title = findTextElement(allChildren, element);
 		if(title instanceof JRDesignTextField){
-			((JRDesignTextField) title).setExpression(createExpression("\""+value+"\"", null));
+			((JRDesignTextField) title).setExpression(createExpression("\""+value+"\"", null, false));
 		}
 		if(title instanceof JRDesignStaticText){
 			((JRDesignStaticText) title).setText(value);

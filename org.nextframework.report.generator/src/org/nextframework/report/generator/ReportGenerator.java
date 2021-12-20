@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.Entity;
@@ -81,7 +82,7 @@ public class ReportGenerator {
 	}
 
 	@SuppressWarnings("unchecked")
-	public ReportSpec generateReportSpec(Map<String, Object> filterMap, int limitResults) {
+	public ReportSpec generateReportSpec(Map<String, Object> filterMap, Locale locale, int limitResults) {
 
 		ReportSpec spec = new ReportSpec();
 		IReportBuilder reportBuilder = createReportBuilder();
@@ -104,6 +105,7 @@ public class ReportGenerator {
 		DynamicSummary summary = createSummary();
 		LayoutReportBuilder layoutBuilder = (LayoutReportBuilder) reportBuilder;
 		layoutBuilder.setFilter(createFilter(filterMap, layoutBuilder));
+		layoutBuilder.setLocale(locale);
 		SummaryResult summaryResult = summary.getSummaryResult(result);
 		for (final GroupElement groupElement : groups) {
 			if (isDateType(getTypeForProperty(groupElement.getName()))) {

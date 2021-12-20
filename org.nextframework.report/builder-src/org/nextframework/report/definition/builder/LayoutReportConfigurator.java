@@ -2,7 +2,6 @@ package org.nextframework.report.definition.builder;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -138,8 +137,8 @@ public class LayoutReportConfigurator {
 		}
 	}
 
-	public FieldConfig createFieldConfig(String fieldName, String fieldPreffix, String label, String pattern, ReportAlignment alignment, String suffix, boolean isEntity, Type type) {
-		return new FieldConfig(label, fieldName, buildName(fieldPreffix, fieldName, suffix), suffix, alignment, pattern, isEntity);
+	public FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, String fieldName, String fieldPreffix, String label, String pattern, ReportAlignment alignment, String suffix, boolean isEntity, boolean callToString) {
+		return new FieldConfig(label, fieldName, buildName(fieldPreffix, fieldName, suffix), suffix, alignment, pattern, isEntity, callToString);
 	}
 	
 	private String buildName(String fieldPreffix, String fieldName, String suffix) {
