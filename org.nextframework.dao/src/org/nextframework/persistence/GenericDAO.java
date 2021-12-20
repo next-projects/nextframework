@@ -442,10 +442,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 			return new ArrayList<BEAN>();
 		}
 
-		Class<? extends Object> propertyClass = o.getClass();
-		while (propertyClass.getName().contains("$$")) {
-			propertyClass = propertyClass.getSuperclass();
-		}
+		Class<?> propertyClass = Util.objects.getRealClass(o.getClass());
 
 		String queryString = null;
 		if ((extraFields != null && extraFields.length > 0) ||

@@ -95,7 +95,7 @@ public class OutputTag extends BaseTag {
 				body = body.replace("<", "&lt;").replace("\n", "<BR>");
 			}
 			if (replaceMessagesCodes) {
-				body = Util.strings.replaceString(NextWeb.getRequestContext().getMessageResolver(), body);
+				body = Util.strings.replaceString(body, NextWeb.getRequestContext().getLocale());
 			}
 		}
 		return body;
@@ -112,7 +112,7 @@ public class OutputTag extends BaseTag {
 		if (value instanceof String || value instanceof Number ||
 				value instanceof Date || value instanceof java.sql.Date ||
 				value instanceof Timestamp || value instanceof Calendar) {
-			return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getMessageResolver());
+			return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getLocale());
 		}
 
 		//Special types

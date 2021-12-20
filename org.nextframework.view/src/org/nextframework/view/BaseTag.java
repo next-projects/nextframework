@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -53,9 +54,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.TagNotFoundException;
-import org.nextframework.message.MessageResolver;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
 import org.springframework.context.NoSuchMessageException;
@@ -247,8 +248,8 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		String message = null;
 
 		try {
-			MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
-			message = messageResolver.message(Util.objects.newMessage(codes, null, defaultValue));
+			Locale locale = NextWeb.getRequestContext().getLocale();
+			message = Next.getMessageSource().getMessage(Util.objects.newMessage(codes, null, defaultValue), locale);
 		} catch (NoSuchMessageException e) {
 			//Se não foi encontrado, não dispara o erro, pois, nas tags, os atributos são opcionais
 		}
@@ -644,20 +645,13 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		} else {
 			id = TagUtils.hasId(value1.getClass()) && id;
 		}
-		Class<? extends Object> class1 = value1.getClass();
-		if (class1.getName().contains("$$")) {
-			class1 = class1.getSuperclass();
-		}
-
+		Class<?> class1 = Util.objects.getRealClass(value1.getClass());
 		if (value2 == null) {
 			return false;
 		} else {
 			id = TagUtils.hasId(value2.getClass()) && id;
 		}
-		Class<? extends Object> class2 = value2.getClass();
-		if (class2.getName().contains("$$")) {
-			class2 = class2.getSuperclass();
-		}
+		Class<?> class2 = Util.objects.getRealClass(value2.getClass());
 		if (id) {
 			BeanDescriptor bd1 = BeanDescriptorFactory.forBean(value1);
 			BeanDescriptor bd2 = BeanDescriptorFactory.forBean(value2);

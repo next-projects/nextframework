@@ -65,7 +65,7 @@ public class ObjectUtils {
 	public boolean isNotEmpty(Object type) {
 		return !isEmpty(type);
 	}
-	
+
 	/**
 	 * Dado um array de classes, retorna um array apenas com as classes concretas
 	 * @param allClassesOfType
@@ -175,6 +175,14 @@ public class ObjectUtils {
 		} catch (InvocationTargetException e) {
 			throw new RuntimeException("Método " + methodName + " lançou exeção " + e.getTargetException().getClass().getSimpleName(), e.getTargetException());
 		}
+	}
+
+	public Class<?> getRealClass(Class<?> clazz) {
+		Class<?> clazz2 = clazz;
+		while (clazz2.getName().contains("$$")) {
+			clazz2 = clazz2.getSuperclass();
+		}
+		return clazz2;
 	}
 
 	public MessageSourceResolvable newMessage(String code) {

@@ -26,15 +26,15 @@ package org.nextframework.view;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Locale;
 
 import javax.persistence.Id;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.el.ELException;
 
 import org.nextframework.bean.BeanDescriptorFactory;
-import org.nextframework.bean.annotation.DescriptionProperty;
+import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
-import org.nextframework.message.MessageResolver;
 import org.nextframework.persistence.HibernateUtils;
 import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
@@ -98,12 +98,10 @@ public class NextFunctions {
 
 	public static String descriptionToString(Object value) {
 		try {
-			if (value == null)
+			if (value == null) {
 				return "";
-			if (hasDescriptionProperty(value.getClass())) {
-				return Util.strings.toStringDescription(value, NextWeb.getRequestContext().getMessageResolver());
 			}
-			return value.toString();
+			return Util.strings.toStringDescription(value, NextWeb.getRequestContext().getLocale());
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao ler a descrição do objeto. Talvez o problema esteja na propriedade com @DescriptionProperty.", e);
 		}
@@ -152,17 +150,6 @@ public class NextFunctions {
 		}
 	}
 
-	private static boolean hasDescriptionProperty(Class<? extends Object> class1) {
-		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-		Method[] methods = reflectionCache.getMethods(class1);
-		for (Method method : methods) {
-			if (reflectionCache.isAnnotationPresent(method, DescriptionProperty.class)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private static boolean hasId(Class<? extends Object> class1) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		Method[] methods = reflectionCache.getMethods(class1);
@@ -207,7 +194,8 @@ public class NextFunctions {
 
 	public static String messageArgs(String code, Object arguments, String defaultValue) {
 		Object[] argumentsArray = resolveArguments(arguments);
-		return NextWeb.getRequestContext().getMessageResolver().message(code, argumentsArray, defaultValue);
+		Locale locale = NextWeb.getRequestContext().getLocale();
+		return Next.getMessageSource().getMessage(code, argumentsArray, defaultValue, locale);
 	}
 
 	public static String messageView(String field) {
@@ -219,15 +207,16 @@ public class NextFunctions {
 		codes[0] = WebUtils.getMessageCodeViewPrefix() + "." + field;
 		codes[1] = field;
 		Object[] argumentsArray = resolveArguments(arguments);
-		MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
-		return messageResolver.message(Util.objects.newMessage(codes, argumentsArray, defaultValue));
+		Locale locale = NextWeb.getRequestContext().getLocale();
+		return Next.getMessageSource().getMessage(Util.objects.newMessage(codes, argumentsArray, defaultValue), locale);
 	}
 
 	public static String messageResolvable(MessageSourceResolvable resolvable) {
 		if (resolvable == null) {
 			return null;
 		}
-		return NextWeb.getRequestContext().getMessageResolver().message(resolvable);
+		Locale locale = NextWeb.getRequestContext().getLocale();
+		return Next.getMessageSource().getMessage(resolvable, locale);
 	}
 
 	private static Object[] resolveArguments(Object arguments) {
@@ -255,7 +244,8 @@ public class NextFunctions {
 	}
 
 	public static String messageReplace(String original) {
-		return Util.strings.replaceString(NextWeb.getRequestContext().getMessageResolver(), original);
+		Locale locale = NextWeb.getRequestContext().getLocale();
+		return Util.strings.replaceString(original, locale);
 	}
 
 }

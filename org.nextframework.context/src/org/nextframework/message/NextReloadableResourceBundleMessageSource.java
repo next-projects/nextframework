@@ -120,9 +120,8 @@ public class NextReloadableResourceBundleMessageSource extends ReloadableResourc
 			return args;
 		}
 		Object[] stringArgs = new Object[args.length];
-		MessageResolver resolver = MessageResolverFactory.get(locale);
 		for (int i = 0; i < args.length; i++) {
-			stringArgs[i] = Util.strings.toStringDescription(args[i], "dd/MM/yyyy HH:mm:ss", null, resolver);
+			stringArgs[i] = Util.strings.toStringDescription(args[i], "dd/MM/yyyy HH:mm:ss", null, locale);
 		}
 		return stringArgs;
 	}

@@ -41,9 +41,8 @@ import java.util.Map;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
-import org.nextframework.message.MessageResolver;
-import org.nextframework.message.MessageResolverFactory;
 import org.springframework.context.MessageSourceResolvable;
 
 /**
@@ -144,10 +143,7 @@ public class StringUtils {
 		}
 
 		StringBuilder stringBuilder = new StringBuilder();
-		Class clazz = o.getClass();
-		while (clazz.getName().contains("$$")) {
-			clazz = clazz.getSuperclass();
-		}
+		Class clazz = Util.objects.getRealClass(o.getClass());
 		stringBuilder.append(clazz.getName());
 		stringBuilder.append("[");
 
@@ -184,17 +180,12 @@ public class StringUtils {
 		return toStringDescription(value, formatDate, formatNumber, null);
 	}
 
-	public String toStringDescription(Object value, MessageResolver resolver) {
-		return toStringDescription(value, null, null, resolver);
-	}
-
 	public String toStringDescription(Object value, Locale locale) {
-		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
-		return toStringDescription(value, null, null, resolver);
+		return toStringDescription(value, null, null, locale);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public String toStringDescription(Object value, String formatDate, String formatNumber, MessageResolver resolver) {
+	public String toStringDescription(Object value, String formatDate, String formatNumber, Locale locale) {
 
 		if (value == null) {
 			return "";
@@ -238,18 +229,15 @@ public class StringUtils {
 			((Formattable) value).formatTo(fmt, 0, -1, -1);
 			return fmt.out().toString();
 		} else if (value instanceof MessageSourceResolvable) {
-			if (resolver == null) {
-				throw new NextException("Nenhum " + MessageResolver.class.getSimpleName() + " foi informado!");
-			}
-			return resolver.message((MessageSourceResolvable) value);
+			return Next.getMessageSource().getMessage((MessageSourceResolvable) value, locale);
 		} else if (value instanceof Throwable) {
-			return Util.exceptions.getExceptionDescription(resolver, (Throwable) value);
+			return Util.exceptions.getExceptionDescription((Throwable) value, locale);
 		} else if (value.getClass().isArray()) {
 			Object[] array = (Object[]) value;
 			String description = "";
 			if (array.length > 0) {
 				for (Object o : array) {
-					description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber, resolver);
+					description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber, locale);
 				}
 			}
 			return description;
@@ -271,7 +259,7 @@ public class StringUtils {
 			value = value.toString();
 		}
 
-		return toStringDescription(value, formatDate, formatNumber, resolver);
+		return toStringDescription(value, formatDate, formatNumber, locale);
 	}
 
 	public String removeAccents(String string) {
@@ -384,7 +372,7 @@ public class StringUtils {
 	public static final String REPLACE_OPEN = "{";
 	public static final String REPLACE_CLOSE = "}";
 
-	public String replaceString(MessageResolver resolver, String original) {
+	public String replaceString(String original, Locale locale) {
 		if (Util.strings.isEmpty(original)) {
 			return original;
 		}
@@ -397,7 +385,7 @@ public class StringUtils {
 				indexEnd = nova.indexOf(REPLACE_CLOSE, indexBegin + REPLACE_OPEN.length());
 				if (indexEnd > -1) {
 					String code = nova.substring(indexBegin + REPLACE_OPEN.length(), indexEnd);
-					String message = resolver.message(code);
+					String message = Next.getMessageSource().getMessage(code, null, locale);
 					nova = nova.substring(0, indexBegin) + message + nova.substring(indexEnd + REPLACE_CLOSE.length(), nova.length());
 				}
 			}

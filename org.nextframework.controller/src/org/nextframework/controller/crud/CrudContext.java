@@ -28,7 +28,7 @@ public class CrudContext {
 	public CrudContext(Class<?> beanClass) {
 		this.beanClass = beanClass;
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(beanClass);
-		this.displayName = Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), bd);
+		this.displayName = Util.beans.getDisplayName(bd, NextWeb.getRequestContext().getLocale());
 		this.beanName = Util.strings.uncaptalize(beanClass.getSimpleName());
 		this.idPropertyName = bd.getIdPropertyName();
 	}

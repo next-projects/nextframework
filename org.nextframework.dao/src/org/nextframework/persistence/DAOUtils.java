@@ -25,10 +25,7 @@ public class DAOUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <BEAN> GenericDAO<BEAN> getDAOForClass(Class<BEAN> classType) {
-		Class<? extends Object> class1 = classType;
-		if(class1.getName().contains("$$")){ // generated class, get original
-			class1 = class1.getSuperclass();
-		}
+		Class<? extends Object> class1 = Util.objects.getRealClass(classType);
 		GenericDAO<BEAN> dao = (GenericDAO<BEAN>) daosMap.get(class1);
 		if (dao == null) {
 			dao = (GenericDAO<BEAN>) Next.getObject(Util.strings.uncaptalize(class1.getSimpleName())+"DAO");

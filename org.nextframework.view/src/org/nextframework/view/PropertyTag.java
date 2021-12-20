@@ -153,9 +153,9 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	public static String getLabel(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor) {
 		String viewCode = WebUtils.getMessageCodeViewPrefix();
 		if (propertyDescriptor != null) {
-			return Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), propertyDescriptor, viewCode);
+			return Util.beans.getDisplayName(propertyDescriptor, viewCode, NextWeb.getRequestContext().getLocale());
 		}
-		return Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), beanDescriptor, viewCode);
+		return Util.beans.getDisplayName(beanDescriptor, viewCode, NextWeb.getRequestContext().getLocale());
 	}
 
 	public void setTypeAndValue(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, FieldError error) {

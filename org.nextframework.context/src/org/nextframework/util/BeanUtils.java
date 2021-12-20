@@ -35,9 +35,8 @@ import java.util.Set;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
-import org.nextframework.message.MessageResolver;
-import org.nextframework.message.MessageResolverFactory;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -182,35 +181,20 @@ public class BeanUtils {
 	}
 
 	public String getDisplayName(Class<?> beanClass) {
-		return BeanDescriptorFactory.forClass(beanClass).getDisplayName();
+		return getDisplayName(BeanDescriptorFactory.forClass(beanClass), null, null);
 	}
 
-	public String getDisplayName(Locale locale, Class<?> beanClass) {
-		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
-		return getDisplayName(resolver, beanClass);
+	public String getDisplayName(Class<?> beanClass, Locale locale) {
+		return getDisplayName(BeanDescriptorFactory.forClass(beanClass), null, locale);
 	}
 
-	public String getDisplayName(MessageResolver resolver, Class<?> beanClass) {
-		return getDisplayName(resolver, BeanDescriptorFactory.forClass(beanClass), null);
+	public String getDisplayName(BeanDescriptor beanDescriptor, Locale locale) {
+		return getDisplayName(beanDescriptor, null, locale);
 	}
 
-	public String getDisplayName(Locale locale, BeanDescriptor beanDescriptor) {
-		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
-		return getDisplayName(resolver, beanDescriptor);
-	}
-
-	public String getDisplayName(MessageResolver resolver, BeanDescriptor beanDescriptor) {
-		return getDisplayName(resolver, beanDescriptor, null);
-	}
-
-	public String getDisplayName(Locale locale, BeanDescriptor beanDescriptor, String optionalPrefix) {
-		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
-		return getDisplayName(resolver, beanDescriptor, optionalPrefix);
-	}
-
-	public String getDisplayName(MessageResolver resolver, BeanDescriptor beanDescriptor, String optionalPrefix) {
+	public String getDisplayName(BeanDescriptor beanDescriptor, String optionalPrefix, Locale locale) {
 		MessageSourceResolvable resolvable = getDisplayNameResolvable(beanDescriptor, optionalPrefix);
-		return resolver.message(resolvable);
+		return Next.getMessageSource().getMessage(resolvable, locale);
 	}
 
 	public MessageSourceResolvable getDisplayNameResolvable(Class<?> beanClass) {
@@ -223,7 +207,7 @@ public class BeanUtils {
 
 	public MessageSourceResolvable getDisplayNameResolvable(BeanDescriptor beanDescriptor, String optionalPrefix) {
 
-		Class<?> beanClass = beanDescriptor.getTargetClass();
+		Class<?> beanClass = Util.objects.getRealClass(beanDescriptor.getTargetClass());
 
 		boolean usePrefix = optionalPrefix != null && optionalPrefix.length() > 0;
 		String[] codes = new String[usePrefix ? 4 : 2];
@@ -244,34 +228,19 @@ public class BeanUtils {
 		return Util.objects.newMessage(codes, null, beanDescriptor.getDisplayName());
 	}
 
-	public String getDisplayName(Locale locale, Class<?> beanClass, String property) {
-		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
-		return getDisplayName(resolver, beanClass, property);
-	}
-
-	public String getDisplayName(MessageResolver resolver, Class<?> beanClass, String property) {
+	public String getDisplayName(Class<?> beanClass, String property, Locale locale) {
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(beanClass);
 		PropertyDescriptor propertyDescriptorBegin = bd.getPropertyDescriptor(property);
-		return getDisplayName(resolver, propertyDescriptorBegin, null);
+		return getDisplayName(propertyDescriptorBegin, null, locale);
 	}
 
-	public String getDisplayName(Locale locale, PropertyDescriptor propertyDescriptor) {
-		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
-		return getDisplayName(resolver, propertyDescriptor);
+	public String getDisplayName(PropertyDescriptor propertyDescriptor, Locale locale) {
+		return getDisplayName(propertyDescriptor, null, locale);
 	}
 
-	public String getDisplayName(MessageResolver resolver, PropertyDescriptor propertyDescriptor) {
-		return getDisplayName(resolver, propertyDescriptor, null);
-	}
-
-	public String getDisplayName(Locale locale, PropertyDescriptor propertyDescriptor, String optionalPrefix) {
-		MessageResolver resolver = locale != null ? MessageResolverFactory.get(locale) : null;
-		return getDisplayName(resolver, propertyDescriptor, optionalPrefix);
-	}
-
-	public String getDisplayName(MessageResolver resolver, PropertyDescriptor propertyDescriptor, String optionalPrefix) {
+	public String getDisplayName(PropertyDescriptor propertyDescriptor, String optionalPrefix, Locale locale) {
 		MessageSourceResolvable resolvable = getDisplayNameResolvable(propertyDescriptor, optionalPrefix);
-		return resolver.message(resolvable);
+		return Next.getMessageSource().getMessage(resolvable, locale);
 	}
 
 	public MessageSourceResolvable getDisplayNameResolvable(Class<?> beanClass, String property) {
@@ -286,7 +255,7 @@ public class BeanUtils {
 
 	public MessageSourceResolvable getDisplayNameResolvable(PropertyDescriptor propertyDescriptor, String optionalPrefix) {
 
-		Class<?> ownerClass = propertyDescriptor.getOwnerClass();
+		Class<?> ownerClass = Util.objects.getRealClass(propertyDescriptor.getOwnerClass());
 		String prop = propertyDescriptor.getName();
 
 		boolean usePrefix = optionalPrefix != null && optionalPrefix.length() > 0;
@@ -309,6 +278,8 @@ public class BeanUtils {
 	}
 
 	public MessageSourceResolvable getCustomFieldResolvable(Class<?> beanClass, String field) {
+
+		beanClass = Util.objects.getRealClass(beanClass);
 
 		String[] codes = new String[2];
 		//Fully-qualified class name and property (Ex: com.app.pack.ClassName.name)

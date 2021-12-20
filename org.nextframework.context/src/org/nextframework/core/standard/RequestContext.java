@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.nextframework.message.MessageResolver;
-
 /**
  * @author rogelgarcia
  * @since 21/01/2006
@@ -41,8 +39,6 @@ public interface RequestContext {
 	TimeZone getTimeZone();
 
 	Locale getLocale();
-
-	MessageResolver getMessageResolver();
 
 	String getParameter(String parameter);
 

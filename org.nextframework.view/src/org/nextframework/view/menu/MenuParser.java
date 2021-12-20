@@ -25,12 +25,12 @@ package org.nextframework.view.menu;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.nextframework.message.MessageResolver;
 import org.nextframework.util.StringUtils;
 import org.nextframework.util.Util;
 import org.w3c.dom.Document;
@@ -45,10 +45,10 @@ public class MenuParser {
 
 	protected static final String DTD_LOCATION = "org/nextframework/view/menu/menu.dtd";
 	protected ClassLoader classLoader = this.getClass().getClassLoader();
-	protected MessageResolver messageResolver;
+	protected Locale locale;
 
-	public MenuParser(MessageResolver messageResolver) {
-		this.messageResolver = messageResolver;
+	public MenuParser(Locale locale) {
+		this.locale = locale;
 	}
 
 	public ClassLoader getClassLoader() {
@@ -98,13 +98,13 @@ public class MenuParser {
 		String target = map.getNamedItem("target").getNodeValue();
 
 		if (icon.contains(StringUtils.REPLACE_OPEN)) {
-			icon = Util.strings.replaceString(messageResolver, icon);
+			icon = Util.strings.replaceString(icon, locale);
 		}
 		if (title.contains(StringUtils.REPLACE_OPEN)) {
-			title = Util.strings.replaceString(messageResolver, title);
+			title = Util.strings.replaceString(title, locale);
 		}
 		if (description.contains(StringUtils.REPLACE_OPEN)) {
-			description = Util.strings.replaceString(messageResolver, description);
+			description = Util.strings.replaceString(description, locale);
 		}
 
 		Menu menu = new Menu();

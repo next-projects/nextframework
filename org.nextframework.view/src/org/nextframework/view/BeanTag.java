@@ -78,7 +78,7 @@ public class BeanTag extends BaseTag implements LogicalTag {
 			throw new NextException(msg + e.getMessage(), e);
 		}
 
-		pushAttribute(varLabel, Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), beanDescriptor));
+		pushAttribute(varLabel, Util.beans.getDisplayName(beanDescriptor, NextWeb.getRequestContext().getLocale()));
 		doBody();
 		popAttribute(varLabel);
 

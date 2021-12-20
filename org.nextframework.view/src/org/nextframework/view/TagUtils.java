@@ -56,10 +56,7 @@ public class TagUtils {
 	}
 
 	public static boolean hasId(Class<? extends Object> class1) {
-		if (class1.getName().contains("$$")) {
-			//a classe enhanceada pelo Hibernate dá pau ao fazer class.getMethods .. temos que pegar a classe superior nao enhanceada
-			class1 = class1.getSuperclass();
-		}
+		class1 = Util.objects.getRealClass(class1);
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		while (class1 != null && !class1.equals(Object.class)) {
 			Method[] methods = reflectionCache.getMethods(class1);
@@ -74,10 +71,7 @@ public class TagUtils {
 	}
 
 	public static boolean hasDescriptionProperty(Class<? extends Object> class1) {
-		if (class1.getName().contains("$$")) {
-			//a classe enhanceada pelo Hibernate dá pau ao fazer class.getMethods .. temos que pegar a classe superior nao enhanceada
-			class1 = class1.getSuperclass();
-		}
+		class1 = Util.objects.getRealClass(class1);
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		while (!class1.equals(Object.class)) {
 			Method[] methods = reflectionCache.getMethods(class1);
@@ -134,7 +128,7 @@ public class TagUtils {
 
 			if (Util.strings.isNotEmpty(pattern)) {
 				if (value instanceof Number || value instanceof Date || value instanceof Calendar) {
-					return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getMessageResolver());
+					return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getLocale());
 				}
 			}
 
@@ -206,7 +200,7 @@ public class TagUtils {
 				return propertyEditor.getAsText();
 			}
 
-			return Util.strings.toStringDescription(value, formatDate, formatNumber, NextWeb.getRequestContext().getMessageResolver());
+			return Util.strings.toStringDescription(value, formatDate, formatNumber, NextWeb.getRequestContext().getLocale());
 
 		} catch (LazyInitializationException e) {
 

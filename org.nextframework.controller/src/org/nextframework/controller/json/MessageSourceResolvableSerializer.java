@@ -1,8 +1,9 @@
 package org.nextframework.controller.json;
 
 import java.io.IOException;
+import java.util.Locale;
 
-import org.nextframework.message.MessageResolver;
+import org.nextframework.core.standard.Next;
 import org.springframework.context.MessageSourceResolvable;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -12,10 +13,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 class MessageSourceResolvableSerializer extends JsonSerializer<MessageSourceResolvable> {
 
-	private MessageResolver messageResolver;
+	private Locale locale;
 
-	public MessageSourceResolvableSerializer(MessageResolver messageResolver) {
-		this.messageResolver = messageResolver;
+	public MessageSourceResolvableSerializer(Locale locale) {
+		this.locale = locale;
 	}
 
 	@Override
@@ -23,7 +24,7 @@ class MessageSourceResolvableSerializer extends JsonSerializer<MessageSourceReso
 		if (value == null) {
 			jgen.writeNull();
 		} else {
-			String valueStr = messageResolver.message(value);
+			String valueStr = Next.getMessageSource().getMessage(value, locale);
 			jgen.writeString(valueStr);
 		}
 	}

@@ -94,7 +94,7 @@ public class DetailTag extends TemplateTag {
 			throw new NextException("A propriedade " + fullNestedName + " de " + beanDescriptor.getTargetClass().getName() + " deveria ser uma lista genérica");
 		}
 
-		detailDysplayName = Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), propertyDescriptor);
+		detailDysplayName = Util.beans.getDisplayName(propertyDescriptor, NextWeb.getRequestContext().getLocale());
 		itens = propertyDescriptor.getValue();
 		if (Util.strings.isEmpty(detailVar)) {
 			detailVar = Util.strings.uncaptalize(detailClass.getSimpleName());

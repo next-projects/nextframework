@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.nextframework.message.MessageResolver;
-
 /**
  * @author rogelgarcia
  * @since 13/07/2006
@@ -54,11 +52,6 @@ public class DefaultRequestContext implements RequestContext {
 
 	@Override
 	public Locale getLocale() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public MessageResolver getMessageResolver() {
 		throw new UnsupportedOperationException();
 	}
 

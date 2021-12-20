@@ -24,27 +24,27 @@
 package org.nextframework.util;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
+import org.nextframework.core.standard.Next;
 import org.nextframework.exception.ApplicationException;
 import org.nextframework.exception.BusinessException;
-import org.nextframework.exception.NextException;
-import org.nextframework.message.MessageResolver;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 
 public class ExceptionUtils {
 
-	public ApplicationException getApplicationException(MessageResolver resolver, BusinessException exception) {
-		String txt = getExceptionDescription(resolver, exception, false);
+	public ApplicationException getApplicationException(BusinessException exception, Locale locale) {
+		String txt = getExceptionDescription(exception, false, locale);
 		throw new ApplicationException(txt, exception.getCause());
 	}
 
-	public String getExceptionDescription(MessageResolver resolver, Throwable exception) {
-		return getExceptionDescription(resolver, exception, true);
+	public String getExceptionDescription(Throwable exception, Locale locale) {
+		return getExceptionDescription(exception, true, locale);
 	}
 
-	public String getExceptionDescription(MessageResolver resolver, Throwable exception, boolean includeCauses) {
+	public String getExceptionDescription(Throwable exception, boolean includeCauses, Locale locale) {
 
 		String allDesc = "";
 
@@ -53,17 +53,15 @@ public class ExceptionUtils {
 		while (cause != null && !allCauses.contains(cause)) {
 
 			String exTipo = null;
-			if (resolver != null) {
-				Class<?> clazz = cause.getClass();
-				do {
-					try {
-						exTipo = resolver.message(clazz.getName());
-					} catch (NoSuchMessageException e) {
-						//Não encontrado...
-					}
-					clazz = clazz.getSuperclass();
-				} while (exTipo == null && clazz != Object.class);
-			}
+			Class<?> clazz = cause.getClass();
+			do {
+				try {
+					exTipo = Next.getMessageSource().getMessage(clazz.getName(), null, locale);
+				} catch (NoSuchMessageException e) {
+					//Não encontrado...
+				}
+				clazz = clazz.getSuperclass();
+			} while (exTipo == null && clazz != Object.class);
 			if (exTipo == null && !(cause instanceof RuntimeException) && !(cause instanceof ApplicationException) && !(cause instanceof BusinessException)) {
 				exTipo = cause.getClass().getSimpleName();
 			}
@@ -71,10 +69,7 @@ public class ExceptionUtils {
 			String exMsg = null;
 
 			if (cause instanceof MessageSourceResolvable) {
-				if (resolver == null) {
-					throw new NextException("Nenhum " + MessageResolver.class.getSimpleName() + " foi informado!");
-				}
-				exMsg = resolver.message((MessageSourceResolvable) cause);
+				exMsg = Next.getMessageSource().getMessage((MessageSourceResolvable) cause, locale);
 			} else {
 				exMsg = cause.getMessage();
 				if (exMsg == null) {

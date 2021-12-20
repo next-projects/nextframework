@@ -7,15 +7,12 @@ import java.util.Locale;
 import org.nextframework.authorization.Authorization;
 import org.nextframework.authorization.User;
 import org.nextframework.core.web.NextWeb;
-import org.nextframework.message.MessageResolver;
-import org.nextframework.message.MessageResolverFactory;
 import org.nextframework.util.Util;
 
 public class MenuResolver {
 
 	public static Menu carregaMenu(String caminho, User user, Locale locale) throws Exception {
-		MessageResolver messageResolver = MessageResolverFactory.get(locale);
-		MenuParser menuParser = new MenuParser(messageResolver);
+		MenuParser menuParser = new MenuParser(locale);
 		InputStream resourceStream = NextWeb.getRequestContext().getSession().getServletContext().getResourceAsStream(caminho);
 		Menu menu = menuParser.parse(resourceStream);
 		verificaMenu(user, menu);

@@ -42,16 +42,12 @@ public class HibernateUtils {
 	}
 
 	public static String getIdAttribute(HibernateTemplate hibernateTemplate, Class<? extends Object> class1) {
-		while (class1.getName().contains("$$")) {
-			class1 = class1.getSuperclass();
-		}
+		class1 = Util.objects.getRealClass(class1);
 		return hibernateTemplate.getSessionFactory().getClassMetadata(class1).getIdentifierPropertyName();
 	}
 
 	public static String getEntityName(HibernateTemplate hibernateTemplate, Class<? extends Object> class1) {
-		while (class1.getName().contains("$$")) {
-			class1 = class1.getSuperclass();
-		}
+		class1 = Util.objects.getRealClass(class1);
 		return hibernateTemplate.getSessionFactory().getClassMetadata(class1).getEntityName();
 	}
 

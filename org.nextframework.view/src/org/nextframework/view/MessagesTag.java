@@ -25,15 +25,16 @@ package org.nextframework.view;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.controller.crud.CrudException;
 import org.nextframework.core.standard.Message;
 import org.nextframework.core.standard.MessageType;
+import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
-import org.nextframework.message.MessageResolver;
 import org.nextframework.util.Util;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
@@ -84,7 +85,7 @@ public class MessagesTag extends BaseTag {
 	protected void doComponent() throws Exception {
 
 		WebRequestContext requestContext = NextWeb.getRequestContext();
-		MessageResolver messageResolver = requestContext.getMessageResolver();
+		Locale locale = requestContext.getLocale();
 		boolean renderAsHtml = Util.booleans.isTrue(this.renderAsHtml);
 
 		if (!renderAsHtml) {
@@ -114,7 +115,7 @@ public class MessagesTag extends BaseTag {
 				for (Object object : globalErrors) {
 
 					ObjectError objectError = (ObjectError) object;
-					String msg = resolveMessage(messageResolver, objectError);
+					String msg = resolveMessage(objectError, locale);
 
 					if (renderAsHtml) {
 						getOut().println("<li class=\"" + globalErrorclass + "\">" + msg + "</li>");
@@ -141,8 +142,8 @@ public class MessagesTag extends BaseTag {
 					if (object instanceof FieldError) {
 
 						FieldError fieldError = (FieldError) object;
-						String field = Util.beans.getDisplayName(messageResolver, errors.getTarget().getClass(), fieldError.getField());
-						String msg = resolveMessage(messageResolver, fieldError);
+						String field = Util.beans.getDisplayName(errors.getTarget().getClass(), fieldError.getField(), locale);
+						String msg = resolveMessage(fieldError, locale);
 
 						if (fieldError.isBindingFailure()) {
 							if (renderAsHtml) {
@@ -186,7 +187,7 @@ public class MessagesTag extends BaseTag {
 			for (Message message : messages) {
 				if (message.getSource() != null) {
 					String clazz = getMessageStyleClass(message);
-					String convertToMessage = convertToMessage(messageResolver, message.getSource());
+					String convertToMessage = convertToMessage(message.getSource(), locale);
 					if (Util.strings.isNotEmpty(convertToMessage)) {
 						convertToMessage = escapeText(convertToMessage);
 						if (renderAsHtml) {
@@ -220,11 +221,11 @@ public class MessagesTag extends BaseTag {
 
 	}
 
-	private String resolveMessage(MessageResolver messageResolver, MessageSourceResolvable msr) {
+	private String resolveMessage(MessageSourceResolvable msr, Locale locale) {
 		try {
-			return messageResolver.message(msr);
+			return Next.getMessageSource().getMessage(msr, locale);
 		} catch (NoSuchMessageException e) {
-			return Util.exceptions.getExceptionDescription(messageResolver, e);
+			return Util.exceptions.getExceptionDescription(e, locale);
 		}
 	}
 
@@ -232,11 +233,11 @@ public class MessagesTag extends BaseTag {
 		return string.replace("\\", "\\\\").replace("\"", "\\\"").replace('\r', ' ').replace('\n', ' ');
 	}
 
-	protected String convertToMessage(MessageResolver messageResolver, Object source) {
+	protected String convertToMessage(Object source, Locale locale) {
 
 		if (source instanceof MessageSourceResolvable) {
 
-			String msg = resolveMessage(messageResolver, (MessageSourceResolvable) source);
+			String msg = resolveMessage((MessageSourceResolvable) source, locale);
 			return msg;
 
 		} else if (source instanceof Throwable) {
@@ -247,7 +248,7 @@ public class MessagesTag extends BaseTag {
 				exception = ((CrudException) exception).getCause();
 			}
 
-			String exceptionName = Util.exceptions.getExceptionDescription(messageResolver, exception, false);
+			String exceptionName = Util.exceptions.getExceptionDescription(exception, false, locale);
 			builder.append("<span class=\"" + exceptionClass + "\">" + exceptionName + "</span>");
 
 			Set<Throwable> allCauses = new HashSet<Throwable>();
@@ -255,7 +256,7 @@ public class MessagesTag extends BaseTag {
 			Throwable cause = exception.getCause();
 			while (cause != null && !allCauses.contains(cause)) {
 
-				exceptionName = Util.exceptions.getExceptionDescription(messageResolver, cause, false);
+				exceptionName = Util.exceptions.getExceptionDescription(cause, false, locale);
 				builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + exceptionName + "</li></ul>");
 
 				allCauses.add(cause);

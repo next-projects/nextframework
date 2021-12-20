@@ -971,7 +971,7 @@ public class MultiActionController extends AbstractController {
 	 * @see #DEFAULT_COMMAND_NAME
 	 */
 	protected String getCommandName(Object command) {
-		return Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), command.getClass());
+		return Util.beans.getDisplayName(command.getClass(), NextWeb.getRequestContext().getLocale());
 	}
 
 	/**

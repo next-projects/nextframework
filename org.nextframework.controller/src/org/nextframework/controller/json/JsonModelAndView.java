@@ -1,7 +1,8 @@
 package org.nextframework.controller.json;
 
+import java.util.Locale;
+
 import org.nextframework.core.web.NextWeb;
-import org.nextframework.message.MessageResolver;
 import org.nextframework.service.ServiceFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -18,8 +19,8 @@ public class JsonModelAndView extends ModelAndView {
 
 		JsonTranslator jsonTranslator = ServiceFactory.getService(JsonTranslator.class);
 		if (jsonTranslator != null && jsonTranslator instanceof JacksonJsonTranslator) {
-			MessageResolver messageResolver = NextWeb.getRequestContext().getMessageResolver();
-			ObjectMapper objectMapper = ((JacksonJsonTranslator) jsonTranslator).createObjectMapper(messageResolver);
+			Locale locale = NextWeb.getRequestContext().getLocale();
+			ObjectMapper objectMapper = ((JacksonJsonTranslator) jsonTranslator).createObjectMapper(locale);
 			view.setObjectMapper(objectMapper);
 		}
 

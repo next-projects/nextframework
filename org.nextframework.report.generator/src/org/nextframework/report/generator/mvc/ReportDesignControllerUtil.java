@@ -216,8 +216,8 @@ public class ReportDesignControllerUtil {
 
 		map.put("type", propertyDescriptor.getType());
 		map.put("extended", isExtendedProperty(beanDescriptor, property));
-		map.put("displayName", getCompleteDisplayName(locale, beanDescriptor, propertyDescriptor, property));
-		map.put("displayNameSimple", Util.beans.getDisplayName(locale, propertyDescriptor));
+		map.put("displayName", getCompleteDisplayName(beanDescriptor, propertyDescriptor, property, locale));
+		map.put("displayNameSimple", Util.beans.getDisplayName(propertyDescriptor, locale));
 		map.put("transient", propertyDescriptor.getAnnotation(Transient.class) != null);
 		ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
 		map.put("filterable", isFilterable(beanDescriptor, property, reportField));
@@ -228,7 +228,7 @@ public class ReportDesignControllerUtil {
 		return map;
 	}
 
-	public String getCompleteDisplayName(Locale locale, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String property) {
+	public String getCompleteDisplayName(BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String property, Locale locale) {
 		String[] parts = property.split("\\.");
 		if (parts.length > 1) {
 			StringBuilder buffer = new StringBuilder();
@@ -237,7 +237,7 @@ public class ReportDesignControllerUtil {
 				String part = parts[i];
 				currentPart += part;
 				PropertyDescriptor pd2 = beanDescriptor.getPropertyDescriptor(currentPart);
-				String displayName = Util.beans.getDisplayName(locale, pd2);
+				String displayName = Util.beans.getDisplayName(pd2, locale);
 				currentPart += ".";
 				buffer.append(displayName);
 				if (i + 1 < parts.length) {

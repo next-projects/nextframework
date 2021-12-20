@@ -110,7 +110,7 @@ public class ObjectAnnotationValidator extends WebApplicationObjectSupport imple
 		for (Annotation annotation : annotations) {
 			PropertyValidator propertyValidator = validatorRegistry.getPropertyValidator(annotation.annotationType());
 			if(propertyValidator != null){
-				String displayName = Util.beans.getDisplayName(NextWeb.getRequestContext().getMessageResolver(), propertyDescriptor);
+				String displayName = Util.beans.getDisplayName(propertyDescriptor, NextWeb.getRequestContext().getLocale());
 				propertyValidator.validate(obj, propertyDescriptor.getValue(), parametro, displayName, annotation, errors, this);
 			}
 		}

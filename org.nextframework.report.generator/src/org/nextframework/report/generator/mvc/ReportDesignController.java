@@ -261,7 +261,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			boolean filterable = util.isFilterable(beanDescriptor, property, reportField);
 			if (filterable) {
 				if (reportField != null && reportField.requiredFilter()) {
-					String completeDisplayName = util.getCompleteDisplayName(locale, beanDescriptor, propertyDescriptor, property);
+					String completeDisplayName = util.getCompleteDisplayName(beanDescriptor, propertyDescriptor, property, locale);
 					camposRequired += (camposRequired.length() == 0 ? "" : ", ") + completeDisplayName;
 					FilterElement filter = reportElement.getData().getFilterByName(property);
 					if (filter != null && filter.isFilterRequired()) {
