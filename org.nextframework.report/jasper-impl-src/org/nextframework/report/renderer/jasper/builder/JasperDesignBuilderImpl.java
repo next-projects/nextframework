@@ -49,6 +49,7 @@ import org.nextframework.report.definition.ReportGroupSection;
 import org.nextframework.report.definition.ReportSection;
 import org.nextframework.report.definition.ReportSectionRow;
 import org.nextframework.report.definition.ReportSectionType;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.definition.elements.ReportBlock;
 import org.nextframework.report.definition.elements.ReportChart;
@@ -294,7 +295,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		if(expression.startsWith("param.")){
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (expression.contains(LayoutReportBuilder.FILTER_PARAMETER)) {
-				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($P{"+expression.substring(6)+"}, (java.util.Locale) $P{LOCALE})");
+				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($P{"+expression.substring(6)+"}, (java.util.Locale) $P{" + BaseReportBuilder.LOCALE + "})");
 			}else{
 				expression2.setText("$P{"+expression.substring(6)+"}");
 			}
@@ -327,7 +328,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		} else {
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (callToString) {
-				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($F{"+expression+"}, (java.util.Locale) $P{LOCALE})");
+				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($F{"+expression+"}, (java.util.Locale) $P{" + BaseReportBuilder.LOCALE + "})");
 			}else{
 				expression2.setText("$F{"+expression+"}");
 			}

@@ -44,6 +44,8 @@ import org.nextframework.view.chart.aggregate.ChartSumAggregateFunction;
 
 public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
+	public static final String LOCALE = "LOCALE";
+	
 	protected SummaryResult<?, ? extends Summary<?>> summaryResult;
 
 	public <E> void setData(SummaryResult<E, ? extends Summary<E>> summaryResult) {
@@ -55,7 +57,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	protected List<?> data;
 	protected Locale locale;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void setData(List<?> items) {
 		if(items.size() > 0){
 			Object item0 = items.get(0);
@@ -134,7 +136,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		if(setupGroups){
 			setupGroups();
 		}
-		getDefinition().setParameter("LOCALE", locale);
+		getDefinition().setParameter(LOCALE, locale);
 	}
 	
 	@SuppressWarnings("unchecked")
