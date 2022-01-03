@@ -91,7 +91,7 @@ public class OutputTag extends BaseTag {
 	public String getStringBody() {
 		String body = getStringBody(value, pattern);
 		if (body != null) {
-			if (escapeHTML) {
+			if (escapeHTML && !(value instanceof File)) {
 				body = body.replace("<", "&lt;").replace("\n", "<BR>");
 			}
 			if (replaceMessagesCodes) {
