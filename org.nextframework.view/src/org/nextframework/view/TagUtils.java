@@ -30,6 +30,7 @@ import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.InvalidPropertyException;
+import org.springframework.context.MessageSourceResolvable;
 
 @SuppressWarnings("deprecation")
 public class TagUtils {
@@ -126,10 +127,9 @@ public class TagUtils {
 
 		try {
 
-			if (Util.strings.isNotEmpty(pattern)) {
-				if (value instanceof Number || value instanceof Date || value instanceof Calendar) {
-					return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getLocale());
-				}
+			boolean usePattern = value instanceof Number || value instanceof Date || value instanceof Calendar;
+			if (Util.strings.isNotEmpty(pattern) && usePattern || value instanceof MessageSourceResolvable) {
+				return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getLocale());
 			}
 
 			PropertyEditor propertyEditor = TagUtils.getPropertyEditorsFromRequest().get(value.getClass());
