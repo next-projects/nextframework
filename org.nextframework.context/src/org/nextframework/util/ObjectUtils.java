@@ -142,6 +142,9 @@ public class ObjectUtils {
 		if (o1 == null || o2 == null) {
 			return false;
 		}
+		if (o1 instanceof Number && o2 instanceof Number) {
+			return Util.numbers.equals(((Number) o1), ((Number) o2));
+		}
 		return o1.equals(o2);
 	}
 

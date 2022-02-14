@@ -31,6 +31,7 @@ package org.nextframework.util;
 public class Util {
 
 	public static BooleanUtils booleans = new BooleanUtils();
+	public static NumberUtils numbers = new NumberUtils();
 	public static StringUtils strings = new StringUtils();
 	public static DateUtils dates = new DateUtils();
 	public static TimeZoneUtils timeZone = new TimeZoneUtils();
