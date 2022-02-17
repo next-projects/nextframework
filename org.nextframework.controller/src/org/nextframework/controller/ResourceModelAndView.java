@@ -37,14 +37,10 @@ public class ResourceModelAndView extends ModelAndView {
 	private Resource resource;
 
 	public ResourceModelAndView(Resource res) {
-		this(res, true, null);
+		this(res, true);
 	}
 
 	public ResourceModelAndView(Resource res, final boolean useAttachment) {
-		this(res, useAttachment, null);
-	}
-
-	public ResourceModelAndView(Resource res, final boolean useAttachment, final Runnable afterWrite) {
 
 		this.resource = res;
 
@@ -56,9 +52,6 @@ public class ResourceModelAndView extends ModelAndView {
 					response.setHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
 				}
 				response.getOutputStream().write(resource.getContents());
-				if (afterWrite != null) {
-					afterWrite.run();
-				}
 			}
 
 			public String getContentType() {
