@@ -25,7 +25,6 @@ package org.nextframework.exception;
 
 import org.nextframework.util.Util;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.util.StringUtils;
 
 public class BusinessException extends ApplicationException implements MessageSourceResolvable {
 
@@ -35,15 +34,21 @@ public class BusinessException extends ApplicationException implements MessageSo
 	private String mensagem;
 
 	public BusinessException(String code) {
-		this(null, code, null, null);
+		this(code, null, null);
 	}
 
 	public BusinessException(String code, Object[] arguments) {
-		this(null, code, arguments, null);
+		this(code, arguments, null);
 	}
 
 	public BusinessException(String code, Object[] arguments, String defaultMessage) {
-		this(null, code, arguments, defaultMessage);
+		this(Util.objects.newMessage(code, arguments, defaultMessage));
+	}
+
+	public BusinessException(MessageSourceResolvable msr) {
+		super();
+		this.resolvable = msr;
+		this.mensagem = msr.toString();
 	}
 
 	public BusinessException(Throwable cause, String code) {
@@ -55,9 +60,13 @@ public class BusinessException extends ApplicationException implements MessageSo
 	}
 
 	public BusinessException(Throwable cause, String code, Object[] arguments, String defaultMessage) {
+		this(cause, Util.objects.newMessage(code, arguments, defaultMessage));
+	}
+
+	public BusinessException(Throwable cause, MessageSourceResolvable msr) {
 		super(cause);
-		this.resolvable = Util.objects.newMessage(code, arguments, defaultMessage);
-		this.mensagem = "code [" + code + "]; arguments [" + (arguments != null ? StringUtils.arrayToDelimitedString(arguments, ",") : null) + "]; default message [" + defaultMessage + "]";
+		this.resolvable = msr;
+		this.mensagem = msr.toString();
 	}
 
 	@Override
