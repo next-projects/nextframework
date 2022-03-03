@@ -65,6 +65,7 @@ public class ExceptionUtils {
 			if (exTipo == null && !(cause instanceof RuntimeException) && !(cause instanceof ApplicationException) && !(cause instanceof BusinessException)) {
 				exTipo = cause.getClass().getSimpleName();
 			}
+			exTipo = Util.strings.isNotEmpty(exTipo) ? exTipo : null;
 
 			String exMsg = null;
 

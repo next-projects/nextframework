@@ -229,18 +229,21 @@ public class MessagesTag extends BaseTag {
 		}
 	}
 
+	private String resolveException(Throwable exception, Locale locale) {
+		try {
+			return Util.exceptions.getExceptionDescription(exception, false, locale);
+		} catch (NoSuchMessageException e) {
+			return Util.exceptions.getExceptionDescription(e, locale);
+		}
+	}
+
 	private String escapeText(String string) {
 		return string.replace("\\", "\\\\").replace("\"", "\\\"").replace('\r', ' ').replace('\n', ' ');
 	}
 
 	protected String convertToMessage(Object source, Locale locale) {
 
-		if (source instanceof MessageSourceResolvable) {
-
-			String msg = resolveMessage((MessageSourceResolvable) source, locale);
-			return msg;
-
-		} else if (source instanceof Throwable) {
+		if (source instanceof Throwable) {
 
 			StringBuilder builder = new StringBuilder();
 			Throwable exception = (Throwable) source;
@@ -248,22 +251,27 @@ public class MessagesTag extends BaseTag {
 				exception = ((CrudException) exception).getCause();
 			}
 
-			String exceptionName = Util.exceptions.getExceptionDescription(exception, false, locale);
-			builder.append("<span class=\"" + exceptionClass + "\">" + exceptionName + "</span>");
+			String exceptionDesc = resolveException(exception, locale);
+			builder.append("<span class=\"" + exceptionClass + "\">" + exceptionDesc + "</span>");
 
 			Set<Throwable> allCauses = new HashSet<Throwable>();
 			allCauses.add(exception);
 			Throwable cause = exception.getCause();
 			while (cause != null && !allCauses.contains(cause)) {
 
-				exceptionName = Util.exceptions.getExceptionDescription(cause, false, locale);
-				builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + exceptionName + "</li></ul>");
+				exceptionDesc = resolveException(cause, locale);
+				builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + exceptionDesc + "</li></ul>");
 
 				allCauses.add(cause);
 				cause = cause.getCause();
 			}
 
 			return builder.toString();
+
+		} else if (source instanceof MessageSourceResolvable) {
+
+			String msg = resolveMessage((MessageSourceResolvable) source, locale);
+			return msg;
 
 		}
 
