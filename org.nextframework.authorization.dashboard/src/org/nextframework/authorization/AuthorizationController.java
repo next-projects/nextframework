@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.nextframework.authorization.impl.AuthorizationManagerImpl;
 import org.nextframework.authorization.web.impl.WebPermissionLocator;
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.controller.Action;
@@ -64,13 +65,15 @@ public class AuthorizationController extends MultiActionController {
 			//while(parameterNames.hasMoreElements()){
 			//	System.out.println(parameterNames.nextElement());
 			//}
-			PermissionLocator permissionLocator = Authorization.getPermissionLocator();
 			synchronized (request.getSession().getServletContext()) { //TODO FIXME FIX THIS SYNC
+				
 				//TODO FIXME CHECK HOW TO FIX THIS
-				if(permissionLocator instanceof WebPermissionLocator){
-					((WebPermissionLocator)permissionLocator).clearCache();
+				if (Authorization.getAuthorizationManager() instanceof AuthorizationManagerImpl) {
+					if (((AuthorizationManagerImpl) Authorization.getAuthorizationManager()).getPermissionLocator() instanceof WebPermissionLocator) {
+						((WebPermissionLocator) ((AuthorizationManagerImpl) Authorization.getAuthorizationManager()).getPermissionLocator()).clearCache();
+					}
 				}
-//				permissionLocator.clearCache();
+				
 				Collection<List<AuthorizationProcessItemFilter>> values = authorizationFilter.getGroupAuthorizationMap().values();
 				final List<AuthorizationProcessItemFilter> authorizationItemFilters = new ArrayList<AuthorizationProcessItemFilter>();
 				for (List<AuthorizationProcessItemFilter> value : values) {
