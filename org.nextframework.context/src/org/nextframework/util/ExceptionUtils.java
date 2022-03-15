@@ -35,11 +35,6 @@ import org.springframework.context.NoSuchMessageException;
 
 public class ExceptionUtils {
 
-	public ApplicationException getApplicationException(BusinessException exception, Locale locale) {
-		String txt = getExceptionDescription(exception, false, locale);
-		throw new ApplicationException(txt, exception.getCause());
-	}
-
 	public String getExceptionDescription(Throwable exception, Locale locale) {
 		return getExceptionDescription(exception, true, locale);
 	}

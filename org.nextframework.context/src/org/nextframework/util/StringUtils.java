@@ -228,10 +228,10 @@ public class StringUtils {
 			Formatter fmt = new Formatter();
 			((Formattable) value).formatTo(fmt, 0, -1, -1);
 			return fmt.out().toString();
-		} else if (value instanceof MessageSourceResolvable) {
-			return Next.getMessageSource().getMessage((MessageSourceResolvable) value, locale);
 		} else if (value instanceof Throwable) {
 			return Util.exceptions.getExceptionDescription((Throwable) value, locale);
+		} else if (value instanceof MessageSourceResolvable) {
+			return Next.getMessageSource().getMessage((MessageSourceResolvable) value, locale);
 		} else if (value.getClass().isArray()) {
 			Object[] array = (Object[]) value;
 			String description = "";
