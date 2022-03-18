@@ -24,24 +24,26 @@
 package org.nextframework.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.Set;
-
 import org.nextframework.classmanager.ClassManager;
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.context.ResourceHandlerMap;
+import org.nextframework.controller.json.MappingJackson2HttpMessageConverter;
 import org.nextframework.web.service.ServletContextServiceProvider;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -61,8 +63,8 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
 public class DispatcherServlet extends org.springframework.web.servlet.DispatcherServlet {
 
 	private static final long serialVersionUID = 1L;
-	
-	public DispatcherServlet(){
+
+	public DispatcherServlet() {
 	}
 
 //	@Override
@@ -70,12 +72,12 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 //		request.setAttribute("CONFIG", getServletConfig());
 //		super.doService(request, response);
 //	}
-	
+
 	@Override
 	protected void onRefresh(ApplicationContext context) {
 		super.onRefresh(context);
 		DispatcherServletResourceHandlerMap handlerMap = (DispatcherServletResourceHandlerMap) ServletContextServiceProvider.getService(getServletContext(), ResourceHandlerMap.class);
-		if(handlerMap == null){
+		if (handlerMap == null) {
 			handlerMap = new DispatcherServletResourceHandlerMap();
 			ServletContextServiceProvider.registerService(getServletContext(), ResourceHandlerMap.class, handlerMap);
 		}
@@ -83,11 +85,11 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 	}
 
 	static class DispatcherServletResourceHandlerMap implements ResourceHandlerMap {
-		
+
 		List<DispatcherServlet> servlets = new ArrayList<DispatcherServlet>();
-		
+
 		Map<String, Object> handlerMap = new HashMap<String, Object>();
-		
+
 		@Override
 		public Object getHandler(String resource) {
 			init();
@@ -101,32 +103,32 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 		}
 
 		public void init() {
-			if(handlerMap.isEmpty()){
+			if (handlerMap.isEmpty()) {
 				for (DispatcherServlet servlet : servlets) {
 					List<HandlerMapping> handlers = (List<HandlerMapping>) PropertyAccessorFactory.forDirectFieldAccess(servlet).getPropertyValue("handlerMappings");
 					for (HandlerMapping handlerMapping : handlers) {
-						if(handlerMapping instanceof AbstractUrlHandlerMapping){
+						if (handlerMapping instanceof AbstractUrlHandlerMapping) {
 							AbstractUrlHandlerMapping abstractUrlHandlerMapping = (AbstractUrlHandlerMapping) handlerMapping;
 							Map<String, Object> handlerMap = abstractUrlHandlerMapping.getHandlerMap();
 							for (Entry<String, Object> entry : handlerMap.entrySet()) {
-								this.handlerMap.put("/"+servlet.getServletName()+entry.getKey(), entry.getValue());
+								this.handlerMap.put("/" + servlet.getServletName() + entry.getKey(), entry.getValue());
 							}
 						}
-						
+
 					}
 				}
 			}
 		}
-		
+
 		Map<String, Boolean> authenticationModuleCache = new HashMap<String, Boolean>();
 
 		@Override
 		public boolean isAuthenticationRequired(String resource) {
 			String module = resource.substring(1, resource.indexOf('/', 1));
-			if(!authenticationModuleCache.containsKey(module)){
+			if (!authenticationModuleCache.containsKey(module)) {
 				boolean result = false;
 				for (DispatcherServlet servlet : servlets) {
-					if(servlet.getServletName().equals(module) && servlet.isSecured()){
+					if (servlet.getServletName().equals(module) && servlet.isSecured()) {
 						result = true;
 						break;
 					}
@@ -136,29 +138,25 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 			return authenticationModuleCache.get(module);
 		}
 	}
-	
+
 	@SuppressWarnings("all")
 	@Override
 	protected List getDefaultStrategies(ApplicationContext context, Class strategyInterface) throws BeansException {
 		List defaultStrategies = super.getDefaultStrategies(context, strategyInterface);
 		if (HandlerMapping.class.isAssignableFrom(strategyInterface)) {
-//			AnnotationsHandlerMapping annotationsHandlerMapping = new AnnotationsHandlerMapping();
-//			annotationsHandlerMapping.setInterceptors(getInterceptors());
-//			annotationsHandlerMapping.setModule("/" + getServletName());
-//			annotationsHandlerMapping.setApplicationContext(context);
 			NextAnnotationHandlerMapping handlerMapping = new NextAnnotationHandlerMapping();
 			handlerMapping.setModule(getServletName());
 			handlerMapping.setInterceptors(getInterceptors());
 			handlerMapping.setApplicationContext(context);
 			defaultStrategies.add(0, handlerMapping);
 		}
-		if(ViewResolver.class.isAssignableFrom(strategyInterface)){
+		if (ViewResolver.class.isAssignableFrom(strategyInterface)) {
 			CompositeViewResolver compositeViewResolver = new CompositeViewResolver();
 			compositeViewResolver.setApplicationContext(context);
 			compositeViewResolver.setParameterName("bodyPage");
-			compositeViewResolver.setPrefix("/WEB-INF/jsp/"+getServletName()+"/");
+			compositeViewResolver.setPrefix("/WEB-INF/jsp/" + getServletName() + "/");
 			compositeViewResolver.setSuffix(".jsp");
-			compositeViewResolver.setBaseView("/WEB-INF/jsp/"+getServletName()+"/base.jsp,/WEB-INF/jsp/base.jsp");
+			compositeViewResolver.setBaseView("/WEB-INF/jsp/" + getServletName() + "/base.jsp,/WEB-INF/jsp/base.jsp");
 			defaultStrategies.add(0, compositeViewResolver);
 		}
 		return defaultStrategies;
@@ -169,7 +167,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 		List<HandlerInterceptor> interceptorsList = new ArrayList<HandlerInterceptor>();
 		try {
 			//TODO REMOVE THIS DEPENDENCY
-			if(isSecured()){
+			if (isSecured()) {
 				interceptorsList.add(new AuthenticationHandlerInterceptor());
 			}
 			interceptorsList.add(new AuthorizationHandlerInterceptor());
@@ -190,21 +188,29 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 	boolean isSecured() {
 		return "true".equalsIgnoreCase(this.getInitParameter("secured"));
 	}
-	
+
 	@Override
+	@SuppressWarnings("deprecation")
 	protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
-		Object bean = super.createDefaultStrategy(context, clazz);
-		if (bean instanceof AnnotationMethodHandlerAdapter) {
-			((AnnotationMethodHandlerAdapter)bean).setAlwaysUseFullPath(true); //Para @Controller padrão do Spring fazer mapeamento completo declarado em @RequestMapping
+		Object strategy = super.createDefaultStrategy(context, clazz);
+		if (strategy instanceof AnnotationMethodHandlerAdapter) {
+			AnnotationMethodHandlerAdapter handlerAdapter = (AnnotationMethodHandlerAdapter) strategy;
+			//Para @Controller padrão do Spring fazer mapeamento completo declarado em @RequestMapping
+			handlerAdapter.setAlwaysUseFullPath(true);
+			//Para converter para json
+			List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+			messageConverters.addAll(Arrays.asList(handlerAdapter.getMessageConverters()));
+			messageConverters.add(new MappingJackson2HttpMessageConverter());
+			handlerAdapter.setMessageConverters(messageConverters.toArray(new HttpMessageConverter<?>[messageConverters.size()]));
 		}
-		return bean;
+		return strategy;
 	}
-	
+
 	@Override
 	protected void configureAndRefreshWebApplicationContext(ConfigurableWebApplicationContext wac) {
 		String configLocation = XmlWebApplicationContext.DEFAULT_CONFIG_LOCATION_PREFIX + getNamespace() + XmlWebApplicationContext.DEFAULT_CONFIG_LOCATION_SUFFIX;
 		WebApplicationContext rootContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
-		if(rootContext.getResource(configLocation).exists()){
+		if (rootContext.getResource(configLocation).exists()) {
 			//only configure factory if xml exists
 			wac.setConfigLocation(configLocation);
 		} else {
@@ -212,7 +218,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 		}
 		super.configureAndRefreshWebApplicationContext(wac);
 	}
-	
+
 //	@Override
 //	public Class<?> getContextClass() {
 //		return AnnotationsXmlWebApplicationContext.class;
@@ -221,27 +227,27 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 	@Override
 	public String getContextAttribute() {
 		String contextAttribute = super.getContextAttribute();
-		if("null".equalsIgnoreCase(contextAttribute)){
+		if ("null".equalsIgnoreCase(contextAttribute)) {
 			return null;
 		}
-		if(contextAttribute == null){
+		if (contextAttribute == null) {
 			return WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE;
 		} else {
 			return contextAttribute;
 		}
 	}
-	
+
 	@Override
 	protected void render(ModelAndView mv, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (mv.isReference()) {
 			String viewName = mv.getViewName();
 			int i = viewName.indexOf(":");
 			if (i > -1) {
-				viewName = viewName.substring(i+1); 
+				viewName = viewName.substring(i + 1);
 			}
 			request.setAttribute("viewName", viewName); //See WebUtils.getModelAndViewName
 		}
 		super.render(mv, request, response);
 	}
-	
+
 }
