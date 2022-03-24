@@ -4,7 +4,7 @@ import org.apache.logging.log4j.message.AbstractMessageFactory;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.ObjectMessage;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
-import org.nextframework.core.standard.Next;
+import org.nextframework.util.Util;
 import org.springframework.context.MessageSourceResolvable;
 
 /**
@@ -95,7 +95,7 @@ public class NextLocalizedMessageFactory extends AbstractMessageFactory {
 		public String getFormattedMessage() {
 			if (objectString == null) {
 				MessageSourceResolvable msr = (MessageSourceResolvable) getParameter();
-				objectString = Next.getMessageSource().getMessage(msr, null) + " [" + msr.getCodes()[0] + "]";
+				objectString = Util.strings.toStringDescription(msr);
 			}
 			return objectString;
 		}
