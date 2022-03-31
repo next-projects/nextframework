@@ -39,7 +39,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.nextframework.persistence.PersistenceUtils.InverseCollectionProperties;
-import org.nextframework.persistence.translator.AliasMap;
 import org.nextframework.persistence.translator.QueryBuilderResultTranslator;
 import org.nextframework.persistence.translator.QueryBuilderResultTranslatorImpl;
 
@@ -193,7 +192,7 @@ public class QueryBuilder<E> {
 	 * @return
 	 */
 	public QueryBuilder<E> from(From from){
-		from(from.getFromClass(), uncapitalize(from.getFromClass().getSimpleName()));
+		from(from.getFromClass(), from.getAlias());
 		return this;
 	}
 
