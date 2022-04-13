@@ -56,12 +56,17 @@ public class DefaultRequestContext implements RequestContext {
 	}
 
 	@Override
+	public void addMessage(Object source, MessageType type) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void addMessage(Object source) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void addMessage(Object source, MessageType type) {
+	public void addWarn(Object source) {
 		throw new UnsupportedOperationException();
 	}
 

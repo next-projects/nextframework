@@ -80,7 +80,6 @@ public class MessagesTag extends BaseTag {
 	private String title;
 	private String invalidValueLabel;
 
-	@SuppressWarnings("all")
 	@Override
 	protected void doComponent() throws Exception {
 
@@ -111,10 +110,9 @@ public class MessagesTag extends BaseTag {
 					getOut().println("<ul>");
 				}
 
-				List globalErrors = errors.getGlobalErrors();
-				for (Object object : globalErrors) {
+				List<ObjectError> globalErrors = errors.getGlobalErrors();
+				for (ObjectError objectError : globalErrors) {
 
-					ObjectError objectError = (ObjectError) object;
 					String msg = resolveMessage(objectError, locale);
 
 					if (renderAsHtml) {
@@ -131,14 +129,14 @@ public class MessagesTag extends BaseTag {
 
 			}
 
-			List allErrors = errors.getAllErrors();
+			List<ObjectError> allErrors = errors.getAllErrors();
 			if (allErrors.size() > 0) {
 
 				if (renderAsHtml) {
 					getOut().println("<ul>");
 				}
 
-				for (Object object : allErrors) {
+				for (ObjectError object : allErrors) {
 					if (object instanceof FieldError) {
 
 						FieldError fieldError = (FieldError) object;

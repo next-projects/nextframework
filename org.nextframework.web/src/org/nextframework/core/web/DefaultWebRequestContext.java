@@ -192,13 +192,18 @@ public class DefaultWebRequestContext implements WebRequestContext {
 	}
 
 	@Override
+	public void addMessage(Object source, MessageType type) {
+		messages.add(new Message(type, source));
+	}
+
+	@Override
 	public void addMessage(Object source) {
 		messages.add(new Message(MessageType.INFO, source));
 	}
 
 	@Override
-	public void addMessage(Object source, MessageType type) {
-		messages.add(new Message(type, source));
+	public void addWarn(Object source) {
+		messages.add(new Message(MessageType.WARN, source));
 	}
 
 	@Override

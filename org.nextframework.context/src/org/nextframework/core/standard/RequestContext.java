@@ -76,14 +76,16 @@ public interface RequestContext {
 	 */
 	String getUserPersistentAttribute(String name);
 
+	void addMessage(Object source, MessageType type);
+
 	void addMessage(Object source);
 
-	void addMessage(Object source, MessageType type);
+	void addWarn(Object source);
 
 	void addError(Object source);
 
 	void addMessage(Message message);
-	
+
 	void addAllMessages(List<Message> messageList);
 
 	Message[] getMessages();
