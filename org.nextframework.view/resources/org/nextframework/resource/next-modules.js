@@ -950,7 +950,7 @@ NextDom.prototype.getForm = function(name, elements){
 	return new NextDomForm(name, elements);
 }
 
-NextDom.zIndexCount = 200;
+NextDom.zIndexCount = 10000;
 
 /**
  * Creates and return a new div popup, the screen will be blocked.
