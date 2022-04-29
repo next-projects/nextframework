@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +27,6 @@ import org.nextframework.persistence.QueryBuilder;
 import org.nextframework.persistence.ResultListImpl;
 import org.nextframework.persistence.TransientsFilter;
 import org.nextframework.report.generator.ReportElement;
-import org.nextframework.report.generator.annotation.ExtendBean;
 import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.chart.ChartElement;
 import org.nextframework.report.generator.data.GroupElement;
@@ -50,6 +48,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public Class getMainType() {
 		try {
 			return Class.forName(fromClass);
@@ -82,126 +81,87 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		return fullResult;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
 
 		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(getMainType()));
 		List<String> properties = element.getProperties();
-		//Set<String> pathsSet = new HashSet<String>();
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(getMainType());
-		//properties.addAll(beans.getPropertiesWithAnnotation(getMainType(), ManyToOne.class));
 		JoinManager joinManager = new JoinManager(query.getAlias());
-
-		//LinkedHashSet<String> orderByProperties = new LinkedHashSet<String>();
 
 		for (String property : properties) {
 
 			if (element.getData().isCalculated(property)) {
-				//this is a calculated field
 				continue;
 			}
-			PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
-//			if(propertyDescriptor.getAnnotation(ManyToOne.class) != null){
-//				//query.leftOuterJoinFetch(query.getAlias()+"."+property + " ");
-////				joinMap.put(query.getAlias()+"."+property, query.getAlias()+"_"+property);
-//			}
-			//TODO IMPROVE ALIAS CONCATENATION (REUSE ALIAS)
 
-			if (property.contains(".")) {
-//				String[] path = property.substring(0, property.lastIndexOf(".")).split("\\.");
-//				String currentPath = "";
-////				String lastPath = "";
-//				for (String partialPath : path) {
-//					currentPath += partialPath;
-//					if(pathsSet.add(currentPath)){
-//						propertyDescriptor = beanDescriptor.getPropertyDescriptor(currentPath);
-//						ManyToOne manyToOne = propertyDescriptor.getAnnotation(ManyToOne.class);
-//						if(manyToOne != null){
-//							query.leftOuterJoinFetch(query.getAlias()+"."+currentPath + " ");
-//						}
-//					}
-//				}
-				boolean lastTransient = false;
-				String[] parts = property.split("\\.");
-//				String currentAlias = "";
-				String currentPath = "";
-				String basePath = "";
-				for (int i = 0; i < parts.length; i++) {
-					if (lastTransient) {
-						break;
+			String currentPath = "";
+			String basePath = "";
+
+			String[] parts = property.split("\\.");
+			for (int i = 0; i < parts.length; i++) {
+
+				basePath = currentPath;
+				currentPath += (i > 0 ? "." : "") + parts[i];
+
+				PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(currentPath);
+
+				ReportField rf = propertyDescriptor.getAnnotation(ReportField.class);
+				if (rf != null && rf.usingFields().length > 0) {
+					for (String field : rf.usingFields()) {
+						String currentPathRF = basePath + (basePath.length() > 0 ? "." : "") + field;
+						joinManager.addJoin(currentPathRF);
 					}
-					basePath = currentPath;
-					if (i > 0) {
-						currentPath += ".";
-					}
-					currentPath += parts[i];
-//					String newAlias = currentAlias+"_"+parts[i];
-//					query.leftOuterJoinFetch(currentAlias+"."+parts[i] + " "+newAlias);
-					propertyDescriptor = beanDescriptor.getPropertyDescriptor(currentPath);
-					if (propertyDescriptor.getAnnotation(Transient.class) != null) {
-						lastTransient = true;
-					}
-					ManyToOne mto = propertyDescriptor.getAnnotation(ManyToOne.class);
-					OneToOne oto = propertyDescriptor.getAnnotation(OneToOne.class);
-					if (mto != null || oto != null) {
-//						joinManager.put(currentAlias+"."+parts[i], newAlias);
-						joinManager.addJoin(currentPath);
-//						currentAlias = newAlias;
-						//if (i == parts.length - 1) {
-							//orderByProperties.add(currentPath);
-						//}
-					} else {
-						if (propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0) {
-							for (String field : propertyDescriptor.getAnnotation(ReportField.class).usingFields()) {
-//								treatReportField(currentPath, query, joinManager, field);
-								String path = basePath;
-								if (path.length() > 0) {
-									path += ".";
+				}
+
+				ManyToOne mto = propertyDescriptor.getAnnotation(ManyToOne.class);
+				OneToOne oto = propertyDescriptor.getAnnotation(OneToOne.class);
+				if (mto != null || oto != null) {
+
+					joinManager.addJoin(currentPath);
+
+					if (i == parts.length - 1) {
+						BeanDescriptor currentPathBD = BeanDescriptorFactory.forClass(propertyDescriptor.getRawType());
+						if (currentPathBD.getDescriptionPropertyName() != null) {
+							PropertyDescriptor currentPathBDPD = currentPathBD.getPropertyDescriptor(currentPathBD.getDescriptionPropertyName());
+							ReportField rf2 = currentPathBDPD.getAnnotation(ReportField.class);
+							if (rf2 != null && rf2.usingFields().length > 0) {
+								for (String field : rf2.usingFields()) {
+									String currentPathRF = currentPath + (currentPath.length() > 0 ? "." : "") + field;
+									joinManager.addJoin(currentPathRF);
 								}
-								joinManager.addJoin(path + field);
 							}
-						//} else {
-							//if (i == parts.length - 1 && !lastTransient) {
-							//	orderByProperties.add(currentPath);
-							//}
 						}
-						break;
 					}
+
+				} else {
+					break;
 				}
-			} else {
-//				if(propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0){
-//					for(String field: propertyDescriptor.getAnnotation(ReportField.class).usingFields()){
-////						treatReportField("", query, joinManager, field);
-//						joinManager.addJoin(field);
-//					}
-//				}
-				if (propertyDescriptor.getAnnotation(ReportField.class) != null && propertyDescriptor.getAnnotation(ReportField.class).usingFields().length > 0) {
-					for (String field : propertyDescriptor.getAnnotation(ReportField.class).usingFields()) {
-//						treatReportField(currentPath, query, joinManager, field);
-						joinManager.addJoin(field);
-					}
-				} else if (propertyDescriptor.getAnnotation(ManyToOne.class) != null || propertyDescriptor.getAnnotation(OneToOne.class) != null) {
-					joinManager.addJoin(property);
-					//orderByProperties.add(property);
-//					joinManager.put(query.getAlias()+"."+property, query.getAlias()+"_"+property);
-				//} else {
-					//if (propertyDescriptor.getAnnotation(ExtendBean.class) == null && propertyDescriptor.getAnnotation(Transient.class) == null) {
-					//	orderByProperties.add(property);
-					//}
+
+				if (propertyDescriptor.getAnnotation(Transient.class) != null) {
+					break;
 				}
+
 			}
+
 		}
+
 		Map<String, String> joinMap = joinManager.getJoinMap();
 		Set<String> joins = joinMap.keySet();
 		for (String join : joins) {
 			query.leftOuterJoinFetch(join + " " + joinMap.get(join));
 		}
+
 		final Set<String> filteredFields = new HashSet<String>();
 		Map<String, Object> transients = new HashMap<String, Object>() {
+			private static final long serialVersionUID = 1L;
+
 			public Object get(Object key) {
 				filteredFields.add((String) key);
 				return super.get(key);
 			}
 		};
+
 		for (String filter : filterMap.keySet()) {
 			String filterNoSuffix = removeSuffix(filter);
 			PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(filterNoSuffix);
@@ -223,6 +183,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 				query.where(query.getAlias() + "." + filter + " = ?", parameterValue);
 			}
 		}
+
 		for (String filter : fixedCriteriaMap.keySet()) {
 			Object criteriaValue = fixedCriteriaMap.get(filter);
 			if ("ISNULL".equals(criteriaValue)) {
@@ -231,12 +192,14 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 				query.where(query.getAlias() + "." + filter + " is not null");
 			}
 		}
+
 		GenericDAO dao = null;
 		try {
 			dao = DAOUtils.getDAOForClass(getMainType());
 		} catch (NoSuchBeanDefinitionException e) {
 			//if no DAO no problem...
 		}
+
 		if (dao instanceof TransientsFilter) {
 			((TransientsFilter) dao).filterQueryForTransients(query, transients);
 			Set<String> keySet = transients.keySet();
@@ -259,7 +222,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 				continue;
 			}
 			String orderColumn = query.getAlias() + "." + property;
-
+		
 			int pIndex = -1;
 			do {
 				pIndex = orderColumn.indexOf(".", pIndex + 1);
@@ -278,7 +241,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 					}
 				}
 			} while (pIndex != -1);
-
+		
 			orderByBuffer.append(orderColumn + ", ");
 		}
 		orderByBuffer.setLength(orderByBuffer.length() - 2);
@@ -289,23 +252,6 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 
 		return query;
 	}
-
-//	private void treatReportField(String currentPath, QueryBuilder query, JoinManager joinMap, String field) {
-//		if(field.contains(".")){
-//			String[] parts = field.split("\\.");
-//			String currentAlias = query.getAlias();
-//			for (int i = 0; i < parts.length; i++) {
-//				String newAlias = currentAlias+"_"+parts[i];
-////							query.leftOuterJoinFetch(currentAlias+"."+parts[i] + " "+newAlias);
-////				joinMap.put(currentAlias+"."+parts[i], newAlias);
-//				joinMap.addJoin(currentPath+"."+parts[i]);
-//				currentAlias = newAlias;
-//			}
-//		} else {
-//			//query.leftOuterJoinFetch(query.getAlias()+"."+field + " "+query.getAlias()+"_"+field);
-//			joinMap.put(query.getAlias()+"."+field, query.getAlias()+"_"+field);
-//		}
-//	}
 
 	protected void updateQuery(QueryBuilder<?> query, ReportElement element, Map<String, Object> filterMap) {
 
