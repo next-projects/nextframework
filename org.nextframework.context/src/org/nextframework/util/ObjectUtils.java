@@ -212,6 +212,28 @@ public class ObjectUtils {
 		return new NextMessageSourceResolvable(codes, args, defaultMessage);
 	}
 
+	public boolean checkResolvableCode(MessageSourceResolvable msg, String code) {
+		if (msg != null && msg.getCodes() != null) {
+			for (String code2 : msg.getCodes()) {
+				if (code2.equals(code)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean checkResolvableCodeAndArgument(MessageSourceResolvable msg, String code, Object arg) {
+		if (checkResolvableCode(msg, code) && msg.getArguments() != null) {
+			for (Object arg2 : msg.getArguments()) {
+				if (arg2.equals(arg)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	static ThreadLocal<Long> timestamp = new ThreadLocal<Long>();
 	static {
 		timestamp.set(System.currentTimeMillis());
