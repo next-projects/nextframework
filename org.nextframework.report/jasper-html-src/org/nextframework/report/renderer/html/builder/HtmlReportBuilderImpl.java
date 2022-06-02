@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 
+import org.apache.commons.codec.binary.Base64;
 import org.nextframework.chart.Chart;
 import org.nextframework.chart.ChartRendererFactory;
 import org.nextframework.chart.google.ChartRendererGoogleTools;
@@ -38,7 +39,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.sun.imageio.plugins.png.PNGMetadata;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
@@ -571,7 +571,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 				Renderable renderer = jrPrintImage.getRenderable();
 				try {
 					if (renderer != null) {
-						String encode = Base64.encode(renderer.getImageData(DefaultJasperReportsContext.getInstance()));
+						String encode = new String(Base64.encodeBase64(renderer.getImageData(DefaultJasperReportsContext.getInstance())));
 						if (renderer.getImageTypeValue() == ImageTypeEnum.PNG) {
 							tag.getAttributes().put("src", "data:image/png;base64," + encode);
 						} else if (renderer.getImageTypeValue() == ImageTypeEnum.JPEG) {
