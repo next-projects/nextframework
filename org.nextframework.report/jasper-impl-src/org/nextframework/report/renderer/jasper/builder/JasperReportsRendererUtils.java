@@ -57,7 +57,11 @@ public class JasperReportsRendererUtils {
 	
 	@SuppressWarnings("unchecked")
 	private static List<? extends JRDesignElement> convertToChildList(JRElementGroup jrDesignElement) {
-		return (List<? extends JRDesignElement>) jrDesignElement.getChildren();
+		List<JRDesignElement> list = new ArrayList<JRDesignElement>();
+		for (JRChild child : jrDesignElement.getChildren()) {
+			list.add((JRDesignElement) child);
+		}
+		return list;
 	}
 
 	@SuppressWarnings("unchecked")
