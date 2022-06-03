@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework/org.nextframework.iml" filepath="$PROJECT_DIR$/org.nextframework/org.nextframework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.authorization/org.nextframework.authorization.iml" filepath="$PROJECT_DIR$/org.nextframework.authorization/org.nextframework.authorization.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.authorization.dashboard/org.nextframework.authorization.dashboard.iml" filepath="$PROJECT_DIR$/org.nextframework.authorization.dashboard/org.nextframework.authorization.dashboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.beans/org.nextframework.beans.iml" filepath="$PROJECT_DIR$/org.nextframework.beans/org.nextframework.beans.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.build/org.nextframework.build.iml" filepath="$PROJECT_DIR$/org.nextframework.build/org.nextframework.build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.chart/org.nextframework.chart.iml" filepath="$PROJECT_DIR$/org.nextframework.chart/org.nextframework.chart.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.compilation/org.nextframework.compilation.iml" filepath="$PROJECT_DIR$/org.nextframework.compilation/org.nextframework.compilation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.context/org.nextframework.context.iml" filepath="$PROJECT_DIR$/org.nextframework.context/org.nextframework.context.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.controller/org.nextframework.controller.iml" filepath="$PROJECT_DIR$/org.nextframework.controller/org.nextframework.controller.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.core/org.nextframework.core.iml" filepath="$PROJECT_DIR$/org.nextframework.core/org.nextframework.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.dao/org.nextframework.dao.iml" filepath="$PROJECT_DIR$/org.nextframework.dao/org.nextframework.dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.jsbuilder/org.nextframework.jsbuilder.iml" filepath="$PROJECT_DIR$/org.nextframework.jsbuilder/org.nextframework.jsbuilder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.legacy/org.nextframework.legacy.iml" filepath="$PROJECT_DIR$/org.nextframework.legacy/org.nextframework.legacy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.persistence/org.nextframework.persistence.iml" filepath="$PROJECT_DIR$/org.nextframework.persistence/org.nextframework.persistence.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.report/org.nextframework.report.iml" filepath="$PROJECT_DIR$/org.nextframework.report/org.nextframework.report.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.report.generator/org.nextframework.report.generator.iml" filepath="$PROJECT_DIR$/org.nextframework.report.generator/org.nextframework.report.generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.services/org.nextframework.services.iml" filepath="$PROJECT_DIR$/org.nextframework.services/org.nextframework.services.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.stjs/org.nextframework.stjs.iml" filepath="$PROJECT_DIR$/org.nextframework.stjs/org.nextframework.stjs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.summary/org.nextframework.summary.iml" filepath="$PROJECT_DIR$/org.nextframework.summary/org.nextframework.summary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.types/org.nextframework.types.iml" filepath="$PROJECT_DIR$/org.nextframework.types/org.nextframework.types.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.validation/org.nextframework.validation.iml" filepath="$PROJECT_DIR$/org.nextframework.validation/org.nextframework.validation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.view/org.nextframework.view.iml" filepath="$PROJECT_DIR$/org.nextframework.view/org.nextframework.view.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.nextframework.web/org.nextframework.web.iml" filepath="$PROJECT_DIR$/org.nextframework.web/org.nextframework.web.iml" />
+    </modules>
+  </component>
+</project>
