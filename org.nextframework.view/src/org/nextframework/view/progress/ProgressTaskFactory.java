@@ -31,7 +31,7 @@ public class ProgressTaskFactory {
 	public static void startTask(final IProgressMonitor monitor, final ProgressTask task, String name, final Log logger) {
 		Thread t = new Thread(Next.getApplicationName().toUpperCase() + " - " + ProgressTask.class.getSimpleName() + " - " + name) {
 			public void run() {
-				monitor.subTask("Inicializando trabalho...");
+				monitor.subTask("Inicializando tarefa...");
 				try {
 					Object r = task.run(monitor);
 					monitor.setReturn(r);
@@ -40,7 +40,7 @@ public class ProgressTaskFactory {
 					monitor.setError(e);
 					monitor.done(false);
 					if (logger != null) {
-						logger.error(e);
+						logger.error("Erro ao executar tarefa!", e);
 					}
 				}
 			};
