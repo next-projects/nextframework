@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="lib/itext-pdfa-5.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.11.jar" sourcepath="lib/src/commons-codec-1.11-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
