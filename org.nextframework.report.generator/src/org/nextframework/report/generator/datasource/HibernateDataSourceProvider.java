@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.bean.annotation.DescriptionProperty;
 import org.nextframework.controller.crud.ListViewFilter;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.standard.Next;
@@ -38,8 +39,6 @@ import org.springframework.util.StringUtils;
 
 @SuppressWarnings("unchecked")
 public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
-
-//	private static BeanFacotryUtils beanFacotries = new BeanFacotryUtils();
 
 	String fromClass;
 
@@ -84,10 +83,14 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 	@SuppressWarnings("rawtypes")
 	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
 
-		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(getMainType()));
+		Class mainType = getMainType();
+
+		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(mainType));
 		List<String> properties = element.getProperties();
-		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(getMainType());
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(mainType);
 		JoinManager joinManager = new JoinManager(query.getAlias());
+
+		//String select = "";
 
 		for (String property : properties) {
 
@@ -96,50 +99,55 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			}
 
 			String currentPath = "";
-			String basePath = "";
 
 			String[] parts = property.split("\\.");
 			for (int i = 0; i < parts.length; i++) {
 
-				basePath = currentPath;
+				String basePath = currentPath;
 				currentPath += (i > 0 ? "." : "") + parts[i];
+				PropertyDescriptor pd = bd.getPropertyDescriptor(currentPath);
 
-				PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(currentPath);
-
-				ReportField rf = propertyDescriptor.getAnnotation(ReportField.class);
-				if (rf != null && rf.usingFields().length > 0) {
-					for (String field : rf.usingFields()) {
-						String currentPathRF = basePath + (basePath.length() > 0 ? "." : "") + field;
-						joinManager.addJoin(currentPathRF);
-					}
-				}
-
-				ManyToOne mto = propertyDescriptor.getAnnotation(ManyToOne.class);
-				OneToOne oto = propertyDescriptor.getAnnotation(OneToOne.class);
-				if (mto != null || oto != null) {
-
+				boolean isRelationship = isRelationship(pd);
+				if (isRelationship) {
 					joinManager.addJoin(currentPath);
-
-					if (i == parts.length - 1) {
-						BeanDescriptor currentPathBD = BeanDescriptorFactory.forClass(propertyDescriptor.getRawType());
-						if (currentPathBD.getDescriptionPropertyName() != null) {
-							PropertyDescriptor currentPathBDPD = currentPathBD.getPropertyDescriptor(currentPathBD.getDescriptionPropertyName());
-							ReportField rf2 = currentPathBDPD.getAnnotation(ReportField.class);
-							if (rf2 != null && rf2.usingFields().length > 0) {
-								for (String field : rf2.usingFields()) {
-									String currentPathRF = currentPath + (currentPath.length() > 0 ? "." : "") + field;
-									joinManager.addJoin(currentPathRF);
-								}
-							}
-						}
-					}
-
-				} else {
-					break;
 				}
 
-				if (propertyDescriptor.getAnnotation(Transient.class) != null) {
+				boolean ultParte = i == parts.length - 1;
+				if (ultParte || pd.getAnnotation(Transient.class) != null) {
+
+					List<String> usingFields = getUsingFields(pd, basePath);
+					for (String field : usingFields) {
+
+						PropertyDescriptor pdField = bd.getPropertyDescriptor(field);
+						if (isRelationship(pdField)) {
+							joinManager.addJoin(field);
+						}
+
+					}
+
+					if (isRelationship) {
+
+						BeanDescriptor currentPathBD = BeanDescriptorFactory.forClass(pd.getRawType());
+						if (currentPathBD.getDescriptionPropertyName() != null) {
+
+							PropertyDescriptor currentPathDP = currentPathBD.getPropertyDescriptor(currentPathBD.getDescriptionPropertyName());
+
+							List<String> usingFieldsDP = getUsingFields(currentPathDP, currentPath);
+							for (String field : usingFieldsDP) {
+
+								PropertyDescriptor pdField = bd.getPropertyDescriptor(field);
+								if (isRelationship(pdField)) {
+									joinManager.addJoin(field);
+								}
+
+							}
+
+						}
+
+					}
+
 					break;
+
 				}
 
 			}
@@ -147,8 +155,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		}
 
 		Map<String, String> joinMap = joinManager.getJoinMap();
-		Set<String> joins = joinMap.keySet();
-		for (String join : joins) {
+		for (String join : joinMap.keySet()) {
 			query.leftOuterJoinFetch(join + " " + joinMap.get(join));
 		}
 
@@ -164,7 +171,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 
 		for (String filter : filterMap.keySet()) {
 			String filterNoSuffix = removeSuffix(filter);
-			PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(filterNoSuffix);
+			PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(filterNoSuffix);
 			Object parameterValue = filterMap.get(filter);
 			if (propertyDescriptor.getAnnotation(Transient.class) != null) {
 				transients.put(filterNoSuffix, parameterValue);
@@ -195,7 +202,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 
 		GenericDAO dao = null;
 		try {
-			dao = DAOUtils.getDAOForClass(getMainType());
+			dao = DAOUtils.getDAOForClass(mainType);
 		} catch (NoSuchBeanDefinitionException e) {
 			//if no DAO no problem...
 		}
@@ -213,44 +220,38 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 
 		//Melhor reaordenar fora do BD para ordenar pelos atributos calculados também.
 		//Porém, é necessário que haja pelo menos 1 critério de ordenação, para garantir a paginação.
-		query.orderBy(query.getAlias() + "." + beanDescriptor.getIdPropertyName());
-
-		/*
-		StringBuilder orderByBuffer = new StringBuilder("  ");
-		for (String property : orderByProperties) {
-			if (element.getData().isCalculated(property)) {
-				continue;
-			}
-			String orderColumn = query.getAlias() + "." + property;
-		
-			int pIndex = -1;
-			do {
-				pIndex = orderColumn.indexOf(".", pIndex + 1);
-				if (pIndex > -1) {
-					String base = orderColumn.substring(0, pIndex);
-					String alias = joinMap.get(base);
-					if (alias != null) {
-						orderColumn = alias + orderColumn.substring(pIndex);
-						pIndex = 0;
-					}
-				} else {
-					String alias = joinMap.get(orderColumn);
-					if (alias != null) {
-						orderColumn = alias;
-						pIndex = -1;
-					}
-				}
-			} while (pIndex != -1);
-		
-			orderByBuffer.append(orderColumn + ", ");
-		}
-		orderByBuffer.setLength(orderByBuffer.length() - 2);
-		query.orderBy(orderByBuffer.toString());
-		*/
+		query.orderBy(query.getAlias() + "." + bd.getIdPropertyName());
 
 		updateQuery(query, element, filterMap);
 
 		return query;
+	}
+
+	private void checkProperty() {
+
+	}
+
+	private List<String> getUsingFields(PropertyDescriptor pd, String prefix) {
+		List<String> fields = new ArrayList<String>();
+		ReportField rf = pd.getAnnotation(ReportField.class);
+		if (rf != null && rf.usingFields().length > 0) {
+			for (String field : rf.usingFields()) {
+				String path = prefix + (prefix.length() > 0 ? "." : "") + field;
+				fields.add(path);
+			}
+		}
+		DescriptionProperty dp = pd.getAnnotation(DescriptionProperty.class);
+		if (dp != null && dp.usingFields().length > 0) {
+			for (String field : dp.usingFields()) {
+				String path = prefix + (prefix.length() > 0 ? "." : "") + field;
+				fields.add(path);
+			}
+		}
+		return fields;
+	}
+
+	private boolean isRelationship(PropertyDescriptor pd) {
+		return pd.getAnnotation(ManyToOne.class) != null || pd.getAnnotation(OneToOne.class) != null;
 	}
 
 	protected void updateQuery(QueryBuilder<?> query, ReportElement element, Map<String, Object> filterMap) {
