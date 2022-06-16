@@ -98,7 +98,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		List<String> properties = element.getProperties();
 		for (String property : properties) {
 			if (!element.getData().isCalculated(property)) {
-				checkProperty(bd, property, selectProperties, joinManager, fetchCollections, checkedProperties);
+				checkProperty(bd, property, selectProperties, joinManager, fetchCollections, true, checkedProperties);
 			}
 		}
 
@@ -185,7 +185,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		return query;
 	}
 
-	protected void checkProperty(BeanDescriptor bd, String property, Set<String> selectProperties, JoinManager joinManager, Set<String> fetchCollections, Set<String> checkedProperties) {
+	protected void checkProperty(BeanDescriptor bd, String property, Set<String> selectProperties, JoinManager joinManager, Set<String> fetchCollections, boolean descOnly, Set<String> checkedProperties) {
 
 		if (checkedProperties.contains(property)) {
 			return;
@@ -206,7 +206,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			if (rf != null && rf.usingFields().length > 0) {
 				String[] fields = getFields(rf.usingFields(), basePath);
 				for (String field : fields) {
-					checkProperty(bd, field, selectProperties, joinManager, fetchCollections, checkedProperties);
+					checkProperty(bd, field, selectProperties, joinManager, fetchCollections, false, checkedProperties);
 				}
 			}
 
@@ -217,22 +217,32 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 				joinManager.addJoin(currentPath);
 
 				if (lastPart) {
-					BeanDescriptor currentPathBD = BeanDescriptorFactory.forClass(pd.getRawType());
-					if (currentPathBD.getDescriptionPropertyName() != null) {
 
-						String dpPath = currentPath + (currentPath.length() > 0 ? "." : "") + currentPathBD.getDescriptionPropertyName();
-						checkProperty(bd, dpPath, selectProperties, joinManager, fetchCollections, checkedProperties);
+					if (descOnly) {
 
-						PropertyDescriptor currentPathDP = currentPathBD.getPropertyDescriptor(currentPathBD.getDescriptionPropertyName());
-						DescriptionProperty dp = currentPathDP.getAnnotation(DescriptionProperty.class);
-						if (dp != null && dp.usingFields().length > 0) {
-							String[] fields = getFields(dp.usingFields(), currentPath);
-							for (String field : fields) {
-								checkProperty(bd, field, selectProperties, joinManager, fetchCollections, checkedProperties);
+						BeanDescriptor currentPathBD = BeanDescriptorFactory.forClass(pd.getRawType());
+						if (currentPathBD.getDescriptionPropertyName() != null) {
+
+							String dpPath = currentPath + (currentPath.length() > 0 ? "." : "") + currentPathBD.getDescriptionPropertyName();
+							checkProperty(bd, dpPath, selectProperties, joinManager, fetchCollections, true, checkedProperties);
+
+							PropertyDescriptor currentPathDP = currentPathBD.getPropertyDescriptor(currentPathBD.getDescriptionPropertyName());
+							DescriptionProperty dp = currentPathDP.getAnnotation(DescriptionProperty.class);
+							if (dp != null && dp.usingFields().length > 0) {
+								String[] fields = getFields(dp.usingFields(), currentPath);
+								for (String field : fields) {
+									checkProperty(bd, field, selectProperties, joinManager, fetchCollections, true, checkedProperties);
+								}
 							}
+
 						}
 
+					} else {
+
+						selectProperties.add(currentPath);
+
 					}
+
 				}
 
 			} else if (pd.getAnnotation(OneToMany.class) != null) {
