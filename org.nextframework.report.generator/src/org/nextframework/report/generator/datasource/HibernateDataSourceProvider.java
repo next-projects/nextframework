@@ -6,11 +6,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -25,6 +27,7 @@ import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
 import org.nextframework.persistence.QueryBuilder;
+import org.nextframework.persistence.QueryBuilder.JoinMode;
 import org.nextframework.persistence.ResultListImpl;
 import org.nextframework.persistence.TransientsFilter;
 import org.nextframework.report.generator.ReportElement;
@@ -84,89 +87,46 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
 
 		Class mainType = getMainType();
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(mainType);
 
 		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(mainType));
-		List<String> properties = element.getProperties();
-		BeanDescriptor bd = BeanDescriptorFactory.forClass(mainType);
+		Set<String> selectProperties = new LinkedHashSet<String>();
 		JoinManager joinManager = new JoinManager(query.getAlias());
+		Set<String> fetchCollections = new LinkedHashSet<String>();
+		Set<String> checkedProperties = new LinkedHashSet<String>();
 
-		//String select = "";
-
+		List<String> properties = element.getProperties();
 		for (String property : properties) {
-
-			if (element.getData().isCalculated(property)) {
-				continue;
+			if (!element.getData().isCalculated(property)) {
+				checkProperty(bd, property, selectProperties, joinManager, fetchCollections, checkedProperties);
 			}
-
-			String currentPath = "";
-
-			String[] parts = property.split("\\.");
-			for (int i = 0; i < parts.length; i++) {
-
-				String basePath = currentPath;
-				currentPath += (i > 0 ? "." : "") + parts[i];
-				PropertyDescriptor pd = bd.getPropertyDescriptor(currentPath);
-
-				boolean isRelationship = isRelationship(pd);
-				if (isRelationship) {
-					joinManager.addJoin(currentPath);
-				}
-
-				boolean ultParte = i == parts.length - 1;
-				if (ultParte || pd.getAnnotation(Transient.class) != null) {
-
-					List<String> usingFields = getUsingFields(pd, basePath);
-					for (String field : usingFields) {
-
-						PropertyDescriptor pdField = bd.getPropertyDescriptor(field);
-						if (isRelationship(pdField)) {
-							joinManager.addJoin(field);
-						}
-
-					}
-
-					if (isRelationship) {
-
-						BeanDescriptor currentPathBD = BeanDescriptorFactory.forClass(pd.getRawType());
-						if (currentPathBD.getDescriptionPropertyName() != null) {
-
-							PropertyDescriptor currentPathDP = currentPathBD.getPropertyDescriptor(currentPathBD.getDescriptionPropertyName());
-
-							List<String> usingFieldsDP = getUsingFields(currentPathDP, currentPath);
-							for (String field : usingFieldsDP) {
-
-								PropertyDescriptor pdField = bd.getPropertyDescriptor(field);
-								if (isRelationship(pdField)) {
-									joinManager.addJoin(field);
-								}
-
-							}
-
-						}
-
-					}
-
-					break;
-
-				}
-
-			}
-
 		}
+
+		String selectStr = "";
+		for (String selectProperty : selectProperties) {
+			selectStr += (selectStr.length() > 0 ? "," : "") + joinManager.applyJoin(selectProperty);
+		}
+		query.select(selectStr);
 
 		Map<String, String> joinMap = joinManager.getJoinMap();
 		for (String join : joinMap.keySet()) {
-			query.leftOuterJoinFetch(join + " " + joinMap.get(join));
+			query.join(JoinMode.LEFT_OUTER, false, join + " " + joinMap.get(join));
+		}
+
+		for (String fetchCollection : fetchCollections) {
+			query.fetchCollection(fetchCollection, true);
 		}
 
 		final Set<String> filteredFields = new HashSet<String>();
 		Map<String, Object> transients = new HashMap<String, Object>() {
+
 			private static final long serialVersionUID = 1L;
 
 			public Object get(Object key) {
 				filteredFields.add((String) key);
 				return super.get(key);
 			}
+
 		};
 
 		for (String filter : filterMap.keySet()) {
@@ -222,40 +182,87 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		//Porém, é necessário que haja pelo menos 1 critério de ordenação, para garantir a paginação.
 		query.orderBy(query.getAlias() + "." + bd.getIdPropertyName());
 
-		updateQuery(query, element, filterMap);
-
 		return query;
 	}
 
-	private void checkProperty() {
+	protected void checkProperty(BeanDescriptor bd, String property, Set<String> selectProperties, JoinManager joinManager, Set<String> fetchCollections, Set<String> checkedProperties) {
+
+		if (checkedProperties.contains(property)) {
+			return;
+		}
+		checkedProperties.add(property);
+
+		String currentPath = "";
+		boolean isRelationship = true;
+		String[] parts = property.split("\\.");
+		for (int i = 0; i < parts.length; i++) {
+
+			String basePath = currentPath;
+			currentPath += (i > 0 ? "." : "") + parts[i];
+			PropertyDescriptor pd = bd.getPropertyDescriptor(currentPath);
+			boolean lastPart = i == parts.length - 1;
+
+			ReportField rf = pd.getAnnotation(ReportField.class);
+			if (rf != null && rf.usingFields().length > 0) {
+				String[] fields = getFields(rf.usingFields(), basePath);
+				for (String field : fields) {
+					checkProperty(bd, field, selectProperties, joinManager, fetchCollections, checkedProperties);
+				}
+			}
+
+			boolean isInsideRelationship = isRelationship;
+			isRelationship = pd.getAnnotation(ManyToOne.class) != null || pd.getAnnotation(OneToOne.class) != null;
+			if (isRelationship) {
+
+				joinManager.addJoin(currentPath);
+
+				if (lastPart) {
+					BeanDescriptor currentPathBD = BeanDescriptorFactory.forClass(pd.getRawType());
+					if (currentPathBD.getDescriptionPropertyName() != null) {
+
+						String dpPath = currentPath + (currentPath.length() > 0 ? "." : "") + currentPathBD.getDescriptionPropertyName();
+						checkProperty(bd, dpPath, selectProperties, joinManager, fetchCollections, checkedProperties);
+
+						PropertyDescriptor currentPathDP = currentPathBD.getPropertyDescriptor(currentPathBD.getDescriptionPropertyName());
+						DescriptionProperty dp = currentPathDP.getAnnotation(DescriptionProperty.class);
+						if (dp != null && dp.usingFields().length > 0) {
+							String[] fields = getFields(dp.usingFields(), currentPath);
+							for (String field : fields) {
+								checkProperty(bd, field, selectProperties, joinManager, fetchCollections, checkedProperties);
+							}
+						}
+
+					}
+				}
+
+			} else if (pd.getAnnotation(OneToMany.class) != null) {
+
+				fetchCollections.add(currentPath);
+				break;
+
+			} else if (pd.getAnnotation(Transient.class) != null) {
+
+				break;
+
+			} else if (isInsideRelationship && lastPart) {
+
+				selectProperties.add(currentPath);
+
+			}
+
+		}
 
 	}
 
-	private List<String> getUsingFields(PropertyDescriptor pd, String prefix) {
+	private String[] getFields(String[] usingFields, String prefix) {
 		List<String> fields = new ArrayList<String>();
-		ReportField rf = pd.getAnnotation(ReportField.class);
-		if (rf != null && rf.usingFields().length > 0) {
-			for (String field : rf.usingFields()) {
-				String path = prefix + (prefix.length() > 0 ? "." : "") + field;
-				fields.add(path);
+		for (String usingField : usingFields) {
+			for (String field : usingField.split("(\\s*)?[,;](\\s*)?")) {
+				String fieldPath = prefix + (prefix.length() > 0 ? "." : "") + field;
+				fields.add(fieldPath);
 			}
 		}
-		DescriptionProperty dp = pd.getAnnotation(DescriptionProperty.class);
-		if (dp != null && dp.usingFields().length > 0) {
-			for (String field : dp.usingFields()) {
-				String path = prefix + (prefix.length() > 0 ? "." : "") + field;
-				fields.add(path);
-			}
-		}
-		return fields;
-	}
-
-	private boolean isRelationship(PropertyDescriptor pd) {
-		return pd.getAnnotation(ManyToOne.class) != null || pd.getAnnotation(OneToOne.class) != null;
-	}
-
-	protected void updateQuery(QueryBuilder<?> query, ReportElement element, Map<String, Object> filterMap) {
-
+		return fields.toArray(new String[fields.size()]);
 	}
 
 	private Object max(Object object) {

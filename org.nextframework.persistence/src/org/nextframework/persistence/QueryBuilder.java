@@ -884,11 +884,14 @@ public class QueryBuilder<E> {
 	}
 
 	protected void initializeProxys(Object object) {
+		
 		if(object == null){
 			return;//se o objeto for nulo, nao devemos inicializar os proxys pois não houve resultados
 		}
+		
 		Set<Entry<String, CollectionFetcher>> entrySet = fetchs.entrySet();
 		for (Entry<String, CollectionFetcher> entry : entrySet) {
+			
 			String collectionProperty = entry.getKey();
 			CollectionFetcher fetcher = entry.getValue();
 			if(fetcher == null){
@@ -899,36 +902,24 @@ public class QueryBuilder<E> {
 				};
 			}
 			
-			InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(getSessionFactory(), object.getClass(), collectionProperty);
-			QueryBuilder<?> qb = getQueryBuilderForCollection(object, collectionProperty, inverseCollectionProperty);
-			List<?> list = fetcher.load(qb, object, collectionProperty, inverseCollectionProperty.type);
-			PersistenceUtils.setProperty(object, collectionProperty, list);
+			Object bean = object;
+			if (collectionProperty.contains(".")) {
+				String lastBeanPath = collectionProperty.substring(0, collectionProperty.lastIndexOf("."));
+				collectionProperty = collectionProperty.substring(collectionProperty.lastIndexOf(".")+1);
+				bean = PersistenceUtils.getProperty(object, lastBeanPath);
+				if (bean == null) {
+					return;
+				}
+			}
+			
+			InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(getSessionFactory(), bean.getClass(), collectionProperty);
+			QueryBuilder<?> qb = getQueryBuilderForCollection(bean, collectionProperty, inverseCollectionProperty);
+			List<?> list = fetcher.load(qb, bean, collectionProperty, inverseCollectionProperty.type);
+			
+			PersistenceUtils.setProperty(bean, collectionProperty, list);
+			
 		}
-//		for (String fetch : fetchs.keySet()) {
-//			try {
-//				Object proxyObj = QueryBuilderUtils.getProperty(object, fetch);
-//				
-//				Hibernate.initialize(proxyObj);
-//				if(fetchsDAO.contains(fetch) && proxyObj instanceof Collection){
-//					Collection newCollection = null;
-//					//TODO A QUERY SERÁ FEITA DUAS VEZES.. OTIMIZAR
-//					Collection<?> proxy = (Collection) proxyObj;
-//					if(proxy.iterator().hasNext()){
-//						newCollection = new ArrayList(); //changed in 2012-08-15, used ListSet
-//						String idProperty = null;
-//						for (Object object2 : proxy) {
-//							if(idProperty == null){
-//								idProperty = QueryBuilderUtils.getIdPropertyName(object2.getClass(), sessionProvider.getSessionFactory());
-//							}
-//							newCollection.add(load(idProperty, object2));
-//						}
-//					}
-//					QueryBuilderUtils.setProperty(object, fetch, newCollection);
-//				}
-//			} catch (Exception e) {
-//				throw new QueryBuilderException("Erro ao tentar fazer fetch de "+fetch+" em "+from.getFromClass().getName(), e);
-//			}
-//		}
+		
 	}
 
 	protected QueryBuilder<?> getQueryBuilderForCollection(Object parent, String collectionProperty, InverseCollectionProperties inverseCollectionProperty) {
