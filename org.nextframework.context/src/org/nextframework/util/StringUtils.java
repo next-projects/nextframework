@@ -191,21 +191,6 @@ public class StringUtils {
 			return "";
 		}
 
-		if (Util.strings.isEmpty(formatDate)) {
-			if (value instanceof Time) {
-				formatDate = "HH:mm";
-			} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) {
-				formatDate = "dd/MM/yyyy";
-			}
-		}
-		if (Util.strings.isEmpty(formatNumber)) {
-			if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
-				formatNumber = "#,##0.00";
-			} else if (value instanceof Number) {
-				formatNumber = "#,##0.##";
-			}
-		}
-
 		if (value instanceof Calendar) {
 			value = ((Calendar) value).getTime();
 		} else if (Collection.class.isAssignableFrom(value.getClass())) {
@@ -215,9 +200,23 @@ public class StringUtils {
 		if (value instanceof String) {
 			return (String) value;
 		} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
+			if (Util.strings.isEmpty(formatDate)) {
+				if (value instanceof Time) {
+					formatDate = "HH:mm";
+				} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) {
+					formatDate = "dd/MM/yyyy";
+				}
+			}
 			DateFormat dateFormat = new SimpleDateFormat(formatDate);
 			return dateFormat.format(value);
 		} else if (value instanceof Number) {
+			if (Util.strings.isEmpty(formatNumber)) {
+				if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
+					formatNumber = "#,##0.00";
+				} else if (value instanceof Number) {
+					formatNumber = "#,##0.##";
+				}
+			}
 			NumberFormat numberFormat = new DecimalFormat(formatNumber);
 			String valueToString = numberFormat.format(value);
 			if (valueToString.startsWith(",")) {
