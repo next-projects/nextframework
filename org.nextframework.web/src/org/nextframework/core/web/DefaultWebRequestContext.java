@@ -38,6 +38,7 @@ import javax.servlet.http.HttpSession;
 import org.nextframework.context.UserPersistentDataProvider;
 import org.nextframework.core.standard.Message;
 import org.nextframework.core.standard.MessageType;
+import org.nextframework.core.standard.Next;
 import org.nextframework.service.ServiceFactory;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.i18n.LocaleContext;
@@ -45,7 +46,6 @@ import org.springframework.context.i18n.TimeZoneAwareLocaleContext;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.LocaleContextResolver;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -100,7 +100,7 @@ public class DefaultWebRequestContext implements WebRequestContext {
 	}
 
 	public void initLocation(HttpServletRequest request) {
-		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
+		LocaleResolver localeResolver = Next.getObject(LocaleResolver.class);
 		if (localeResolver instanceof LocaleContextResolver) {
 			LocaleContext localeContext = ((LocaleContextResolver) localeResolver).resolveLocaleContext(request);
 			this.locale = localeContext.getLocale();
