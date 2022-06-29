@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.nextframework.authorization.Authorization;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.standard.RequestContext;
-import org.nextframework.exception.ApplicationException;
+import org.nextframework.core.web.NextWeb;
+import org.nextframework.core.web.WebRequestContext;
+import org.nextframework.exception.BusinessException;
 import org.nextframework.util.Util;
 import org.nextframework.view.progress.ProgressMonitor;
 
@@ -23,27 +26,29 @@ public class ProgressBarCallback implements AjaxCallbackController {
 	private static final String PROGRESS_BARS = "progressBars";
 
 	public void doAjax(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		WebRequestContext requestContext = NextWeb.getRequestContext();
+		Locale locale = requestContext.getLocale();
 		PrintWriter out = response.getWriter();
 		try {
 			String serverId = request.getParameter("serverId");
 			ProgressMonitor progressMonitor = getMonitors(Next.getRequestContext()).get(serverId);
 			if (progressMonitor == null) {
 				progressMonitor = new ProgressMonitor();
-				progressMonitor.subTask("(...)");
-				progressMonitor.setError(new ApplicationException("Atualização de progresso não disponível"));
+				progressMonitor.subTask(Util.objects.newMessage("org.nextframework.view.ajax.ProgressBarCallback.noSubTask", null, "..."));
+				progressMonitor.setError(new BusinessException("org.nextframework.view.ajax.ProgressBarCallback.noSubTaskError", null, "Atualização de progresso não disponível"));
 			}
 			String progressBarId = request.getParameter("progressbarid");
 			int percentDone = progressMonitor.getPercentDone();
-			String subtask = Util.strings.escape(progressMonitor.getSubtask());
+			String subtask = toString(progressMonitor.getSubtask(), locale);
 			out.printf("var progressBar = ProgressBar.getById('%s');", progressBarId);
 			if (progressMonitor.getError() == null) {
 				boolean done = progressMonitor.getDone() == ProgressMonitor.DONE_SUCCESS;
-				out.printf("progressBar.setInformation(%d, '%s', %b, %s);", percentDone, subtask, done, convertToJsArray(progressMonitor.getTasks()));
+				out.printf("progressBar.setInformation(%d, '%s', %b, %s);", percentDone, subtask, done, convertToJsArray(progressMonitor.getTasks(), locale));
 			} else {
-				List<String> tasks = new ArrayList<String>(progressMonitor.getTasks());
-				String error = progressMonitor.getError().getMessage();
+				List<Object> tasks = new ArrayList<Object>(progressMonitor.getTasks());
+				String error = toString(progressMonitor.getError(), locale);
 				tasks.add("<span class='progressInfoError'>" + Util.strings.escape(error) + "</span>");
-				out.printf("progressBar.setError(%d, '%s', %b, %s);", percentDone, subtask, false, convertToJsArray(tasks));
+				out.printf("progressBar.setError(%d, '%s', %b, %s);", percentDone, subtask, false, convertToJsArray(tasks, locale));
 			}
 			if (progressMonitor.getDone() == null) {
 				out.println("progressBar.startSynchronization();");
@@ -51,20 +56,20 @@ public class ProgressBarCallback implements AjaxCallbackController {
 				getMonitors(Next.getRequestContext()).remove(serverId);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			out.println("alert(\"Erro no servidor: " + Util.strings.escapeQuotes(e.getMessage()) + "\")");
+			String errorStr = toString(e, locale);
+			out.println("alert(\"" + errorStr + "\")");
 		}
 	}
 
-	private String convertToJsArray(List<String> tasks) {
+	private String convertToJsArray(List<Object> tasks, Locale locale) {
 		StringBuilder builder = new StringBuilder("[");
 		for (int i = 0; i < tasks.size(); i++) {
-			String task = tasks.get(i);
+			Object task = tasks.get(i);
 			if (task == null) {
 				task = "";
 			}
 			builder.append("\"");
-			builder.append(Util.strings.escapeQuotes(task.replace('\n', ' ').replace('\r', ' ')));
+			builder.append(toString(task, locale));
 			builder.append("\"");
 			if (i + 1 < tasks.size()) {
 				builder.append(",");
@@ -102,6 +107,12 @@ public class ProgressBarCallback implements AjaxCallbackController {
 			requestContext.setUserAttribute(PROGRESS_BARS, monitorsMap);
 		}
 		return monitorsMap;
+	}
+
+	private String toString(Object obj, Locale locale) {
+		String objStr = Util.strings.toStringDescription(obj, locale);
+		objStr = Util.strings.escapeQuotes(objStr.replace('\n', ' ').replace('\r', ' '));
+		return objStr;
 	}
 
 }

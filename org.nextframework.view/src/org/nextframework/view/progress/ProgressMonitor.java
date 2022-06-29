@@ -4,15 +4,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-import org.nextframework.exception.NextException;
-
 public class ProgressMonitor implements IProgressMonitor {
 
 	public static String DONE_SUCCESS = "OK";
 	public static String DONE_ERROR = "ERROR";
 
-	private List<String> tasks = new Vector<String>();
-	private String subtask = "";
+	private List<Object> tasks = new Vector<Object>();
+	private Object subtask = "";
 	private int totalWork = 1;
 	private int workDone = 0;
 	private boolean canceled = false;
@@ -22,8 +20,8 @@ public class ProgressMonitor implements IProgressMonitor {
 	Object retorno = null;
 
 	@Override
-	public void beginTask(String name, int totalWork) {
-		tasks.add(name);
+	public void beginTask(Object taskName, int totalWork) {
+		tasks.add(taskName);
 		this.totalWork = totalWork;
 	}
 
@@ -43,20 +41,17 @@ public class ProgressMonitor implements IProgressMonitor {
 	}
 
 	@Override
-	public void setTaskName(String name) {
-		tasks.add(name);
+	public void setTaskName(Object task) {
+		tasks.add(task);
 	}
 
 	@Override
-	public void subTask(String name) {
-		this.subtask = name;
+	public void subTask(Object subTask) {
+		this.subtask = subTask;
 	}
 
 	@Override
 	public void worked(int work) {
-		if (tasks.isEmpty()) {
-			throw new NextException("O IProgressMonitor não foi inicializado. Chame o método beginTask");
-		}
 		workDone += work;
 	}
 
@@ -86,7 +81,7 @@ public class ProgressMonitor implements IProgressMonitor {
 	}
 
 	/* Métodos da implementação */
-	public List<String> getTasks() {
+	public List<Object> getTasks() {
 		return tasks;
 	}
 
@@ -94,7 +89,7 @@ public class ProgressMonitor implements IProgressMonitor {
 		return (int) (workDone * 100.0 / totalWork);
 	}
 
-	public String getSubtask() {
+	public Object getSubtask() {
 		return subtask;
 	}
 

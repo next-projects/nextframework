@@ -273,7 +273,7 @@ public class MessagesTag extends BaseTag {
 
 		}
 
-		return Util.strings.toStringDescription(source);
+		return Util.strings.toStringDescription(source, locale);
 	}
 
 	private String getMessageStyleClass(Message message) {

@@ -405,7 +405,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 			@Override
 			public Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception {
-				progressMonitor.setTaskName("Gerando PDF");
+				progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.generatingPDF", null, "Gerando PDF"));
 				DynamicBaseReportDefinition definition2 = (DynamicBaseReportDefinition) definition;
 				if (Util.collections.isNotEmpty(definition2.getSummarizedData().getItems())) {
 					onDownloadDefinitionPDF(definition);
@@ -434,7 +434,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 			@Override
 			public Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception {
-				progressMonitor.setTaskName("Gerando HTML");
+				progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.generatingHTML", null, "Gerando HTML"));
 				DynamicBaseReportDefinition definition2 = (DynamicBaseReportDefinition) definition;
 				if (Util.collections.isNotEmpty(definition2.getSummarizedData().getItems())) {
 					return HtmlReportRenderer.renderAsHtml(definition);
@@ -474,7 +474,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			//Se já existir, dá bomba
 			ProgressMonitor monitor = monitorMap.get(model.getId());
 			if (monitor != null) {
-				request.addError("Não é possível executar o relatório, pois uma requisição ainda está em andamento");
+				request.addError(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.alreadyRunning", null, "Não é possível executar o relatório, pois uma requisição ainda está em andamento"));
 				return showFilterView(request, model);
 			}
 
@@ -482,9 +482,9 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			ProgressTask pTask = new ProgressTask() {
 				@Override
 				public Object run(IProgressMonitor progressMonitor) throws Exception {
-					progressMonitor.beginTask("Inicializando", 120);
+					progressMonitor.beginTask(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.initializing", null, "Inicializando"), 120);
 					ReportDefinition definition = getReportDefinition(reportElement, filterMap, getLocale(), getMaxResults(), progressMonitor);
-					progressMonitor.setTaskName("Formatando");
+					progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.formatting", null, "Formatando"));
 					Object converted = task.convertResults(definition, progressMonitor);
 					progressMonitor.worked(20);
 					return converted;

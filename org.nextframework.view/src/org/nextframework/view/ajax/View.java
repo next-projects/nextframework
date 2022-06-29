@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.exception.NextException;
+import org.nextframework.util.Util;
 
 /**
  * Classe que representa a visão do browser. Essa classe deve ser utilizada em chamadas Ajax
@@ -42,7 +43,7 @@ import org.nextframework.exception.NextException;
 public class View {
 
 	private static final String CURRENT_VIEW = "CURRENT_VIEW";
-	
+
 	@SuppressWarnings("unused")
 	private WebRequestContext request;
 	HttpServletResponse response;
@@ -50,36 +51,41 @@ public class View {
 
 	@SuppressWarnings("unused")
 	private List<String> linhas = new ArrayList<String>();
-	
-	
+
 	public View(WebRequestContext request) {
 		this.request = request;
 		response = request.getServletResponse();
 		response.setCharacterEncoding("UTF-8");
 	}
 
-	public static View getCurrent(){
+	public static View getCurrent() {
 		WebRequestContext requestContext = NextWeb.getRequestContext();
-		View currentView = (View)requestContext.getAttribute(CURRENT_VIEW);
-		if(currentView == null){
+		View currentView = (View) requestContext.getAttribute(CURRENT_VIEW);
+		if (currentView == null) {
 			currentView = new View(requestContext);
 			requestContext.setAttribute(CURRENT_VIEW, currentView);
 		}
 		return currentView;
 	}
-	
-	public View alert(Object o){
-		println("alert('"+o+"');");
+
+	public View alertMessage(String code, Object[] args, String defaultMessage) {
+		return alert(Util.objects.newMessage(code, args, defaultMessage));
+	}
+
+	public View alert(Object o) {
+		WebRequestContext request = NextWeb.getRequestContext();
+		String oStr = Util.strings.toStringDescription(o, request.getLocale());
+		println("alert('" + oStr + "');");
 		return this;
 	}
-	
-	public View eval(String codigo){
+
+	public View eval(String codigo) {
 		println(codigo);
 		return this;
 	}
-	
-	public View println(String s){
-		if(out == null){
+
+	public View println(String s) {
+		if (out == null) {
 			try {
 				out = response.getWriter();
 			} catch (IOException e) {
@@ -91,13 +97,13 @@ public class View {
 		out.println(s);
 		return this;
 	}
-	
+
 	/**
 	 * Monta e envia o código para o cliente
 	 *
 	 */
-	public void flush(){
-		if(out == null){
+	public void flush() {
+		if (out == null) {
 			try {
 				out = response.getWriter();
 			} catch (IOException e) {

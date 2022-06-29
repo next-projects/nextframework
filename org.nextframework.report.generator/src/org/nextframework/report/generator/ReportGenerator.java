@@ -89,14 +89,14 @@ public class ReportGenerator {
 		Map<String, Object> fixedCriteriaMap = getFixedCriteriaMap(reportElement);
 
 		if (progressMonitor != null) {
-			progressMonitor.setTaskName("Obtendo registros");
+			progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.ReportGenerator.gettingResult", null, "Obtendo registros"));
 		}
 
 		List<?> result = reportElement.getData().getDataSourceProvider().getResult(reportElement, filterMap, fixedCriteriaMap, limitResults);
 
 		if (progressMonitor != null) {
 			progressMonitor.worked(60);
-			progressMonitor.setTaskName("Sumarizando resultados");
+			progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.ReportGenerator.summarizing", null, "Sumarizando resultados"));
 		}
 
 		reorderResult(result);
