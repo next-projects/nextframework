@@ -3,12 +3,10 @@ package org.nextframework.controller.json;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import org.nextframework.exception.NextException;
 import org.nextframework.types.Cep;
-import org.springframework.context.MessageSourceResolvable;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonParser;
@@ -22,10 +20,6 @@ import com.github.jonpeterson.jackson.module.versioning.VersioningModule;
 public class JacksonJsonTranslator implements JsonTranslator {
 
 	public ObjectMapper createObjectMapper() {
-		return createObjectMapper(null);
-	}
-
-	public ObjectMapper createObjectMapper(Locale locale) {
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setSerializationInclusion(Include.NON_NULL);
@@ -42,9 +36,6 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		nextModule.addSerializer(Cep.class, new CepSerializer());
 		nextModule.addDeserializer(Cep.class, new CepDeserializer());
 		nextModule.addSerializer(Throwable.class, new ThrowableSerializer());
-		if (locale != null) {
-			nextModule.addSerializer(MessageSourceResolvable.class, new MessageSourceResolvableSerializer(locale));
-		}
 
 		mapper.registerModule(nextModule);
 

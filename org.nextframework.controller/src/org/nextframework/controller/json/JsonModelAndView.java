@@ -4,11 +4,13 @@ import java.util.Locale;
 
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.service.ServiceFactory;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class JsonModelAndView extends ModelAndView {
 
@@ -19,9 +21,16 @@ public class JsonModelAndView extends ModelAndView {
 
 		JsonTranslator jsonTranslator = ServiceFactory.getService(JsonTranslator.class);
 		if (jsonTranslator != null && jsonTranslator instanceof JacksonJsonTranslator) {
+
+			ObjectMapper objectMapper = ((JacksonJsonTranslator) jsonTranslator).createObjectMapper();
+
+			SimpleModule module = new SimpleModule();
 			Locale locale = NextWeb.getRequestContext().getLocale();
-			ObjectMapper objectMapper = ((JacksonJsonTranslator) jsonTranslator).createObjectMapper(locale);
+			module.addSerializer(MessageSourceResolvable.class, new MessageSourceResolvableSerializer(locale));
+			objectMapper.registerModule(module);
+
 			view.setObjectMapper(objectMapper);
+
 		}
 
 		//USE JsonJSDateModelAndView

@@ -21,6 +21,7 @@ public class JsonJSDateModelAndView extends ModelAndView {
 
 		setView(view);
 		this.addObject("jsonObject", obj);
+
 	}
 
 }
