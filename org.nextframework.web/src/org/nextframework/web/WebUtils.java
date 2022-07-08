@@ -83,6 +83,10 @@ public class WebUtils {
 	}
 
 	public static String getMessageCodeViewPrefix() {
+		String messageCodeViewPrefix = (String) NextWeb.getRequestContext().getAttribute("messageCodeViewPrefix");
+		if (messageCodeViewPrefix != null) {
+			return messageCodeViewPrefix;
+		}
 		String view = getModelAndViewName();
 		return getRequestModule() + "." + getRequestController() + "." + (view != null ? view : "view");
 	}
