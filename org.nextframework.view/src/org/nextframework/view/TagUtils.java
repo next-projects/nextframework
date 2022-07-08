@@ -242,7 +242,7 @@ public class TagUtils {
 
 	public static JspFragment popJspFragment(HttpServletRequest request) {
 		List<JspFragment> jspFragmentStack = TagUtils.getJspFragmentStack(request);
-		return jspFragmentStack.remove(jspFragmentStack.size() - 1);
+		return jspFragmentStack.size() > 0 ? jspFragmentStack.remove(jspFragmentStack.size() - 1) : null;
 	}
 
 	public static void pushJspFragment(HttpServletRequest request, JspFragment jspFragment) {
