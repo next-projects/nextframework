@@ -29,15 +29,15 @@ public abstract class AbstractBeanDescriptor implements BeanDescriptor {
 	public AbstractBeanDescriptor(Object bean) {
 		Assert.notNull(bean, "Cannot instantiate " + this.getClass().getName() + " with null bean");
 		this.bean = bean;
-		this.targetClass = bean.getClass();
+		this.targetClass = getUserClass(bean.getClass());
 		this.wrapper = new BeanWrapperImpl(bean);
-		this.typeWrapper = new BeanWrapperForDirectClassAccess(getUserClass(this.targetClass));
+		this.typeWrapper = new BeanWrapperForDirectClassAccess(this.targetClass);
 	}
 
 	public AbstractBeanDescriptor(Class<?> targetClass) {
 		Assert.notNull(targetClass, "Cannot instantiate " + this.getClass().getName() + " with null class");
-		this.targetClass = targetClass;
-		this.wrapper = new BeanWrapperForDirectClassAccess(targetClass);
+		this.targetClass = getUserClass(targetClass);
+		this.wrapper = new BeanWrapperForDirectClassAccess(this.targetClass);
 		this.typeWrapper = this.wrapper;
 	}
 

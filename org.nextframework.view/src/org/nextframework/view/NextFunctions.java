@@ -152,7 +152,8 @@ public class NextFunctions {
 
 	private static boolean hasId(Class<? extends Object> class1) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-		Method[] methods = reflectionCache.getMethods(class1);
+		Class<? extends Object> realClass = Util.objects.getRealClass(class1);
+		Method[] methods = reflectionCache.getMethods(realClass);
 		for (Method method : methods) {
 			if (reflectionCache.isAnnotationPresent(method, Id.class)) {
 				return true;
