@@ -41,6 +41,7 @@ import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.standard.Next;
 import org.nextframework.service.ServiceFactory;
 import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.i18n.LocaleContext;
 import org.springframework.context.i18n.TimeZoneAwareLocaleContext;
 import org.springframework.validation.BindException;
@@ -100,15 +101,19 @@ public class DefaultWebRequestContext implements WebRequestContext {
 	}
 
 	public void initLocation(HttpServletRequest request) {
-		LocaleResolver localeResolver = Next.getObject(LocaleResolver.class);
-		if (localeResolver instanceof LocaleContextResolver) {
-			LocaleContext localeContext = ((LocaleContextResolver) localeResolver).resolveLocaleContext(request);
-			this.locale = localeContext.getLocale();
-			if (localeContext instanceof TimeZoneAwareLocaleContext) {
-				this.timeZone = ((TimeZoneAwareLocaleContext) localeContext).getTimeZone();
+		try {
+			LocaleResolver localeResolver = Next.getObject(LocaleResolver.class);
+			if (localeResolver instanceof LocaleContextResolver) {
+				LocaleContext localeContext = ((LocaleContextResolver) localeResolver).resolveLocaleContext(request);
+				this.locale = localeContext.getLocale();
+				if (localeContext instanceof TimeZoneAwareLocaleContext) {
+					this.timeZone = ((TimeZoneAwareLocaleContext) localeContext).getTimeZone();
+				}
+			} else if (localeResolver != null) {
+				this.locale = localeResolver.resolveLocale(request);
 			}
-		} else if (localeResolver != null) {
-			this.locale = localeResolver.resolveLocale(request);
+		} catch (NoSuchBeanDefinitionException ex) {
+			//Nada...
 		}
 	}
 

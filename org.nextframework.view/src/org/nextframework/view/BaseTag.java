@@ -61,6 +61,8 @@ import org.nextframework.exception.TagNotFoundException;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.NoSuchMessageException;
 
 /**
@@ -131,8 +133,8 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
 		if (localName != null) {
 			localName = localName.toLowerCase();
+			dynamicAttributesMap.put(localName, value);
 		}
-		dynamicAttributesMap.put(localName, value);
 	}
 
 	public String getDynamicAttributesToString() {
@@ -364,25 +366,33 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	@Override
 	public final void doTag() throws JspException, IOException {
+
 		if (Boolean.FALSE.equals(rendered)) {
 			return;
 		}
+
 		if (Boolean.TRUE.equals(bypass)) {
 			//se for para pular a funcionalidade dessa tag.. e utilizar só as tags filhas
 			doBody();
 			return;
 		}
+
 		boolean registeringDataGrid = getRequest().getAttribute(ColumnTag.REGISTERING_DATAGRID) != null;
 		if (registeringDataGrid && !(this instanceof ColumnChildTag)) {
 			//se estiver registrando o datagrid não precisa renderizar nada
 			return;
 		}
+
 		if (!getTagStack().isEmpty()) {
 			parent = getTagStack().peek();
 		}
+
 		try {
+
 			//coloca a tag no escopo
 			pushTagOnStack();
+
+			applyDefaultStyleClasses();
 
 			//verificar se está dentro de um panelGrid
 			//panelGrid tem um comportamento especial para poder suportar tags dentro dele sem utilizar a tag Panel
@@ -392,6 +402,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 			PanelGridTag panelGrid = parent instanceof PanelGridTag ? (PanelGridTag) parent : null;
 			GetContentTag getContent = findParentGetContent();
+
 			if (getContent != null) {
 				doTagInGetContent(getContent);
 			} else if (panelGrid != null && !(this instanceof PanelTag) && !(this instanceof LogicalTag)) {
@@ -410,8 +421,9 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 					//throw new JspException(e);
 				}
 			}
-			//tira a tag do escopo
+
 		} finally {
+			//tira a tag do escopo
 			popTagFromStack();
 		}
 
@@ -446,7 +458,6 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		getPageContext().popBody();
 		printWriter.flush();
 		String body = outputStream.toString();
-
 		getContent.register(body);
 	}
 
@@ -468,7 +479,6 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		Map<String, Object> properties = new HashMap<String, Object>();
 		addBasicPanelProperties(properties);
 		addPanelProperties(properties);
-
 		block.setBody(body);
 		block.setProperties(properties);
 		panelGrid.addBlock(block);
@@ -485,6 +495,37 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	protected void addPanelProperties(Map<String, Object> properties) {
 
+	}
+
+	protected void applyDefaultStyleClasses() throws JspException {
+		Set<String> fields = getViewConfig().getStyleClassFields(this.getClass());
+		if (fields != null) {
+			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+			for (String field : fields) {
+				String defaultStyleClass = getViewConfig().getDefaultStyleClass(this.getClass(), field);
+				applyDefaultStyleClass(bw, field, defaultStyleClass);
+			}
+		}
+	}
+
+	protected void applyDefaultStyleClass(BeanWrapper bw, String field, String defaultStyleClass) throws JspException {
+		if (bw.isWritableProperty(field)) {
+			Object value = bw.getPropertyValue(field);
+			if (value == null) {
+				value = defaultStyleClass;
+				if (value != null) {
+					bw.setPropertyValue(field, value);
+				}
+			}
+		} else if ("class".equals(field)) {
+			String classCss = (String) getDynamicAttributesMap().get("class");
+			if (classCss == null) {
+				classCss = defaultStyleClass;
+				if (classCss != null) {
+					setDynamicAttribute(null, "class", classCss);
+				}
+			}
+		}
 	}
 
 	protected void doComponent() throws Exception {

@@ -36,17 +36,17 @@ import org.nextframework.view.combo.ComboTag;
  * @version 1.1
  */
 public class GroupTag extends ComboTag {
-	
+
 	protected Integer colspan;
-	
+
 	protected String legend;
-	
+
 	protected Boolean showBorder = true;
-	
+
 	protected Boolean useParentPanelGridProperties = true;
-	
+
 	// panelgridproperties
-	
+
 	protected int columns = 1;
 
 	protected String style;
@@ -56,15 +56,14 @@ public class GroupTag extends ComboTag {
 	protected String rowStyleClasses;
 
 	protected String rowStyles;
-	
+
 	protected String columnStyleClasses;
 
 	protected String columnStyles;
 
-	
 	@Override
 	protected void doComponent() throws Exception {
-		
+
 		if (Util.booleans.isTrue(useParentPanelGridProperties)) {
 			PanelGridTag parentPanel = findParent(PanelGridTag.class);
 			if (parentPanel != null) {
@@ -88,26 +87,26 @@ public class GroupTag extends ComboTag {
 				}
 			}
 		}
-		
+
 		PanelTag panelTag = new PanelTag();
 		PanelGridTag panelGridTag = new PanelGridTag();
-		
+
 		HashMap<String, Object> dynamicAttributesMapPanelGrid = new HashMap<String, Object>(getDynamicAttributesMap());
-		
+
 		Set<String> keySet = new HashSet<String>(getDynamicAttributesMap().keySet());
-		for (String string : keySet) {
-			if(string.startsWith("panel")){
-				panelTag.setDynamicAttribute(null, string.substring("panel".length()), getDynamicAttributesMap().get(string));
-				getDynamicAttributesMap().remove(string);
-				dynamicAttributesMapPanelGrid.remove(string);
+		for (String key : keySet) {
+			if (key.startsWith("panel")) {
+				panelTag.setDynamicAttribute(null, key.substring("panel".length()), getDynamicAttributesMap().get(key));
+				getDynamicAttributesMap().remove(key);
+				dynamicAttributesMapPanelGrid.remove(key);
 			}
 		}
-		for (String string : keySet) {
-			if(string.startsWith("panelgrid")){
-				getDynamicAttributesMap().remove(string);
+		for (String key : keySet) {
+			if (key.startsWith("panelgrid")) {
+				getDynamicAttributesMap().remove(key);
 			}
 		}
-		
+
 		panelGridTag.setDynamicAttributesMap(dynamicAttributesMapPanelGrid);
 		getDynamicAttributesMap().remove("id");//nao duplicar o id
 		panelGridTag.setColumns(getColumns());
@@ -118,42 +117,42 @@ public class GroupTag extends ComboTag {
 		panelGridTag.setColumnStyleClasses(getColumnStyleClasses());
 		panelGridTag.setColumnStyles(getColumnStyles());
 		panelGridTag.setUseParentPanelGridProperties(false);
-		
-		
-		TextTag text = null; 
-			
-		if(colspan != null){
+
+		TextTag text = null;
+
+		if (colspan != null) {
 			panelTag.setDynamicAttribute(null, "colspan", colspan);
 		}
-		
-		
+
 		TagHolder panelHolder = new TagHolder(panelTag);
 		TagHolder panelGridHolder = new TagHolder(panelGridTag);
 		TagHolder textHolder = null;
-		if(showBorder){
-			if(legend != null){
+		if (showBorder) {
+			if (legend != null) {
 				for (String string : keySet) {
-					if(string.startsWith("legend")){
+					if (string.startsWith("legend")) {
 						Object value = getDynamicAttributesMap().remove(string);
 						getDynamicAttributesMap().put(string.substring("legend".length()), value);
 					}
 				}
-				text = new TextTag("<fieldset "+getDynamicAttributesToString()+"><legend>"+legend+"</legend>","</fieldset>");
+				text = new TextTag("<fieldset " + getDynamicAttributesToString() + "><legend>" + legend + "</legend>", "</fieldset>");
 			} else {
-				text = new TextTag("<fieldset>","</fieldset>");
+				text = new TextTag("<fieldset>", "</fieldset>");
 			}
 			textHolder = new TagHolder(text);
 		}
-		if(textHolder != null){
+
+		if (textHolder != null) {
 			panelHolder.addChild(textHolder);
 			textHolder.addChild(panelGridHolder);
 		} else {
-			panelHolder.addChild(panelGridHolder);	
+			panelHolder.addChild(panelGridHolder);
 		}
-		
+
 		panelGridTag.setJspBody(getJspBody());
-		
+
 		invoke(panelHolder);
+
 	}
 
 	public Integer getColspan() {
@@ -243,19 +242,19 @@ public class GroupTag extends ComboTag {
 	public void setUseParentPanelGridProperties(Boolean useParentPanelGridProperties) {
 		this.useParentPanelGridProperties = useParentPanelGridProperties;
 	}
-	
+
 }
 
 class TextTag extends BaseTag {
-	
+
 	protected String parte1;
 	protected String parte2;
-	
-	public TextTag(String parte1, String parte2){
+
+	public TextTag(String parte1, String parte2) {
 		this.parte1 = parte1;
 		this.parte2 = parte2;
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
 		getOut().println(parte1);

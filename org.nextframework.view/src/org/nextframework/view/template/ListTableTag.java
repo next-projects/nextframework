@@ -50,6 +50,8 @@ public class ListTableTag extends TemplateTag {
 	protected Number currentPage;
 	protected Number numberOfPages;
 
+	protected String pagePanelStyleClass;
+
 	@Override
 	protected void doComponent() throws Exception {
 
@@ -253,6 +255,14 @@ public class ListTableTag extends TemplateTag {
 
 	public void setNumberOfPages(Number numberOfPages) {
 		this.numberOfPages = numberOfPages;
+	}
+
+	public String getPagePanelStyleClass() {
+		return pagePanelStyleClass;
+	}
+
+	public void setPagePanelStyleClass(String pagePanelStyleClass) {
+		this.pagePanelStyleClass = pagePanelStyleClass;
 	}
 
 }

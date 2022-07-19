@@ -23,9 +23,9 @@
  */
 package org.nextframework.view;
 
-import java.util.Optional;
-
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.util.Util;
+import org.nextframework.web.WebUtils;
 
 /**
  * @author rogelgarcia
@@ -37,72 +37,99 @@ public class PaggingTag extends BaseTag {
 	protected Integer currentPage;
 	protected Integer totalNumberOfPages;
 	protected String parameters;
-	
-	protected String selectedClass = "disabled";
-	protected String unselectedClass;
-		
+
+	protected String panelClass;
+	protected String selectedClass;
+
 	@Override
 	protected void doComponent() throws Exception {
-		int start = Math.max(1, currentPage+1 - 4) - 1;
+
+		int start = Math.max(1, currentPage + 1 - 4) - 1;
 		boolean start3pontos = start != 0;
-		int fim = Math.min( 9 - (currentPage - start) + currentPage , totalNumberOfPages);
+		int fim = Math.min(9 - (currentPage - start) + currentPage, totalNumberOfPages);
 		boolean fim3pontos = fim < totalNumberOfPages;//fim nao é incluido
-		String paggingExtraStyleClass = getViewConfig().getPaggingExtraStyleClass();
-		getOut().println("<ul class=\"pagination " + paggingExtraStyleClass + "\">");
-		Optional.ofNullable(selectedClass).orElse(getViewConfig().getPaggingDefaultSelectedClass());
-		if(start3pontos)getOut().print("<li><a href=\""+getRequest().getContextPath()+NextWeb.getRequestContext().getRequestQuery()+"?currentPage=0"+getParameters()+"\">...</a></li>");
-		for (int i = start; i < fim; i++) {
-			if(i == currentPage){
-				String cs = selectedClass != null? " class=\""+selectedClass +"\"": "";
-				getOut().print("<li"+cs+"><a href=\"#\">"+(i+1)+"</a></li> ");
-			} else {
-				String cs = unselectedClass != null? " class=\""+unselectedClass +"\"": "";
-				getOut().print("<li><a href=\""+getRequest().getContextPath()+NextWeb.getRequestContext().getRequestQuery()+"?currentPage="+i+getParameters()+"\" "+cs+">"+(i+1)+"</a> </li>");
-			}
-			//codigo de teste
-//			if(i==currentPage){
-//				System.out.println(">"+(i+1));
-//			} else {
-//				System.out.println((i+1));
-//			}
+
+		getOut().println("<ul class=\"" + panelClass + "\">");
+
+		if (start3pontos) {
+			getOut().print("<li>" + getLink(0) + "&nbsp;...&nbsp;</li>");
 		}
-		if(fim3pontos)getOut().print("<li><a href=\"#\">...</a></li>");
+
+		for (int i = start; i < fim; i++) {
+			if (i == currentPage) {
+				String cs = selectedClass != null ? " class=\"" + selectedClass + "\"" : "";
+				getOut().print("<li><a " + cs + " href=\"#\">" + (i + 1) + "</a></li> ");
+			} else {
+				getOut().print("<li>" + getLink(i) + "</li>");
+			}
+		}
+
+		if (fim3pontos) {
+			getOut().print("<li>&nbsp;...&nbsp;" + getLink(totalNumberOfPages) + "</li>");
+		}
+
 		getOut().println("</ul>");
+
 	}
-	
+
+	private String getLink(int page) {
+
+		//Link basico
+		String link = getRequest().getContextPath() + NextWeb.getRequestContext().getRequestQuery() + "?currentPage=" + page + getParameters();
+
+		//Verifica ultima acao
+		String acao = (String) getRequest().getAttribute("lastAction");
+		if (Util.strings.isNotEmpty(acao)) {
+			link += "&ACTION=" + acao;
+		}
+
+		//Verifica URL Sufix
+		link = WebUtils.rewriteUrl(link);
+
+		return "<a href=\"" + link + "\" >" + (page + 1) + "</a>";
+	}
+
 	public Integer getCurrentPage() {
 		return currentPage;
 	}
-	public String getSelectedClass() {
-		return selectedClass;
-	}
-	public Integer getTotalNumberOfPages() {
-		return totalNumberOfPages;
-	}
-	public String getUnselectedClass() {
-		return unselectedClass;
-	}
+
 	public void setCurrentPage(Integer currentPage) {
 		this.currentPage = currentPage;
 	}
-	public void setSelectedClass(String selectedClass) {
-		this.selectedClass = selectedClass;
+
+	public Integer getTotalNumberOfPages() {
+		return totalNumberOfPages;
 	}
+
 	public void setTotalNumberOfPages(Integer totalNumberOfPages) {
 		this.totalNumberOfPages = totalNumberOfPages;
 	}
-	public void setUnselectedClass(String unselectedClass) {
-		this.unselectedClass = unselectedClass;
-	}
 
 	public String getParameters() {
-		if(parameters == null){
+		if (parameters == null) {
 			return "";
 		}
-		return "&"+parameters.replaceAll(";", "&");
+		return "&" + parameters.replaceAll(";", "&");
 	}
 
 	public void setParameters(String parameters) {
 		this.parameters = parameters;
 	}
+
+	public String getPanelClass() {
+		return panelClass;
+	}
+
+	public void setPanelClass(String panelClass) {
+		this.panelClass = panelClass;
+	}
+
+	public String getSelectedClass() {
+		return selectedClass;
+	}
+
+	public void setSelectedClass(String selectedClass) {
+		this.selectedClass = selectedClass;
+	}
+
 }

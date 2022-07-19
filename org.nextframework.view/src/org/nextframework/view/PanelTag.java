@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nextframework.util.Util;
+import org.nextframework.view.template.PropertyTag;
 
 /**
  * @author rogelgarcia
@@ -34,26 +35,76 @@ import org.nextframework.util.Util;
  * @version 1.1
  */
 public class PanelTag extends BaseTag {
-	
+
 	protected Integer colspan;
 	protected String title;
-	protected Boolean propertyRenderAsDouble;
+	protected String propertyRenderAs;
 	protected String onSelectTab;
 
-	public String getOnSelectTab() {
-		return onSelectTab;
-	}
+	@Override
+	protected void doComponent() throws Exception {
 
-	public void setOnSelectTab(String onSelectTab) {
-		this.onSelectTab = onSelectTab;
-	}
+		BaseTag findFirst2 = findFirst2(AcceptPanelRenderedBlock.class, PanelTag.class, ColumnTag.class);
+		if (findFirst2 != null && findFirst2 instanceof AcceptPanelRenderedBlock) {
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
-	}
+			String body;
+			if (getJspBody() != null) {
+				body = getBody();
+			} else {
+				body = "";
+			}
 
-	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
+			Map<String, Object> attrs = new HashMap<String, Object>();
+			attrs.putAll(getDynamicAttributesMap());
+			if ("".equals(attrs.get("style"))) {
+				attrs.remove("style");
+			}
+			if ("".equals(attrs.get("class"))) {
+				attrs.remove("class");
+			}
+			if (colspan != null) {
+				attrs.put("colspan", colspan);
+			}
+			if (title != null) {
+				attrs.put("title", title);
+			}
+			if (onSelectTab != null) {
+				attrs.put("onselecttab", onSelectTab);
+			}
+			if (id != null) {
+				attrs.put("id", id);
+			}
+
+			PanelRenderedBlock renderedBlock = new PanelRenderedBlock();
+			renderedBlock.setBody(body);
+			renderedBlock.setProperties(attrs);
+
+			AcceptPanelRenderedBlock acceptPanel = findParent2(AcceptPanelRenderedBlock.class, true);
+			acceptPanel.addBlock(renderedBlock);
+
+		} else {
+
+			Object style = getDynamicAttributesMap().get("style");
+			Object clazz = getDynamicAttributesMap().get("class");
+			if (Util.objects.isNotEmpty(style) || Util.objects.isNotEmpty(clazz)) {
+				getOut().print("<span");
+				if (Util.objects.isNotEmpty(style)) {
+					getOut().print(" style=\"" + style + "\"");
+				}
+				if (Util.objects.isNotEmpty(clazz)) {
+					getOut().print(" class=\"" + clazz + "\"");
+				}
+				getOut().print(">");
+			}
+
+			doBody();
+
+			if (Util.objects.isNotEmpty(style) || Util.objects.isNotEmpty(clazz)) {
+				getOut().print("</span>");
+			}
+
+		}
+
 	}
 
 	public Integer getColspan() {
@@ -71,65 +122,35 @@ public class PanelTag extends BaseTag {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	@Override
-	protected void doComponent() throws Exception {
-		BaseTag findFirst2 = findFirst2(AcceptPanelRenderedBlock.class, PanelTag.class, ColumnTag.class);
-		if(findFirst2 != null && findFirst2 instanceof AcceptPanelRenderedBlock){
-			String body; 
-			if (getJspBody() != null) {
-				body = getBody();
-			} else {
-				body = "";
-			}
-			Map<String, Object> attrs = new HashMap<String, Object>();
-			attrs.putAll(getDynamicAttributesMap());
-			if("".equals(attrs.get("style"))){
-				attrs.remove("style");
-			}		
-			if("".equals(attrs.get("class"))){
-				attrs.remove("class");
-			}
-			if(colspan != null){
-				attrs.put("colspan", colspan);
-			}
-			if(title != null){
-				attrs.put("title", title);
-			}
-			if(onSelectTab != null){
-				attrs.put("onselecttab", onSelectTab);
-			}
-			if(id != null){
-				attrs.put("id", id);
-			}
-			PanelRenderedBlock renderedBlock = new PanelRenderedBlock();
-			renderedBlock.setBody(body);
-			renderedBlock.setProperties(attrs);
-			
-			
-			AcceptPanelRenderedBlock acceptPanel = findParent2(AcceptPanelRenderedBlock.class, true);
-			acceptPanel.addBlock(renderedBlock);	
-		} else {
-			Object style = getDynamicAttributesMap().get("style");
-			Object clazz = getDynamicAttributesMap().get("class");
-			if(Util.objects.isNotEmpty(style) || Util.objects.isNotEmpty(clazz)){
-				getOut().print("<span");
-				if(Util.objects.isNotEmpty(style)){
-					getOut().print(" style=\""+style+"\"");	
-				}
-				if(Util.objects.isNotEmpty(clazz)){
-					getOut().print(" class=\""+clazz+"\"");	
-				}
-				getOut().print(">");
-			}
-			doBody();
-			if(Util.objects.isNotEmpty(style) || Util.objects.isNotEmpty(clazz)){
-				getOut().print("</span>");
-			}
-		}
-		
+
+	public String getPropertyRenderAs() {
+		return propertyRenderAs;
 	}
 
+	public void setPropertyRenderAs(String propertyRenderAs) {
+		this.propertyRenderAs = propertyRenderAs;
+	}
 
+	@Deprecated
+	public Boolean getPropertyRenderAsDouble() {
+		return PropertyTag.DOUBLE.equalsIgnoreCase(propertyRenderAs);
+	}
+
+	@Deprecated
+	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
+		if (Util.booleans.isTrue(propertyRenderAsDouble)) {
+			this.propertyRenderAs = PropertyTag.DOUBLE;
+		} else {
+			this.propertyRenderAs = PropertyTag.SINGLE;
+		}
+	}
+
+	public String getOnSelectTab() {
+		return onSelectTab;
+	}
+
+	public void setOnSelectTab(String onSelectTab) {
+		this.onSelectTab = onSelectTab;
+	}
 
 }

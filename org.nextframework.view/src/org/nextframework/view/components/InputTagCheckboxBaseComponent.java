@@ -10,8 +10,7 @@ public class InputTagCheckboxBaseComponent extends InputTagComponent {
 		String onchangestring = "";
 		if (Util.booleans.isTrue(inputTag.getReloadOnChange())) {
 			FormTag form = inputTag.findParent(FormTag.class, true);
-			onchangestring =
-					form.getName() + ".validate = 'false'; " +
+			onchangestring = form.getName() + ".validate = 'false'; " +
 					form.getName() + ".suppressErrors.value = 'true';" +
 					form.getName() + ".suppressValidation.value = 'true';" +
 					form.getSubmitFunction() + "()";
@@ -27,4 +26,5 @@ public class InputTagCheckboxBaseComponent extends InputTagComponent {
 		}
 		return onchangestring;
 	}
+
 }

@@ -66,13 +66,13 @@ public class PropertyTag extends TemplateTag {
 
 	public static final String DOUBLE = "double";
 
-	public static final String INVERT = "invert";
-
 	public static final String DOUBLELINE = "doubleline";
 
-	public static final String FORMGROUP = "form-group";
+	public static final String STACKED = "stacked";
 
-	private static final List<String> RENDERAS_OPTIONS = Arrays.asList(COLUMN, SINGLE, DOUBLE, DOUBLELINE, FORMGROUP);
+	public static final String INVERT = "invert";
+
+	private static final List<String> RENDERAS_OPTIONS = Arrays.asList(COLUMN, SINGLE, DOUBLE, DOUBLELINE, STACKED, INVERT);
 
 	protected String name;
 	protected String renderAs = null;
@@ -186,10 +186,8 @@ public class PropertyTag extends TemplateTag {
 					renderAs = configTag.getRenderAs();
 				} else if (findFirst instanceof PanelTag) {
 					PanelTag panel = (PanelTag) findFirst;
-					Boolean propertyRenderAsDouble = panel.getPropertyRenderAsDouble();
-					if (propertyRenderAsDouble != null) {
-						renderAs = Util.booleans.isTrue(propertyRenderAsDouble) ? DOUBLE : SINGLE;
-					} else {
+					renderAs = panel.getPropertyRenderAs();
+					if (renderAs == null) {
 						// procurar opcoes de renderAs nas tags mais acima do panel, já que esse panel não está forçando a renderização double
 						if (configTag != null && Util.strings.isNotEmpty(configTag.getRenderAs())) {
 							if (configTag.getRenderAs().toLowerCase().equals(DOUBLELINE)) {
@@ -203,10 +201,8 @@ public class PropertyTag extends TemplateTag {
 					}
 				} else if (findFirst instanceof PanelGridTag) {
 					PanelGridTag panelGrid = (PanelGridTag) findFirst;
-					Boolean propertyRenderAsDouble = panelGrid.getPropertyRenderAsDouble();
-					if (propertyRenderAsDouble != null) {
-						renderAs = Util.booleans.isTrue(propertyRenderAsDouble) ? DOUBLE : SINGLE;
-					} else {
+					renderAs = panelGrid.getPropertyRenderAs();
+					if (renderAs == null) {
 						//procurar opcoes de renderAs nas tags mais acima do panel, já que esse panel não está forçando a renderização double
 						if (configTag != null && Util.strings.isNotEmpty(configTag.getRenderAs())) {
 							if (configTag.getRenderAs().toLowerCase().equals(DOUBLELINE)) {

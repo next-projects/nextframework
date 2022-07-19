@@ -42,12 +42,12 @@ public class ViewTag extends TemplateTag {
 	protected Class<?> beanType;
 	protected String propertyMode;
 
+	protected String pageStyleClass;
+	protected String titleStyleClass;
+	protected String bodyStyleClass;
+
 	@Override
 	protected void doComponent() throws Exception {
-
-		if (formName == null && useBean != null) {
-			formName = useBean;
-		}
 
 		if (title == null) {
 			title = getDefaultViewLabel("title", null);
@@ -139,6 +139,30 @@ public class ViewTag extends TemplateTag {
 
 	public void setPropertyMode(String propertyMode) {
 		this.propertyMode = propertyMode;
+	}
+
+	public String getPageStyleClass() {
+		return pageStyleClass;
+	}
+
+	public void setPageStyleClass(String pageStyleClass) {
+		this.pageStyleClass = pageStyleClass;
+	}
+
+	public String getTitleStyleClass() {
+		return titleStyleClass;
+	}
+
+	public void setTitleStyleClass(String titleStyleClass) {
+		this.titleStyleClass = titleStyleClass;
+	}
+
+	public String getBodyStyleClass() {
+		return bodyStyleClass;
+	}
+
+	public void setBodyStyleClass(String bodyStyleClass) {
+		this.bodyStyleClass = bodyStyleClass;
 	}
 
 }

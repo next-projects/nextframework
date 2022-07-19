@@ -57,15 +57,4 @@ public class ViewUtils {
 		}
 	}
 
-//	public static boolean isCrudRequest() {
-//		Object crudRequest = ((WebRequestContext)NextWeb.getRequestContext()).getAttribute(CrudController.CRUD_REQUEST);
-//		return crudRequest != null && (Boolean) crudRequest;
-//	}
-//
-//	public static Class<?> getCrudClass() {
-//		if(isCrudRequest()){
-//			return (Class<?>) ((WebRequestContext)NextWeb.getRequestContext()).getAttribute(CrudController.CRUD_CLASS);
-//		}
-//		return null;
-//	}
 }

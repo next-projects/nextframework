@@ -1,5 +1,4 @@
 <div id="${tag.id}"></div>
-
 <script type="text/javascript">
 	var element = ProgressBar.setup({
 		id: "${tag.id}",

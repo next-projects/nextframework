@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!-- Valor selecionado ${tag.valueToString} -->
 <div class="select_many_popup_container">
 	<input type="text" name="${tag.name}_labels" value="" class="select_many_popup_labels" readonly="readonly" ${tag.dynamicAttributesToString}/>
 	<c:set var="aberto" value="${(empty tag.dynamicAttributesMap['disabled'] || tag.dynamicAttributesMap['disabled'] == 'false') && (empty tag.dynamicAttributesMap['readonly'] || tag.dynamicAttributesMap['readonly'] == 'false')}" />

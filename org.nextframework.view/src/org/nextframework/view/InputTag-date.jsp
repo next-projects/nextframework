@@ -7,14 +7,14 @@
 	<script type="text/javascript">
 	  Calendar.setup(
 	    {
-	      inputField  : "${tag.id}",         // ID of the input field
-	      ifFormat    : "${tag.inputComponent.calendarPattern}",    // the date format
-	      button      : "${tag.id}_trigger",       // ID of the button
+	      inputField  : "${tag.id}", // ID of the input field
+	      ifFormat    : "${tag.inputComponent.calendarPattern}", // the date format
+	      button      : "${tag.id}_trigger", // ID of the button
 	      showsTime   : ${tag.inputComponent.showCalendarTime},
 	      showsSeconds: ${tag.inputComponent.showCalendarSeconds},
 	      weekNumbers : false
 	    }
 	  );
-	</script>	
+	</script>
 </c:if>
 </c:if>

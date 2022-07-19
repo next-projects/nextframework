@@ -23,6 +23,8 @@
  */
 package org.nextframework.view.template;
 
+import org.nextframework.util.Util;
+
 /**
  * @author rogelgarcia
  * @since 03/02/2006
@@ -38,10 +40,19 @@ public class ReportTableTag extends TemplateTag {
 	protected String columnStyles;
 	protected String rowStyleClasses;
 	protected String rowStyles;
-	protected Boolean propertyRenderAsDouble;
+	protected String propertyRenderAs;
+	protected Boolean propertyShowLabel;
 
 	@Override
 	protected void doComponent() throws Exception {
+
+		if (propertyRenderAs == null) {
+			propertyRenderAs = getViewConfig().isDefaultPropertyRenderAs();
+		}
+
+		if (propertyShowLabel == null) {
+			propertyShowLabel = PropertyTag.SINGLE.equalsIgnoreCase(propertyRenderAs);
+		}
 
 		pushAttribute("TtabelaRelatorio", this); //Legacy
 		includeJspTemplate();
@@ -113,12 +124,34 @@ public class ReportTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
+	public String getPropertyRenderAs() {
+		return propertyRenderAs;
 	}
 
+	public void setPropertyRenderAs(String propertyRenderAs) {
+		this.propertyRenderAs = propertyRenderAs;
+	}
+
+	@Deprecated
+	public Boolean getPropertyRenderAsDouble() {
+		return PropertyTag.DOUBLE.equalsIgnoreCase(propertyRenderAs);
+	}
+
+	@Deprecated
 	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
+		if (Util.booleans.isTrue(propertyRenderAsDouble)) {
+			this.propertyRenderAs = PropertyTag.DOUBLE;
+		} else {
+			this.propertyRenderAs = PropertyTag.SINGLE;
+		}
+	}
+
+	public Boolean getPropertyShowLabel() {
+		return propertyShowLabel;
+	}
+
+	public void setPropertyShowLabel(Boolean propertyShowLabel) {
+		this.propertyShowLabel = propertyShowLabel;
 	}
 
 }

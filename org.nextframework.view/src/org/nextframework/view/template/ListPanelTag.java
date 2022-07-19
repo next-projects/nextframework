@@ -30,9 +30,19 @@ package org.nextframework.view.template;
  */
 public class ListPanelTag extends TemplateTag {
 
+	private String panelStyleClass;
+
 	@Override
 	protected void doComponent() throws Exception {
 		includeJspTemplate();
+	}
+
+	public String getPanelStyleClass() {
+		return panelStyleClass;
+	}
+
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
 	}
 
 }

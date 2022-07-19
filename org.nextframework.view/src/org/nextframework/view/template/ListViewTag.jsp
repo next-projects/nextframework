@@ -8,7 +8,7 @@
 	<input type="hidden" name="notFirstTime" value="true"/>
 
 	<c:if test="${listViewTag.showNewLink || !empty listViewTag.linkArea}">
-		<div>
+		<div class="${listViewTag.linkBarStyleClass}">
 			${listViewTag.invokeLinkArea}
 			<c:if test="${listViewTag.showNewLink}">
 				<n:link action="create">${listViewTag.newLinkLabel}</n:link>

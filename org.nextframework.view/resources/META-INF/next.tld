@@ -934,6 +934,11 @@
 		<tag-class>org.nextframework.view.PanelGridTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
+			<name>flatMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>columns</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -974,8 +979,14 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Utilizado para determinar se os property que estiverem dentro desse panelGrid devem ser renderizados com 2 colunas</description>
-			<name>propertyRenderAsDouble</name>
+			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<name>propertyRenderAs</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Informa se esse panelGrid deve herdar as propriedades de estilo do panelGrid pai (se existir) default = true</description>
+			<name>useParentPanelGridProperties</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -991,13 +1002,6 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<attribute>
-			<description>Informa se esse panelGrid deve herdar as propriedades de estilo do panelGrid pai (se existir) default = true</description>
-			<name>useParentPanelGridProperties</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -1076,7 +1080,6 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-
 		<attribute>
 			<description>Utilizado quando esse panel estiver dentro de um tagPanel</description>
 			<name>title</name>
@@ -1084,12 +1087,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Utilizado para determinar se os property que estiverem dentro desse panel devem ser renderizados com 2 colunas</description>
-			<name>propertyRenderAsDouble</name>
+			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<name>propertyRenderAs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-
 		<attribute>
 			<name>rendered</name>
 			<required>false</required>
@@ -1105,7 +1107,6 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -1193,17 +1194,17 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>selectedClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>unselectedClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
 			<name>parameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>panelClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>selectedClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

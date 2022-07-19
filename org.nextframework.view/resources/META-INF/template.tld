@@ -302,8 +302,8 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Utilizado para determinar se os property que estiverem dentro desse panelGrid devem ser renderizados com 2 colunas</description>
-			<name>propertyRenderAsDouble</name>
+			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<name>propertyRenderAs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -399,8 +399,8 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description></description>
-			<name>propertyRenderAsDouble</name>
+			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<name>propertyRenderAs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -461,8 +461,8 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description></description>
-			<name>propertyRenderAsDouble</name>
+			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<name>propertyRenderAs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

@@ -64,8 +64,7 @@ public class PropertyConfigTag extends TemplateTag {
 				if (findFirst instanceof PropertyConfigTag) {
 					this.renderAs = ((PropertyConfigTag) findFirst).getRenderAs();
 				} else if (findFirst instanceof PanelGridTag) {
-					Boolean propertyRenderAsDouble = ((PanelGridTag) findFirst).getPropertyRenderAsDouble();
-					this.renderAs = propertyRenderAsDouble != null ? (propertyRenderAsDouble ? PropertyTag.DOUBLE : PropertyTag.SINGLE) : null;
+					this.renderAs = ((PanelGridTag) findFirst).getPropertyRenderAs();
 				} else if (findFirst instanceof DataGridTag) {
 					this.renderAs = PropertyTag.COLUMN;
 				}

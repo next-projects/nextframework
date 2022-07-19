@@ -3,9 +3,17 @@
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <n:panel title="${formTableTag.title}" colspan="${formTableTag.colspan}">
-	<div class="form-horizontal">
-		<t:propertyConfig showLabel="${formTableTag.propertyShowLabel}" renderAs="form-group">
+
+	<n:panelGrid columns="${formTableTag.columns}" cellpadding="1" cellspacing="0"
+		styleClass="${formTableTag.styleClass}" style="${formTableTag.style}"
+		columnStyleClasses="${formTableTag.columnStyleClasses}" columnStyles="${formTableTag.columnStyles}"
+		rowStyleClasses="${formTableTag.rowStyleClasses}" rowStyles="${formTableTag.rowStyles}"
+		dynamicAttributesMap="${formTableTag.dynamicAttributesMap}" propertyRenderAs="${formTableTag.propertyRenderAs}" >
+
+		<t:propertyConfig mode="input" showLabel="${formTableTag.propertyShowLabel}">
 			<n:doBody />
 		</t:propertyConfig>
-	</div>
+
+	</n:panelGrid>
+
 </n:panel>

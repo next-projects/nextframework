@@ -20,7 +20,7 @@
 	</n:panel>
 	
 	<div id="edittable" style="display:none">
-		<n:panelGrid columns="2" propertyRenderAsDouble="true">
+		<n:panelGrid columns="2" propertyRenderAs="double">
 			<t:property name="id" type="hidden" write="true"/>
 			<t:property name="reportPublic" />
 			<t:property name="reportXml" rows="40" cols="180" style="text-transform: none;"/>

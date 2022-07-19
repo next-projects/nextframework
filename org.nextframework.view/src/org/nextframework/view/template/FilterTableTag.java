@@ -23,6 +23,8 @@
  */
 package org.nextframework.view.template;
 
+import org.nextframework.util.Util;
+
 /**
  * @author rogelgarcia
  * @since 03/02/2006
@@ -36,12 +38,13 @@ public class FilterTableTag extends TemplateTag {
 
 	protected String styleClass;
 	protected String style;
-	protected String columnStyleClasses;
-	protected String columnStyles;
 	protected String rowStyleClasses;
 	protected String rowStyles;
+	protected String columnStyleClasses;
+	protected String columnStyles;
+	protected String actionBarStyleClass;
 
-	protected Boolean propertyRenderAsDouble;
+	protected String propertyRenderAs;
 	protected Boolean propertyShowLabel;
 
 	protected Boolean showSubmit = true;
@@ -53,10 +56,6 @@ public class FilterTableTag extends TemplateTag {
 	@Override
 	protected void doComponent() throws Exception {
 
-		if (propertyShowLabel == null) {
-			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
-		}
-
 		if (submitAction == null) {
 			if (findParent(ReportViewTag.class) != null) {
 				submitAction = "generate";
@@ -65,6 +64,14 @@ public class FilterTableTag extends TemplateTag {
 
 		if (submitLabel == null) {
 			submitLabel = getDefaultViewLabel("submitLabel", "Pesquisar");
+		}
+
+		if (propertyRenderAs == null) {
+			propertyRenderAs = getViewConfig().isDefaultPropertyRenderAs();
+		}
+
+		if (propertyShowLabel == null) {
+			propertyShowLabel = PropertyTag.SINGLE.equalsIgnoreCase(propertyRenderAs);
 		}
 
 		pushAttribute("TabelaFiltroTag", this); //Legacy
@@ -145,12 +152,34 @@ public class FilterTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
+	public String getActionBarStyleClass() {
+		return actionBarStyleClass;
 	}
 
+	public void setActionBarStyleClass(String actionBarStyleClass) {
+		this.actionBarStyleClass = actionBarStyleClass;
+	}
+
+	public String getPropertyRenderAs() {
+		return propertyRenderAs;
+	}
+
+	public void setPropertyRenderAs(String propertyRenderAs) {
+		this.propertyRenderAs = propertyRenderAs;
+	}
+
+	@Deprecated
+	public Boolean getPropertyRenderAsDouble() {
+		return PropertyTag.DOUBLE.equalsIgnoreCase(propertyRenderAs);
+	}
+
+	@Deprecated
 	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
+		if (Util.booleans.isTrue(propertyRenderAsDouble)) {
+			this.propertyRenderAs = PropertyTag.DOUBLE;
+		} else {
+			this.propertyRenderAs = PropertyTag.SINGLE;
+		}
 	}
 
 	public Boolean getPropertyShowLabel() {

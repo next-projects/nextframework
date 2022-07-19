@@ -36,6 +36,10 @@ public class FormPanelTag extends TemplateTag {
 	protected String submitConfirmationScript;
 	protected String submitLabel = null;
 
+	private String panelStyleClass;
+	private String actionBarStyleClass;
+	private String buttonStyleClass;
+
 	@Override
 	protected void doComponent() throws Exception {
 
@@ -95,6 +99,29 @@ public class FormPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
+	}
+
+	public String getPanelStyleClass() {
+		return panelStyleClass;
+	}
+
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
+	}
+	
+	public String getActionBarStyleClass() {
+		return actionBarStyleClass;
+	}
+	public void setActionBarStyleClass(String actionBarStyleClass) {
+		this.actionBarStyleClass = actionBarStyleClass;
+	}
+
+	public String getButtonStyleClass() {
+		return buttonStyleClass;
+	}
+
+	public void setButtonStyleClass(String buttonStyleClass) {
+		this.buttonStyleClass = buttonStyleClass;
 	}
 
 }

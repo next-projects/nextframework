@@ -1,2 +1,2 @@
-<input type="checkbox" id="${tag.id}" style="border: ; background: ;" name="${tag.name}" onclick="${tag.inputComponent.reloadOnClickString}" ${tag.checked} ${tag.dynamicAttributesToString} value="${tag.checkboxValue}" class="checkboxClass"/>
+<input type="checkbox" id="${tag.id}" name="${tag.name}" onclick="${tag.inputComponent.reloadOnClickString}" ${tag.checked} ${tag.dynamicAttributesToString} value="${tag.checkboxValue}" />
 <input type="hidden" name="_${tag.name}"/>

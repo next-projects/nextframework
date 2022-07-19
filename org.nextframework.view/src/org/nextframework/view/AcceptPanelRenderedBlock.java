@@ -31,4 +31,5 @@ package org.nextframework.view;
 public interface AcceptPanelRenderedBlock {
 
 	public boolean addBlock(PanelRenderedBlock o);
+
 }

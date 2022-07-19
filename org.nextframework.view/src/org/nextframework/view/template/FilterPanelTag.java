@@ -36,6 +36,9 @@ public class FilterPanelTag extends TemplateTag {
 	protected String name = "filter";
 	protected String sectionTitle;
 
+	protected String sectionTitleStyleClass;
+	protected String filterPanelStyleClass;
+
 	@Override
 	protected void doComponent() throws Exception {
 
@@ -70,6 +73,22 @@ public class FilterPanelTag extends TemplateTag {
 
 	public void setSectionTitle(String sectionTitle) {
 		this.sectionTitle = sectionTitle;
+	}
+
+	public String getSectionTitleStyleClass() {
+		return sectionTitleStyleClass;
+	}
+
+	public void setSectionTitleStyleClass(String sectionTitleStyleClass) {
+		this.sectionTitleStyleClass = sectionTitleStyleClass;
+	}
+
+	public String getFilterPanelStyleClass() {
+		return filterPanelStyleClass;
+	}
+
+	public void setFilterPanelStyleClass(String filterPanelStyleClass) {
+		this.filterPanelStyleClass = filterPanelStyleClass;
 	}
 
 }

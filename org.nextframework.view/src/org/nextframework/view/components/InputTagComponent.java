@@ -21,15 +21,7 @@ public class InputTagComponent {
 
 	protected InputTag inputTag;
 	protected InputTagHelper helper;
-	
 	protected InputTagType selectedType;
-
-	public void setTag(InputTag inputTag) {
-		this.inputTag = inputTag;
-	}
-	public void setHelper(InputTagHelper inputTagHelper) {
-		this.helper = inputTagHelper;
-	}
 
 	public void validateTag() {
 	}
@@ -39,13 +31,7 @@ public class InputTagComponent {
 		configureValidation(disabled);
 		configureReadOnly();
 	}
-	
-	public InputTagType getSelectedType() {
-		return selectedType;
-	}
-	public void setSelectedType(InputTagType selectedType) {
-		this.selectedType = selectedType;
-	}
+
 	protected void configureValidation(boolean disabled) {
 		if (!disabled) {
 			ValidationItem validationItem = null;
@@ -58,15 +44,15 @@ public class InputTagComponent {
 				ParameterizedType parameterizedType = (ParameterizedType) inputTag.getType();
 				validationItem = ServiceFactory.getService(ValidatorRegistry.class).getExtractor().getValidationItem(labelSimples, (Class<?>) parameterizedType.getRawType(), inputTag.getAnnotations());
 			}
-			if(inputTag.getRequired() != null){
+			if (inputTag.getRequired() != null) {
 				Required requiredValidation = new Required() {
 					public Class<? extends Annotation> annotationType() {
 						return Required.class;
 					}
 				};
-				if(inputTag.getRequired() && !containsRequired(validationItem.getValidations())){
+				if (inputTag.getRequired() && !containsRequired(validationItem.getValidations())) {
 					validationItem.getValidations().add(requiredValidation);
-				} else if(!inputTag.getRequired() && containsRequired(validationItem.getValidations())){
+				} else if (!inputTag.getRequired() && containsRequired(validationItem.getValidations())) {
 					removeRequired(validationItem.getValidations());
 				}
 			}
@@ -81,34 +67,36 @@ public class InputTagComponent {
 			}
 		}
 	}
-	
+
 	private void removeRequired(List<Annotation> validations) {
 		for (Iterator<Annotation> iterator = validations.iterator(); iterator.hasNext();) {
 			Annotation annotation = iterator.next();
-			if(annotation.annotationType().equals(Required.class)){
+			if (annotation.annotationType().equals(Required.class)) {
 				iterator.remove();
 				break;
 			}
 		}
 	}
+
 	private boolean containsRequired(List<Annotation> validations) {
 		for (Annotation annotation : validations) {
-			if(annotation.annotationType().equals(Required.class)){
+			if (annotation.annotationType().equals(Required.class)) {
 				return true;
 			}
 		}
 		return false;
 	}
+
 	protected boolean configureDisabled() {
 		PropertyConfigTag propertyConfig = inputTag.findParent(PropertyConfigTag.class);
 		boolean disabled = false;
 		Object disabledObj = inputTag.getDynamicAttributesMap().get("disabled");
-		if(disabledObj == null || "false".equals(disabledObj) || Boolean.FALSE.equals(disabledObj)){
+		if (disabledObj == null || "false".equals(disabledObj) || Boolean.FALSE.equals(disabledObj)) {
 			inputTag.getDynamicAttributesMap().remove("disabled");
 		} else {
 			disabled = true;
 		}
-		
+
 		DataGridTag dataGridTag = inputTag.findParent(DataGridTag.class);
 		if (propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled()) && (dataGridTag == null || dataGridTag.getCurrentStatus() != DataGridTag.Status.DYNALINE)) {
 			if (disabled) {
@@ -122,18 +110,36 @@ public class InputTagComponent {
 	public String getValueAsString() {
 		return null;
 	}
-	
+
 	public boolean printRequired() {
 		return inputTag.isToPrintRequired();
 	}
 
 	public void configureReadOnly() {
 		Object readonlyObj = inputTag.getDynamicAttributesMap().get("readonly");
-		if(readonlyObj == null || "false".equals(readonlyObj) || Boolean.FALSE.equals(readonlyObj)){
+		if (readonlyObj == null || "false".equals(readonlyObj) || Boolean.FALSE.equals(readonlyObj)) {
 			inputTag.getDynamicAttributesMap().remove("readonly");
 		}
 	}
+
 	public void afterPrint() {
-		
+
 	}
+
+	public void setTag(InputTag inputTag) {
+		this.inputTag = inputTag;
+	}
+
+	public void setHelper(InputTagHelper inputTagHelper) {
+		this.helper = inputTagHelper;
+	}
+
+	public InputTagType getSelectedType() {
+		return selectedType;
+	}
+
+	public void setSelectedType(InputTagType selectedType) {
+		this.selectedType = selectedType;
+	}
+
 }

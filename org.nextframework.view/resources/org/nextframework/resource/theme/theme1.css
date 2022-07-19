@@ -90,6 +90,32 @@ a:hover {
 	margin-top: 4px;
 }
 
+UL.pagePanel {
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+}
+
+UL.pagePanel LI {
+	display: inline;
+	padding: 0;
+	margin: 0;
+}
+
+UL.pagePanel LI A {
+	padding: 4px 8px;
+	text-decoration: none;
+}
+
+UL.pagePanel LI A.pageSelected {
+	font-weight: bold;
+	background-color: #f9f9f9
+}
+
+UL.pagePanel LI A:hover:not(.pageSelected) {
+	background-color: #f9f9f9;
+}
+
 .inputTable TD {
 	padding: 6px;
 }

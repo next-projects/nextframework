@@ -6,12 +6,12 @@
 <n:bean name="filter">
 
 	<c:if test="${! empty reportPanelTag.sectionTitle }">
-		<div class="sectionTitle">${reportPanelTag.sectionTitle}</div>
+		<div class="${reportPanelTag.sectionTitleStyleClass}">${reportPanelTag.sectionTitle}</div>
 	</c:if>
 
-	<div class="filterWindow">
+	<div class="${reportPanelTag.panelStyleClass}">
 		<n:doBody />
-		<div class="actionBar">
+		<div class="${reportPanelTag.actionBarStyleClass}">
 			<n:submit action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
 		</div>
 	</div>

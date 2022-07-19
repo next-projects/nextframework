@@ -64,6 +64,9 @@ public class DetailTag extends TemplateTag {
 	private String deleteLinkLabel;
 	private Boolean showNewLineButton = true;
 	private String newLineButtonLabel;
+	
+	private String panelStyleClass;
+	private String buttonStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -331,6 +334,21 @@ public class DetailTag extends TemplateTag {
 
 	public void setNewLineButtonLabel(String newLineButtonLabel) {
 		this.newLineButtonLabel = newLineButtonLabel;
+	}
+	
+	public String getPanelStyleClass() {
+		return panelStyleClass;
+	}
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
+	}
+	
+	public String getButtonStyleClass() {
+		return buttonStyleClass;
+	}
+	
+	public void setButtonStyleClass(String buttonStyleClass) {
+		this.buttonStyleClass = buttonStyleClass;
 	}
 
 }

@@ -1,6 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
-<!-- Valor selecionado ${tag.valueToString} -->
 <span style="white-space: nowrap; width: ${tag.dynamicAttributesMap['spanwidth']};">
 <table border="0" style="width: ${tag.dynamicAttributesMap['spanwidth']}; display:inline" cellpadding="0" cellspacing="0">
 <tr>

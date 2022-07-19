@@ -35,6 +35,10 @@ public class ReportPanelTag extends TemplateTag {
 	private String submitConfirmationScript = "true";
 	private String submitLabel;
 
+	private String sectionTitleStyleClass;
+	private String panelStyleClass;
+	private String actionBarStyleClass;
+
 	@Override
 	protected void doComponent() throws Exception {
 
@@ -86,6 +90,30 @@ public class ReportPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
+	}
+
+	public String getSectionTitleStyleClass() {
+		return sectionTitleStyleClass;
+	}
+
+	public void setSectionTitleStyleClass(String sectionTitleStyleClass) {
+		this.sectionTitleStyleClass = sectionTitleStyleClass;
+	}
+
+	public String getPanelStyleClass() {
+		return panelStyleClass;
+	}
+
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
+	}
+
+	public String getActionBarStyleClass() {
+		return actionBarStyleClass;
+	}
+
+	public void setActionBarStyleClass(String actionBarStyleClass) {
+		this.actionBarStyleClass = actionBarStyleClass;
 	}
 
 }

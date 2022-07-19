@@ -10,10 +10,10 @@
 	</c:if>
 
 	<c:if test="${formViewTag.showListLink || !empty formViewTag.linkArea}">
-		<div class="linkBar">
+		<div class="${formViewTag.linkBarStyleClass}">
 			${formViewTag.invokeLinkArea}
 			<c:if test="${formViewTag.showListLink}">
-				<n:link action="list" class="outterTableHeaderLink">${formViewTag.listLinkLabel}</n:link>
+				<n:link action="list" class="${formViewTag.linkStyleClass}">${formViewTag.listLinkLabel}</n:link>
 			</c:if>
 		</div>
 	</c:if>

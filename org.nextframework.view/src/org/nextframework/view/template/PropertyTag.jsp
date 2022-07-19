@@ -8,7 +8,6 @@
 <n:property name="${propertyTag.name}">
 	${propertyTag.idConfig} <%-- Le os atributos da propriedade para saber se é ID --%>
 	<c:choose>
-
 		<%-- column --%>
 		<c:when test="${propertyTag.renderAs == 'column'}">
 			<n:column>
@@ -19,12 +18,12 @@
 				</c:if>
 				<c:if test="${!propertyTag.entityId}">
 					<n:header style="${propertyTag.headerStyle}" class="${propertyTag.headerStyleClass}">
-						${n:default(propertyTag.header, label)}
+						${n:default(label, propertyTag.header)}
 					</n:header>
 				</c:if>
 				<n:body align="${propertyTag.columnAlign}" style="${propertyTag.bodyStyle}" class="${propertyTag.bodyStyleClass}">
 					<c:if test="${propertyTag.mode == 'input'}">
-						<n:input class="form-control" pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}"  type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+						<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
 							label="${n:default(label, propertyTag.label)}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}"
 							id="${compId}">
 							<n:doBody />
@@ -36,12 +35,11 @@
 				</n:body>
 			</n:column>
 		</c:when>
-
 		<%-- id --%>
 		<c:when test="${propertyTag.entityId && empty value}">
 			<%-- Se a propriedade for ID e for nula, não escrever nada... Se for ID mas tiver valor, cai nas outras opções
 			<c:if test="${propertyTag.mode == 'input'}">
-				<n:input pattern="${propertyTag.pattern}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}"  showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="false" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+				<n:input pattern="${propertyTag.pattern}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="false" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
 					includeBlank="${propertyTag.includeBlank}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
 					<n:doBody />
 				</n:input>
@@ -51,15 +49,14 @@
 			</c:if>
 			--%>
 		</c:when>
-
 		<%-- double --%>
 		<c:when test="${propertyTag.renderAs == 'double'}">
 			<n:panel style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" >
-					<label for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+				<label for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 			</n:panel>
 			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
 				<c:if test="${propertyTag.mode == 'input'}">
-					<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+					<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
 						label="${n:default(label, propertyTag.label)}" id="${compId}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
 						<n:doBody />
 					</n:input>
@@ -69,31 +66,45 @@
 				</c:if>
 			</n:panel>
 		</c:when>
-
-		<%-- form-group --%>
-		<c:when test="${propertyTag.renderAs == 'form-group'}">
-			<%-- form-group --%>
-			<div class="form-group">
-				<label class="control-label col-sm-2 ${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label> 
-				<div class="col-sm-10 ${propertyTag.panelStyleClass}" style="${propertyTag.panelStyle}">
+		<%-- stacked --%>
+		<c:when test="${propertyTag.renderAs == 'stacked'}">
+			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
+				<label class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label> 
+				<div>
 					<c:if test="${propertyTag.mode == 'input'}">
-						<n:input class="form-control" pattern="${propertyTag.pattern}"  selectOneWindowSize="${propertyTag.selectOneWindowSize}"  selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}" showRemoverButton="${propertyTag.showRemoverButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+						<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showRemoverButton="${propertyTag.showRemoverButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
 							label="${n:default(propertyTag.label, label)}" id="${compId}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
 							<n:doBody />
 						</n:input>
 					</c:if>
 					<c:if test="${propertyTag.mode == 'output'}">
-						<n:output  pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
+						<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
 					</c:if>
 				</div>
-			</div>		
+			</n:panel>
 		</c:when>
-
+		<%-- invert --%>
+		<c:when test="${propertyTag.renderAs == 'invert'}">
+			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
+				<c:if test="${propertyTag.mode == 'input'}">
+					<n:input pattern="${propertyTag.pattern}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+						label="${n:default(label, propertyTag.label)}" id="${compId}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
+						<n:doBody />
+					</n:input>
+				</c:if>
+				<c:if test="${propertyTag.mode == 'output'}">
+					<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
+				</c:if>
+			</n:panel>
+			<n:panel style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" >
+				<label for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+			</n:panel>
+		</c:when>
 		<%-- single --%>
 		<c:otherwise>
 			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
 				<c:if test="${propertyTag.mode == 'input'}">
-					<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}"  selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}"  holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}"  transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" labelStyle="${propertyTag.labelStyle}" labelStyleClass="${propertyTag.labelStyleClass}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+					<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" labelStyle="${propertyTag.labelStyle}" labelStyleClass="${propertyTag.labelStyleClass}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
 						label="${n:default(label, propertyTag.label)}&nbsp;${labelseparator}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" id="${compId}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
 						<n:doBody />
 		 			</n:input>
@@ -111,6 +122,5 @@
 				</c:if>
 			</n:panel>
 		</c:otherwise>
-
 	</c:choose>
 </n:property>

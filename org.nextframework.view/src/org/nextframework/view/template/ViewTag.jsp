@@ -9,9 +9,10 @@
 	<c:set var="_form_enctype" scope="page" value="${Tproperty.dynamicAttributesMap['enctype']}" />
 </c:if>
 
-<n:form name="${viewTag.formName}" enctype="${_form_enctype}" method="${viewTag.formMethod}" action="${viewTag.formAction}" validate="${viewTag.validateForm}" validateFunction="validarFormulario" bypass="${!viewTag.includeForm}" >
+<n:form name="${viewTag.formName}" enctype="${_form_enctype}" method="${viewTag.formMethod}" action="${viewTag.formAction}" validate="${viewTag.validateForm}" validateFunction="validarFormulario" bypass="${!viewTag.includeForm}">
 
 	<n:validation functionName="validateForm" bypass="${!viewTag.includeForm || !viewTag.validateForm}">
+
 		<script language="javascript">
 			// caso seja alterada a função validation ela será chamada após a validacao do formulario
 			var validation;
@@ -19,19 +20,21 @@
 				<c:if test="${!viewTag.validateForm}">
 					return true;
 				</c:if>
-				var valido = validateForm();
-				if(validation){
-					valido = validation(valido);
-				}
-				return valido;
+				<c:if test="${viewTag.validateForm}">
+					var valido = validateForm();
+					if(validation){
+						valido = validation(valido);
+					}
+					return valido;
+				</c:if>
 			}
 		</script>
 
-		<div class="panel panel-default">
+		<div class="${viewTag.pageStyleClass}">
 			<c:if test="${! empty viewTag.title }">
-				<div class="panel-heading">${viewTag.title}</div>
+				<div class="${viewTag.titleStyleClass}">${viewTag.title}</div>
 			</c:if>
-			<div class="panel-body">
+			<div class="${viewTag.bodyStyleClass}">
 				<n:bean name="${viewTag.useBean}" valueType="${viewTag.beanType}" bypass="${empty viewTag.useBean}">
 					<t:propertyConfig mode="${viewTag.propertyMode}" bypass="${(empty viewTag.useBean || empty viewTag.propertyMode) && empty viewTag.includeForm}">
 						<n:doBody />
@@ -41,4 +44,5 @@
 		</div>
 
 	</n:validation>
+
 </n:form>

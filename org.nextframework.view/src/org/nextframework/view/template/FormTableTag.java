@@ -24,6 +24,7 @@
 package org.nextframework.view.template;
 
 import org.nextframework.controller.crud.CrudContext;
+import org.nextframework.util.Util;
 
 /**
  * @author rogelgarcia
@@ -39,12 +40,12 @@ public class FormTableTag extends TemplateTag {
 
 	protected String styleClass;
 	protected String style;
-	protected String columnStyleClasses;
-	protected String columnStyles;
 	protected String rowStyleClasses;
 	protected String rowStyles;
+	protected String columnStyleClasses;
+	protected String columnStyles;
 
-	protected Boolean propertyRenderAsDouble = true;
+	protected String propertyRenderAs;
 	protected Boolean propertyShowLabel;
 
 	@Override
@@ -62,8 +63,12 @@ public class FormTableTag extends TemplateTag {
 			title = crudContext.getDisplayName();
 		}
 
+		if (propertyRenderAs == null) {
+			propertyRenderAs = getViewConfig().isDefaultPropertyRenderAs();
+		}
+
 		if (propertyShowLabel == null) {
-			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
+			propertyShowLabel = PropertyTag.SINGLE.equalsIgnoreCase(propertyRenderAs);
 		}
 
 		pushAttribute("TtabelaEntrada", this); //Legacy
@@ -112,22 +117,6 @@ public class FormTableTag extends TemplateTag {
 		this.style = style;
 	}
 
-	public String getColumnStyleClasses() {
-		return columnStyleClasses;
-	}
-
-	public void setColumnStyleClasses(String columnStyleClasses) {
-		this.columnStyleClasses = columnStyleClasses;
-	}
-
-	public String getColumnStyles() {
-		return columnStyles;
-	}
-
-	public void setColumnStyles(String columnStyles) {
-		this.columnStyles = columnStyles;
-	}
-
 	public String getRowStyleClasses() {
 		return rowStyleClasses;
 	}
@@ -144,12 +133,42 @@ public class FormTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
+	public String getColumnStyleClasses() {
+		return columnStyleClasses;
 	}
 
+	public void setColumnStyleClasses(String columnStyleClasses) {
+		this.columnStyleClasses = columnStyleClasses;
+	}
+
+	public String getColumnStyles() {
+		return columnStyles;
+	}
+
+	public void setColumnStyles(String columnStyles) {
+		this.columnStyles = columnStyles;
+	}
+
+	public String getPropertyRenderAs() {
+		return propertyRenderAs;
+	}
+
+	public void setPropertyRenderAs(String propertyRenderAs) {
+		this.propertyRenderAs = propertyRenderAs;
+	}
+
+	@Deprecated
+	public Boolean getPropertyRenderAsDouble() {
+		return PropertyTag.DOUBLE.equalsIgnoreCase(propertyRenderAs);
+	}
+
+	@Deprecated
 	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
+		if (Util.booleans.isTrue(propertyRenderAsDouble)) {
+			this.propertyRenderAs = PropertyTag.DOUBLE;
+		} else {
+			this.propertyRenderAs = PropertyTag.SINGLE;
+		}
 	}
 
 	public Boolean getPropertyShowLabel() {

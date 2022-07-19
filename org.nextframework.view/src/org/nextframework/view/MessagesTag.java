@@ -51,31 +51,35 @@ public class MessagesTag extends BaseTag {
 
 	private Boolean renderAsHtml;
 
-	protected String containerClass = "messagesContainer";
+	protected String containerClass;
 
-	protected String titleClass = "messagetitle";
+	protected String bindblockClass;
 
-	protected String globalErrorclass = "globalerror";
+	protected String messageblockClass;
 
-	protected String fieldName = "fieldname";
+	protected String titleClass;
 
-	protected String bindErrorClass = "binderror";
+	protected String globalErrorclass;
 
-	protected String validationErrorClass = "validationerror";
+	protected String fieldNameClass;
 
-	protected String debugClass = "debug";
+	protected String bindErrorClass;
 
-	protected String traceClass = "trace";
+	protected String validationErrorClass;
 
-	protected String infoClass = "info";
+	protected String debugClass;
 
-	protected String warnClass = "warn";
+	protected String traceClass;
 
-	protected String errorClass = "error";
+	protected String infoClass;
 
-	protected String exceptionClass = "exceptionitem";
+	protected String warnClass;
 
-	protected String exceptionCauseClass = "causeitem";
+	protected String errorClass;
+
+	protected String exceptionClass;
+
+	protected String exceptionCauseClass;
 
 	private String title;
 	private String invalidValueLabel;
@@ -98,7 +102,7 @@ public class MessagesTag extends BaseTag {
 			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
 
 			if (renderAsHtml) {
-				getOut().println("<div class='bindblock' id='bindBlock'>");
+				getOut().println("<div class=\"" + bindblockClass + "\" id='bindBlock'>");
 				getOut().println("<span id=\"bindTitle\" class=\"" + titleClass + "\">" + title + " '" + errors.getObjectName() + "'</span>");
 			} else {
 				getOut().println(String.format("next.messages.setBindTitle(\"%s\");", title + " '" + errors.getObjectName() + "'"));
@@ -145,16 +149,16 @@ public class MessagesTag extends BaseTag {
 
 						if (fieldError.isBindingFailure()) {
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + bindErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + ": </span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg + "</li>");
+								getOut().println("<li class=\"" + bindErrorClass + "\"> <span class=\"" + fieldNameClass + "\">" + field + ": </span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg + "</li>");
 							} else {
-								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg);
+								String msg2 = escapeText("<span class=\"" + fieldNameClass + "\">" + field + "</span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg);
 								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, bindErrorClass));
 							}
 						} else {
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + validationErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + "</span> " + msg + "</li>");
+								getOut().println("<li class=\"" + validationErrorClass + "\"> <span class=\"" + fieldNameClass + "\">" + field + "</span> " + msg + "</li>");
 							} else {
-								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + msg);
+								String msg2 = escapeText("<span class=\"" + fieldNameClass + "\">" + field + "</span> " + msg);
 								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, validationErrorClass));
 							}
 						}
@@ -178,7 +182,7 @@ public class MessagesTag extends BaseTag {
 		if (messages.length > 0) {
 
 			if (renderAsHtml) {
-				getOut().println("<div class='messageblock' id='messageBlock'>");
+				getOut().println("<div class=\"" + messageblockClass + "\" id='messageBlock'>");
 				getOut().println("<ul>");
 			}
 
@@ -309,6 +313,22 @@ public class MessagesTag extends BaseTag {
 		this.containerClass = containerClass;
 	}
 
+	public String getBindblockClass() {
+		return bindblockClass;
+	}
+
+	public void setBindblockClass(String bindblockClass) {
+		this.bindblockClass = bindblockClass;
+	}
+
+	public String getMessageblockClass() {
+		return messageblockClass;
+	}
+
+	public void setMessageblockClass(String messageblockClass) {
+		this.messageblockClass = messageblockClass;
+	}
+
 	public String getTitleClass() {
 		return titleClass;
 	}
@@ -325,12 +345,12 @@ public class MessagesTag extends BaseTag {
 		this.globalErrorclass = globalErrorclass;
 	}
 
-	public String getFieldName() {
-		return fieldName;
+	public String getFieldNameClass() {
+		return fieldNameClass;
 	}
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public void setFieldNameClass(String fieldNameClass) {
+		this.fieldNameClass = fieldNameClass;
 	}
 
 	public String getBindErrorClass() {

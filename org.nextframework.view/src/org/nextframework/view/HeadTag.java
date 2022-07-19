@@ -27,16 +27,12 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.nextframework.core.config.ViewConfig;
 import org.nextframework.core.web.NextWeb;
-import org.nextframework.service.ServiceFactory;
 
 public class HeadTag extends BaseTag {
-	
+
 	protected String charset;
-	
-	protected Boolean useBootstrap;
-	
+
 	protected boolean includeNormalizeCss = true;
 	protected boolean includeSystemCss = true;
 	protected boolean includeDefaultCss = true;
@@ -49,9 +45,10 @@ public class HeadTag extends BaseTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		String firstRequestUrl = NextWeb.getRequestContext().getFirstRequestUrl();
-		String module = firstRequestUrl.substring(0, firstRequestUrl.substring(1).indexOf('/')+1);
-		
+		String module = firstRequestUrl.substring(0, firstRequestUrl.substring(1).indexOf('/') + 1);
+
 		//procurar css
 		Set<String> resourcePathsCssServer = getServletContext().getResourcePaths("/css");
 		Set<String> resourcePathsCss = null;
@@ -68,9 +65,9 @@ public class HeadTag extends BaseTag {
 				}
 			}
 		}
-		
+
 		//procurar css para modulo
-		Set<String> resourcePathsCssModuleServer = getServletContext().getResourcePaths("/css"+module);
+		Set<String> resourcePathsCssModuleServer = getServletContext().getResourcePaths("/css" + module);
 		Set<String> resourcePathsModuleCss = null;
 		if (resourcePathsCssModuleServer != null) {
 			resourcePathsModuleCss = new TreeSet<String>(resourcePathsCssModuleServer);
@@ -99,7 +96,7 @@ public class HeadTag extends BaseTag {
 			}
 		}
 		//procurar JS para modulo
-		Set<String> resourcePathsJsModuleServer = getServletContext().getResourcePaths("/js"+module);
+		Set<String> resourcePathsJsModuleServer = getServletContext().getResourcePaths("/js" + module);
 		Set<String> resourcePathsModuleJs = null;
 		if (resourcePathsJsModuleServer != null) {
 			resourcePathsModuleJs = new TreeSet<String>(resourcePathsJsModuleServer);
@@ -111,14 +108,13 @@ public class HeadTag extends BaseTag {
 				}
 			}
 		}
-		
+
 		filterDirs(resourcePathsJs);
 		filterDirs(resourcePathsCss);
-		
-		ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
-		charset = charset != null ? charset : viewConfig.getJSPDefaultCharset();
-		useBootstrap = useBootstrap != null ? useBootstrap : viewConfig.isUseBootstrap();
-		
+
+		charset = charset != null ? charset : getViewConfig().getJSPDefaultCharset();
+		pushAttribute("useBootstrap", getViewConfig().isUseBootstrap());
+
 		pushAttribute("jss", resourcePathsJs);
 		pushAttribute("csss", resourcePathsCss);
 		pushAttribute("jssModule", resourcePathsModuleJs);
@@ -126,25 +122,20 @@ public class HeadTag extends BaseTag {
 		pushAttribute("searchJsDir", this.searchJsDir);
 		pushAttribute("searchCssDir", this.searchCssDir);
 		includeJspTemplate();
-		popAttribute("searchJsDir");
 		popAttribute("searchCssDir");
+		popAttribute("searchJsDir");
+		popAttribute("csssModule");
+		popAttribute("jssModule");
 		popAttribute("csss");
 		popAttribute("jss");
-	}
 
-	public Boolean getUseBootstrap() {
-		return useBootstrap;
-	}
-
-	public void setUseBootstrap(Boolean useBootstrap) {
-		this.useBootstrap = useBootstrap;
 	}
 
 	protected void filterDirs(Set<String> resourcePathsJs) {
-		if(resourcePathsJs != null){
+		if (resourcePathsJs != null) {
 			for (Iterator<String> iterator = resourcePathsJs.iterator(); iterator.hasNext();) {
 				String path = iterator.next();
-				if(path.endsWith("/")){
+				if (path.endsWith("/")) {
 					iterator.remove();
 				}
 			}
@@ -210,7 +201,7 @@ public class HeadTag extends BaseTag {
 	public String getCharset() {
 		return charset;
 	}
-	
+
 	public void setCharset(String charset) {
 		this.charset = charset;
 	}
@@ -230,5 +221,5 @@ public class HeadTag extends BaseTag {
 	public void setIncludeSystemCss(boolean includeSystemCss) {
 		this.includeSystemCss = includeSystemCss;
 	}
-	
+
 }

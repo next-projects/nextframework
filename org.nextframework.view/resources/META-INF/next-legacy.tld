@@ -907,6 +907,11 @@
 		<tag-class>org.nextframework.view.PanelGridTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
+			<name>flatMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>columns</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -940,37 +945,36 @@
 			<name>columnStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Utilizado para determinar se os property que estiverem dentro desse panelGrid devem ser renderizados com 2 colunas</description>
 			<name>propertyRenderAsDouble</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>					
-		<attribute>
-			<description></description>
-			<name>dynamicAttributesMap</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
-		<attribute>
-			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
-			<name>rendered</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description>Informa se esse panelGrid deve herdar as propriedades de estilo do panelGrid pai (se existir) default = true</description>
 			<name>useParentPanelGridProperties</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+		<attribute>
+			<description></description>
+			<name>dynamicAttributesMap</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	
@@ -1038,7 +1042,6 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	
-	
 	<tag>
 		<description></description>
 		<name>panel</name>
@@ -1050,37 +1053,34 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
 		<attribute>
 			<description>Utilizado quando esse panel estiver dentro de um tagPanel</description>
 			<name>title</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
 		<attribute>
 			<description>Utilizado para determinar se os property que estiverem dentro desse panel devem ser renderizados com 2 colunas</description>
 			<name>propertyRenderAsDouble</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
-		
+		</attribute>
 		<attribute>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
+		</attribute>
 		<attribute>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>						
+		</attribute>
 		<attribute>
 			<name>onSelectTab</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>								
-		
-		<dynamic-attributes>true</dynamic-attributes>		
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	
 	<tag>
@@ -1166,23 +1166,23 @@
 			<name>totalNumberOfPages</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
+		<attribute>
+			<name>parameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>panelClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<attribute>
 			<name>selectedClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<attribute>
-			<name>unselectedClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
-		<attribute>
-			<name>parameters</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>				
-	</tag>	
+	</tag>
 	
 	<tag>
 		<description></description>
