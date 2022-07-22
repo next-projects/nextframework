@@ -23,11 +23,37 @@
  */
 package org.nextframework.view.template;
 
-/**
- * @author rogelgarcia
- * @since 07/02/2006
- * @version 1.1
- */
-public class ReportViewTag extends ViewTag {
+public class ReportViewTag extends TemplateTag {
+
+	protected String title;
+
+	@Override
+	protected void doComponent() throws Exception {
+
+		if (title == null) {
+			title = getDefaultViewLabel("title", null);
+		}
+
+		includeJspTemplate();
+
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Deprecated
+	public String getTitulo() {
+		return title;
+	}
+
+	@Deprecated
+	public void setTitulo(String titulo) {
+		this.title = titulo;
+	}
 
 }

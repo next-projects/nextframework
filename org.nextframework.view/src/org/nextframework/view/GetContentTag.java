@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class GetContentTag extends BaseTag implements LogicalTag{
+public class GetContentTag extends BaseTag implements LogicalTag {
 
 	protected String tagName;
 	protected String vars;
@@ -39,7 +39,6 @@ public class GetContentTag extends BaseTag implements LogicalTag{
 		@Override
 		public String toString() {
 			StringBuffer buf = new StringBuffer();
-
 			Iterator<String> i = iterator();
 			boolean hasNext = i.hasNext();
 			while (hasNext) {
@@ -49,50 +48,47 @@ public class GetContentTag extends BaseTag implements LogicalTag{
 				if (hasNext)
 					buf.append(" ");
 			}
-
 			return buf.toString();
 		}
 
 	};
-	
-	public void register(String body){
+
+	public boolean getTag(BaseTag baseTag) {
+		String tag = tagName;
+		String id = null;
+		if (tagName.contains("#")) {
+			tag = tagName.substring(0, tagName.indexOf("#"));
+			id = tagName.substring(tagName.indexOf("#") + 1);
+		}
+		return baseTag.getClass().getSimpleName().equalsIgnoreCase(tag) && (id == null || id.equals(baseTag.getId()));
+	}
+
+	public void register(String body) {
 		tags.add(body);
 	}
-	
+
+	@Override
+	protected void doComponent() throws Exception {
+		if (vars == null) {
+			vars = tagName + "s";
+		}
+		pushAttribute(vars, tags);
+		if (bodyVar != null) {
+			getPageContext().setAttribute(vars, tags);
+			String body = getBody();
+			getPageContext().setAttribute(bodyVar, body);
+		} else {
+			doBody();
+		}
+		popAttribute(vars);
+	}
+
 	public String getTagName() {
 		return tagName;
 	}
 
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
-	}
-
-	public boolean getTag(BaseTag baseTag){
-		String tag = tagName;
-		String id = null;
-		if(tagName.contains("#")){
-			tag = tagName.substring(0, tagName.indexOf("#"));
-			id = tagName.substring(tagName.indexOf("#")+1);
-		}
-		return baseTag.getClass().getSimpleName().equalsIgnoreCase(tag) && (id == null || id.equals(baseTag.getId()));
-	}
-
-	@Override
-	protected void doComponent() throws Exception {
-
-		if(vars == null){
-			vars = tagName+"s";
-		}
-		pushAttribute(vars, tags);
-		if(bodyVar != null){
-			getPageContext().setAttribute(vars, tags);
-			String body = getBody();
-			getPageContext().setAttribute(bodyVar, body);
-			
-		} else {
-			doBody();
-		}
-		popAttribute(vars);
 	}
 
 	public String getVars() {
@@ -110,6 +106,5 @@ public class GetContentTag extends BaseTag implements LogicalTag{
 	public void setBodyVar(String bodyVar) {
 		this.bodyVar = bodyVar;
 	}
-	
-	
+
 }

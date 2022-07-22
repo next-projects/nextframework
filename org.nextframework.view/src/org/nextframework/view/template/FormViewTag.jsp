@@ -3,7 +3,7 @@
 <%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<t:view title="${formViewTag.title}">
+<t:view title="${formViewTag.title}" useBean="${crudContext.beanName}" propertyMode="${param.ACTION=='view' ? 'output' : 'input'}">
 
 	<c:if test="${param.fromInsertOne == 'true'}">
 		<input type="hidden" name="fromInsertOne" value="true" />
@@ -13,20 +13,11 @@
 		<div class="${formViewTag.linkBarStyleClass}">
 			${formViewTag.invokeLinkArea}
 			<c:if test="${formViewTag.showListLink}">
-				<n:link action="list" class="${formViewTag.linkStyleClass}">${formViewTag.listLinkLabel}</n:link>
+				<n:link action="list">${formViewTag.listLinkLabel}</n:link>
 			</c:if>
 		</div>
 	</c:if>
 
-	<div>
-		<n:bean name="${crudContext.beanName}">
-			<c:if test="${param.ACTION=='view'}">
-				<c:set var="modeView" value="output" scope="request" />
-			</c:if>
-			<t:propertyConfig mode="${n:default('input', modeView)}">
-				<n:doBody />
-			</t:propertyConfig>
-		</n:bean>
-	</div>
+	<n:doBody />
 
 </t:view>

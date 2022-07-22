@@ -36,6 +36,8 @@ import javax.servlet.ServletException;
  */
 public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 
+	private static final String TABPANEL_LAST_ID = "TABPANEL_LAST_ID";
+
 	protected List<PanelRenderedBlock> blocks = new ArrayList<PanelRenderedBlock>();
 
 	protected Boolean renderUniqueTab = false;
@@ -47,52 +49,58 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 	@Override
 	protected void doComponent() throws Exception {
 
+		if (this.id == null) {
+			Integer lastId = (Integer) getRequest().getAttribute(TABPANEL_LAST_ID);
+			lastId = lastId != null ? lastId + 1 : 1;
+			getRequest().setAttribute(TABPANEL_LAST_ID, lastId);
+			this.id = "Tabs" + lastId;
+		}
+
 		String body = null;
 		if (getJspBody() != null) {
 			body = getBody();
 		}
 
-		String idTabPanel = id != null ? id : generateUniqueId();
 		int currentPanel = 0;
 		List<TabPanelBlock> tabBlocks = new ArrayList<TabPanelBlock>();
 		for (PanelRenderedBlock block : blocks) {
-			tabBlocks.add(new TabPanelBlock(block, idTabPanel, currentPanel++));
+			tabBlocks.add(new TabPanelBlock(block, this.id, currentPanel++));
 		}
 
 		//verificar se já existia algum pré-selecionado
 		int selectedIndex = 0;
-		if (id != null) {
-			String index = getRequest().getParameter("TABPANEL_" + id);
+		if (this.id != null) {
+			String index = getRequest().getParameter("TABPANEL_" + this.id);
 			if (index != null) {
 				selectedIndex = Integer.parseInt(index);
 			}
 		}
 
 		if (!getViewConfig().isUseBootstrap()) {
-			renderScript(idTabPanel, tabBlocks, selectedIndex);
+			renderScript(tabBlocks, selectedIndex);
 		}
-		renderSelectArea(idTabPanel, tabBlocks, selectedIndex);
-		renderPanels(idTabPanel, tabBlocks, selectedIndex);
+		renderSelectArea(tabBlocks, selectedIndex);
+		renderPanels(tabBlocks, selectedIndex);
 		if (!getViewConfig().isUseBootstrap()) {
-			renderSelectedPanelScript(idTabPanel, tabBlocks, selectedIndex);
+			renderSelectedPanelScript(tabBlocks, selectedIndex);
 		}
-		
+
 		if (body != null) {
 			getOut().println(body);
 		}
 
 	}
 
-	protected void renderSelectedPanelScript(String idTabPanel, List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
+	protected void renderSelectedPanelScript(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
 		if (tabBlocks.size() > 1) {
 			TabPanelBlock block = tabBlocks.get(selectedIndex);
 			getOut().println("<script language=\"javascript\">");
-			getOut().print("show" + idTabPanel + "('" + block.getId() + "', " + selectedIndex + ", '" + idTabPanel + "_link_" + selectedIndex + "');");
+			getOut().print("show" + this.id + "('" + block.getId() + "', " + selectedIndex + ", '" + this.id + "_link_" + selectedIndex + "');");
 			getOut().print("</script>");
 		}
 	}
 
-	private void renderPanels(String idTabPanel, List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
+	private void renderPanels(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
 		int index = 0;
 		if (tabBlocks.size() == 1 && !renderUniqueTab) {
 			getOut().println(tabBlocks.get(0).getBody());
@@ -110,13 +118,13 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 		}
 	}
 
-	private void renderSelectArea(String idTabPanel, List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
+	private void renderSelectArea(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
 
 		if (tabBlocks.size() == 1 && !renderUniqueTab) {
 			return;//manter compatibilidade com o estilo de rernderizacao antigo, onde, quando houver apenas uma aba.. não mostrar o tabpanel
 		}
 
-		pushAttribute("id", idTabPanel);
+		pushAttribute("id", this.id);
 		pushAttribute("blocks", tabBlocks);
 		pushAttribute("selectedIndex", selectedIndex);
 
@@ -136,36 +144,36 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 		return (idTabPanel + "_link_" + i);
 	}
 
-	private void renderScript(String idTabPanel, List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
+	private void renderScript(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
 		if (tabBlocks.size() <= 1 && !renderUniqueTab) {
 			return;//se o número de tabs nao for maior que 1, nao é necessário criar um script
 		}
-		if (id != null) {
-			getOut().println("<input type=\"hidden\" name=\"TABPANEL_" + idTabPanel + "\" value=\"" + selectedIndex + "\"/>");
+		if (this.id != null) {
+			getOut().println("<input type=\"hidden\" name=\"TABPANEL_" + this.id + "\" value=\"" + selectedIndex + "\"/>");
 		}
 		FormTag form = findParent(FormTag.class);
 		getOut().println("<script language=\"javascript\">");
-		getOut().println("    function show" + idTabPanel + "(panel, index, linkid) {");
+		getOut().println("    function show" + this.id + "(panel, index, linkid) {");
 		for (int i = 0; i < tabBlocks.size(); i++) {
 			TabPanelBlock block = tabBlocks.get(i);
-			String linkId = createLinkId(idTabPanel, i);
-			getOut().println("        hide" + idTabPanel + "('" + block.getId() + "');");
-			getOut().println("        unselect" + idTabPanel + "('" + block.getId() + "', '" + linkId + "');");
+			String linkId = createLinkId(this.id, i);
+			getOut().println("        hide" + this.id + "('" + block.getId() + "');");
+			getOut().println("        unselect" + this.id + "('" + block.getId() + "', '" + linkId + "');");
 		}
 		getOut().println("        document.getElementById(panel).style.display = 'unset';");
-		getOut().println("        select" + idTabPanel + "(panel, index, linkid);");
+		getOut().println("        select" + this.id + "(panel, index, linkid);");
 		getOut().println("    }");
-		getOut().println("    function hide" + idTabPanel + "(panel) {");
+		getOut().println("    function hide" + this.id + "(panel) {");
 		getOut().println("        document.getElementById(panel).style.display = 'none';");
 		getOut().println("    }");
 
-		getOut().println("    function select" + idTabPanel + "(panel, index, linkid) {");
+		getOut().println("    function select" + this.id + "(panel, index, linkid) {");
 		if (form != null && id != null) {
-			getOut().println("        document.forms[\"" + form.getName() + "\"].TABPANEL_" + idTabPanel + ".value = index;");
+			getOut().println("        document.forms[\"" + form.getName() + "\"].TABPANEL_" + this.id + ".value = index;");
 		}
 		getOut().println("        document.getElementById(linkid).parentNode.className = 'active';");
 		getOut().println("    }");
-		getOut().println("    function unselect" + idTabPanel + "(panel, linkid) {");
+		getOut().println("    function unselect" + this.id + "(panel, linkid) {");
 		getOut().println("        document.getElementById(linkid).parentNode.className = '';");
 		getOut().println("    }");
 		getOut().println("</script>");

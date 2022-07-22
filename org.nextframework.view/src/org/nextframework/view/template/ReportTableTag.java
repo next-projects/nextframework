@@ -32,14 +32,16 @@ import org.nextframework.util.Util;
  */
 public class ReportTableTag extends TemplateTag {
 
-	protected Integer columns;
+	protected int columns = 2;
 	protected Integer colspan;
+
 	protected String styleClass;
 	protected String style;
 	protected String columnStyleClasses;
 	protected String columnStyles;
 	protected String rowStyleClasses;
 	protected String rowStyles;
+
 	protected String propertyRenderAs;
 	protected Boolean propertyShowLabel;
 
@@ -60,11 +62,11 @@ public class ReportTableTag extends TemplateTag {
 
 	}
 
-	public Integer getColumns() {
+	public int getColumns() {
 		return columns;
 	}
 
-	public void setColumns(Integer columns) {
+	public void setColumns(int columns) {
 		this.columns = columns;
 	}
 

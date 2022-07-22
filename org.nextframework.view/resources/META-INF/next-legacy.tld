@@ -1089,9 +1089,8 @@
 		<tag-class>org.nextframework.view.TabPanelTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
-			<description>Id do tabPanel (se quiser manter a aba selecionada durante um refresh, setar o id)</description>
 			<name>id</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

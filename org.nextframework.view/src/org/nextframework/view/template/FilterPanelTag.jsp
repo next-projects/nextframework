@@ -8,8 +8,23 @@
 		<div class="${filterPanelTag.sectionTitleStyleClass}">${filterPanelTag.sectionTitle}</div>
 	</c:if>
 
-	<div class="${filterPanelTag.filterPanelStyleClass}">
-		<n:doBody />
-	</div>
+	<n:getContent tagName="actionPanelTag" vars="acoes">
+
+		<div class="${filterPanelTag.panelStyleClass}">
+
+			<n:doBody />
+
+			<c:if test="${filterPanelTag.showSubmit || !empty acoes}">
+				<div class="${filterPanelTag.actionBarStyleClass}">
+					${acoes}
+					<c:if test="${filterPanelTag.showSubmit}">
+						<n:submit class="${filterPanelTag.buttonStyleClass}" url="${filterPanelTag.submitUrl}" action="${filterPanelTag.submitAction}" validate="${filterPanelTag.validateForm}">${filterPanelTag.submitLabel}</n:submit>
+					</c:if>
+				</div>
+			</c:if>
+
+		</div>
+
+	</n:getContent>
 
 </n:bean>

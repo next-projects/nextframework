@@ -36,14 +36,32 @@ public class FilterPanelTag extends TemplateTag {
 	protected String name = "filter";
 	protected String sectionTitle;
 
+	protected Boolean showSubmit = true;
+	protected String submitUrl = null;
+	protected String submitAction = null;
+	protected Boolean validateForm = true;
+	protected String submitLabel = null;
+
 	protected String sectionTitleStyleClass;
-	protected String filterPanelStyleClass;
+	protected String panelStyleClass;
+	protected String actionBarStyleClass;
+	protected String buttonStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
 
+		if (submitAction == null) {
+			if (findParent(ReportViewTag.class) != null) {
+				submitAction = "generate";
+			}
+		}
+
 		if (sectionTitle == null) {
 			sectionTitle = getDefaultViewLabel("sectionTitle", "Pesquisar");
+		}
+
+		if (submitLabel == null) {
+			submitLabel = getDefaultViewLabel("submitLabel", "Pesquisar");
 		}
 
 		CrudContext crudContext = CrudContext.getCurrentInstance();
@@ -75,6 +93,46 @@ public class FilterPanelTag extends TemplateTag {
 		this.sectionTitle = sectionTitle;
 	}
 
+	public Boolean getShowSubmit() {
+		return showSubmit;
+	}
+
+	public void setShowSubmit(Boolean showSubmit) {
+		this.showSubmit = showSubmit;
+	}
+
+	public String getSubmitUrl() {
+		return submitUrl;
+	}
+
+	public void setSubmitUrl(String submitUrl) {
+		this.submitUrl = submitUrl;
+	}
+
+	public String getSubmitAction() {
+		return submitAction;
+	}
+
+	public void setSubmitAction(String submitAction) {
+		this.submitAction = submitAction;
+	}
+
+	public Boolean getValidateForm() {
+		return validateForm;
+	}
+
+	public void setValidateForm(Boolean validateForm) {
+		this.validateForm = validateForm;
+	}
+
+	public String getSubmitLabel() {
+		return submitLabel;
+	}
+
+	public void setSubmitLabel(String submitLabel) {
+		this.submitLabel = submitLabel;
+	}
+
 	public String getSectionTitleStyleClass() {
 		return sectionTitleStyleClass;
 	}
@@ -83,12 +141,28 @@ public class FilterPanelTag extends TemplateTag {
 		this.sectionTitleStyleClass = sectionTitleStyleClass;
 	}
 
-	public String getFilterPanelStyleClass() {
-		return filterPanelStyleClass;
+	public String getPanelStyleClass() {
+		return panelStyleClass;
 	}
 
-	public void setFilterPanelStyleClass(String filterPanelStyleClass) {
-		this.filterPanelStyleClass = filterPanelStyleClass;
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
+	}
+
+	public String getActionBarStyleClass() {
+		return actionBarStyleClass;
+	}
+
+	public void setActionBarStyleClass(String actionBarStyleClass) {
+		this.actionBarStyleClass = actionBarStyleClass;
+	}
+
+	public String getButtonStyleClass() {
+		return buttonStyleClass;
+	}
+
+	public void setButtonStyleClass(String buttonStyleClass) {
+		this.buttonStyleClass = buttonStyleClass;
 	}
 
 }

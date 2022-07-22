@@ -63,9 +63,15 @@ public class ListViewTag extends TemplateTag {
 			newLinkLabel = getDefaultViewLabel("newLinkLabel", "Novo");
 		}
 
+		if (crudContext != null) {
+			pushAttribute("crudContext", crudContext);
+		}
 		pushAttribute("listagemTag", this); //Legacy
 		includeJspTemplate();
 		popAttribute("listagemTag");
+		if (crudContext != null) {
+			popAttribute("crudContext");
+		}
 
 	}
 

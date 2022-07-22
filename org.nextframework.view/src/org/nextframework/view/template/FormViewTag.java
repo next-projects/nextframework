@@ -43,7 +43,6 @@ public class FormViewTag extends TemplateTag {
 	protected JspFragment linkArea;
 
 	protected String linkBarStyleClass;
-	protected String linkStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -149,14 +148,6 @@ public class FormViewTag extends TemplateTag {
 
 	public void setLinkBarStyleClass(String linkBarStyleClass) {
 		this.linkBarStyleClass = linkBarStyleClass;
-	}
-
-	public String getLinkStyleClass() {
-		return linkStyleClass;
-	}
-
-	public void setLinkStyleClass(String linkStyleClass) {
-		this.linkStyleClass = linkStyleClass;
 	}
 
 }

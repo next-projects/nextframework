@@ -2,10 +2,10 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<t:view title="${listViewTag.title}" validateForm="true">
+<t:view title="${listViewTag.title}">
 
-	<input type="hidden" name="currentPage" value="0"/>
-	<input type="hidden" name="notFirstTime" value="true"/>
+	<input type="hidden" name="currentPage" value="0" />
+	<input type="hidden" name="notFirstTime" value="true" />
 
 	<c:if test="${listViewTag.showNewLink || !empty listViewTag.linkArea}">
 		<div class="${listViewTag.linkBarStyleClass}">
@@ -14,10 +14,8 @@
 				<n:link action="create">${listViewTag.newLinkLabel}</n:link>
 			</c:if>
 		</div>
-	</c:if>	
+	</c:if>
 
-	<div>
-		<n:doBody />
-	</div>
+	<n:doBody />
 
 </t:view>

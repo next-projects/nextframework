@@ -9,11 +9,20 @@
 		<div class="${reportPanelTag.sectionTitleStyleClass}">${reportPanelTag.sectionTitle}</div>
 	</c:if>
 
-	<div class="${reportPanelTag.panelStyleClass}">
-		<n:doBody />
-		<div class="${reportPanelTag.actionBarStyleClass}">
-			<n:submit action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
+	<n:getContent tagName="actionPanelTag" vars="acoes">
+
+		<div class="${reportPanelTag.panelStyleClass}">
+
+			<n:doBody />
+
+			<div class="${reportPanelTag.actionBarStyleClass}">
+				${acoes}
+				<n:submit action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
+			</div>
+
 		</div>
-	</div>
+
+	</n:getContent>
+
 
 </n:bean>

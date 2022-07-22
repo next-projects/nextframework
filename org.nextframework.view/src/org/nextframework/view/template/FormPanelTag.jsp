@@ -2,22 +2,26 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<div class="${formPanelTag.panelStyleClass}">
+<n:getContent tagName="actionPanelTag" vars="acoes">
 
-	<c:set value="${tabNum != null ? tabNum + 1 : 0}" var="tabNum" scope="request" />
-	<n:tabPanel id="janelaEntrada_${tabNum}">
+	<div class="${formPanelTag.panelStyleClass}">
+
 		<n:doBody />
-	</n:tabPanel>
 
-	<c:if test="${formPanelTag.showSubmit}">
-		<div class="${formPanelTag.actionBarStyleClass}">
-			<c:if test="${param.ACTION == 'view'}">
-				<n:submit class="${formPanelTag.buttonStyleClass}" id="do_editar_submit" action="update" validate="false">${formPanelTag.updateLinkLabel}</n:submit>
-			</c:if>
-			<c:if test="${param.ACTION != 'view'}">
-				<n:submit class="${formPanelTag.buttonStyleClass}" id="do_${formPanelTag.submitAction}_submit" action="${formPanelTag.submitAction}" validate="true" confirmationScript="${formPanelTag.submitConfirmationScript}">${formPanelTag.submitLabel}</n:submit>
-			</c:if>
-		</div>
-	</c:if>
+		<c:if test="${formPanelTag.showSubmit || !empty acoes}">
+			<div class="${formPanelTag.actionBarStyleClass}">
+				${acoes}
+				<c:if test="${formPanelTag.showSubmit}">
+					<c:if test="${param.ACTION == 'view'}">
+						<n:submit class="${formPanelTag.buttonStyleClass}" id="do_editar_submit" action="update" validate="false">${formPanelTag.updateLinkLabel}</n:submit>
+					</c:if>
+					<c:if test="${param.ACTION != 'view'}">
+						<n:submit class="${formPanelTag.buttonStyleClass}" id="do_${formPanelTag.submitAction}_submit" action="${formPanelTag.submitAction}" validate="true" confirmationScript="${formPanelTag.submitConfirmationScript}">${formPanelTag.submitLabel}</n:submit>
+					</c:if>
+				</c:if>
+			</div>
+		</c:if>
 
-</div>
+	</div>
+
+</n:getContent>

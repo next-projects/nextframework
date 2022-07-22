@@ -32,9 +32,8 @@ import org.nextframework.util.Util;
  */
 public class FilterTableTag extends TemplateTag {
 
-	protected Integer columns;
 	protected Integer colspan;
-	protected String width;
+	protected int columns = 2;
 
 	protected String styleClass;
 	protected String style;
@@ -42,29 +41,12 @@ public class FilterTableTag extends TemplateTag {
 	protected String rowStyles;
 	protected String columnStyleClasses;
 	protected String columnStyles;
-	protected String actionBarStyleClass;
 
 	protected String propertyRenderAs;
 	protected Boolean propertyShowLabel;
 
-	protected Boolean showSubmit = true;
-	protected String submitUrl = null;
-	protected String submitAction = null;
-	protected Boolean validateForm = true;
-	protected String submitLabel = null;
-
 	@Override
 	protected void doComponent() throws Exception {
-
-		if (submitAction == null) {
-			if (findParent(ReportViewTag.class) != null) {
-				submitAction = "generate";
-			}
-		}
-
-		if (submitLabel == null) {
-			submitLabel = getDefaultViewLabel("submitLabel", "Pesquisar");
-		}
 
 		if (propertyRenderAs == null) {
 			propertyRenderAs = getViewConfig().isDefaultPropertyRenderAs();
@@ -80,14 +62,6 @@ public class FilterTableTag extends TemplateTag {
 
 	}
 
-	public Integer getColumns() {
-		return columns;
-	}
-
-	public void setColumns(Integer columns) {
-		this.columns = columns;
-	}
-
 	public Integer getColspan() {
 		return colspan;
 	}
@@ -96,12 +70,12 @@ public class FilterTableTag extends TemplateTag {
 		this.colspan = colspan;
 	}
 
-	public String getWidth() {
-		return width;
+	public int getColumns() {
+		return columns;
 	}
 
-	public void setWidth(String width) {
-		this.width = width;
+	public void setColumns(int columns) {
+		this.columns = columns;
 	}
 
 	public String getStyleClass() {
@@ -152,14 +126,6 @@ public class FilterTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public String getActionBarStyleClass() {
-		return actionBarStyleClass;
-	}
-
-	public void setActionBarStyleClass(String actionBarStyleClass) {
-		this.actionBarStyleClass = actionBarStyleClass;
-	}
-
 	public String getPropertyRenderAs() {
 		return propertyRenderAs;
 	}
@@ -188,46 +154,6 @@ public class FilterTableTag extends TemplateTag {
 
 	public void setPropertyShowLabel(Boolean propertyShowLabel) {
 		this.propertyShowLabel = propertyShowLabel;
-	}
-
-	public Boolean getShowSubmit() {
-		return showSubmit;
-	}
-
-	public void setShowSubmit(Boolean showSubmit) {
-		this.showSubmit = showSubmit;
-	}
-
-	public String getSubmitUrl() {
-		return submitUrl;
-	}
-
-	public void setSubmitUrl(String submitUrl) {
-		this.submitUrl = submitUrl;
-	}
-
-	public String getSubmitAction() {
-		return submitAction;
-	}
-
-	public void setSubmitAction(String submitAction) {
-		this.submitAction = submitAction;
-	}
-
-	public Boolean getValidateForm() {
-		return validateForm;
-	}
-
-	public void setValidateForm(Boolean validateForm) {
-		this.validateForm = validateForm;
-	}
-
-	public String getSubmitLabel() {
-		return submitLabel;
-	}
-
-	public void setSubmitLabel(String submitLabel) {
-		this.submitLabel = submitLabel;
 	}
 
 }

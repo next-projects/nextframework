@@ -23,7 +23,6 @@
  */
 package org.nextframework.view.template;
 
-import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.util.Util;
 
 /**
@@ -33,9 +32,7 @@ import org.nextframework.util.Util;
  */
 public class FormTableTag extends TemplateTag {
 
-	protected String title;
 	protected Integer colspan;
-
 	protected int columns = 2;
 
 	protected String styleClass;
@@ -51,18 +48,6 @@ public class FormTableTag extends TemplateTag {
 	@Override
 	protected void doComponent() throws Exception {
 
-		CrudContext crudContext = CrudContext.getCurrentInstance();
-
-		if (title == null && crudContext != null && crudContext.hasCustomDisplayName()) {
-			title = crudContext.getDisplayName();
-		}
-		if (title == null) {
-			title = getDefaultViewLabel("title", null);
-		}
-		if (title == null && crudContext != null) {
-			title = crudContext.getDisplayName();
-		}
-
 		if (propertyRenderAs == null) {
 			propertyRenderAs = getViewConfig().isDefaultPropertyRenderAs();
 		}
@@ -75,14 +60,6 @@ public class FormTableTag extends TemplateTag {
 		includeJspTemplate();
 		popAttribute("TtabelaEntrada");
 
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public Integer getColspan() {
