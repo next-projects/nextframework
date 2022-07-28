@@ -5,13 +5,13 @@
 
 <n:bean name="filter">
 
-	<c:if test="${! empty reportPanelTag.sectionTitle }">
-		<div class="${reportPanelTag.sectionTitleStyleClass}">${reportPanelTag.sectionTitle}</div>
-	</c:if>
-
 	<n:getContent tagName="actionPanelTag" vars="acoes">
 
 		<div class="${reportPanelTag.panelStyleClass}">
+
+			<c:if test="${! empty reportPanelTag.sectionTitle }">
+				<div class="${reportPanelTag.sectionTitleStyleClass}">${reportPanelTag.sectionTitle}</div>
+			</c:if>
 
 			<n:doBody />
 

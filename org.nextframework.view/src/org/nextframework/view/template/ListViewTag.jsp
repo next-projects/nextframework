@@ -11,7 +11,7 @@
 		<div class="${listViewTag.linkBarStyleClass}">
 			${listViewTag.invokeLinkArea}
 			<c:if test="${listViewTag.showNewLink}">
-				<n:link action="create">${listViewTag.newLinkLabel}</n:link>
+				<n:link action="create" class="${listViewTag.linkStyleClass}">${listViewTag.newLinkLabel}</n:link>
 			</c:if>
 		</div>
 	</c:if>

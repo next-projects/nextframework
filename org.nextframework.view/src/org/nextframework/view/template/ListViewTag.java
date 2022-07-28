@@ -43,6 +43,7 @@ public class ListViewTag extends TemplateTag {
 	protected JspFragment linkArea;
 
 	protected String linkBarStyleClass = null;
+	protected String linkStyleClass = null;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -138,6 +139,14 @@ public class ListViewTag extends TemplateTag {
 
 	public void setLinkBarStyleClass(String linkBarStyleClass) {
 		this.linkBarStyleClass = linkBarStyleClass;
+	}
+
+	public String getLinkStyleClass() {
+		return linkStyleClass;
+	}
+
+	public void setLinkStyleClass(String linkStyleClass) {
+		this.linkStyleClass = linkStyleClass;
 	}
 
 }

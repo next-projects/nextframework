@@ -266,11 +266,6 @@
 	<textarea readonly="readonly" rows="20" cols="120" id="xml" style="text-transform: none;" class="xmlinputstyle" name="reportXml"></textarea>
 </div>
 
-<%--
-<button onclick="$('xml').style.display = '';">Show xml</button>
-<button onclick="$('xml').style.display = 'none';">Hide xml</button>
- --%>
-
 <div id="calculatedPropertiesWizzard" class="propertiesWizzard" style="display: none;  ">
 	<div style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-color: white" class="blockview">
 	&nbsp;

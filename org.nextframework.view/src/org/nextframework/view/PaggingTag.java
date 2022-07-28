@@ -34,12 +34,16 @@ import org.nextframework.web.WebUtils;
  */
 public class PaggingTag extends BaseTag {
 
+	private static final String PTS = "&nbsp;...&nbsp;";
+
 	protected Integer currentPage;
 	protected Integer totalNumberOfPages;
 	protected String parameters;
 
 	protected String panelClass;
+	protected String itemClass;
 	protected String selectedClass;
+	protected String unselectedClass;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -52,41 +56,50 @@ public class PaggingTag extends BaseTag {
 		getOut().println("<ul class=\"" + panelClass + "\">");
 
 		if (start3pontos) {
-			getOut().print("<li>" + getLink(0) + "&nbsp;...&nbsp;</li>");
+			getOut().print("<li>" + getLink(false, 0, PTS + 1, unselectedClass) + "&nbsp;...&nbsp;</li>");
 		}
 
 		for (int i = start; i < fim; i++) {
-			if (i == currentPage) {
-				String cs = selectedClass != null ? " class=\"" + selectedClass + "\"" : "";
-				getOut().print("<li><a " + cs + " href=\"#\">" + (i + 1) + "</a></li> ");
-			} else {
-				getOut().print("<li>" + getLink(i) + "</li>");
-			}
+			String ics = itemClass != null ? " class=\"" + itemClass + "\"" : "";
+			String acs = i == currentPage ? selectedClass : unselectedClass;
+			getOut().print("<li" + ics + ">" + getLink(i == currentPage, i, String.valueOf(i + 1), acs) + "</li>");
 		}
 
 		if (fim3pontos) {
-			getOut().print("<li>&nbsp;...&nbsp;" + getLink(totalNumberOfPages) + "</li>");
+			getOut().print("<li>" + getLink(false, totalNumberOfPages, PTS + (totalNumberOfPages + 1), unselectedClass) + "</li>");
 		}
 
 		getOut().println("</ul>");
 
 	}
 
-	private String getLink(int page) {
+	private String getLink(boolean current, int page, String label, String styleClass) {
 
-		//Link basico
-		String link = getRequest().getContextPath() + NextWeb.getRequestContext().getRequestQuery() + "?currentPage=" + page + getParameters();
+		String link = null;
 
-		//Verifica ultima acao
-		String acao = (String) getRequest().getAttribute("lastAction");
-		if (Util.strings.isNotEmpty(acao)) {
-			link += "&ACTION=" + acao;
+		if (current) {
+
+			link = "#";
+
+		} else {
+
+			//Link basico
+			link = getRequest().getContextPath() + NextWeb.getRequestContext().getRequestQuery() + "?currentPage=" + page + getParameters();
+
+			//Verifica ultima acao
+			String acao = (String) getRequest().getAttribute("lastAction");
+			if (Util.strings.isNotEmpty(acao)) {
+				link += "&ACTION=" + acao;
+			}
+
+			//Verifica URL Sufix
+			link = WebUtils.rewriteUrl(link);
+
 		}
 
-		//Verifica URL Sufix
-		link = WebUtils.rewriteUrl(link);
+		String cs = styleClass != null ? " class=\"" + styleClass + "\"" : "";
 
-		return "<a href=\"" + link + "\" >" + (page + 1) + "</a>";
+		return "<a href=\"" + link + "\"" + cs + " >" + label + "</a>";
 	}
 
 	public Integer getCurrentPage() {
@@ -124,12 +137,28 @@ public class PaggingTag extends BaseTag {
 		this.panelClass = panelClass;
 	}
 
+	public String getItemClass() {
+		return itemClass;
+	}
+
+	public void setItemClass(String itemClass) {
+		this.itemClass = itemClass;
+	}
+
 	public String getSelectedClass() {
 		return selectedClass;
 	}
 
 	public void setSelectedClass(String selectedClass) {
 		this.selectedClass = selectedClass;
+	}
+
+	public String getUnselectedClass() {
+		return unselectedClass;
+	}
+
+	public void setUnselectedClass(String unselectedClass) {
+		this.unselectedClass = unselectedClass;
 	}
 
 }

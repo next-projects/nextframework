@@ -66,6 +66,7 @@ public class DataGridTag extends BaseTag {
 	protected String property;
 	protected Object itemType;
 	protected Object itens;
+	protected String containerStyleClass;
 	protected String styleClass;
 	protected String style;
 	protected String headerStyleClass;
@@ -290,14 +291,17 @@ public class DataGridTag extends BaseTag {
 		if (hasColumns) {
 
 			compositeListener.beforeTableTagContainer();
+			getOut().println("<div class=\"" + containerStyleClass + "\">");
+
 			String hideID = generateUniqueId();
 			if (isRenderResizeColumns()) {
-				getOut().println("<div class=\"datagridcontainer\">");
-				getOut().println("<div class=\"datagridblock\" id=\"" + this.id + "_block\">");
+				getOut().println("<div style=\"position: relative;\" id=\"" + this.id + "_block\">");
 			}
 			if (isHideDatagridWhileLoading()) {
-				getOut().println("<div id=\"" + hideID + "_wait\" style='text-align:center'>Aguarde...</div><div id=\"" + hideID + "\" style=\"display:none\">");
+				getOut().println("<div id=\"" + hideID + "_wait\" style='text-align:center'>Aguarde...</div>");
+				getOut().println("<div id=\"" + hideID + "\" style=\"display:none\">");
 			}
+
 			compositeListener.beforeStartTableTag();
 			String tableTagBegin = "<table" + styleString + classString + getDynamicAttributesToString() + id + ">";
 			tableTagBegin = compositeListener.replaceTableTagBegin(tableTagBegin);
@@ -335,6 +339,7 @@ public class DataGridTag extends BaseTag {
 
 			getOut().println("</table>");
 			compositeListener.afterEndTableTag();
+
 			if (isHideDatagridWhileLoading()) {
 				getOut().println("</div>");
 				getOut().println("<script type=\"text/javascript\">document.getElementById('" + hideID + "').style.display='';document.getElementById('" + hideID + "_wait').style.display='none';</script>");
@@ -342,9 +347,11 @@ public class DataGridTag extends BaseTag {
 
 			if (isRenderResizeColumns()) {
 				getOut().println("</div>");
-				getOut().println("</div>");
 				getOut().println("<script type=\"text/javascript\">/*reloadDatagridConfig('" + this.id + "');*/ datagridList.push('" + this.id + "');</script>");
 			}
+
+			getOut().println("</div>"); //Container
+			compositeListener.afterTableTagContainer();
 
 			if (dynaLine) {
 				currentStatus = Status.DYNALINE;
@@ -354,6 +361,7 @@ public class DataGridTag extends BaseTag {
 			}
 
 		} else {
+
 			Collection collection = (Collection) itens;
 			if (Util.strings.isNotEmpty(varStatus)) {
 				getRequest().setAttribute(varStatus, getLoopTagStatus());
@@ -364,6 +372,7 @@ public class DataGridTag extends BaseTag {
 				_end = _count - 1;
 			}
 			iterate(collection);
+
 		}
 
 		getRequest().setAttribute(var, requestObject);
@@ -487,8 +496,8 @@ public class DataGridTag extends BaseTag {
 	private void renderHeader() throws ELException, IOException, JspException {
 		String styleString = headerStyle != null ? " style=\"" + headerStyle + "\"" : "";
 		String classString = headerStyleClass != null ? " class=\"" + headerStyleClass + "\"" : "";
-		getOut().print("<thead>"); //modificado por pedro para suportar o plugin do jquery para dar trace na tabela
-		getOut().print("<tr" + styleString + classString + "  onselectstart=\"return false;\" onmousedown=\"return false;\">");
+		getOut().print("<thead>");
+		getOut().print("<tr" + styleString + classString + " onselectstart=\"return false;\" onmousedown=\"return false;\">");
 		doBody();
 		getOut().print("</tr>");
 		getOut().print("</thead>");
@@ -623,14 +632,14 @@ public class DataGridTag extends BaseTag {
 	}
 
 	private CyclicIterator<String> getBodyStyleClassesIterator() {
-		if (Util.strings.isEmpty(bodyStyleClasses)){
+		if (Util.strings.isEmpty(bodyStyleClasses)) {
 			return new CyclicIterator<String>();
 		}
 		return new CyclicIterator<String>(bodyStyleClasses.split(","));
 	}
 
 	private CyclicIterator<String> getBodyStylesIterator() {
-		if (Util.strings.isEmpty(bodyStyles)){
+		if (Util.strings.isEmpty(bodyStyles)) {
 			return new CyclicIterator<String>();
 		}
 		return new CyclicIterator<String>(bodyStyles.split(","));
@@ -815,6 +824,14 @@ public class DataGridTag extends BaseTag {
 
 	public void setStyle(String style) {
 		this.style = style;
+	}
+
+	public String getContainerStyleClass() {
+		return containerStyleClass;
+	}
+
+	public void setContainerStyleClass(String containerStyleClass) {
+		this.containerStyleClass = containerStyleClass;
 	}
 
 	public String getStyleClass() {

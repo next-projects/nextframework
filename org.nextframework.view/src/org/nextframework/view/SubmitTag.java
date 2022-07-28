@@ -23,12 +23,15 @@
  */
 package org.nextframework.view;
 
+import javax.servlet.jsp.JspException;
+
 import org.nextframework.authorization.Authorization;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
 import org.nextframework.view.template.PropertyConfigTag;
 import org.nextframework.web.WebUtils;
+import org.springframework.beans.BeanWrapper;
 
 /**
  * @author rogelgarcia
@@ -67,6 +70,19 @@ public class SubmitTag extends BaseTag {
 		return onclick;
 	}
 
+	@Override
+	protected void applyDefaultStyleClass(BeanWrapper bw, String field, String defaultStyleClass) throws JspException {
+		if (field.contains("-")) {
+			String typePrefix = getResolvedType() + "-";
+			if (field.startsWith(typePrefix)) {
+				String compField = field.substring(typePrefix.length());
+				super.applyDefaultStyleClass(bw, compField, defaultStyleClass);
+			}
+			return;
+		}
+		super.applyDefaultStyleClass(bw, field, defaultStyleClass);
+	}
+	
 	@Override
 	protected void doComponent() throws Exception {
 		if(action == null){
@@ -111,7 +127,7 @@ public class SubmitTag extends BaseTag {
 			action = formName+"."+MultiActionController.ACTION_PARAMETER+".value = '';";//se o submit foi criado com action null... devemos enviar para action null
 		}
 		
-		Type tipo = definirTipo();
+		Type tipo = getResolvedType();
 		
 		if(tipo == Type.BUTTON){
 			boolean disabled = "disabled".equals(getDynamicAttributesMap().get("disabled"));
@@ -165,7 +181,7 @@ public class SubmitTag extends BaseTag {
 		return fullUrl;
 	}
 
-	private Type definirTipo() {
+	private Type getResolvedType() {
 		Type tipo = Type.BUTTON;
 		if ("link".equalsIgnoreCase(type)) {
 			tipo = Type.LINK;

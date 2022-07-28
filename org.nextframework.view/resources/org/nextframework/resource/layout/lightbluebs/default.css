@@ -1,4 +1,4 @@
-BODY {
+MAIN {
 	background-image: url("header-background.jpg");
 	background-position: top;
 	background-repeat: repeat-x;
@@ -8,8 +8,21 @@ TH {
 	font-weight: normal;
 }
 
+A {
+	text-decoration: none;
+}
+
+A:HOVER {
+	text-decoration: underline;
+}
+
+A.btn:HOVER {
+	text-decoration: none;
+}
+
 :root {
 	--bs-primary: #006699;
+	--ls-primary-hover: #005588;
 	--bs-link-color: #006699;
 	--bs-link-hover-color: #005588;
 	--bs-border-color: #cccccc;
@@ -17,25 +30,40 @@ TH {
 }
 
 .btn-primary {
-	--bs-btn-bg: #006699;
-	--bs-btn-border-color: #006699;
-	--bs-btn-hover-bg: #005588;
-	--bs-btn-hover-border-color: #005588;
+	--bs-btn-color: #FFFFFF;
+	--bs-btn-bg: var(--bs-primary);
+	--bs-btn-border-color: var(--bs-primary);
+	--bs-btn-hover-bg: var(--ls-primary-hover);
+	--bs-btn-hover-border-color: var(--ls-primary-hover);
+}
+
+.btn-outline-primary {
+	--bs-btn-color: var(--bs-primary);
+	--bs-btn-border-color: var(--bs-primary);
+	--bs-btn-hover-bg: var(--ls-primary-hover);
+	--bs-btn-hover-border-color: var(--ls-primary-hover);
+}
+
+.dropdown-menu {
+	--bs-dropdown-link-color: var(--bs-primary);
+	--bs-dropdown-link-hover-color: #FFFFFF;
+	--bs-dropdown-link-hover-bg: var(--ls-primary-hover);
 }
 
 .card {
 	--bs-card-border-color: var(--bs-border-color);
 	--bs-card-cap-bg: var(--sl-card-cap-color);
-	--bs-card-cap-color: #006699;
+	--bs-card-cap-color: var(--bs-primary);
 }
 
 .table {
-	--bs-table-bg: white;
+	--bs-table-bg: #FFFFFF;
 	--bs-table-striped-bg: #F9F9F9;
 	margin-bottom: 0px;
 }
 
 .table-light {
+	--bs-table-color: var(--bs-primary);
 	--bs-table-bg: var(--sl-card-cap-color);
 	--bs-table-border-color: var(--bs-border-color);
 }
@@ -232,14 +260,6 @@ LI.causeitem {
 	background: #CBE2FD;
 }
 
-.resultWindow {
-	margin: 0px;
-	margin-top: 12px;
-	border: 1px solid #CCCCCC;
-	border-collapse: collapse;
-}
-
-
 
 .inputWindow {
 	margin: 0px;
@@ -259,11 +279,6 @@ LI.causeitem {
 	padding: 2px;
 }
 
-.order {
-	font-size: 12px;
-	text-decoration: none;
-	text-align: left;
-}
 
 UL.pagePanel {
 	display: inline-block;
@@ -290,18 +305,6 @@ UL.pagePanel LI A.pageSelected {
 UL.pagePanel LI A:hover:not(.pageSelected) {
 	background-color: #F9F9F9;
 }
-
-*/
-
-A {
-	text-decoration: none;
-}
-
-A:HOVER {
-	text-decoration: underline;
-}
-
-/*
 
 .labelColumn {
 	min-width: 80px;

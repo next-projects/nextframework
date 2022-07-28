@@ -4,13 +4,13 @@
 
 <n:bean name="${filterPanelTag.name}">
 
-	<c:if test="${! empty filterPanelTag.sectionTitle }">
-		<div class="${filterPanelTag.sectionTitleStyleClass}">${filterPanelTag.sectionTitle}</div>
-	</c:if>
-
 	<n:getContent tagName="actionPanelTag" vars="acoes">
 
 		<div class="${filterPanelTag.panelStyleClass}">
+
+			<c:if test="${! empty filterPanelTag.sectionTitle }">
+				<div class="${filterPanelTag.sectionTitleStyleClass}">${filterPanelTag.sectionTitle}</div>
+			</c:if>
 
 			<n:doBody />
 
