@@ -14,34 +14,17 @@
 <% request.setAttribute("app", request.getContextPath()); %>
 
 <c:if test="${useBootstrap}">
-
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" >
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="${app}/resource/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-	<![endif]-->
-
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script language="JavaScript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script language="JavaScript" src="${app}/resource/bootstrap/js/bootstrap.min.js"></script>
-
+	<script src="${app}/resource/bootstrap/js/bootstrap.bundle.min.js" language="JavaScript"></script>
+	<link href="${app}/resource/bootstrap/fonts/bootstrap-icons.css" rel="stylesheet" >
 </c:if>
-<c:if test="${!useBootstrap}">
-
-	<c:if test="${headTag.includeNormalizeCss}">
-		<link rel="stylesheet" href="${app}/resource/theme/normalize.css"/>	
-	</c:if>
-
+<c:if test="${!useBootstrap && headTag.includeNormalizeCss}">
+	<link rel="stylesheet" href="${app}/resource/theme/normalize.css"/>
 </c:if>
-
 <c:if test="${headTag.includeSystemCss}">
-	<link rel="stylesheet" href="${app}/resource/theme/system.css"/>	
+	<link rel="stylesheet" href="${app}/resource/theme/system.css"/>
 </c:if>
 
 <script language="JavaScript" src="${app}/resource/js/stjs.js"></script>
@@ -77,7 +60,8 @@
 <script language="JavaScript" src="${app}/resource/js/dynatable-listeners.js"></script>
 <script language="JavaScript" src="${app}/resource/js/JSCookMenu.js"></script>
 
-<script language="JavaScript" src="${app}/resource/js/treetable.js"></script>
+<%-- TREETABLE CONFLITA COM API DO GOOGLE! --%>
+<%-- <script language="JavaScript" src="${app}/resource/js/treetable.js"></script> --%>
 
 
 <link rel="StyleSheet" href="${app}/resource/css/suggest.css" type="text/css">
@@ -91,7 +75,7 @@
 <script language="JavaScript" src="${app}/resource/calendar/calendar-ptBR.js"></script>
 <script language="JavaScript" src="${app}/resource/calendar/calendar-setup.js"></script>
 
-<link rel="StyleSheet" href="${app}/resource/calendar/calendar-system.css" type="text/css">	
+<link rel="StyleSheet" href="${app}/resource/calendar/calendar-system.css" type="text/css">
 
 <%-- DATAGRID --%>
 <script language="JavaScript" src="${app}/resource/js/datagrid.js"></script>
@@ -107,7 +91,7 @@
 
 <%-- MENU --%>
 <c:if test="${headTag.includeThemeCss}">
-<link rel="StyleSheet" href="${app}/resource/menu/theme.css" type="text/css">
+	<link rel="StyleSheet" href="${app}/resource/menu/theme.css" type="text/css">
 </c:if>
 <script language="JavaScript" src="${app}/resource/menu/theme.js"></script>
 
@@ -119,31 +103,31 @@
 	} catch(e){}// se não conseguiu achar o javascript não dar exceção
 </script>
 
-
 <%-- DEFAULT CSS --%>
-<c:if test="${!useBootstrap}">
-
-	<c:if test="${headTag.includeDefaultCss}">
-		<link rel="StyleSheet" href="${app}/resource/css/default.css" type="text/css">	
+<c:if test="${headTag.includeDefaultCss}">
+	<c:if test="${useBootstrap}">
+		<link rel="StyleSheet" href="${app}/resource/layout/lightbluebs/default.css" type="text/css">
 	</c:if>
-
-<c:if test="${!useBootstrap}">
+	<c:if test="${!useBootstrap}">
+		<link rel="StyleSheet" href="${app}/resource/layout/lightblue/default.css" type="text/css">
+	</c:if>
+</c:if>
 
 <%-- APPLICATION CSS JS --%>
 <c:if test="${searchCssDir == true}">
 	<c:forEach items="${csss}" var="css">
-	<link rel="StyleSheet" href="${app}${css}" type="text/css">	
+	<link rel="StyleSheet" href="${app}${css}" type="text/css">
 	</c:forEach>
 	<c:forEach items="${csssModule}" var="css">
-	<link rel="StyleSheet" href="${app}${css}" type="text/css">	
+	<link rel="StyleSheet" href="${app}${css}" type="text/css">
 	</c:forEach>
 </c:if>
 
 <c:if test="${searchJsDir == true}">
 	<c:forEach items="${jss}" var="js">
-	<script language="JavaScript" src="${app}${js}"></script>	
+	<script language="JavaScript" src="${app}${js}"></script>
 	</c:forEach>
 	<c:forEach items="${jssModule}" var="js">
-	<script language="JavaScript" src="${app}${js}"></script>	
+	<script language="JavaScript" src="${app}${js}"></script>
 	</c:forEach>
 </c:if>
