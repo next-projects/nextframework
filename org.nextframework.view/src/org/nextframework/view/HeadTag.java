@@ -36,7 +36,7 @@ public class HeadTag extends BaseTag {
 	protected boolean includeNormalizeCss = true;
 	protected boolean includeSystemCss = true;
 	protected boolean includeDefaultCss = true;
-	protected boolean includeThemeCss = true;
+	protected boolean includeMenuThemeCss = true;
 	protected boolean includeUtilJs = true;
 	protected boolean includeNextJs = true;
 	protected boolean includeNextDirectJs = false;
@@ -60,7 +60,7 @@ public class HeadTag extends BaseTag {
 						includeDefaultCss = false;
 					}
 					if (string.endsWith("theme.css")) {
-						includeThemeCss = false;
+						includeMenuThemeCss = false;
 					}
 				}
 			}
@@ -77,11 +77,12 @@ public class HeadTag extends BaseTag {
 						includeDefaultCss = false;
 					}
 					if (string.endsWith("theme.css")) {
-						includeThemeCss = false;
+						includeMenuThemeCss = false;
 					}
 				}
 			}
 		}
+
 		//procurar JS
 		Set<String> resourcePathsJsServer = getServletContext().getResourcePaths("/js");
 		Set<String> resourcePathsJs = null;
@@ -95,6 +96,7 @@ public class HeadTag extends BaseTag {
 				}
 			}
 		}
+
 		//procurar JS para modulo
 		Set<String> resourcePathsJsModuleServer = getServletContext().getResourcePaths("/js" + module);
 		Set<String> resourcePathsModuleJs = null;
@@ -174,12 +176,12 @@ public class HeadTag extends BaseTag {
 		this.includeUtilJs = includeUtilJs;
 	}
 
-	public boolean isIncludeThemeCss() {
-		return includeThemeCss;
+	public boolean isIncludeMenuThemeCss() {
+		return includeMenuThemeCss;
 	}
 
-	public void setIncludeThemeCss(boolean includeThemeCss) {
-		this.includeThemeCss = includeThemeCss;
+	public void setIncludeMenuThemeCss(boolean includeMenuThemeCss) {
+		this.includeMenuThemeCss = includeMenuThemeCss;
 	}
 
 	public boolean isSearchCssDir() {

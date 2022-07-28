@@ -21,10 +21,10 @@
 	<link href="${app}/resource/bootstrap/fonts/bootstrap-icons.css" rel="stylesheet" >
 </c:if>
 <c:if test="${!useBootstrap && headTag.includeNormalizeCss}">
-	<link rel="stylesheet" href="${app}/resource/theme/normalize.css"/>
+	<link rel="stylesheet" href="${app}/resource/css/normalize.css"/>
 </c:if>
 <c:if test="${headTag.includeSystemCss}">
-	<link rel="stylesheet" href="${app}/resource/theme/system.css"/>
+	<link rel="stylesheet" href="${app}/resource/css/system.css"/>
 </c:if>
 
 <script language="JavaScript" src="${app}/resource/js/stjs.js"></script>
@@ -66,8 +66,6 @@
 
 <link rel="StyleSheet" href="${app}/resource/css/suggest.css" type="text/css">
 
-<link rel="StyleSheet" href="${app}/resource/css/system.css" type="text/css">
-
 <link rel="StyleSheet" href="${app}/resource/css/select_many_popup.css" type="text/css">
  
 <%-- CALENDAR --%>
@@ -90,7 +88,7 @@
 </script>
 
 <%-- MENU --%>
-<c:if test="${headTag.includeThemeCss}">
+<c:if test="${headTag.includeMenuThemeCss}">
 	<link rel="StyleSheet" href="${app}/resource/menu/theme.css" type="text/css">
 </c:if>
 <script language="JavaScript" src="${app}/resource/menu/theme.js"></script>

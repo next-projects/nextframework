@@ -10,33 +10,29 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" ><!-- Solves AJAX bug in IE10 -->
-		
-		<link rel="stylesheet"	href="${application}/resource/theme/fonts/open-sans.css"/>
-		
-		<link rel="stylesheet"	href="${application}/resource/theme/theme1.css"/>
-		
-		<n:head includeDefaultCss="false" includeThemeCss="false"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+		<n:head />
 	</head>
 	<body>
+	
 		<div class="applicationTitleBar">
 			<div class="applicationTitle">
-				<b>Next</b> Application 
+				<b>Next</b> Application
 			</div>
 		</div>
-		
+	
 		<div class="menubar">
 			<div class="menubarInner">
-				<n:menu menupath="/WEB-INF/menu.xml"/>
+				<n:menu menupath="/WEB-INF/menu.xml" />
 			</div>
 		</div>
-		 
+	
 		<div class="messageOuterDiv">
-			<n:messages/> 
+			<n:messages />
 		</div>
 		<div class="body">
-			<jsp:include page="${bodyPage}" /> 
+			<jsp:include page="${bodyPage}" />
 		</div>
-		
+	
 	</body>
 </html>

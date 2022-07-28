@@ -128,7 +128,7 @@ public class NextFilter implements Filter {
 		out.println("<HTML>");
 		out.println("<head>");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />");
-		out.println("<link rel=\"stylesheet\" href=\"" + request.getContextPath() + "/resource/theme/welcome.css\"/>");
+		out.println("<link rel=\"stylesheet\" href=\"" + request.getContextPath() + "/resource/css/welcome.css\"/>");
 		out.println("</head>");
 		out.println("<BODY>");
 		if (ex != null) {

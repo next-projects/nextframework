@@ -3,21 +3,17 @@
  *
  * Se copiar esse CSS para o diretório /css da sua aplicação
  * será necessário refatorar o caminho das imagens para
- * ../resource/css/layout/lightblue/
+ * ../resource/layout/lightblue/
  * Exemplo: onde tiver url("header-background.jpg"); terá que ser url("../resource/css/layout/lightblue/header-background.jpg");
  *
  * Você poderá excluir o conteúdo desse arquivo e importar outro CSS se desejar, para isso basta ter um arquivo com o seguinte conteúdo:
  *
- * @IMPORT url("../resource/css/layout/lightblue/default.css");
+ * @IMPORT url("../resource/layout/lightblue/default.css");
  *
  * Isso importará o arquivo CSS padrão, você poderá adicionar regras CSS para incrementar ou alterar o estilo padrão.
  *
- * Os layouts disponíveis são:
- *   @IMPORT url("../resource/css/layout/lightblue/default.css"); //padrão
- *   @IMPORT url("../resource/css/layout/alternate/default.css");
- *   @IMPORT url("../resource/css/layout/simpleposts/default.css"); 
- *
  */
+
 BODY {
 	background-image: url("header-background.jpg");
 	background-position: top;
@@ -27,22 +23,12 @@ BODY {
 }
 
 .applicationTitle {
-	position: absolute;
-	top: 14px;
-	left: 14px;
+	margin:5px;
 	font-size: 12px;
-	display: none;
-}
-
-div.body {
-	margin: 5px;
-	position: relative;
-	top: -46px;
 }
 
 .menubar {
-	margin-left: 16%;
-	margin-right: 16%;
+	margin:5px;
 }
 
 .menubar-before {
@@ -75,47 +61,9 @@ div.body {
 	position: relative;
 }
 
-.pageTitle {
-	font-family: verdana;
-	font-size: 20px;
-	position: relative;
-	left: 2px;
-	top: -10px;
-}
-
-.linkBar {
-	font-size: 12px;
-	font-family: verdana;
-	padding-bottom: 6px;
-	padding-top: 6px;
-	padding-left: 2px;
-	border: 1px solid #83AADA;
-	background: #DDECFE;
-	background-position: center;
-}
-
-.linkBar A {
-	color: black;
-	text-decoration: none;
-	padding: 7px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	width: 180px;
-	min-width: 120px;
-}
-
-.linkBar A:hover {
-	border: 1px solid #83AADA;
-	text-decoration: none;
-	padding-left: 6px;
-	padding-right: 6px;
-	background: #CBE2FD;
-}
-
 .messageOuterDiv {
 	position: relative;
 	padding-top: 2px;
-	min-height: 80px;
 	padding-bottom: 3px;
 }
 
@@ -274,11 +222,54 @@ LI.causeitem {
 	font-weight: normal;
 }
 
+div.body {
+	margin: 5px;
+}
+
+.pageTitle {
+	font-family: verdana;
+	font-size: 20px;
+}
+
+.linkBar {
+	font-size: 12px;
+	font-family: verdana;
+	padding-bottom: 6px;
+	padding-top: 6px;
+	padding-left: 2px;
+	border: 1px solid #83AADA;
+	background: #DDECFE;
+	background-position: center;
+}
+
+.linkBar A {
+	color: black;
+	text-decoration: none;
+	padding: 7px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	width: 180px;
+	min-width: 120px;
+}
+
+.linkBar A:hover {
+	border: 1px solid #83AADA;
+	text-decoration: none;
+	padding-left: 6px;
+	padding-right: 6px;
+	background: #CBE2FD;
+}
+
 .resultWindow {
 	margin: 0px;
-	margin-top: 1px;
+	margin-top: 12px;
 	border: 1px solid #CCCCCC;
 	border-collapse: collapse;
+}
+
+.datagridcontainer {
+	width: 100%; 
+	overflow: auto;
 }
 
 .dataGrid {
@@ -342,7 +333,11 @@ LI.causeitem {
 }
 
 .inputTable {
-	
+	margin: 4px;
+}
+
+.inputTable TD {
+	padding: 2px;
 }
 
 .sectionTitle {
@@ -395,7 +390,7 @@ UL.pagePanel LI A:hover:not(.pageSelected) {
 .actionBar {
 	text-align: left;
 	background-color: #EBF0F8;
-	padding: 3px;
+	padding: 4px;
 	font-size: 11px;
 	border-top: 1px solid #CCCCCC;
 }

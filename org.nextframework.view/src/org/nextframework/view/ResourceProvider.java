@@ -27,10 +27,6 @@ public class ResourceProvider {
 
 	public void init(ServletConfig config) throws ServletException {
 
-		map.put("bootstrap/css", "org/nextframework/resource/bootstrap/css");
-		map.put("bootstrap/fonts", "org/nextframework/resource/bootstrap/fonts");
-		map.put("bootstrap/js", "org/nextframework/resource/bootstrap/js");
-
 		map.put("js/validation", "org/nextframework/resource");
 		map.put("js/inputs", "org/nextframework/resource");
 		map.put("js/ajax", "org/nextframework/resource");
@@ -43,15 +39,14 @@ public class ResourceProvider {
 		map.put("img", "org/nextframework/resource/imgs");
 		map.put("report", "org/nextframework/report/renderer/html/resource");
 
-		//layouts
-		map.put("css/layout/lightblue", "org/nextframework/resource/layout/lightblue");
-		map.put("css/layout/lightgreen", "org/nextframework/resource/layout/lightgreen");
-		map.put("css/layout/alternate", "org/nextframework/resource/layout/alternate");
-		map.put("css/layout/simpleposts", "org/nextframework/resource/layout/simpleposts");
+		map.put("bootstrap/css", "org/nextframework/resource/bootstrap/css");
+		map.put("bootstrap/js", "org/nextframework/resource/bootstrap/js");
+		map.put("bootstrap/menu", "org/nextframework/resource/bootstrap/menu");
+		map.put("bootstrap/fonts", "org/nextframework/resource/bootstrap/fonts");
 
-		map.put("theme", "org/nextframework/resource/theme");
-		map.put("theme/fonts", "org/nextframework/resource/theme/fonts");
-		map.put("theme/images", "org/nextframework/resource/theme/images");
+		//layouts
+		map.put("layout/lightblue", "org/nextframework/resource/layout/lightblue");
+		map.put("layout/lightbluebs", "org/nextframework/resource/layout/lightbluebs");
 
 		//adicionar layouts customizados
 		Enumeration<String> initParameterNames = config.getInitParameterNames();
@@ -109,14 +104,6 @@ public class ResourceProvider {
 				while ((b = in.read()) != -1) {
 					out.write(b);
 				}
-
-				/*
-				byte[] buffer = new byte[8192];
-				int read;
-				while((read = in.read(buffer)) != -1){
-					out.write(buffer, 0, read);
-				}
-				*/
 
 				if (out instanceof GZIPOutputStream) {
 					((GZIPOutputStream) out).finish();
