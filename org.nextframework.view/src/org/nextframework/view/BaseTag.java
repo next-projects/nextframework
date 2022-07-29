@@ -616,10 +616,11 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	protected void includeTextTemplateFile(String template) throws ServletException, IOException, ELException, JspException {
-		String[] text = templateManager.getTextFromTemplate(this, template);
+
 		Object last = getRequest().getAttribute(TAG_ATTRIBUTE);
 		getRequest().setAttribute(TAG_ATTRIBUTE, this);
 
+		String[] text = templateManager.getTextFromTemplate(this, template);
 		evaluateAndPrint(text[0]);
 		if (getJspBody() != null) {
 			getJspBody().invoke(null);
@@ -631,6 +632,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		}
 
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
+
 	}
 
 	protected void evaluateAndPrint(String expression) throws ELException, IOException {
@@ -652,8 +654,10 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	protected void includeJspTemplateFile(String template) throws ServletException, IOException {
+
 		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
 		PrintWriter writer = new PrintWriter(arrayOutputStream);
+
 		//Object lastBody = getRequest().getAttribute(JSPFRAGMENT);
 		//getRequest().setAttribute(JSPFRAGMENT, getJspBody());
 		TagUtils.pushJspFragment(getRequest(), getJspBody());
@@ -675,6 +679,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
 		//getRequest().setAttribute(JSPFRAGMENT, lastBody);
 		TagUtils.popJspFragment(getRequest());
+
 	}
 
 	//Faz o dispatch para determinada url, coloca a saida no writer
