@@ -40,7 +40,6 @@ import org.nextframework.util.Util;
 import org.nextframework.view.code.DebugInputsTag;
 import org.nextframework.view.components.InputTagComponent;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -162,16 +161,8 @@ public class InputTag extends BaseTag {
 	}
 
 	@Override
-	protected void applyDefaultStyleClass(BeanWrapper bw, String field, String defaultStyleClass) throws JspException {
-		if (field.contains("-")) {
-			String typePrefix = selectedType.toString() + "-";
-			if (field.startsWith(typePrefix)) {
-				String compField = field.substring(typePrefix.length());
-				super.applyDefaultStyleClass(bw, compField, defaultStyleClass);
-			}
-			return;
-		}
-		super.applyDefaultStyleClass(bw, field, defaultStyleClass);
+	protected String getSubComponentName() {
+		return selectedType != null ? selectedType.toString() : null;
 	}
 
 	@Override
@@ -194,27 +185,13 @@ public class InputTag extends BaseTag {
 
 		inputComponent.prepare();
 
-		if (Util.booleans.isTrue(showLabel)) {
-			if (label != null && label.trim().length() != 0) {
-				boolean usespan = labelStyle != null && labelStyle.length() > 0 || labelStyleClass != null && labelStyleClass.length() > 0;
-				if (getId() != null) {
-					getOut().print("<label for=\"" + getId() + "\">");
-				}
-				if (usespan) {
-					getOut().print("<span ");
-					getOut().print("style=\"" + labelStyle + "\" ");
-					getOut().print("class=\"" + labelStyleClass + "\"");
-					getOut().print(">");
-				}
-				// removido o (dois pontos) + ": "
-				getOut().print(label);
-				if (usespan) {
-					getOut().print("</span>");
-				}
-				if (getId() != null) {
-					getOut().print("</label>");
-				}
-			}
+		if (Util.booleans.isTrue(showLabel) && Util.strings.isNotEmpty(label)) {
+			String id = getId() != null ? getId() : generateUniqueId();
+			String styleClass = Util.strings.isNotEmpty(labelStyleClass) ? " class=\"" + labelStyleClass + "\"" : "";
+			String style = Util.strings.isNotEmpty(labelStyle) ? " style=\"" + labelStyle + "\"" : "";
+			getOut().print("<label for=\"" + id + "\"" + styleClass + style + ">");
+			getOut().print(label);
+			getOut().print("</label>");
 		}
 
 		// fazer os listeners

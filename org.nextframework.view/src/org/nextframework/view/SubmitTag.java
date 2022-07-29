@@ -23,15 +23,12 @@
  */
 package org.nextframework.view;
 
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.authorization.Authorization;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
 import org.nextframework.view.template.PropertyConfigTag;
 import org.nextframework.web.WebUtils;
-import org.springframework.beans.BeanWrapper;
 
 /**
  * @author rogelgarcia
@@ -71,18 +68,10 @@ public class SubmitTag extends BaseTag {
 	}
 
 	@Override
-	protected void applyDefaultStyleClass(BeanWrapper bw, String field, String defaultStyleClass) throws JspException {
-		if (field.contains("-")) {
-			String typePrefix = getResolvedType() + "-";
-			if (field.startsWith(typePrefix)) {
-				String compField = field.substring(typePrefix.length());
-				super.applyDefaultStyleClass(bw, compField, defaultStyleClass);
-			}
-			return;
-		}
-		super.applyDefaultStyleClass(bw, field, defaultStyleClass);
+	protected String getSubComponentName() {
+		return getResolvedType().toString();
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
 		if(action == null){

@@ -51,8 +51,8 @@
 		</c:when>
 		<%-- double --%>
 		<c:when test="${propertyTag.renderAs == 'double'}">
-			<n:panel style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" >
-				<label for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+			<n:panel style="${propertyTag.labelPanelStyle}" class="${propertyTag.labelPanelStyleClass}" >
+				<label style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 			</n:panel>
 			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
 				<c:if test="${propertyTag.mode == 'input'}">
@@ -96,8 +96,8 @@
 					<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
 				</c:if>
 			</n:panel>
-			<n:panel style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" >
-				<label for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+			<n:panel style="${propertyTag.labelPanelStyle}" class="${propertyTag.labelPanelStyleClass}" >
+				<label style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 			</n:panel>
 		</c:when>
 		<%-- single --%>

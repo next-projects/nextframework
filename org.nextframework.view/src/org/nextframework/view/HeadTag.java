@@ -49,6 +49,8 @@ public class HeadTag extends BaseTag {
 		String firstRequestUrl = NextWeb.getRequestContext().getFirstRequestUrl();
 		String module = firstRequestUrl.substring(0, firstRequestUrl.substring(1).indexOf('/') + 1);
 
+		charset = charset != null ? charset : getViewConfig().getJSPDefaultCharset();
+
 		//procurar css
 		Set<String> resourcePathsCssServer = getServletContext().getResourcePaths("/css");
 		Set<String> resourcePathsCss = null;
@@ -111,11 +113,11 @@ public class HeadTag extends BaseTag {
 			}
 		}
 
+		pushAttribute("app", getRequest().getContextPath());
+		pushAttribute("useBootstrap", getViewConfig().isUseBootstrap());
+
 		filterDirs(resourcePathsJs);
 		filterDirs(resourcePathsCss);
-
-		charset = charset != null ? charset : getViewConfig().getJSPDefaultCharset();
-		pushAttribute("useBootstrap", getViewConfig().isUseBootstrap());
 
 		pushAttribute("jss", resourcePathsJs);
 		pushAttribute("csss", resourcePathsCss);

@@ -73,6 +73,9 @@ import org.springframework.context.NoSuchMessageException;
 @SuppressWarnings("deprecation")
 public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
+	private static final String IDSEQUENCE = "IDSEQUENCE";
+	private static final String GENERATED = "GENERATED_";
+
 	protected static Log log = LogFactory.getLog(BaseTag.class);
 
 	private String STACK_ATTRIBUTE_NAME = "TagStack";
@@ -153,12 +156,12 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	public String generateUniqueId() {
-		Integer idsequence = (Integer) getRequest().getAttribute("IDSEQUENCE");
+		Integer idsequence = (Integer) getRequest().getAttribute(IDSEQUENCE);
 		if (idsequence == null) {
 			idsequence = 0;
 		}
-		getRequest().setAttribute("IDSEQUENCE", idsequence + 1);
-		return ("GENERATED_") + idsequence;
+		getRequest().setAttribute(IDSEQUENCE, idsequence + 1);
+		return GENERATED + idsequence;
 	}
 
 	protected void pushAttribute(String name, Object value) {
@@ -509,6 +512,14 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	protected void applyDefaultStyleClass(BeanWrapper bw, String field, String defaultStyleClass) throws JspException {
+		String sub = getSubComponentName();
+		if (sub != null && field.contains("-")) {
+			if (field.startsWith(sub.toUpperCase() + "-")) {
+				field = field.substring(sub.length() + 1);
+			} else {
+				return;
+			}
+		}
 		if (bw.isWritableProperty(field)) {
 			Object value = bw.getPropertyValue(field);
 			if (value == null) {
@@ -519,13 +530,14 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 		} else if ("class".equals(field)) {
 			String classCss = (String) getDynamicAttributesMap().get("class");
-			if (classCss == null) {
-				classCss = defaultStyleClass;
-				if (classCss != null) {
-					setDynamicAttribute(null, "class", classCss);
-				}
+			if (classCss == null && defaultStyleClass != null) {
+				setDynamicAttribute(null, "class", defaultStyleClass);
 			}
 		}
+	}
+
+	protected String getSubComponentName() {
+		return null;
 	}
 
 	protected void doComponent() throws Exception {

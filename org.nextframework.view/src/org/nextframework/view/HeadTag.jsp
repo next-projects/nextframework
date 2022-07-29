@@ -11,8 +11,6 @@
 <meta http-equiv="cache-control" content="no-cache" />
 <meta http-equiv="expires" content="-1" />
 
-<% request.setAttribute("app", request.getContextPath()); %>
-
 <c:if test="${useBootstrap}">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" >
 	<meta name="viewport" content="width=device-width, initial-scale=1">

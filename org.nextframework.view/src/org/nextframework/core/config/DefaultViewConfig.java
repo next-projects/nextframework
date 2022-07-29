@@ -38,6 +38,7 @@ public class DefaultViewConfig implements ViewConfig {
 		return "iso-8859-1";
 	}
 
+	@Override
 	public Map<Class<?>, InputTagType> getCustomInputTypes() {
 		return customInputTypesMap;
 	}
@@ -47,14 +48,17 @@ public class DefaultViewConfig implements ViewConfig {
 		return PropertyTag.DOUBLE;
 	}
 
+	@Override
 	public String getRequiredMarkString() {
 		return "&#0149;";
 	}
 
+	@Override
 	public boolean isDefaultShowCalendar() {
 		return true;
 	}
 
+	@Override
 	public boolean isDefaultResizeDatagridColumns() {
 		return false;
 	}
@@ -177,6 +181,9 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
+			regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "m-2");
+			regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+
 			regDefaultStyleClasses(styleClassesMap, ListPanelTag.class, "panelStyleClass", "card");
 
 			regDefaultStyleClasses(styleClassesMap, ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
@@ -188,14 +195,20 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
-			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "rowStyleClasses", "row g-3");
-			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "col-form-label, col");
+			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "m-2");
+			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
 
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "panelStyleClass", "card");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "card-header");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 
+			regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "m-2");
+			regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+
 			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "buttonStyleClass", "btn btn-sm");
+
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-class", "form-control");
 
 		} else {
 

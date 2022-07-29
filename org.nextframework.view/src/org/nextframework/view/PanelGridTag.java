@@ -155,11 +155,11 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			if (remainingColumns == columns) {
 
 				String styleClass = rowStyleClassIterator.next();
-				String classString = styleClass != null ? " class=\"" + styleClass + "\"" : "";
+				String rowStyleClass = styleClass != null ? " class=\"" + styleClass + "\"" : "";
 				String style = rowStyleIterator.next();
-				String styleString = style != null ? " style=\"" + style + "\"" : "";
+				String rowStyle = style != null ? " style=\"" + style + "\"" : "";
 
-				getOut().print("<" + rowTag + classString + styleString + ">");
+				getOut().print("<" + rowTag + rowStyleClass + rowStyle + ">");
 
 				rowCount++;
 
@@ -167,19 +167,23 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 			{
 
-				String styleClass = columnStyleClassIterator.next();
+				String columnStyleClass = columnStyleClassIterator.next();
 				if (block.getProperties().containsKey("class")) {
-					Object blockClass = block.getProperties().remove("class");
-					styleClass = (Util.strings.isNotEmpty(styleClass) ? styleClass + " " : "") + blockClass;
+					String blockClass = (String) block.getProperties().remove("class");
+					if (blockClass != null) {
+						columnStyleClass = (Util.strings.isNotEmpty(columnStyleClass) ? columnStyleClass + " " : "") + blockClass;
+					}
 				}
-				String classString = styleClass != null ? " class=\"" + styleClass + "\"" : "";
+				String classString = columnStyleClass != null ? " class=\"" + columnStyleClass + "\"" : "";
 
-				String style = columnStyleIterator.next();
+				String columnStyle = columnStyleIterator.next();
 				if (block.getProperties().containsKey("style")) {
-					Object blockStyle = block.getProperties().remove("style");
-					style = (Util.strings.isNotEmpty(style) ? style + "; " : "") + blockStyle;
+					String blockStyle = (String) block.getProperties().remove("style");
+					if (blockStyle != null) {
+						columnStyle = (Util.strings.isNotEmpty(columnStyle) ? columnStyle + "; " : "") + blockStyle;
+					}
 				}
-				String styleString = style != null ? " style=\"" + style + "\"" : "";
+				String styleString = columnStyle != null ? " style=\"" + columnStyle + "\"" : "";
 
 				getOut().print("<" + blockTag + classString + styleString + getDynamicAttributesToString(block.getProperties()) + ">");
 				getOut().print(block.body);

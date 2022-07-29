@@ -2,6 +2,7 @@ MAIN {
 	background-image: url("header-background.jpg");
 	background-position: top;
 	background-repeat: repeat-x;
+	min-height: 100px;
 }
 
 TH {

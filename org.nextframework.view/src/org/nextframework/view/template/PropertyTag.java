@@ -127,14 +127,26 @@ public class PropertyTag extends TemplateTag {
 	protected boolean showDeleteButton = true;
 
 	//estilos
-	private String headerStyleClass = "";
-	private String headerStyle = "";
-	private String bodyStyleClass = "";
-	private String bodyStyle = "";
-	private String panelStyleClass = "";
-	private String panelStyle = "";
-	private String labelStyleClass = "";
-	private String labelStyle = "";
+	private String headerStyleClass;
+	private String headerStyle;
+	private String bodyStyleClass;
+	private String bodyStyle;
+	private String panelStyleClass;
+	private String panelStyle;
+	private String labelPanelStyleClass;
+	private String labelPanelStyle;
+	private String labelStyleClass;
+	private String labelStyle;
+
+	@Override
+	protected void applyDefaultStyleClasses() throws JspException {
+		//Não aplica no fluxo natural.
+	}
+
+	@Override
+	protected String getSubComponentName() {
+		return renderAs;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -148,6 +160,9 @@ public class PropertyTag extends TemplateTag {
 		}
 
 		verifyRenderAs(configTag, findFirst);
+
+		//Aplica estilos padrão apenas após resolver o 'renderAs'
+		super.applyDefaultStyleClasses();
 
 		verifyMode(configTag);
 
@@ -709,6 +724,22 @@ public class PropertyTag extends TemplateTag {
 		this.panelStyle = panelStyle;
 	}
 
+	public String getLabelPanelStyle() {
+		return labelPanelStyle;
+	}
+
+	public void setLabelPanelStyle(String labelPanelStyle) {
+		this.labelPanelStyle = labelPanelStyle;
+	}
+
+	public String getLabelPanelStyleClass() {
+		return labelPanelStyleClass;
+	}
+
+	public void setLabelPanelStyleClass(String labelPanelStyleClass) {
+		this.labelPanelStyleClass = labelPanelStyleClass;
+	}
+
 	public String getLabelStyleClass() {
 		return labelStyleClass;
 	}
@@ -723,23 +754,6 @@ public class PropertyTag extends TemplateTag {
 
 	public void setLabelStyle(String labelStyle) {
 		this.labelStyle = labelStyle;
-	}
-
-	@Override
-	public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
-		//berga - 17/08/2009 : Ajuste para o framework aceitar panelStyle, PanelStyleClass e panelClass case insensitive
-		if (value != null) {
-			if ("panelStyle".equalsIgnoreCase(localName)) {
-				setPanelStyle(value.toString());
-			} else if ("panelStyleClass".equalsIgnoreCase(localName)) {
-				setPanelStyleClass(value.toString());
-			} else if ("panelClass".equalsIgnoreCase(localName)) {
-				setPanelStyleClass(value.toString());
-			} else if ("class".equalsIgnoreCase(localName)) {
-				super.setDynamicAttribute(uri, "styleClass", value);
-			}
-		}
-		super.setDynamicAttribute(uri, localName, value);
 	}
 
 }
