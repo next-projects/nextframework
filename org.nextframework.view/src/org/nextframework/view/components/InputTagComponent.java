@@ -111,8 +111,8 @@ public class InputTagComponent {
 		return null;
 	}
 
-	public boolean printRequired() {
-		return inputTag.isToPrintRequired();
+	public boolean isToPrintRequired() {
+		return inputTag.isRequiredResolved();
 	}
 
 	public void configureReadOnly() {

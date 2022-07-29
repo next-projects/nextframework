@@ -126,9 +126,9 @@ public class InputTag extends BaseTag {
 	private String checkboxValue = "true";
 
 	// estilos
-	private String labelStyle = "";
-
-	private String labelStyleClass = "";
+	private String labelStyle;
+	private String labelStyleClass;
+	private String requiredStyleClass;
 
 	// arquivo
 	protected Boolean transientFile;
@@ -219,7 +219,10 @@ public class InputTag extends BaseTag {
 			}
 		}
 
+		addRequiredStyle();
+
 		includeTemplate();
+
 		printRequired();
 
 		inputComponent.afterPrint();
@@ -232,15 +235,29 @@ public class InputTag extends BaseTag {
 		includeJspTemplate(selectedType.toString().toLowerCase());
 	}
 
-	protected void printRequired() throws IOException {
-		if (inputComponent.printRequired()) {
+	public boolean isRequiredResolved() {
+		return required != null && required && !getDynamicAttributesMap().containsKey("readonly") && !getDynamicAttributesMap().containsKey("disabled");
+	}
+
+	protected void addRequiredStyle() {
+		if (inputComponent.isToPrintRequired()) {
 			String requiredMark = ServiceFactory.getService(ViewConfig.class).getRequiredMarkString();
-			getOut().println("<span class='requiredMark'>" + requiredMark + "</span>");
+			if (requiredMark == null && requiredStyleClass != null) {
+				String sc = (String) getDAAtribute("class", false);
+				sc = sc != null ? sc + " " + requiredStyleClass : requiredStyleClass;
+				getDynamicAttributesMap().put("class", sc);
+			}
 		}
 	}
 
-	public boolean isToPrintRequired() {
-		return required != null && required && !getDynamicAttributesMap().containsKey("readonly") && !getDynamicAttributesMap().containsKey("disabled");
+	protected void printRequired() throws IOException {
+		if (inputComponent.isToPrintRequired()) {
+			String requiredMark = ServiceFactory.getService(ViewConfig.class).getRequiredMarkString();
+			if (requiredMark != null) {
+				String sc = requiredStyleClass != null ? " class=\"" + requiredStyleClass + "\"" : "";
+				getOut().println("<span" + sc + ">" + requiredMark + "</span>");
+			}
+		}
 	}
 
 	public Object getOnKeyPress() {
@@ -499,16 +516,24 @@ public class InputTag extends BaseTag {
 		return labelStyle;
 	}
 
-	public String getLabelStyleClass() {
-		return labelStyleClass;
-	}
-
 	public void setLabelStyle(String labelStyle) {
 		this.labelStyle = labelStyle;
 	}
 
+	public String getLabelStyleClass() {
+		return labelStyleClass;
+	}
+
 	public void setLabelStyleClass(String labelStyleClass) {
 		this.labelStyleClass = labelStyleClass;
+	}
+
+	public String getRequiredStyleClass() {
+		return requiredStyleClass;
+	}
+
+	public void setRequiredStyleClass(String requiredStyleClass) {
+		this.requiredStyleClass = requiredStyleClass;
 	}
 
 	public Boolean getUseAjax() {
