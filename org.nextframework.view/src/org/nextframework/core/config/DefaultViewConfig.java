@@ -49,8 +49,13 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
+	public RequiredMarkMode getRequiredMarkMode() {
+		return isUseBootstrap() ? RequiredMarkMode.BEFORE : RequiredMarkMode.AFTER;
+	}
+
+	@Override
 	public String getRequiredMarkString() {
-		return "&#0149;";
+		return isUseBootstrap() ? "" : "&#0149;";
 	}
 
 	@Override
@@ -112,15 +117,15 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "styleClass", "table table-sm table-striped table-bordered table-hover");
 			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "headerStyleClass", "table-light");
 
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "requiredStyleClass", "position-absolute top-0 end-0 requiredMark");
-			
+			regDefaultStyleClasses(styleClassesMap, InputTag.class, "requiredStyleClass", "requiredMark");
+
 			regDefaultStyleClasses(styleClassesMap, MenuTag.class, "panelStyleClass", "mb-2 mb-md-0");
 
 			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "panelClass", "pagination pagination-sm d-inline-flex m-0");
 			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "itemClass", "page-item");
 			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "selectedClass", "page-link active");
 			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "unselectedClass", "page-link");
-			
+
 			regDefaultStyleClasses(styleClassesMap, SubmitTag.class, "BUTTON-class", "btn btn-sm btn-primary");
 			regDefaultStyleClasses(styleClassesMap, SubmitTag.class, "SUBMIT-class", "btn btn-sm btn-primary");
 
@@ -185,7 +190,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "m-2");
-			regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "text-end p-2,position-relative p-2");
+			regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
 
 			regDefaultStyleClasses(styleClassesMap, ListPanelTag.class, "panelStyleClass", "card");
 
@@ -199,19 +204,20 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "m-2");
-			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "text-end p-2,position-relative p-2");
+			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
 
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "panelStyleClass", "card");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "card-header");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 
 			regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "m-2");
-			regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "text-end p-2,position-relative p-2");
+			regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
 
 			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "buttonStyleClass", "btn btn-sm");
 
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-class", "form-control");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "SINGLE-class", "form-control form-control-sm form-control-inline");
 
 		} else {
 

@@ -14,7 +14,9 @@ public interface ViewConfig {
 
 	String isDefaultPropertyRenderAs();
 
-	String getRequiredMarkString();
+	RequiredMarkMode getRequiredMarkMode();
+
+	public String getRequiredMarkString();
 
 	boolean isDefaultShowCalendar();
 
@@ -31,5 +33,9 @@ public interface ViewConfig {
 	Set<String> getStyleClassFields(Class<? extends BaseTag> tagClass);
 
 	String getDefaultStyleClass(Class<? extends BaseTag> tagClass, String field);
+
+	public static enum RequiredMarkMode {
+		STYLECLASS, BEFORE, AFTER;
+	}
 
 }

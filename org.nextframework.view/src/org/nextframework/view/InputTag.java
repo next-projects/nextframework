@@ -33,6 +33,7 @@ import javax.servlet.jsp.JspException;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.core.config.ViewConfig;
+import org.nextframework.core.config.ViewConfig.RequiredMarkMode;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.service.ServiceFactory;
@@ -219,20 +220,25 @@ public class InputTag extends BaseTag {
 			}
 		}
 
-		addRequiredStyle();
+		RequiredMarkMode requiredMarkMode = ServiceFactory.getService(ViewConfig.class).getRequiredMarkMode();
+		if (!inputComponent.isToPrintRequired()) {
+			requiredMarkMode = null;
+		}
+
+		if (requiredMarkMode == RequiredMarkMode.STYLECLASS) {
+			addRequiredStyle();
+		} else if (requiredMarkMode == RequiredMarkMode.BEFORE) {
+			printRequired();
+		}
 
 		includeTemplate();
 
-		printRequired();
+		if (requiredMarkMode == RequiredMarkMode.AFTER) {
+			printRequired();
+		}
 
 		inputComponent.afterPrint();
 
-		// getOut().println("</nobr>");
-
-	}
-
-	protected void includeTemplate() throws ServletException, IOException {
-		includeJspTemplate(selectedType.toString().toLowerCase());
 	}
 
 	public boolean isRequiredResolved() {
@@ -240,24 +246,23 @@ public class InputTag extends BaseTag {
 	}
 
 	protected void addRequiredStyle() {
-		if (inputComponent.isToPrintRequired()) {
-			String requiredMark = ServiceFactory.getService(ViewConfig.class).getRequiredMarkString();
-			if (requiredMark == null && requiredStyleClass != null) {
-				String sc = (String) getDAAtribute("class", false);
-				sc = sc != null ? sc + " " + requiredStyleClass : requiredStyleClass;
-				getDynamicAttributesMap().put("class", sc);
-			}
+		if (requiredStyleClass != null) {
+			String sc = (String) getDAAtribute("class", false);
+			sc = sc != null ? sc + " " + requiredStyleClass : requiredStyleClass;
+			getDynamicAttributesMap().put("class", sc);
 		}
 	}
 
 	protected void printRequired() throws IOException {
-		if (inputComponent.isToPrintRequired()) {
-			String requiredMark = ServiceFactory.getService(ViewConfig.class).getRequiredMarkString();
-			if (requiredMark != null) {
-				String sc = requiredStyleClass != null ? " class=\"" + requiredStyleClass + "\"" : "";
-				getOut().println("<span" + sc + ">" + requiredMark + "</span>");
-			}
+		String requiredMark = ServiceFactory.getService(ViewConfig.class).getRequiredMarkString();
+		if (requiredMark != null) {
+			String sc = requiredStyleClass != null ? " class=\"" + requiredStyleClass + "\"" : "";
+			getOut().println("<span" + sc + ">" + requiredMark + "</span>");
 		}
+	}
+
+	protected void includeTemplate() throws ServletException, IOException {
+		includeJspTemplate(selectedType.toString().toLowerCase());
 	}
 
 	public Object getOnKeyPress() {
