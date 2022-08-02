@@ -3,7 +3,7 @@
 <%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:panelGrid colspan="${reportTableTag.colspan}" columns="${reportTableTag.columns}" cellpadding="1" cellspacing="0"
+<n:panelGrid colspan="${reportTableTag.colspan}" columns="${reportTableTag.columns}" flatMode="${reportTableTag.flatMode}"
 	styleClass="${reportTableTag.styleClass}" style="${reportTableTag.style}"
 	columnStyleClasses="${reportTableTag.columnStyleClasses}" columnStyles="${reportTableTag.columnStyles}"
 	rowStyleClasses="${reportTableTag.rowStyleClasses}" rowStyles="${reportTableTag.rowStyles}"

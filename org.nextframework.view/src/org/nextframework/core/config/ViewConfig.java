@@ -12,12 +12,6 @@ public interface ViewConfig {
 
 	Map<Class<?>, InputTagType> getCustomInputTypes();
 
-	String isDefaultPropertyRenderAs();
-
-	RequiredMarkMode getRequiredMarkMode();
-
-	public String getRequiredMarkString();
-
 	boolean isDefaultShowCalendar();
 
 	boolean isDefaultResizeDatagridColumns();
@@ -29,6 +23,18 @@ public interface ViewConfig {
 	boolean isPersistTemporaryFiles();
 
 	boolean isUseBootstrap();
+
+	boolean isDefaultFlatMode();
+
+	Integer getDefaultColumns();
+
+	Integer getDefaultColspan();
+
+	String getDefaultPropertyRenderAs();
+
+	RequiredMarkMode getRequiredMarkMode();
+
+	public String getRequiredMarkString();
 
 	Set<String> getStyleClassFields(Class<? extends BaseTag> tagClass);
 

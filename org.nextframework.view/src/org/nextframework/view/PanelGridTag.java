@@ -102,11 +102,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		}
 
 		if (columns == null || columns == 0/*forçado*/) {
-			if (getViewConfig().isUseBootstrap()) {
-				columns = 12;
-			} else {
-				columns = 1;
-			}
+			columns = 1;
 		}
 		if (columns <= 0) {
 			throw new IllegalArgumentException("O atributo columns da tag panelGrid deve ser positivo");
@@ -142,7 +138,8 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		int rowCount = 0;
 		for (PanelRenderedBlock block : blocks) {
 
-			Integer colspanColumn = asInteger(block.getProperties().get("colspan"));
+			Integer colspanBlock = asInteger(block.getProperties().remove("colspan"));
+			colspanBlock = colspanBlock != null ? colspanBlock : 1;
 
 			if (remainingColumns <= 0) {
 
@@ -167,6 +164,11 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 			{
 
+				String colspan = "";
+				if (!flatMode) {
+					colspan = " colspan=\"" + colspanBlock + "\"";
+				}
+
 				String columnStyleClass = columnStyleClassIterator.next();
 				if (block.getProperties().containsKey("class")) {
 					String blockClass = (String) block.getProperties().remove("class");
@@ -174,7 +176,12 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 						columnStyleClass = (Util.strings.isNotEmpty(columnStyleClass) ? columnStyleClass + " " : "") + blockClass;
 					}
 				}
-				String classString = columnStyleClass != null ? " class=\"" + columnStyleClass + "\"" : "";
+
+				String classString = "";
+				if (columnStyleClass != null) {
+					columnStyleClass = columnStyleClass.replaceAll("\\{CS\\}", colspanBlock.toString());
+					classString = " class=\"" + columnStyleClass + "\"";
+				}
 
 				String columnStyle = columnStyleIterator.next();
 				if (block.getProperties().containsKey("style")) {
@@ -185,19 +192,19 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 				}
 				String styleString = columnStyle != null ? " style=\"" + columnStyle + "\"" : "";
 
-				getOut().print("<" + blockTag + classString + styleString + getDynamicAttributesToString(block.getProperties()) + ">");
+				getOut().print("<" + blockTag + colspan + classString + styleString + getDynamicAttributesToString(block.getProperties()) + ">");
 				getOut().print(block.body);
 				getOut().println("</" + blockTag + ">");
 
-				if (colspanColumn.intValue() > 1) {
-					for (int i = 0; i < (colspanColumn - 1); i++) {
+				if (colspanBlock.intValue() > 1) {
+					for (int i = 0; i < (colspanBlock - 1); i++) {
 						columnStyleClassIterator.next();
 					}
 				}
 
 			}
 
-			remainingColumns -= Math.max(colspanColumn, 1);
+			remainingColumns -= colspanBlock;
 
 		}
 
@@ -207,7 +214,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			}
 		}
 
-		getOut().println("</" + rowTag + ">");
+		if (rowCount > 0) {
+			getOut().println("</" + rowTag + ">");
+		}
 		getOut().println("</" + mainTag + ">");
 
 	}

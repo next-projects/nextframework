@@ -319,7 +319,10 @@ public class PropertyTag extends TemplateTag {
 			colspan = colspan - 1;
 		}
 		if (colspan == null || colspan == 0) {
-			colspan = 1;
+			colspan = getViewConfig().getDefaultColspan();
+			if (colspan == null || colspan == 0) {
+				colspan = 1;
+			}
 		}
 	}
 

@@ -209,10 +209,10 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		if (e.getClass().getName().startsWith("java.lang")) {
 			extype = e.getClass().getSimpleName() + ": ";
 		}
-		getOut().println("<font class=\"exceptionitem\" color=\"red\">" + extype + "<b>" + e.getMessage() + "</b>" + "</font>");
+		getOut().println("<font class=\"exceptionItem\" color=\"red\">" + extype + "<b>" + e.getMessage() + "</b>" + "</font>");
 		Throwable cause = getNextException(e);
 		while (cause != null) {
-			getOut().println("<font class=\"exceptionitem\" color=\"red\">" + cause.getMessage() + "</font>");
+			getOut().println("<font class=\"exceptionItem\" color=\"red\">" + cause.getMessage() + "</font>");
 			cause = getNextException(cause);
 		}
 		e.printStackTrace();

@@ -26,14 +26,13 @@ package org.nextframework.view.template;
 import org.nextframework.util.Util;
 
 /**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
+ * @author rogelgarcia e marcusabreu
  */
 public class FormTableTag extends TemplateTag {
 
 	protected Integer colspan;
-	protected int columns = 2;
+	protected Integer columns;
+	protected Boolean flatMode;
 
 	protected String styleClass;
 	protected String style;
@@ -48,17 +47,23 @@ public class FormTableTag extends TemplateTag {
 	@Override
 	protected void doComponent() throws Exception {
 
+		if (flatMode == null) {
+			flatMode = getViewConfig().isDefaultFlatMode();
+		}
+
+		if (columns == null) {
+			columns = getViewConfig().getDefaultColumns();
+		}
+
 		if (propertyRenderAs == null) {
-			propertyRenderAs = getViewConfig().isDefaultPropertyRenderAs();
+			propertyRenderAs = getViewConfig().getDefaultPropertyRenderAs();
 		}
 
 		if (propertyShowLabel == null) {
 			propertyShowLabel = PropertyTag.SINGLE.equalsIgnoreCase(propertyRenderAs);
 		}
 
-		pushAttribute("TtabelaEntrada", this); //Legacy
 		includeJspTemplate();
-		popAttribute("TtabelaEntrada");
 
 	}
 
@@ -70,12 +75,20 @@ public class FormTableTag extends TemplateTag {
 		this.colspan = colspan;
 	}
 
-	public int getColumns() {
+	public Integer getColumns() {
 		return columns;
 	}
 
-	public void setColumns(int columns) {
+	public void setColumns(Integer columns) {
 		this.columns = columns;
+	}
+
+	public Boolean getFlatMode() {
+		return flatMode;
+	}
+
+	public void setFlatMode(Boolean flatMode) {
+		this.flatMode = flatMode;
 	}
 
 	public String getStyleClass() {

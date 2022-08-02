@@ -261,11 +261,11 @@ NextUtil.prototype.fromSeparatorToCamel = function(name, separator){
 }
 
 NextUtil.prototype.getYearFromDate = function(date){
-    if(date.getFullYear){
-    	return date.getFullYear();
-    } else {
-    	return date.getYear() + 1900; 
-    }
+	if(date.getFullYear){
+		return date.getFullYear();
+	} else {
+		return date.getYear() + 1900; 
+	}
 }
 
 /**
@@ -411,9 +411,9 @@ NextEvents.prototype.attachEvent = function(el, event, func){
 		var newFunc = function(e){
 			var ret = func.call(el, e);
 			if (ret === false) {
-	            window.event.returnValue = false;
-	            window.event.cancelBubble = true;
-	        }			
+				window.event.returnValue = false;
+				window.event.cancelBubble = true;
+			}			
 		};
 		el.attachEvent('on'+event, newFunc);
 		return newFunc;
@@ -1172,7 +1172,7 @@ NextStyle = function(){}
  * @return
  */
 NextStyle.prototype.hasClass = function(ele, cls) {
-	if(ele.className){
+	if(ele.className && cls){
 		return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
 	} else {
 		return false;
@@ -1185,7 +1185,7 @@ NextStyle.prototype.hasClass = function(ele, cls) {
  * @return
  */
 NextStyle.prototype.addClass = function(ele, cls) {
-    if (!this.hasClass(ele, cls)) ele.className += " " + cls;
+	if (!this.hasClass(ele, cls) && cls != null && cls.length > 0) ele.className += " " + cls;
 }
 /**
  * Remove uma classe CSS do elemento
@@ -1194,10 +1194,10 @@ NextStyle.prototype.addClass = function(ele, cls) {
  * @return
  */
 NextStyle.prototype.removeClass = function(ele, cls) {
-    if (this.hasClass(ele, cls)) {
-        var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
-        ele.className = ele.className.replace(reg, ' ');
-    }
+	if (this.hasClass(ele, cls)) {
+		var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+		ele.className = ele.className.replace(reg, ' ');
+	}
 }
 /**
  * Transforma um valor em pixels em um inteiro (faz as conversões necessárias)
@@ -1241,14 +1241,14 @@ NextStyle.prototype.getStylePropertyGeneric = function(obj, IEStyleProp, CSSStyl
 }
 
 NextStyle.prototype.getOffset = function ( el ) {
-    var _x = 0;
-    var _y = 0;
-    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-        _x += el.offsetLeft - el.scrollLeft;
-        _y += el.offsetTop - el.scrollTop;
-        el = el.offsetParent;
-    }
-    return { top: _y, left: _x };
+	var _x = 0;
+	var _y = 0;
+	while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+		_x += el.offsetLeft - el.scrollLeft;
+		_y += el.offsetTop - el.scrollTop;
+		el = el.offsetParent;
+	}
+	return { top: _y, left: _x };
 }
 
 NextStyle.prototype.getTop = function ( el ) {
@@ -1389,10 +1389,10 @@ NextStyle.prototype.setShadow = function(el, shadow){
 	el.style.boxShadow = shadow;
 }
 
-//	filter: alpha(opacity=1); /* internet explorer */
-//	-khtml-opacity: 0.01;      /* khtml, old safari */
-//	-moz-opacity: 0.01;       /* mozilla, netscape */
-//	opacity: 0.01;           /* fx, safari, opera */
+//	filter: alpha(opacity=1);	/* internet explorer */
+//	-khtml-opacity: 0.01;		/* khtml, old safari */
+//	-moz-opacity: 0.01;	 		/* mozilla, netscape */
+//	opacity: 0.01;				/* fx, safari, opera */
 NextStyle.prototype.setOpacity = function(el, opacity){
 	el.style.filter = "alpha(opacity="+opacity+")";
 	if(opacity < 100){
@@ -1525,8 +1525,8 @@ NextAjax.READY_STATE_COMPLETE=4;
  *		params: 'ACTION=filtrar&id=5', 
  *		evalScripts: true,
  *		onComplete: function(data){
- *		                document.getElementById('container').innerHTML = data;
- *		            }
+ *						document.getElementById('container').innerHTML = data;
+ *					}
  *	});
  * </PRE>
  * @param options
@@ -1758,7 +1758,7 @@ NextEffects.prototype.blockScreen = function(){
 		
 		innerElement = next.dom.newElement('DIV',
 				{
-			    	className: 'blockScreenTransparent',
+					className: 'blockScreenTransparent',
 					style: {
 						position: 'absolute',
 						left:'0px',
@@ -2069,13 +2069,12 @@ NextMessageTypes = function(){
 	this.MESSAGE = 'message';
 };
 
-
 NextMessages = function(){
 	this.types = new NextMessageTypes();
+	this.styleClasses = {};
 	this.onAddMessageEvents = new Array();
 	this.onRemoveMessageEvents = new Array();
 };
-
 
 NextMessagesMessage = function(message, type, li, div, block){
 	this.message = message;
@@ -2102,20 +2101,23 @@ NextMessagesMessage.prototype.remove = function(){
 NextMessages.prototype.Message = NextMessagesMessage;
 
 NextMessages.prototype.toast = function(msg){
-	var toastDiv = next.dom.newElement('div', {className:"messagetoast", innerHTML: "<div>"+msg+"</div>"});
+	var toastDiv = next.dom.newElement('div', { className:this.getStyleClass('toast'), innerHTML: "<div>"+msg+"</div>" });
 	next.dom.insertFirstChild(document.body, toastDiv);
-	
-	
 	setTimeout(function(){
 		next.effects.fade(toastDiv, 0.9, 0, {}, function(){
 			document.body.removeChild(toastDiv);
-		})}, msg.length > 30? 4000 : 2000);
+		})}, 2000 + msg.length * 100);
+}
+
+NextMessages.prototype.getStyleClass = function(type){
+	return type != null && type != 'null' ? this.styleClasses[type + 'Class'] : null;
 }
 
 NextMessages.prototype.initialize = function(div, blockId){
 	if(next.util.isDefined(div.messageBlocks) && next.util.isDefined(div.messageBlocks[blockId])){
 		return;
 	}
+	var bigThis = this;
 	var originalDiv = div;
 	if(div.id != blockId){
 		var childNodes = div.childNodes;
@@ -2161,14 +2163,15 @@ NextMessages.prototype.initialize = function(div, blockId){
 		}
 		ul.addMessage = function(message, type){
 			var li = document.createElement('li');
-			li.className = type;
+			var sc = bigThis.getStyleClass(type);
+			if (sc != null) {
+				li.className = sc;
+			}
 			li.innerHTML = message;
-			
 			var closeIcon = document.createElement('div');
 			closeIcon.className = 'messageCloseIcon';
 			closeIcon.innerHTML = 'x';
 			li.appendChild(closeIcon);
-			
 			next.events.attachEvent(closeIcon, 'click', function(){
 				var li = this.parentNode;
 				var ul = li.parentNode; 
@@ -2178,7 +2181,6 @@ NextMessages.prototype.initialize = function(div, blockId){
 				});
 				ul.removeMessage(null);
 			});
-			
 			ul.appendChild(li);
 			return li;
 		}
@@ -2209,7 +2211,7 @@ NextMessages.prototype.initialize = function(div, blockId){
 		}
 		return ul;
 	}
-	next.style.addClass(div.messageBlocks[blockId], blockId.toLowerCase());
+	next.style.addClass(div.messageBlocks[blockId], this.getStyleClass(blockId));
 }
 
 /**
@@ -2263,7 +2265,6 @@ NextMessages.prototype.setBindTitle = function(title, div){
 		div = document.getElementById('messagesContainer');
 	}
 	this.initialize(div, 'bindBlock');
-	
 	if(title == ''){
 		var t = next.dom.id('bindTitle');
 		if(next.util.isDefined(t)){
@@ -2274,8 +2275,10 @@ NextMessages.prototype.setBindTitle = function(title, div){
 	if(!next.util.isDefined(t)){
 		t = document.createElement('div');
 		t.id = 'bindTitle';
-		t.className = 'messagetitle';
-		
+		var sc = this.getStyleClass('title');
+		if (sc != null) {
+			t.className = sc;
+		}
 		var bb = document.getElementById('bindBlock');
 		if(bb.hasChildNodes()){
 			bb.insertBefore(t, bb.childNodes[0]);
@@ -2294,25 +2297,21 @@ NextMessages.prototype.addMessageToBlock = function(message, type, div, block){
 		div = document.getElementById('messagesContainer');
 	}
 	this.initialize(div, block);
-
 	var li = div.messageBlocks[block].getUL().addMessage(message, type);
 	var messageObj = new NextMessagesMessage(message, type, li, div, block);
-	
 	next.util.each(this.onAddMessageEvents, function(e){
 		e(message, type, block, div, li);
 	});
-	
 	return messageObj;
 }
 
-NextMessages.prototype.removeMessageFromBlock  = function(message, div, block){
+NextMessages.prototype.removeMessageFromBlock = function(message, div, block){
 	if(next.util.isDefined(div)){
 		div = next.dom.toElement(div);
 	} else {
 		div = document.getElementById('messagesContainer');
 	}
 	this.initialize(div, block);
-	
 	div.messageBlocks[block].getUL().removeMessage(message);
 }
 
@@ -2448,7 +2447,7 @@ NextBrowser.browser = {
 				   string: navigator.userAgent,
 				   subString: "iPhone",
 				   identity: "iPhone/iPod"
-		    },
+			},
 			{
 				string: navigator.platform,
 				subString: "Linux",

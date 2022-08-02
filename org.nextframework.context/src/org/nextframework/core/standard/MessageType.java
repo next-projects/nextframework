@@ -25,8 +25,6 @@ package org.nextframework.core.standard;
 
 /**
  * @author rogelgarcia | marcusabreu
- * @since 02/02/2006
- * @version 1.1
  */
 public enum MessageType {
 
@@ -35,18 +33,9 @@ public enum MessageType {
 	INFO,
 	WARN,
 	ERROR,
-	
+
 	/*EXTRA TYPES*/
-	REDIRECT,
-	FORBIDDEN,
-	QUESTION,
-	EXCLAMATION,
 	EVENT,
-	
-	TASK,
-	MESSAGE,
-	
-	TOAST //quick message
-	;
-	
+	TOAST;
+
 }

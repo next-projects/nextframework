@@ -24,11 +24,140 @@ A.btn:HOVER {
 :root {
 	--bs-primary: #006699;
 	--ls-primary-hover: #005588;
+	--bs-warning: #d7a100;
 	--bs-link-color: #006699;
 	--bs-link-hover-color: #005588;
-	--bs-border-color: #cccccc;
-	--sl-card-cap-color: #e7eef9;
+	--bs-border-color: #d6e2f5;
+	--sl-card-cap-color: #eaf2ff;
 }
+
+/* MenuTag */
+
+.dropdown-menu {
+	--bs-dropdown-link-color: var(--bs-primary);
+	--bs-dropdown-link-hover-color: #FFFFFF;
+	--bs-dropdown-link-hover-bg: var(--ls-primary-hover);
+}
+
+/* MessagesTag */
+
+.alert-primary {
+	--bs-alert-color: var(--bs-primary);
+	--bs-alert-bg: var(--sl-card-cap-color);
+	--bs-alert-border-color: var(--bs-border-color);
+}
+
+.messageBlock UL {
+	padding-left: 0;
+	margin: 0px;
+}
+
+.messageBlock UL LI {
+	position: relative;
+	list-style-type: none;
+	padding-left: 30px;
+}
+
+.messageCloseIcon {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding: 5px;
+	padding-top: 0px;
+	cursor: pointer;
+	color: var(--bs-dark);
+}
+
+LI.debug, .debug {
+	background-image: url("debug.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	color: var(--bs-green);
+}
+
+LI.trace, .trace {
+	background-image: url("trace.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+}
+
+LI.info, .info {
+	background-image: url("ok.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	color: var(--bs-success);
+}
+
+LI.warn, .warn {
+	background-image: url("warn.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	color: var(--bs-warning);
+}
+
+LI.error, .error {
+	background-image: url("error.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	color: var(--bs-danger);
+}
+
+LI.validation, .validation {
+	background-image: url("validation.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+	color: var(--bs-danger);
+}
+
+LI.event, .event {
+	background-image: url("event.png");
+	background-repeat: no-repeat;
+	background-position: 5px 4px;
+}
+
+.exceptionItem, .messageBlock UL LI .exceptionItemm {
+	color: var(--bs-danger);
+}
+
+.causeItem, .messageBlock UL LI UL LI.causeItem {
+	color: var(--bs-dark);
+	font-size: 0.75rem;
+	padding-left: 0px;
+}
+
+/* Panels */
+
+.card {
+	--bs-card-border-color: var(--bs-border-color);
+	--bs-card-cap-bg: var(--sl-card-cap-color);
+	--bs-card-cap-color: var(--bs-primary);
+}
+
+/* PropertyTag e InputTag */
+
+.card-footer .form-control, .form-control-inline {
+	display: inline;
+	width: auto;
+	min-width: 0;
+}
+
+.card-footer .form-check-input{
+	margin-top: 0.75em;
+}
+
+.requiredMark{
+	color: red;
+	position: absolute;
+}
+
+.requiredMark::before{
+	content: "\2022";
+	position: relative;
+	left: -10px;
+	top: 6px;
+}
+
+/* SubmitTag */
 
 .btn-primary {
 	--bs-btn-color: #FFFFFF;
@@ -45,17 +174,7 @@ A.btn:HOVER {
 	--bs-btn-hover-border-color: var(--ls-primary-hover);
 }
 
-.dropdown-menu {
-	--bs-dropdown-link-color: var(--bs-primary);
-	--bs-dropdown-link-hover-color: #FFFFFF;
-	--bs-dropdown-link-hover-bg: var(--ls-primary-hover);
-}
-
-.card {
-	--bs-card-border-color: var(--bs-border-color);
-	--bs-card-cap-bg: var(--sl-card-cap-color);
-	--bs-card-cap-color: var(--bs-primary);
-}
+/* DataGridTag */
 
 .table {
 	--bs-table-bg: #FFFFFF;
@@ -69,272 +188,11 @@ A.btn:HOVER {
 	--bs-table-border-color: var(--bs-border-color);
 }
 
-.form-control-inline {
-	min-width: 0;
-	width: auto;
-	display: inline;
-}
 
-.requiredMark{
-	color: red;
-	position: absolute;
-}
 
-.requiredMark::before{
-	content: "\2022";
-	position: relative;
-	left: -10px;
-	top: 6px;
-}
+
 
 /*
-
-.messageOuterDiv {
-	position: relative;
-	padding-top: 2px;
-	padding-bottom: 3px;
-}
-
-.messageblock {
-	margin-left: 240px;
-	margin-right: 60px;
-}
-
-.messageblock UL {
-	display: inline;
-	margin: 0px;
-	font-family: tahoma;
-	font-size: 12px;
-}
-
-.messageblock LI {
-	position: relative;
-	list-style: none;
-	list-style-position: outside;
-	border: 1px solid;
-	margin-bottom: 1px;
-	margin-top: 1px;
-	padding: 4px;
-	padding-left: 28px;
-	border-radius: 6px;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
-}
-
-.messageCloseIcon {
-	position: absolute;
-	right: 0px;
-	top: 0px;
-	padding: 5px;
-	padding-top: 0px;
-	cursor: pointer;
-}
-
-.bindblock {
-	padding: 4px;
-	margin-left: 240px;
-	margin-right: 60px;
-	border: 1px solid;
-	border-color: #b40404;
-	background-color: #FFCCCC;
-	color: #555555;
-}
-
-.bindblock .messagetitle {
-	background-color: #FFCCCC;
-	display: inline;
-	line-height: 2em;
-	vertical-align: top;
-	font-size: 12px;
-	font-weight: bold;
-	padding-left: 2px;
-}
-
-.bindblock UL {
-	display: inline;
-	margin: 0px;
-	font-family: tahoma;
-	font-size: 12px;
-}
-
-.bindblock .fieldname {
-	font-weight: bold;
-}
-
-.bindblock LI {
-	list-style: none;
-	list-style-position: outside;
-	padding-left: 2px;
-}
-
-LI.binderror {
-	background-color: #FFCCCC;
-	color: #993333;
-	border-color: #993333;
-}
-
-LI.debug, .debug {
-	background-image: url("debug.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #CCFFFF;
-	color: #003333;
-	border-color: #003333;
-}
-
-LI.trace, .trace {
-	background-image: url("trace.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #FFFFFF;
-	color: #333366;
-	border-color: #333366;
-}
-
-LI.info, .info {
-	background-image: url("ok.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #CCFFCC;
-	color: #004400;
-	border-color: #006633;
-}
-
-LI.warn, .warn {
-	background-image: url("warn.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #fcedb9;
-	color: #ab6622;
-	border-color: #996633;
-}
-
-LI.error, .error {
-	background-image: url("error.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #fddada;
-	color: #b40404;
-	border-color: #b40404;
-}
-
-LI.redirect, .redirect {
-	background-image: url("trace.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #FFFFFF;
-	color: #333366;
-	border-color: #333366;
-}
-
-LI.validation, .validation {
-	background-image: url("validation.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #CCFFCC;
-	color: #004400;
-	border-color: #006633;
-}
-
-LI.event, .event {
-	background-image: url("event.png");
-	background-repeat: no-repeat;
-	background-position: 5px 4px;
-	background-color: #f4fef4;
-	color: #004400;
-	border-color: #006633;
-}
-
-LI.causeitem {
-	border: 0px;
-	font-weight: normal;
-}
-
-.linkBar {
-	font-size: 12px;
-	font-family: verdana;
-	padding-bottom: 6px;
-	padding-top: 6px;
-	padding-left: 2px;
-	border: 1px solid #83AADA;
-	background: #DDECFE;
-	background-position: center;
-}
-
-.linkBar A {
-	color: black;
-	text-decoration: none;
-	padding: 7px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	width: 180px;
-	min-width: 120px;
-}
-
-.linkBar A:hover {
-	border: 1px solid #83AADA;
-	text-decoration: none;
-	padding-left: 6px;
-	padding-right: 6px;
-	background: #CBE2FD;
-}
-
-
-.inputWindow {
-	margin: 0px;
-	margin-top: 1px;
-	border: 1px solid #CCCCCC;
-}
-
-.inputWindow * {
-	font-size: 11px;
-}
-
-.inputTable {
-	margin: 4px;
-}
-
-.inputTable TD {
-	padding: 2px;
-}
-
-
-UL.pagePanel {
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-}
-
-UL.pagePanel LI {
-	display: inline;
-	padding: 0;
-	margin: 0;
-}
-
-UL.pagePanel LI A {
-	padding: 4px 8px;
-	text-decoration: none;
-}
-
-UL.pagePanel LI A.pageSelected {
-	font-weight: bold;
-	background-color: #F9F9F9;
-}
-
-UL.pagePanel LI A:hover:not(.pageSelected) {
-	background-color: #F9F9F9;
-}
-
-.labelColumn {
-	min-width: 80px;
-	min-height: 20px;
-	line-height: 20px;
-}
-
-.propertyColumn {
-	min-height: 20px;
-	line-height: 20px;
-}
 
 .tabPanel {
 	position: relative;

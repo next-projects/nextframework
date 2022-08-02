@@ -278,13 +278,18 @@
 		<tag-class>org.nextframework.view.template.FilterTableTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description></description>
 			<name>columns</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>colspan</name>
+			<name>flatMode</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -339,12 +344,6 @@
 		<tag-class>org.nextframework.view.template.FormTableTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
-			<description>Atributo que vai para o panel</description>
-			<name>title</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
 			<description></description>
 			<name>colspan</name>
 			<required>false</required>
@@ -353,6 +352,17 @@
 		<attribute>
 			<description></description>
 			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>flatMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Atributo que vai para o panel</description>
+			<name>title</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -408,7 +418,18 @@
 		<body-content>scriptless</body-content>
 		<attribute>
 			<description></description>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>columns</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>flatMode</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -445,12 +466,6 @@
 		<attribute>
 			<description></description>
 			<name>columnStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

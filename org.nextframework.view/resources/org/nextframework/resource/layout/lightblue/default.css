@@ -67,19 +67,19 @@ BODY {
 	padding-bottom: 3px;
 }
 
-.messageblock {
+.messageBlock {
 	margin-left: 240px;
 	margin-right: 60px;
 }
 
-.messageblock UL {
+.messageBlock UL {
 	display: inline;
 	margin: 0px;
 	font-family: tahoma;
 	font-size: 12px;
 }
 
-.messageblock LI {
+.messageBlock LI {
 	position: relative;
 	list-style: none;
 	list-style-position: outside;
@@ -102,7 +102,7 @@ BODY {
 	cursor: pointer;
 }
 
-.bindblock {
+.bindBlock {
 	padding: 4px;
 	margin-left: 240px;
 	margin-right: 60px;
@@ -112,7 +112,7 @@ BODY {
 	color: #555555;
 }
 
-.bindblock .messagetitle {
+.bindBlock .messageTitle {
 	background-color: #FFCCCC;
 	display: inline;
 	line-height: 2em;
@@ -122,24 +122,24 @@ BODY {
 	padding-left: 2px;
 }
 
-.bindblock UL {
+.bindBlock UL {
 	display: inline;
 	margin: 0px;
 	font-family: tahoma;
 	font-size: 12px;
 }
 
-.bindblock .fieldname {
+.bindBlock .fieldName {
 	font-weight: bold;
 }
 
-.bindblock LI {
+.bindBlock LI {
 	list-style: none;
 	list-style-position: outside;
 	padding-left: 2px;
 }
 
-LI.binderror {
+LI.bindError {
 	background-color: #FFCCCC;
 	color: #993333;
 	border-color: #993333;
@@ -217,7 +217,7 @@ LI.event, .event {
 	border-color: #006633;
 }
 
-LI.causeitem {
+LI.causeItem {
 	border: 0px;
 	font-weight: normal;
 }
