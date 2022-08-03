@@ -7,7 +7,7 @@
 	<input type="hidden" name="${tag.name}_datePattern" value="${tag.pattern}"/>
 	<c:if test="${tag.inputComponent.showCalendar}">
 		<c:if test="${useBootstrap}">
-			<i id="${tag.id}_trigger" class="bi bi-calendar-date input-group-text"></i>
+			<i id="${tag.id}_trigger" class="bi bi-calendar3 pe-auto input-group-text" style="cursor:pointer;"></i>
 		</c:if>
 		<c:if test="${!useBootstrap}">
 			<button id="${tag.id}_trigger" class="calendarbutton">...</button>

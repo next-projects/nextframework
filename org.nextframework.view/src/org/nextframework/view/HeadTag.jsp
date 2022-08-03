@@ -64,7 +64,7 @@
 
 <link rel="StyleSheet" href="${app}/resource/css/suggest.css" type="text/css">
 
-<link rel="StyleSheet" href="${app}/resource/css/select_many_popup.css" type="text/css">
+<link rel="StyleSheet" href="${app}/resource/css/input-selectmanypopup.css" type="text/css">
  
 <%-- CALENDAR --%>
 <script language="JavaScript" src="${app}/resource/calendar/calendar.js"></script>
@@ -79,13 +79,11 @@
 <%-- PROGRESS --%>
 <script language="JavaScript" src="${app}/resource/js/progress.js"></script>
 
-<%-- INICIALIZAÇÃO DO MENU --%>
+<%-- MENU --%>
 <script language="JavaScript">
 	//menu
 	var cmThemeOfficeBase = '${app}/resource/menu/';
 </script>
-
-<%-- MENU --%>
 <c:if test="${headTag.includeMenuThemeCss}">
 	<link rel="StyleSheet" href="${app}/resource/menu/theme.css" type="text/css">
 </c:if>
@@ -98,6 +96,14 @@
 		preparaHtmlArea('${app}/resource/htmlarea/');	
 	} catch(e){}// se não conseguiu achar o javascript não dar exceção
 </script>
+
+<%-- GLOBAL MAP --%>
+<c:if test="${useBootstrap}">
+	<st:staticResource resource="/resource/bootstrap/js/globalMap.js" />
+</c:if>
+<c:if test="${!useBootstrap}">
+	<st:staticResource resource="/resource/js/globalMap.js" />
+</c:if>
 
 <%-- DEFAULT CSS --%>
 <c:if test="${headTag.includeDefaultCss}">

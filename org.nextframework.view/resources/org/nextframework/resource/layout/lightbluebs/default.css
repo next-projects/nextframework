@@ -29,6 +29,7 @@ A.btn:HOVER {
 	--bs-link-hover-color: #005588;
 	--bs-border-color: #d6e2f5;
 	--sl-card-cap-color: #eaf2ff;
+	--sl-disabled-bg: var(--bs-gray-200);
 }
 
 /* MenuTag */
@@ -133,16 +134,30 @@ LI.event, .event {
 	--bs-card-cap-color: var(--bs-primary);
 }
 
+/* Tabs */
+
+.nav-tabs {
+	background-color: var(--sl-card-cap-color);
+}
+
 /* PropertyTag e InputTag */
 
-.card-footer .form-control, .form-control-inline {
+SPAN.form-control {
+	background-color: var(--sl-disabled-bg);
+}
+
+.card-header .form-control, .card-footer .form-control, .form-control-inline {
 	display: inline;
 	width: auto;
 	min-width: 0;
 }
 
-.card-footer .form-check-input{
+.card-footer .form-check-input {
 	margin-top: 0.75em;
+}
+
+.input-group-text {
+	padding: 0.375rem 0.4rem; /* para não esconder a data */
 }
 
 .requiredMark{
@@ -153,8 +168,8 @@ LI.event, .event {
 .requiredMark::before{
 	content: "\2022";
 	position: relative;
-	left: -10px;
-	top: 6px;
+	left: -5px;
+	top: -12px;
 }
 
 /* SubmitTag */

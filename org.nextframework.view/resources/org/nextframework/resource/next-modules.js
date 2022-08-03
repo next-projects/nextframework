@@ -281,7 +281,26 @@ NextUtil.prototype.toArray = function(el){
 	return r;
 }
 
+/**************************************************************************************  GLOBAL MAP  **/
+
+NextGlobalMap = function(){
+	this.map = {};
+};
+
+NextGlobalMap.prototype.put = function(key, value){
+	if (key != null) {
+		this.map[key] = value;
+	}
+}
+
+NextGlobalMap.prototype.get = function(key, defaultValue){
+	return key != null && key != 'null' ? this.map[key] : defaultValue;
+}
+
+new NextGlobalMap();
+
 /**************************************************************************************  NUMBERS  **/
+
 NextNumbers = function(){};
 
 /**
@@ -301,6 +320,7 @@ NextNumbers.prototype.formataDecimal = function(n, c, d, t){
 }
 
 /**************************************************************************************  LOG  **/
+
 NextLog = function(){};
 NextLog.enabled = false;
 
@@ -350,6 +370,7 @@ NextLog.prototype.getLogDiv = function(){
 new NextLog();
 
 /**************************************************************************************  EVENTS  **/
+
 NextEvents = function(){
 	this.loaded = false;
 };
@@ -463,6 +484,7 @@ NextEvents.prototype.cancelEvent = function(event){
 new NextEvents();
 
 /**************************************************************************************  HTTP  **/
+
 NextHttp = function(){};
 
 /**
@@ -518,7 +540,9 @@ NextHttp.prototype.getApplicationContext = function(){
 }
 
 new NextHttp();
+
 /**************************************************************************************  DOM  **/
+
 NextDom = function(){};
 NextDom.sequenceGenerator = 1;
 NextDom.prototype.id = function(id){
@@ -960,16 +984,14 @@ NextDom.prototype.getNewPopupDiv = function (){
 	next.effects.blockScreen();
 	var popupdiv = next.dom.newElement('DIV',
 			{
-				className: 'select_many_popup_box popup_box',
+				className: next.globalMap.get('PopupDiv.box'),
 				style : {
 					zIndex: NextDom.zIndexCount++,
-					position: 'absolute',
-					backgroundColor: 'white'
+					position: 'absolute'
 				}
 			}
 		);
 	next.dom.insertFirstChild(document.body, popupdiv);
-	
 	popupdiv.close = function(){
 		popupdiv.parentNode.removeChild(popupdiv);
 		next.effects.unblockScreen();
@@ -1185,7 +1207,10 @@ NextStyle.prototype.hasClass = function(ele, cls) {
  * @return
  */
 NextStyle.prototype.addClass = function(ele, cls) {
-	if (!this.hasClass(ele, cls) && cls != null && cls.length > 0) ele.className += " " + cls;
+	if (!this.hasClass(ele, cls) && cls != null && cls.length > 0){
+		ele.className += " " + cls;
+		ele.className = ele.className.trim();
+	}
 }
 /**
  * Remove uma classe CSS do elemento
@@ -1197,6 +1222,7 @@ NextStyle.prototype.removeClass = function(ele, cls) {
 	if (this.hasClass(ele, cls)) {
 		var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
 		ele.className = ele.className.replace(reg, ' ');
+		ele.className = ele.className.trim();
 	}
 }
 /**
@@ -1474,6 +1500,7 @@ NextStyle.prototype.centralizeMiddleLine = function(element){
 new NextStyle();
 
 /**************************************************************************************  AJAX  **/
+
 /**** CALLBACKS *****/
 NextAjaxCallBacks = function(){};
 NextAjaxCallBacks.prototype.eval = function(){
@@ -2084,6 +2111,10 @@ NextMessagesMessage = function(message, type, li, div, block){
 	this.block = block;
 }
 
+NextMessages.prototype.getStyleClass = function(type){
+	return type != null && type != 'null' ? this.styleClasses[type + 'Class'] : null;
+}
+
 NextMessagesMessage.prototype.remove = function(){
 	var bigThis = this;
 	next.util.each(next.messages.onRemoveMessageEvents, function(e){
@@ -2107,10 +2138,6 @@ NextMessages.prototype.toast = function(msg){
 		next.effects.fade(toastDiv, 0.9, 0, {}, function(){
 			document.body.removeChild(toastDiv);
 		})}, 2000 + msg.length * 100);
-}
-
-NextMessages.prototype.getStyleClass = function(type){
-	return type != null && type != 'null' ? this.styleClasses[type + 'Class'] : null;
 }
 
 NextMessages.prototype.initialize = function(div, blockId){

@@ -212,3 +212,14 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 	color: #505050;
 	min-height: 20px;
 }
+
+.popup_box {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-khtml-border-radius: 6px;
+	padding: 14px;
+	backgroundColor: 'white';
+	border: 1px solid #888888; 
+	border-radius: 6px;
+	box-shadow: 4px 4px 3px #888888;
+}

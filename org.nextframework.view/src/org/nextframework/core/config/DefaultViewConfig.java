@@ -163,10 +163,16 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "selectedClass", "page-link active");
 			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "unselectedClass", "page-link");
 
+			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "m-2");
+			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "p-2");
+
 			regDefaultStyleClasses(styleClassesMap, SubmitTag.class, "BUTTON-class", "btn btn-primary");
 			regDefaultStyleClasses(styleClassesMap, SubmitTag.class, "SUBMIT-class", "btn btn-primary");
 
+			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navPanelClass", null);
 			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navClass", "nav nav-tabs");
+			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navItemClass", "nav-item");
+			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navLinkClass", "nav-link");
 			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "contentClass", "tab-content");
 			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "selectedClass", "tab-pane active");
 			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "unselectedClass", "tab-pane");

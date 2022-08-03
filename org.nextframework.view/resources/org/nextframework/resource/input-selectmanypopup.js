@@ -1,7 +1,8 @@
-﻿var SelectManyPopup = function(element, style){
+﻿var SelectManyPopup = function(element, style, styleClasses){
 	element.selectManyPopup = this;
 	this.input = element;
 	this.styleObject = style;
+	this.styleClasses = styleClasses;
 	if(!next.util.isDefined(element)){
 		alert('SelectManyPopup was created with \'undefined\' value');
 		return;
@@ -10,69 +11,55 @@
 };
 
 SelectManyPopup.prototype.configure = function(){
-	this.container = next.dom.getParentTagByClass(this.input, 'select_many_popup_container');
-	this.button = next.dom.getInnerElementByClass(this.container, 'select_many_popup_button');
-	this.labels = next.dom.getInnerElementByClass(this.container, 'select_many_popup_labels');
+	this.button = next.dom.getInnerElementById(this.input.parentNode, this.input.id + '_trigger');
+	this.labels = next.dom.getInnerElementById(this.input.parentNode, this.input.id + '_labels');
 	this.setLabels();
 	if (this.button != null) {
 		var bigThis = this;
 		next.events.attachEvent(this.button, 'click', function(){
+			
 			var popupDiv = next.dom.getNewPopupDiv();
 			popupDiv.style.cssText = bigThis.styleObject+';'+popupDiv.style.cssText;
-			//for(k in bigThis.styleObject){
-				//alert(k);
-				//popupDiv.style[k] = bigThis.styleObject[k];
-			//}
+			
 			var options = bigThis.input.options;
 			var checkList = new Array();
 			
-			var controlArea = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls'});
-			var controlArea_buttons = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls_buttons', style: {cssFloat: 'left'}});
-			var controlArea_filter = next.dom.newElement('DIV', {className: 'select_many_popup_box_controls_filter', style: {clear:'right', cssFloat: 'right'}});
+			var controlArea = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.controls')});
+			var controlArea_buttons = next.dom.newElement('DIV', {style: {cssFloat: 'left'}});
+			var controlArea_filter = next.dom.newElement('DIV', {style: {clear:'right', cssFloat: 'right'}});
 			
-			var markAll = next.dom.newElement('BUTTON', {innerHTML: 'Marcar Todos'});
-			var unmarkAll = next.dom.newElement('BUTTON', {innerHTML: 'Desmarcar Todos'});
+			var markAll = next.dom.newElement('BUTTON', {innerHTML: 'Marcar Todos', className: next.globalMap.get('SelectManyPopup.button')});
+			var unmarkAll = next.dom.newElement('BUTTON', {innerHTML: 'Desmarcar Todos', className: next.globalMap.get('SelectManyPopup.button')});
 			unmarkAll.style.marginLeft = '6px';
 			
 			controlArea_buttons.appendChild(markAll);
 			controlArea_buttons.appendChild(unmarkAll);
 			
-			var filter = next.dom.newInput('text', '', 'Filtrar ', {title:'Apresenta apenas os itens com o filtro digitado.', id: next.dom.generateUniqueId()});
+			var filter = next.dom.newInput('text', '', 'Filtrar ', {id: next.dom.generateUniqueId(), className: next.globalMap.get('SelectManyPopup.filter')});
 			controlArea_filter.appendChild(filter);
 			
 			popupDiv.appendChild(controlArea);
 			controlArea.appendChild(controlArea_buttons);
 			controlArea.appendChild(controlArea_filter);
 			
-			var divOptionsBlock = next.dom.newElement('DIV', {style: {clear: 'both', maxHeight: '600px', overflow: 'auto'}});
+			var divOptionsBlock = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.body'), style: {clear: 'both', maxHeight: '600px', overflow: 'auto'}});
 			popupDiv.appendChild(divOptionsBlock);
 			
 			//var text = '';
 			for(var i = 0; i < options.length; i++){
 				var op = options[i];
-				var divOp = next.dom.newElement('DIV', {className: 'select_many_popup_box_opdiv'});
+				var divOp = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.option')});
 				var check = next.dom.newInput('checkbox', '', op.text, {id: next.dom.generateUniqueId()});
 				check.childNodes[0].value = op.value;
 				check.childNodes[0].checked = op.selected;
-				
 				divOp.appendChild(check);
-				
 				checkList.push(check.childNodes[0]);
-				
-				//if(i == 0){
-				//	divOp.style.clear = 'both';
-				//}
-				//	text += '<div style="float:left; width: 200px"> <input type="checkbox" checked="checked">'+op.text + '</div>';
-				//} else {
-				//	text += '<div style="float:left; width: 200px"> <input type="checkbox"> '+op.text + '</div>';
-				//}
 				divOptionsBlock.appendChild(divOp);
 			}
-			//popupDiv.innerHTML = text;
 			
-			var buttonArea = next.dom.newElement('DIV', {className: 'select_many_popup_box_buttons', style: {clear:'both', textAlign: 'right'}});
-			var cancel = next.dom.newElement('BUTTON', {innerHTML: 'Cancelar', title: 'Cancela a operação.'});
-			var ok = next.dom.newElement('BUTTON', {innerHTML: 'Ok', title: 'Seleciona os itens visíveis marcados.'});
+			var buttonArea = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.buttons'), style: {clear:'both', textAlign: 'right'}});
+			var cancel = next.dom.newElement('BUTTON', {innerHTML: 'Cancelar', className: next.globalMap.get('SelectManyPopup.button')});
+			var ok = next.dom.newElement('BUTTON', {innerHTML: 'Ok', className: next.globalMap.get('SelectManyPopup.button')});
 			ok.style.marginLeft = '6px';
 			
 			buttonArea.appendChild(cancel);
@@ -94,7 +81,6 @@ SelectManyPopup.prototype.configure = function(){
 			next.events.attachEvent(filter.childNodes[1], 'keyup', function(e){
 				var filter = this.value; 
 				bigThis.filter(filter, checkList, options);
-				
 				//this will force IE to re-render the block
 				if(popupDiv.style.marginLeft == '0px'){
 					popupDiv.style.marginLeft = '';
@@ -103,7 +89,6 @@ SelectManyPopup.prototype.configure = function(){
 					popupDiv.style.marginLeft = '0px';
 					popupDiv.style.marginRight = '';
 				}
-				//popupDiv.style.width = '650px';
 			});
 			
 			popupDiv.appendChild(buttonArea);
@@ -112,6 +97,7 @@ SelectManyPopup.prototype.configure = function(){
 			popupDiv.style.top = '160px';
 			
 			filter.childNodes[1].focus();
+			
 		});
 	}
 	
@@ -176,6 +162,6 @@ SelectManyPopup.prototype.setLabels = function(){
 	this.labels.value = labelsText;
 }
 
-SelectManyPopup.install = function(element, style){
-	new SelectManyPopup(next.dom.toElement(element), style);
+SelectManyPopup.install = function(element, style, styleClasses){
+	new SelectManyPopup(next.dom.toElement(element), style, styleClasses);
 };

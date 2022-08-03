@@ -521,8 +521,8 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 		}
 		if (bw.isWritableProperty(field)) {
-			Object value = bw.getPropertyValue(field);
-			if (value == null) {
+			String value = (String) bw.getPropertyValue(field);
+			if (Util.strings.isEmpty(value)) {
 				value = defaultStyleClass;
 				if (value != null) {
 					bw.setPropertyValue(field, value);
@@ -530,7 +530,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 		} else if ("class".equals(field)) {
 			String classCss = (String) getDynamicAttributesMap().get("class");
-			if (classCss == null && defaultStyleClass != null) {
+			if (Util.strings.isEmpty(classCss) && Util.strings.isNotEmpty(defaultStyleClass)) {
 				setDynamicAttribute(null, "class", defaultStyleClass);
 			}
 		}
