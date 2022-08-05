@@ -2,11 +2,13 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:getContent tagName="actionPanelTag" vars="acoes">
+<div class="${formPanelTag.panelStyleClass}">
 
-	<div class="${formPanelTag.panelStyleClass}">
+	<n:getContent tagName="actionPanelTag" vars="acoes">
 
-		<n:doBody />
+		<div class="${formPanelTag.bodyStyleClass}">
+			<n:doBody />
+		</div>
 
 		<c:if test="${formPanelTag.showSubmit || !empty acoes}">
 			<div class="${formPanelTag.actionBarStyleClass}">
@@ -22,6 +24,6 @@
 			</div>
 		</c:if>
 
-	</div>
+	</n:getContent>
 
-</n:getContent>
+</div>

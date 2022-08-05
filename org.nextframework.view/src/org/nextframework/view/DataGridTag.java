@@ -400,7 +400,7 @@ public class DataGridTag extends BaseTag {
 			renderResizeColumns = false;
 			return;
 		}
-		renderResizeColumns = ServiceFactory.getService(ViewConfig.class).isDefaultResizeDatagridColumns();
+		renderResizeColumns = getViewConfig().isDefaultResizeDatagridColumns();
 	}
 
 	Boolean hideDatagridWhileLoading = null;
@@ -421,7 +421,7 @@ public class DataGridTag extends BaseTag {
 			hideDatagridWhileLoading = false;
 			return;
 		}
-		hideDatagridWhileLoading = ServiceFactory.getService(ViewConfig.class).isDefaultHideDatagridWhileLoading();
+		hideDatagridWhileLoading = getViewConfig().isDefaultHideDatagridWhileLoading();
 	}
 
 	boolean isRenderResizeColumns() {

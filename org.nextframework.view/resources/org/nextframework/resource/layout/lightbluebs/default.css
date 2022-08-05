@@ -29,23 +29,16 @@ A.btn:HOVER {
 	--bs-link-hover-color: #005588;
 	--bs-border-color: #d6e2f5;
 	--sl-card-cap-color: #eaf2ff;
+	--bs-light-rgb: 233,236,239;
 	--sl-disabled-bg: var(--bs-gray-200);
-}
-
-/* MenuTag */
-
-.dropdown-menu {
-	--bs-dropdown-link-color: var(--bs-primary);
-	--bs-dropdown-link-hover-color: #FFFFFF;
-	--bs-dropdown-link-hover-bg: var(--ls-primary-hover);
 }
 
 /* MessagesTag */
 
 .alert-primary {
 	--bs-alert-color: var(--bs-primary);
-	--bs-alert-bg: var(--sl-card-cap-color);
-	--bs-alert-border-color: var(--bs-border-color);
+	--bs-alert-bg: #fff9e5;
+	--bs-alert-border-color: #e5dbba;
 }
 
 .messageBlock UL {
@@ -203,71 +196,14 @@ SPAN.form-control {
 	--bs-table-border-color: var(--bs-border-color);
 }
 
+/* Popover */
 
-
-
+.popover {
+	--bs-popover-max-width: 500px;
+}
 
 /*
 
-.tabPanel {
-	position: relative;
-	left: -1px;
-	right: 1px;
-	top: -1px;
-	background-color: white;
-	float: left;
-	width: 100%;
-	font-size: 93%;
-	line-height: normal;
-	background: #FFFFFF url("tab-bg.gif") repeat-x bottom;
-}
-.tabPanel ul {
-	margin: 0;
-	padding: 0px 0px 0;
-	list-style: none;
-}
-.tabPanel li {
-	float: left;
-	background: url("tab-right-off.gif") no-repeat right top;
-	margin: 0;
-	margin-right: 1px;
-	padding: 0px;
-}
-.tabPanel a {
-	display: block;
-	background: url("tab-left-off.gif") no-repeat left top;
-	padding: 5px 15px 4px;
-}
-.tabPanel a:hover {
-	text-decoration: none;
-}
-.tabPanel a:ACTIVE {
-	text-decoration: none;
-}
-.tabPanel .active {
-	background-image: url("tab-right.gif");
-}
-.tabPanel .active a {
-	background-image: url("tab-left.gif");
-	padding-bottom: 5px;
-}
-.tabPanel .clear {
-	background-color: white;
-	float: right;
-	position: relative;
-	right: -4px;
-	padding: 10px 0px 0px;
-}
-.tabSelected {
-	width: 100%;
-	clear: both;
-	display: unset;
-}
-.tabUnselected {
-	width: 100%;
-	clear: both;
-	display: none;
-}
 
 div.progressbar {
 	border: 1px solid gray;

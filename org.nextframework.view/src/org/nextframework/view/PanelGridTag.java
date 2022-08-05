@@ -129,10 +129,10 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			getOut().println("<" + mainTag + classString + styleString + getDynamicAttributesToString() + ">");
 		}
 
-		Iterator<String> rowStyleClassIterator = Util.strings.isEmpty(rowStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(rowStyleClasses.split(","));
-		Iterator<String> rowStyleIterator = Util.strings.isEmpty(rowStyles) ? new CyclicIterator(null) : new CyclicIterator(rowStyles.split(","));
-		Iterator<String> columnStyleClassIterator = Util.strings.isEmpty(columnStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(columnStyleClasses.split(","));
-		Iterator<String> columnStyleIterator = Util.strings.isEmpty(columnStyles) ? new CyclicIterator(null) : new CyclicIterator(columnStyles.split(","));
+		CyclicIterator rowStyleClassIterator = Util.strings.isEmpty(rowStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(rowStyleClasses.split(","));
+		CyclicIterator rowStyleIterator = Util.strings.isEmpty(rowStyles) ? new CyclicIterator(null) : new CyclicIterator(rowStyles.split(","));
+		CyclicIterator columnStyleClassIterator = Util.strings.isEmpty(columnStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(columnStyleClasses.split(","));
+		CyclicIterator columnStyleIterator = Util.strings.isEmpty(columnStyles) ? new CyclicIterator(null) : new CyclicIterator(columnStyles.split(","));
 
 		int remainingColumns = columns;
 		int rowCount = 0;
@@ -159,6 +159,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 				getOut().print("<" + rowTag + rowStyleClass + rowStyle + ">");
 
 				rowCount++;
+
+				columnStyleClassIterator.reset();
+				columnStyleIterator.reset();
 
 			}
 
@@ -368,9 +371,13 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			if (strings == null || strings.length == 0)
 				return null;
 			if (i >= strings.length) {
-				i = 0;
+				reset();
 			}
 			return strings[i++];
+		}
+
+		public void reset() {
+			i = 0;
 		}
 
 		@SuppressWarnings("unused")

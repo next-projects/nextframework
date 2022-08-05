@@ -315,14 +315,14 @@ public class PropertyTag extends TemplateTag {
 	}
 
 	private void verifyColspan() {
-		if (colspan != null && (DOUBLE.equals(renderAs) || INVERT.equals(renderAs))) {
-			colspan = colspan - 1;
-		}
 		if (colspan == null || colspan == 0) {
-			colspan = getViewConfig().getDefaultColspan();
+			colspan = getViewConfig().getDefaultColspan(this);
 			if (colspan == null || colspan == 0) {
-				colspan = 1;
+				colspan = DOUBLE.equals(renderAs) || INVERT.equals(renderAs) ? 2 : 1;
 			}
+		}
+		if (DOUBLE.equals(renderAs) || INVERT.equals(renderAs)) {
+			colspan = colspan - 1;
 		}
 	}
 

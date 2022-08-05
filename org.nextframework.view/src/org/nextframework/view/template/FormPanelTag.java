@@ -37,6 +37,7 @@ public class FormPanelTag extends TemplateTag {
 	protected String submitLabel = null;
 
 	private String panelStyleClass;
+	private String bodyStyleClass;
 	private String actionBarStyleClass;
 	private String buttonStyleClass;
 
@@ -108,10 +109,19 @@ public class FormPanelTag extends TemplateTag {
 	public void setPanelStyleClass(String panelStyleClass) {
 		this.panelStyleClass = panelStyleClass;
 	}
-	
+
+	public String getBodyStyleClass() {
+		return bodyStyleClass;
+	}
+
+	public void setBodyStyleClass(String bodyStyleClass) {
+		this.bodyStyleClass = bodyStyleClass;
+	}
+
 	public String getActionBarStyleClass() {
 		return actionBarStyleClass;
 	}
+
 	public void setActionBarStyleClass(String actionBarStyleClass) {
 		this.actionBarStyleClass = actionBarStyleClass;
 	}

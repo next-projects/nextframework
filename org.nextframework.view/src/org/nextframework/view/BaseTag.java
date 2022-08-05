@@ -506,7 +506,9 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
 			for (String field : fields) {
 				String defaultStyleClass = getViewConfig().getDefaultStyleClass(this.getClass(), field);
-				applyDefaultStyleClass(bw, field, defaultStyleClass);
+				if (defaultStyleClass != null) {
+					applyDefaultStyleClass(bw, field, defaultStyleClass);
+				}
 			}
 		}
 	}
@@ -522,15 +524,12 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		}
 		if (bw.isWritableProperty(field)) {
 			String value = (String) bw.getPropertyValue(field);
-			if (Util.strings.isEmpty(value)) {
-				value = defaultStyleClass;
-				if (value != null) {
-					bw.setPropertyValue(field, value);
-				}
+			if (value == null || value.length() == 0) {
+				bw.setPropertyValue(field, defaultStyleClass);
 			}
 		} else if ("class".equals(field)) {
 			String classCss = (String) getDynamicAttributesMap().get("class");
-			if (Util.strings.isEmpty(classCss) && Util.strings.isNotEmpty(defaultStyleClass)) {
+			if ((classCss == null || classCss.length() == 0)) {
 				setDynamicAttribute(null, "class", defaultStyleClass);
 			}
 		}

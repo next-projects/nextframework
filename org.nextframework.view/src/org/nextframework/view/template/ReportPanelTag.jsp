@@ -3,26 +3,27 @@
 <%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:bean name="filter">
+<div class="${reportPanelTag.panelStyleClass}">
 
-	<n:getContent tagName="actionPanelTag" vars="acoes">
+	<c:if test="${! empty reportPanelTag.sectionTitle }">
+		<div class="${reportPanelTag.sectionTitleStyleClass}">${reportPanelTag.sectionTitle}</div>
+	</c:if>
 
-		<div class="${reportPanelTag.panelStyleClass}">
+	<n:bean name="filter">
 
-			<c:if test="${! empty reportPanelTag.sectionTitle }">
-				<div class="${reportPanelTag.sectionTitleStyleClass}">${reportPanelTag.sectionTitle}</div>
-			</c:if>
+		<n:getContent tagName="actionPanelTag" vars="acoes">
 
-			<n:doBody />
+			<div class="${reportPanelTag.bodyStyleClass}">
+				<n:doBody />
+			</div>
 
 			<div class="${reportPanelTag.actionBarStyleClass}">
 				${acoes}
 				<n:submit action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
 			</div>
 
-		</div>
+		</n:getContent>
 
-	</n:getContent>
+	</n:bean>
 
-
-</n:bean>
+</div>

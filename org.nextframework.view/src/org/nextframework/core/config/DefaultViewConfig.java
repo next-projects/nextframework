@@ -8,6 +8,7 @@ import org.nextframework.view.BaseTag;
 import org.nextframework.view.DataGridTag;
 import org.nextframework.view.InputTag;
 import org.nextframework.view.InputTagType;
+import org.nextframework.view.LinkTag;
 import org.nextframework.view.MessagesTag;
 import org.nextframework.view.PaggingTag;
 import org.nextframework.view.SubmitTag;
@@ -84,8 +85,8 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
-	public Integer getDefaultColspan() {
-		return isUseBootstrap() ? 2 : 1;
+	public Integer getDefaultColspan(PropertyTag propertyTag) {
+		return isUseBootstrap() && !PropertyTag.COLUMN.equals(propertyTag.getRenderAs()) ? 2 : 1;
 	}
 
 	@Override
@@ -124,6 +125,8 @@ public class DefaultViewConfig implements ViewConfig {
 			return;
 		}
 
+		String bsbp = "md";
+
 		//Componentes
 
 		if (isUseBootstrap()) {
@@ -138,7 +141,9 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "RADIO-class", "form-check-input");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "SELECT_ONE-class", "form-select");
 
-			regDefaultStyleClasses(styleClassesMap, MenuTag.class, "panelStyleClass", "mb-2 mb-md-0");
+			regDefaultStyleClasses(styleClassesMap, LinkTag.class, "BUTTON-class", "btn btn-primary");
+
+			regDefaultStyleClasses(styleClassesMap, MenuTag.class, "panelStyleClass", "mb-2 mb-" + bsbp + "-0");
 
 			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "containerClass", "container messageBlock");
 			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "bindBlockClass", "alert alert-danger");
@@ -231,13 +236,14 @@ public class DefaultViewConfig implements ViewConfig {
 
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "sectionTitleStyleClass", "card-header");
+			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "container-fluid m-2");
+				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "col-{CS} p-2");
+				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "col-" + bsbp + "-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "m-2");
 				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
@@ -251,13 +257,14 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-primary ms-2");
 
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "panelStyleClass", "card mb-4");
+			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "container-fluid m-2");
+				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "col-{CS} p-2");
+				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "col-" + bsbp + "-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "m-2");
 				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
@@ -265,12 +272,13 @@ public class DefaultViewConfig implements ViewConfig {
 
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "card-header");
+			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 
 			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "container-fluid m-2");
+				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "col-{CS} p-2");
+				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "col-" + bsbp + "-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "m-2");
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
@@ -279,6 +287,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "buttonStyleClass", "btn btn-sm");
 
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
 
 		} else {
 

@@ -42,8 +42,9 @@ public class FilterPanelTag extends TemplateTag {
 	protected Boolean validateForm = true;
 	protected String submitLabel = null;
 
-	protected String sectionTitleStyleClass;
 	protected String panelStyleClass;
+	protected String sectionTitleStyleClass;
+	protected String bodyStyleClass;
 	protected String actionBarStyleClass;
 	protected String buttonStyleClass;
 
@@ -57,7 +58,7 @@ public class FilterPanelTag extends TemplateTag {
 		}
 
 		if (sectionTitle == null) {
-			sectionTitle = getDefaultViewLabel("sectionTitle", "Pesquisar");
+			sectionTitle = getDefaultViewLabel("sectionTitle", "Filtragem");
 		}
 
 		if (submitLabel == null) {
@@ -133,6 +134,14 @@ public class FilterPanelTag extends TemplateTag {
 		this.submitLabel = submitLabel;
 	}
 
+	public String getPanelStyleClass() {
+		return panelStyleClass;
+	}
+
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
+	}
+
 	public String getSectionTitleStyleClass() {
 		return sectionTitleStyleClass;
 	}
@@ -141,12 +150,12 @@ public class FilterPanelTag extends TemplateTag {
 		this.sectionTitleStyleClass = sectionTitleStyleClass;
 	}
 
-	public String getPanelStyleClass() {
-		return panelStyleClass;
+	public String getBodyStyleClass() {
+		return bodyStyleClass;
 	}
 
-	public void setPanelStyleClass(String panelStyleClass) {
-		this.panelStyleClass = panelStyleClass;
+	public void setBodyStyleClass(String bodyStyleClass) {
+		this.bodyStyleClass = bodyStyleClass;
 	}
 
 	public String getActionBarStyleClass() {

@@ -42,6 +42,7 @@ public class MenuTag extends BaseTag {
 	private Menu menu;
 	private String orientation;
 	private String panelStyleClass;
+	private String subPanelStyleClass;
 
 	@Override
 	public void doComponent() throws Exception {
@@ -82,7 +83,7 @@ public class MenuTag extends BaseTag {
 	private String getMenuCodeFromMenu(Menu menu) {
 		MenuBuilder menuBuilder = null;
 		if (getViewConfig().isUseBootstrap()) {
-			menuBuilder = new MenuBuilderBootstrap(getRequest().getContextPath(), orientation, panelStyleClass);
+			menuBuilder = new MenuBuilderBootstrap(getRequest().getContextPath(), orientation, panelStyleClass, subPanelStyleClass);
 		} else {
 			menuBuilder = new MenuBuilderJS(generateUniqueId(), getRequest().getContextPath(), orientation, panelStyleClass);
 		}
@@ -157,6 +158,14 @@ public class MenuTag extends BaseTag {
 
 	public void setPanelStyleClass(String panelStyleClass) {
 		this.panelStyleClass = panelStyleClass;
+	}
+
+	public String getSubPanelStyleClass() {
+		return subPanelStyleClass;
+	}
+
+	public void setSubPanelStyleClass(String subPanelStyleClass) {
+		this.subPanelStyleClass = subPanelStyleClass;
 	}
 
 	private class MenuCache {

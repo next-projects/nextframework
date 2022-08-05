@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.InputTagType;
+import org.nextframework.view.template.PropertyTag;
 
 public interface ViewConfig {
 
@@ -28,7 +29,7 @@ public interface ViewConfig {
 
 	Integer getDefaultColumns();
 
-	Integer getDefaultColspan();
+	Integer getDefaultColspan(PropertyTag propertyTag);
 
 	String getDefaultPropertyRenderAs();
 

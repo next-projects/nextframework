@@ -36,8 +36,9 @@ public class ReportPanelTag extends TemplateTag {
 	private String submitConfirmationScript = "true";
 	private String submitLabel;
 
-	private String sectionTitleStyleClass;
 	private String panelStyleClass;
+	private String sectionTitleStyleClass;
+	private String bodyStyleClass;
 	private String actionBarStyleClass;
 
 	@Override
@@ -93,6 +94,14 @@ public class ReportPanelTag extends TemplateTag {
 		this.submitLabel = submitLabel;
 	}
 
+	public String getPanelStyleClass() {
+		return panelStyleClass;
+	}
+
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
+	}
+
 	public String getSectionTitleStyleClass() {
 		return sectionTitleStyleClass;
 	}
@@ -101,12 +110,12 @@ public class ReportPanelTag extends TemplateTag {
 		this.sectionTitleStyleClass = sectionTitleStyleClass;
 	}
 
-	public String getPanelStyleClass() {
-		return panelStyleClass;
+	public String getBodyStyleClass() {
+		return bodyStyleClass;
 	}
 
-	public void setPanelStyleClass(String panelStyleClass) {
-		this.panelStyleClass = panelStyleClass;
+	public void setBodyStyleClass(String bodyStyleClass) {
+		this.bodyStyleClass = bodyStyleClass;
 	}
 
 	public String getActionBarStyleClass() {

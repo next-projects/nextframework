@@ -2,17 +2,19 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:bean name="${filterPanelTag.name}">
+<div class="${filterPanelTag.panelStyleClass}">
 
-	<n:getContent tagName="actionPanelTag" vars="acoes">
+	<c:if test="${! empty filterPanelTag.sectionTitle }">
+		<div class="${filterPanelTag.sectionTitleStyleClass}">${filterPanelTag.sectionTitle}</div>
+	</c:if>
 
-		<div class="${filterPanelTag.panelStyleClass}">
+	<n:bean name="${filterPanelTag.name}" bypass="${empty filterPanelTag.name}">
 
-			<c:if test="${! empty filterPanelTag.sectionTitle }">
-				<div class="${filterPanelTag.sectionTitleStyleClass}">${filterPanelTag.sectionTitle}</div>
-			</c:if>
+		<n:getContent tagName="actionPanelTag" vars="acoes">
 
-			<n:doBody />
+			<div class="${filterPanelTag.bodyStyleClass}">
+				<n:doBody />
+			</div>
 
 			<c:if test="${filterPanelTag.showSubmit || !empty acoes}">
 				<div class="${filterPanelTag.actionBarStyleClass}">
@@ -23,8 +25,8 @@
 				</div>
 			</c:if>
 
-		</div>
+		</n:getContent>
 
-	</n:getContent>
+	</n:bean>
 
-</n:bean>
+</div>

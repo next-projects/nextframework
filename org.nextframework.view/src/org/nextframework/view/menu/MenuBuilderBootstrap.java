@@ -35,12 +35,14 @@ public class MenuBuilderBootstrap implements MenuBuilder {
 	protected String urlPrefix;
 	protected String orientation;
 	protected String panelStyleClass;
+	protected String subPanelStyleClass;
 
-	public MenuBuilderBootstrap(String urlPrefix, String orientation, String panelStyleClass) {
+	public MenuBuilderBootstrap(String urlPrefix, String orientation, String panelStyleClass, String subPanelStyleClass) {
 
 		this.urlPrefix = urlPrefix;
 		this.orientation = orientation;
 		this.panelStyleClass = panelStyleClass;
+		this.subPanelStyleClass = subPanelStyleClass;
 
 		if (Util.strings.isNotEmpty(orientation) && (!orientation.equals("dropstart") && !orientation.equals("dropend") && !orientation.equals("dropup") && !orientation.equals("right"))) {
 			throw new NextException("Property 'orientation' must be one of: dropstart, dropend, dropup or right. Value found: " + orientation);
@@ -141,11 +143,19 @@ public class MenuBuilderBootstrap implements MenuBuilder {
 			code.append("<ul");
 
 			if (!isDropdown) {
+
 				code.append(" class=\"dropdown-menu");
+
+				if (Util.strings.isNotEmpty(subPanelStyleClass)) {
+					code.append(" " + subPanelStyleClass);
+				}
+
 				if (Util.strings.isNotEmpty(orientation) && "right".equals(orientation)) {
 					code.append(" dropdown-menu-end");
 				}
+
 				code.append("\"");
+
 			}
 
 			code.append(">");

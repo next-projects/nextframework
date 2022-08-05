@@ -74,7 +74,7 @@ public class ListTableTag extends TemplateTag {
 		}
 
 		if (name == null) {
-			throw new IllegalArgumentException("O atributo name da tag TabelaResultados não foi informado, e também não foi configurado por um CrudController. " +
+			throw new IllegalArgumentException("O atributo name da tag ListTableTag não foi informado, e também não foi configurado por um CrudController. " +
 					"Se estiver utilizando um controller do tipo CrudController verifique se os atributos estão sendo colocados no escopo corretamente " +
 					"ou se você não sobrescreveu a funcionalidade padrão do controller.");
 		}

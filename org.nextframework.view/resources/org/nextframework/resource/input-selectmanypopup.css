@@ -25,6 +25,10 @@
 	padding: 2px;
 }
 
+.select_many_popup_box_opdiv input{
+	margin-right: 10px;
+}
+
 .select_many_popup_box_buttons {
 	padding-top: 8px;
 }
