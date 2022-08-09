@@ -9,14 +9,17 @@ import org.stjs.javascript.dom.Select;
 public class NextGlobalJs {
 
 	public static NextBridge next;
-	
-	public static void selectManyAddOption(Select inputFrom, String label, String value, Map<String, Object> properties){
-		
+
+	public static void selectManyAddOption(Select inputFrom, String label, String value, Map<String, Object> properties) {
+
 	}
-	
-	public static void selectManyBoxAdd(Element element){
+
+	public static void selectManyBoxAdd(Element element) {
+
 	}
-	
-	public static void selectManyBoxRemove(Element element){
+
+	public static void selectManyBoxRemove(Element element) {
+
 	}
+
 }

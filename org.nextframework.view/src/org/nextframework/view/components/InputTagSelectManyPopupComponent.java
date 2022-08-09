@@ -3,9 +3,7 @@ package org.nextframework.view.components;
 public class InputTagSelectManyPopupComponent extends InputTagSelectComboComponent {
 
 	public String getStyleString() {
-		String daAtribute = (String) inputTag.getDAAtribute("popupstyle", true);
-		daAtribute = "width: 920px;" + (daAtribute != null ? " " + daAtribute : "");
-		return daAtribute;
+		return (String) inputTag.getDAAtribute("popupstyle", true);
 	}
 
 	@Override

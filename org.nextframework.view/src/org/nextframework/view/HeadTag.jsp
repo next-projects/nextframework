@@ -101,9 +101,6 @@
 <c:if test="${useBootstrap}">
 	<st:staticResource resource="/resource/bootstrap/js/globalMap.js" />
 </c:if>
-<c:if test="${!useBootstrap}">
-	<st:staticResource resource="/resource/js/globalMap.js" />
-</c:if>
 
 <%-- DEFAULT CSS --%>
 <c:if test="${headTag.includeDefaultCss}">

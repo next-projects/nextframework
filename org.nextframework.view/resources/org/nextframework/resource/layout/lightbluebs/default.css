@@ -33,6 +33,7 @@ A.btn:HOVER {
 	--sl-disabled-bg: var(--bs-gray-200);
 }
 
+
 /* MessagesTag */
 
 .alert-primary {
@@ -119,6 +120,7 @@ LI.event, .event {
 	padding-left: 0px;
 }
 
+
 /* Panels */
 
 .card {
@@ -127,11 +129,13 @@ LI.event, .event {
 	--bs-card-cap-color: var(--bs-primary);
 }
 
+
 /* Tabs */
 
 .nav-tabs {
 	background-color: var(--sl-card-cap-color);
 }
+
 
 /* PropertyTag e InputTag */
 
@@ -165,6 +169,7 @@ SPAN.form-control {
 	top: -12px;
 }
 
+
 /* SubmitTag */
 
 .btn-primary {
@@ -182,6 +187,7 @@ SPAN.form-control {
 	--bs-btn-hover-border-color: var(--ls-primary-hover);
 }
 
+
 /* DataGridTag */
 
 .table {
@@ -196,11 +202,13 @@ SPAN.form-control {
 	--bs-table-border-color: var(--bs-border-color);
 }
 
+
 /* Popover */
 
 .popover {
 	--bs-popover-max-width: 500px;
 }
+
 
 /*
 

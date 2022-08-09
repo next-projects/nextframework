@@ -10,25 +10,3 @@
 .select_many_popup_button {
 	
 }
-
-.select_many_popup_box_controls {
-	
-}
-
-.select_many_popup_box_body {
-	
-}
-
-.select_many_popup_box_opdiv {
-	width: 300px;
-	float: left;
-	padding: 2px;
-}
-
-.select_many_popup_box_opdiv input{
-	margin-right: 10px;
-}
-
-.select_many_popup_box_buttons {
-	padding-top: 8px;
-}

@@ -2,6 +2,7 @@ package org.nextframework.resource;
 
 import static org.nextframework.js.NextGlobalJs.next;
 import static org.stjs.javascript.JSCollections.$array;
+import static org.stjs.javascript.JSCollections.$map;
 
 import org.nextframework.js.ajax.AjaxRequest;
 import org.nextframework.resource.NextDialogs.MessageDialog;
@@ -27,21 +28,21 @@ public class NextDataGrid {
 		private String tableId;
 		private String dropId;
 		private Map<String, String> columnsMap;
-		
+
 		private Array<Column> columns;
 		private Element dropEl;
 		private Map<String, Object> ajaxInfo;
 		private Array<String> hideColumns;
-		
+
 		private static class Column {
-			
+
 			String id;
 			String label;
 			boolean showColumn;
 			Input check;
 			int columnIndex;
 			Table table;
-			
+
 			public Column(String id, String label) {
 				this.id = id;
 				this.label = label;
@@ -61,19 +62,18 @@ public class NextDataGrid {
 				labelEl.style.verticalAlign = "2px";
 				p.appendChild(labelEl);
 			}
-			
-			private int getColumnIndex(){
+
+			private int getColumnIndex() {
 				TableCell tableCell = getTableHeaderCell();
 				return tableCell.cellIndex;
 			}
 
 			public TableCell getTableHeaderCell() {
 				Element element = next.dom.toElement(id);
-				while(!element.parentNode.tagName.toLowerCase().equals("td") && 
-						!element.parentNode.tagName.toLowerCase().equals("th")){
+				while (!element.parentNode.tagName.toLowerCase().equals("td") && !element.parentNode.tagName.toLowerCase().equals("th")) {
 					element = element.parentNode;
 				}
-				TableCell tableCell = (TableCell)element.parentNode;
+				TableCell tableCell = (TableCell) element.parentNode;
 				return tableCell;
 			}
 
@@ -95,12 +95,13 @@ public class NextDataGrid {
 			public void updateRows(HTMLCollection<TableRow> rows) {
 				for (int i = 0; i < rows.length; i++) {
 					TableCell cell = rows.$get(i).cells.$get(columnIndex);
-					cell.style.display = showColumn? "" : "none";
+					cell.style.display = showColumn ? "" : "none";
 				}
 			}
+
 		}
 
-		public OptionalColumnsComponent(String tableId, String dropId, Map<String, String> columnsMap, Map<String,Object> ajaxInfo, Array<String> hideColumns) {
+		public OptionalColumnsComponent(String tableId, String dropId, Map<String, String> columnsMap, Map<String, Object> ajaxInfo, Array<String> hideColumns) {
 			this.tableId = tableId;
 			this.dropEl = next.dom.toElement(dropId);
 			this.columnsMap = columnsMap;
@@ -112,46 +113,40 @@ public class NextDataGrid {
 		private void init() {
 			for (String label : columnsMap) {
 				Column column = new Column(columnsMap.$get(label), label);
-				if(hideColumns != null && hideColumns.indexOf(column.label) >= 0){
+				if (hideColumns != null && hideColumns.indexOf(column.label) >= 0) {
 					column.showColumn = false;
 					column.updateVisibility();
 				}
 				this.columns.push(column);
 			}
 			dropEl.style.cursor = "pointer";
-			
 			final OptionalColumnsComponent bigThis = this;
 			next.events.attachEvent(dropEl, "click", new Callback1<DOMEvent>() {
 				public void $invoke(DOMEvent p1) {
 					bigThis.showConfigurationDialog();
 				}
 			});
-			
 		}
 
 		public void showConfigurationDialog() {
-			MessageDialog dialog = new MessageDialog(); 
+			MessageDialog dialog = new MessageDialog();
 			dialog.setTitle("Configurar colunas");
-			
-			Div menu = next.dom.newElement("div");
-			menu.style.minWidth = "300px";
 			for (String c : columns) {
 				Column column = columns.$get(c);
-				Element p = next.dom.newElement("p");
-				column.appendColumn(p);
-				menu.appendChild(p);
+				Element divOp = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.option", "popup_box_option")));
+				column.appendColumn(divOp);
+				dialog.body.appendChild(divOp);
 			}
 			final OptionalColumnsComponent bigThis = this;
 			dialog.setCallback(new NextDialogs.DialogCallback() {
 				public void onClose(String command, Object value) {
-					if(command.equals("CANCEL")){
+					if (command.equals("CANCEL")) {
 						bigThis.cancel();
 					} else {
 						bigThis.saveColumns();
 					}
 				}
 			});
-			dialog.body.appendChild(menu);
 			dialog.show();
 		}
 
@@ -169,19 +164,19 @@ public class NextDataGrid {
 		 * @see DataGridOptionalColumnsTag for ajaxInfo setup
 		 */
 		private void persist() {
+
 			Integer ajaxId = (Integer) ajaxInfo.$get("ajaxId");
 			String serverUrl = (String) ajaxInfo.$get("serverUrl");
 			String cacheKey = (String) ajaxInfo.$get("cacheKey");
-			
+
 			Array<String> configMap = JSCollections.$array();
 			for (String c : columns) {
 				Column column = columns.$get(c);
-				if(!column.showColumn){
+				if (!column.showColumn) {
 					configMap.push(column.label);
 				}
 			}
-			
-			
+
 			AjaxRequest request = next.ajax.newRequest();
 			request.setUrl(serverUrl);
 			request.setParameter("serverId", ajaxId);
@@ -189,22 +184,23 @@ public class NextDataGrid {
 			request.setParameter("hideColumns", Global.JSON.stringify(configMap));
 			request.setAppendContext(false);
 			request.setOnComplete(new Callback1<String>() {
-
 				@Override
 				public void $invoke(String p1) {
 					Global.console.log(p1);
 				}
 			});
+
 			request.send();
 		}
 
 		protected void cancel() {
-			
+
 		}
 
 	}
-	
-	public void createOptionalColumns(String tableId, String dropId, Map<String, String> columnsMap, Map<String, Object> ajaxInfo, Array<String> hideColumns){
+
+	public void createOptionalColumns(String tableId, String dropId, Map<String, String> columnsMap, Map<String, Object> ajaxInfo, Array<String> hideColumns) {
 		new OptionalColumnsComponent(tableId, dropId, columnsMap, ajaxInfo, hideColumns).init();
 	}
+
 }

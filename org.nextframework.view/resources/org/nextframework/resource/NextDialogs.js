@@ -1,4 +1,4 @@
-var NextDialogs = function(){};
+﻿var NextDialogs = function(){};
 
 NextDialogs.CANCEL = "CANCEL";
 NextDialogs.OK = "OK";
@@ -10,6 +10,7 @@ NextDialogs.DialogCallback.$typeDescription={};
 NextDialogs.AbstractDialog = function() {
 
     this.body = next.dom.newElement("div");
+    this.body.className = next.globalMap.get("NextDialogs.body", "popup_box_body");
     this.commandsMap = {"OK": "Ok", 
         "CANCEL": "Cancelar"};
     //cannot use the constants .. causes bugs
@@ -60,16 +61,13 @@ NextDialogs.MessageDialog.prototype.close = function() {
 };
 NextDialogs.MessageDialog.prototype.show = function() {
     this.popup = next.dom.getNewPopupDiv();
-    var titleDiv = next.dom.newElement("h2", {"innerHTML": this.title, 
-        "class": "separator"});
+    var titleDiv = next.dom.newElement("div", {"innerHTML": this.title, 
+        "class": next.globalMap.get("NextDialogs.header", "separator")});
     this.popup.appendChild(titleDiv);
     this.popup.appendChild(this.body);
     if (this.commandsMap != null) {
-        this.popup.appendChild(next.dom.newElement("div", {"innerHTML": "&nbsp;", 
-            "class": "separator", 
-            "font-size": "1px;"}));
         var buttonDiv = next.dom.newElement("div");
-        buttonDiv.style.textAlign = "right";
+        buttonDiv.className = next.globalMap.get("NextDialogs.footer", "popup_box_footer");
         for (var key in this.commandsMap) {
             var button = this.createButton(this.popup, key);
             buttonDiv.appendChild(button);
@@ -84,7 +82,7 @@ NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
     var button = next.dom.newElement("button");
     button.innerHTML = this.commandsMap[key];
     button.id = "dialog_btn_" + key;
-    button.style.margin = "4px";
+    button.className = next.globalMap.get("NextDialogs.button", "button");
     button.onclick = function(p1) {
         popup.close();
         bigThis.dialogCallback.onClose(key, bigThis.getValue());
@@ -131,7 +129,6 @@ NextDialogs.prototype.showInputNumberDialog = function(title, mensagem) {
     input.style.marginTop = "4px";
     input.style.marginBottom = "4px";
     d.input = input;
-    //onKeyDown="return mascara_float(this,event)"
     input.onkeydown = function(event) {
         return eval("mascara_float(input, event)");
     };

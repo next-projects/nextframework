@@ -24,10 +24,11 @@ public abstract class NextAjax {
 	 *   on404<BR>
 	 */
 	public abstract void send(Map<String, ?> options);
-	
+
 	public abstract AjaxRequest newRequest();
-	
+
 	public abstract AjaxRequest newFormRequest();
-	
+
 	public abstract AjaxRequest newFormRequest(String name);
+
 }

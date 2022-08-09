@@ -120,12 +120,10 @@ public class DefaultViewConfig implements ViewConfig {
 
 	private void initStyleClasses() {
 
-		styleClassesMap.clear();
+		//styleClassesMap.clear();
 		if (!styleClassesMap.isEmpty()) {
 			return;
 		}
-
-		String bsbp = "md";
 
 		//Componentes
 
@@ -143,7 +141,7 @@ public class DefaultViewConfig implements ViewConfig {
 
 			regDefaultStyleClasses(styleClassesMap, LinkTag.class, "BUTTON-class", "btn btn-primary");
 
-			regDefaultStyleClasses(styleClassesMap, MenuTag.class, "panelStyleClass", "mb-2 mb-" + bsbp + "-0");
+			regDefaultStyleClasses(styleClassesMap, MenuTag.class, "panelStyleClass", "mb-2 mb-md-0");
 
 			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "containerClass", "container messageBlock");
 			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "bindBlockClass", "alert alert-danger");
@@ -243,7 +241,7 @@ public class DefaultViewConfig implements ViewConfig {
 			if (isDefaultFlatMode()) {
 				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "col-" + bsbp + "-{CS} p-2");
+				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "m-2");
 				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
@@ -264,7 +262,7 @@ public class DefaultViewConfig implements ViewConfig {
 			if (isDefaultFlatMode()) {
 				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "col-" + bsbp + "-{CS} p-2");
+				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "m-2");
 				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
@@ -278,7 +276,7 @@ public class DefaultViewConfig implements ViewConfig {
 			if (isDefaultFlatMode()) {
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "col-" + bsbp + "-{CS} p-2");
+				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "m-2");
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");

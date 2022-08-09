@@ -984,7 +984,7 @@ NextDom.prototype.getNewPopupDiv = function (){
 	next.effects.blockScreen();
 	var popupdiv = next.dom.newElement('DIV',
 			{
-				className: next.globalMap.get('PopupDiv.box'),
+				className: next.globalMap.get('PopupDiv.box', 'popup_box'),
 				style : {
 					zIndex: NextDom.zIndexCount++,
 					position: 'absolute'
@@ -1434,27 +1434,21 @@ NextStyle.prototype.setOpacity = function(el, opacity){
 
 NextStyle.prototype.centralizeHorizontal = function(element){
 	var width = next.style.getFullWidth(element);
-	
 	var windowWidth = next.style.getWindowSize()[0];
-	
 	var left = (windowWidth /2) - (width/2);
 	element.style.left = left + 'px';
 }
 
 NextStyle.prototype.centralizeVerticalMiddleLine = function(element){
 	var height = next.style.getFullHeight(element);
-	
 	var windowHeight = next.style.getWindowSize()[1];
-	
 	var top = (windowHeight /2) - (height);
 	element.style.top = top + 'px';
 }
 
 NextStyle.prototype.centralizeVertical = function(element){
 	var height = next.style.getFullHeight(element);
-	
 	var windowHeight = next.style.getWindowSize()[1];
-	
 	var top = (windowHeight /2) - (height/2);
 	element.style.top = top + 'px';
 }
@@ -1462,17 +1456,13 @@ NextStyle.prototype.centralizeVertical = function(element){
 NextStyle.prototype.centralize = function(element){
 	{
 		var height = next.style.getFullHeight(element);
-		
 		var windowHeight = next.style.getWindowSize()[1];
-		
 		var top = (windowHeight /2) - (height/2);
 		element.style.top = top + 'px';
 	}
 	{
 		var width = next.style.getFullWidth(element);
-		
 		var windowWidth = next.style.getWindowSize()[0];
-		
 		var left = (windowWidth /2) - (width/2);
 		element.style.left = left + 'px';		
 	}
@@ -1481,17 +1471,13 @@ NextStyle.prototype.centralize = function(element){
 NextStyle.prototype.centralizeMiddleLine = function(element){
 	{
 		var height = next.style.getFullHeight(element);
-		
 		var windowHeight = next.style.getWindowSize()[1];
-		
 		var top = (windowHeight /2) - (height);
 		element.style.top = top + 'px';
 	}
 	{
 		var width = next.style.getFullWidth(element);
-		
 		var windowWidth = next.style.getWindowSize()[0];
-		
 		var left = (windowWidth /2) - (width/2);
 		element.style.left = left + 'px';		
 	}
@@ -1511,12 +1497,6 @@ NextAjaxCallBacks.prototype.alert = function(){
 };
 NextAjaxCallBacks.prototype.evalScripts = function(){
 	return function(contents){
-//		var scripts = '';
-//		var text = contents.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function(all, code){
-//			scripts += code + '\n';
-//			return '';
-//		});
-//		eval(scripts);
 		next.util.evalScripts(contents);
 	}
 }

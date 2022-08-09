@@ -1,4 +1,4 @@
-var NextDataGrid = function(){};
+﻿var NextDataGrid = function(){};
 
 NextDataGrid.OptionalColumnsComponent = function(tableId, dropId, columnsMap, ajaxInfo, hideColumns) {
 
@@ -91,14 +91,12 @@ NextDataGrid.OptionalColumnsComponent.prototype.init = function() {
 NextDataGrid.OptionalColumnsComponent.prototype.showConfigurationDialog = function() {
     var dialog = new NextDialogs.MessageDialog();
     dialog.setTitle("Configurar colunas");
-    var menu = next.dom.newElement("div");
-    menu.style.minWidth = "300px";
     for (var c in this.columns) {
         if (!(this.columns).hasOwnProperty(c)) continue;
         var column = this.columns[c];
-        var p = next.dom.newElement("p");
-        column.appendColumn(p);
-        menu.appendChild(p);
+        var divOp = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.option", "popup_box_option")});
+        column.appendColumn(divOp);
+        dialog.body.appendChild(divOp);
     }
     var bigThis = this;
     dialog.setCallback((function(){
@@ -117,7 +115,6 @@ NextDataGrid.OptionalColumnsComponent.prototype.showConfigurationDialog = functi
     
     return new _InlineType();
     })());
-    dialog.body.appendChild(menu);
     dialog.show();
 };
 NextDataGrid.OptionalColumnsComponent.prototype.saveColumns = function() {

@@ -1,3 +1,14 @@
+/* Block screen */
+
+.blockScreenTransparent {
+	filter: alpha(opacity = 40);
+	-moz-opacity: 0.4;
+	opacity: 0.4;
+}
+
+
+/* Datagrid */
+
 th.datagridresizeblock {
 	vertical-align: middle;
 	background-position: center;
@@ -46,11 +57,8 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 	background-image: url("../img/resize-bar-tiny.png");
 }
 
-.blockScreenTransparent {
-	filter: alpha(opacity = 40);
-	-moz-opacity: 0.4;
-	opacity: 0.4;
-}
+
+/* Tabs */
 
 .tabPanel {
 	position: relative;
@@ -121,6 +129,9 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 	clear: both;
 	display: none;
 }
+
+
+/* Report */
 
 .report-table {
 	cursor: default;
@@ -213,6 +224,9 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 	min-height: 20px;
 }
 
+
+/* Popup */
+
 .popup_box {
 	-moz-border-radius: 6px;
 	-webkit-border-radius: 6px;
@@ -222,4 +236,40 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 	border: 1px solid #888888; 
 	border-radius: 6px;
 	box-shadow: 4px 4px 3px #888888;
+}
+
+.popup_box_header {
+	padding: 8px;
+}
+
+.popup_box_body {
+	padding: 2px;
+}
+
+.popup_box_footer {
+	padding: 8px;
+	text-align: right;
+}
+
+.popup_box_option {
+	width: 300px;
+	float: left;
+	margin-bottom: 2px;
+	margin-right: 2px;
+}
+
+.popup_box_option input{
+	margin-right: 10px;
+}
+
+/* Util */
+
+.mw-md-75 {
+	width: auto;
+}
+
+@media (min-width: 768px) {
+	.mw-md-75 {
+		max-width: 75%!important;
+	}
 }
