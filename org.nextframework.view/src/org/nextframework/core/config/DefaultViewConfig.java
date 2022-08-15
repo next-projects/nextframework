@@ -106,24 +106,25 @@ public class DefaultViewConfig implements ViewConfig {
 
 	@Override
 	public Set<String> getStyleClassFields(Class<? extends BaseTag> tagClass) {
-		initStyleClasses();
-		Map<String, String> tagMap = this.styleClassesMap.get(tagClass);
+		Map<String, String> tagMap = getStyleClasses().get(tagClass);
 		return tagMap != null ? tagMap.keySet() : null;
 	}
 
 	@Override
 	public String getDefaultStyleClass(Class<? extends BaseTag> tagClass, String field) {
-		initStyleClasses();
-		Map<String, String> tagMap = this.styleClassesMap.get(tagClass);
+		Map<String, String> tagMap = getStyleClasses().get(tagClass);
 		return tagMap != null ? tagMap.get(field) : null;
 	}
 
-	private void initStyleClasses() {
-
-		//styleClassesMap.clear();
-		if (!styleClassesMap.isEmpty()) {
-			return;
+	protected Map<Class<? extends BaseTag>, Map<String, String>> getStyleClasses() {
+		styleClassesMap.clear();
+		if (styleClassesMap.isEmpty()) {
+			initStyleClasses();
 		}
+		return styleClassesMap;
+	}
+
+	protected void initStyleClasses() {
 
 		//Componentes
 
@@ -225,12 +226,12 @@ public class DefaultViewConfig implements ViewConfig {
 
 		if (isUseBootstrap()) {
 
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "pageStyleClass", "container");
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "titleStyleClass", "h3 mb-4");
+			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "pageStyleClass", null);
+			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "titleStyleClass", "h3"); //mb-4 pq?
 			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "bodyStyleClass", null);
 
-			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex justify-content-end mb-4");
-			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-primary ms-2");
+			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
+			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-primary"); //Melhor tirar ms-2 e tentar gap
 
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "sectionTitleStyleClass", "card-header");
@@ -251,8 +252,8 @@ public class DefaultViewConfig implements ViewConfig {
 
 			regDefaultStyleClasses(styleClassesMap, ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
 
-			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex justify-content-end mb-4");
-			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-primary ms-2");
+			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4"); //Melhor tirar mb-4 e tentar gap
+			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-primary"); //Melhor tirar ms-2 e tentar gap
 
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "bodyStyleClass", "card-body p-2");
@@ -339,7 +340,7 @@ public class DefaultViewConfig implements ViewConfig {
 
 	}
 
-	private void regDefaultStyleClasses(Map<Class<? extends BaseTag>, Map<String, String>> map, Class<? extends BaseTag> tagClass, String field, String styleClass) {
+	protected void regDefaultStyleClasses(Map<Class<? extends BaseTag>, Map<String, String>> map, Class<? extends BaseTag> tagClass, String field, String styleClass) {
 		Map<String, String> tagMap = map.get(tagClass);
 		if (tagMap == null) {
 			tagMap = new HashMap<String, String>();
