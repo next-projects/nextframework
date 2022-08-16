@@ -19,7 +19,7 @@
 
 			<div class="${reportPanelTag.actionBarStyleClass}">
 				${acoes}
-				<n:submit action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
+				<n:submit class="${reportPanelTag.buttonStyleClass}" action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
 			</div>
 
 		</n:getContent>

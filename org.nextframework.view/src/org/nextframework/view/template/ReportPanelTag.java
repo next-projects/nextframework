@@ -30,16 +30,17 @@ package org.nextframework.view.template;
  */
 public class ReportPanelTag extends TemplateTag {
 
-	private String sectionTitle;
+	protected String sectionTitle;
 
-	private String submitAction = "generate";
-	private String submitConfirmationScript = "true";
-	private String submitLabel;
+	protected String submitAction = "generate";
+	protected String submitConfirmationScript = "true";
+	protected String submitLabel;
 
-	private String panelStyleClass;
-	private String sectionTitleStyleClass;
-	private String bodyStyleClass;
-	private String actionBarStyleClass;
+	protected String panelStyleClass;
+	protected String sectionTitleStyleClass;
+	protected String bodyStyleClass;
+	protected String actionBarStyleClass;
+	protected String buttonStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -124,6 +125,14 @@ public class ReportPanelTag extends TemplateTag {
 
 	public void setActionBarStyleClass(String actionBarStyleClass) {
 		this.actionBarStyleClass = actionBarStyleClass;
+	}
+
+	public String getButtonStyleClass() {
+		return buttonStyleClass;
+	}
+
+	public void setButtonStyleClass(String buttonStyleClass) {
+		this.buttonStyleClass = buttonStyleClass;
 	}
 
 }

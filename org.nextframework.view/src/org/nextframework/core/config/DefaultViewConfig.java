@@ -231,7 +231,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "bodyStyleClass", null);
 
 			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
-			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-primary"); //Melhor tirar ms-2 e tentar gap
+			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary"); //Melhor tirar ms-2 e tentar gap
 
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "sectionTitleStyleClass", "card-header");
@@ -253,7 +253,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
 
 			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4"); //Melhor tirar mb-4 e tentar gap
-			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-primary"); //Melhor tirar ms-2 e tentar gap
+			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary"); //Melhor tirar ms-2 e tentar gap
 
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "bodyStyleClass", "card-body p-2");
@@ -273,7 +273,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "card-header");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
-
+			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
+			
 			if (isDefaultFlatMode()) {
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "rowStyleClasses", "row");

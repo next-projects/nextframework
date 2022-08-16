@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+		version="2.0">
 
 	<description>Next 2.0 template library</description>
 	<display-name>Next template</display-name>
@@ -70,6 +73,24 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description></description>
+			<name>pageStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>titleStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>bodyStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -102,6 +123,18 @@
 			<required>false</required>
 			<fragment>true</fragment>
 		</attribute>
+		<attribute>
+			<description></description>
+			<name>linkBarStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>linkStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -133,6 +166,18 @@
 			<name>linkArea</name>
 			<required>false</required>
 			<fragment>true</fragment>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>linkBarStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>linkStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
@@ -176,6 +221,12 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>submitUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>submitAction</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -188,6 +239,36 @@
 		<attribute>
 			<description></description>
 			<name>submitLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>panelStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>sectionTitleStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>bodyStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>actionBarStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>buttonStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -229,6 +310,30 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description></description>
+			<name>panelStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>bodyStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>actionBarStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>buttonStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -261,6 +366,36 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description></description>
+			<name>panelStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>sectionTitleStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>bodyStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>actionBarStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>buttonStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -269,6 +404,12 @@
 		<name>listPanel</name>
 		<tag-class>org.nextframework.view.template.ListPanelTag</tag-class>
 		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>panelStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
@@ -278,6 +419,7 @@
 		<tag-class>org.nextframework.view.template.FilterTableTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
+			<description></description>
 			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -294,44 +436,50 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
 			<name>styleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
 			<name>style</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>columnStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>columnStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
+			<description></description>
 			<name>rowStyleClasses</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
 			<name>rowStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<description></description>
+			<name>columnStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>columnStyles</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>propertyRenderAs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>dynamicAttributesMap</name>
+			<name>propertyShowLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -361,12 +509,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Atributo que vai para o panel</description>
-			<name>title</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
 			<description></description>
 			<name>styleClass</name>
 			<required>false</required>
@@ -375,6 +517,18 @@
 		<attribute>
 			<description></description>
 			<name>style</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rowStyleClasses</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rowStyles</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -392,19 +546,12 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>rowStyleClasses</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>rowStyles</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
 			<name>propertyRenderAs</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>propertyShowLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -435,13 +582,13 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>style</name>
+			<name>styleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>styleClass</name>
+			<name>style</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -470,8 +617,14 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<description></description>
 			<name>propertyRenderAs</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>propertyShowLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -522,6 +675,36 @@
 		<attribute>
 			<description></description>
 			<name>showDeleteLink</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>selectLinkLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>viewLinkLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>updateLinkLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>deleteLinkLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>pagePanelStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -631,6 +814,18 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
+			<name>panelStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>buttonStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
 			<name>rendered</name>
 			<required>false</required>
@@ -658,31 +853,37 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>autoSugestUniqueItem</name>
+			<name>renderAs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>holdValue</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>useAjax</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>onLoadItens</name>
+			<name>mode</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
 			<name>order</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Utilizado quando o property estiver em modo SINGLE só terá efeito se estiver dentro de um panelgrid</description>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>showLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>label</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -700,61 +901,7 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>selectLabelProperty</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>label</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>ognl</description>
-			<name>itens</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>Parametros da função itens que são opcionais</description>
-			<name>optionalParams</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>cols</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>rows</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>showLabel</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>blankLabel</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>includeBlank</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>selectOnePath</name>
+			<name>pattern</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -766,25 +913,107 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>trueFalseNullLabels</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
 			<name>replaceMessagesCodes</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>mode</name>
+			<name>trueFalseNullLabels</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>renderAs</name>
+			<name>selectOnePath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>selectOnePathParameters</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				Determina os atributos width, height, top e left, da janela que será utilizada por um select one button.
+				Os valores devem ser separados por vírgula. Não é necessário informar todos os parâmetros. 
+				Se quiser definir a largura e altura pode-se usar: selectOneWindowSize="400,300" 
+			</description>
+			<name>selectOneWindowSize</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>insertPath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>ognl</description>
+			<name>itens</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>useAjax</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>autoSugestUniqueItem</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Parametros da função itens que são opcionais</description>
+			<name>optionalParams</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>holdValue</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>onLoadItens</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>selectLabelProperty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>includeBlank</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>blankLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>rows</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>cols</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -795,12 +1024,17 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Utilizado quando o property estiver em modo SINGLE só terá efeito se estiver dentro de um panelgrid</description>
-			<name>colspan</name>
+			<description>Se um arquivo é transiente não existe a opção para fazer download</description>
+			<name>transientFile</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-
+		<attribute>
+			<description>Indica de deve ser mostrado o botão remover</description>
+			<name>showDeleteButton</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>headerStyle</name>
@@ -861,52 +1095,9 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
 		<attribute>
 			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
 			<name>rendered</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-
-		<attribute>
-			<description>Se um arquivo é transiente não existe a opção para fazer download</description>
-			<name>transientFile</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-
-		<attribute>
-			<description>Indica de deve ser mostrado o botão remover</description>
-			<name>showDeleteButton</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>pattern</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>selectOnePathParameters</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description>
-				Determina os atributos width, height, top e left, da janela que será utilizada por um select one button.
-				Os valores devem ser separados por vírgula. Não é necessário informar todos os parâmetros. 
-				Se quiser definir a largura e altura pode-se usar: selectOneWindowSize="400,300" 
-			</description>
-			<name>selectOneWindowSize</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>insertPath</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
