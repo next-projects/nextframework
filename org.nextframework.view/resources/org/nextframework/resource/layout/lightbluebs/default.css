@@ -23,13 +23,13 @@ A.btn:HOVER {
 
 :root {
 	--bs-primary: #006699;
-	--ls-primary-hover: #005588;
+	--sl-primary-hover: #005588;
 	--bs-warning: #d7a100;
 	--bs-link-color: #006699;
 	--bs-link-hover-color: #005588;
-	--bs-border-color: #d6e2f5;
+	--bs-border-color: #eeeff0;
 	--sl-card-cap-color: #eaf2ff;
-	--bs-light-rgb: 233,236,239;
+	--bs-light-rgb: 238,239,240; /* #eeeff0 */
 	--sl-disabled-bg: var(--bs-gray-200);
 }
 
@@ -123,10 +123,24 @@ LI.event, .event {
 
 /* Panels */
 
+.list-group {
+	--bs-list-group-border-color: var(--bs-border-color);
+}
+
 .card {
 	--bs-card-border-color: var(--bs-border-color);
 	--bs-card-cap-bg: var(--sl-card-cap-color);
 	--bs-card-cap-color: var(--bs-primary);
+}
+
+.card-header .form-control, .card-footer .form-control, .form-control-inline {
+	display: inline;
+	width: auto;
+	min-width: 0;
+}
+
+.card-footer .form-check-input {
+	margin-top: 0.75em;
 }
 
 
@@ -143,14 +157,9 @@ SPAN.form-control {
 	background-color: var(--sl-disabled-bg);
 }
 
-.card-header .form-control, .card-footer .form-control, .form-control-inline {
-	display: inline;
-	width: auto;
-	min-width: 0;
-}
-
-.card-footer .form-check-input {
-	margin-top: 0.75em;
+.form-control:focus {
+	border-color: var(--bs-primary);
+	box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
 }
 
 .input-group-text {
@@ -158,33 +167,31 @@ SPAN.form-control {
 }
 
 .requiredMark{
-	color: red;
-	position: absolute;
-}
-
-.requiredMark::before{
-	content: "\2022";
-	position: relative;
-	left: -5px;
-	top: -12px;
+	border-right: 3px solid red;
 }
 
 
 /* SubmitTag */
 
+.btn {
+	--bs-btn-focus-shadow-rgb: var(--bs-primary-rgb)
+}
+
 .btn-primary {
 	--bs-btn-color: #FFFFFF;
 	--bs-btn-bg: var(--bs-primary);
 	--bs-btn-border-color: var(--bs-primary);
-	--bs-btn-hover-bg: var(--ls-primary-hover);
-	--bs-btn-hover-border-color: var(--ls-primary-hover);
+	--bs-btn-hover-bg: var(--sl-primary-hover);
+	--bs-btn-hover-border-color: var(--sl-primary-hover);
+	--bs-btn-active-bg: var(--sl-primary-hover);
+	--bs-btn-active-border-color: var(--sl-primary-hover);
 }
 
 .btn-outline-primary {
 	--bs-btn-color: var(--bs-primary);
 	--bs-btn-border-color: var(--bs-primary);
-	--bs-btn-hover-bg: var(--ls-primary-hover);
-	--bs-btn-hover-border-color: var(--ls-primary-hover);
+	--bs-btn-hover-bg: var(--sl-primary-hover);
+	--bs-btn-hover-border-color: var(--sl-primary-hover);
 }
 
 
@@ -200,6 +207,15 @@ SPAN.form-control {
 	--bs-table-color: var(--bs-primary);
 	--bs-table-bg: var(--sl-card-cap-color);
 	--bs-table-border-color: var(--bs-border-color);
+}
+
+TABLE THEAD A, TABLE THEAD A:HOVER {
+	color: var(--bs-table-color);
+}
+
+.pagination {
+	--bs-pagination-active-bg: var(--bs-primary);
+	--bs-pagination-active-border-color: var(--bs-primary);
 }
 
 

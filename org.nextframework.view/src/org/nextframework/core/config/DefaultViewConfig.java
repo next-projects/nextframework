@@ -96,7 +96,7 @@ public class DefaultViewConfig implements ViewConfig {
 
 	@Override
 	public RequiredMarkMode getRequiredMarkMode() {
-		return isUseBootstrap() ? RequiredMarkMode.BEFORE : RequiredMarkMode.AFTER;
+		return isUseBootstrap() ? RequiredMarkMode.STYLECLASS : RequiredMarkMode.AFTER;
 	}
 
 	@Override
@@ -227,14 +227,14 @@ public class DefaultViewConfig implements ViewConfig {
 		if (isUseBootstrap()) {
 
 			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "pageStyleClass", null);
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "titleStyleClass", "h3"); //mb-4 pq?
+			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "titleStyleClass", "h3");
 			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "bodyStyleClass", null);
 
 			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
-			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary"); //Melhor tirar ms-2 e tentar gap
+			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
 
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "sectionTitleStyleClass", "card-header");
+			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
@@ -253,7 +253,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
 
 			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4"); //Melhor tirar mb-4 e tentar gap
-			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary"); //Melhor tirar ms-2 e tentar gap
+			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
 
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "bodyStyleClass", "card-body p-2");
@@ -270,7 +270,7 @@ public class DefaultViewConfig implements ViewConfig {
 			}
 
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "card-header");
+			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
