@@ -821,7 +821,13 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>buttonStyleClass</name>
+			<name>actionButtonStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>newLineButtonStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

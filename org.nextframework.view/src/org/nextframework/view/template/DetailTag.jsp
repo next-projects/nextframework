@@ -18,10 +18,10 @@
 							${acoes}
 							<c:if test="${detailTag.showDeleteButton && !view}">
 								<c:if test="${!propertyConfigDisabled || dataGridDynaline}">
-									<button type="button" class="${detailTag.buttonStyleClass}" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
+									<button type="button" class="${detailTag.actionButtonStyleClass}" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
 								</c:if>
 								<c:if test="${propertyConfigDisabled && !dataGridDynaline}">
-									<button type="button" class="${detailTag.buttonStyleClass}" disabled="disabled" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
+									<button type="button" class="${detailTag.actionButtonStyleClass}" disabled="disabled" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
 								</c:if>
 							</c:if>
 						</n:column>
@@ -31,10 +31,10 @@
 		</n:dataGrid>
 		<c:if test="${detailTag.showNewLineButton && !view}">
 			<c:if test="${!propertyConfigDisabled}">
-				<button class="${detailTag.buttonStyleClass}" style="margin: 2px 0px;" type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="${detailTag.newLineButtonStyleClass}" style="margin: 2px 0px;" type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 			<c:if test="${propertyConfigDisabled}">
-				<button class="${detailTag.buttonStyleClass}" style="margin: 2px 0px;" type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="${detailTag.newLineButtonStyleClass}" style="margin: 2px 0px;" type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 		</c:if>
 	</div>

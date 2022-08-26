@@ -284,7 +284,8 @@ public class DefaultViewConfig implements ViewConfig {
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
 			}
 
-			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "buttonStyleClass", "btn btn-sm");
+			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "actionButtonStyleClass", "btn btn-sm btn-primary");
+			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary");
 
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
