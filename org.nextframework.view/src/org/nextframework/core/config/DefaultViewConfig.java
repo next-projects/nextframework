@@ -137,6 +137,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "requiredStyleClass", "requiredMark");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "class", "form-control");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "CHECKBOX-class", "form-check-input");
+			regDefaultStyleClasses(styleClassesMap, InputTag.class, "HIDDEN-class", " ");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "RADIO-class", "form-check-input");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "SELECT_ONE-class", "form-select");
 

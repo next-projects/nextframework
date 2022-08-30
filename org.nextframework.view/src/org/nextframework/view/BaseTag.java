@@ -731,17 +731,16 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	public String getDynamicAttributesToString(Map<String, Object> dynamicAttributesMap) {
+
 		StringBuilder builder = new StringBuilder(" ");
 		Set<String> keySet = dynamicAttributesMap.keySet();
+
 		for (String key : keySet) {
+
 			boolean inPanelGrid = findParent(PanelGridTag.class) != null;
 			if (inPanelGrid && key.startsWith("panel")) {
 				continue;//nao montar tags iniciadas com panel... provavelmente está configurando o panel externo
 			}
-			builder.append(" ");
-			builder.append(key);
-			builder.append("=");
-			builder.append("'");
 
 			Object object = dynamicAttributesMap.get(key);
 			if (object != null) {
@@ -750,10 +749,20 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 					object = getOgnlValue((String) object);
 				}
 				object = object.toString();
+				object = TagUtils.escapeSingleQuotes((String) object);
 			}
-			builder.append(TagUtils.escapeSingleQuotes((String) object));
-			builder.append("'");
+
+			if (object != null) {
+				builder.append(" ");
+				builder.append(key);
+				builder.append("=");
+				builder.append("'");
+				builder.append(object);
+				builder.append("'");
+			}
+
 		}
+
 		String toString = builder.toString();
 		return toString;
 	}

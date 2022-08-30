@@ -40,7 +40,6 @@ public class BodyTag extends ColumnChildTag {
 	protected void doColumnChild(Status status) throws JspException, IOException {
 		//Quando no data grid vinha uma célula vazia, ele atrapalhava o estilo css, entao foi adicionado &nbsp; quando nao possuir nenhum valor.
 		//modificado por pedrogoncalves em 20/04/2007
-		
 		if (dataGrid.getCurrentStatus() == Status.BODY) {
 			String body = getBody();
 			findParent(ColumnTag.class, true).setHasBodyTag(true);
@@ -48,15 +47,13 @@ public class BodyTag extends ColumnChildTag {
 				getOut().print("&nbsp");
 			} else {
 				getOut().print(body);
-//				doBody();
 			}
-		} else if(dataGrid.getCurrentStatus() == Status.DYNALINE){
+		} else if (dataGrid.getCurrentStatus() == Status.DYNALINE) {
 			String body = getBody();
 			if (body == null || body.trim().equals("")) {
 				getOut().print("&nbsp");
 			} else {
 				getOut().print(body);
-//				doBody();
 			}
 		}
 	}
@@ -75,6 +72,5 @@ public class BodyTag extends ColumnChildTag {
 	protected boolean doTd() {
 		return dataGrid.getCurrentStatus() != Status.DYNALINE;
 	}
-
 
 }

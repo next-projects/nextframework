@@ -406,23 +406,22 @@ public class PropertyTag extends TemplateTag {
 	 * Auto alinhamento dos valores de uma determinada coluna
 	 */
 	public String getColumnAlign() {
-		//em modo input nao alinhar a direita pois o proprio input terá alinhamento
 		Object type = getRequest().getAttribute("type");
 		return getColumnAlignForType(type);
 	}
 
 	public String getColumnAlignForType(Object type) {
+		//em modo input nao alinhar a direita pois o proprio input terá alinhamento
 		if ("input".equalsIgnoreCase(getMode())) {
-			return "";
+			return null;
 		}
 		if (Util.objects.isNotEmpty(getDynamicAttributesMap().get("align"))) {
 			return getDynamicAttributesMap().get("align").toString();
 		}
 		if (type != null && (type.equals(Money.class) || (type instanceof Class<?> && Number.class.isAssignableFrom((Class<?>) type)))) {
 			return "right";
-		} else {
-			return "";
 		}
+		return null;
 	}
 
 	public String getName() {
