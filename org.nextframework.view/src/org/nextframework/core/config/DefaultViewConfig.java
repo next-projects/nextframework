@@ -137,6 +137,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "requiredStyleClass", "requiredMark");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "class", "form-control");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "CHECKBOX-class", "form-check-input");
+			regDefaultStyleClasses(styleClassesMap, InputTag.class, "CHECKLIST-class", "form-check-input");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "HIDDEN-class", " ");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "RADIO-class", "form-check-input");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "SELECT_ONE-class", "form-select");
@@ -290,6 +291,9 @@ public class DefaultViewConfig implements ViewConfig {
 
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-panelStyleClass", null);
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check mt-4 pt-2");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label text-nowrap text-truncate");
 
 		} else {
 

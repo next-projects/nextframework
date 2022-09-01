@@ -1539,4 +1539,10 @@
 		<function-signature>java.lang.String messageReplace(java.lang.String)</function-signature>
 	</function>
 
+	<function>
+		<name>defaultStyleClass</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String defaultStyleClass(java.lang.String, java.lang.String)</function-signature>
+	</function>
+
 </taglib>

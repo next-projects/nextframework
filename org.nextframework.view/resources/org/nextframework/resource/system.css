@@ -264,12 +264,26 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 
 /* Util */
 
-.mw-md-75 {
+.w-md-75, .w-md-50, .w-md-33, .w-md-25 {
 	width: auto;
 }
 
 @media (min-width: 768px) {
-	.mw-md-75 {
-		max-width: 75%!important;
+
+	.w-md-25 {
+		width: 25%!important;
 	}
+
+	.w-md-33 {
+		width: 33%!important;
+	}
+
+	.w-md-50 {
+		width: 50%!important;
+	}
+
+	.w-md-75 {
+		width: 75%!important;
+	}
+
 }

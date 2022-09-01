@@ -66,23 +66,6 @@
 				</c:if>
 			</n:panel>
 		</c:when>
-		<%-- stacked --%>
-		<c:when test="${propertyTag.renderAs == 'stacked'}">
-			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
-				<label class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label> 
-				<div>
-					<c:if test="${propertyTag.mode == 'input'}">
-						<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showRemoverButton="${propertyTag.showRemoverButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
-							label="${n:default(propertyTag.label, label)}" id="${compId}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
-							<n:doBody />
-						</n:input>
-					</c:if>
-					<c:if test="${propertyTag.mode == 'output'}">
-						<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
-					</c:if>
-				</div>
-			</n:panel>
-		</c:when>
 		<%-- invert --%>
 		<c:when test="${propertyTag.renderAs == 'invert'}">
 			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
@@ -98,6 +81,40 @@
 			</n:panel>
 			<n:panel style="${propertyTag.labelPanelStyle}" class="${propertyTag.labelPanelStyleClass}" >
 				<label style="${propertyTag.labelStyle}" class="${propertyTag.labelStyleClass}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+			</n:panel>
+		</c:when>
+		<%-- stacked --%>
+		<c:when test="${propertyTag.renderAs == 'stacked'}">
+			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
+				<label class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+				<div class="${propertyTag.stackedPanelStyleClass}">
+					<c:if test="${propertyTag.mode == 'input'}">
+						<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showRemoverButton="${propertyTag.showRemoverButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+							label="${n:default(propertyTag.label, label)}" id="${compId}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
+							<n:doBody />
+						</n:input>
+					</c:if>
+					<c:if test="${propertyTag.mode == 'output'}">
+						<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
+					</c:if>
+				</div>
+			</n:panel>
+		</c:when>
+		<%-- stacked invert --%>
+		<c:when test="${propertyTag.renderAs == 'stacked_invert'}">
+			<n:panel colspan="${propertyTag.colspan}" style="${propertyTag.panelStyle}" class="${propertyTag.panelStyleClass}">
+				<div class="${propertyTag.stackedPanelStyleClass}">
+					<c:if test="${propertyTag.mode == 'input'}">
+						<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showRemoverButton="${propertyTag.showRemoverButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
+							label="${n:default(propertyTag.label, label)}" id="${compId}" selectLabelProperty="${propertyTag.selectLabelProperty}" includeBlank="${propertyTag.includeBlank}" blankLabel="${propertyTag.blankLabel}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">
+							<n:doBody />
+						</n:input>
+					</c:if>
+					<c:if test="${propertyTag.mode == 'output'}">
+						<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
+					</c:if>
+					<label class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}" for="${compId}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+				</div>
 			</n:panel>
 		</c:when>
 		<%-- single --%>

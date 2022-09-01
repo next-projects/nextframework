@@ -141,7 +141,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			Integer colspanBlock = asInteger(block.getProperties().remove("colspan"));
 			colspanBlock = colspanBlock != null ? colspanBlock : 1;
 
-			if (remainingColumns <= 0) {
+			if (remainingColumns - colspanBlock < 0) {
 
 				remainingColumns = columns;
 

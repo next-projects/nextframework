@@ -33,9 +33,12 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.el.ELException;
 
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.config.ViewConfig;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.exception.NextException;
 import org.nextframework.persistence.HibernateUtils;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
@@ -103,7 +106,7 @@ public class NextFunctions {
 			}
 			return Util.strings.toStringDescription(value, NextWeb.getRequestContext().getLocale());
 		} catch (Exception e) {
-			throw new RuntimeException("Erro ao ler a descrição do objeto. Talvez o problema esteja na propriedade com @DescriptionProperty.", e);
+			throw new NextException("Erro ao ler a descrição do objeto. Talvez o problema esteja na propriedade com @DescriptionProperty.", e);
 		}
 	}
 
@@ -247,6 +250,18 @@ public class NextFunctions {
 	public static String messageReplace(String original) {
 		Locale locale = NextWeb.getRequestContext().getLocale();
 		return Util.strings.replaceString(original, locale);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static String defaultStyleClass(String tagClassName, String field) throws Exception {
+		Class<? extends BaseTag> tagClass = null;
+		try {
+			tagClass = (Class<? extends BaseTag>) Class.forName(tagClassName);
+		} catch (Exception e) {
+			throw new NextException("Erro ao obter classe de tag!", e);
+		}
+		ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
+		return viewConfig.getDefaultStyleClass(tagClass, field);
 	}
 
 }

@@ -1,4 +1,4 @@
-﻿next.globalMap.put('PopupDiv.box', 'card mw-md-75 m-4 shadow');
+﻿next.globalMap.put('PopupDiv.box', 'card w-md-75 m-4 shadow');
 
 next.globalMap.put('NextDialogs.header', 'card-header');
 next.globalMap.put('NextDialogs.body', 'card-body p-2 row');

@@ -68,11 +68,13 @@ public class PropertyTag extends TemplateTag {
 
 	public static final String DOUBLELINE = "doubleline";
 
-	public static final String STACKED = "stacked";
-
 	public static final String INVERT = "invert";
 
-	private static final List<String> RENDERAS_OPTIONS = Arrays.asList(COLUMN, SINGLE, DOUBLE, DOUBLELINE, STACKED, INVERT);
+	public static final String STACKED = "stacked";
+
+	public static final String STACKED_INVERT = "stacked_invert";
+
+	private static final List<String> RENDERAS_OPTIONS = Arrays.asList(COLUMN, SINGLE, DOUBLE, DOUBLELINE, INVERT, STACKED, STACKED_INVERT);
 
 	protected String name;
 	protected String renderAs = null;
@@ -137,6 +139,7 @@ public class PropertyTag extends TemplateTag {
 	private String labelPanelStyle;
 	private String labelStyleClass;
 	private String labelStyle;
+	private String stackedPanelStyleClass;
 
 	@Override
 	protected void applyDefaultStyleClasses() throws JspException {
@@ -756,6 +759,14 @@ public class PropertyTag extends TemplateTag {
 
 	public void setLabelStyle(String labelStyle) {
 		this.labelStyle = labelStyle;
+	}
+
+	public String getStackedPanelStyleClass() {
+		return stackedPanelStyleClass;
+	}
+
+	public void setStackedPanelStyleClass(String stackedPanelStyleClass) {
+		this.stackedPanelStyleClass = stackedPanelStyleClass;
 	}
 
 }
