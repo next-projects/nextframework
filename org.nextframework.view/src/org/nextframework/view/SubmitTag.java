@@ -36,7 +36,7 @@ import org.nextframework.web.WebUtils;
  * @version 1.1
  */
 public class SubmitTag extends BaseTag {
-	
+
 	// atributos
 	protected String url;
 
@@ -49,16 +49,16 @@ public class SubmitTag extends BaseTag {
 	protected String type;
 
 	protected String parameters;
-	
+
 	protected Boolean validate;
-	
+
 	protected String confirmationScript;
-	
+
 	enum Type {
 		/* Adicionado SUBMIT em 22/05/2009 para dar suporte ao ENTER e fazer submit do form */
 		BUTTON, IMAGE, LINK, SUBMIT
 	}
-	
+
 	//extra
 	//protected String formName;
 	protected String onclick;
@@ -74,85 +74,93 @@ public class SubmitTag extends BaseTag {
 
 	@Override
 	protected void doComponent() throws Exception {
-		if(action == null){
-			//a action deve ser explicita para qual método deve ser chamado
-			//action = NextWeb.getRequestContext().getLastAction();
-		}
+
+		//if(action == null){
+		//a action deve ser explicita para qual método deve ser chamado
+		//action = NextWeb.getRequestContext().getLastAction();
+		//}
+
 		boolean hasAuthorization = hasAuthorization();
 		url = montarUrlCompleta();
-		
-		if(!hasAuthorization){
-			getOut().println("<!-- Sem autorização para acessar: "+url+"-->");
+
+		if (!hasAuthorization) {
+			getOut().println("<!-- Sem autorização para acessar: " + url + "-->");
 			return;
 		}
+
 		FormTag form = findParent(FormTag.class, true);
+
 		String formName = form.getName();
 		String submitFunction = form.getSubmitFunction();
-		if(!url.startsWith("javascript:")){
-			if(validate != null){
-				onclick = formName+".action = '"+url+"'; "+formName+".validate = '"+validate+"'; "+submitFunction+"()";
+
+		if (!url.startsWith("javascript:")) {
+			if (validate != null) {
+				onclick = formName + ".action = '" + url + "'; " + formName + ".validate = '" + validate + "'; " + submitFunction + "()";
 			} else {
-				onclick = formName+".action = '"+url+"'; "+submitFunction+"()";	
-			}	
+				onclick = formName + ".action = '" + url + "'; " + submitFunction + "()";
+			}
 		} else {
-			onclick = url.substring("javascript:".length());;
+			onclick = url.substring("javascript:".length());
 		}
-		
-		if(getDynamicAttributesMap().get("onclick") != null){
-			onclick = getDynamicAttributesMap().get("onclick")+";"+onclick;
+
+		if (getDynamicAttributesMap().get("onclick") != null) {
+			onclick = getDynamicAttributesMap().get("onclick") + ";" + onclick;
 			getDynamicAttributesMap().remove("onclick");
 		}
-		if(confirmationScript != null && confirmationScript.trim().length() > 0) {
-			if(confirmationScript.contains(";")) {
+
+		if (confirmationScript != null && confirmationScript.trim().length() > 0) {
+			if (confirmationScript.contains(";")) {
 				throw new NextException("O confirmationScript não pode conter ';' Ele deve ser uma expressão (ou chamada de função) booleana. " +
-						"Se a expressão retornar true o submit será executado. confirmationScriptEncontrado: "+confirmationScript);
+						"Se a expressão retornar true o submit será executado. confirmationScriptEncontrado: " + confirmationScript);
 			}
-			onclick = "if ("+confirmationScript+") {"+onclick+"}";
+			onclick = "if (" + confirmationScript + ") {" + onclick + "}";
 		}
-		
+
 		if (action != null) {
-			action = formName+"."+MultiActionController.ACTION_PARAMETER+".value ='"+action+"';";
+			action = formName + "." + MultiActionController.ACTION_PARAMETER + ".value ='" + action + "';";
 		} else {
-			action = formName+"."+MultiActionController.ACTION_PARAMETER+".value = '';";//se o submit foi criado com action null... devemos enviar para action null
+			action = formName + "." + MultiActionController.ACTION_PARAMETER + ".value = '';";//se o submit foi criado com action null... devemos enviar para action null
 		}
-		
+
 		Type tipo = getResolvedType();
-		
-		if(tipo == Type.BUTTON){
+
+		if (tipo == Type.BUTTON) {
 			boolean disabled = "disabled".equals(getDynamicAttributesMap().get("disabled"));
 			boolean enabled = "false".equals(getDynamicAttributesMap().get("disabled"));
-			
-			if(!enabled){
+
+			if (!enabled) {
 				PropertyConfigTag propertyConfig = findParent(PropertyConfigTag.class);
 				DataGridTag dataGridTag = findParent(DataGridTag.class);
-				if(propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled())
-						&& (dataGridTag == null || dataGridTag.getCurrentStatus() != DataGridTag.Status.DYNALINE)){
-					if(disabled){
+				if (propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled())
+						&& (dataGridTag == null || dataGridTag.getCurrentStatus() != DataGridTag.Status.DYNALINE)) {
+					if (disabled) {
 						getDynamicAttributesMap().put("originaldisabled", "disabled");
 					}
 					getDynamicAttributesMap().put("disabled", "disabled");
-				}	
+				}
 			} else {
 				getDynamicAttributesMap().remove("disabled");
 			}
+
 		}
-		
+
 		switch (tipo) {
-		case IMAGE:
-			includeTextTemplate("image");
-			break;
-		case BUTTON:
-			includeTextTemplate("button");
-			break;
-		case LINK:
-			includeTextTemplate("link");
-			break;
-		case SUBMIT:
-			includeTextTemplate("submit");
-			break;
+			case IMAGE:
+				includeTextTemplate("image");
+				break;
+			case BUTTON:
+				includeTextTemplate("button");
+				break;
+			case LINK:
+				includeTextTemplate("link");
+				break;
+			case SUBMIT:
+				includeTextTemplate("submit");
+				break;
 		}
+
 	}
-	
+
 	private boolean hasAuthorization() {
 		try {
 			return Authorization.getAuthorizationManager().isAuthorized(getPartialURL(), action, Authorization.getUserLocator().getUser());
@@ -160,13 +168,12 @@ public class SubmitTag extends BaseTag {
 			throw new NextException("Problema ao verificar autorização", e);
 		}
 	}
-	
-	
-	private String getPartialURL(){
+
+	private String getPartialURL() {
 		if (url != null && url.startsWith(getRequest().getContextPath())) {
 			return url.substring(getRequest().getContextPath().length());
 		}
-		String fullUrl = url == null ? WebUtils.getFirstUrl() : (url.startsWith("/") ?  url : url);
+		String fullUrl = url == null ? WebUtils.getFirstUrl() : (url.startsWith("/") ? url : url);
 		return fullUrl;
 	}
 
@@ -188,25 +195,28 @@ public class SubmitTag extends BaseTag {
 	}
 
 	private String montarUrlCompleta() {
-		if(url != null && url.startsWith("javascript:")){
+
+		if (url != null && url.startsWith("javascript:")) {
 			return url;
 		}
-		if(action != null && action.startsWith("javascript:")){
+
+		if (action != null && action.startsWith("javascript:")) {
 			url = action;
 			action = null;
 			return url;
 		}
+
 		//updated in 2012-09-05 url.length == 0
 		String fullUrl = url == null || url.length() == 0 ? WebUtils.getFirstFullUrl() : (url.startsWith("/") ? WebUtils.getFullUrl(getRequest(), url) : url);
 		String separator = fullUrl.contains("?") ? "&" : "?";
 		// adicionar parameters na url
 		if (parameters != null) {
 			fullUrl += separator + parameters.replace(";", "&");
-		}		
-		
+		}
+
 		//Verifica URL Sufix
 		fullUrl = WebUtils.rewriteUrl(fullUrl);
-		
+
 		return fullUrl;
 	}
 

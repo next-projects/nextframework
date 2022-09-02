@@ -34,7 +34,7 @@ import org.springframework.validation.BindException;
  * @version 1.0
  */
 public class HasMessagesTag extends BaseTag {
-	
+
 	@Override
 	protected void doComponent() throws Exception {
 		WebRequestContext requestContext = NextWeb.getRequestContext();

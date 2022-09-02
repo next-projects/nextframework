@@ -12,11 +12,12 @@ public class ContentTag extends BaseTag implements LogicalTag {
 	@Override
 	protected void doComponent() throws Exception {
 		String body = getBody();
-		if(body != null){
+		if (body != null) {
 			String newBody = body.trim().replace("\t", "").replace("\n", "").replace("\r", "");
-			if(Util.strings.isNotEmpty(newBody)){
+			if (Util.strings.isNotEmpty(newBody)) {
 				getOut().println(body);
 			}
 		}
 	}
+
 }

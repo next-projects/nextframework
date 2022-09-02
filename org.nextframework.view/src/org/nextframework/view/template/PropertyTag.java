@@ -211,8 +211,10 @@ public class PropertyTag extends TemplateTag {
 			} else if (findFirst instanceof GroupTag) {
 				GroupTag groupTag = (GroupTag) findFirst;
 				renderAs = groupTag.getPropertyRenderAs();
-			} else if (findFirst instanceof DataGridTag || findFirst instanceof ColumnTag) {
+			} else if (findFirst instanceof DataGridTag) {
 				renderAs = COLUMN;
+			} else if (findFirst instanceof ColumnTag) {
+				renderAs = SINGLE;
 			}
 		}
 		if (Util.strings.isEmpty(renderAs)) {

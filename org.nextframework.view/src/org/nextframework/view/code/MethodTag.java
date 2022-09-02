@@ -36,14 +36,15 @@ public class MethodTag extends BaseTag implements LogicalTag {
 	}
 
 	public void setName(String name) {
-		if("main".equals(name)){
+		if ("main".equals(name)) {
 			throw new NextException("main é um nome reservado e não pode ser utilizado na tag method");
 		}
 		this.name = name;
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
 		findParent(ClassTag.class, true).registerMethod(getName(), getJspBody());
 	}
+
 }

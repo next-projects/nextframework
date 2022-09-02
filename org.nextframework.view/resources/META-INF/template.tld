@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-		version="2.0">
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
 
 	<description>Next 2.0 template library</description>
 	<display-name>Next template</display-name>
@@ -16,6 +13,7 @@
 		<name>view</name>
 		<tag-class>org.nextframework.view.template.ViewTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>formName</name>
@@ -91,7 +89,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -99,6 +101,7 @@
 		<name>listView</name>
 		<tag-class>org.nextframework.view.template.ListViewTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>title</name>
@@ -135,7 +138,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -143,6 +150,7 @@
 		<name>formView</name>
 		<tag-class>org.nextframework.view.template.FormViewTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>title</name>
@@ -179,7 +187,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -187,13 +199,18 @@
 		<name>reportView</name>
 		<tag-class>org.nextframework.view.template.ReportViewTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>title</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -201,6 +218,7 @@
 		<name>filterPanel</name>
 		<tag-class>org.nextframework.view.template.FilterPanelTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>name</name>
@@ -272,7 +290,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -280,6 +302,7 @@
 		<name>formPanel</name>
 		<tag-class>org.nextframework.view.template.FormPanelTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>showSubmit</name>
@@ -334,7 +357,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -342,6 +369,7 @@
 		<name>reportPanel</name>
 		<tag-class>org.nextframework.view.template.ReportPanelTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>sectionTitle</name>
@@ -396,7 +424,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -404,13 +436,18 @@
 		<name>listPanel</name>
 		<tag-class>org.nextframework.view.template.ListPanelTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>panelStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -418,6 +455,7 @@
 		<name>filterTable</name>
 		<tag-class>org.nextframework.view.template.FilterTableTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>colspan</name>
@@ -483,7 +521,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -491,6 +533,7 @@
 		<name>formTable</name>
 		<tag-class>org.nextframework.view.template.FormTableTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>colspan</name>
@@ -555,7 +598,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -563,6 +610,7 @@
 		<name>reportTable</name>
 		<tag-class>org.nextframework.view.template.ReportTableTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>colspan</name>
@@ -628,7 +676,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -636,6 +688,7 @@
 		<name>listTable</name>
 		<tag-class>org.nextframework.view.template.ListTableTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>itens</name>
@@ -708,7 +761,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -716,6 +773,11 @@
 		<name>actionPanel</name>
 		<tag-class>org.nextframework.view.template.ActionPanelTag</tag-class>
 		<body-content>scriptless</body-content>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 
 	<tag>
@@ -723,6 +785,7 @@
 		<name>detail</name>
 		<tag-class>org.nextframework.view.template.DetailTag</tag-class>
 		<body-content>scriptless</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>id</name>
@@ -832,12 +895,10 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -845,6 +906,7 @@
 		<name>property</name>
 		<tag-class>org.nextframework.view.template.PropertyTag</tag-class>
 		<body-content>empty</body-content>
+		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>id</name>
@@ -1102,12 +1164,10 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Caso seje informado essa tag só será executada se o valor for TRUE</description>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1140,7 +1200,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Ignora a funcionalidade dessa tag. Apenas renderizando as tags filhas, como se essa tag não existisse.</description>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>bypass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

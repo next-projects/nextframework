@@ -245,4 +245,5 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 	public void setUnselectedClass(String unselectedClass) {
 		this.unselectedClass = unselectedClass;
 	}
+
 }

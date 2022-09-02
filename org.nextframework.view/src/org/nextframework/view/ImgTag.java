@@ -28,28 +28,29 @@ import org.nextframework.controller.resource.Resource;
 import org.nextframework.view.chart.jfree.ChartRendererJFreeChart;
 
 public class ImgTag extends BaseTag {
-	
+
 	public static final String RESOURCE_SERVLET_PATH = "/resource";
 
 	public static final String RESOURCE_SERVLET_TYPE = ResourceProvider.RESOURCE;
-	
+
 	private Object resource;
-	
+
 	public Object getResource() {
 		return resource;
 	}
+
 	public void setResource(Object resource) {
 		this.resource = resource;
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
-		if(resource instanceof Chart){
+		if (resource instanceof Chart) {
 			resource = new Resource("image/png", "chart.png", ChartRendererJFreeChart.renderAsImage((Chart) resource));
 		}
-		if(resource instanceof Resource){
+		if (resource instanceof Resource) {
 			Integer id = ResourceUtil.save(getRequest().getSession(), (Resource) resource);
-			getOut().println("<img src=\""+getRequest().getContextPath()+RESOURCE_SERVLET_PATH+"/"+RESOURCE_SERVLET_TYPE+"?id="+id+"\" "+getDynamicAttributesToString()+"/>");
+			getOut().println("<img src=\"" + getRequest().getContextPath() + RESOURCE_SERVLET_PATH + "/" + RESOURCE_SERVLET_TYPE + "?id=" + id + "\" " + getDynamicAttributesToString() + "/>");
 		} else {
 			throw new RuntimeException("Erro ao renderizar imagem, o tipo de resource deve ser Resource ou Chart");
 		}

@@ -68,6 +68,7 @@ public class FormTag extends BaseTag {
 		submitFunction = "submit" + Util.strings.captalize(getName());
 
 		includeJspTemplate();
+
 	}
 
 	public String getAction() {

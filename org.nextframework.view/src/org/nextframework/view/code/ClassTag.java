@@ -40,25 +40,25 @@ import org.nextframework.view.LogicalTag;
 public class ClassTag extends BaseTag implements LogicalTag {
 
 	public static String RUN_METHOD_ATTRIBUTE = "RUN_METHOD_ATTRIBUTE";
-	
+
 	public Map<String, JspFragment> metodos = new HashMap<String, JspFragment>();
-	
+
 	@Override
 	protected void doComponent() throws Exception {
 		PrintWriter out = new PrintWriter(new ByteArrayOutputStream());
 		getJspBody().invoke(out);
 		out.close();
 		String runmethod = (String) getRequest().getAttribute(RUN_METHOD_ATTRIBUTE);
-		if(runmethod == null){
+		if (runmethod == null) {
 			runmethod = "main";
 		}
 		executeMethod(runmethod, getDynamicAttributesMap());
 	}
-	
-	public void executeMethod(String name, Map<String, Object> parameters) throws JspException, IOException{
+
+	public void executeMethod(String name, Map<String, Object> parameters) throws JspException, IOException {
 		JspFragment jspFragment = metodos.get(name);
-		if(jspFragment == null){
-			throw new NextException("Método não encontrado: "+name);
+		if (jspFragment == null) {
+			throw new NextException("Método não encontrado: " + name);
 		} else {
 			Set<String> keySet = parameters.keySet();
 			for (String parameter : keySet) {
@@ -70,10 +70,11 @@ public class ClassTag extends BaseTag implements LogicalTag {
 			}
 		}
 	}
-	
-	public void registerMethod(String method, JspFragment codigo){
-		if(metodos.put(method, codigo) != null){
-			throw new NextException("Método JSP duplicado: "+method);
+
+	public void registerMethod(String method, JspFragment codigo) {
+		if (metodos.put(method, codigo) != null) {
+			throw new NextException("Método JSP duplicado: " + method);
 		}
 	}
+
 }

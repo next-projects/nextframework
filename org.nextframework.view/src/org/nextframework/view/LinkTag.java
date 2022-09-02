@@ -68,6 +68,7 @@ public class LinkTag extends BaseTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		boolean hasAuthorization = hasAuthorization();
 		url = buildFullUrl();
 
@@ -75,7 +76,9 @@ public class LinkTag extends BaseTag {
 			getOut().println("<!-- Sem autorização para acessar: " + url + "-->");
 			return;
 		}
+
 		//corpo = getBody();
+
 		Type tipo = getResolvedType();
 
 		if (tipo == Type.BUTTON) {
@@ -167,6 +170,7 @@ public class LinkTag extends BaseTag {
 			fullUrl += separator + MultiActionController.ACTION_PARAMETER + "=" + action;
 			separator = "&";
 		}
+
 		// adicionar parameters na url
 		if (parameters != null) {
 			fullUrl += separator + parameters.replace(";", "&");

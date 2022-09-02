@@ -32,6 +32,7 @@ import org.nextframework.view.PropertyTag;
  * @version 1.1
  */
 public class InputPropertyTag extends ComboTag {
+
 	protected String name;
 	protected Boolean showLabel = true;
 
@@ -45,17 +46,19 @@ public class InputPropertyTag extends ComboTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		InputTag inputTag = new InputTag();
 		inputTag.setShowLabel(getShowLabel());
-		
+
 		PropertyTag propertyTag = new PropertyTag();
 		propertyTag.setName(name);
-		
+
 		TagHolder propertyHolder = new TagHolder(propertyTag);
 		propertyHolder.addChild(new TagHolder(inputTag));
 		inputTag.setJspBody(getJspBody());
-		
+
 		invoke(propertyHolder);
+
 	}
 
 	public String getName() {

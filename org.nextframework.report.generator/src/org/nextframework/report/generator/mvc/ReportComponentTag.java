@@ -28,7 +28,9 @@ public class ReportComponentTag extends BaseTag {
 		pushAttribute("reportFieldsFormatters", getFormattersMap());
 		pushAttribute("reportFilterDateAutoFilterList", ReportFilterDateAutoFilter.values());
 		pushAttribute("ReportFilterDateAutoFilterType", ReportFilterDateAutoFilter.class);
+
 		includeJspTemplate();
+
 	}
 
 	private Object getProcessorsMap() {

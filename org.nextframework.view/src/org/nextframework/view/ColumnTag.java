@@ -41,17 +41,17 @@ public class ColumnTag extends BaseTag {
 
 	public static final String COLUMN_RESIZE_CODE_BEGIN = "<table class=\"datagridresizeblocktable\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><th class=\"datagridoriginalcontents\" style=\"background-color: transparent; background-image: none;\">";
 	public static final String COLUMN_RESIZE_CODE_END = "</th><th class=\"datagridresizeblock\" onmousedown=\"datagridStartResizeColumn(event, this, '{id}')\">&nbsp;</th></tr></table>";
-	
+
 	public static final String REGISTERING_DATAGRID = "REGISTERING_DATAGRID";
 
 	protected String header;
-	
+
 	protected String order;
-	
+
 	protected String footer;
 
 	protected DataGridTag dataGrid;
-	
+
 	protected boolean hasBodyTag = false;
 
 	public void setHasBodyTag(boolean hasBodyTag) {
@@ -70,85 +70,84 @@ public class ColumnTag extends BaseTag {
 		Map<String, Object> mapBody = new HashMap<String, Object>();
 		Set<String> keySet = getDynamicAttributesMap().keySet();
 		for (String string : keySet) {
-			if(string.startsWith("body")){
+			if (string.startsWith("body")) {
 				mapBody.put(string.substring("body".length()), getDynamicAttributesMap().get(string));
-			} else if(string.startsWith("header")) {
+			} else if (string.startsWith("header")) {
 				mapHeader.put(string.substring("header".length()).toLowerCase(), getDynamicAttributesMap().get(string));
 			} else {
 				mapBody.put(string, getDynamicAttributesMap().get(string));
 				mapHeader.put(string, getDynamicAttributesMap().get(string));
 			}
 		}
-		if(dataGrid.getCurrentStatus() == Status.REGISTER){
+		if (dataGrid.getCurrentStatus() == Status.REGISTER) {
 			pushAttribute(REGISTERING_DATAGRID, true);
 			//temos que falar que estamos registrando um dataGrid para determinados códigos do corpo do column não ser executados. Por exemplo validação
 		}
 		String tagBody = null;
-		if(!(dataGrid.getCurrentStatus() == Status.HEADER && header != null)){// SE ESTIVER NA ETAPA DE HEADER.. MAS JÁ TIVER HEADER.. NAO INVOCAR O CORPO
+		if (!(dataGrid.getCurrentStatus() == Status.HEADER && header != null)) {// SE ESTIVER NA ETAPA DE HEADER.. MAS JÁ TIVER HEADER.. NAO INVOCAR O CORPO
 			tagBody = getBody();
 		}
-		
-		
-		if(dataGrid.getCurrentStatus() == Status.REGISTER){
+
+		if (dataGrid.getCurrentStatus() == Status.REGISTER) {
 			popAttribute(REGISTERING_DATAGRID);
 		}
 		switch (dataGrid.getCurrentStatus()) {
-		case HEADER:
-			if(dataGrid.isRenderResizeColumns()){
-				//se for reziseColumns não poderá haver colunas com width em percentual
-				Object styleO = mapHeader.get("style");
-				if(styleO != null){
-					String style = styleO.toString();
-					mapHeader.put("style", checkStyleForHeaderNoPercent(style));
+			case HEADER:
+				if (dataGrid.isRenderResizeColumns()) {
+					//se for reziseColumns não poderá haver colunas com width em percentual
+					Object styleO = mapHeader.get("style");
+					if (styleO != null) {
+						String style = styleO.toString();
+						mapHeader.put("style", checkStyleForHeaderNoPercent(style));
+					}
 				}
-			}
-			if (header == null && Util.strings.isEmpty(tagBody)) {
-				header = "";
-			} else if (header == null && !Util.strings.isEmpty(tagBody) && tagBody.trim().startsWith("<!--HEADER-->")) {
-				getOut().print(tagBody);
-				//o tagBody já conterá o TD então nao vamos continuar 
+				if (header == null && Util.strings.isEmpty(tagBody)) {
+					header = "";
+				} else if (header == null && !Util.strings.isEmpty(tagBody) && tagBody.trim().startsWith("<!--HEADER-->")) {
+					getOut().print(tagBody);
+					//o tagBody já conterá o TD então nao vamos continuar 
+					break;
+				}
+				if (header == null) {
+					header = "";
+				}
+				dataGrid.onRenderColumnHeader(header);
+				if (order == null) {
+					String contents = doResizeColumnContents(header, dataGrid);
+					getOut().print("<th " + getDynamicAttributesToString(mapHeader) + ">");
+					dataGrid.onRenderColumnHeaderBody();
+					getOut().print(contents + "</th>");
+				} else {
+					String orderLink = getRequest().getContextPath() + NextWeb.getRequestContext().getRequestQuery() + "?orderBy=" + order;
+
+					//Verifica URL Sufix
+					orderLink = WebUtils.rewriteUrl(orderLink);
+					String contents = "<a class=\"order\" href=\"" + orderLink + "\">" + header + "</a>";
+					getOut().print("<th " + getDynamicAttributesToString(mapHeader) + ">");
+					dataGrid.onRenderColumnHeaderBody();
+					getOut().print(doResizeColumnContents(contents, dataGrid) + "</th>");
+				}
 				break;
-			}
-			if(header == null){
-				header = "";
-			}
-			dataGrid.onRenderColumnHeader(header);
-			if(order == null){
-				String contents = doResizeColumnContents(header, dataGrid);
-				getOut().print("<th "+getDynamicAttributesToString(mapHeader)+">");
-				dataGrid.onRenderColumnHeaderBody();
-				getOut().print(contents + "</th>"); 
-			} else{
-				String orderLink = getRequest().getContextPath()+NextWeb.getRequestContext().getRequestQuery()+"?orderBy="+order;
-					
-				//Verifica URL Sufix
-				orderLink = WebUtils.rewriteUrl(orderLink);
-				String contents = "<a class=\"order\" href=\""+orderLink+"\">"+header+"</a>";
-				getOut().print("<th " + getDynamicAttributesToString(mapHeader) + ">"); 
-				dataGrid.onRenderColumnHeaderBody();
-				getOut().print(doResizeColumnContents(contents, dataGrid) + "</th>");
-			}
-			break;
-		case BODY:
-			if(dataGrid.isRenderResizeColumns()){
-				//se for reziseColumns não poderá haver colunas com width em percentual
-				Object styleO = mapBody.get("style");
-				if(styleO != null){
-					String style = styleO.toString();
-					mapBody.put("style", checkStyleForHeaderNoPercent(style));
+			case BODY:
+				if (dataGrid.isRenderResizeColumns()) {
+					//se for reziseColumns não poderá haver colunas com width em percentual
+					Object styleO = mapBody.get("style");
+					if (styleO != null) {
+						String style = styleO.toString();
+						mapBody.put("style", checkStyleForHeaderNoPercent(style));
+					}
 				}
-			}
-			if (!hasBodyTag) {
-				getOut().print("<td"+getDynamicAttributesToString(mapBody)+">");
-				getOut().print(tagBody == null || tagBody.trim().equals("")? "&nbsp;" : tagBody.trim());
-				getOut().print("</td>");
-			} else {
-				//Adicionado, porque o tagBody pode vir com <td ...> ... </td> e precisa validar se o conteúdo entre as tags é em branco.
-				//modificado por pedrogoncalves em 17/04/2007
-				
-				//Código removido, o uso de expressão regular estava deixando o datagrid lento, foi alterado para fazer semelhante no arquivo BodyTag.java
-				//modificado por pedrogoncalves em 20/04/2007
-				
+				if (!hasBodyTag) {
+					getOut().print("<td" + getDynamicAttributesToString(mapBody) + ">");
+					getOut().print(tagBody == null || tagBody.trim().equals("") ? "&nbsp;" : tagBody.trim());
+					getOut().print("</td>");
+				} else {
+					//Adicionado, porque o tagBody pode vir com <td ...> ... </td> e precisa validar se o conteúdo entre as tags é em branco.
+					//modificado por pedrogoncalves em 17/04/2007
+
+					//Código removido, o uso de expressão regular estava deixando o datagrid lento, foi alterado para fazer semelhante no arquivo BodyTag.java
+					//modificado por pedrogoncalves em 20/04/2007
+
 //				Pattern pattern = Pattern.compile("<td (.*?)>(.*)</td>",Pattern.DOTALL);
 //				Matcher matcher = pattern.matcher(tagBody.trim());
 //				if (matcher.find()) {
@@ -157,35 +156,35 @@ public class ColumnTag extends BaseTag {
 //				} else {
 //					getOut().print(tagBody);
 //				}
-				getOut().print(tagBody);
-			}
-			break;
-		case DYNALINE:
-			PanelRenderedBlock block = new PanelRenderedBlock();
-			block.setBody(tagBody);				
-			dataGrid.add(block);
-			break;
-		case FOOTER:
-			if (Util.strings.isEmpty(footer)) {
-				getOut().print("<td"+getDynamicAttributesToString()+"> </td>");
-			} else {
-				getOut().print(footer);
-			}
-			break;
-		case REGISTER:
-			// registrar
-			// if (getJspBody()!=null) {
-			// PrintWriter writer = new PrintWriter(new
-			// ByteArrayOutputStream());
-			// getJspBody().invoke(writer);
-			// }
-			if (Util.strings.isNotEmpty(header)) {
-				dataGrid.setRenderHeader(true);
-			}
-			dataGrid.setHasColumns(true);
-			//adicionado para dar informacoes ao datagrid sobre as colunas
-			dataGrid.registerColumn(this);
-			break;
+					getOut().print(tagBody);
+				}
+				break;
+			case DYNALINE:
+				PanelRenderedBlock block = new PanelRenderedBlock();
+				block.setBody(tagBody);
+				dataGrid.add(block);
+				break;
+			case FOOTER:
+				if (Util.strings.isEmpty(footer)) {
+					getOut().print("<td" + getDynamicAttributesToString() + "> </td>");
+				} else {
+					getOut().print(footer);
+				}
+				break;
+			case REGISTER:
+				// registrar
+				// if (getJspBody()!=null) {
+				// PrintWriter writer = new PrintWriter(new
+				// ByteArrayOutputStream());
+				// getJspBody().invoke(writer);
+				// }
+				if (Util.strings.isNotEmpty(header)) {
+					dataGrid.setRenderHeader(true);
+				}
+				dataGrid.setHasColumns(true);
+				//adicionado para dar informacoes ao datagrid sobre as colunas
+				dataGrid.registerColumn(this);
+				break;
 		}
 	}
 
@@ -214,7 +213,7 @@ public class ColumnTag extends BaseTag {
 	public static String doResizeColumnContents(String contents, DataGridTag dataGrid) {
 		String begin = "";
 		String end = "";
-		if(dataGrid.isRenderResizeColumns()){
+		if (dataGrid.isRenderResizeColumns()) {
 			end = COLUMN_RESIZE_CODE_END.replace("{id}", dataGrid.getId());
 			begin = COLUMN_RESIZE_CODE_BEGIN;
 		}
@@ -237,11 +236,11 @@ public class ColumnTag extends BaseTag {
 	public void setOrder(String order) {
 		this.order = order;
 	}
-	
+
 	public void setFooter(String footer) {
 		this.footer = footer;
 	}
-	
+
 	public String getFooter() {
 		return footer;
 	}

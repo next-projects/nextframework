@@ -43,10 +43,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.jstl.core.LoopTagStatus;
 
-import org.nextframework.core.config.ViewConfig;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.HibernateUtils;
-import org.nextframework.service.ServiceFactory;
 import org.nextframework.types.TypedValue;
 import org.nextframework.util.CyclicIterator;
 import org.nextframework.util.Util;
@@ -153,6 +151,7 @@ public class DataGridTag extends BaseTag {
 		}
 
 		if (property != null) {
+
 			PropertyTag propertyTag = new PropertyTag();
 			propertyTag.setName(property);
 			TagHolder tagHolderPropertyTag = new ComboTag.TagHolder(propertyTag);
@@ -167,11 +166,15 @@ public class DataGridTag extends BaseTag {
 			tagHolderDataGrid.addChild(tagHolderBean);
 			ComboTag.TagHolderFragment fragment = new ComboTag.TagHolderFragment(getJspContext(), Arrays.asList(tagHolderPropertyTag), this);
 			fragment.invoke(getOut());
+
 			return;
+
 		} else if (itemType != null) {
+
 			if (!(itemType instanceof String) && !(itemType instanceof Class)) {
 				throw new RuntimeException("O atributo itemType deve ser do typo String ou Class");
 			}
+
 			Class itemClass;
 			try {
 				itemClass = (Class) (itemType instanceof Class ? itemType : Class.forName((String) itemType));
@@ -182,6 +185,7 @@ public class DataGridTag extends BaseTag {
 			beanTag.setName(var);
 			beanTag.setValueType(itemClass);
 			beanTag.setJspBody(getJspBody());
+
 			TagHolder tagHolderBeanTag = new ComboTag.TagHolder(beanTag);
 			this.itemType = null;
 
@@ -281,12 +285,6 @@ public class DataGridTag extends BaseTag {
 		}
 
 		String id = this.id == null ? "" : "id=\"" + this.id + "\"";
-		//if(!getDynamicAttributesMap().containsKey("width")){
-		//	getDynamicAttributesMap().put("width", "100%");
-		//}
-		//if(!getDynamicAttributesMap().containsKey("cellspacing")){
-		//	getDynamicAttributesMap().put("cellspacing", "1");
-		//}
 
 		if (hasColumns) {
 
@@ -320,6 +318,7 @@ public class DataGridTag extends BaseTag {
 			if (Util.strings.isNotEmpty(varStatus)) {
 				getRequest().setAttribute(varStatus, getLoopTagStatus());
 			}
+
 			currentStatus = Status.BODY;
 			_count = collection.size();
 			if (_end == null) {

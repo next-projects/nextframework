@@ -48,21 +48,21 @@ public class BeanPanelGridTag extends ComboTag implements LogicalTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		PanelGridTag panelGridTag = new PanelGridTag();
 		BeanTag beanTag = new BeanTag();
-		
+
 		panelGridTag.setColumns(columns);
-		
-		
+
 		beanTag.setName(name);
 		beanTag.setValueType(valueType);
 		beanTag.setJspBody(getJspBody());
 
-		
 		TagHolder panelGridTagHolder = new TagHolder(panelGridTag);
 		panelGridTagHolder.addChild(new TagHolder(beanTag));
 
 		invoke(panelGridTagHolder);
+
 	}
 
 	public String getName() {
@@ -80,6 +80,5 @@ public class BeanPanelGridTag extends ComboTag implements LogicalTag {
 	public void setColumns(Integer columns) {
 		this.columns = columns;
 	}
-
 
 }

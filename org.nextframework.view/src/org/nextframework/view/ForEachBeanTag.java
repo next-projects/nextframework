@@ -30,12 +30,12 @@ import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.exception.NextException;
 
-public class ForEachBeanTag extends PropertyTag  {
+public class ForEachBeanTag extends PropertyTag {
 
 	protected String property;
 	protected String var = "bean";
 	protected String varIndex = "index";
-	
+
 	public String getVarIndex() {
 		return varIndex;
 	}
@@ -62,43 +62,47 @@ public class ForEachBeanTag extends PropertyTag  {
 
 	String fullName;
 	String fullNestedName;
-	
+
 	@Override
 	public String getFullName() {
 		return fullName;
 	}
-	
+
 	@Override
 	public String getFullNestedName() {
 		return fullNestedName;
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
+
 		setName(getProperty());//simula colocar um <n:property> para configurar os fullnestedname, etc
-		
+
 		this.fullName = montarFullPropertyName();
 		this.fullNestedName = montarFullNestedName(this, name);
-		
-		
+
 		final BeanDescriptor beanDescriptor = findParent(BeanTag.class, true).getBeanDescriptor();
 		//removed in 2012-08-08
 //		beanDescriptor.setIndexValueResolver(new PageContextIndexResolver(getPageContext()));
 		PropertyDescriptor propertyDescriptor = null;
-		if(!"".equals(fullNestedName)){
-			propertyDescriptor = beanDescriptor.getPropertyDescriptor(fullNestedName);	
+		if (!"".equals(fullNestedName)) {
+			propertyDescriptor = beanDescriptor.getPropertyDescriptor(fullNestedName);
 		}
-		if(propertyDescriptor == null){
-			throw new NextException("Erro na tag forEachBean. Não foi possível achar o property descriptor para a propriedade "+fullNestedName);
+
+		if (propertyDescriptor == null) {
+			throw new NextException("Erro na tag forEachBean. Não foi possível achar o property descriptor para a propriedade " + fullNestedName);
 		}
+
 		Object value = propertyDescriptor.getValue();
-		if(value != null && value.getClass().isArray()){
-			value = Arrays.asList((Object[])value);
+		if (value != null && value.getClass().isArray()) {
+			value = Arrays.asList((Object[]) value);
 		}
-		if(!(value instanceof Collection<?>) && value != null){
-			throw new NextException("Erro na tag forEachBean. O property leva a um atributo que não é uma coleção. Valor encontrado"+value);			
+
+		if (!(value instanceof Collection<?>) && value != null) {
+			throw new NextException("Erro na tag forEachBean. O property leva a um atributo que não é uma coleção. Valor encontrado" + value);
 		}
-		if(value != null){
+
+		if (value != null) {
 			Collection<?> collection = (Collection<?>) value;
 			String fullName = this.fullName;  //nome do input
 			String fullNestedName = this.fullNestedName; //nome da propriedade começando do bean
@@ -106,15 +110,17 @@ public class ForEachBeanTag extends PropertyTag  {
 			for (Object object : collection) {
 				pushAttribute(var, object);
 				pushAttribute(varIndex, i);
-				
-				this.fullName = fullName + "["+i+"]";
-				this.fullNestedName = fullNestedName + "["+i+"]";
+
+				this.fullName = fullName + "[" + i + "]";
+				this.fullNestedName = fullNestedName + "[" + i + "]";
 				doBody();
-				
+
 				i++;
 				popAttribute(varIndex);
 				popAttribute(var);
 			}
 		}
+
 	}
+
 }
