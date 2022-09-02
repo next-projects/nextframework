@@ -42,6 +42,7 @@ import org.nextframework.view.BeanTag;
 import org.nextframework.view.ColumnTag;
 import org.nextframework.view.ComboReloadGroupTag;
 import org.nextframework.view.DataGridTag;
+import org.nextframework.view.GroupTag;
 import org.nextframework.view.PanelGridTag;
 import org.nextframework.view.PanelTag;
 import org.nextframework.web.WebUtils;
@@ -156,7 +157,7 @@ public class PropertyTag extends TemplateTag {
 	protected void doComponent() throws Exception {
 
 		PropertyConfigTag configTag = findParent(PropertyConfigTag.class);
-		BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelTag.class, ColumnTag.class, DataGridTag.class, PanelGridTag.class);
+		BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelTag.class, ColumnTag.class, GroupTag.class, PanelGridTag.class, DataGridTag.class);
 
 		if (getId() == null || "".equals(getId())) {
 			id = generateUniqueId() + "_" + getName();
@@ -199,46 +200,23 @@ public class PropertyTag extends TemplateTag {
 			renderAs = renderAs.toLowerCase();
 		}
 		if (Util.strings.isEmpty(renderAs)) {
-			do {
-				if (findFirst instanceof PropertyConfigTag && Util.strings.isNotEmpty(configTag.getRenderAs())) {
-					renderAs = configTag.getRenderAs();
-				} else if (findFirst instanceof PanelTag) {
-					PanelTag panel = (PanelTag) findFirst;
-					renderAs = panel.getPropertyRenderAs();
-					if (renderAs == null) {
-						// procurar opcoes de renderAs nas tags mais acima do panel, já que esse panel não está forçando a renderização double
-						if (configTag != null && Util.strings.isNotEmpty(configTag.getRenderAs())) {
-							if (configTag.getRenderAs().toLowerCase().equals(DOUBLELINE)) {
-								renderAs = DOUBLELINE;
-							} else {
-								renderAs = SINGLE;
-							}
-						} else {
-							renderAs = SINGLE;
-						}
-					}
-				} else if (findFirst instanceof PanelGridTag) {
-					PanelGridTag panelGrid = (PanelGridTag) findFirst;
-					renderAs = panelGrid.getPropertyRenderAs();
-					if (renderAs == null) {
-						//procurar opcoes de renderAs nas tags mais acima do panel, já que esse panel não está forçando a renderização double
-						if (configTag != null && Util.strings.isNotEmpty(configTag.getRenderAs())) {
-							if (configTag.getRenderAs().toLowerCase().equals(DOUBLELINE)) {
-								renderAs = DOUBLELINE;
-							} else {
-								renderAs = SINGLE;
-							}
-						} else {
-							renderAs = SINGLE;
-						}
-					}
-				} else if (findFirst instanceof DataGridTag) {
-					renderAs = COLUMN;
-				} else {
-					renderAs = SINGLE;
-				}
-				break;
-			} while (true);
+			if (findFirst instanceof PropertyConfigTag && Util.strings.isNotEmpty(configTag.getRenderAs())) {
+				renderAs = configTag.getRenderAs();
+			} else if (findFirst instanceof PanelTag) {
+				PanelTag panel = (PanelTag) findFirst;
+				renderAs = panel.getPropertyRenderAs();
+			} else if (findFirst instanceof PanelGridTag) {
+				PanelGridTag panelGrid = (PanelGridTag) findFirst;
+				renderAs = panelGrid.getPropertyRenderAs();
+			} else if (findFirst instanceof GroupTag) {
+				GroupTag groupTag = (GroupTag) findFirst;
+				renderAs = groupTag.getPropertyRenderAs();
+			} else if (findFirst instanceof DataGridTag || findFirst instanceof ColumnTag) {
+				renderAs = COLUMN;
+			}
+		}
+		if (Util.strings.isEmpty(renderAs)) {
+			renderAs = SINGLE;
 		}
 		if (DOUBLELINE.equals(renderAs)) {
 			renderAs = SINGLE;

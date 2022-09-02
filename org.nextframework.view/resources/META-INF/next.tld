@@ -1014,6 +1014,11 @@
 		<tag-class>org.nextframework.view.GroupTag</tag-class>
 		<body-content>scriptless</body-content>
 		<attribute>
+			<name>flatMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>columns</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1050,6 +1055,12 @@
 		</attribute>
 		<attribute>
 			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Utilizado para determinar como os properties dentro desse panel devem ser renderizados</description>
+			<name>propertyRenderAs</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

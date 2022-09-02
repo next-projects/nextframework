@@ -26,6 +26,7 @@ package org.nextframework.view.template;
 import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.DataGridTag;
+import org.nextframework.view.GroupTag;
 import org.nextframework.view.PanelGridTag;
 
 /**
@@ -59,10 +60,12 @@ public class PropertyConfigTag extends TemplateTag {
 			renderAs = renderAs.toLowerCase();
 			PropertyTag.validateRenderAs(renderAs);
 		} else {
-			BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class, DataGridTag.class);
+			BaseTag findFirst = findFirst(PropertyConfigTag.class, GroupTag.class, PanelGridTag.class, DataGridTag.class);
 			if (findFirst != null) {
 				if (findFirst instanceof PropertyConfigTag) {
 					this.renderAs = ((PropertyConfigTag) findFirst).getRenderAs();
+				} else if (findFirst instanceof GroupTag) {
+					this.renderAs = ((GroupTag) findFirst).getPropertyRenderAs();
 				} else if (findFirst instanceof PanelGridTag) {
 					this.renderAs = ((PanelGridTag) findFirst).getPropertyRenderAs();
 				} else if (findFirst instanceof DataGridTag) {

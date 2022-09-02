@@ -41,7 +41,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 	protected List<PanelRenderedBlock> blocks = new ArrayList<PanelRenderedBlock>();
 
-	protected Boolean flatMode = false;
+	protected Boolean flatMode;
 
 	protected Integer columns = null;
 
@@ -70,6 +70,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		if (Util.booleans.isTrue(useParentPanelGridProperties)) {
 			PanelGridTag parentPanel = findParent(PanelGridTag.class);
 			if (parentPanel != null) {
+				if (flatMode == null) {
+					flatMode = parentPanel.getFlatMode();
+				}
 				if (Util.strings.isEmpty(style)) {
 					style = parentPanel.getStyle();
 				}
@@ -92,13 +95,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		}
 
 		if (flatMode == null) {
-			PanelGridTag findFirst = findParent(PanelGridTag.class);
-			if (findFirst != null) {
-				flatMode = findFirst.getFlatMode();
-			}
-			if (flatMode == null) {
-				flatMode = false;
-			}
+			flatMode = false;
 		}
 
 		if (columns == null || columns == 0/*forçado*/) {
@@ -141,7 +138,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			Integer colspanBlock = asInteger(block.getProperties().remove("colspan"));
 			colspanBlock = colspanBlock != null ? colspanBlock : 1;
 
-			if (remainingColumns - colspanBlock < 0) {
+			if (remainingColumns - colspanBlock < 0 && remainingColumns != columns) {
 
 				remainingColumns = columns;
 

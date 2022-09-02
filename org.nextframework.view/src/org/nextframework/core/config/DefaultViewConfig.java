@@ -291,9 +291,9 @@ public class DefaultViewConfig implements ViewConfig {
 
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
 			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-panelStyleClass", null);
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check mt-4 pt-2");
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label text-nowrap text-truncate");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
+			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
 
 		} else {
 
