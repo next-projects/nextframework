@@ -1088,6 +1088,26 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>fieldsetStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>fieldsetStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>legendStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>legendStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>styleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1130,11 +1150,6 @@
 		</attribute>
 		<attribute>
 			<name>legend</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>showBorder</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

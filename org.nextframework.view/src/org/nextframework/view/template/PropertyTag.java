@@ -299,7 +299,7 @@ public class PropertyTag extends TemplateTag {
 
 	private void verifyColspan() {
 		if (colspan == null || colspan == 0) {
-			colspan = getViewConfig().getDefaultColspan(this);
+			colspan = getViewConfig().getDefaultColspan(renderAs);
 			if (colspan == null || colspan == 0) {
 				colspan = DOUBLE.equals(renderAs) || INVERT.equals(renderAs) ? 2 : 1;
 			}

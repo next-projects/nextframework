@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.DataGridTag;
+import org.nextframework.view.GroupTag;
 import org.nextframework.view.InputTag;
 import org.nextframework.view.InputTagType;
 import org.nextframework.view.LinkTag;
@@ -85,8 +86,8 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
-	public Integer getDefaultColspan(PropertyTag propertyTag) {
-		return isUseBootstrap() && !PropertyTag.COLUMN.equals(propertyTag.getRenderAs()) ? 2 : 1;
+	public Integer getDefaultColspan(String renderAs) {
+		return isUseBootstrap() && !PropertyTag.COLUMN.equals(renderAs) ? 2 : 1;
 	}
 
 	@Override
@@ -133,6 +134,9 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "containerStyleClass", "table-responsive");
 			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "styleClass", "table table-sm table-striped table-bordered table-hover");
 			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "headerStyleClass", "table-light");
+
+			regDefaultStyleClasses(styleClassesMap, GroupTag.class, "fieldsetStyleClass", "border rounded p-2");
+			regDefaultStyleClasses(styleClassesMap, GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-50");
 
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "requiredStyleClass", "requiredMark");
 			regDefaultStyleClasses(styleClassesMap, InputTag.class, "class", "form-control");
@@ -276,7 +280,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
-			
+
 			if (isDefaultFlatMode()) {
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "container-fluid");
 				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "rowStyleClasses", "row");

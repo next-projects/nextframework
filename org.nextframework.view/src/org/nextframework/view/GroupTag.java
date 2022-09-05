@@ -23,9 +23,10 @@
  */
 package org.nextframework.view;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.servlet.jsp.JspException;
 
 import org.nextframework.util.Util;
 import org.nextframework.view.combo.ComboTag;
@@ -41,6 +42,14 @@ public class GroupTag extends ComboTag {
 	protected Boolean flatMode;
 
 	protected Integer columns;
+
+	protected String fieldsetStyle;
+
+	protected String fieldsetStyleClass;
+
+	protected String legendStyle;
+
+	protected String legendStyleClass;
 
 	protected String style;
 
@@ -59,8 +68,6 @@ public class GroupTag extends ComboTag {
 	protected String propertyRenderAs;
 
 	protected String legend;
-
-	protected Boolean showBorder = true;
 
 	protected Boolean useParentPanelGridProperties = true;
 
@@ -115,75 +122,70 @@ public class GroupTag extends ComboTag {
 			}
 		}
 
+		//Panel
+
 		PanelTag panelTag = new PanelTag();
+		setDynamicAttributes("panel", panelTag);
 
 		if (colspan != null) {
 			panelTag.setDynamicAttribute(null, "colspan", colspan);
 		}
 
-		PanelGridTag panelGridTag = new PanelGridTag();
-
-		HashMap<String, Object> dynamicAttributesMapPanelGrid = new HashMap<String, Object>(getDynamicAttributesMap());
-
-		Set<String> keySet = new HashSet<String>(getDynamicAttributesMap().keySet());
-		for (String key : keySet) {
-			if (key.startsWith("panel")) {
-				panelTag.setDynamicAttribute(null, key.substring("panel".length()), getDynamicAttributesMap().get(key));
-				getDynamicAttributesMap().remove(key);
-				dynamicAttributesMapPanelGrid.remove(key);
-			}
-		}
-		for (String key : keySet) {
-			if (key.startsWith("panelgrid")) {
-				getDynamicAttributesMap().remove(key);
-			}
-		}
-
-		panelGridTag.setDynamicAttributesMap(dynamicAttributesMapPanelGrid);
-		panelGridTag.setFlatMode(getFlatMode());
-		panelGridTag.setColumns(getColumns());
-		panelGridTag.setStyle(getStyle());
-		panelGridTag.setStyleClass(getStyleClass());
-		panelGridTag.setRowStyleClasses(getRowStyleClasses());
-		panelGridTag.setRowStyles(getRowStyles());
-		panelGridTag.setColumnStyleClasses(getColumnStyleClasses());
-		panelGridTag.setColumnStyles(getColumnStyles());
-		panelGridTag.setPropertyRenderAs(getPropertyRenderAs());
-		panelGridTag.setUseParentPanelGridProperties(false);
-		getDynamicAttributesMap().remove("id");//nao duplicar o id
-
 		TagHolder panelHolder = new TagHolder(panelTag);
-		TagHolder panelGridHolder = new TagHolder(panelGridTag);
 
-		if (showBorder) {
+		//Fieldset and Legend
 
-			TextTag text = null;
-			if (legend != null) {
-				for (String string : keySet) {
-					if (string.startsWith("legend")) {
-						Object value = getDynamicAttributesMap().remove(string);
-						getDynamicAttributesMap().put(string.substring("legend".length()), value);
-					}
-				}
-				text = new TextTag("<fieldset " + getDynamicAttributesToString() + "><legend>" + legend + "</legend>", "</fieldset>");
-			} else {
-				text = new TextTag("<fieldset>", "</fieldset>");
-			}
+		SimpleTag fieldsetTag = new SimpleTag("fieldset", null);
+		setDynamicAttributes("fieldset", fieldsetTag);
+		fieldsetTag.setDynamicAttribute(null, "style", fieldsetStyle);
+		fieldsetTag.setDynamicAttribute(null, "class", fieldsetStyleClass);
 
-			TagHolder fieldsetHolder = new TagHolder(text);
-			fieldsetHolder.addChild(panelGridHolder);
-			panelHolder.addChild(fieldsetHolder);
+		TagHolder fieldsetHolder = new TagHolder(fieldsetTag);
+		panelHolder.addChild(fieldsetHolder);
 
-		} else {
+		if (legend != null) {
 
-			panelHolder.addChild(panelGridHolder);
+			SimpleTag legendTag = new SimpleTag("legend", legend);
+			setDynamicAttributes("legend", legendTag);
+			legendTag.setDynamicAttribute(null, "style", legendStyle);
+			legendTag.setDynamicAttribute(null, "class", legendStyleClass);
+
+			TagHolder legendHolder = new TagHolder(legendTag);
+			fieldsetHolder.addChild(legendHolder);
 
 		}
 
+		//Panelgrid
+
+		PanelGridTag panelGridTag = new PanelGridTag();
+		setDynamicAttributes("panelGrid", panelGridTag);
+		panelGridTag.setFlatMode(flatMode);
+		panelGridTag.setColumns(columns);
+		panelGridTag.setStyle(style);
+		panelGridTag.setStyleClass(styleClass);
+		panelGridTag.setRowStyleClasses(rowStyleClasses);
+		panelGridTag.setRowStyles(rowStyles);
+		panelGridTag.setColumnStyleClasses(columnStyleClasses);
+		panelGridTag.setColumnStyles(columnStyles);
+		panelGridTag.setPropertyRenderAs(propertyRenderAs);
+		panelGridTag.setUseParentPanelGridProperties(false);
 		panelGridTag.setJspBody(getJspBody());
+
+		TagHolder panelGridHolder = new TagHolder(panelGridTag);
+		fieldsetHolder.addChild(panelGridHolder);
 
 		invoke(panelHolder);
 
+	}
+
+	private void setDynamicAttributes(String prefix, BaseTag tag) throws JspException {
+		Set<String> keySet = new HashSet<String>(getDynamicAttributesMap().keySet());
+		for (String key : keySet) {
+			if (key.startsWith(prefix)) {
+				tag.setDynamicAttribute(null, key.substring(prefix.length()), getDynamicAttributesMap().get(key));
+				getDynamicAttributesMap().remove(key);
+			}
+		}
 	}
 
 	public Boolean getFlatMode() {
@@ -200,6 +202,38 @@ public class GroupTag extends ComboTag {
 
 	public void setColumns(Integer columns) {
 		this.columns = columns;
+	}
+
+	public String getFieldsetStyle() {
+		return fieldsetStyle;
+	}
+
+	public void setFieldsetStyle(String fieldsetStyle) {
+		this.fieldsetStyle = fieldsetStyle;
+	}
+
+	public String getFieldsetStyleClass() {
+		return fieldsetStyleClass;
+	}
+
+	public void setFieldsetStyleClass(String fieldsetStyleClass) {
+		this.fieldsetStyleClass = fieldsetStyleClass;
+	}
+
+	public String getLegendStyle() {
+		return legendStyle;
+	}
+
+	public void setLegendStyle(String legendStyle) {
+		this.legendStyle = legendStyle;
+	}
+
+	public String getLegendStyleClass() {
+		return legendStyleClass;
+	}
+
+	public void setLegendStyleClass(String legendStyleClass) {
+		this.legendStyleClass = legendStyleClass;
 	}
 
 	public String getStyleClass() {
@@ -274,14 +308,6 @@ public class GroupTag extends ComboTag {
 		this.legend = legend;
 	}
 
-	public Boolean getShowBorder() {
-		return showBorder;
-	}
-
-	public void setShowBorder(Boolean showBorder) {
-		this.showBorder = showBorder;
-	}
-
 	public Boolean getUseParentPanelGridProperties() {
 		return useParentPanelGridProperties;
 	}
@@ -292,21 +318,25 @@ public class GroupTag extends ComboTag {
 
 }
 
-class TextTag extends BaseTag {
+class SimpleTag extends BaseTag {
 
-	protected String parte1;
-	protected String parte2;
+	protected String tag;
+	protected String content;
 
-	public TextTag(String parte1, String parte2) {
-		this.parte1 = parte1;
-		this.parte2 = parte2;
+	public SimpleTag(String tag, String content) {
+		this.tag = tag;
+		this.content = content;
 	}
 
 	@Override
 	protected void doComponent() throws Exception {
-		getOut().println(parte1);
-		doBody();
-		getOut().println(parte2);
+		getOut().println("<" + tag + " " + getDynamicAttributesToString() + ">");
+		if (this.content != null) {
+			getOut().println(this.content);
+		} else {
+			doBody();
+		}
+		getOut().println("</" + tag + ">");
 	}
 
 }

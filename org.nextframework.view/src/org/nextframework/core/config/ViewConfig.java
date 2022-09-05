@@ -29,7 +29,7 @@ public interface ViewConfig {
 
 	Integer getDefaultColumns();
 
-	Integer getDefaultColspan(PropertyTag propertyTag);
+	Integer getDefaultColspan(String renderAs);
 
 	String getDefaultPropertyRenderAs();
 
