@@ -61,9 +61,36 @@ import org.springframework.beans.PropertyAccessorFactory;
 @SuppressWarnings("deprecation")
 public class DataGridTag extends BaseTag {
 
-	protected String property;
-	protected Object itemType;
+	//Dados
+
 	protected Object itens;
+	protected Object itemType;
+	protected String property;
+
+	protected String indexProperty;
+	protected String groupProperty;
+
+	protected String varLastGroupProperty = "lastProperty"; //Fora do TLD
+	protected String varGroupPropertyIndex = "groupIndex"; //Fora do TLD
+	protected String varGroupItens = "groupItens"; //Fora do TLD
+
+	protected String varStatus;
+	protected String var = "row";
+	protected String varIndex = "index";
+	protected String varRowIndex = "rowIndex"; //Fora do TLD
+	protected String varSequence = "sequence"; //Fora do TLD
+
+	//Listeners nad utils
+
+	protected DataGridListener compositeListener = null;  //Interno
+	protected List<DataGridListener> listeners = new ArrayList<DataGridListener>(); //Interno
+	protected Boolean renderResizeColumns = null; //Dinâmico. Fora do TLD
+	protected Boolean hideDatagridWhileLoading = null; //Dinâmico. Fora do TLD
+
+	//View
+
+	protected Integer colspan;
+
 	protected String containerStyleClass;
 	protected String styleClass;
 	protected String style;
@@ -74,71 +101,51 @@ public class DataGridTag extends BaseTag {
 	protected String footerStyleClass;
 	protected String footerStyle;
 	protected String groupStyleClasses;
-	protected String groupStyle = "";
-	protected Boolean dynaLine = false;
+	protected String groupStyle;
 
-	protected String indexProperty;
+	protected Iterator<String> bodyStyleClassIterator; //Interno
+	protected Iterator<String> bodyStyleIterator; //Interno
 
-	protected String groupProperty;
-	protected String[] groupProperties = null; //Grupos já separados
+	//Rows e columns
+	private String rowSeparator;
+	private Map<String, CyclicIterator<String>> rowAttributes = new LinkedHashMap<String, CyclicIterator<String>>(); //Interno
+	private String row; //Esse atributo nao é utilzado
+	private boolean hasColumns = false; // Interno
+	protected List<ColumnTag> columns = new ArrayList<ColumnTag>(); // Interno
 
-	protected String varStatus;
-	protected String var = "row";
-	protected String varIndex = "index";
-	protected String varRowIndex = "rowIndex";
-	protected String varSequence = "sequence";
-
-	protected String varLastGroupProperty = "lastProperty";
-	protected String varGroupPropertyIndex = "groupIndex";
-	protected String varGroupItens = "groupItens";
+	//Rendering
 
 	public enum Status {
 		REGISTER, HEADER, BODY, DYNALINE, FOOTER, GROUPTOTAL
 	}
 
-	//extra
-	protected Status currentStatus = Status.REGISTER;
-	protected boolean renderHeader = false;
-	protected boolean renderBody = false;
-	protected boolean renderFooter = false;
-
-	//dynaline
-	protected List<PanelRenderedBlock> blocks = new ArrayList<PanelRenderedBlock>();
-
-	//configuracao dos rows
-	private Map<String, CyclicIterator<String>> rowAttributes = new LinkedHashMap<String, CyclicIterator<String>>();
-	private String rowSeparator;
-	/**
-	 * Esse atributo nao é utilzado
-	 */
-	private String row;
+	protected Status currentStatus = Status.REGISTER; // Interno
+	protected boolean renderHeader = false; // Interno
+	protected boolean renderBody = false; // Interno
+	protected boolean renderFooter = false; // Interno
 
 	//informacoes do loopTagStatus
-	protected Object _current;
-	protected int _index;
-	protected int _count;
-	protected boolean _isFirst;
-	protected boolean _isLast;
-	protected Integer _begin = 0;
-	protected Integer _end;
-	protected Integer _step = 1;
 
-	//listeners
-	List<DataGridListener> listeners = new ArrayList<DataGridListener>();
+	protected Object _current; // Interno
+	protected int _index; // Interno
+	protected int _count; // Interno
+	protected boolean _isFirst; // Interno
+	protected boolean _isLast; // Interno
+	protected Integer _begin = 0; // Interno
+	protected Integer _end; // Interno
+	protected Integer _step = 1; // Interno
 
-	Iterator<String> bodyStyleIterator;
-	Iterator<String> bodyStyleClassIterator;
+	//DynaLine
 
-	protected List<ColumnTag> columns = new ArrayList<ColumnTag>();
-
-	private boolean hasColumns = false; // informa se esse dataGrid tem tags Columns no seu corpo
+	protected Boolean dynaLine = false;
+	protected List<PanelRenderedBlock> blocks = new ArrayList<PanelRenderedBlock>(); // Interno
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void doComponent() throws Exception {
 
 		if (itens != null && property != null) {
-			throw new RuntimeException("O dataGrid não pode ter as propriedades property e itens configuradas ao mesmo tempo. ");
+			throw new RuntimeException("O dataGrid não pode ter as propriedades property e itens configuradas ao mesmo tempo.");
 		}
 
 		if (itens != null && itens instanceof TypedValue && itemType == null) {
@@ -147,7 +154,7 @@ public class DataGridTag extends BaseTag {
 		}
 
 		if (itemType != null && property != null) {
-			throw new RuntimeException("O dataGrid não pode ter as propriedades property e itemType configuradas ao mesmo tempo. ");
+			throw new RuntimeException("O dataGrid não pode ter as propriedades property e itemType configuradas ao mesmo tempo.");
 		}
 
 		if (property != null) {
@@ -181,6 +188,7 @@ public class DataGridTag extends BaseTag {
 			} catch (ClassNotFoundException e) {
 				throw new RuntimeException("Atributo itemType inválido: " + itemType, e);
 			}
+
 			BeanTag beanTag = new BeanTag();
 			beanTag.setName(var);
 			beanTag.setValueType(itemClass);
@@ -257,11 +265,11 @@ public class DataGridTag extends BaseTag {
 			compositeListener.setDataGrid(this);
 		}
 
-		bodyStyleIterator = getBodyStylesIterator();
 		bodyStyleClassIterator = getBodyStyleClassesIterator();
+		bodyStyleIterator = getBodyStylesIterator();
 
-		bodyStyleIterator = compositeListener.replaceBodyStyleIterator(bodyStyleIterator);
 		bodyStyleClassIterator = compositeListener.replaceBodyStyleClassesIterator(bodyStyleClassIterator);
+		bodyStyleIterator = compositeListener.replaceBodyStyleIterator(bodyStyleIterator);
 
 		//configurar os iterators dos rows
 		Set<String> daKeys = new LinkedHashSet<String>(getDynamicAttributesMap().keySet());
@@ -315,8 +323,9 @@ public class DataGridTag extends BaseTag {
 			if (HibernateUtils.isLazy(collection)) {
 				collection = HibernateUtils.getLazyValue(collection);
 			}
+
 			if (Util.strings.isNotEmpty(varStatus)) {
-				getRequest().setAttribute(varStatus, getLoopTagStatus());
+				getRequest().setAttribute(varStatus, new DataGrudLoopTagStatus());
 			}
 
 			currentStatus = Status.BODY;
@@ -363,7 +372,7 @@ public class DataGridTag extends BaseTag {
 
 			Collection collection = (Collection) itens;
 			if (Util.strings.isNotEmpty(varStatus)) {
-				getRequest().setAttribute(varStatus, getLoopTagStatus());
+				getRequest().setAttribute(varStatus, new DataGrudLoopTagStatus());
 			}
 			currentStatus = Status.BODY;
 			_count = collection.size();
@@ -385,7 +394,36 @@ public class DataGridTag extends BaseTag {
 		getJspBody().invoke(writer);
 	}
 
-	Boolean renderResizeColumns = null;
+	public DataGridListener createCompositeListener() {
+		if (compositeListener == null) {
+			compositeListener = new DataGridCompositeListener(listeners);
+		}
+		return compositeListener;
+	}
+
+	private CyclicIterator<String> getBodyStyleClassesIterator() {
+		if (Util.strings.isEmpty(bodyStyleClasses)) {
+			return new CyclicIterator<String>();
+		}
+		return new CyclicIterator<String>(bodyStyleClasses.split(","));
+	}
+
+	private CyclicIterator<String> getBodyStylesIterator() {
+		if (Util.strings.isEmpty(bodyStyles)) {
+			return new CyclicIterator<String>();
+		}
+		return new CyclicIterator<String>(bodyStyles.split(","));
+	}
+
+	private String[] toStringArray(Object object) {
+		if (object == null) {
+			object = "";
+		}
+		if (rowSeparator == null) {
+			return new String[] { object.toString() };
+		}
+		return object.toString().split(rowSeparator);
+	}
 
 	private void configureResizeColumns() {
 		Object nocolumnresize = getDynamicAttributesMap().get("nocolumnresize");
@@ -401,8 +439,6 @@ public class DataGridTag extends BaseTag {
 		}
 		renderResizeColumns = getViewConfig().isDefaultResizeDatagridColumns();
 	}
-
-	Boolean hideDatagridWhileLoading = null;
 
 	private void configureHideDatagridWhileLoading() {
 		Object attr = getDynamicAttributesMap().get("hideDatagridWhileLoading");
@@ -423,26 +459,90 @@ public class DataGridTag extends BaseTag {
 		hideDatagridWhileLoading = getViewConfig().isDefaultHideDatagridWhileLoading();
 	}
 
-	boolean isRenderResizeColumns() {
-		return renderResizeColumns;
+	private void renderHeader() throws ELException, IOException, JspException {
+		String styleString = headerStyle != null ? " style=\"" + headerStyle + "\"" : "";
+		String classString = headerStyleClass != null ? " class=\"" + headerStyleClass + "\"" : "";
+		getOut().print("<thead>");
+		getOut().print("<tr" + styleString + classString + " onselectstart=\"return false;\" onmousedown=\"return false;\">");
+		doBody();
+		getOut().print("</tr>");
+		getOut().print("</thead>");
 	}
 
-	public boolean isHideDatagridWhileLoading() {
-		return hideDatagridWhileLoading;
-	}
+	@SuppressWarnings("all")
+	private void iterate(Collection collection) throws ELException, IOException, JspException {
 
-	public String getIndexProperty() {
-		return indexProperty;
-	}
+		_isFirst = true;
+		Iterator iterator = collection.iterator();
 
-	private String[] toStringArray(Object object) {
-		if (object == null) {
-			object = "";
+		//Inicia o analizador de groupProperties
+		GroupPropertyAnaliser groupPropertyAnaliser = new GroupPropertyAnaliser(this);
+
+		while (iterator.hasNext()) {
+
+			_current = iterator.next();
+
+			getRequest().setAttribute(var, _current);
+			getRequest().setAttribute(varIndex, _index);
+			getRequest().setAttribute(varRowIndex, _index + 1);
+			getRequest().setAttribute(varSequence, "SQ_SRV_" + _index);
+
+			//Define no analizador as propriedades atuais
+			groupPropertyAnaliser.defineActualPropertiesAndTotalize(_current);
+
+			currentStatus = Status.BODY;
+			renderBody(_current, groupPropertyAnaliser.getGroupId());
+
+			_index++;
+
 		}
-		if (rowSeparator == null) {
-			return new String[] { object.toString() };
+		_current = null;
+
+		//fecha totalizadores
+		groupPropertyAnaliser.closeGroups();
+
+		getRequest().setAttribute(var, null);
+		getRequest().setAttribute(varIndex, null);
+
+	}
+
+	protected void renderBody(Object current, String groupPropertyValue) throws ELException, IOException, JspException {
+		String style = bodyStyleIterator.next();
+		String styleClass = bodyStyleClassIterator.next();
+		String styleString = style != null ? " style=\"" + style + "\"" : "";
+		String classString = styleClass != null ? " class=\"" + styleClass + "\"" : "";
+		if (hasColumns) {
+			String daattributes = "";
+			Set<String> attributes = rowAttributes.keySet();
+			for (String attr : attributes) {
+				String attrValue = rowAttributes.get(attr).next();
+				attrValue = compositeListener.updateRowAttribute(attr, attrValue);
+				daattributes += " " + attr + "=\"" + TagUtils.escape(attrValue) + "\"";
+			}
+			renderRow(styleString, classString, daattributes, current, groupPropertyValue);
+		} else {
+			doBody();
 		}
-		return object.toString().split(rowSeparator);
+	}
+
+	protected void renderRow(String styleString, String classString, String daattributes, Object current, String groupPropertyValue) throws IOException, JspException {
+		String gp = "";
+		if (groupProperty != null) {
+			gp = " group=\"" + groupPropertyValue + "\" ";
+		}
+		getOut().print("<tr" + styleString + classString + gp + daattributes + ">");
+		doBody();
+		getOut().print("</tr>");
+	}
+
+	private void renderFooter() throws ELException, IOException, JspException {
+		String styleString = footerStyle != null ? " style=\"" + footerStyle + "\"" : "";
+		String classString = footerStyleClass != null ? " class=\"" + footerStyleClass + "\"" : "";
+		getOut().print("<tfoot>");
+		getOut().print("<tr" + styleString + classString + ">");
+		doBody();
+		getOut().print("</tr>");
+		getOut().print("</tfoot>");
 	}
 
 	private void renderDynaLine() throws ELException, IOException, JspException, ServletException {
@@ -492,282 +592,6 @@ public class DataGridTag extends BaseTag {
 
 	}
 
-	private void renderHeader() throws ELException, IOException, JspException {
-		String styleString = headerStyle != null ? " style=\"" + headerStyle + "\"" : "";
-		String classString = headerStyleClass != null ? " class=\"" + headerStyleClass + "\"" : "";
-		getOut().print("<thead>");
-		getOut().print("<tr" + styleString + classString + " onselectstart=\"return false;\" onmousedown=\"return false;\">");
-		doBody();
-		getOut().print("</tr>");
-		getOut().print("</thead>");
-	}
-
-	protected void renderBody(Object current, String groupPropertyValue) throws ELException, IOException, JspException {
-		String style = bodyStyleIterator.next();
-		String styleClass = bodyStyleClassIterator.next();
-		String styleString = style != null ? " style=\"" + style + "\"" : "";
-		String classString = styleClass != null ? " class=\"" + styleClass + "\"" : "";
-		if (hasColumns) {
-			String daattributes = "";
-			Set<String> attributes = rowAttributes.keySet();
-			for (String attr : attributes) {
-				String attrValue = rowAttributes.get(attr).next();
-				attrValue = compositeListener.updateRowAttribute(attr, attrValue);
-				daattributes += " " + attr + "=\"" + TagUtils.escape(attrValue) + "\"";
-			}
-			renderRow(styleString, classString, daattributes, current, groupPropertyValue);
-		} else {
-			doBody();
-		}
-	}
-
-	protected void renderRow(String styleString, String classString, String daattributes, Object current, String groupPropertyValue) throws IOException, JspException {
-		String gp = "";
-		if (groupProperty != null) {
-			gp = " group=\"" + groupPropertyValue + "\" ";
-		}
-		getOut().print("<tr" + styleString + classString + gp + daattributes + ">");
-		doBody();
-		getOut().print("</tr>");
-	}
-
-	private void renderFooter() throws ELException, IOException, JspException {
-		String styleString = footerStyle != null ? " style=\"" + footerStyle + "\"" : "";
-		String classString = footerStyleClass != null ? " class=\"" + footerStyleClass + "\"" : "";
-		getOut().print("<tfoot>");
-		getOut().print("<tr" + styleString + classString + ">");
-		doBody();
-		getOut().print("</tr>");
-		getOut().print("</tfoot>");
-	}
-
-	@SuppressWarnings("all")
-	private void iterate(Collection collection) throws ELException, IOException, JspException {
-
-		_isFirst = true;
-		Iterator iterator = collection.iterator();
-
-		//Inicia o analizador de groupProperties
-		GroupPropertyAnaliser groupPropertyAnaliser = new GroupPropertyAnaliser(this);
-
-		while (iterator.hasNext()) {
-
-			_current = iterator.next();
-
-			getRequest().setAttribute(var, _current);
-			getRequest().setAttribute(varIndex, _index);
-			getRequest().setAttribute(varRowIndex, _index + 1);
-			getRequest().setAttribute(varSequence, "SQ_SRV_" + _index);
-
-			//Define no analizador as propriedades atuais
-			groupPropertyAnaliser.defineActualPropertiesAndTotalize(_current);
-
-			currentStatus = Status.BODY;
-			renderBody(_current, groupPropertyAnaliser.getGroupId());
-
-			_index++;
-
-		}
-		_current = null;
-
-		//fecha totalizadores
-		groupPropertyAnaliser.closeGroups();
-
-		getRequest().setAttribute(var, null);
-		getRequest().setAttribute(varIndex, null);
-
-	}
-
-	public void registerColumn(ColumnTag columnTag) {
-		this.columns.add(columnTag);
-	}
-
-	private LoopTagStatus getLoopTagStatus() {
-
-		return new LoopTagStatus() {
-
-			public Object getCurrent() {
-				return DataGridTag.this._current;
-			}
-
-			public int getIndex() {
-				return DataGridTag.this._index;
-			}
-
-			public int getCount() {
-				return DataGridTag.this._count;
-			}
-
-			public boolean isFirst() {
-				return DataGridTag.this._isFirst;
-			}
-
-			public boolean isLast() {
-				return DataGridTag.this._isLast;
-			}
-
-			public Integer getBegin() {
-				return DataGridTag.this._begin;
-			}
-
-			public Integer getEnd() {
-				return DataGridTag.this._end;
-			}
-
-			public Integer getStep() {
-				return DataGridTag.this._step;
-			}
-
-		};
-
-	}
-
-	public String getIdCapitalized() {
-		String id = getId();
-		if (id != null) {
-			return Util.strings.captalize(id);
-		}
-		return null;
-	}
-
-	private CyclicIterator<String> getBodyStyleClassesIterator() {
-		if (Util.strings.isEmpty(bodyStyleClasses)) {
-			return new CyclicIterator<String>();
-		}
-		return new CyclicIterator<String>(bodyStyleClasses.split(","));
-	}
-
-	private CyclicIterator<String> getBodyStylesIterator() {
-		if (Util.strings.isEmpty(bodyStyles)) {
-			return new CyclicIterator<String>();
-		}
-		return new CyclicIterator<String>(bodyStyles.split(","));
-	}
-
-	public Status getCurrentStatus() {
-		return currentStatus;
-	}
-
-	public void setCurrentStatus(Status currentStatus) {
-		this.currentStatus = currentStatus;
-	}
-
-	public String getFooterStyle() {
-		return footerStyle;
-	}
-
-	public String getFooterStyleClass() {
-		return footerStyleClass;
-	}
-
-	public String getHeaderStyle() {
-		return headerStyle;
-	}
-
-	public String getHeaderStyleClass() {
-		return headerStyleClass;
-	}
-
-	public Object getItens() {
-		return itens;
-	}
-
-	public void setBodyStyleClasses(String bodyStyleClasses) {
-		this.bodyStyleClasses = bodyStyleClasses;
-	}
-
-	public void setBodyStyles(String bodyStyles) {
-		this.bodyStyles = bodyStyles;
-	}
-
-	public void setFooterStyle(String footerStyle) {
-		this.footerStyle = footerStyle;
-	}
-
-	public void setFooterStyleClass(String footerStyleClass) {
-		this.footerStyleClass = footerStyleClass;
-	}
-
-	public void setHeaderStyle(String headerStyle) {
-		this.headerStyle = headerStyle;
-	}
-
-	public void setHeaderStyleClass(String headerStyleClass) {
-		this.headerStyleClass = headerStyleClass;
-	}
-
-	public void setItens(Object itens) {
-		this.itens = itens;
-	}
-
-	public String getVar() {
-		return var;
-	}
-
-	public String getVarStatus() {
-		return varStatus;
-	}
-
-	public void setVar(String var) {
-		this.var = var;
-	}
-
-	public void setVarStatus(String varStatus) {
-		this.varStatus = varStatus;
-	}
-
-	public boolean isRenderBody() {
-		return renderBody;
-	}
-
-	public boolean isRenderFooter() {
-		return renderFooter;
-	}
-
-	public boolean isRenderHeader() {
-		return renderHeader;
-	}
-
-	public void setRenderBody(boolean renderBody) {
-		this.renderBody = renderBody;
-	}
-
-	public void setRenderFooter(boolean renderFooter) {
-		this.renderFooter = renderFooter;
-	}
-
-	public void setRenderHeader(boolean renderHeader) {
-		this.renderHeader = renderHeader;
-	}
-
-	@Override
-	public String getBody() throws JspException, IOException {
-		return super.getBody();
-	}
-
-	public Boolean getDynaLine() {
-		return dynaLine;
-	}
-
-	public String getVarIndex() {
-		return varIndex;
-	}
-
-	public void setDynaLine(Boolean dynaLine) {
-		this.dynaLine = dynaLine;
-	}
-
-	public void setVarIndex(String varIndex) {
-		this.varIndex = varIndex;
-	}
-
-	/**
-	 * Adiciona um bloco para ser renderizado no detalhe
-	 */
-	public boolean add(PanelRenderedBlock o) {
-		return blocks.add(o);
-	}
-
 	public String enhanceProperty(String id, String propertyName, String value) {
 		if (value == null) {
 			return "document.getElementById('" + id + "')." + propertyName + " = null;";
@@ -801,6 +625,125 @@ public class DataGridTag extends BaseTag {
 		return builder.toString();
 	}
 
+	@Override
+	protected void addPanelProperties(Map<String, Object> properties) {
+		if (colspan != null) {
+			properties.put("colspan", colspan);
+		}
+	}
+
+	public void registerColumn(ColumnTag columnTag) {
+		this.columns.add(columnTag);
+	}
+
+	public int getNumberOfColumns() {
+		return columns.size();
+	}
+
+	public void setHasColumns(boolean b) {
+		this.hasColumns = b;
+	}
+
+	public boolean add(PanelRenderedBlock o) {
+		return blocks.add(o);
+	}
+
+	public void registerListener(DataGridListener listener) {
+		listeners.add(listener);
+	}
+
+	public void onRenderColumnHeader(String label) {
+		compositeListener.onRenderColumnHeader(label);
+	}
+
+	public void onRenderColumnHeaderBody() throws IOException {
+		compositeListener.onRenderColumnHeaderBody();
+	}
+
+	public String getIdCapitalized() {
+		String id = getId();
+		if (id != null) {
+			return Util.strings.captalize(id);
+		}
+		return null;
+	}
+
+	public Object getItens() {
+		return itens;
+	}
+
+	public void setItens(Object itens) {
+		this.itens = itens;
+	}
+
+	public Object getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(Object itemType) {
+		this.itemType = itemType;
+	}
+
+	public String getProperty() {
+		return property;
+	}
+
+	public void setProperty(String property) {
+		this.property = property;
+	}
+
+	public String getIndexProperty() {
+		return indexProperty;
+	}
+
+	public void setIndexProperty(String indexProperty) {
+		this.indexProperty = indexProperty;
+	}
+
+	public String getGroupProperty() {
+		return groupProperty;
+	}
+
+	public void setGroupProperty(String groupProperty) {
+		this.groupProperty = groupProperty;
+	}
+
+	public String getVarLastGroupProperty() {
+		return varLastGroupProperty;
+	}
+
+	public String getVarGroupPropertyIndex() {
+		return varGroupPropertyIndex;
+	}
+
+	public String getVarGroupItens() {
+		return varGroupItens;
+	}
+
+	public String getVarStatus() {
+		return varStatus;
+	}
+
+	public void setVarStatus(String varStatus) {
+		this.varStatus = varStatus;
+	}
+
+	public String getVar() {
+		return var;
+	}
+
+	public void setVar(String var) {
+		this.var = var;
+	}
+
+	public String getVarIndex() {
+		return varIndex;
+	}
+
+	public void setVarIndex(String varIndex) {
+		this.varIndex = varIndex;
+	}
+
 	public String getVarRowIndex() {
 		return varRowIndex;
 	}
@@ -817,12 +760,24 @@ public class DataGridTag extends BaseTag {
 		this.varSequence = varSequence;
 	}
 
-	public String getStyle() {
-		return style;
+	public List<DataGridListener> getListeners() {
+		return listeners;
 	}
 
-	public void setStyle(String style) {
-		this.style = style;
+	boolean isRenderResizeColumns() {
+		return renderResizeColumns;
+	}
+
+	public boolean isHideDatagridWhileLoading() {
+		return hideDatagridWhileLoading;
+	}
+
+	public Integer getColspan() {
+		return colspan;
+	}
+
+	public void setColspan(Integer colspan) {
+		this.colspan = colspan;
 	}
 
 	public String getContainerStyleClass() {
@@ -841,78 +796,60 @@ public class DataGridTag extends BaseTag {
 		this.styleClass = styleClass;
 	}
 
-	public String getProperty() {
-		return property;
+	public String getStyle() {
+		return style;
 	}
 
-	public void setProperty(String property) {
-		this.property = property;
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
-	public void setHasColumns(boolean b) {
-		this.hasColumns = b;
-
+	public String getHeaderStyleClass() {
+		return headerStyleClass;
 	}
 
-	public String getRow() {
-		return row;
+	public void setHeaderStyleClass(String headerStyleClass) {
+		this.headerStyleClass = headerStyleClass;
 	}
 
-	public String getRowSeparator() {
-		return rowSeparator;
+	public String getHeaderStyle() {
+		return headerStyle;
 	}
 
-	public void setRow(String row) {
-		this.row = row;
+	public void setHeaderStyle(String headerStyle) {
+		this.headerStyle = headerStyle;
 	}
 
-	public void setRowSeparator(String rowSeparator) {
-		this.rowSeparator = rowSeparator;
+	public void setBodyStyleClasses(String bodyStyleClasses) {
+		this.bodyStyleClasses = bodyStyleClasses;
 	}
 
-	public Object getItemType() {
-		return itemType;
-	}
-
-	public void setItemType(Object itemType) {
-		this.itemType = itemType;
-	}
-
-	//=====================================================================
-
-	public String getGroupProperty() {
-		return groupProperty;
-	}
-
-	public void setGroupProperty(String groupProperty) {
-		this.groupProperty = groupProperty;
-
-		//converte o groupProperty
-		String[] split = groupProperty.split("(\\s*)?[,;](\\s*)?");
-		List<String> grupos = new ArrayList<String>();
-		for (String string : split) {
-			if (Util.strings.isNotEmpty(string)) {
-				grupos.add(string);
-			}
-		}
-
-		this.groupProperties = grupos.toArray(new String[grupos.size()]);
-	}
-
-	public String getBodyStyles() {
-		return bodyStyles;
+	public void setBodyStyles(String bodyStyles) {
+		this.bodyStyles = bodyStyles;
 	}
 
 	public String getBodyStyleClasses() {
 		return bodyStyleClasses;
 	}
 
-	public String getGroupStyle() {
-		return groupStyle;
+	public String getBodyStyles() {
+		return bodyStyles;
 	}
 
-	public void setGroupStyle(String groupStyle) {
-		this.groupStyle = groupStyle;
+	public String getFooterStyleClass() {
+		return footerStyleClass;
+	}
+
+	public void setFooterStyleClass(String footerStyleClass) {
+		this.footerStyleClass = footerStyleClass;
+	}
+
+	public String getFooterStyle() {
+		return footerStyle;
+	}
+
+	public void setFooterStyle(String footerStyle) {
+		this.footerStyle = footerStyle;
 	}
 
 	public String getGroupStyleClasses() {
@@ -923,24 +860,104 @@ public class DataGridTag extends BaseTag {
 		this.groupStyleClasses = groupStyleClass;
 	}
 
-	public int getNumberOfColumns() {
-		return columns.size();
+	public String getGroupStyle() {
+		return groupStyle;
 	}
 
-	public String[] getGroupProperties() {
-		return groupProperties;
+	public void setGroupStyle(String groupStyle) {
+		this.groupStyle = groupStyle;
 	}
 
-	public String getVarGroupItens() {
-		return varGroupItens;
+	public String getRowSeparator() {
+		return rowSeparator;
 	}
 
-	public String getVarGroupPropertyIndex() {
-		return varGroupPropertyIndex;
+	public void setRowSeparator(String rowSeparator) {
+		this.rowSeparator = rowSeparator;
 	}
 
-	public String getVarLastGroupProperty() {
-		return varLastGroupProperty;
+	public String getRow() {
+		return row;
+	}
+
+	public void setRow(String row) {
+		this.row = row;
+	}
+
+	public Status getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(Status currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+
+	public boolean isRenderHeader() {
+		return renderHeader;
+	}
+
+	public void setRenderHeader(boolean renderHeader) {
+		this.renderHeader = renderHeader;
+	}
+
+	public boolean isRenderBody() {
+		return renderBody;
+	}
+
+	public void setRenderBody(boolean renderBody) {
+		this.renderBody = renderBody;
+	}
+
+	public boolean isRenderFooter() {
+		return renderFooter;
+	}
+
+	public void setRenderFooter(boolean renderFooter) {
+		this.renderFooter = renderFooter;
+	}
+
+	public Boolean getDynaLine() {
+		return dynaLine;
+	}
+
+	public void setDynaLine(Boolean dynaLine) {
+		this.dynaLine = dynaLine;
+	}
+
+	class DataGrudLoopTagStatus implements LoopTagStatus {
+
+		public Object getCurrent() {
+			return DataGridTag.this._current;
+		}
+
+		public int getIndex() {
+			return DataGridTag.this._index;
+		}
+
+		public int getCount() {
+			return DataGridTag.this._count;
+		}
+
+		public boolean isFirst() {
+			return DataGridTag.this._isFirst;
+		}
+
+		public boolean isLast() {
+			return DataGridTag.this._isLast;
+		}
+
+		public Integer getBegin() {
+			return DataGridTag.this._begin;
+		}
+
+		public Integer getEnd() {
+			return DataGridTag.this._end;
+		}
+
+		public Integer getStep() {
+			return DataGridTag.this._step;
+		}
+
 	}
 
 	class GroupPropertyAnaliser extends AbstractGroupPropertyAnaliser {
@@ -957,7 +974,7 @@ public class DataGridTag extends BaseTag {
 		private Iterator<String> bodyStyleClassIterator;
 
 		public GroupPropertyAnaliser(DataGridTag dataGridTag) {
-			super(dataGridTag.getGroupProperties());
+			super(dataGridTag.getGroupProperty());
 			if (groupProperties != null) {
 				this.dataGridTag = dataGridTag;
 				this.varLastGroupProperty = dataGridTag.getVarLastGroupProperty();
@@ -991,7 +1008,6 @@ public class DataGridTag extends BaseTag {
 				group = "group=\"" + group + "\"";
 				int paddingLeft = 20 * i + 2;
 				String groupDisplay = TagUtils.getObjectDescriptionToString(property);
-
 				dataGridTag.getOut().println("<tr class=\"" + getLevel(groupStyleClasses, i) + "\" style=\"" + getLevel(groupStyle, i) + "\" " + group + " isgroupline=\"true\">");
 				dataGridTag.getOut().println("<td colspan=\"" + numberOfColumns + "\" style=\"padding-left: " + paddingLeft + "\">" + groupDisplay + "</td>");
 				dataGridTag.getOut().println("</tr>");
@@ -1022,35 +1038,6 @@ public class DataGridTag extends BaseTag {
 			dataGridTag.setCurrentStatus(DataGridTag.Status.GROUPTOTAL);
 		}
 
-	}
-
-	public List<DataGridListener> getListeners() {
-		return listeners;
-	}
-
-	public void registerListener(DataGridListener listener) {
-		listeners.add(listener);
-	}
-
-	public void setIndexProperty(String indexProperty) {
-		this.indexProperty = indexProperty;
-	}
-
-	DataGridListener compositeListener = null;
-
-	public DataGridListener createCompositeListener() {
-		if (compositeListener == null) {
-			compositeListener = new DataGridCompositeListener(listeners);
-		}
-		return compositeListener;
-	}
-
-	public void onRenderColumnHeader(String label) {
-		compositeListener.onRenderColumnHeader(label);
-	}
-
-	public void onRenderColumnHeaderBody() throws IOException {
-		compositeListener.onRenderColumnHeaderBody();
 	}
 
 }

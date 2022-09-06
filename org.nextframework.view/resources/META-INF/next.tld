@@ -778,6 +778,18 @@
 		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
+			<name>itens</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Coloca no escopo qual é a classe dos itens desse dataGrid para tags property que estiverem dentro desse datagrid usarem</description>
+			<name>itemType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>property</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -788,8 +800,6 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-
-		<!-- Atributos para configurar agrupamento -->
 		<attribute>
 			<description></description>
 			<name>groupProperty</name>
@@ -798,38 +808,42 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>groupStyleClasses</name>
+			<name>varStatus</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>groupStyle</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-
-		<attribute>
-			<description>Coloca no escopo qual é a classe dos itens desse dataGrid para tags property que estiverem dentro desse datagrid usarem</description>
-			<name>itemType</name>
+			<name>var</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>itens</name>
+			<name>varIndex</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>colspan</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>style</name>
+			<name>containerStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
 			<name>styleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>style</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -871,42 +885,22 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>varStatus</name>
+			<name>groupStyleClasses</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>var</name>
+			<name>groupStyle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		<attribute>
-			<description></description>
-			<name>dynaLine</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>varIndex</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description></description>
-			<name>id</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-
 		<attribute>
 			<description>Indica qual caracter deve ser utilizado para separar os valores dos rows. (Expressao regular)</description>
 			<name>rowSeparator</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-
 		<attribute>
 			<description>O attributo row na verdade não existe. 
 			Deve na verdade ser utilizado row[attributo da linha]. 
@@ -919,7 +913,18 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-
+		<attribute>
+			<description></description>
+			<name>dynaLine</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<attribute>
 			<name>rendered</name>
 			<required>false</required>
