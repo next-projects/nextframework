@@ -127,235 +127,235 @@ public class DefaultViewConfig implements ViewConfig {
 
 	protected void initStyleClasses() {
 
-		//Componentes
+		// Componentes
 
 		if (isUseBootstrap()) {
 
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "containerStyleClass", "table-responsive");
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "styleClass", "table table-sm table-striped table-bordered table-hover");
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "headerStyleClass", "table-light");
+			regDefaultStyleClasses(DataGridTag.class, "containerStyleClass", "table-responsive");
+			regDefaultStyleClasses(DataGridTag.class, "styleClass", "table table-sm table-striped table-bordered table-hover");
+			regDefaultStyleClasses(DataGridTag.class, "headerStyleClass", "table-light");
 
-			regDefaultStyleClasses(styleClassesMap, GroupTag.class, "fieldsetStyleClass", "border rounded p-2");
-			regDefaultStyleClasses(styleClassesMap, GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-50");
+			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border rounded p-2");
+			regDefaultStyleClasses(GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-50");
 
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "requiredStyleClass", "requiredMark");
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "class", "form-control");
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "CHECKBOX-class", "form-check-input");
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "CHECKLIST-class", "form-check-input");
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "HIDDEN-class", " ");
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "RADIO-class", "form-check-input");
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "SELECT_ONE-class", "form-select");
+			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
+			regDefaultStyleClasses(InputTag.class, "class", "form-control");
+			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "form-check-input");
+			regDefaultStyleClasses(InputTag.class, "CHECKLIST-class", "form-check-input");
+			regDefaultStyleClasses(InputTag.class, "HIDDEN-class", " ");
+			regDefaultStyleClasses(InputTag.class, "RADIO-class", "form-check-input");
+			regDefaultStyleClasses(InputTag.class, "SELECT_ONE-class", "form-select");
 
-			regDefaultStyleClasses(styleClassesMap, LinkTag.class, "BUTTON-class", "btn btn-primary");
+			regDefaultStyleClasses(LinkTag.class, "BUTTON-class", "btn btn-primary");
 
-			regDefaultStyleClasses(styleClassesMap, MenuTag.class, "panelStyleClass", "mb-2 mb-md-0");
+			regDefaultStyleClasses(MenuTag.class, "panelStyleClass", "mb-2 mb-md-0");
 
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "containerClass", "container messageBlock");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "bindBlockClass", "alert alert-danger");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "messageBlockClass", "alert alert-primary");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "titleClass", "h6");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "fieldNameClass", "fw-bold");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "globalErrorClass", "error");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "bindErrorClass", "error");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "validationErrorClass", "error");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "debugClass", "debug");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "traceClass", "trace");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "infoClass", "info");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "warnClass", "warn");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "errorClass", "error");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "eventClass", "event");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "toastClass", "messageToast");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "exceptionClass", "exceptionItem");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "exceptionCauseClass", "causeItem");
+			regDefaultStyleClasses(MessagesTag.class, "containerClass", "container messageBlock");
+			regDefaultStyleClasses(MessagesTag.class, "bindBlockClass", "alert alert-danger");
+			regDefaultStyleClasses(MessagesTag.class, "messageBlockClass", "alert alert-primary");
+			regDefaultStyleClasses(MessagesTag.class, "titleClass", "h6");
+			regDefaultStyleClasses(MessagesTag.class, "fieldNameClass", "fw-bold");
+			regDefaultStyleClasses(MessagesTag.class, "globalErrorClass", "error");
+			regDefaultStyleClasses(MessagesTag.class, "bindErrorClass", "error");
+			regDefaultStyleClasses(MessagesTag.class, "validationErrorClass", "error");
+			regDefaultStyleClasses(MessagesTag.class, "debugClass", "debug");
+			regDefaultStyleClasses(MessagesTag.class, "traceClass", "trace");
+			regDefaultStyleClasses(MessagesTag.class, "infoClass", "info");
+			regDefaultStyleClasses(MessagesTag.class, "warnClass", "warn");
+			regDefaultStyleClasses(MessagesTag.class, "errorClass", "error");
+			regDefaultStyleClasses(MessagesTag.class, "eventClass", "event");
+			regDefaultStyleClasses(MessagesTag.class, "toastClass", "messageToast");
+			regDefaultStyleClasses(MessagesTag.class, "exceptionClass", "exceptionItem");
+			regDefaultStyleClasses(MessagesTag.class, "exceptionCauseClass", "causeItem");
 
-			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "panelClass", "pagination pagination-sm d-inline-flex m-0");
-			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "itemClass", "page-item");
-			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "selectedClass", "page-link active");
-			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "unselectedClass", "page-link");
+			regDefaultStyleClasses(PaggingTag.class, "panelClass", "pagination pagination-sm d-inline-flex m-0");
+			regDefaultStyleClasses(PaggingTag.class, "itemClass", "page-item");
+			regDefaultStyleClasses(PaggingTag.class, "selectedClass", "page-link active");
+			regDefaultStyleClasses(PaggingTag.class, "unselectedClass", "page-link");
 
-			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "m-2");
-			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "p-2");
+			regDefaultStyleClasses(FormTableTag.class, "styleClass", "m-2");
+			regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "p-2");
 
-			regDefaultStyleClasses(styleClassesMap, SubmitTag.class, "BUTTON-class", "btn btn-primary");
-			regDefaultStyleClasses(styleClassesMap, SubmitTag.class, "SUBMIT-class", "btn btn-primary");
+			regDefaultStyleClasses(SubmitTag.class, "BUTTON-class", "btn btn-primary");
+			regDefaultStyleClasses(SubmitTag.class, "SUBMIT-class", "btn btn-primary");
 
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navPanelClass", null);
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navClass", "nav nav-tabs");
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navItemClass", "nav-item");
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navLinkClass", "nav-link");
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "contentClass", "tab-content");
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "selectedClass", "tab-pane active");
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "unselectedClass", "tab-pane");
+			regDefaultStyleClasses(TabPanelTag.class, "navPanelClass", null);
+			regDefaultStyleClasses(TabPanelTag.class, "navClass", "nav nav-tabs");
+			regDefaultStyleClasses(TabPanelTag.class, "navItemClass", "nav-item");
+			regDefaultStyleClasses(TabPanelTag.class, "navLinkClass", "nav-link");
+			regDefaultStyleClasses(TabPanelTag.class, "contentClass", "tab-content");
+			regDefaultStyleClasses(TabPanelTag.class, "selectedClass", "tab-pane active");
+			regDefaultStyleClasses(TabPanelTag.class, "unselectedClass", "tab-pane");
 
 		} else {
 
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "containerStyleClass", "datagridcontainer");
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "styleClass", "dataGrid");
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "headerStyleClass", "dataGridHeader");
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "bodyStyleClasses", "dataGridBody1, dataGridBody2");
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "footerStyleClass", "dataGridFooter");
-			regDefaultStyleClasses(styleClassesMap, DataGridTag.class, "groupStyleClasses", "dataGridGroup1, dataGridGroup2, dataGridGroup3");
+			regDefaultStyleClasses(DataGridTag.class, "containerStyleClass", "datagridcontainer");
+			regDefaultStyleClasses(DataGridTag.class, "styleClass", "dataGrid");
+			regDefaultStyleClasses(DataGridTag.class, "headerStyleClass", "dataGridHeader");
+			regDefaultStyleClasses(DataGridTag.class, "bodyStyleClasses", "dataGridBody1, dataGridBody2");
+			regDefaultStyleClasses(DataGridTag.class, "footerStyleClass", "dataGridFooter");
+			regDefaultStyleClasses(DataGridTag.class, "groupStyleClasses", "dataGridGroup1, dataGridGroup2, dataGridGroup3");
 
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "requiredStyleClass", "requiredMark");
-			regDefaultStyleClasses(styleClassesMap, InputTag.class, "CHECKBOX-class", "checkboxClass");
+			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
+			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "checkboxClass");
 
-			regDefaultStyleClasses(styleClassesMap, MenuTag.class, "panelStyleClass", "menuClass");
+			regDefaultStyleClasses(MenuTag.class, "panelStyleClass", "menuClass");
 
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "containerClass", "messagesContainer");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "bindBlockClass", "bindBlock");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "messageBlockClass", "messageBlock");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "titleClass", "messageTitle");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "globalErrorClass", "globalError");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "fieldNameClass", "fieldName");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "bindErrorClass", "bindError");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "validationErrorClass", "validationError");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "debugClass", "debug");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "traceClass", "trace");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "infoClass", "info");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "warnClass", "warn");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "errorClass", "error");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "eventClass", "event");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "toastClass", "messageToast");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "exceptionClass", "exceptionItem");
-			regDefaultStyleClasses(styleClassesMap, MessagesTag.class, "exceptionCauseClass", "causeItem");
+			regDefaultStyleClasses(MessagesTag.class, "containerClass", "messagesContainer");
+			regDefaultStyleClasses(MessagesTag.class, "bindBlockClass", "bindBlock");
+			regDefaultStyleClasses(MessagesTag.class, "messageBlockClass", "messageBlock");
+			regDefaultStyleClasses(MessagesTag.class, "titleClass", "messageTitle");
+			regDefaultStyleClasses(MessagesTag.class, "globalErrorClass", "globalError");
+			regDefaultStyleClasses(MessagesTag.class, "fieldNameClass", "fieldName");
+			regDefaultStyleClasses(MessagesTag.class, "bindErrorClass", "bindError");
+			regDefaultStyleClasses(MessagesTag.class, "validationErrorClass", "validationError");
+			regDefaultStyleClasses(MessagesTag.class, "debugClass", "debug");
+			regDefaultStyleClasses(MessagesTag.class, "traceClass", "trace");
+			regDefaultStyleClasses(MessagesTag.class, "infoClass", "info");
+			regDefaultStyleClasses(MessagesTag.class, "warnClass", "warn");
+			regDefaultStyleClasses(MessagesTag.class, "errorClass", "error");
+			regDefaultStyleClasses(MessagesTag.class, "eventClass", "event");
+			regDefaultStyleClasses(MessagesTag.class, "toastClass", "messageToast");
+			regDefaultStyleClasses(MessagesTag.class, "exceptionClass", "exceptionItem");
+			regDefaultStyleClasses(MessagesTag.class, "exceptionCauseClass", "causeItem");
 
-			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "panelClass", "pagePanel");
-			regDefaultStyleClasses(styleClassesMap, PaggingTag.class, "selectedClass", "pageSelected");
+			regDefaultStyleClasses(PaggingTag.class, "panelClass", "pagePanel");
+			regDefaultStyleClasses(PaggingTag.class, "selectedClass", "pageSelected");
 
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "navClass", "tabPanel");
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "selectedClass", "tabSelected");
-			regDefaultStyleClasses(styleClassesMap, TabPanelTag.class, "unselectedClass", "tabUnselected");
+			regDefaultStyleClasses(TabPanelTag.class, "navClass", "tabPanel");
+			regDefaultStyleClasses(TabPanelTag.class, "selectedClass", "tabSelected");
+			regDefaultStyleClasses(TabPanelTag.class, "unselectedClass", "tabUnselected");
 
 		}
 
-		//Templates
+		// Templates
 
 		if (isUseBootstrap()) {
 
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "pageStyleClass", null);
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "titleStyleClass", "h3");
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "bodyStyleClass", null);
+			regDefaultStyleClasses(ViewTag.class, "pageStyleClass", null);
+			regDefaultStyleClasses(ViewTag.class, "titleStyleClass", "h3");
+			regDefaultStyleClasses(ViewTag.class, "bodyStyleClass", null);
 
-			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
-			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
+			regDefaultStyleClasses(ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
+			regDefaultStyleClasses(ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
 
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "sectionTitleStyleClass", "card-header h6");
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "actionBarStyleClass", "card-footer text-end");
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
-
-			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "container-fluid");
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
-			} else {
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
-			}
-
-			regDefaultStyleClasses(styleClassesMap, ListPanelTag.class, "panelStyleClass", "card mb-4");
-
-			regDefaultStyleClasses(styleClassesMap, ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
-
-			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4"); //Melhor tirar mb-4 e tentar gap
-			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
-
-			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "actionBarStyleClass", "card-footer text-end");
-			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
+			regDefaultStyleClasses(FilterPanelTag.class, "panelStyleClass", "card mb-4");
+			regDefaultStyleClasses(FilterPanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(FilterPanelTag.class, "bodyStyleClass", "card-body p-2");
+			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "container-fluid");
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
+				regDefaultStyleClasses(FilterTableTag.class, "styleClass", "container-fluid");
+				regDefaultStyleClasses(FilterTableTag.class, "rowStyleClasses", "row");
+				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+				regDefaultStyleClasses(FilterTableTag.class, "styleClass", "m-2");
+				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
 			}
 
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "card-header h6");
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
+			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "card mb-4");
+
+			regDefaultStyleClasses(ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
+
+			regDefaultStyleClasses(FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4"); //Melhor tirar mb-4 e tentar gap
+			regDefaultStyleClasses(FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
+
+			regDefaultStyleClasses(FormPanelTag.class, "panelStyleClass", "card mb-4");
+			regDefaultStyleClasses(FormPanelTag.class, "bodyStyleClass", "card-body p-2");
+			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "container-fluid");
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
+				regDefaultStyleClasses(FormTableTag.class, "styleClass", "container-fluid");
+				regDefaultStyleClasses(FormTableTag.class, "rowStyleClasses", "row");
+				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+				regDefaultStyleClasses(FormTableTag.class, "styleClass", "m-2");
+				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
 			}
 
-			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "actionButtonStyleClass", "btn btn-sm btn-primary");
-			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary");
+			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "card mb-4");
+			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
+			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
-			regDefaultStyleClasses(styleClassesMap, PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
+			if (isDefaultFlatMode()) {
+				regDefaultStyleClasses(ReportTableTag.class, "styleClass", "container-fluid");
+				regDefaultStyleClasses(ReportTableTag.class, "rowStyleClasses", "row");
+				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
+			} else {
+				regDefaultStyleClasses(ReportTableTag.class, "styleClass", "m-2");
+				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+			}
+
+			regDefaultStyleClasses(DetailTag.class, "actionButtonStyleClass", "btn btn-sm btn-primary");
+			regDefaultStyleClasses(DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary");
+
+			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
 
 		} else {
 
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "pageStyleClass", null);
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "titleStyleClass", "pageTitle");
-			regDefaultStyleClasses(styleClassesMap, ViewTag.class, "bodyStyleClass", "pageBody");
+			regDefaultStyleClasses(ViewTag.class, "pageStyleClass", null);
+			regDefaultStyleClasses(ViewTag.class, "titleStyleClass", "pageTitle");
+			regDefaultStyleClasses(ViewTag.class, "bodyStyleClass", "pageBody");
 
-			regDefaultStyleClasses(styleClassesMap, ListViewTag.class, "linkBarStyleClass", "linkBar");
+			regDefaultStyleClasses(ListViewTag.class, "linkBarStyleClass", "linkBar");
 
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "panelStyleClass", "filterWindow");
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "sectionTitleStyleClass", "sectionTitle");
-			regDefaultStyleClasses(styleClassesMap, FilterPanelTag.class, "actionBarStyleClass", "actionBar");
+			regDefaultStyleClasses(FilterPanelTag.class, "panelStyleClass", "filterWindow");
+			regDefaultStyleClasses(FilterPanelTag.class, "sectionTitleStyleClass", "sectionTitle");
+			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "actionBar");
 
-			regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "styleClass", "inputTable");
+			regDefaultStyleClasses(FilterTableTag.class, "styleClass", "inputTable");
 			if (isDefaultFlatMode()) {
 
 			} else {
-				regDefaultStyleClasses(styleClassesMap, FilterTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
+				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
 			}
 
-			regDefaultStyleClasses(styleClassesMap, ListPanelTag.class, "panelStyleClass", "resultWindow");
+			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "resultWindow");
 
-			regDefaultStyleClasses(styleClassesMap, ListTableTag.class, "pagePanelStyleClass", "pagging");
+			regDefaultStyleClasses(ListTableTag.class, "pagePanelStyleClass", "pagging");
 
-			regDefaultStyleClasses(styleClassesMap, FormViewTag.class, "linkBarStyleClass", "linkBar");
+			regDefaultStyleClasses(FormViewTag.class, "linkBarStyleClass", "linkBar");
 
-			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "panelStyleClass", "inputWindow");
-			regDefaultStyleClasses(styleClassesMap, FormPanelTag.class, "actionBarStyleClass", "actionBar");
+			regDefaultStyleClasses(FormPanelTag.class, "panelStyleClass", "inputWindow");
+			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "actionBar");
 
-			regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "styleClass", "inputTable");
+			regDefaultStyleClasses(FormTableTag.class, "styleClass", "inputTable");
 			if (isDefaultFlatMode()) {
 
 			} else {
-				regDefaultStyleClasses(styleClassesMap, FormTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
+				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
 			}
 
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "panelStyleClass", "filterWindow");
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "sectionTitleStyleClass", "sectionTitle");
-			regDefaultStyleClasses(styleClassesMap, ReportPanelTag.class, "actionBarStyleClass", "actionBar");
+			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "filterWindow");
+			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "sectionTitle");
+			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "actionBar");
 
-			regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "styleClass", "inputTable");
+			regDefaultStyleClasses(ReportTableTag.class, "styleClass", "inputTable");
 			if (isDefaultFlatMode()) {
 
 			} else {
-				regDefaultStyleClasses(styleClassesMap, ReportTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
+				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
 			}
 
-			regDefaultStyleClasses(styleClassesMap, DetailTag.class, "panelStyleClass", "inputTable");
+			regDefaultStyleClasses(DetailTag.class, "panelStyleClass", "inputTable");
 
 		}
 
 	}
 
-	protected void regDefaultStyleClasses(Map<Class<? extends BaseTag>, Map<String, String>> map, Class<? extends BaseTag> tagClass, String field, String styleClass) {
-		Map<String, String> tagMap = map.get(tagClass);
+	protected void regDefaultStyleClasses(Class<? extends BaseTag> tagClass, String field, String styleClass) {
+		Map<String, String> tagMap = styleClassesMap.get(tagClass);
 		if (tagMap == null) {
 			tagMap = new HashMap<String, String>();
-			map.put(tagClass, tagMap);
+			styleClassesMap.put(tagClass, tagMap);
 		}
 		tagMap.put(field, styleClass);
 	}

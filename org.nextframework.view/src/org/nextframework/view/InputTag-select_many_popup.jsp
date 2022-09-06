@@ -16,7 +16,6 @@
 		<c:if test="${!useBootstrap}">
 			<button id="${tag.id}_trigger" class="select_many_popup_button" >...</button>
 		</c:if>
-		
 	</c:if>
 </div>
 <script type="text/javascript">

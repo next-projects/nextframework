@@ -212,7 +212,7 @@ public class InputTag extends BaseTag {
 				getDynamicAttributesMap().put("title", "Propriedade duplicada: " + name);
 			}
 			try {
-				Class class1 = debugInputsTag.getCommandClass();
+				Class<?> class1 = debugInputsTag.getCommandClass();
 				BeanDescriptorFactory.forClass(class1).getPropertyDescriptor(name);
 			} catch (Exception e) {
 				getDynamicAttributesMap().put("style", "border: 1px solid red");
@@ -346,7 +346,6 @@ public class InputTag extends BaseTag {
 		} else {
 			opValue = TagUtils.getObjectValueToString(value, false, null);
 		}
-
 		return escapeStringValueForAttribute(opValue);
 	}
 
@@ -695,4 +694,5 @@ public class InputTag extends BaseTag {
 	public PropertySetter getPropertySetter() {
 		return propertySetter;
 	}
+
 }
