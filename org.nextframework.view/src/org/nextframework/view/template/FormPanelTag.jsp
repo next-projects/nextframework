@@ -4,6 +4,10 @@
 
 <div class="${formPanelTag.panelStyleClass}">
 
+	<c:if test="${! empty formPanelTag.sectionTitle }">
+		<div class="${formPanelTag.sectionTitleStyleClass}">${formPanelTag.sectionTitle}</div>
+	</c:if>
+
 	<n:getContent tagName="actionPanelTag" vars="acoes">
 
 		<div class="${formPanelTag.bodyStyleClass}">

@@ -26,15 +26,9 @@ package org.nextframework.view.template;
 import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.persistence.PageAndOrder;
 
-/**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
- */
-public class FilterPanelTag extends TemplateTag {
+public class FilterPanelTag extends SimplePanelTag {
 
 	protected String name = "filter";
-	protected String sectionTitle;
 
 	protected Boolean showSubmit = true;
 	protected String submitUrl = null;
@@ -42,10 +36,6 @@ public class FilterPanelTag extends TemplateTag {
 	protected Boolean validateForm = true;
 	protected String submitLabel = null;
 
-	protected String panelStyleClass;
-	protected String sectionTitleStyleClass;
-	protected String bodyStyleClass;
-	protected String actionBarStyleClass;
 	protected String buttonStyleClass;
 
 	@Override
@@ -86,14 +76,6 @@ public class FilterPanelTag extends TemplateTag {
 		this.name = name;
 	}
 
-	public String getSectionTitle() {
-		return sectionTitle;
-	}
-
-	public void setSectionTitle(String sectionTitle) {
-		this.sectionTitle = sectionTitle;
-	}
-
 	public Boolean getShowSubmit() {
 		return showSubmit;
 	}
@@ -132,38 +114,6 @@ public class FilterPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
-	}
-
-	public String getPanelStyleClass() {
-		return panelStyleClass;
-	}
-
-	public void setPanelStyleClass(String panelStyleClass) {
-		this.panelStyleClass = panelStyleClass;
-	}
-
-	public String getSectionTitleStyleClass() {
-		return sectionTitleStyleClass;
-	}
-
-	public void setSectionTitleStyleClass(String sectionTitleStyleClass) {
-		this.sectionTitleStyleClass = sectionTitleStyleClass;
-	}
-
-	public String getBodyStyleClass() {
-		return bodyStyleClass;
-	}
-
-	public void setBodyStyleClass(String bodyStyleClass) {
-		this.bodyStyleClass = bodyStyleClass;
-	}
-
-	public String getActionBarStyleClass() {
-		return actionBarStyleClass;
-	}
-
-	public void setActionBarStyleClass(String actionBarStyleClass) {
-		this.actionBarStyleClass = actionBarStyleClass;
 	}
 
 	public String getButtonStyleClass() {

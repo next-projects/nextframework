@@ -27,6 +27,7 @@ import org.nextframework.view.template.ListViewTag;
 import org.nextframework.view.template.PropertyTag;
 import org.nextframework.view.template.ReportPanelTag;
 import org.nextframework.view.template.ReportTableTag;
+import org.nextframework.view.template.SimplePanelTag;
 import org.nextframework.view.template.ViewTag;
 
 public class DefaultViewConfig implements ViewConfig {
@@ -236,6 +237,11 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ViewTag.class, "titleStyleClass", "h3");
 			regDefaultStyleClasses(ViewTag.class, "bodyStyleClass", null);
 
+			regDefaultStyleClasses(SimplePanelTag.class, "panelStyleClass", "card mb-4");
+			regDefaultStyleClasses(SimplePanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(SimplePanelTag.class, "bodyStyleClass", "card-body p-2");
+			regDefaultStyleClasses(SimplePanelTag.class, "actionBarStyleClass", "card-footer text-end");
+
 			regDefaultStyleClasses(ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
 			regDefaultStyleClasses(ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
 
@@ -255,6 +261,9 @@ public class DefaultViewConfig implements ViewConfig {
 			}
 
 			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "card mb-4");
+			regDefaultStyleClasses(ListPanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(ListPanelTag.class, "bodyStyleClass", null);
+			regDefaultStyleClasses(ListPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 
 			regDefaultStyleClasses(ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
 
@@ -262,6 +271,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
 
 			regDefaultStyleClasses(FormPanelTag.class, "panelStyleClass", "card mb-4");
+			regDefaultStyleClasses(FormPanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(FormPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer text-end");
 			regDefaultStyleClasses(FormPanelTag.class, "buttonStyleClass", "btn btn-primary");

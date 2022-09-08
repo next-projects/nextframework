@@ -23,52 +23,31 @@
  */
 package org.nextframework.view.template;
 
-/**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
- */
-public class ReportPanelTag extends TemplateTag {
-
-	protected String sectionTitle;
+public class ReportPanelTag extends SimplePanelTag {
 
 	protected String submitAction = "generate";
 	protected String submitConfirmationScript = "true";
 	protected String submitLabel;
 
-	protected String panelStyleClass;
-	protected String sectionTitleStyleClass;
-	protected String bodyStyleClass;
-	protected String actionBarStyleClass;
 	protected String buttonStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
 
 		if (sectionTitle == null) {
-			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+			sectionTitle = getDefaultViewLabel("sectionTitle", "Relatório");
 		}
 
 		if (submitLabel == null) {
 			submitLabel = getDefaultViewLabel("submitLabel", "Gerar relatório");
 		}
 
-		pushAttribute("TJanelaRelatorio", this);
 		includeJspTemplate();
-		popAttribute("TJanelaRelatorio");
 
 	}
 
 	public String getUniqueId() {
 		return generateUniqueId();
-	}
-
-	public String getSectionTitle() {
-		return sectionTitle;
-	}
-
-	public void setSectionTitle(String sectionTitle) {
-		this.sectionTitle = sectionTitle;
 	}
 
 	public String getSubmitAction() {
@@ -93,38 +72,6 @@ public class ReportPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
-	}
-
-	public String getPanelStyleClass() {
-		return panelStyleClass;
-	}
-
-	public void setPanelStyleClass(String panelStyleClass) {
-		this.panelStyleClass = panelStyleClass;
-	}
-
-	public String getSectionTitleStyleClass() {
-		return sectionTitleStyleClass;
-	}
-
-	public void setSectionTitleStyleClass(String sectionTitleStyleClass) {
-		this.sectionTitleStyleClass = sectionTitleStyleClass;
-	}
-
-	public String getBodyStyleClass() {
-		return bodyStyleClass;
-	}
-
-	public void setBodyStyleClass(String bodyStyleClass) {
-		this.bodyStyleClass = bodyStyleClass;
-	}
-
-	public String getActionBarStyleClass() {
-		return actionBarStyleClass;
-	}
-
-	public void setActionBarStyleClass(String actionBarStyleClass) {
-		this.actionBarStyleClass = actionBarStyleClass;
 	}
 
 	public String getButtonStyleClass() {

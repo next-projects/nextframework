@@ -23,26 +23,17 @@
  */
 package org.nextframework.view.template;
 
-/**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
- */
-public class ListPanelTag extends TemplateTag {
-
-	private String panelStyleClass;
+public class ListPanelTag extends SimplePanelTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
+		if (sectionTitle == null) {
+			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+		}
+
 		includeJspTemplate();
-	}
 
-	public String getPanelStyleClass() {
-		return panelStyleClass;
-	}
-
-	public void setPanelStyleClass(String panelStyleClass) {
-		this.panelStyleClass = panelStyleClass;
 	}
 
 }

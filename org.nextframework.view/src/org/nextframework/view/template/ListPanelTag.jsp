@@ -3,5 +3,19 @@
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <div class="${listPanelTag.panelStyleClass}">
-	<n:doBody />
+
+	<c:if test="${! empty listPanelTag.sectionTitle }">
+		<div class="${listPanelTag.sectionTitleStyleClass}">${listPanelTag.sectionTitle}</div>
+	</c:if>
+
+	<div class="${listPanelTag.bodyStyleClass}">
+		<n:doBody />
+	</div>
+
+	<c:if test="${!empty acoes}">
+		<div class="${listPanelTag.actionBarStyleClass}">
+			${acoes}
+		</div>
+	</c:if>
+
 </div>

@@ -23,12 +23,7 @@
  */
 package org.nextframework.view.template;
 
-/**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
- */
-public class FormPanelTag extends TemplateTag {
+public class FormPanelTag extends SimplePanelTag {
 
 	protected boolean showSubmit = true;
 	protected String updateLinkLabel = null;
@@ -36,9 +31,6 @@ public class FormPanelTag extends TemplateTag {
 	protected String submitConfirmationScript;
 	protected String submitLabel = null;
 
-	private String panelStyleClass;
-	private String bodyStyleClass;
-	private String actionBarStyleClass;
 	private String buttonStyleClass;
 
 	@Override
@@ -48,13 +40,15 @@ public class FormPanelTag extends TemplateTag {
 			updateLinkLabel = getDefaultViewLabel("updateLinkLabel", "Editar");
 		}
 
+		if (sectionTitle == null) {
+			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+		}
+
 		if (submitLabel == null) {
 			submitLabel = getDefaultViewLabel("submitLabel", "Salvar");
 		}
 
-		pushAttribute("janelaEntradaTag", this); //Legacy
 		includeJspTemplate();
-		popAttribute("janelaEntradaTag");
 
 	}
 
@@ -100,30 +94,6 @@ public class FormPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
-	}
-
-	public String getPanelStyleClass() {
-		return panelStyleClass;
-	}
-
-	public void setPanelStyleClass(String panelStyleClass) {
-		this.panelStyleClass = panelStyleClass;
-	}
-
-	public String getBodyStyleClass() {
-		return bodyStyleClass;
-	}
-
-	public void setBodyStyleClass(String bodyStyleClass) {
-		this.bodyStyleClass = bodyStyleClass;
-	}
-
-	public String getActionBarStyleClass() {
-		return actionBarStyleClass;
-	}
-
-	public void setActionBarStyleClass(String actionBarStyleClass) {
-		this.actionBarStyleClass = actionBarStyleClass;
 	}
 
 	public String getButtonStyleClass() {
