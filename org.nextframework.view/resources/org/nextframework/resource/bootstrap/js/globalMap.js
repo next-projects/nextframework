@@ -1,5 +1,12 @@
 ﻿next.globalMap.put('PopupDiv.box', 'card w-md-75 m-4 shadow');
 
+//next.globalMap.put('Progress.container', 'progressbarContainer');
+next.globalMap.put('Progress.bar', 'progress');
+next.globalMap.put('Progress.barInside', 'progress-bar bg-success');
+next.globalMap.put('Progress.barError', 'progress-bar bg-danger');
+next.globalMap.put('Progress.status', 'small');
+next.globalMap.put('Progress.tasks', 'mt-3');
+
 next.globalMap.put('NextDialogs.header', 'card-header');
 next.globalMap.put('NextDialogs.body', 'card-body p-2 row');
 next.globalMap.put('NextDialogs.option', 'col-md-6 mb-2');

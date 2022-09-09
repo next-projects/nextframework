@@ -1,9 +1,10 @@
 /* Block screen */
 
 .blockScreenTransparent {
-	filter: alpha(opacity = 40);
-	-moz-opacity: 0.4;
-	opacity: 0.4;
+	background-color: white;
+	filter: alpha(opacity = 50);
+	-moz-opacity: 0.5;
+	opacity: 0.5;
 }
 
 
@@ -222,6 +223,99 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 	font-weight: bold;
 	color: #505050;
 	min-height: 20px;
+}
+
+
+/* Progress bar event */
+
+DIV.progressOverlay {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	text-align: center;
+	visibility: hidden;
+}
+
+DIV.progressOverlay div.progressbarBox {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 500px;
+	z-index: 1020;
+}
+
+DIV.progressOverlay div.progressbarBody {
+	position: relative;
+	top: -100px;
+	left: -250px;
+	font-size: 11px;
+	text-align: left;
+	padding: 20px;
+	border: 1px solid #eeeeee;
+	background-color: #FFFFFF;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 6px 8px 16px 0px #AAA;
+	-moz-box-shadow: 6px 8px 16px 0px #AAA;
+	box-shadow: 6px 8px 16px 0px #AAA;
+}
+
+div.progressbar {
+	border: 1px solid gray;
+}
+
+div.progressbar div {
+	background-color: #7fb871;
+	height: 12px;
+	width: 0px;
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#a0d7a7), to(#5c9839));
+	/* Safari 5.1, Chrome 10+ */
+	background: -webkit-linear-gradient(top, #a0d7a7, #5c9839);
+	/* Firefox 3.6+ */
+	background: -moz-linear-gradient(top, #a0d7a7, #5c9839);
+	/* IE 10 */
+	background: -ms-linear-gradient(top, #a0d7a7, #5c9839);
+	/* IE 9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#a0d7a7, endColorstr=#5c9839)";
+	/* IE <= 8*/
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a0d7a7', endColorstr='#5c9839');
+	/* Opera 11.10+ */
+	background: -o-linear-gradient(top, #a0d7a7, #5c9839);
+}
+
+div.progressbar div.progressBarError {
+	background-color: #red;
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d65656), to(#741414));
+	/* Safari 5.1, Chrome 10+ */
+	background: -webkit-linear-gradient(top, #d65656, #741414);
+	/* Firefox 3.6+ */
+	background: -moz-linear-gradient(top, #d65656, #741414);
+	/* IE 10 */
+	background: -ms-linear-gradient(top, #d65656, #741414);
+	/* IE 9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#d65656, endColorstr=#741414)";
+	/* IE <= 8*/
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d65656', endColorstr='#741414');
+	/* Opera 11.10+ */
+	background: -o-linear-gradient(top, #d65656, #741414);
+}
+
+div.progressStatus {
+	
+}
+
+div.progressTasks {
+	padding-left: 10px;
+	font-style: italic;
+}
+
+div.progressTasks *.progressInfoError {
+	color: red;
 }
 
 

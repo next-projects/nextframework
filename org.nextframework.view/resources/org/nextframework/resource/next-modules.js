@@ -294,7 +294,13 @@ NextGlobalMap.prototype.put = function(key, value){
 }
 
 NextGlobalMap.prototype.get = function(key, defaultValue){
-	return key != null && key != 'null' ? this.map[key] : defaultValue;
+	if (key != null && key != 'null') {
+		var value = this.map[key];
+		if (value != null) {
+			return value;
+		}
+	}
+	return defaultValue;
 }
 
 new NextGlobalMap();
@@ -1454,33 +1460,13 @@ NextStyle.prototype.centralizeVertical = function(element){
 }
 
 NextStyle.prototype.centralize = function(element){
-	{
-		var height = next.style.getFullHeight(element);
-		var windowHeight = next.style.getWindowSize()[1];
-		var top = (windowHeight /2) - (height/2);
-		element.style.top = top + 'px';
-	}
-	{
-		var width = next.style.getFullWidth(element);
-		var windowWidth = next.style.getWindowSize()[0];
-		var left = (windowWidth /2) - (width/2);
-		element.style.left = left + 'px';		
-	}
+	centralizeHorizontal(element);
+	centralizeVertical(element);
 }
 
 NextStyle.prototype.centralizeMiddleLine = function(element){
-	{
-		var height = next.style.getFullHeight(element);
-		var windowHeight = next.style.getWindowSize()[1];
-		var top = (windowHeight /2) - (height);
-		element.style.top = top + 'px';
-	}
-	{
-		var width = next.style.getFullWidth(element);
-		var windowWidth = next.style.getWindowSize()[0];
-		var left = (windowWidth /2) - (width/2);
-		element.style.left = left + 'px';		
-	}
+	centralizeHorizontal(element);
+	centralizeVerticalMiddleLine(element);
 }
 
 new NextStyle();
@@ -1753,8 +1739,6 @@ NextAjax.prototype.Request = NextAjaxRequest;
 /**************************************************************************************  EFFECTS  **/
 NextEffects = function(){};
 
-NextEffects.blockScreenColor = 'white';
-
 NextEffects.prototype.blockScreen = function(){
 	var blockScreenId = '__block_screen';
 	var blockScreen = document.getElementById(blockScreenId);
@@ -1762,53 +1746,24 @@ NextEffects.prototype.blockScreen = function(){
 	if(!next.util.isDefined(blockScreen)){
 		blockScreen = next.dom.newElement('DIV', {'id':blockScreenId});
 		next.dom.insertFirstChild(document.body, blockScreen);
-		
 		innerElement = next.dom.newElement('DIV',
 				{
 					className: 'blockScreenTransparent',
 					style: {
-						position: 'absolute',
-						left:'0px',
+						position: 'fixed',
 						top:'0px',
-						width:'500px',
-						height: '500px',
-						backgroundColor: NextEffects.blockScreenColor,
+						left:'0px',
+						zIndex: 1050,
+						width: '100vw',
+						height: '100vh',
 						display: 'none'
 					}
 				});
-		
 		next.dom.insertFirstChild(blockScreen, innerElement);
 	} else {
 		innerElement = 	blockScreen.childNodes[0];	
 	}
-	var winW = 630, winH = 460;
-	if (document.body && document.body.offsetWidth) {
-		winW = document.body.offsetWidth;
-		winH = document.body.offsetHeight;
-	}
-	if (document.compatMode == 'CSS1Compat' && document.documentElement
-			&& document.documentElement.offsetWidth) {
-		winW = document.documentElement.offsetWidth;
-		winH = document.documentElement.offsetHeight;
-	}
-	if (window.innerWidth && window.innerHeight) {
-		winW = window.innerWidth;
-		winH = window.innerHeight;
-	}
-	
-	var documentHeight = next.style.getFullHeight(document.body);
-	if(documentHeight > winH){
-		winH = documentHeight;
-	}
-	innerElement.style.height = winH + 'px';
-	innerElement.style.width = winW + 'px';
-	innerElement.style.zIndex = 100;
 	innerElement.style.display = 'block';
-	
-	//<DIV style="position: relative;">
-	//	<DIV id="telaBranca" class="transparent" style="position: absolute; left: 0px; top: 0px; width: 500px; height: 500px; background-color: white; display: none;"></DIV>
-	//</DIV>
-	
 }
 
 NextEffects.prototype.unblockScreen = function(){
@@ -1818,17 +1773,18 @@ NextEffects.prototype.unblockScreen = function(){
 		var innerElement = 	blockScreen.childNodes[0];
 		innerElement.style.display = 'none';
 	}
-	
 }
+
 NextEffects.prototype.show = function(el){
-	
 	el = next.dom.toElement(el);
 	el.style.display = '';  
 }
+
 NextEffects.prototype.hide = function(el){
 	el = next.dom.toElement(el);
 	el.style.display = 'none';  
 }
+
 NextEffects.prototype.showProperty = function(el, type, form){
 	if(!next.util.isDefined(type) && !next.util.isDefined(form)){
 		next.dom.getParentTag(el, 'tr').style.display = '';		
@@ -1836,6 +1792,7 @@ NextEffects.prototype.showProperty = function(el, type, form){
 		next.effects.hideShowProperty(el, type, form, '');
 	}
 }
+
 NextEffects.prototype.hideProperty = function(el, type, form){
 	if(!next.util.isDefined(type) && !next.util.isDefined(form)){
 		next.dom.getParentTag(el, 'tr').style.display = 'none';		
@@ -1843,6 +1800,7 @@ NextEffects.prototype.hideProperty = function(el, type, form){
 		next.effects.hideShowProperty(el, type, form, 'none');
 	}
 }
+
 NextEffects.prototype.hideShowProperty = function(el, type, form, operation){
 	if(type != 'double'){
 		alert('Only type=double supported by hideProperty.');
@@ -1864,8 +1822,6 @@ NextEffects.prototype.hideShowProperty = function(el, type, form, operation){
 		next.dom.getParentTag(input, 'tr').style.display = operation;
 	}	
 }
-
-
 
 NextEffects.prototype.highlightOnOver = function(el, overColor, outColor){
 	next.events.attachEvent(el, 'mouseover', function(){

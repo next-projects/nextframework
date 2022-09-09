@@ -5,8 +5,6 @@ import org.stjs.javascript.dom.Element;
 
 public abstract class NextEffects {
 
-	public static String blockScreenColor;
-
 	public abstract void hide(Object el);
 
 	public abstract void show(Object el);

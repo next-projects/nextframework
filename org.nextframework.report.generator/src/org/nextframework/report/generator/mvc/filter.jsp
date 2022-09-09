@@ -48,19 +48,15 @@
 	</div>
 	
 	<c:if test="${!empty progressMonitor}">
-		<div id="overlay_BARRA" class="progressOverlay" style="visibility: visible;" >
-			<div class="progressbarBox">
-				<div class="progressbarBody">
-					<n:progressBar progressMonitor="${progressMonitor}" onComplete="onFinish(element);" onError="onFinish(element);"  />
-				</div>
-			</div>
-		</div>
+		<n:modal id="overlay_BARRA">
+			<n:progressBar progressMonitor="${progressMonitor}" onComplete="onFinish(element);" onError="onFinish(element);"  />
+		</n:modal>
 		<script type="text/javascript">
 			function onFinish(element){
 				if (!element.done) {
 					alert('Erro ao executar a tarefa.');
 				}
-				document.getElementById("overlay_BARRA").style.visibility = "hidden";
+				hideModal_overlay_BARRA();
 				model.ACTION.value ='showFilterView';
 				submitModel();
 			}

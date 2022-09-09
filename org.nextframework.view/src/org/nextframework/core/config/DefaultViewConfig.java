@@ -11,6 +11,7 @@ import org.nextframework.view.InputTag;
 import org.nextframework.view.InputTagType;
 import org.nextframework.view.LinkTag;
 import org.nextframework.view.MessagesTag;
+import org.nextframework.view.ModalTag;
 import org.nextframework.view.PaggingTag;
 import org.nextframework.view.SubmitTag;
 import org.nextframework.view.TabPanelTag;
@@ -137,7 +138,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(DataGridTag.class, "headerStyleClass", "table-light");
 
 			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border rounded p-2");
-			regDefaultStyleClasses(GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-50");
+			regDefaultStyleClasses(GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-75");
 
 			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
 			regDefaultStyleClasses(InputTag.class, "class", "form-control");
@@ -168,6 +169,10 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(MessagesTag.class, "toastClass", "messageToast");
 			regDefaultStyleClasses(MessagesTag.class, "exceptionClass", "exceptionItem");
 			regDefaultStyleClasses(MessagesTag.class, "exceptionCauseClass", "causeItem");
+
+			regDefaultStyleClasses(ModalTag.class, "overlayStyleClass", "modal fade");
+			regDefaultStyleClasses(ModalTag.class, "panelStyleClass", "modal-dialog modal-dialog-centered modal-dialog-scrollable");
+			regDefaultStyleClasses(ModalTag.class, "contentStyleClass", "modal-content p-4 m-4 shadow");
 
 			regDefaultStyleClasses(PaggingTag.class, "panelClass", "pagination pagination-sm d-inline-flex m-0");
 			regDefaultStyleClasses(PaggingTag.class, "itemClass", "page-item");
@@ -219,6 +224,10 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(MessagesTag.class, "toastClass", "messageToast");
 			regDefaultStyleClasses(MessagesTag.class, "exceptionClass", "exceptionItem");
 			regDefaultStyleClasses(MessagesTag.class, "exceptionCauseClass", "causeItem");
+
+			regDefaultStyleClasses(ModalTag.class, "overlayStyleClass", "progressOverlay");
+			regDefaultStyleClasses(ModalTag.class, "panelStyleClass", "progressbarBox");
+			regDefaultStyleClasses(ModalTag.class, "contentStyleClass", "progressbarBody");
 
 			regDefaultStyleClasses(PaggingTag.class, "panelClass", "pagePanel");
 			regDefaultStyleClasses(PaggingTag.class, "selectedClass", "pageSelected");

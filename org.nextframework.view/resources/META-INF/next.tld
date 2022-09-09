@@ -1397,6 +1397,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+
 	<tag>
 		<description></description>
 		<name>content</name>
@@ -1490,6 +1491,48 @@
 		</attribute>
 		<attribute>
 			<name>bypass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description></description>
+		<name>modal</name>
+		<tag-class>org.nextframework.view.ModalTag</tag-class>
+		<body-content>scriptless</body-content>
+		<attribute>
+			<description></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>visible</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>overlayStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>panelStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>contentStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

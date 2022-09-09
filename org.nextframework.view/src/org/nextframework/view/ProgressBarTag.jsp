@@ -8,5 +8,4 @@
 		onComplete: function(element){${tag.onComplete}}
 	});
 	element.startSynchronization();
-	${tag.onProgressBarCreation}
 </script>
