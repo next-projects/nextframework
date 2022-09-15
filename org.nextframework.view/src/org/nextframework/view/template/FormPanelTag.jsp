@@ -2,20 +2,20 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<div class="${formPanelTag.panelStyleClass}">
+<div class="${formPanelTag.panelStyleClass}" style="${formPanelTag.panelStyle}">
 
 	<c:if test="${! empty formPanelTag.sectionTitle }">
-		<div class="${formPanelTag.sectionTitleStyleClass}">${formPanelTag.sectionTitle}</div>
+		<div class="${formPanelTag.sectionTitleStyleClass}" style="${formPanelTag.sectionTitleStyle}">${formPanelTag.sectionTitle}</div>
 	</c:if>
 
 	<n:getContent tagName="actionPanelTag" vars="acoes">
 
-		<div class="${formPanelTag.bodyStyleClass}">
+		<div class="${formPanelTag.bodyStyleClass}" style="${formPanelTag.bodyStyle}">
 			<n:doBody />
 		</div>
 
 		<c:if test="${formPanelTag.showSubmit || !empty acoes}">
-			<div class="${formPanelTag.actionBarStyleClass}">
+			<div class="${formPanelTag.actionBarStyleClass}" style="${formPanelTag.actionBarStyle}">
 				${acoes}
 				<c:if test="${formPanelTag.showSubmit}">
 					<c:if test="${param.ACTION == 'view'}">

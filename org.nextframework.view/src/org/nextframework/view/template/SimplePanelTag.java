@@ -28,9 +28,13 @@ public class SimplePanelTag extends TemplateTag {
 	protected String sectionTitle;
 
 	protected String panelStyleClass;
+	protected String panelStyle;
 	protected String sectionTitleStyleClass;
+	protected String sectionTitleStyle;
 	protected String bodyStyleClass;
+	protected String bodyStyle;
 	protected String actionBarStyleClass;
+	protected String actionBarStyle;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -53,12 +57,28 @@ public class SimplePanelTag extends TemplateTag {
 		this.panelStyleClass = panelStyleClass;
 	}
 
+	public String getPanelStyle() {
+		return panelStyle;
+	}
+
+	public void setPanelStyle(String panelStyle) {
+		this.panelStyle = panelStyle;
+	}
+
 	public String getSectionTitleStyleClass() {
 		return sectionTitleStyleClass;
 	}
 
 	public void setSectionTitleStyleClass(String sectionTitleStyleClass) {
 		this.sectionTitleStyleClass = sectionTitleStyleClass;
+	}
+
+	public String getSectionTitleStyle() {
+		return sectionTitleStyle;
+	}
+
+	public void setSectionTitleStyle(String sectionTitleStyle) {
+		this.sectionTitleStyle = sectionTitleStyle;
 	}
 
 	public String getBodyStyleClass() {
@@ -69,12 +89,28 @@ public class SimplePanelTag extends TemplateTag {
 		this.bodyStyleClass = bodyStyleClass;
 	}
 
+	public String getBodyStyle() {
+		return bodyStyle;
+	}
+
+	public void setBodyStyle(String bodyStyle) {
+		this.bodyStyle = bodyStyle;
+	}
+
 	public String getActionBarStyleClass() {
 		return actionBarStyleClass;
 	}
 
 	public void setActionBarStyleClass(String actionBarStyleClass) {
 		this.actionBarStyleClass = actionBarStyleClass;
+	}
+
+	public String getActionBarStyle() {
+		return actionBarStyle;
+	}
+
+	public void setActionBarStyle(String actionBarStyle) {
+		this.actionBarStyle = actionBarStyle;
 	}
 
 }
