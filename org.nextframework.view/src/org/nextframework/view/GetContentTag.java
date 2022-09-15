@@ -54,13 +54,16 @@ public class GetContentTag extends BaseTag implements LogicalTag {
 	};
 
 	public boolean getTag(BaseTag baseTag) {
-		String tag = tagName;
-		String id = null;
-		if (tagName.contains("#")) {
-			tag = tagName.substring(0, tagName.indexOf("#"));
-			id = tagName.substring(tagName.indexOf("#") + 1);
+		if (tagName != null) {
+			String tag = tagName;
+			String id = null;
+			if (tagName.contains("#")) {
+				tag = tagName.substring(0, tagName.indexOf("#"));
+				id = tagName.substring(tagName.indexOf("#") + 1);
+			}
+			return baseTag.getClass().getSimpleName().equalsIgnoreCase(tag) && (id == null || id.equals(baseTag.getId()));
 		}
-		return baseTag.getClass().getSimpleName().equalsIgnoreCase(tag) && (id == null || id.equals(baseTag.getId()));
+		return false;
 	}
 
 	public void register(String body) {

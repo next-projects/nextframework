@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:if test="${useBootstrap}">
-	<div class="input-group">
+	<div class="input-group flex-nowrap">
 </c:if>
 <c:if test="${!useBootstrap}">
 	<div class="select_many_popup_container">

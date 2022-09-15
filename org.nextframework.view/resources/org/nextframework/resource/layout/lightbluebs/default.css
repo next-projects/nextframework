@@ -24,6 +24,7 @@ A.btn:HOVER {
 :root {
 	--bs-primary: #006699;
 	--sl-primary-hover: #005588;
+	--sl-primary-disabled: #005588;
 	--bs-warning: #d7a100;
 	--bs-link-color: #006699;
 	--bs-link-hover-color: #005588;
@@ -189,6 +190,9 @@ SPAN.form-control {
 	--bs-btn-hover-border-color: var(--sl-primary-hover);
 	--bs-btn-active-bg: var(--sl-primary-hover);
 	--bs-btn-active-border-color: var(--sl-primary-hover);
+	--bs-btn-disabled-bg: var(--sl-primary-disabled);
+	--bs-btn-disabled-border-color: var(--sl-primary-disabled);
+	--bs-btn-disabled-opacity: 0.5;
 }
 
 .btn-outline-primary {
@@ -209,6 +213,11 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 	--bs-table-bg: #FFFFFF;
 	--bs-table-striped-bg: #F9F9F9;
 	margin-bottom: 0px;
+}
+
+.table > thead > tr > th {
+	vertical-align: middle;
+	text-align: center;
 }
 
 .table > tbody > tr > td {

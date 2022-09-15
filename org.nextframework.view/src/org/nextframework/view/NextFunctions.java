@@ -34,8 +34,10 @@ import javax.servlet.jsp.el.ELException;
 
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.core.config.ViewConfig;
+import org.nextframework.core.standard.Message;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.HibernateUtils;
 import org.nextframework.service.ServiceFactory;
@@ -44,6 +46,7 @@ import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.validation.BindException;
 
 /**
  * @author rogelgarcia
@@ -262,6 +265,13 @@ public class NextFunctions {
 		}
 		ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
 		return viewConfig.getDefaultStyleClass(tagClass, field);
+	}
+
+	public static Boolean hasMessages() {
+		WebRequestContext requestContext = NextWeb.getRequestContext();
+		Message[] messages = requestContext.getMessages();
+		BindException errors = requestContext.getBindException();
+		return errors.hasErrors() || messages.length > 0;
 	}
 
 }

@@ -137,6 +137,7 @@ public class GroupTag extends ComboTag {
 
 		SimpleTag fieldsetTag = new SimpleTag("fieldset", null);
 		setDynamicAttributes("fieldset", fieldsetTag);
+		fieldsetTag.setDynamicAttribute(null, "id", id);
 		fieldsetTag.setDynamicAttribute(null, "style", fieldsetStyle);
 		fieldsetTag.setDynamicAttribute(null, "class", fieldsetStyleClass);
 

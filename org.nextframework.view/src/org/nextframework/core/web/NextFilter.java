@@ -39,6 +39,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.authorization.User;
 import org.nextframework.authorization.web.impl.WebUserLocator;
+import org.nextframework.core.config.ViewConfig;
+import org.nextframework.service.ServiceFactory;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -50,6 +52,9 @@ public class NextFilter implements Filter {
 	protected Log log = LogFactory.getLog(this.getClass());
 
 	private static final String APPLICATION_ATTRIB = "application";
+	private static final String APP_ATTRIB = "app";
+	private static final String BOOTSTRAP_ATTRIB = "useBootstrap";
+
 	private static final String URL_NEXT = "/next";
 	private static final String URL_LOGOUT = "/logout";
 	private static final String ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE = WebApplicationContext.class.getName() + ".ROOT";
@@ -97,6 +102,10 @@ public class NextFilter implements Filter {
 
 			//context path como atributo
 			request.setAttribute(APPLICATION_ATTRIB, request.getContextPath());
+			request.setAttribute(APP_ATTRIB, request.getContextPath());
+
+			//Uso de bootstrap
+			request.setAttribute(BOOTSTRAP_ATTRIB, ServiceFactory.getService(ViewConfig.class).isUseBootstrap());
 
 			//colocar um flag na requisição indicando que esta é uma página selectone ou cadastrar
 			String parameter = request.getParameter(INSELECTONE);

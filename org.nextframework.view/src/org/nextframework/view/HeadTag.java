@@ -113,9 +113,6 @@ public class HeadTag extends BaseTag {
 			}
 		}
 
-		pushAttribute("app", getRequest().getContextPath());
-		pushAttribute("useBootstrap", getViewConfig().isUseBootstrap());
-
 		filterDirs(resourcePathsJs);
 		filterDirs(resourcePathsCss);
 
