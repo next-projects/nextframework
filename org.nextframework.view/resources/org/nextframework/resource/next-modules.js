@@ -554,6 +554,7 @@ NextDom.sequenceGenerator = 1;
 NextDom.prototype.id = function(id){
 	return document.getElementById(id);
 }
+
 /**
  * Gera um id único
  * @return
@@ -561,6 +562,7 @@ NextDom.prototype.id = function(id){
 NextDom.prototype.generateUniqueId = function(){
 	return "__uid"+ (NextDom.sequenceGenerator++);
 }
+
 /**
  * Cria um elemento DOM com os atributos. Podem ser informados eventos e estilo.<BR>
  * Exemplo:<BR> 
@@ -589,6 +591,7 @@ NextDom.prototype.newElement = function(tag, options){
 	this.attachAttributes(element, options);
 	return element;
 }
+
 NextDom.prototype.newSpanElement = function(text, options){
 	var div = this.newElement("span", options);
 	if(text){
@@ -596,6 +599,7 @@ NextDom.prototype.newSpanElement = function(text, options){
 	}
 	return div;
 }
+
 NextDom.prototype.newDivElement = function(text, options){
 	var div = this.newElement("div", options);
 	if(text){
@@ -603,6 +607,7 @@ NextDom.prototype.newDivElement = function(text, options){
 	}
 	return div;
 }
+
 /**
  * Cria um novo input
  * @param type
@@ -741,6 +746,7 @@ NextDom.prototype.setSelectedValueWithId = function(el, id, dispatchEvent){
 	}
 	return false;
 }
+
 NextDom.prototype.setSelectedValue = function(el, value, dispatchEvent){
 	el = next.dom.toElement(el);
 	var ops = el.options;
@@ -776,6 +782,7 @@ NextDom.prototype.getSelectedValues = function(el){
 	el = next.dom.toElement(el);
 	return next.dom.getSelectedValue(el);
 }
+
 /**
  * Retorna o valor selecionado de um combobox.<BR>
  * Exemplo: next.dom.getSelectedValue(combo);
@@ -827,6 +834,7 @@ NextDom.prototype.getSelectedText = function(el){
 NextDom.prototype.newCheckbox = function(name, label, options){
 	return this.newInput("checkbox", name, label, options);
 }
+
 /**
  * Se o elemento passado como parâmetro for um elemento, retorna o próprio elemento.<BR>
  * Se for uma string, será pesquisada na página um elemento com ID ou NAME igual a string.<BR>
@@ -884,6 +892,7 @@ NextDom.prototype.getParentTagById = function(el, parentTagId){
 	}
 	return el;
 }
+
 NextDom.prototype.getParentTagByClass = function(el, className){
 	el = el.parentNode;
 	while(next.util.isDefined(el) && !next.style.hasClass(el, className)) {
@@ -933,6 +942,7 @@ NextDom.prototype.getInnerElementById = function(parent, innerId, innerTagName){
 	}
 	return null;
 }
+
 NextDom.prototype.getInnerElementByClass = function(parent, className, innerTagName){
 	if(parent && parent.childNodes){
 		for(var i = 0; i < parent.childNodes.length; i++){
@@ -954,6 +964,7 @@ NextDom.prototype.getInnerElementByClass = function(parent, className, innerTagN
 	}
 	return null;
 }
+
 NextDom.prototype.getInnerElementByName = function(parent, innerName, innerTagName){
 	if(parent && parent.childNodes){
 		for(var i = 0; i < parent.childNodes.length; i++){
@@ -1037,6 +1048,7 @@ NextDomForm.prototype.getElements = function(){
 	
 	return this.elements;
 }
+
 /**
  * Retorna um novo formulário com apenas os elementos determinados.
  * <BR>
@@ -1782,45 +1794,38 @@ NextEffects.prototype.show = function(el){
 
 NextEffects.prototype.hide = function(el){
 	el = next.dom.toElement(el);
-	el.style.display = 'none';  
+	el.style.display = 'none';
 }
 
-NextEffects.prototype.showProperty = function(el, type, form){
-	if(!next.util.isDefined(type) && !next.util.isDefined(form)){
-		next.dom.getParentTag(el, 'tr').style.display = '';		
-	} else {
-		next.effects.hideShowProperty(el, type, form, '');
-	}
+NextEffects.prototype.showProperty = function(el){
+	next.effects.showHideProperty(el, true);
 }
 
-NextEffects.prototype.hideProperty = function(el, type, form){
-	if(!next.util.isDefined(type) && !next.util.isDefined(form)){
-		next.dom.getParentTag(el, 'tr').style.display = 'none';		
-	} else {
-		next.effects.hideShowProperty(el, type, form, 'none');
-	}
+NextEffects.prototype.hideProperty = function(el){
+	next.effects.showHideProperty(el, false);
 }
 
-NextEffects.prototype.hideShowProperty = function(el, type, form, operation){
-	if(type != 'double'){
-		alert('Only type=double supported by hideProperty.');
-		return;
+NextEffects.prototype.showHideProperty = function(el, show){
+	
+	var el2 = el;
+	if (typeof(el) == 'string') {
+		el2 = next.dom.toElement(el);
 	}
-	if(!next.util.isDefined(form)){
-		form = document.forms[0];
+	
+	if (el2 == null) {
+		alert("Elemento '" + el + "' não encontrado!");
 	}
-	var input = form[el];
-	//var label = null;
-	var labels = document.getElementsByTagName('label');
-	for(var i = 0; i < labels.length; i++){
-		if(labels[i].getAttribute("for") == el.id){
-			//label = labels[i];
-			break;
-		}
+	
+	var panel = next.dom.id('p_' + el2.id);
+	if (panel != null) {
+		panel.style.display = show ? '' : 'none';
 	}
-	if(type == 'double'){
-		next.dom.getParentTag(input, 'tr').style.display = operation;
-	}	
+	
+	var label = next.dom.id('l_' + el2.id);
+	if (label != null) {
+		label.style.display = show ? '' : 'none';
+	}
+	
 }
 
 NextEffects.prototype.highlightOnOver = function(el, overColor, outColor){

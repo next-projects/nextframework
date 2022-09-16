@@ -9,9 +9,11 @@ public abstract class NextEffects {
 
 	public abstract void show(Object el);
 
+	public abstract void showProperty(Element el);
+
 	public abstract void hideProperty(Element el);
 
-	public abstract void showProperty(Element el);
+	public abstract void showHideProperty(Element el, boolean show);
 
 	public abstract void blinkColors(Element el, String colorA, String colorB);
 
