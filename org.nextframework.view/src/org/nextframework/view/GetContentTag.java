@@ -27,11 +27,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.nextframework.util.Util;
+
 public class GetContentTag extends BaseTag implements LogicalTag {
 
 	protected String tagName;
 	protected String vars;
 	protected String bodyVar;
+	protected Boolean discardEmpty;
 	protected List<String> tags = new ArrayList<String>() {
 
 		private static final long serialVersionUID = 1L;
@@ -67,7 +70,10 @@ public class GetContentTag extends BaseTag implements LogicalTag {
 	}
 
 	public void register(String body) {
-		tags.add(body);
+		body = getString(body);
+		if (body != null) {
+			tags.add(body);
+		}
 	}
 
 	@Override
@@ -79,11 +85,21 @@ public class GetContentTag extends BaseTag implements LogicalTag {
 		if (bodyVar != null) {
 			getPageContext().setAttribute(vars, tags);
 			String body = getBody();
-			getPageContext().setAttribute(bodyVar, body);
+			body = getString(body);
+			if (body != null) {
+				getPageContext().setAttribute(bodyVar, body);
+			}
 		} else {
 			doBody();
 		}
 		popAttribute(vars);
+	}
+
+	public String getString(String value) {
+		if (Util.booleans.isTrue(discardEmpty) && Util.strings.isEmpty(value)) {
+			return null;
+		}
+		return value;
 	}
 
 	public String getTagName() {
@@ -108,6 +124,14 @@ public class GetContentTag extends BaseTag implements LogicalTag {
 
 	public void setBodyVar(String bodyVar) {
 		this.bodyVar = bodyVar;
+	}
+
+	public Boolean getDiscardEmpty() {
+		return discardEmpty;
+	}
+
+	public void setDiscardEmpty(Boolean discardEmpty) {
+		this.discardEmpty = discardEmpty;
 	}
 
 }
