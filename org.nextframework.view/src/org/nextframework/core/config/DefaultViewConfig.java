@@ -142,6 +142,8 @@ public class DefaultViewConfig implements ViewConfig {
 
 			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
 			regDefaultStyleClasses(InputTag.class, "class", "form-control");
+			regDefaultStyleClasses(InputTag.class, "DATE-group", "input-group flex-nowrap");
+			regDefaultStyleClasses(InputTag.class, "DATE-button", "bi bi-calendar3 pe-auto input-group-text");
 			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "form-check-input");
 			regDefaultStyleClasses(InputTag.class, "CHECKLIST-class", "form-check-input");
 			regDefaultStyleClasses(InputTag.class, "HIDDEN-class", " ");
@@ -203,6 +205,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(DataGridTag.class, "groupStyleClasses", "dataGridGroup1, dataGridGroup2, dataGridGroup3");
 
 			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
+			regDefaultStyleClasses(InputTag.class, "DATE-button", "calendarbutton");
 			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "checkboxClass");
 
 			regDefaultStyleClasses(MenuTag.class, "panelStyleClass", "menuClass");
@@ -249,7 +252,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(SimplePanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(SimplePanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(SimplePanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(SimplePanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(SimplePanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 
 			regDefaultStyleClasses(ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
 			regDefaultStyleClasses(ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
@@ -257,7 +260,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FilterPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(FilterPanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(FilterPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			if (isDefaultFlatMode()) {
@@ -272,9 +275,9 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(ListPanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(ListPanelTag.class, "bodyStyleClass", null);
-			regDefaultStyleClasses(ListPanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(ListPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 
-			regDefaultStyleClasses(ListTableTag.class, "pagePanelStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(ListTableTag.class, "pagePanelStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 
 			regDefaultStyleClasses(FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4"); //Melhor tirar mb-4 e tentar gap
 			regDefaultStyleClasses(FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
@@ -282,7 +285,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FormPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(FormPanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(FormPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			if (isDefaultFlatMode()) {
@@ -297,7 +300,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "card-header h6");
 			regDefaultStyleClasses(ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "card-footer text-end");
+			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			if (isDefaultFlatMode()) {

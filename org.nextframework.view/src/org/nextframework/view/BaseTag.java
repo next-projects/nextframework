@@ -526,11 +526,17 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			String value = (String) bw.getPropertyValue(field);
 			if (value == null || value.length() == 0) {
 				bw.setPropertyValue(field, defaultStyleClass);
+			} else if (value.contains("+")) {
+				value = value.replace("+", defaultStyleClass);
+				bw.setPropertyValue(field, value);
 			}
 		} else if ("class".equals(field)) {
-			String classCss = (String) getDynamicAttributesMap().get("class");
-			if ((classCss == null || classCss.length() == 0)) {
+			String value = (String) getDynamicAttributesMap().get("class");
+			if (value == null || value.length() == 0) {
 				setDynamicAttribute(null, "class", defaultStyleClass);
+			} else if (value.contains("+")) {
+				value = value.replace("+", defaultStyleClass);
+				setDynamicAttribute(null, "class", value);
 			}
 		}
 	}

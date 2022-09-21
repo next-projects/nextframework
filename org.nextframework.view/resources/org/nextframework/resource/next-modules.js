@@ -1472,13 +1472,13 @@ NextStyle.prototype.centralizeVertical = function(element){
 }
 
 NextStyle.prototype.centralize = function(element){
-	centralizeHorizontal(element);
-	centralizeVertical(element);
+	next.style.centralizeHorizontal(element);
+	next.style.centralizeVertical(element);
 }
 
 NextStyle.prototype.centralizeMiddleLine = function(element){
-	centralizeHorizontal(element);
-	centralizeVerticalMiddleLine(element);
+	next.style.centralizeHorizontal(element);
+	next.style.centralizeVerticalMiddleLine(element);
 }
 
 new NextStyle();

@@ -140,10 +140,6 @@ LI.event, .event {
 	min-width: 0;
 }
 
-.card-footer .form-check-input {
-	margin-top: 0.75em;
-}
-
 
 /* Tabs */
 
@@ -200,6 +196,14 @@ SPAN.form-control {
 	--bs-btn-border-color: var(--bs-primary);
 	--bs-btn-hover-bg: var(--sl-primary-hover);
 	--bs-btn-hover-border-color: var(--sl-primary-hover);
+}
+
+.btn-micro {
+	--bs-btn-padding-y: 1px;
+	--bs-btn-padding-x: 2px;
+	--bs-btn-font-size: 0.75rem;
+	--bs-btn-border-radius: 0.2rem;
+	--bs-btn-line-height: 1em;
 }
 
 

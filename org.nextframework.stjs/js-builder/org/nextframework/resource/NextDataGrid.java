@@ -11,7 +11,6 @@ import org.stjs.javascript.Global;
 import org.stjs.javascript.JSCollections;
 import org.stjs.javascript.Map;
 import org.stjs.javascript.dom.DOMEvent;
-import org.stjs.javascript.dom.Div;
 import org.stjs.javascript.dom.Element;
 import org.stjs.javascript.dom.HTMLCollection;
 import org.stjs.javascript.dom.Input;
@@ -122,21 +121,29 @@ public class NextDataGrid {
 			dropEl.style.cursor = "pointer";
 			final OptionalColumnsComponent bigThis = this;
 			next.events.attachEvent(dropEl, "click", new Callback1<DOMEvent>() {
+
 				public void $invoke(DOMEvent p1) {
 					bigThis.showConfigurationDialog();
 				}
+
 			});
 		}
 
 		public void showConfigurationDialog() {
+
 			MessageDialog dialog = new MessageDialog();
 			dialog.setTitle("Configurar colunas");
+
+			Element panelDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDataGrid.panel", "")));
+			dialog.body.appendChild(panelDiv);
+
 			for (String c : columns) {
 				Column column = columns.$get(c);
-				Element divOp = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.option", "popup_box_option")));
+				Element divOp = next.dom.newElement("div", $map("class", next.globalMap.get("NextDataGrid.option", "popup_box_option")));
 				column.appendColumn(divOp);
-				dialog.body.appendChild(divOp);
+				panelDiv.appendChild(divOp);
 			}
+
 			final OptionalColumnsComponent bigThis = this;
 			dialog.setCallback(new NextDialogs.DialogCallback() {
 				public void onClose(String command, Object value) {
@@ -147,7 +154,9 @@ public class NextDataGrid {
 					}
 				}
 			});
+
 			dialog.show();
+
 		}
 
 		protected void saveColumns() {
@@ -184,10 +193,12 @@ public class NextDataGrid {
 			request.setParameter("hideColumns", Global.JSON.stringify(configMap));
 			request.setAppendContext(false);
 			request.setOnComplete(new Callback1<String>() {
+
 				@Override
 				public void $invoke(String p1) {
 					Global.console.log(p1);
 				}
+
 			});
 
 			request.send();

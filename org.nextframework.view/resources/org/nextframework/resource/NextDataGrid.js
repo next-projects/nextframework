@@ -91,12 +91,14 @@ NextDataGrid.OptionalColumnsComponent.prototype.init = function() {
 NextDataGrid.OptionalColumnsComponent.prototype.showConfigurationDialog = function() {
     var dialog = new NextDialogs.MessageDialog();
     dialog.setTitle("Configurar colunas");
+    var panelDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDataGrid.panel", "")});
+    dialog.body.appendChild(panelDiv);
     for (var c in this.columns) {
         if (!(this.columns).hasOwnProperty(c)) continue;
         var column = this.columns[c];
-        var divOp = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.option", "popup_box_option")});
+        var divOp = next.dom.newElement("div", {"class": next.globalMap.get("NextDataGrid.option", "popup_box_option")});
         column.appendColumn(divOp);
-        dialog.body.appendChild(divOp);
+        panelDiv.appendChild(divOp);
     }
     var bigThis = this;
     dialog.setCallback((function(){
