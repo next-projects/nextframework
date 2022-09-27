@@ -27,8 +27,8 @@ SelectManyPopup.prototype.configure = function(){
 			var checkList = new Array();
 			
 			var controlArea = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.header', 'popup_box_header')});
-			var controlArea_buttons = next.dom.newElement('DIV', {style: {cssFloat: 'left'}});
-			var controlArea_filter = next.dom.newElement('DIV', {style: {clear:'right', cssFloat: 'right'}});
+			var controlArea_buttons = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.headerButtons'), style: {cssFloat: 'left'}});
+			var controlArea_filter = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.headerFilter'), style: {clear:'right', cssFloat: 'right'}});
 			
 			var markAll = next.dom.newElement('BUTTON', {innerHTML: 'Marcar Todos', className: next.globalMap.get('SelectManyPopup.button', 'button')});
 			var unmarkAll = next.dom.newElement('BUTTON', {innerHTML: 'Desmarcar Todos', className: next.globalMap.get('SelectManyPopup.button', 'button')});
@@ -50,7 +50,13 @@ SelectManyPopup.prototype.configure = function(){
 			for(var i = 0; i < options.length; i++){
 				var op = options[i];
 				var divOp = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.option', 'popup_box_option')});
-				var check = next.dom.newInput('checkbox', '', op.text, {id: next.dom.generateUniqueId()});
+				var check = next.dom.newInput('checkbox', '', op.text,
+					{
+						id: next.dom.generateUniqueId(),
+						className: next.globalMap.get('SelectManyPopup.optionInput'),
+						labelOptions: {className: next.globalMap.get('SelectManyPopup.optionLabel')},
+						containerOptions: {className: next.globalMap.get('SelectManyPopup.optionContainer')}
+					});
 				check.childNodes[0].value = op.value;
 				check.childNodes[0].checked = op.selected;
 				divOp.appendChild(check);

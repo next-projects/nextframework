@@ -149,6 +149,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(InputTag.class, "HIDDEN-class", " ");
 			regDefaultStyleClasses(InputTag.class, "RADIO-class", "form-check-input");
 			regDefaultStyleClasses(InputTag.class, "SELECT_ONE-class", "form-select");
+			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-group", "input-group flex-nowrap");
+			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-button", "bi bi-three-dots input-group-text");
 
 			regDefaultStyleClasses(LinkTag.class, "BUTTON-class", "btn btn-primary");
 
@@ -207,6 +209,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
 			regDefaultStyleClasses(InputTag.class, "DATE-button", "calendarbutton");
 			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "checkboxClass");
+			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-button", "select_many_popup_button");
 
 			regDefaultStyleClasses(MenuTag.class, "panelStyleClass", "menuClass");
 

@@ -8,14 +8,18 @@
 		<div class="${listPanelTag.sectionTitleStyleClass}" style="${listPanelTag.sectionTitleStyle}">${listPanelTag.sectionTitle}</div>
 	</c:if>
 
-	<div class="${listPanelTag.bodyStyleClass}" style="${listPanelTag.bodyStyle}">
-		<n:doBody />
-	</div>
+	<n:getContent tagName="actionPanelTag" vars="acoes">
 
-	<c:if test="${!empty acoes}">
-		<div class="${listPanelTag.actionBarStyleClass}" style="${listPanelTag.actionBarStyle}">
-			${acoes}
+		<div class="${listPanelTag.bodyStyleClass}" style="${listPanelTag.bodyStyle}">
+			<n:doBody />
 		</div>
-	</c:if>
+
+		<c:if test="${!empty acoes}">
+			<div class="${listPanelTag.actionBarStyleClass}" style="${listPanelTag.actionBarStyle}">
+				${acoes}
+			</div>
+		</c:if>
+
+	</n:getContent>
 
 </div>

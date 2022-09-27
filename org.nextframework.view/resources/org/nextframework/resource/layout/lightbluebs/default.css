@@ -32,6 +32,7 @@ A.btn:HOVER {
 	--sl-card-cap-color: #eaf2ff;
 	--bs-light-rgb: 238,239,240; /* #eeeff0 */
 	--sl-disabled-bg: var(--bs-gray-200);
+	--sl-alert-bg: #fffaeb;
 }
 
 
@@ -39,7 +40,7 @@ A.btn:HOVER {
 
 .alert-primary {
 	--bs-alert-color: var(--bs-primary);
-	--bs-alert-bg: #fff9e5;
+	--bs-alert-bg: var(--sl-alert-bg);
 	--bs-alert-border-color: #e5dbba;
 }
 
@@ -216,6 +217,7 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 .table {
 	--bs-table-bg: #FFFFFF;
 	--bs-table-striped-bg: #F9F9F9;
+	--bs-table-hover-bg: var(--sl-alert-bg);
 	margin-bottom: 0px;
 }
 
@@ -238,6 +240,12 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 	--bs-pagination-active-bg: var(--bs-primary);
 	--bs-pagination-active-border-color: var(--bs-primary);
 }
+
+/* Text */
+
+.small75{
+	font-size: 0.75em;
+} 
 
 
 /* Popover */
