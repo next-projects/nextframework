@@ -135,7 +135,8 @@ LI.event, .event {
 	--bs-card-cap-color: var(--bs-primary);
 }
 
-.card-header .form-control, .card-footer .form-control, .form-control-inline {
+.card-header .form-control, .card-footer .form-control,
+.card-header .form-select, .card-footer .form-select, .form-control-inline {
 	display: inline;
 	width: auto;
 	min-width: 0;
@@ -240,12 +241,6 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 	--bs-pagination-active-bg: var(--bs-primary);
 	--bs-pagination-active-border-color: var(--bs-primary);
 }
-
-/* Text */
-
-.small75{
-	font-size: 0.75em;
-} 
 
 
 /* Popover */

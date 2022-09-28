@@ -1,4 +1,4 @@
-﻿next.globalMap.put('NextDialogs.header', 'card-header h6');
+﻿next.globalMap.put('NextDialogs.header', 'card-header h5');
 next.globalMap.put('NextDialogs.body', 'card-body p-2');
 next.globalMap.put('NextDialogs.footer', 'card-footer d-flex flex-wrap justify-content-end align-items-center gap-2');
 next.globalMap.put('NextDialogs.button', 'btn btn-primary');
@@ -15,7 +15,7 @@ next.globalMap.put('Progress.barError', 'progress-bar bg-danger');
 next.globalMap.put('Progress.status', 'small');
 next.globalMap.put('Progress.tasks', 'mt-3');
 
-next.globalMap.put('SelectManyPopup.header', 'card-header h6');
+next.globalMap.put('SelectManyPopup.header', 'card-header h5');
 next.globalMap.put('SelectManyPopup.headerButtons', 'd-flex flex-wrap align-items-center gap-2');
 next.globalMap.put('SelectManyPopup.headerFilter', 'd-flex flex-wrap align-items-center gap-2');
 next.globalMap.put('SelectManyPopup.body', 'card-body p-2 row');

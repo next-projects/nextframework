@@ -253,7 +253,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ViewTag.class, "bodyStyleClass", null);
 
 			regDefaultStyleClasses(SimplePanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(SimplePanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(SimplePanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(SimplePanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(SimplePanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 
@@ -261,7 +261,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
 
 			regDefaultStyleClasses(FilterPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(FilterPanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(FilterPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(FilterPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
@@ -276,7 +276,7 @@ public class DefaultViewConfig implements ViewConfig {
 			}
 
 			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(ListPanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(ListPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(ListPanelTag.class, "bodyStyleClass", null);
 			regDefaultStyleClasses(ListPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 
@@ -286,7 +286,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
 
 			regDefaultStyleClasses(FormPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(FormPanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(FormPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(FormPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
@@ -301,7 +301,7 @@ public class DefaultViewConfig implements ViewConfig {
 			}
 
 			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "card mb-4");
-			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "card-header h6");
+			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
 			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
@@ -316,7 +316,7 @@ public class DefaultViewConfig implements ViewConfig {
 			}
 
 			regDefaultStyleClasses(DetailTag.class, "actionButtonStyleClass", "btn btn-sm btn-primary");
-			regDefaultStyleClasses(DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary");
+			regDefaultStyleClasses(DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary mt-1");
 
 			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
 			regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");

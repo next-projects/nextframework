@@ -31,10 +31,10 @@
 		</n:dataGrid>
 		<c:if test="${detailTag.showNewLineButton && !view}">
 			<c:if test="${!propertyConfigDisabled}">
-				<button class="${detailTag.newLineButtonStyleClass}" style="margin: 2px 0px;" type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="${detailTag.newLineButtonStyleClass}" type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 			<c:if test="${propertyConfigDisabled}">
-				<button class="${detailTag.newLineButtonStyleClass}" style="margin: 2px 0px;" type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="${detailTag.newLineButtonStyleClass}" type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 		</c:if>
 	</div>
