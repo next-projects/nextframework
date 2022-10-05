@@ -170,11 +170,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 				}
 
 				String columnStyleClass = columnStyleClassIterator.next();
-				if (block.getProperties().containsKey("class")) {
-					String blockClass = (String) block.getProperties().remove("class");
-					if (blockClass != null) {
-						columnStyleClass = (Util.strings.isNotEmpty(columnStyleClass) ? columnStyleClass + " " : "") + blockClass;
-					}
+				String blockClass = (String) block.getProperties().remove("class");
+				if (blockClass != null) {
+					columnStyleClass = (Util.strings.isNotEmpty(columnStyleClass) ? columnStyleClass + " " : "") + blockClass;
 				}
 
 				String classString = "";
@@ -184,11 +182,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 				}
 
 				String columnStyle = columnStyleIterator.next();
-				if (block.getProperties().containsKey("style")) {
-					String blockStyle = (String) block.getProperties().remove("style");
-					if (blockStyle != null) {
-						columnStyle = (Util.strings.isNotEmpty(columnStyle) ? columnStyle + "; " : "") + blockStyle;
-					}
+				String blockStyle = (String) block.getProperties().remove("style");
+				if (blockStyle != null) {
+					columnStyle = (Util.strings.isNotEmpty(columnStyle) ? columnStyle + "; " : "") + blockStyle;
 				}
 				String styleString = columnStyle != null ? " style=\"" + columnStyle + "\"" : "";
 

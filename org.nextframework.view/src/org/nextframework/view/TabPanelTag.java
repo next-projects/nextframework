@@ -29,6 +29,8 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.nextframework.util.Util;
+
 /**
  * @author rogelgarcia
  * @since 31/01/2006
@@ -152,21 +154,39 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 	}
 
 	private void renderPanels(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
-		int index = 0;
+
 		if (tabBlocks.size() == 1 && !renderUniqueTab) {
 			getOut().println(tabBlocks.get(0).getBody());
 		} else {
+
+			int index = 0;
 			String css = contentClass != null ? " class=\"" + contentClass + "\"" : "";
 			getOut().println("<div" + css + ">");
+
 			for (TabPanelBlock block : tabBlocks) {
-				String cssb = index == selectedIndex ? selectedClass != null ? " class=\"" + selectedClass + "\"" : "" : unselectedClass != null ? " class=\"" + unselectedClass + "\"" : "";
-				getOut().print("<div" + cssb + " id=\"" + block.getId() + "\">");
+
+				String columnStyleClass = index == selectedIndex ? selectedClass : unselectedClass;
+				String blockClass = block.getStyleClass();
+				if (blockClass != null) {
+					columnStyleClass = (Util.strings.isNotEmpty(columnStyleClass) ? columnStyleClass + " " : "") + blockClass;
+				}
+				String classString = Util.strings.isNotEmpty(columnStyleClass) ? " class=\"" + columnStyleClass + "\"" : "";
+
+				String blockStyle = block.getStyle();
+				String styleString = Util.strings.isNotEmpty(blockStyle) ? " style=\"" + blockStyle + "\"" : "";
+
+				getOut().print("<div" + classString + styleString + " id=\"" + block.getId() + "\">");
 				getOut().print(block.getBody());
 				getOut().print("</div>");
+
 				index++;
+
 			}
+
 			getOut().print("</div>");
+
 		}
+
 	}
 
 	protected void renderSelectedPanelScript(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {

@@ -13,6 +13,5 @@
 				<li class="${tabPanelTag.navItemClass}"><a id="${linkId}" ${current} href="javascript:show${id}('${block.id}', ${status.index}, '${linkId}'); ${block.onSelectTab}">${block.title}</a></li>
 			</c:forEach>
 		</ul>
-		<div class='clear'>&nbsp;</div>
 	</div>
 </c:if>

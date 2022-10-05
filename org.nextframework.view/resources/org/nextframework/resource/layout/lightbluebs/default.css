@@ -222,12 +222,12 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 	margin-bottom: 0px;
 }
 
-.table > thead > tr > th {
+.table > THEAD > TR > TH, .table-center > TD {
 	vertical-align: middle;
 	text-align: center;
 }
 
-.table > tbody > tr > td {
+.table > TBODY > TR > TD {
 	vertical-align: middle;
 }
 

@@ -13,22 +13,24 @@
 
 	<n:validation functionName="validateForm" bypass="${!viewTag.includeForm || !viewTag.validateForm}">
 
-		<script language="javascript">
-			// caso seja alterada a função validation ela será chamada após a validacao do formulario
-			var validation;
-			function validarFormulario(){
-				<c:if test="${!viewTag.validateForm}">
-					return true;
-				</c:if>
-				<c:if test="${viewTag.validateForm}">
-					var valido = validateForm();
-					if(validation){
-						valido = validation(valido);
-					}
-					return valido;
-				</c:if>
-			}
-		</script>
+		<c:if test="${viewTag.includeForm && viewTag.validateForm}">
+			<script language="javascript">
+				// caso seja alterada a função validation ela será chamada após a validacao do formulario
+				var validation;
+				function validarFormulario(){
+					<c:if test="${!viewTag.validateForm}">
+						return true;
+					</c:if>
+					<c:if test="${viewTag.validateForm}">
+						var valido = validateForm();
+						if(validation){
+							valido = validation(valido);
+						}
+						return valido;
+					</c:if>
+				}
+			</script>
+		</c:if>
 
 		<div class="${viewTag.pageStyleClass}">
 			<c:if test="${! empty viewTag.title }">

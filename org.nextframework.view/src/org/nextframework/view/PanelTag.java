@@ -84,22 +84,13 @@ public class PanelTag extends BaseTag {
 
 		} else {
 
-			Object style = getDynamicAttributesMap().get("style");
-			Object clazz = getDynamicAttributesMap().get("class");
-			if (Util.objects.isNotEmpty(style) || Util.objects.isNotEmpty(clazz)) {
-				getOut().print("<span");
-				if (Util.objects.isNotEmpty(style)) {
-					getOut().print(" style=\"" + style + "\"");
-				}
-				if (Util.objects.isNotEmpty(clazz)) {
-					getOut().print(" class=\"" + clazz + "\"");
-				}
-				getOut().print(">");
+			if (Util.collections.isNotEmpty(getDynamicAttributesMap())) {
+				getOut().print("<span " + getDynamicAttributesToString() + " >");
 			}
 
 			doBody();
 
-			if (Util.objects.isNotEmpty(style) || Util.objects.isNotEmpty(clazz)) {
+			if (Util.collections.isNotEmpty(getDynamicAttributesMap())) {
 				getOut().print("</span>");
 			}
 

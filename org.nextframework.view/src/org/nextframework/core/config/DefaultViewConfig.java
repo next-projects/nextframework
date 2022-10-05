@@ -137,7 +137,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(DataGridTag.class, "styleClass", "table table-sm table-striped table-bordered table-hover");
 			regDefaultStyleClasses(DataGridTag.class, "headerStyleClass", "table-light");
 
-			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border rounded p-2");
+			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border border-primary border-opacity-50 rounded p-2");
 			regDefaultStyleClasses(GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-75");
 
 			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
@@ -194,7 +194,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(TabPanelTag.class, "navItemClass", "nav-item");
 			regDefaultStyleClasses(TabPanelTag.class, "navLinkClass", "nav-link");
 			regDefaultStyleClasses(TabPanelTag.class, "contentClass", "tab-content");
-			regDefaultStyleClasses(TabPanelTag.class, "selectedClass", "tab-pane active");
+			regDefaultStyleClasses(TabPanelTag.class, "selectedClass", "tab-pane");
 			regDefaultStyleClasses(TabPanelTag.class, "unselectedClass", "tab-pane");
 
 		} else {
