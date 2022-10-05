@@ -141,7 +141,7 @@ public class CollectionsUtil {
 	 * @param property propriedade que deve ser extraida de cada bean
 	 * @return Uma lista com os objetos de cada propriedade do bean
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public Set<?> getSetProperty(Collection<?> collection, String property){
 		//TODO OTIMIZAR
 		Set set = new HashSet();
@@ -239,5 +239,13 @@ public class CollectionsUtil {
 	public boolean isNotEmpty(Collection<?> col) {
 		return !isEmpty(col);
 	}
-	
+
+	public boolean isEmpty(Map<?, ?> map) {
+		return map == null || map.isEmpty();
+	}
+
+	public boolean isNotEmpty(Map<?, ?> map) {
+		return !isEmpty(map);
+	}
+
 }
