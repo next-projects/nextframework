@@ -189,7 +189,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(SubmitTag.class, "BUTTON-class", "btn btn-primary");
 			regDefaultStyleClasses(SubmitTag.class, "SUBMIT-class", "btn btn-primary");
 
-			regDefaultStyleClasses(TabPanelTag.class, "navPanelClass", null);
+			regDefaultStyleClasses(TabPanelTag.class, "navPanelClass", "mb-2");
 			regDefaultStyleClasses(TabPanelTag.class, "navClass", "nav nav-tabs");
 			regDefaultStyleClasses(TabPanelTag.class, "navItemClass", "nav-item");
 			regDefaultStyleClasses(TabPanelTag.class, "navLinkClass", "nav-link");

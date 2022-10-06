@@ -44,6 +44,27 @@ public class PanelTag extends BaseTag {
 	@Override
 	protected void doComponent() throws Exception {
 
+		Map<String, Object> attrs = new HashMap<String, Object>();
+		attrs.putAll(getDynamicAttributesMap());
+		if (attrs.get("style") == null || "".equals(attrs.get("style"))) {
+			attrs.remove("style");
+		}
+		if (attrs.get("class") == null || "".equals(attrs.get("class"))) {
+			attrs.remove("class");
+		}
+		if (colspan != null) {
+			attrs.put("colspan", colspan);
+		}
+		if (title != null) {
+			attrs.put("title", title);
+		}
+		if (onSelectTab != null) {
+			attrs.put("onselecttab", onSelectTab);
+		}
+		if (id != null) {
+			attrs.put("id", id);
+		}
+
 		BaseTag findFirst2 = findFirst2(AcceptPanelRenderedBlock.class, PanelTag.class, ColumnTag.class);
 		if (findFirst2 != null && findFirst2 instanceof AcceptPanelRenderedBlock) {
 
@@ -52,27 +73,6 @@ public class PanelTag extends BaseTag {
 				body = getBody();
 			} else {
 				body = "";
-			}
-
-			Map<String, Object> attrs = new HashMap<String, Object>();
-			attrs.putAll(getDynamicAttributesMap());
-			if ("".equals(attrs.get("style"))) {
-				attrs.remove("style");
-			}
-			if ("".equals(attrs.get("class"))) {
-				attrs.remove("class");
-			}
-			if (colspan != null) {
-				attrs.put("colspan", colspan);
-			}
-			if (title != null) {
-				attrs.put("title", title);
-			}
-			if (onSelectTab != null) {
-				attrs.put("onselecttab", onSelectTab);
-			}
-			if (id != null) {
-				attrs.put("id", id);
 			}
 
 			PanelRenderedBlock renderedBlock = new PanelRenderedBlock();
@@ -84,13 +84,15 @@ public class PanelTag extends BaseTag {
 
 		} else {
 
-			if (Util.collections.isNotEmpty(getDynamicAttributesMap())) {
-				getOut().print("<span " + getDynamicAttributesToString() + " >");
+			boolean useSpan = attrs.containsKey("class") || attrs.containsKey("style");
+
+			if (useSpan) {
+				getOut().print("<span " + getDynamicAttributesToString(attrs) + " >");
 			}
 
 			doBody();
 
-			if (Util.collections.isNotEmpty(getDynamicAttributesMap())) {
+			if (useSpan) {
 				getOut().print("</span>");
 			}
 
