@@ -35,119 +35,155 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.nextframework.authorization.User;
+import org.nextframework.authorization.web.impl.WebUserLocator;
+
 /**
  * @author rogelgarcia | marcusabreu
  * @since 21/01/2006
  * @version 1.1
  */
 public class NextFilter implements Filter {
-	
-	String ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE = WebApplicationContext.class.getName() + ".ROOT";
-	
+
+	protected Log log = LogFactory.getLog(this.getClass());
+
+	private static final String APPLICATION_ATTRIB = "application";
+	private static final String URL_NEXT = "/next";
+	private static final String URL_LOGOUT = "/logout";
+	private static final String ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE = WebApplicationContext.class.getName() + ".ROOT";
+
 	//copied from SelecionarCadastrarServlet
-	public static final String INSELECTONE = "INSELECTONE";
-	
-	private Boolean initError = null;
+	private static final String INSELECTONE = "INSELECTONE";
 
 	public void init(FilterConfig config) throws ServletException {
-		
+
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-		long beginTime = System.currentTimeMillis();
+
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
-		
-		//colocar um flag na requisição indicando que esta é uma página selectone ou cadastrar
-		String parameter = request.getParameter(INSELECTONE);
-		if("true".equals(parameter)){
-			request.setAttribute(INSELECTONE, true);
-		}
-		
-		if(initError == null){
-			initError = ((HttpServletRequest)req).getSession().getServletContext().getAttribute(ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE) instanceof Exception;
-		}
-		
-		//context path como atributo
-		request.setAttribute("application", request.getContextPath());
-		
-		//cria o contexto de requisicao NEXT
-		NextWeb.createRequestContext(request, response);
-		
-		boolean nextRequest = request.getRequestURI().equals(request.getContextPath()+"/next");
-		if(nextRequest || initError){
-			response.setCharacterEncoding("ISO-8859-1");
-			PrintWriter out = response.getWriter();
-			out.println("<HTML>");
-			out.println("<head>");
-			out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />");
-			out.println("<link rel=\"stylesheet\"	href=\""+request.getContextPath()+"/resource/theme/welcome.css\"/>");
-			out.println("</head>");
-			
-			out.println("<BODY>");
-			if(initError){
-				Exception ex = (Exception)((HttpServletRequest)req).getSession().getServletContext().getAttribute(ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-				out.println("<h1 style=\"color: #AA0000\">There was a problem in the application initialization! Check log for more info</h1>");
-				out.println("<div>"+ex.getMessage()+"</div>");
-				out.println("<div style=\"padding-left: 20px\"> -> "+ex.getCause()+"</div>");
-			} else {
-				out.println("<h1>"+getAppName(request)+"</h1>");
-				out.println("<h2>Application is running</h2>");
-			}
-			out.println("<p style=\"font-style: italic\">powered by NEXT FRAMEWORK</p>");
-			out.println("</BODY>");
-			out.println("</HTML>");
-			out.flush();
-			//String url = "/WEB-INF/classes/org/nextframework/resource/next.jsp";
-			//ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-			//PrintWriter writer = new PrintWriter(arrayOutputStream);
-		
-			//RequestDispatcher requestDispatcher = null;
-			//requestDispatcher = request.getRequestDispatcher(url);
-			//requestDispatcher.include(request, response);
-			//writer.flush();
-			//response.getWriter().write(arrayOutputStream.toString());
-			
-			
-			response.setStatus(HttpServletResponse.SC_OK);
+
+		boolean nextRequest = request.getServletPath().equals(URL_NEXT);
+		Exception ex = (Exception) ((HttpServletRequest) req).getSession().getServletContext().getAttribute(ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+
+		if (nextRequest || ex != null) {
+
+			printNextInfo(request, response, ex);
+
 		} else {
-			if(request.getServletPath().equals("/logout")){
+
+			if (request.getServletPath().equals(URL_LOGOUT)) {
 				request.getSession().invalidate();
 				response.sendRedirect(request.getContextPath());
 				return;
-				
 			}
-			String uri = request.getRequestURI();
-					
-//			if (uri.matches("/.+?/.+?/.*")) {
-//				request.setAttribute("NEXT_MODULO", uri.split("/")[2]);
-//			}
-			
+
+			//cria o contexto de requisicao NEXT
+			NextWeb.createRequestContext(request, response);
+
+			boolean simpleResource = isSimpleResource(request);
+			if (simpleResource) {
+				chain.doFilter(request, response);
+				return;
+			}
+
+			//Marca início do processo
+			long beginTime = System.currentTimeMillis();
+			String userProcessPrefix = getUserProcessPrefix(request);
+			log.info(userProcessPrefix + "...");
+
+			//context path como atributo
+			request.setAttribute(APPLICATION_ATTRIB, request.getContextPath());
+
+			//colocar um flag na requisição indicando que esta é uma página selectone ou cadastrar
+			String parameter = request.getParameter(INSELECTONE);
+			if ("true".equals(parameter)) {
+				request.setAttribute(INSELECTONE, true);
+			}
+
+			//Toca o barco
 			chain.doFilter(request, response);
 
-			long endTime = System.currentTimeMillis();
-			long elapsed = (endTime - beginTime);
-			if (uri.length() > 5 && !uri.substring(uri.length() - 5).contains(".")) {
-				if (elapsed > 250) {
-					System.out.println("Time: " + request.getRequestURI() + "  " + elapsed + " ms");
-				}
+			//Marca fim do processo
+			long elapsed = (System.currentTimeMillis() - beginTime);
+			if (elapsed < 1000 * 10) {
+				log.info(userProcessPrefix + " " + elapsed + " ms");
+			} else {
+				log.warn(userProcessPrefix + " " + elapsed + " ms");
 			}
+
 		}
+
+	}
+
+	private void printNextInfo(HttpServletRequest request, HttpServletResponse response, Exception ex) throws IOException {
+
+		response.setCharacterEncoding("ISO-8859-1");
+
+		PrintWriter out = response.getWriter();
+
+		out.println("<HTML>");
+		out.println("<head>");
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />");
+		out.println("<link rel=\"stylesheet\" href=\"" + request.getContextPath() + "/resource/theme/welcome.css\"/>");
+		out.println("</head>");
+		out.println("<BODY>");
+		if (ex != null) {
+			out.println("<h1 style=\"color: #AA0000\">There was a problem in the application initialization! Check log for more info</h1>");
+			out.println("<div>" + ex.getMessage() + "</div>");
+			out.println("<div style=\"padding-left: 20px\"> -> " + ex.getCause() + "</div>");
+		} else {
+			out.println("<h1>" + getAppName(request) + "</h1>");
+			out.println("<h2>Application is running</h2>");
+		}
+		out.println("<p style=\"font-style: italic\">powered by NEXT FRAMEWORK</p>");
+		out.println("</BODY>");
+		out.println("</HTML>");
+		out.flush();
+
+		//String url = "/WEB-INF/classes/org/nextframework/resource/next.jsp";
+		//ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+		//PrintWriter writer = new PrintWriter(arrayOutputStream);
+
+		//RequestDispatcher requestDispatcher = null;
+		//requestDispatcher = request.getRequestDispatcher(url);
+		//requestDispatcher.include(request, response);
+		//writer.flush();
+		//response.getWriter().write(arrayOutputStream.toString());
+
+		response.setStatus(HttpServletResponse.SC_OK);
+
 	}
 
 	public String getAppName(HttpServletRequest request) {
 		String contextpath = request.getContextPath();
-		if(contextpath != null && contextpath.length() > 1){
+		if (contextpath != null && contextpath.length() > 1) {
 			return contextpath.substring(1).toUpperCase();
 		}
 		String contextName = request.getServletContext().getServletContextName();
-		if(contextName != null){
+		if (contextName != null) {
 			return contextName;
 		}
 		return new DefaultWebApplicationContext(request.getServletContext()).getApplicationName();
 	}
 
+	public boolean isSimpleResource(HttpServletRequest request) {
+		String uri = request.getRequestURI();
+		return uri.length() < 5 || uri.substring(uri.length() - 5).contains(".") || uri.contains("/ajax/");
+	}
+
+	public String getUserProcessPrefix(HttpServletRequest request) {
+		User user = WebUserLocator.getSessionUser(request);
+		String userStr = user != null ? user.getUsername() : "?";
+		String ip = request.getRemoteAddr();
+		return userStr + " (" + ip + ") -> " + request.getRequestURI();
+	}
+
 	public void destroy() {
+
 	}
 
 }
