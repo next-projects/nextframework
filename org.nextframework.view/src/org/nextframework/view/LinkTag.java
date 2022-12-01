@@ -40,7 +40,7 @@ public class LinkTag extends BaseTag {
 
 	// atributos
 	protected String confirmationMessage;//mensagem de confirmacao.. (janela javascript)
-	
+
 	protected String url;
 
 	protected String action;
@@ -52,7 +52,6 @@ public class LinkTag extends BaseTag {
 	protected String type;
 
 	protected String parameters;
-	
 
 	enum Type {
 		BUTTON, IMAGE, LINK
@@ -60,31 +59,30 @@ public class LinkTag extends BaseTag {
 
 	// extra
 
-
 	private String onclick;
 
 	@Override
 	protected void doComponent() throws Exception {
 		boolean hasAuthorization = hasAuthorization();
 		url = buildFullUrl();
-		
-		if(!hasAuthorization){
-			getOut().println("<!-- Sem autorização para acessar: "+url+"-->");
+
+		if (!hasAuthorization) {
+			getOut().println("<!-- Sem autorização para acessar: " + url + "-->");
 			return;
 		}
 		//corpo = getBody();
 		Type tipo = configureType();
-		
-		if(tipo == Type.BUTTON){
+
+		if (tipo == Type.BUTTON) {
 			boolean disabled = "disabled".equals(getDynamicAttributesMap().get("disabled"));
 			boolean enabled = "false".equals(getDynamicAttributesMap().get("disabled"));
-			
-			if(!enabled){
+
+			if (!enabled) {
 				PropertyConfigTag propertyConfig = findParent(PropertyConfigTag.class);
 				DataGridTag dataGridTag = findParent(DataGridTag.class);
-				if(propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled())
-						&& (dataGridTag == null || dataGridTag.getCurrentStatus() != DataGridTag.Status.DYNALINE)){
-					if(disabled){
+				if (propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled())
+						&& (dataGridTag == null || dataGridTag.getCurrentStatus() != DataGridTag.Status.DYNALINE)) {
+					if (disabled) {
 						getDynamicAttributesMap().put("originaldisabled", "disabled");
 					}
 					getDynamicAttributesMap().put("disabled", "disabled");
@@ -93,32 +91,32 @@ public class LinkTag extends BaseTag {
 				getDynamicAttributesMap().remove("disabled");
 			}
 		}
-				
+
 		switch (tipo) {
-		case IMAGE:
-			includeTextTemplate("image");
-			break;
-		case BUTTON:
-			if(url.startsWith("javascript:")){
-				url = url.substring("javascript:".length());
-			} else {
-				url = "window.location='"+url+"'";
-			}
-			if(Util.strings.isNotEmpty(confirmationMessage)){
-				url = "if(confirm('"+confirmationMessage+"')){"+url+"}";
-			}
-			includeTextTemplate("button");
-			break;
-		case LINK:
-			includeTextTemplate("link");
-			break;
+			case IMAGE:
+				includeTextTemplate("image");
+				break;
+			case BUTTON:
+				if (url.startsWith("javascript:")) {
+					url = url.substring("javascript:".length());
+				} else {
+					url = "window.location='" + url + "'";
+				}
+				if (Util.strings.isNotEmpty(confirmationMessage)) {
+					url = "if(confirm('" + confirmationMessage + "')){" + url + "}";
+				}
+				includeTextTemplate("button");
+				break;
+			case LINK:
+				includeTextTemplate("link");
+				break;
 		}
 	}
 
 	private boolean hasAuthorization() {
 		try {
 			String partialURL = getPartialURL();
-			if(partialURL.contains("?")){
+			if (partialURL.contains("?")) {
 				partialURL = partialURL.substring(0, partialURL.indexOf('?'));
 			}
 			User user = Authorization.getUserLocator().getUser();
@@ -127,13 +125,12 @@ public class LinkTag extends BaseTag {
 			throw new NextException("Problema ao verificar autorização", e);
 		}
 	}
-	
-	
-	private String getPartialURL(){
+
+	private String getPartialURL() {
 		if (url != null && url.startsWith(getRequest().getContextPath())) {
 			return url.substring(getRequest().getContextPath().length());
 		}
-		String fullUrl = url == null ? WebUtils.getFirstUrl() : (url.startsWith("/") ?  url : url);
+		String fullUrl = url == null ? WebUtils.getFirstUrl() : url;
 		return fullUrl;
 	}
 
@@ -148,13 +145,12 @@ public class LinkTag extends BaseTag {
 		return type;
 	}
 
-
 	private String buildFullUrl() {
-		if(url != null && url.startsWith("javascript:")){
+		if (url != null && url.startsWith("javascript:")) {
 			return url;
 		}
 
-		if(action != null && action.startsWith("javascript:")){
+		if (action != null && action.startsWith("javascript:")) {
 			url = action;
 			action = null;
 			return url;
@@ -169,19 +165,17 @@ public class LinkTag extends BaseTag {
 		// adicionar parameters na url
 		if (parameters != null) {
 			fullUrl += separator + parameters.replace(";", "&");
-		}		
-				
-		
+		}
+
 		//Verifica URL Sufix
 		fullUrl = WebUtils.rewriteUrl(fullUrl);
-		
+
 		return fullUrl;
 	}
 
 	public String getOnclick() {
 		return onclick;
 	}
-
 
 	public String getAction() {
 		return action;
@@ -205,11 +199,11 @@ public class LinkTag extends BaseTag {
 
 	public String getUrl() {
 		Type tipo = configureType();
-		if(confirmationMessage != null && (tipo == Type.LINK || tipo == Type.IMAGE)){//TODO FAZER PARA OUTROS TIPOS
-			if(url.startsWith("javascript: ")){
-				return "javascript: if(confirm('"+confirmationMessage+"')){"+url.substring("javascript:".length())+"}";
+		if (confirmationMessage != null && (tipo == Type.LINK || tipo == Type.IMAGE)) {//TODO FAZER PARA OUTROS TIPOS
+			if (url.startsWith("javascript: ")) {
+				return "javascript: if(confirm('" + confirmationMessage + "')){" + url.substring("javascript:".length()) + "}";
 			}
-			return "javascript: if(confirm('"+confirmationMessage+"')){window.location = '"+url+"';}";
+			return "javascript: if(confirm('" + confirmationMessage + "')){window.location = '" + url + "';}";
 		}
 		return url;
 	}
@@ -245,4 +239,5 @@ public class LinkTag extends BaseTag {
 	public void setConfirmationMessage(String confirmationMessage) {
 		this.confirmationMessage = confirmationMessage;
 	}
+
 }
