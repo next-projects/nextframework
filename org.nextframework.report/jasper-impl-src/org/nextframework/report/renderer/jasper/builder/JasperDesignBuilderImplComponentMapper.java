@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.nextframework.chart.Chart;
 import org.nextframework.report.definition.ReportParent;
@@ -183,7 +185,14 @@ public class JasperDesignBuilderImplComponentMapper {
 	//			result.setPositionType((PositionTypeEnum) renderParameters.get(JasperRenderParameters.POSITION_TYPE));
 	//		}
 		if(renderParameters.containsKey(JasperRenderParameters.PRINT_WHEN_EXPRESSION)){
-			result.setPrintWhenExpression(new JRDesignExpression((String) renderParameters.get(JasperRenderParameters.PRINT_WHEN_EXPRESSION)));
+			String printExpression = (String) renderParameters.get(JasperRenderParameters.PRINT_WHEN_EXPRESSION);
+			result.setPrintWhenExpression(new JRDesignExpression(printExpression));
+			if (printExpression.contains("$F{")) {
+				Matcher m = Pattern.compile("\\$F\\{(.*)\\}").matcher(printExpression);
+				while (m.find()) {
+					jasperDesignBuilderImpl.createFieldOrParameterExpression(m.group(1), null, false);
+				}
+			}
 		}
 		
 		if(result instanceof JRBoxContainer){
