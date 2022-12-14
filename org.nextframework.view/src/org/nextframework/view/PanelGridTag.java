@@ -126,10 +126,10 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			getOut().println("<" + mainTag + classString + styleString + getDynamicAttributesToString() + ">");
 		}
 
-		CyclicIterator rowStyleClassIterator = Util.strings.isEmpty(rowStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(rowStyleClasses.split(","));
-		CyclicIterator rowStyleIterator = Util.strings.isEmpty(rowStyles) ? new CyclicIterator(null) : new CyclicIterator(rowStyles.split(","));
-		CyclicIterator columnStyleClassIterator = Util.strings.isEmpty(columnStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(columnStyleClasses.split(","));
-		CyclicIterator columnStyleIterator = Util.strings.isEmpty(columnStyles) ? new CyclicIterator(null) : new CyclicIterator(columnStyles.split(","));
+		CyclicIterator rowStyleClassIterator = Util.strings.isEmpty(rowStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(rowStyleClasses);
+		CyclicIterator rowStyleIterator = Util.strings.isEmpty(rowStyles) ? new CyclicIterator(null) : new CyclicIterator(rowStyles);
+		CyclicIterator columnStyleClassIterator = Util.strings.isEmpty(columnStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(columnStyleClasses);
+		CyclicIterator columnStyleIterator = Util.strings.isEmpty(columnStyles) ? new CyclicIterator(null) : new CyclicIterator(columnStyles);
 
 		int remainingColumns = columns;
 		int rowCount = 0;
@@ -149,9 +149,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			if (remainingColumns == columns) {
 
 				String styleClass = rowStyleClassIterator.next();
-				String rowStyleClass = styleClass != null ? " class=\"" + styleClass + "\"" : "";
+				String rowStyleClass = Util.strings.isNotEmpty(styleClass) ? " class=\"" + styleClass + "\"" : "";
 				String style = rowStyleIterator.next();
-				String rowStyle = style != null ? " style=\"" + style + "\"" : "";
+				String rowStyle = Util.strings.isNotEmpty(style) ? " style=\"" + style + "\"" : "";
 
 				getOut().print("<" + rowTag + rowStyleClass + rowStyle + ">");
 
@@ -176,7 +176,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 				}
 
 				String classString = "";
-				if (columnStyleClass != null) {
+				if (Util.strings.isNotEmpty(columnStyleClass)) {
 					columnStyleClass = columnStyleClass.replaceAll("\\{CS\\}", colspanBlock.toString());
 					classString = " class=\"" + columnStyleClass + "\"";
 				}
@@ -348,12 +348,13 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 	private static class CyclicIterator implements Iterator<String> {
 
-		private String[] strings;
+		private static String SEP = ",";
 
+		private String[] strings;
 		int i = 0;
 
-		public CyclicIterator(String[] strings) {
-			this.strings = strings;
+		public CyclicIterator(String strings) {
+			this.strings = strings != null ? strings.split(SEP) : null;
 		}
 
 		public boolean hasNext() {

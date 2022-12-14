@@ -232,6 +232,10 @@ public class DataGridTag extends BaseTag {
 			}
 		}
 
+		if (itens != null && itens instanceof Map) {
+			itens = ((Map) itens).entrySet();
+		}
+
 		if (itens == null) { // se os itens forem null funcionar como se fosse uma tabela vazia
 			itens = new ArrayList<Object>();
 		}
@@ -246,12 +250,14 @@ public class DataGridTag extends BaseTag {
 			}
 			try {
 				Collections.sort((List) itens, new Comparator() {
+
 					@Override
 					public int compare(Object o1, Object o2) {
 						Comparable propertyValue1 = (Comparable) PropertyAccessorFactory.forBeanPropertyAccess(o1).getPropertyValue(indexProperty);
 						Comparable propertyValue2 = (Comparable) PropertyAccessorFactory.forBeanPropertyAccess(o2).getPropertyValue(indexProperty);
 						return propertyValue1.compareTo(propertyValue2);
 					}
+
 				});
 			} catch (Exception e) {
 				throw new NextException("Cannot reorder list in datagrid. ", e);
