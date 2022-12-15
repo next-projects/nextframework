@@ -135,8 +135,10 @@ LI.event, .event {
 	--bs-card-cap-color: var(--bs-primary);
 }
 
-.card-header .form-control, .card-footer .form-control,
-.card-header .form-select, .card-footer .form-select, .form-control-inline {
+.card-header .form-control, .card-header .form-select,
+.card-footer .form-control, .card-footer .form-select,
+.form-controls-inline .form-control, .form-controls-inline .form-select,
+.form-control-inline {
 	display: inline;
 	width: auto;
 	min-width: 0;
