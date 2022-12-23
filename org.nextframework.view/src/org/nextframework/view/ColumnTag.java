@@ -73,7 +73,7 @@ public class ColumnTag extends BaseTag {
 			if (string.startsWith("body")) {
 				mapBody.put(string.substring("body".length()), getDynamicAttributesMap().get(string));
 			} else if (string.startsWith("header")) {
-				mapHeader.put(string.substring("header".length()).toLowerCase(), getDynamicAttributesMap().get(string));
+				mapHeader.put(string.substring("header".length()), getDynamicAttributesMap().get(string));
 			} else {
 				mapBody.put(string, getDynamicAttributesMap().get(string));
 				mapHeader.put(string, getDynamicAttributesMap().get(string));
@@ -119,7 +119,6 @@ public class ColumnTag extends BaseTag {
 					getOut().print(contents + "</th>");
 				} else {
 					String orderLink = getRequest().getContextPath() + NextWeb.getRequestContext().getRequestQuery() + "?orderBy=" + order;
-
 					//Verifica URL Sufix
 					orderLink = WebUtils.rewriteUrl(orderLink);
 					String contents = "<a class=\"order\" href=\"" + orderLink + "\">" + header + "</a>";
@@ -144,18 +143,16 @@ public class ColumnTag extends BaseTag {
 				} else {
 					//Adicionado, porque o tagBody pode vir com <td ...> ... </td> e precisa validar se o conteúdo entre as tags é em branco.
 					//modificado por pedrogoncalves em 17/04/2007
-
 					//Código removido, o uso de expressão regular estava deixando o datagrid lento, foi alterado para fazer semelhante no arquivo BodyTag.java
 					//modificado por pedrogoncalves em 20/04/2007
-
-//				Pattern pattern = Pattern.compile("<td (.*?)>(.*)</td>",Pattern.DOTALL);
-//				Matcher matcher = pattern.matcher(tagBody.trim());
-//				if (matcher.find()) {
-//					String tdBody = matcher.group(2);
-//					getOut().print(tdBody == null || tdBody.trim().equals("")? "<td "+matcher.group(1)+" >&nbsp;</td>" : tagBody);
-//				} else {
-//					getOut().print(tagBody);
-//				}
+					//Pattern pattern = Pattern.compile("<td (.*?)>(.*)</td>",Pattern.DOTALL);
+					//Matcher matcher = pattern.matcher(tagBody.trim());
+					//if (matcher.find()) {
+					//	String tdBody = matcher.group(2);
+					//	getOut().print(tdBody == null || tdBody.trim().equals("")? "<td "+matcher.group(1)+" >&nbsp;</td>" : tagBody);
+					//} else {
+					//	getOut().print(tagBody);
+					//}
 					getOut().print(tagBody);
 				}
 				break;

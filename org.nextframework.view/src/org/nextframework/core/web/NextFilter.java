@@ -181,7 +181,7 @@ public class NextFilter implements Filter {
 
 	public boolean isSimpleResource(HttpServletRequest request) {
 		String uri = request.getRequestURI();
-		return uri.length() < 10 || uri.substring(uri.length() - 10).contains(".") || uri.contains("/ajax/");
+		return uri.length() < 10 || (uri.substring(uri.length() - 10).contains(".") && !uri.contains(".jsp")) || uri.contains("/ajax/");
 	}
 
 	public String getUserProcessPrefix(HttpServletRequest request) {
