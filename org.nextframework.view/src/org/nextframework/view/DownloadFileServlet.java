@@ -40,15 +40,14 @@ import org.nextframework.service.ServiceFactory;
 import org.nextframework.types.File;
 import org.nextframework.web.WebContext;
 
-
 public class DownloadFileServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final String DOWNLOAD_FILE_MAP = "NEXT_DOWNLOAD_FILE_MAP";
 
 	public static final String DOWNLOAD_FILE_PATH = "/downloadfile";
-	
+
 	DownloadFileProvider delegate;
 
 	@Override
@@ -56,31 +55,31 @@ public class DownloadFileServlet extends HttpServlet {
 		super.init(config);
 		//some containers do not use the same Thread for filter and servlet initialization
 		WebContext.setServletContext(config.getServletContext());
-		
+
 		delegate = ServiceFactory.getService(DownloadFileProvider.class);
 	}
-	
+
 	private static long tempFileId = -1;
-	
-	public synchronized static long getNewTempFileId(){
+
+	public synchronized static long getNewTempFileId() {
 		return tempFileId--;
 	}
-	
+
 	public static void persist(File value, long tempFileId) throws IOException {
 		//TODO UNIFICAR O LOCAL DE SALVAR E LER OS ARQUIVOS TEMPORARIOS
-		java.io.File tempFile = new java.io.File(System.getProperty("java.io.tmpdir"), Next.getApplicationName()+"_tempFileObject"+tempFileId+".next");
-		System.out.println("TEMPORARY FILE    "+tempFile.getAbsolutePath());
+		java.io.File tempFile = new java.io.File(System.getProperty("java.io.tmpdir"), Next.getApplicationName() + "_tempFileObject" + tempFileId + ".next");
+		System.out.println("TEMPORARY FILE    " + tempFile.getAbsolutePath());
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 		out.writeObject(value);
 		out.flush();
 		out.close();
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		delegate.doGet(req, resp);
 	}
-	
+
 	@Override
 	protected long getLastModified(HttpServletRequest req) {
 		return delegate.getLastModified(req);
@@ -90,14 +89,14 @@ public class DownloadFileServlet extends HttpServlet {
 		getMap(session).put(cdfile, cdfile);
 	}
 
-	public static Long getCdfile(HttpSession session, Long cdfile) {
-		return getMap(session).get(cdfile);
+	public static boolean checkCdfile(HttpSession session, Long cdfile) {
+		return getMap(session).containsKey(cdfile);
 	}
 
 	private static HashMap<Long, Long> getMap(HttpSession session) {
 		@SuppressWarnings("unchecked")
 		HashMap<Long, Long> map = (HashMap<Long, Long>) session.getAttribute(DOWNLOAD_FILE_MAP);
-		
+
 		if (map == null) {
 			map = new HashMap<Long, Long>();
 			session.setAttribute(DOWNLOAD_FILE_MAP, map);
@@ -105,4 +104,5 @@ public class DownloadFileServlet extends HttpServlet {
 
 		return map;
 	}
+
 }
