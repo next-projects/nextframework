@@ -125,10 +125,11 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 	private void createAndDrawChart(final String id, DataTable data) {
 		Chart chart = instanciateChart(this.chart.getStyle().getChartType(), id);
 		ChartStyle style = this.chart.getStyle();
-		Map chartParameters = map(
-				"width", style.getWidth(),
-				"height", this.chart.getStyle().getHeight());
-		
+		Map chartParameters = map();
+		if (style.getWidth() != null && style.getHeight() != null) {
+			chartParameters.putProperty("width", style.getWidth());
+			chartParameters.putProperty("height", style.getHeight());
+		}
 		Map hAxis = map();
 		if(ChartUtils.hasText(this.chart.getData().getGroupTitle())){
 			hAxis.putProperty("title", this.chart.getData().getGroupTitle());
@@ -208,14 +209,19 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 			chartParameters.putProperty("bar", bar);
 		}
 		
-		if(style.getLeftPadding() != null || style.getTopPadding() != null
-				|| style.getChartAreaHeight() != null || style.getChartAreaWidth() != null){
+		if(style.getTopPadding() != null || style.getBottomPadding() != null ||  style.getLeftPadding() != null || style.getRightPadding() != null || style.getChartAreaHeight() != null || style.getChartAreaWidth() != null){
 			Map chartArea = map();
+			if(this.chart.getStyle().getTopPadding() != null){
+				chartArea.putProperty("top", this.chart.getStyle().getTopPadding());
+			}
+			if(this.chart.getStyle().getBottomPadding() != null){
+				chartArea.putProperty("bottom", this.chart.getStyle().getBottomPadding());
+			}
 			if(this.chart.getStyle().getLeftPadding() != null){
 				chartArea.putProperty("left", this.chart.getStyle().getLeftPadding());
 			}
-			if(this.chart.getStyle().getTopPadding() != null){
-				chartArea.putProperty("top", this.chart.getStyle().getTopPadding());
+			if(this.chart.getStyle().getRightPadding() != null){
+				chartArea.putProperty("right", this.chart.getStyle().getRightPadding());
 			}
 			if(this.chart.getStyle().getChartAreaHeight() != null){
 				chartArea.putProperty("height", this.chart.getStyle().getChartAreaHeight());

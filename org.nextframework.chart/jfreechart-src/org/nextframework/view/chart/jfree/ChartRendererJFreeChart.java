@@ -67,7 +67,13 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 	}
 	
 	public static byte[] renderAsSVG(Chart chart){
-		return convertChartToSVG(renderAsJFreeChart(chart), chart.getStyle().getWidth(), chart.getStyle().getHeight());
+		try {
+			int width = Integer.parseInt(chart.getStyle().getWidth());
+			int height = Integer.parseInt(chart.getStyle().getHeight());
+			return convertChartToSVG(renderAsJFreeChart(chart), width, height);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -77,7 +83,9 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 	 */
 	public static byte[] renderAsImage(Chart chart){
 		try {
-			return convertChartToByteArray(chart, renderAsJFreeChart(chart), chart.getStyle().getWidth(), chart.getStyle().getHeight());
+			int width = Integer.parseInt(chart.getStyle().getWidth());
+			int height = Integer.parseInt(chart.getStyle().getHeight());
+			return convertChartToByteArray(chart, renderAsJFreeChart(chart), width, height);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
