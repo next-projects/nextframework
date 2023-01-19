@@ -22,105 +22,111 @@ public class SubreportTable extends Subreport {
 
 	@Override
 	public ReportDefinition getReport() {
-		if(report == null){
+		if (report == null) {
 			report = createReport();
 		}
 		return super.getReport();
 	}
 
 	private ReportDefinition createReport() {
+
 		ReportDefinition definition = new ReportDefinition();
-		definition.setReportName("subreporttable"+tableInformation.hashCode()+tableInformation.getClass().getSimpleName()+Math.random());
-		
+		definition.setReportName("subreporttable" + tableInformation.hashCode() + tableInformation.getClass().getSimpleName() + Math.random());
+
 		Collection<?> columnHeaderDataSet = tableInformation.getColumnHeaderDataSet();
 		Collection<?> rowGroupDataSet = tableInformation.getRowGroupDataSet();
-		
+
 		definition.getColumn(0).setWidth(tableInformation.getFirstColumnWidth());
 		ReportSection sectionForHeader = tableInformation.getSectionForHeader(definition);
-		
+
 		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
-		
+
 		ReportTextField groupField = new ReportTextField("GROUP");
 		definition.addItem(groupField, definition.getSectionDetail(), 0);
 		tableInformation.configureGroupField(groupField);
-		
+
 		String firstColumnHeaderText = tableInformation.getFirstColumnHeader();
-		if(firstColumnHeaderText == null){
+		if (firstColumnHeaderText == null) {
 			firstColumnHeaderText = "";
 		}
-		if(firstColumnHeaderText != null){
+		if (firstColumnHeaderText != null) {
 			ReportLabel firstColumnHeaderField = new ReportLabel(firstColumnHeaderText);
 			tableInformation.configureHeaderField(firstColumnHeaderField, 0);
 			definition.addItem(firstColumnHeaderField, sectionForHeader, 0);
 		}
-		
+
 		int i = 1;
 		Map<Object, Set<String>> expressionsForColumns = new HashMap<Object, Set<String>>();
 		for (Object headerValue : columnHeaderDataSet) {
+
 			ReportItem component = tableInformation.getComponentFor(headerValue, i);
-			
+
 			Set<String> expressions = getExpressionsForAndConfigurePrefix(component, i);
 			expressionsForColumns.put(headerValue, expressions);
-			
+
 			ReportLabel headerField = new ReportLabel(tableInformation.formatHeader(headerValue));
 			tableInformation.configureHeaderField(headerField, i);
 			definition.addItem(headerField, sectionForHeader, i);
 			definition.addItem(component, definition.getSectionDetail(), i);
-			
+
 			i++;
+
 		}
-		
+
 		for (Object rowGroup : rowGroupDataSet) {
+
 			Map<String, Object> rowMap = new HashMap<String, Object>();
 			rowMap.put("GROUP", tableInformation.formatRowGroup(rowGroup));
 			data.add(rowMap);
-			
+
 			i = 1;
 			for (Object headerValue : columnHeaderDataSet) {
 				Object o = tableInformation.getValueForRowAndColumn(rowGroup, headerValue, i);
-				if(o == null){
+				if (o == null) {
 					throw new IllegalArgumentException("Value cannot be null. Null value returned from tableInformation.getValueForRowAndColumn(...)");
 				}
-				
+
 				for (String exp : expressionsForColumns.get(headerValue)) {
 					Object propertyValue = readValue(o, exp);
-					
-					rowMap.put("c"+i+"_"+exp, propertyValue);
+
+					rowMap.put("c" + i + "_" + exp, propertyValue);
 				}
 				i++;
 			}
+
 		}
-		
+
 		definition.setData(data);
+
 		return definition;
 	}
 
 	private Object readValue(Object o, String property) {
-		if(o == null){
+		if (o == null) {
 			return null;
 		}
 		String capitalized = Character.toUpperCase(property.charAt(0)) + property.substring(1);
 		try {
-			Method method = o.getClass().getMethod("get"+capitalized);
+			Method method = o.getClass().getMethod("get" + capitalized);
 			method.setAccessible(true);
 			return method.invoke(o);
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Cannot read property '"+property+"' from object of class "+o.getClass().getName(), e);
+			throw new IllegalArgumentException("Cannot read property '" + property + "' from object of class " + o.getClass().getName(), e);
 		}
 	}
 
 	private Set<String> getExpressionsForAndConfigurePrefix(ReportItem component, int i) {
 		Set<String> expressions = new HashSet<String>();
 		ReportItemIterator iterator = new ReportItemIterator(component);
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			ReportItem next = iterator.next();
-			if(next instanceof ReportTextField){
+			if (next instanceof ReportTextField) {
 				ReportTextField tf = (ReportTextField) next;
 				expressions.add(tf.getExpression());
-				tf.setExpression("c"+i+"_"+tf.getExpression());
+				tf.setExpression("c" + i + "_" + tf.getExpression());
 			}
 		}
 		return expressions;
 	}
-	
+
 }

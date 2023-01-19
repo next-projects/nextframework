@@ -8,7 +8,6 @@ public class ReportTextField extends ReportTextElement {
 	private String type = "field";
 	private String pattern;
 	private String patternExpression;
-	private boolean callToString;
 
 	public ReportTextField(String expression, ReportAlignment alignment) {
 		this(expression);
@@ -51,10 +50,6 @@ public class ReportTextField extends ReportTextElement {
 		return patternExpression;
 	}
 
-	public boolean isCallToString() {
-		return callToString;
-	}
-
 	public void setExpression(String expression) {
 		this.expression = expression;
 	}
@@ -67,10 +62,6 @@ public class ReportTextField extends ReportTextElement {
 	public ReportTextField setPatternExpression(String patternExpression) {
 		this.patternExpression = patternExpression;
 		return this;
-	}
-
-	public void setCallToString(boolean callToString) {
-		this.callToString = callToString;
 	}
 
 	/**

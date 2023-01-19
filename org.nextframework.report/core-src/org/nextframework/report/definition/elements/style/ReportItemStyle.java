@@ -3,54 +3,55 @@ package org.nextframework.report.definition.elements.style;
 import java.awt.Color;
 
 public class ReportItemStyle extends ReportBasicStyle {
-	
-	Integer fontSize;
 
-	Boolean bold;
-	Boolean italic;
-	
-	String design;
-	
-	public ReportItemStyle(){
+	private Integer fontSize;
+	private Boolean bold;
+	private Boolean italic;
+	private String design;
+
+	public ReportItemStyle() {
 	}
-	
-	public ReportItemStyle(boolean bold){
+
+	public ReportItemStyle(boolean bold) {
 		this.bold = bold;
 	}
-	
-	public ReportItemStyle(int fontSize){
+
+	public ReportItemStyle(int fontSize) {
 		this.fontSize = fontSize;
 	}
-	
+
 	public ReportItemStyle setForegroundColor(Color foregroundColor) {
 		this.foregroundColor = foregroundColor;
 		return this;
 	}
-	
+
 	public ReportItemStyle setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 		return this;
 	}
 
-
 	public Integer getFontSize() {
 		return fontSize;
 	}
-	
+
 	public ReportItemStyle setFontSize(Integer fontSize) {
 		this.fontSize = fontSize;
 		return this;
 	}
+
 	public Boolean getBold() {
 		return bold;
 	}
+
 	public Boolean getItalic() {
 		return italic;
 	}
+
 	public ReportItemStyle setBold(Boolean bold) {
 		this.bold = bold;
 		return this;
 	}
+
 	public ReportItemStyle setItalic(Boolean italic) {
 		this.italic = italic;
 		return this;
@@ -59,6 +60,7 @@ public class ReportItemStyle extends ReportBasicStyle {
 	public String getDesign() {
 		return design;
 	}
+
 	public void setDesign(String design) {
 		this.design = design;
 	}
@@ -107,7 +109,7 @@ public class ReportItemStyle extends ReportBasicStyle {
 	public ReportItemStyle setPaddingTop(int paddingTop) {
 		return (ReportItemStyle) super.setPaddingTop(paddingTop);
 	}
-	
+
 	public ReportItemStyle setPadding(int padding) {
 		setPaddingBottom(padding);
 		setPaddingLeft(padding);
@@ -115,4 +117,5 @@ public class ReportItemStyle extends ReportBasicStyle {
 		setPaddingTop(padding);
 		return this;
 	}
+
 }

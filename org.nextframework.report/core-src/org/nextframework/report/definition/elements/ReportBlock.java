@@ -7,15 +7,14 @@ import org.nextframework.report.definition.ReportParent;
 
 public class ReportBlock extends ReportItem implements ReportParent {
 
-	List<ReportItem> itens = new ArrayList<ReportItem>();
-	
-	String element;
-	
-	public ReportBlock(String element){
+	private List<ReportItem> itens = new ArrayList<ReportItem>();
+	private String element;
+
+	public ReportBlock(String element) {
 		this.element = element;
 	}
-	
-	public ReportBlock(String element, int width){
+
+	public ReportBlock(String element, int width) {
 		this(element);
 		this.width = width;
 	}
@@ -24,12 +23,12 @@ public class ReportBlock extends ReportItem implements ReportParent {
 		e.setParent(this);
 		return itens.add(e);
 	}
-	
+
 	@Override
 	public List<ReportItem> getChildren() {
 		return itens;
 	}
-	
+
 	public String getElement() {
 		return element;
 	}
@@ -38,5 +37,5 @@ public class ReportBlock extends ReportItem implements ReportParent {
 	public String getDescriptionName() {
 		return "Block";
 	}
-	
+
 }

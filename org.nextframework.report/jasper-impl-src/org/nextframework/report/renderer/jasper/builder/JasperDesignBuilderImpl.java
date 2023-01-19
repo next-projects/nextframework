@@ -11,6 +11,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.nextframework.chart.Chart;
+import org.nextframework.report.definition.ReportColumn;
+import org.nextframework.report.definition.ReportGroup;
+import org.nextframework.report.definition.ReportGroupSection;
+import org.nextframework.report.definition.ReportSection;
+import org.nextframework.report.definition.ReportSectionRow;
+import org.nextframework.report.definition.ReportSectionType;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
+import org.nextframework.report.definition.builder.LayoutReportBuilder;
+import org.nextframework.report.definition.elements.ReportBlock;
+import org.nextframework.report.definition.elements.ReportChart;
+import org.nextframework.report.definition.elements.ReportComposite;
+import org.nextframework.report.definition.elements.ReportConstants;
+import org.nextframework.report.definition.elements.ReportGrid;
+import org.nextframework.report.definition.elements.ReportImage;
+import org.nextframework.report.definition.elements.ReportItem;
+import org.nextframework.report.definition.elements.ReportLabel;
+import org.nextframework.report.definition.elements.ReportOverlapComposite;
+import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.definition.elements.Subreport;
+import org.nextframework.report.definition.elements.style.Border;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
+
 import net.sf.jasperreports.engine.JRChild;
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -41,28 +64,6 @@ import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.PositionTypeEnum;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
 import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
-
-import org.nextframework.chart.Chart;
-import org.nextframework.report.definition.ReportColumn;
-import org.nextframework.report.definition.ReportGroup;
-import org.nextframework.report.definition.ReportGroupSection;
-import org.nextframework.report.definition.ReportSection;
-import org.nextframework.report.definition.ReportSectionRow;
-import org.nextframework.report.definition.ReportSectionType;
-import org.nextframework.report.definition.builder.BaseReportBuilder;
-import org.nextframework.report.definition.builder.LayoutReportBuilder;
-import org.nextframework.report.definition.elements.ReportBlock;
-import org.nextframework.report.definition.elements.ReportChart;
-import org.nextframework.report.definition.elements.ReportComposite;
-import org.nextframework.report.definition.elements.ReportConstants;
-import org.nextframework.report.definition.elements.ReportGrid;
-import org.nextframework.report.definition.elements.ReportImage;
-import org.nextframework.report.definition.elements.ReportItem;
-import org.nextframework.report.definition.elements.ReportLabel;
-import org.nextframework.report.definition.elements.ReportOverlapComposite;
-import org.nextframework.report.definition.elements.ReportTextField;
-import org.nextframework.report.definition.elements.Subreport;
-import org.nextframework.report.definition.elements.style.Border;
 
 public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 	
@@ -295,7 +296,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		if(expression.startsWith("param.")){
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (expression.contains(LayoutReportBuilder.FILTER_PARAMETER)) {
-				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($P{"+expression.substring(6)+"}, (java.util.Locale) $P{" + BaseReportBuilder.LOCALE + "})");
+				expression2.setText("((" + ReportBuilderValueConverter.class.getCanonicalName() + ")$P{" + BaseReportBuilder.CONVERTER + "}).apply($P{"+expression.substring(6)+"})");
 			}else{
 				expression2.setText("$P{"+expression.substring(6)+"}");
 			}
@@ -328,7 +329,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		} else {
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (callToString) {
-				expression2.setText("org.nextframework.util.Util.strings.toStringDescription($F{"+expression+"}, (java.util.Locale) $P{" + BaseReportBuilder.LOCALE + "})");
+				expression2.setText("((" + ReportBuilderValueConverter.class.getCanonicalName() + ")$P{" + BaseReportBuilder.CONVERTER + "}).apply($F{"+expression+"})");
 			}else{
 				expression2.setText("$F{"+expression+"}");
 			}
@@ -877,7 +878,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				} else if(child instanceof ReportTextField) {
 					ReportTextField tf = (ReportTextField) child;
 					JRDesignTextField textField = getInnerTextField(findTextFieldInList(tf, list));
-					textField.setExpression(createFieldOrParameterExpression(tf.getExpression(), null, tf.isCallToString()));
+					textField.setExpression(createFieldOrParameterExpression(tf.getExpression(), null, true));
 				} else {
 					throw new RuntimeException("element not supported in blocks "+child);
 				}

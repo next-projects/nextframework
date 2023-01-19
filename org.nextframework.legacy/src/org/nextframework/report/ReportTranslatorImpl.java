@@ -35,8 +35,8 @@ import net.sf.jasperreports.engine.util.JRLoader;
 public class ReportTranslatorImpl implements ReportTranslator {
 
 	protected ReportNameResolver nameResolver;
-	
-	public ReportTranslatorImpl(ReportNameResolver nameResolver){
+
+	public ReportTranslatorImpl(ReportNameResolver nameResolver) {
 		this.nameResolver = nameResolver;
 	}
 

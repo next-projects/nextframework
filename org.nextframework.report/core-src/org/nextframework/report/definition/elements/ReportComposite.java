@@ -16,18 +16,19 @@ import org.nextframework.report.definition.ReportParent;
  */
 public class ReportComposite extends ReportItem implements ReportParent {
 
-	List<ReportItem> items = new ArrayList<ReportItem>();
-	
+	private List<ReportItem> items = new ArrayList<ReportItem>();
+
 	public ReportComposite() {
 	}
-	
+
 	public ReportComposite(int width) {
 		this.width = width;
 	}
-	
+
 	public ReportComposite(ReportItem... itens) {
 		this.items = Arrays.asList(itens);
 	}
+
 	public ReportComposite(List<ReportItem> itens) {
 		super();
 		this.items = itens;
@@ -38,7 +39,7 @@ public class ReportComposite extends ReportItem implements ReportParent {
 		items.add(e);
 		return this;
 	}
-	
+
 	@Override
 	public List<ReportItem> getChildren() {
 		return items;
@@ -48,4 +49,5 @@ public class ReportComposite extends ReportItem implements ReportParent {
 	public String getDescriptionName() {
 		return "Composite";
 	}
+
 }

@@ -1,9 +1,13 @@
 package org.nextframework.report.definition.builder;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.report.definition.ReportGroup;
 import org.nextframework.report.definition.ReportSection;
 import org.nextframework.report.definition.elements.ReportGrid;
@@ -15,14 +19,189 @@ import org.nextframework.report.definition.elements.style.ReportAlignment;
 public abstract class LayoutReportBuilder extends BaseReportBuilder {
 
 	public static final String FILTER_PARAMETER = "REPORT_FILTER";
+	public static final String FIELD_NAME = "fieldName";
 
 	protected int currentColumn = 0;
 	protected Object filter;
-	
+	protected ReportGrid reportFilterGrid;
+	private BeanDescriptor filterClassBeanDescriptorCache;
+
+	@Override
+	protected void configureDefinition() {
+
+		super.configureDefinition();
+		getDefinition().getParameters().put(FILTER_PARAMETER, filter);
+		configureReport();
+
+		if (isSetupColumnWidths()) {
+			getDefinition().setColumnWidths(getColumnConfig());
+		}
+
+		this.reportFilterGrid = getConfigurator().getReportFilterGrid(this);
+		getDefinition().addTitleItem(this.reportFilterGrid);
+		layoutReportFilter();
+
+		layoutReport();
+
+		afterLayout();
+
+	}
+
+	protected void configureReport() {
+		getConfigurator().configureReport(this);
+	}
+
+	public LayoutReportConfigurator getConfigurator() {
+		return LayoutReportConfiguratorFactory.getConfigurator();
+	}
+
+	@Override
+	protected void onSetupGroup(String groupName, GroupSetup groupSetup, int index) {
+		super.onSetupGroup(groupName, groupSetup, index);
+		addLabelForGroup(groupName, groupSetup, index);
+	}
+
+	protected void addLabelForGroup(String groupName, GroupSetup groupSetup, int index) {
+		ReportTextField field = getGroupTextField(groupName, groupSetup);
+		groupSetup.setLabelTextField(field);
+		configureLabelForGroup(groupName, groupSetup, index, field);
+		getDefinition().addItem(field, groupSetup.getReportGroup().getSectionHeader().getRow(0), 0);
+	}
+
+	private ReportTextField getGroupTextField(String groupName, GroupSetup groupSetup) {
+		return field(groupSetup.getGroupExpression());
+	}
+
+	protected void configureLabelForGroup(String groupName, GroupSetup groupSetup, int index, ReportTextField field) {
+		getConfigurator().configureLabelForGroup(groupName, groupSetup, index, field);
+	}
+
+	/**
+	 * Will configure column widths? (will call getColumnConfig() method)
+	 */
+	protected boolean isSetupColumnWidths() {
+		return true;
+	}
+
+	protected void layoutReportFilter() {
+		List<String> properties = getFilterProperties();
+		for (String property : properties) {
+			try {
+				filter(property);
+			} catch (Exception e) {
+				addLabelAndFieldToFilterGrid(new ReportLabel(property), new ReportLabel("ERROR"));
+			}
+		}
+	}
+
+	protected List<String> getFilterProperties() {
+		List<String> properties = new ArrayList<String>();
+		PropertyDescriptor[] pds = BeanDescriptorFactory.forBean(getFilter()).getPropertyDescriptors();
+		for (PropertyDescriptor pd : pds) {
+			if (pd.getOwnerClass() == getFilter().getClass()) {
+				properties.add(pd.getName());
+			}
+		}
+		Collections.sort(properties);
+		return properties;
+	}
+
+	protected abstract void layoutReport();
+
+	protected void afterLayout() {
+		getConfigurator().afterLayout(this);
+	}
+
+	@Override
+	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String label,
+			String fieldName, String fieldPreffix, String fieldSuffix, String reportExpression,
+			String pattern, ReportAlignment alignment) {
+
+		FieldConfig fieldConfig = super.createFieldConfig(builder, beanDescriptor, propertyDescriptor, label,
+				fieldName, fieldPreffix, fieldSuffix, reportExpression,
+				pattern, alignment);
+
+		getConfigurator().updateFieldConfig(fieldConfig);
+
+		return fieldConfig;
+	}
+
+	protected void filter(String fieldName) {
+		filter(fieldName, null);
+	}
+
+	protected void filter(String fieldName, String label) {
+
+		FieldConfig configForFilterField = getConfigForFilterField(fieldName);
+
+		ReportLabel labelElement = new ReportLabel(label == null ? configForFilterField.label : label);
+		labelElement.getStyle().setPaddingRight(4);
+		labelElement.getStyle().setAlignment(ReportAlignment.LEFT);
+		labelElement.setRenderParameter(FIELD_NAME, fieldName);
+
+		BeanDescriptor beanWrapperImpl = BeanDescriptorFactory.forBean(filter);
+		PropertyDescriptor propertyDescriptor = beanWrapperImpl.getPropertyDescriptor(configForFilterField.originalExpression);
+		Object propertyValue = propertyDescriptor.getValue();
+		propertyValue = checkFilterValue(propertyDescriptor, propertyValue);
+		getDefinition().getParameters().put(configForFilterField.reportExpression, propertyValue);
+
+		ReportTextField fieldElement = new ReportTextField("param." + configForFilterField.reportExpression);
+		fieldElement.setPattern(configForFilterField.pattern);
+		fieldElement.getStyle().setAlignment(ReportAlignment.LEFT);
+		fieldElement.getStyle().setPaddingRight(4);
+		fieldElement.setRenderParameter(FIELD_NAME, fieldName);
+
+		addLabelAndFieldToFilterGrid(labelElement, fieldElement);
+
+	}
+
+	protected FieldConfig getConfigForFilterField(String fieldName) {
+		String fieldPreffix = FILTER_PARAMETER + ".";
+		return getConfigForBeanDescriptor(fieldName, fieldPreffix, getFilterClassBeanDescriptorCache());
+	}
+
+	protected BeanDescriptor getFilterClassBeanDescriptorCache() {
+		if (filterClassBeanDescriptorCache == null) {
+			if (filter == null) {
+				throw new NullPointerException("Report filter not set");
+			}
+			filterClassBeanDescriptorCache = BeanDescriptorFactory.forClass(filter.getClass());
+		}
+		return filterClassBeanDescriptorCache;
+	}
+
+	protected Object checkFilterValue(PropertyDescriptor propertyDescriptor, Object propertyValue) {
+
+		if (propertyValue == null) {
+			Type type = propertyDescriptor.getType();
+			if (type instanceof Class<?>) {
+				Class<?> clazz = (Class<?>) type;
+				if (clazz.getPackage() != null && !clazz.getPackage().getName().startsWith("java")) {
+					propertyValue = "[TODOS]";
+				}
+			}
+		}
+
+		return propertyValue;
+	}
+
+	protected void addLabelAndFieldToFilterGrid(ReportLabel labelElement, ReportTextElement fieldElement) {
+		reportFilterGrid.addItem(labelElement);
+		reportFilterGrid.addItem(fieldElement);
+	}
+
+	public Object getFilter() {
+		return filter;
+	}
+
 	public void setFilter(Object filter) {
 		this.filter = filter;
 	}
-	
+
+	public ReportGrid getReportFilterGrid() {
+		return reportFilterGrid;
+	}
+
 	/**
 	 * Override to configure the report columns
 	 * @return
@@ -31,271 +210,61 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		return null;
 	}
 
-	protected void breakDetailLine() {
-		getDefinition().getSectionDetailHeader().breakLine();
-		getDefinition().getSectionDetail().breakLine();
-		gotoColumn(2);
-	}
-	
-	private BeanDescriptor filterClassBeanDescriptor;
-
-	BeanDescriptor getFilterClassBeanDescriptor() {
-		if(filterClassBeanDescriptor == null){
-			filterClassBeanDescriptor = BeanDescriptorFactory.forClass(getFilterClass());
-		}
-		return filterClassBeanDescriptor;
-	}
-	
-	protected FieldConfig getConfigForFilterField(String fieldName) {
-		String fieldPreffix = FILTER_PARAMETER + ".";
-		return getConfigForBeanDescriptor(fieldName, fieldPreffix, getFilterClassBeanDescriptor(), filter);
-	}
-	
-	
-	@SuppressWarnings("all")
-	private Class getFilterClass() {
-		if(filter == null){
-			throw new NullPointerException("Report filter not set");
-		}
-		return filter.getClass();
-	}
-
-	public Object getFilter() {
-		return filter;
-	}
-	
-	public int getColumnQuantity(){
+	public int getColumnQuantity() {
 		return getColumnConfig().length;
 	}
-	
-	protected void gotoColumn(int column){
-		currentColumn = column;
-		if(getColumnConfig() != null){
-			if(currentColumn > getColumnConfig().length -1){
-				throw new IllegalArgumentException("invalid column "+column);
-			}
-		}
-	}
-	
-	protected void incrementColumn(int colspan, ReportSection section){
-		currentColumn += colspan;
-		if(getColumnConfig() != null){
-			if(currentColumn > getColumnConfig().length -1){
-				currentColumn = 0;
-				if(section != null){
-					section.breakLine();
-				}
-			}
-		}
-	}
-	
-	public ColumnBuilder columnSpan(int colspan){
+
+	public ColumnBuilder columnSpan(int colspan) {
 		return columnSpan(colspan, null);
 	}
-	public ColumnBuilder columnSpan(int colspan, ReportAlignment alignment){
+
+	public ColumnBuilder columnSpan(int colspan, ReportAlignment alignment) {
 		return column(currentColumn, colspan, alignment);
 	}
-	
-	public ColumnBuilder column(){
+
+	public ColumnBuilder column() {
 		return column(currentColumn);
 	}
-	public ColumnBuilder column(int column){
+
+	public ColumnBuilder column(int column) {
 		return column(column, 1);
 	}
-	
-	public ColumnBuilder column(int column, int colspan){
+
+	public ColumnBuilder column(int column, int colspan) {
 		return column(column, colspan, null);
 	}
 
-	public ColumnBuilder column(ReportAlignment alignment){
+	public ColumnBuilder column(ReportAlignment alignment) {
 		return column(currentColumn, 1, alignment);
 	}
-	
-	public ColumnBuilder column(int column, int colspan, ReportAlignment alignment){
+
+	public ColumnBuilder column(int column, int colspan, ReportAlignment alignment) {
 		ColumnBuilder columnBuilder = new ColumnBuilder(column, colspan, alignment, this, sumarizedData);
 		gotoColumn(column);
 		incrementColumn(colspan, null);
 		return columnBuilder;
 	}
 
-	
-	public ColumnBuilder fieldSummaryForGroups(String fieldName){
-		return column().fieldSummaryForGroups(fieldName);
-	}
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label){
-		return fieldSummaryForGroups(fieldName, label, 1);
-	}
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label, int colspan){
-		return column(currentColumn, colspan, null).fieldSummaryForGroups(fieldName, label, colspan, null);
-	}
-	public ColumnBuilder fieldSummary(String fieldName){
-		return column().fieldSummary(fieldName);
-	}
-	public ColumnBuilder fieldSummary(String fieldName, String label){
-		return column().fieldSummary(fieldName, label);
-	}
-	public ColumnBuilder fieldSummary(String fieldName, ReportAlignment alignment){
-		return column(alignment).fieldSummary(fieldName);
-	}
-	public ColumnBuilder fieldSummary(String fieldName, String label, ReportAlignment alignment){
-		return column(alignment).fieldSummary(fieldName, label);
-	}
-	public ColumnBuilder fieldSummary(String fieldName, String label, String pattern){
-		return column().fieldSummary(fieldName, label, pattern);
-	}
-	public ColumnBuilder fieldDetail(String fieldName, ReportAlignment alignment){
-		return column(alignment).fieldDetail(fieldName, 1);
-	}
-	public ColumnBuilder fieldDetail(String fieldName, String label, ReportAlignment alignment){
-		return column(alignment).fieldDetail(fieldName, label, 1);
-	}
-	public ColumnBuilder fieldDetail(String fieldName){
-		return fieldDetail(fieldName, 1);
-	}
-	public ColumnBuilder fieldDetail(String fieldName, int colspan){
-		return column(currentColumn, colspan, null).fieldDetail(fieldName, colspan);
-	}
-	public ColumnBuilder fieldDetail(String fieldName, String label){
-		return fieldDetail(fieldName, label, (String)null);
-	}
-
-	public ColumnBuilder fieldDetail(String fieldName, String label, String pattern){
-		return fieldDetail(fieldName, label, 1, pattern);
-	}
-	
-	public ColumnBuilder fieldDetail(String fieldName, String label, String pattern, ReportAlignment alignment){
-		return fieldDetail(fieldName, label, 1, pattern, alignment);
-	}
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan){
-		return fieldDetail(fieldName, label, colspan, null);
-	}
-
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern){
-		return column(currentColumn, colspan, null).fieldDetail(fieldName, label, colspan, pattern);
-	}
-	
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern, ReportAlignment alignment){
-		return column(currentColumn, colspan, alignment).fieldDetail(fieldName, label, colspan, pattern, alignment);
-	}
-	
-	protected ReportGrid reportFilterGrid;
-
-	/**
-	 * Will configure column widths? (will call getColumnConfig() method)
-	 */
-	protected boolean setupColumnWidths = true;
-	
-	public ReportGrid getReportFilterGrid() {
-		return reportFilterGrid;
-	}
-	
-	@Override
-	protected void configureDefinition() {
-		configureReport();
-		super.configureDefinition();
-		if(setupColumnWidths){
-			getDefinition().setColumnWidths(getColumnConfig());
+	protected void gotoColumn(int column) {
+		currentColumn = column;
+		if (getColumnConfig() != null) {
+			if (currentColumn > getColumnConfig().length - 1) {
+				throw new IllegalArgumentException("invalid column " + column);
+			}
 		}
-		getDefinition().getParameters().put(FILTER_PARAMETER, filter);
-		configureSections();
-		this.reportFilterGrid = getConfigurator().getReportFilterGrid(this);
-		configureFilterGrid(reportFilterGrid);
-		adjustFilterGrid(reportFilterGrid);
-		layoutReport();
-		afterLayout();
 	}
-	
-	protected void filter(String fieldName) {
-		filter(fieldName, null);
-	}
-	
-	protected void filter(String fieldName, String label) {
-		FieldConfig configForFilterField = getConfigForFilterField(fieldName);
-		
-		BeanDescriptor beanWrapperImpl = BeanDescriptorFactory.forBean(filter);
-		Object propertyValue = beanWrapperImpl.getPropertyDescriptor(configForFilterField.reportExpression.substring(FILTER_PARAMETER.length() + 1)).getValue();
-		
-		if(propertyValue == null && configForFilterField.entity){
-			propertyValue = "[TODOS]";
+
+	protected void incrementColumn(int colspan, ReportSection section) {
+		currentColumn += colspan;
+		if (getColumnConfig() != null) {
+			if (currentColumn > getColumnConfig().length - 1) {
+				currentColumn = 0;
+				if (section != null) {
+					section.breakLine();
+				}
+			}
 		}
-		
-		getDefinition().getParameters().put(configForFilterField.reportExpression, propertyValue);
-		
-		ReportTextField fieldElement = new ReportTextField("param."+configForFilterField.reportExpression);
-		fieldElement.setPattern(configForFilterField.pattern);
-		fieldElement.setCallToString(configForFilterField.callToString);
-		fieldElement.getStyle().setAlignment(ReportAlignment.LEFT);
-		fieldElement.getStyle().setPaddingRight(4);
-		
-		ReportLabel labelElement = new ReportLabel((label == null? configForFilterField.label : label) + ":");
-		labelElement.getStyle().setPaddingRight(4);
-		labelElement.getStyle().setAlignment(ReportAlignment.LEFT);
-		
-		addLabelAndFieldToFilterGrid(fieldElement, labelElement);
 	}
-
-	protected void addLabelAndFieldToFilterGrid(ReportTextElement fieldElement, ReportLabel labelElement) {
-		reportFilterGrid.addItem(labelElement);
-		reportFilterGrid.addItem(fieldElement);
-	}
-	
-	protected void adjustFilterGrid(ReportGrid reportFilterGrid) {
-		
-	}
-
-	protected void configureFilterGrid(ReportGrid grid) {
-	}
-
-	protected void configureReport() {
-		getConfigurator().configureReport(this);
-	}
-
-	protected void afterLayout() {
-		getConfigurator().afterLayout(this);
-	}
-
-	protected void configureSections() {
-		getConfigurator().configureSections(this);
-	}
-
-	@Override
-	protected void onSetupGroup(String groupName, GroupSetup groupSetup, int index) {
-		super.onSetupGroup(groupName, groupSetup, index);
-		addLabelForGroup(groupName, groupSetup, index);
-		configureGroupStyle(groupName, groupSetup, index);
-	}
-
-	private void configureGroupStyle(String groupName, GroupSetup groupSetup, int index) {
-		getConfigurator().configure(groupName, groupSetup, index);
-	}
-
-	protected void addLabelForGroup(String groupName, GroupSetup groupSetup, int index) {
-		ReportTextField field = getGroupTextField(groupName, groupSetup);
-		groupSetup.setLabelTextField(field);
-		configureAndAddGroupLabel(groupName, groupSetup, index, field);
-	}
-
-	protected void configureAndAddGroupLabel(String groupName, GroupSetup groupSetup, int index, ReportTextField field) {
-		getConfigurator().configureLabelForGroup(groupName, groupSetup, index, field);
-		configureGroupLabel(groupName, groupSetup, index, field);
-		getDefinition().addItem(field, groupSetup.reportGroup.getSectionHeader().getRow(0), 0);
-	}
-
-	/**
-	 * Override to configure group label
-	 * @param groupName
-	 * @param groupSetup
-	 * @param index
-	 * @param field
-	 */
-	protected void configureGroupLabel(String groupName, GroupSetup groupSetup, int index, ReportTextField field) {
-	}
-
-	private ReportTextField getGroupTextField(String groupName, GroupSetup groupSetup) {
-		return field(groupSetup.groupExpression);
-	}
-	
-	protected abstract void layoutReport();
 
 	protected void breakGroupsLines() {
 		getDefinition().getSectionSummaryDataHeader().breakLine();
@@ -305,4 +274,87 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 			reportGroup.getSectionHeader().breakLine();
 		}
 	}
+
+	protected void breakDetailLine() {
+		getDefinition().getSectionDetailHeader().breakLine();
+		getDefinition().getSectionDetail().breakLine();
+		gotoColumn(2);
+	}
+
+	public ColumnBuilder fieldSummaryForGroups(String fieldName) {
+		return column().fieldSummaryForGroups(fieldName);
+	}
+
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label) {
+		return fieldSummaryForGroups(fieldName, label, 1);
+	}
+
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label, int colspan) {
+		return column(currentColumn, colspan, null).fieldSummaryForGroups(fieldName, label, colspan, null);
+	}
+
+	public ColumnBuilder fieldSummary(String fieldName) {
+		return column().fieldSummary(fieldName);
+	}
+
+	public ColumnBuilder fieldSummary(String fieldName, String label) {
+		return column().fieldSummary(fieldName, label);
+	}
+
+	public ColumnBuilder fieldSummary(String fieldName, ReportAlignment alignment) {
+		return column(alignment).fieldSummary(fieldName);
+	}
+
+	public ColumnBuilder fieldSummary(String fieldName, String label, ReportAlignment alignment) {
+		return column(alignment).fieldSummary(fieldName, label);
+	}
+
+	public ColumnBuilder fieldSummary(String fieldName, String label, String pattern) {
+		return column().fieldSummary(fieldName, label, pattern);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, ReportAlignment alignment) {
+		return column(alignment).fieldDetail(fieldName, 1);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, String label, ReportAlignment alignment) {
+		return column(alignment).fieldDetail(fieldName, label, 1);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName) {
+		return fieldDetail(fieldName, 1);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, int colspan) {
+		return column(currentColumn, colspan, null).fieldDetail(fieldName, colspan);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, String label) {
+		return fieldDetail(fieldName, label, (String) null);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, String label, String pattern) {
+		return fieldDetail(fieldName, label, 1, pattern);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, String label, String pattern, ReportAlignment alignment) {
+		return fieldDetail(fieldName, label, 1, pattern, alignment);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan) {
+		return fieldDetail(fieldName, label, colspan, null);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern) {
+		return column(currentColumn, colspan, null).fieldDetail(fieldName, label, colspan, pattern);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern, ReportAlignment alignment) {
+		return column(currentColumn, colspan, alignment).fieldDetail(fieldName, label, colspan, pattern, alignment);
+	}
+
+	public int getChartDefaultHeight() {
+		return getConfigurator().getChartDefaultHeight();
+	}
+
 }

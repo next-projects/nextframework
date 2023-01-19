@@ -2,7 +2,7 @@ package org.nextframework.report.definition;
 
 public enum ReportSectionType {
 
-	TITLE, 
+	TITLE,
 	PAGE_HEADER,
 	PAGE_FOOTER,
 	COLUMN_HEADER,
@@ -18,5 +18,5 @@ public enum ReportSectionType {
 	FIRST_PAGE_HEADER,
 	LAST_PAGE_FOOTER,
 	SUMARY
-	
+
 }

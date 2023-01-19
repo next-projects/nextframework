@@ -35,6 +35,7 @@ import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.definition.elements.style.ReportAlignment;
 import org.nextframework.report.definition.elements.style.ReportItemStyle;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
 import org.nextframework.summary.Summary;
 import org.nextframework.summary.SummaryRow;
 import org.nextframework.summary.compilation.SummaryResult;
@@ -45,17 +46,20 @@ import org.nextframework.view.chart.aggregate.ChartSumAggregateFunction;
 public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	public static final String LOCALE = "LOCALE";
+	public static final String CONVERTER = "CONVERTER";
 
 	protected SummaryResult<?, ? extends Summary<?>> summaryResult;
+	protected boolean sumarizedData = false;
+	protected List<?> data;
+
+	protected Locale locale;
+
+	protected Map<String, GroupSetup> groupSetups = new HashMap<String, GroupSetup>();
 
 	public <E> void setData(SummaryResult<E, ? extends Summary<E>> summaryResult) {
 		this.summaryResult = summaryResult;
 		setData(summaryResult.getItems());
 	}
-
-	protected boolean sumarizedData = false;
-	protected List<?> data;
-	protected Locale locale;
 
 	@SuppressWarnings("rawtypes")
 	public void setData(List<?> items) {
@@ -69,14 +73,6 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			}
 		}
 		this.data = items;
-	}
-
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public void setLocale(Locale locale) {
-		this.locale = locale;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -112,32 +108,48 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		}
 	}
 
-	private BeanDescriptor rowClassBeanDescriptor;
+	private BeanDescriptor rowClassBeanDescriptorCache;
 
-	BeanDescriptor getRowClassBeanDescriptor() {
-		if (rowClassBeanDescriptor == null) {
-			rowClassBeanDescriptor = BeanDescriptorFactory.forClass(getRowClass());
+	protected BeanDescriptor getRowClassBeanDescriptorCache() {
+		if (rowClassBeanDescriptorCache == null) {
+			rowClassBeanDescriptorCache = BeanDescriptorFactory.forClass(getRowClass());
 		}
-		return rowClassBeanDescriptor;
+		return rowClassBeanDescriptorCache;
 	}
 
-	private BeanDescriptor summaryClassBeanDescriptor;
-	protected boolean setupGroups = true;
+	private BeanDescriptor summaryClassBeanDescriptorCache;
 
-	BeanDescriptor getSummaryClassBeanDescriptor() {
-		if (summaryClassBeanDescriptor == null) {
-			summaryClassBeanDescriptor = BeanDescriptorFactory.forClass(getSummaryClass());
+	protected BeanDescriptor getSummaryClassBeanDescriptorCache() {
+		if (summaryClassBeanDescriptorCache == null) {
+			summaryClassBeanDescriptorCache = BeanDescriptorFactory.forClass(getSummaryClass());
 		}
-		return summaryClassBeanDescriptor;
+		return summaryClassBeanDescriptorCache;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 
 	@Override
 	protected void configureDefinition() {
+
 		getDefinition().setData(data);
-		if (setupGroups) {
+
+		if (isSetupGroups()) {
 			setupGroups();
 		}
+
 		getDefinition().setParameter(LOCALE, locale);
+		getDefinition().setParameter(CONVERTER, new ReportBuilderValueConverter());
+
+	}
+
+	protected boolean isSetupGroups() {
+		return true;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -146,7 +158,6 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		if (summaryClass != null) {
 			SummaryDefinition<? extends Summary<?>> def = new SummaryDefinition<Summary<?>>((Class<Summary<?>>) summaryClass);
 			Set<SummaryGroupDefinition> groups = def.getGroups();
-
 			int index = 0;
 			for (SummaryGroupDefinition summaryGroupDefinition : groups) {
 				setupGroup(summaryGroupDefinition, index++);
@@ -177,17 +188,8 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return true;
 	}
 
-	Map<String, GroupSetup> groupSetups = new HashMap<String, GroupSetup>();
-
-	Map<String, GroupSetup> getGroupSetups() {
-		return groupSetups;
-	}
-
-	protected GroupSetup getGroupSetup(String group) {
-		return groupSetups.get(group);
-	}
-
 	protected void setupGroup(String groupName, String expression, int index) {
+
 		ReportGroup reportGroup = getDefinition().createGroup(expression);
 
 		GroupSetup groupSetup = new GroupSetup();
@@ -198,25 +200,32 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		groupSetups.put(groupName, groupSetup);
 
 		onSetupGroup(groupName, groupSetup, index);
+
 	}
 
 	protected void onSetupGroup(String groupName, GroupSetup groupSetup, int index) {
 	}
 
-	//elements
-	protected static class GridConfig {
-
-		public int autoWidth() {
-			return ReportConstants.AUTO_WIDTH;
-		}
-
-		public int percentWidth(int number) {
-			return number | ReportConstants.PERCENT_WIDTH;
-		}
-
+	protected Map<String, GroupSetup> getGroupSetups() {
+		return groupSetups;
 	}
 
-	protected GridConfig grid = new GridConfig();
+	protected GroupSetup getGroupSetup(String group) {
+		return groupSetups.get(group);
+	}
+
+	protected void setTitle(String title, String subtitle) {
+		setTitle(title);
+		setSubtitle(subtitle);
+	}
+
+	protected void setTitle(String title) {
+		getDefinition().setTitle(title);
+	}
+
+	protected void setSubtitle(String subtitle) {
+		getDefinition().setSubtitle(subtitle);
+	}
 
 	public ReportItemStyle style() {
 		return new ReportItemStyle();
@@ -286,10 +295,10 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		if (!reportTextField.isLiteral()) {
 			if (fieldExpression.startsWith("param.")) {
 				//parameters does not have config
-			} else if (fieldExpression.startsWith("row.")) {
-				config = getConfigForRowField(fieldExpression.substring("row.".length()));
 			} else if (fieldExpression.startsWith("summary.")) {
 				config = getConfigForSummaryField(fieldExpression.substring("summary.".length()));
+			} else if (fieldExpression.startsWith("row.")) {
+				config = getConfigForRowField(fieldExpression.substring("row.".length()));
 			} else {
 				config = getConfigForRowField(fieldExpression);
 			}
@@ -299,9 +308,98 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				reportTextField.getStyle().setAlignment(config.alignment);
 			}
 			reportTextField.setPattern(config.pattern);
-			reportTextField.setCallToString(config.callToString);
 		}
 		return reportTextField;
+	}
+
+	public static class FieldConfig {
+
+		public String label;
+		public String originalExpression;
+		public String reportExpression;
+		public String preffix;
+		public String suffix;
+		public String pattern;
+		public ReportAlignment alignment;
+
+		public FieldConfig(String label, String originalExpression, String preffix, String suffix, String reportExpression, String pattern, ReportAlignment alignment) {
+			this.label = label;
+			this.originalExpression = originalExpression;
+			this.preffix = preffix;
+			this.suffix = suffix;
+			this.reportExpression = reportExpression;
+			this.pattern = pattern;
+			this.alignment = alignment;
+		}
+
+	}
+
+	protected FieldConfig getConfigForSummaryField(String fieldName) {
+		if (fieldName.startsWith("summary.")) {
+			fieldName = fieldName.substring("summary.".length());
+		}
+		String fieldPreffix = "summary.";
+		return getConfigForBeanDescriptor(fieldName, fieldPreffix, getSummaryClassBeanDescriptorCache());
+	}
+
+	protected FieldConfig getConfigForRowField(String fieldName) {
+		String fieldPreffix = sumarizedData ? "row." : "";
+		return getConfigForBeanDescriptor(fieldName, fieldPreffix, getRowClassBeanDescriptorCache());
+	}
+
+	protected FieldConfig getConfigForBeanDescriptor(String fieldName, String fieldPreffix, BeanDescriptor beanDescriptor) {
+
+		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(fieldName);
+		String label = propertyDescriptor.getDisplayName();
+		String pattern = null;
+		ReportAlignment alignment = null;
+		String fieldSuffix = null;
+
+		Type type = propertyDescriptor.getType();
+		if (type instanceof Class<?>) {
+
+			Class<?> clazz = (Class<?>) type;
+
+			if (Number.class.isAssignableFrom(clazz)) {
+
+				alignment = ReportAlignment.RIGHT;
+				if (clazz.getName().startsWith("java")) {
+					pattern = "#,##0";
+					if (Float.class.isAssignableFrom(clazz) || Double.class.isAssignableFrom(clazz) || BigDecimal.class.isAssignableFrom(clazz)) {
+						pattern = "#,##0.00";
+					}
+				}
+
+			} else if (Date.class.isAssignableFrom(clazz)) {
+
+				pattern = "dd/MM/yyyy";
+
+			} else if (Calendar.class.isAssignableFrom(clazz)) {
+
+				fieldSuffix = ".time";
+				pattern = "dd/MM/yyyy";
+
+			}
+
+		}
+
+		String reportExpression = fieldName;
+		if (fieldPreffix != null) {
+			reportExpression = fieldPreffix + fieldName;
+		}
+		if (fieldSuffix != null) {
+			reportExpression += fieldSuffix;
+		}
+
+		return createFieldConfig(this, beanDescriptor, propertyDescriptor,
+				label, fieldName, fieldPreffix, fieldSuffix, reportExpression,
+				pattern, alignment);
+	}
+
+	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor,
+			String label, String fieldName, String fieldPreffix, String fieldSuffix, String reportExpression,
+			String pattern, ReportAlignment alignment) {
+		return new FieldConfig(label, fieldName, fieldPreffix, fieldSuffix, reportExpression, pattern, alignment);
 	}
 
 	protected ReportGrid grid() {
@@ -372,6 +470,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	}
 
 	protected ReportChart chart(ChartType chartType, String chartTitle, List<?> chartData, String groupProperty, String seriesProperty, String valueProperty) {
+
 		Chart chart = createChart(chartType, chartTitle);
 		ChartData data = null;
 		if (ChartType.PIE.equals(chartType) && seriesProperty != null) {
@@ -387,13 +486,10 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				data = ChartDataBuilder.build(chartData, groupProperty, seriesProperty, valueProperty);
 			}
 		}
-//		if(isAutoAggregateGroups(chartTitle)){
-//			aggregateGroups(data);
-//		}
+
 		chart.setData(data);
 
 		ReportChart reportChart = new ReportChart(chart);
-//		reportChart.getRenderParameters().put(JasperRenderParameters.HORIZONTAL_ALIGNMENT, HorizontalAlignEnum.CENTER);
 		reportChart.getStyle().setAlignment(ReportAlignment.CENTER);
 		reportChart.setHeight(125);
 		reportChart.getStyle().setPaddingTop(2);
@@ -405,7 +501,6 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				Object i0 = chartData.get(0);
 				String seriesDisplay = BeanDescriptorFactory.forBean(i0).getPropertyDescriptor(valueProperty).getDisplayName();
 				data.setSeries(seriesDisplay);
-//				chart.getStyle().setValuesFormatter();
 			}
 			chart.setData(data);
 		}
@@ -430,10 +525,12 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	}
 
 	protected ReportChart chartPropertiesAsSeries(ChartType chartType, String w, String h, String chartTitle, List<?> chartData, String groupProperty, String... seriesProperties) {
+
 		Chart chart = createChart(chartType, chartTitle);
 		if (w != null && h != null) {
 			chart.setDimension(w, h);
 		}
+
 		ChartData data = ChartDataBuilder.buildPropertiesAsSeries(chartData, groupProperty, seriesProperties);
 		if (isAutoAggregateGroups(chartTitle)) {
 			aggregateGroups(data);
@@ -441,7 +538,6 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		chart.setData(data);
 
 		ReportChart reportChart = new ReportChart(chart);
-//		reportChart.getRenderParameters().put(JasperRenderParameters.HORIZONTAL_ALIGNMENT, HorizontalAlignEnum.CENTER);
 		reportChart.getStyle().setAlignment(ReportAlignment.CENTER);
 		reportChart.setHeight(125);
 		reportChart.getStyle().setPaddingTop(2);
@@ -513,25 +609,12 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				} else {
 					elements[i] = label(string);
 				}
-				//			} else if(object instanceof ReportAlignment){
-				//				for (int j = 0; j < i; j++) {
-				//					Object object2 = elements[j];
-				//					if(object2 instanceof ReportTextElement){
-				//						ReportTextElement reportTextElement = (ReportTextElement)object2;
-				//						if(reportTextElement.getStyle().getAlignment() == null){
-				//							reportTextElement.getStyle().setAlignment((ReportAlignment) object);
-				//						}
-				//					}
-				//					
-				//				}
 			} else if (object instanceof Chart) {
 				ReportChart reportChart = new ReportChart((Chart) object);
-//				reportChart.getRenderParameters().put(JasperRenderParameters.HORIZONTAL_ALIGNMENT, HorizontalAlignEnum.CENTER);
 				reportChart.getStyle().setAlignment(ReportAlignment.CENTER);
 				reportChart.setHeight(getChartDefaultHeight());
 				reportChart.getStyle().setPaddingTop(2);
 				reportChart.getStyle().setPaddingBottom(2);
-
 				elements[i] = reportChart;
 			} else if (!(object instanceof ReportItem)) {
 				throw new IllegalArgumentException("column elements must be ReportItem or String");
@@ -566,12 +649,8 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		}
 	}
 
-	public int getChartDefaultHeight() {
-		return getConfigurator().getChartDefaultHeight();
-	}
-
-	protected ReportItem addItemToDefinition(int column, ReportSection section, ReportItem reportItem) {
-		return getDefinition().addItem(reportItem, section, column);
+	protected int getChartDefaultHeight() {
+		return 100;
 	}
 
 	boolean startsWithRowOrSummary(ReportTextField reportTextField) {
@@ -579,162 +658,8 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return (expression.startsWith("row.") || expression.startsWith("summary."));
 	}
 
-	public static class FieldConfig {
-
-		String label;
-		String originalExpression;
-		String reportExpression;
-		String suffix;
-		ReportAlignment alignment;
-		String pattern;
-		boolean entity;
-		boolean callToString;
-
-		public FieldConfig(String label, String originalExpression, String reportExpression, String suffix, ReportAlignment alignment, String pattern, boolean isEntity, boolean callToString) {
-			super();
-			this.label = label;
-			this.originalExpression = originalExpression;
-			this.reportExpression = reportExpression;
-			this.suffix = suffix;
-			this.alignment = alignment;
-			this.pattern = pattern;
-			this.entity = isEntity;
-			this.callToString = callToString;
-		}
-
-	}
-
-	protected FieldConfig getConfigForSummaryField(String fieldName) {
-		if (fieldName.startsWith("summary.")) {
-			fieldName = fieldName.substring("summary.".length());
-		}
-		String fieldPreffix = "summary.";
-		BeanDescriptor rowClassBeanDescriptor = getSummaryClassBeanDescriptor();
-		return getConfigForBeanDescriptor(fieldName, fieldPreffix, rowClassBeanDescriptor, null);
-	}
-
-	protected FieldConfig getConfigForRowField(String fieldName) {
-		String fieldPreffix = sumarizedData ? "row." : "";
-		BeanDescriptor rowClassBeanDescriptor = getRowClassBeanDescriptor();
-		return getConfigForBeanDescriptor(fieldName, fieldPreffix, rowClassBeanDescriptor, null);
-	}
-
-	@SuppressWarnings("unchecked")
-	protected FieldConfig getConfigForBeanDescriptor(String fieldName, String fieldPreffix, BeanDescriptor beanDescriptor, Object object) {
-
-		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(fieldName);
-		String label = propertyDescriptor.getDisplayName();
-		Type type = propertyDescriptor.getType();
-		String pattern = null;
-		ReportAlignment alignment = null;
-		String suffix = null;
-		boolean isEntity = false;
-		boolean callToString = false; //Definido nas configurações dos projetos
-
-		Object propertyValue = null;
-		if (object != null) {
-			propertyValue = BeanDescriptorFactory.forBean(object).getPropertyDescriptor(fieldName).getValue();
-		}
-
-		if (type instanceof Class<?>) {
-
-			Class<?> clazz = (Class<?>) type;
-
-			if (Number.class.isAssignableFrom(clazz)) {
-
-				alignment = ReportAlignment.RIGHT;
-				if (clazz.getName().startsWith("java")) {
-					//only use patterns with java classes (the formater only know about these)
-					pattern = "#,##0";
-					if (Float.class.isAssignableFrom(clazz) || Double.class.isAssignableFrom(clazz) || BigDecimal.class.isAssignableFrom(clazz)) {
-						pattern = "#,##0.00";
-					}
-				}
-
-			} else if (Date.class.isAssignableFrom(clazz)) {
-
-				pattern = "dd/MM/yyyy";
-
-			} else if (Calendar.class.isAssignableFrom(clazz)) {
-
-				suffix = ".time";
-				pattern = "dd/MM/yyyy";
-
-			}
-
-			Class entityClass = null;
-			try {
-				entityClass = Class.forName("javax.persistence.Entity");
-			} catch (Exception e) {
-			}
-
-			if (entityClass != null) {
-
-				if (clazz.isArray() && propertyValue != null) {
-
-					Object[] propertyValueArray = (Object[]) propertyValue;
-					for (Object pv : propertyValueArray) {
-
-						if (pv.getClass().isAnnotationPresent(entityClass)) {
-							BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBean(pv);
-							String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
-							Object value = entityBeanDescriptor.getPropertyDescriptor(descriptionPropertyName).getValue();
-							if (value == null) {
-								loadValue(pv, descriptionPropertyName);
-							}
-						}
-
-					}
-
-				} else if (clazz.getPackage() != null && !clazz.getPackage().getName().startsWith("java")) {
-
-					BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBeanOrClass(propertyValue, clazz);
-					String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
-					if (descriptionPropertyName != null) {
-						suffix = "." + descriptionPropertyName;
-					}
-
-					if (clazz.isAnnotationPresent(entityClass)) {
-						isEntity = true;
-						if (propertyValue != null) {
-							Object value = entityBeanDescriptor.getPropertyDescriptor(descriptionPropertyName).getValue();
-							if (value == null) {
-								loadValue(propertyValue, descriptionPropertyName);
-							}
-						}
-					}
-
-				}
-
-			}
-
-		}
-		return createFieldConfig(this, beanDescriptor, fieldName, fieldPreffix, label, pattern, alignment, suffix, isEntity, callToString);
-	}
-
-	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, String fieldName, String fieldPreffix, String label, String pattern, ReportAlignment alignment, String suffix, boolean isEntity, boolean callToString) {
-		return getConfigurator().createFieldConfig(builder, beanDescriptor, fieldName, fieldPreffix, label, pattern, alignment, suffix, isEntity, callToString);
-	}
-
-	protected void loadValue(Object propertyValue, String descriptionPropertyName) {
-		getConfigurator().loadValue(propertyValue, descriptionPropertyName);
-	}
-
-	protected void setTitle(String title, String subtitle) {
-		setTitle(title);
-		setSubtitle(subtitle);
-	}
-
-	protected void setTitle(String title) {
-		getDefinition().setTitle(title);
-	}
-
-	protected void setSubtitle(String subtitle) {
-		getDefinition().setSubtitle(subtitle);
-	}
-
-	public LayoutReportConfigurator getConfigurator() {
-		return LayoutReportConfiguratorFactory.getConfigurator();
+	protected ReportItem addItemToDefinition(int column, ReportSection section, ReportItem reportItem) {
+		return getDefinition().addItem(reportItem, section, column);
 	}
 
 }

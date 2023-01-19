@@ -126,6 +126,7 @@ public class ReportBuilderSourceGenerator {
 	}
 
 	public SourceCodeBuilder createSourceCodeBuilder() {
+		
 		SourceCodeBuilder source = new SourceCodeBuilder();
 		
 		source.setPackage(getMainType(), "report.builder");
@@ -177,14 +178,8 @@ public class ReportBuilderSourceGenerator {
 		}
 		columnConfigMethod.append("};");
 		
-		/*
-		@Override
-		protected void configureAndAddGroupLabel(String groupName, GroupSetup groupSetup, int index, ReportTextField field) {
-			super.configureAndAddGroupLabel(groupName, groupSetup, index, field);
-		}
-		/*/
-		SourceCodeBlock configureGroupMethod = source.declareMethod("protected void configureAndAddGroupLabel(String groupName, GroupSetup groupSetup, int index, ReportTextField field)", true);
-		configureGroupMethod.statement("super.configureAndAddGroupLabel(groupName, groupSetup, index, field)");
+		SourceCodeBlock configureGroupMethod = source.declareMethod("protected void configureLabelForGroup(String groupName, GroupSetup groupSetup, int index, ReportTextField field)", true);
+		configureGroupMethod.statement("super.configureLabelForGroup(groupName, groupSetup, index, field)");
 		configureGroupMethod.statement("field.setColspan("+getFirstAggregateIndex()+")");
 		
 		source.declareMethod("public String getTitle()", true)

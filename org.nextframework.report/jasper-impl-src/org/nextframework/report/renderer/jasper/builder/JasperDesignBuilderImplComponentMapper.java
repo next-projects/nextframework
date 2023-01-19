@@ -74,7 +74,7 @@ public class JasperDesignBuilderImplComponentMapper {
 			}
 			JRDesignElement returnElement = section.getType() != ReportSectionType.TITLE? (JRDesignElement) jasperDesignBuilderImpl.findTextFieldInList(reportTextField, jasperDesignBuilderImpl.compileItemsFromOriginalTemplate(section)).clone():  new JRDesignTextField();
 			JRDesignTextField jrDesignTextField = jasperDesignBuilderImpl.getInnerTextField(returnElement);
-			JRDesignExpression jrExpr = jasperDesignBuilderImpl.createFieldOrParameterExpression(expression, null, reportTextField.isCallToString());
+			JRDesignExpression jrExpr = jasperDesignBuilderImpl.createFieldOrParameterExpression(expression, null, true);
 			jrDesignTextField.setExpression(jrExpr);
 			if(reportTextField.getPatternExpression() != null){
 				String originalExpressionText = jrExpr.getText();
@@ -83,7 +83,6 @@ public class JasperDesignBuilderImplComponentMapper {
 			jrDesignTextField.setBlankWhenNull(true);
 			jrDesignTextField.setEvaluationTime(EvaluationTimeEnum.AUTO);
 			jrDesignTextField.setStretchWithOverflow(true);
-			//jrDesignTextField.setStretchType(StretchTypeEnum.RELATIVE_TO_TALLEST_OBJECT);
 			jrDesignTextField.setPositionType(PositionTypeEnum.FLOAT);
 			jrDesignTextField.setPattern(reportTextField.getPattern());
 			configureFrameWidthForTextElement(returnElement, computeWidth);
@@ -129,24 +128,12 @@ public class JasperDesignBuilderImplComponentMapper {
 			if(reportChart.isRendered()){
 				String parameterReference = "$P{"+"chart"+jasperDesignBuilderImpl.definition.getChartIndex(reportChart)+"}";
 				String chartRendererExpression = "new "+ChartDrawRenderer.class.getName()+"("+parameterReference+", "+computeWidth+", "+chartHeight+")";
-				//String imageExpression = "new " + ByteArrayInputStream.class.getName() + "(" + ChartRendererJFreeChart.class.getName() + ".renderAsResource(" + parameterReference + ").getContents())";
 				JRDesignExpression fieldExpression = new JRDesignExpression(chartRendererExpression);
-				//String svgExpression = ChartRendererJFreeChart.class.getName() + ".renderAsSVG("+parameterReference+")";
-				//JRDesignExpression fieldExpression = new JRDesignExpression(BatikRenderer.class.getName()+".getInstance("+svgExpression +")");
-				
 				image.setExpression(fieldExpression);
 			} else {
 				String fieldReference = "$F{"+reportChart.getReference()+"}";
-	//				String byteArrayExpression = ChartRendererJFreeChart.class.getName() + ".renderAsResource(" + fieldReference + ").getContents()";
-	//				String imageBytesExpression = "new " + ByteArrayInputStream.class.getName() + "(" + byteArrayExpression + ")";
-				
-	//				String svgExpression = ChartRendererJFreeChart.class.getName() + ".renderAsSVG("+fieldReference+")";
-	//				String jfreeExpression = ChartRendererJFreeChart.class.getName() + ".renderAsJFreeChart("+fieldReference+")";
-	//				String batikExpression = BatikRenderer.class.getName()+".getInstance("+svgExpression +")";
-	//				String drawChartExpression = "new " + DrawChartRenderer.class.getName()+"("+jfreeExpression+", null)";
 				String chartRendererExpression = "new "+ChartDrawRenderer.class.getName()+"("+fieldReference+", "+computeWidth+", "+chartHeight+")";
 				JRDesignExpression fieldExpression = new JRDesignExpression(chartRendererExpression);
-				
 				jasperDesignBuilderImpl.createFieldOrParameterExpression(reportChart.getReference(), Chart.class, false);
 				image.setExpression(fieldExpression);
 				image.setUsingCache(false);
@@ -181,9 +168,6 @@ public class JasperDesignBuilderImplComponentMapper {
 		Map<String, Object> renderParameters = item.getRenderParameters();
 		jasperDesignBuilderImpl.configureRenderParameters(result, renderParameters);
 		
-	//		if(renderParameters.containsKey(JasperRenderParameters.POSITION_TYPE)){
-	//			result.setPositionType((PositionTypeEnum) renderParameters.get(JasperRenderParameters.POSITION_TYPE));
-	//		}
 		if(renderParameters.containsKey(JasperRenderParameters.PRINT_WHEN_EXPRESSION)){
 			String printExpression = (String) renderParameters.get(JasperRenderParameters.PRINT_WHEN_EXPRESSION);
 			result.setPrintWhenExpression(new JRDesignExpression(printExpression));
@@ -244,12 +228,7 @@ public class JasperDesignBuilderImplComponentMapper {
 		jrDesignTextElement.setWidth(width);
 		jrDesignTextElement.setBold(reportTextField.getStyle().getBold());
 		jrDesignTextElement.setItalic(reportTextField.getStyle().getItalic());
-		//boolean italic = booleans.isTrue(reportTextField.getStyle().getItalic());
-		//jrDesignTextElement.setBold(bold);
-		//jrDesignTextElement.setItalic(italic);
-		//jrDesignTextElement.setPdfEmbedded(true);
 		jrDesignTextElement.setPdfFontName(jasperDesignBuilderImpl.getPdfFontName(reportTextField.getStyle().getBold(), reportTextField.getStyle().getItalic(), jrStyle));
-		//jrDesignTextElement.setPdfFontName(null);
 		
 		if(!reportTextField.isHeightAuto()){
 			jrDesignTextElement.setHeight(reportTextField.getHeight());
@@ -274,8 +253,6 @@ public class JasperDesignBuilderImplComponentMapper {
 				horizontalAlign = HorizontalAlignEnum.JUSTIFIED;
 				break;
 		}
-		//jrDesignTextField.setFontSize(20);
-		//jrDesignTextElement.setPrintWhenDetailOverflows(true);
 		jrDesignTextElement.setHorizontalAlignment(horizontalAlign);
 		
 		if(reportTextField.getStyle().getForegroundColor() != null){

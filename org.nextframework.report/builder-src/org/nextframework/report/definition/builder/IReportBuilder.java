@@ -4,5 +4,6 @@ import org.nextframework.report.definition.ReportDefinition;
 
 public interface IReportBuilder {
 
-	ReportDefinition getDefinition();
+	public ReportDefinition getDefinition();
+
 }
