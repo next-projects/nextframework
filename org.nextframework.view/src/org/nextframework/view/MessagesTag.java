@@ -23,6 +23,7 @@
  */
 package org.nextframework.view;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -85,6 +86,10 @@ public class MessagesTag extends BaseTag {
 
 		WebRequestContext requestContext = NextWeb.getRequestContext();
 		Locale locale = requestContext.getLocale();
+
+		title = getDefaultViewLabel("messagePanelTitle", "Valores incorretos encontrados em");
+		invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
+
 		boolean renderAsHtml = Util.booleans.isTrue(this.renderAsHtml);
 
 		if (!renderAsHtml) {
@@ -92,10 +97,27 @@ public class MessagesTag extends BaseTag {
 		}
 
 		BindException errors = requestContext.getBindException();
-		if (errors.hasErrors() && !"true".equalsIgnoreCase(getRequest().getParameter(MultiActionController.SUPPRESS_ERRORS))) {
+		printBindException(errors, renderAsHtml, locale);
 
-			title = getDefaultViewLabel("messagePanelTitle", "Valores incorretos encontrados em");
-			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
+		Message[] messages = requestContext.getMessages();
+		printBindException(messages, renderAsHtml, locale);
+		printMessages(messages, renderAsHtml, locale);
+
+		if (!renderAsHtml) {
+			getOut().println("}, true);</script>");
+			getOut().println("<script language='javascript'>function clearMessages(){" +
+					"if(next.util.isDefined(document.getElementById('messagesContainer')))document.getElementById('messagesContainer').style.display = 'none';" +
+					"}</script>");
+		}
+
+		requestContext.clearMessages();
+
+	}
+
+	private void printBindException(BindException errors, boolean renderAsHtml, Locale locale) throws IOException {
+
+		boolean suppressErrors = "true".equalsIgnoreCase(getRequest().getParameter(MultiActionController.SUPPRESS_ERRORS));
+		if (errors.hasErrors() && !suppressErrors) {
 
 			if (renderAsHtml) {
 				getOut().println("<div class='bindblock' id='bindBlock'>");
@@ -174,7 +196,22 @@ public class MessagesTag extends BaseTag {
 
 		}
 
-		Message[] messages = requestContext.getMessages();
+	}
+
+	private void printBindException(Message[] messages, boolean renderAsHtml, Locale locale) throws IOException {
+		if (messages.length > 0) {
+			for (int i = 0; i < messages.length; i++) {
+				Message message = messages[i];
+				if (message.getSource() instanceof BindException) {
+					printBindException((BindException) message.getSource(), renderAsHtml, locale);
+					messages[i] = null;
+				}
+			}
+		}
+	}
+
+	private void printMessages(Message[] messages, boolean renderAsHtml, Locale locale) throws IOException {
+
 		if (messages.length > 0) {
 
 			if (renderAsHtml) {
@@ -183,7 +220,7 @@ public class MessagesTag extends BaseTag {
 			}
 
 			for (Message message : messages) {
-				if (message.getSource() != null) {
+				if (message != null && message.getSource() != null) {
 					String clazz = getMessageStyleClass(message);
 					String convertToMessage = convertToMessage(message.getSource(), locale);
 					if (Util.strings.isNotEmpty(convertToMessage)) {
@@ -198,6 +235,7 @@ public class MessagesTag extends BaseTag {
 							}
 						}
 					}
+
 				}
 			}
 
@@ -207,15 +245,6 @@ public class MessagesTag extends BaseTag {
 			}
 
 		}
-
-		if (!renderAsHtml) {
-			getOut().println("}, true);</script>");
-			getOut().println("<script language='javascript'>function clearMessages(){" +
-					"if(next.util.isDefined(document.getElementById('messagesContainer')))document.getElementById('messagesContainer').style.display = 'none';" +
-					"}</script>");
-		}
-
-		requestContext.clearMessages();
 
 	}
 
