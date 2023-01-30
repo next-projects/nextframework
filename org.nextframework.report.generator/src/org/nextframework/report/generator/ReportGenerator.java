@@ -92,7 +92,7 @@ public class ReportGenerator {
 			progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.ReportGenerator.gettingResult", null, "Obtendo registros"));
 		}
 
-		List<?> result = reportElement.getData().getDataSourceProvider().getResult(reportElement, filterMap, fixedCriteriaMap, limitResults);
+		List<?> result = reportElement.getData().getResult(reportElement, filterMap, fixedCriteriaMap, limitResults);
 
 		if (progressMonitor != null) {
 			progressMonitor.worked(60);
@@ -139,6 +139,7 @@ public class ReportGenerator {
 							throw new RuntimeException("Error reordering date group", e);
 						}
 					}
+
 				});
 			}
 		}
@@ -169,7 +170,7 @@ public class ReportGenerator {
 					try {
 						ds1 = bd1.getPropertyDescriptor(property).getValue();
 						ds2 = bd2.getPropertyDescriptor(property).getValue();
-					}catch(InvalidPropertyException ex) {
+					} catch (InvalidPropertyException ex) {
 						continue;
 					}
 					if ((ds1 == null && ds2 == null) || (ds1 != null && ds1.equals(ds2))) {
@@ -273,11 +274,13 @@ public class ReportGenerator {
 
 	@SuppressWarnings("serial")
 	private static Map<String, String> formatTimeMap = new HashMap<String, String>() {
+
 		{
 			put("minutes", " / (1000.0 * 60)");
 			put("hours", " / (1000.0 * 60 * 60)");
 			put("days", " / (1000.0 * 60 * 60 * 24)");
 		}
+
 	};
 
 	public static String convertToTimeFormula(String formatTimeDetail) {

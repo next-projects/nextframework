@@ -244,21 +244,21 @@ TABLE .group1 TD, TABLE .group2 TD, TABLE .group3 TD{
 	box-shadow: none;
 }
 
-TABLE .group1 TD:before, TABLE .group2 TD:before, TABLE .group3 TD:before{
+TABLE .group1 TD:first-child:before, TABLE .group2 TD:first-child:before, TABLE .group3 TD:first-child:before{
 	font-family: bootstrap-icons !important;
 	font-size: 0.7em;
 	padding-right: 0.5em;
 }
 
-TABLE .group1 TD:before{
+TABLE .group1 TD:first-child:before{
 	content: "\F231 ";
 }
 
-TABLE .group2 TD:before{
+TABLE .group2 TD:first-child:before{
 	content: "\F231\F231 ";
 }
 
-TABLE .group3 TD:before{
+TABLE .group3 TD:first-child:before{
 	content: "\F231\F231\F231 ";
 }
 

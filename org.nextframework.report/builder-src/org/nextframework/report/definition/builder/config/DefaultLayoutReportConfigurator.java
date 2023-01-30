@@ -1,17 +1,18 @@
-package org.nextframework.report.definition.builder;
+package org.nextframework.report.definition.builder.config;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Map;
 
 import org.nextframework.report.definition.ReportSection;
 import org.nextframework.report.definition.ReportSectionRow;
 import org.nextframework.report.definition.builder.BaseReportBuilder.FieldConfig;
+import org.nextframework.report.definition.builder.GroupSetup;
+import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.definition.elements.ReportConstants;
 import org.nextframework.report.definition.elements.ReportGrid;
 import org.nextframework.report.definition.elements.ReportTextField;
 
-public class LayoutReportConfigurator {
+public class DefaultLayoutReportConfigurator implements LayoutReportConfigurator {
 
 	public static final String LOGO = "LOGO";
 
@@ -21,10 +22,8 @@ public class LayoutReportConfigurator {
 	public void configureLabelForGroup(String groupName, GroupSetup groupSetup, int index, ReportTextField field) {
 
 		field.getStyle().setPaddingLeft(2 + index * 5);
-		groupSetup.getReportGroup().getSectionHeader().getRow(0).setStyleClass("groupLabelRow_" + index);
-
-		List<ReportSectionRow> rows = groupSetup.getReportGroup().getSectionHeader().getRows();
-		for (ReportSectionRow row : rows) {
+		groupSetup.getReportGroup().getSectionHeader().getRenderParameters().put("index", index);
+		for (ReportSectionRow row : groupSetup.getReportGroup().getSectionHeader().getRows()) {
 			row.setStyleClass("groupLabelRow_" + index);
 		}
 
@@ -52,7 +51,7 @@ public class LayoutReportConfigurator {
 		}
 	}
 
-	public InputStream getLogo(LayoutReportBuilder layoutReportBuilder) {
+	protected InputStream getLogo(LayoutReportBuilder layoutReportBuilder) {
 		return getClass().getClassLoader().getResourceAsStream("org/nextframework/report/renderer/jasper/logonextframework.png");
 	}
 

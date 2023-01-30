@@ -598,7 +598,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return subreportItem;
 	}
 
-	void configure(int column, int colspan, ReportAlignment alignment, ReportSection section, Object[] elements, String defaultFieldPrefix) {
+	protected void configure(int column, int colspan, ReportAlignment alignment, ReportSection section, Object[] elements, String defaultFieldPrefix) {
 		for (int i = 0; i < elements.length; i++) {
 			Object object = elements[i];
 			if (object instanceof String) {

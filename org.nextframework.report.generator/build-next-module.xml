@@ -2,4 +2,10 @@
 	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
 	
 	<property name="module.disabled.package" value="true"/>	
+	
+	<fileset id="project.source.dirs" dir=".">
+		<include name="src/**/*"/>
+		<include name="jasper-html-src/**/*"/>
+	</fileset>
+	
 </project>

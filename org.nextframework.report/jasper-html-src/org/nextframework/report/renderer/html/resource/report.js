@@ -2,6 +2,7 @@
 TableVisitor = function(table){
 	this.table = table;
 };
+
 TableVisitor.prototype.visitRows = function(f){
 	var rows = this.table.rows;
 	for (var i = 0; i < rows.length; i++){
@@ -12,18 +13,11 @@ TableVisitor.prototype.visitRows = function(f){
 
 function enableReport(id){
 	var reportDiv = document.getElementById(id);
-
 	var table = reportDiv.getElementsByTagName('TABLE')[0];
-
 	var visitor = new TableVisitor(table);
-
 	visitor.visitRows(configurePaddings);
-
 	visitor.visitRows(installPlusSign);
-
 	configureTree(table);
-	
-	
 	visitor.visitRows(function(row){
 		if(row.reportChildren){
 			closeRow(row);
@@ -38,6 +32,7 @@ function openCloseRow(){
 		openRow(this);
 	}
 }
+
 function openRow(row){
 	row.opened = true;
 	for(var i = 0; i < row.reportChildren.length; i++){
@@ -64,19 +59,16 @@ function installTreeTop(row){
 	if(!row.reportChildren){
 		row.reportChildren = new Array();
 		next.events.attachEvent(row, 'click', openCloseRow);
-
 		row.hideChildren = function(){
 			if(row.opened)
 			for(var i = 0; i < row.reportChildren.length; i++){
 				var child = row.reportChildren[i];
 				child.style.display = 'none';
-
 				if(child.hideChildren && child.opened){
 					child.hideChildren();
 				}
 			}
 		}
-
 		row.showChildren = function(){
 			if(row.opened)
 			for(var i = 0; i < row.reportChildren.length; i++){
@@ -105,7 +97,6 @@ function configureTree(table){
 					break;
 				}
 			}
-
 		}
 	}
 }
@@ -125,19 +116,11 @@ function installPlusSign(row, i, previousRow){
 		plusSign.style.cssFloat = 'left';
 		plusSign.style.float = 'left';
 		plusSign.style.position = 'relative';
-		//plusSign.style.paddingTop = '2px';
 		plusSign.innerHTML = '<img src="'+next.http.getApplicationContext() + '/resource/report/mais.gif'+'" style="padding-left: 5px; padding-right: 5px;">';
 		plusSign.id = 'treesign';
-		
 		next.events.attachEvent(previousRow, 'click', alternateSign);
-
-		//previousRow.firstChild.firstChild.style.cssFloat = 'left';
-		//previousRow.firstChild.firstChild.style.float = 'left';
-		
 		previousRow.firstChild.insertBefore(plusSign, previousRow.firstChild.firstChild);
-
 		previousRow.opened = true;
-
 	}
 }
 

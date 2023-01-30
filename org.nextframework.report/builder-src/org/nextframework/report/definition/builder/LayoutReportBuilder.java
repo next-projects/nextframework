@@ -1,6 +1,5 @@
 package org.nextframework.report.definition.builder;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,11 +9,13 @@ import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.report.definition.ReportGroup;
 import org.nextframework.report.definition.ReportSection;
+import org.nextframework.report.definition.builder.config.LayoutReportConfigurator;
 import org.nextframework.report.definition.elements.ReportGrid;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextElement;
 import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.style.ReportAlignment;
+import org.nextframework.service.ServiceFactory;
 
 public abstract class LayoutReportBuilder extends BaseReportBuilder {
 
@@ -52,7 +53,7 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 	}
 
 	public LayoutReportConfigurator getConfigurator() {
-		return LayoutReportConfiguratorFactory.getConfigurator();
+		return ServiceFactory.getService(LayoutReportConfigurator.class);
 	}
 
 	@Override
@@ -85,16 +86,21 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 
 	protected void layoutReportFilter() {
 		List<String> properties = getFilterProperties();
-		for (String property : properties) {
-			try {
-				filter(property);
-			} catch (Exception e) {
-				addLabelAndFieldToFilterGrid(new ReportLabel(property), new ReportLabel("ERROR"));
+		if (properties != null) {
+			for (String property : properties) {
+				try {
+					filter(property);
+				} catch (Exception e) {
+					addLabelAndFieldToFilterGrid(new ReportLabel(property), new ReportLabel("ERROR"));
+				}
 			}
 		}
 	}
 
 	protected List<String> getFilterProperties() {
+		if (getFilter() == null) {
+			return null;
+		}
 		List<String> properties = new ArrayList<String>();
 		PropertyDescriptor[] pds = BeanDescriptorFactory.forBean(getFilter()).getPropertyDescriptors();
 		for (PropertyDescriptor pd : pds) {
@@ -171,17 +177,6 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 	}
 
 	protected Object checkFilterValue(PropertyDescriptor propertyDescriptor, Object propertyValue) {
-
-		if (propertyValue == null) {
-			Type type = propertyDescriptor.getType();
-			if (type instanceof Class<?>) {
-				Class<?> clazz = (Class<?>) type;
-				if (clazz.getPackage() != null && !clazz.getPackage().getName().startsWith("java")) {
-					propertyValue = "[TODOS]";
-				}
-			}
-		}
-
 		return propertyValue;
 	}
 

@@ -17,31 +17,28 @@ import org.springframework.util.StringUtils;
 
 public class ReportElement {
 
-	String name;
-	
-	String reportTitle;
-	
-	DataElement data;
-	LayoutElement layout;
-	
-	ChartsElement charts;
-	
+	private String name;
+	private String reportTitle;
+	private DataElement data;
+	private LayoutElement layout;
+	private ChartsElement charts;
+
 	public ReportElement() {
 	}
-	
+
 	public ReportElement(String name) {
 		this.name = name;
 		this.reportTitle = name;
 	}
-	
+
 	public ChartsElement getCharts() {
 		return charts;
 	}
-	
+
 	public void setCharts(ChartsElement charts) {
 		this.charts = charts;
 	}
-	
+
 	public String getReportTitle() {
 		return reportTitle;
 	}
@@ -127,11 +124,11 @@ public class ReportElement {
 			return false;
 		return true;
 	}
-	
+
 	public List<String> getProperties() {
 		Set<String> properties = new LinkedHashSet<String>();
 		for (LayoutItem layoutItem : getLayout().getItems()) {
-			if(layoutItem instanceof FieldDetailElement){
+			if (layoutItem instanceof FieldDetailElement) {
 				properties.add(((FieldDetailElement) layoutItem).getName());
 			}
 		}
@@ -144,13 +141,13 @@ public class ReportElement {
 			String groupProperty = chartElement.getGroupProperty();
 			String seriesProperty = chartElement.getSeriesProperty();
 			String valueProperty = chartElement.getValueProperty();
-			if(groupProperty != null){
+			if (groupProperty != null) {
 				properties.add(groupProperty);
 			}
-			if(StringUtils.hasText(seriesProperty)){
+			if (StringUtils.hasText(seriesProperty)) {
 				properties.add(seriesProperty);
 			}
-			if(valueProperty != null && ! valueProperty.equals("count")){
+			if (valueProperty != null && !valueProperty.equals("count")) {
 				properties.add(valueProperty);
 			}
 		}
@@ -166,5 +163,5 @@ public class ReportElement {
 		List<String> propertiesLst = new ArrayList<String>(properties);
 		return propertiesLst;
 	}
-	
+
 }

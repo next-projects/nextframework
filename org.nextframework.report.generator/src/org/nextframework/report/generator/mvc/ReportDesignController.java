@@ -41,14 +41,13 @@ import org.nextframework.report.generator.generated.ReportSpec;
 import org.nextframework.report.generator.layout.DynamicBaseReportDefinition;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.view.progress.IProgressMonitor;
 import org.nextframework.view.progress.ProgressMonitor;
 import org.nextframework.view.progress.ProgressTask;
 import org.nextframework.view.progress.ProgressTaskFactory;
 import org.nextframework.web.WebUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindException;
@@ -82,7 +81,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	public ModelAndView selectProperties(ReportDesignModel model) throws SAXException, IOException {
-		
+
 		ReportElement reportElement = null;
 		if (model.getReportXml() != null) {
 			reportElement = new ReportReader(model.getReportXml()).getReportElement();
@@ -100,7 +99,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 
 		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), selectedGeneratedType, avaiableProperties);
-		
+
 		setAttribute("model", model);
 		setAttribute("avaiableProperties", avaiableProperties);
 		setAttribute("propertyMetadata", propertiesMetadata);
@@ -125,12 +124,9 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			return model.getSelectedGeneratedType();
 		}
 		try {
-			String defaultProvider = ReportReader.dataSourceProviders.keySet().iterator().next();
-			DataSourceProvider<?> dataProvider = ReportReader.getDataSourceProviderForType(defaultProvider);
-			BeanWrapper bw = new BeanWrapperImpl(dataProvider);
+			DataSourceProvider defaultDataSourceProvider = ServiceFactory.getService(DataSourceProvider.class);
 			Class<?> selectedGeneratedType = model.getSelectedType();
-			bw.setPropertyValue("fromClass", selectedGeneratedType.getName());
-			return dataProvider.getMainType();
+			return defaultDataSourceProvider.getMainType(selectedGeneratedType.getName());
 		} catch (Exception e) {
 			throw new RuntimeException("Verify datasourceprovider code", e);
 		}
@@ -156,7 +152,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				properties.remove(calculatedFieldElement.getName());
 			}
 		}
-		
+
 		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), reportType, properties);
 		//complete metadata with calculated fields
 		for (CalculatedFieldElement calculatedFieldElement : calculatedFields) {
@@ -456,9 +452,11 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	/////////////////////////////////////////////// EXECUTE TASKS ///////////////////////////////////////////////
 
 	public interface ReportDesignTask {
+
 		Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception;
 
 		ModelAndView showResults(WebRequestContext request, ReportDesignModel model, Object data) throws Exception;
+
 	}
 
 	protected ModelAndView executeTask(WebRequestContext request, ReportDesignModel model, final ReportDesignTask task) throws Exception {
@@ -480,6 +478,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 			//Se não existir, inicia a thread e obtém o monitor
 			ProgressTask pTask = new ProgressTask() {
+
 				@Override
 				public Object run(IProgressMonitor progressMonitor) throws Exception {
 					progressMonitor.beginTask(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.initializing", null, "Inicializando"), 120);
@@ -489,6 +488,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 					progressMonitor.worked(20);
 					return converted;
 				}
+
 			};
 
 			monitor = ProgressTaskFactory.startTask(pTask, ReportDesignTask.class.getSimpleName() + " " + model.getId(), logger);

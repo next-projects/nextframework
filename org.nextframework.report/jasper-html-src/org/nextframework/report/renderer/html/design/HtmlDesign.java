@@ -1,19 +1,8 @@
 package org.nextframework.report.renderer.html.design;
 
-import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
-
 public class HtmlDesign {
 
-	MappedJasperPrint mappedJasperPrint;
-	HtmlTag tag = new HtmlTag("div");
-
-	public HtmlDesign(MappedJasperPrint mappedJasperPrint) {
-		this.mappedJasperPrint = mappedJasperPrint;
-	}
-
-	public void setTag(HtmlTag tag) {
-		this.tag = tag;
-	}
+	private HtmlTag tag = new HtmlTag("div");
 
 	public HtmlTag getTag() {
 		return tag;

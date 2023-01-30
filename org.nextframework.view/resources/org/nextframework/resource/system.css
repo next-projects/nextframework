@@ -136,6 +136,8 @@ TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.da
 
 .report-table {
 	cursor: default;
+	width: 100%;
+	border-collapse: collapse;
 }
 
 .report-table .report-table {

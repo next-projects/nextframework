@@ -198,15 +198,12 @@ public class ColumnBuilder {
 
 	private void fieldDetailWithConfig(String label, FieldConfig configForRowField, int colspan, String pattern) {
 
-		ReportTextField fieldElement = getFieldElementForFieldConfig(configForRowField, null);
 
 		ReportLabel labelElement = baseReportBuilder.label(label == null ? configForRowField.label : label);
-		labelElement.getStyle().setPaddingRight(4);
-		labelElement.getStyle().setAlignment(configForRowField.alignment);
-
 		labelElement.setColspan(colspan);
-		fieldElement.setColspan(colspan);
 
+		ReportTextField fieldElement = getFieldElementForFieldConfig(configForRowField, null);
+		fieldElement.setColspan(colspan);
 		if (pattern != null) {
 			fieldElement.setPattern(pattern);
 		}

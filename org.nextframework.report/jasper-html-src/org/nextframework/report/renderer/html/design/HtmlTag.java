@@ -4,22 +4,22 @@
 package org.nextframework.report.renderer.html.design;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class HtmlTag {
 
-	HtmlStyle style = new HtmlStyle();
-	HtmlClass styleClass = new HtmlClass();
+	private HtmlStyle style = new HtmlStyle();
+	private HtmlClass styleClass = new HtmlClass();
 
-	boolean breakLine = false;
-	String tagName;
-	String innerHTML;
-	Map<String, Object> attributes = new HashMap<String, Object>();
+	private boolean breakLine = false;
+	private String tagName;
+	private String innerHTML;
+	private Map<String, Object> attributes = new LinkedHashMap<String, Object>();
 
-	List<HtmlTag> children = new ArrayList<HtmlTag>();
+	private List<HtmlTag> children = new ArrayList<HtmlTag>();
 
 	public HtmlClass getStyleClass() {
 		return styleClass;

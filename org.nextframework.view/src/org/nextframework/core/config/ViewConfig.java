@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.InputTagType;
-import org.nextframework.view.template.PropertyTag;
 
 public interface ViewConfig {
 

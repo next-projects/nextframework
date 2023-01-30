@@ -36,6 +36,14 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 			} else {
 				verifyDescriptionProperty(propertyValue);
 			}
+		} else {
+			Type type = propertyDescriptor.getType();
+			if (type instanceof Class<?>) {
+				Class<?> clazz = (Class<?>) type;
+				if (clazz.getPackage() != null && !clazz.getPackage().getName().startsWith("java")) {
+					propertyValue = getEmptyFilterValue();
+				}
+			}
 		}
 
 		return propertyValue;
@@ -52,6 +60,10 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 				dao.loadDescriptionProperty(obj);
 			}
 		}
+	}
+
+	protected String getEmptyFilterValue() {
+		return "[TODOS]";
 	}
 
 	@Override
