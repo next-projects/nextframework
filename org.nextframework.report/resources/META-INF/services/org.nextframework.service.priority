@@ -1,1 +1,2 @@
+org.nextframework.report.definition.builder.config.DefaultLayoutReportConfigurator=100
 org.nextframework.report.renderer.html.builder.config.DefaultHtmlReportViewConfigurator=100
