@@ -160,6 +160,7 @@ function limparCombo(combo, includeblank, currentValue,blankLabel){
 	combo.options.add(op);//forçar o redimensionamento do form
 	combo.remove(pararEm + remove - 1);
 	
+	
 	if(includeblank){
 		op = new Option();
 		op.text = blankLabel;

@@ -145,6 +145,32 @@ public class ObjectUtils {
 		if (o1 instanceof Number && o2 instanceof Number) {
 			return Util.numbers.equals(((Number) o1), ((Number) o2));
 		}
+		if (o1.getClass().isArray() && o2.getClass().isArray()) {
+			Class<?> o1Type = o1.getClass().getComponentType();
+			Class<?> o2Type = o2.getClass().getComponentType();
+			if (o1Type != o2Type) {
+				return false;
+			}
+			if (o1Type == boolean.class) {
+				return Arrays.equals((boolean[]) o1, (boolean[]) o2);
+			} else if (o1Type == byte.class) {
+				return Arrays.equals((byte[]) o1, (byte[]) o2);
+			} else if (o1Type == char.class) {
+				return Arrays.equals((char[]) o1, (char[]) o2);
+			} else if (o1Type == short.class) {
+				return Arrays.equals((short[]) o1, (short[]) o2);
+			} else if (o1Type == int.class) {
+				return Arrays.equals((int[]) o1, (int[]) o2);
+			} else if (o1Type == float.class) {
+				return Arrays.equals((float[]) o1, (float[]) o2);
+			} else if (o1Type == double.class) {
+				return Arrays.equals((double[]) o1, (double[]) o2);
+			} else if (o1Type == long.class) {
+				return Arrays.equals((long[]) o1, (long[]) o2);
+			} else if (!o1Type.isPrimitive()) {
+				return Arrays.equals((Object[]) o1, (Object[]) o2);
+			}
+		}
 		return o1.equals(o2);
 	}
 
