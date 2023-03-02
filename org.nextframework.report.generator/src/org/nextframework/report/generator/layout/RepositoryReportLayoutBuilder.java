@@ -31,10 +31,10 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 		if (propertyValue != null) {
 			if (propertyValue.getClass().isArray()) {
 				for (Object pv : (Object[]) propertyValue) {
-					verifyDescriptionProperty(pv);
+					verifyEntityDescription(pv);
 				}
 			} else {
-				verifyDescriptionProperty(propertyValue);
+				verifyEntityDescription(propertyValue);
 			}
 		} else {
 			Type type = propertyDescriptor.getType();
@@ -50,7 +50,7 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 	}
 
 	@SuppressWarnings("unchecked")
-	private <BEAN> void verifyDescriptionProperty(BEAN obj) {
+	private <BEAN> void verifyEntityDescription(BEAN obj) {
 		if (obj != null && obj.getClass().isAnnotationPresent(Entity.class)) {
 			BeanDescriptor entityBeanDescriptor = BeanDescriptorFactory.forBean(obj);
 			String descriptionPropertyName = entityBeanDescriptor.getDescriptionPropertyName();
@@ -69,11 +69,11 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor,
-			String label, String fieldName, String fieldPreffix, String fieldSuffix, String reportExpression,
+			String label, String fieldName, String fieldPreffix, String reportExpression,
 			String pattern, ReportAlignment alignment) {
 
 		FieldConfig fieldConfig = super.createFieldConfig(builder, beanDescriptor, propertyDescriptor,
-				label, fieldName, fieldPreffix, fieldSuffix, reportExpression,
+				label, fieldName, fieldPreffix, reportExpression,
 				pattern, alignment);
 
 		fieldConfig.label = Util.beans.getDisplayName(propertyDescriptor, getLocale());

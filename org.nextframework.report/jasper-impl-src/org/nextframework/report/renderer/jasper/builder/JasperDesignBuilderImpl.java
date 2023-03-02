@@ -311,7 +311,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		if (expression.startsWith("param.")) {
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (expression.contains(LayoutReportBuilder.FILTER_PARAMETER)) {
-				expression2.setText("((" + ReportBuilderValueConverter.class.getCanonicalName() + ")$P{" + BaseReportBuilder.CONVERTER + "}).apply($P{" + expression.substring(6) + "})");
+				expression2.setText(getConverterExpression("$P{" + expression.substring(6) + "}"));
 			} else {
 				expression2.setText("$P{" + expression.substring(6) + "}");
 			}
@@ -344,7 +344,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		} else {
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (callToString) {
-				expression2.setText("((" + ReportBuilderValueConverter.class.getCanonicalName() + ")$P{" + BaseReportBuilder.CONVERTER + "}).apply($F{" + expression + "})");
+				expression2.setText(getConverterExpression("$F{" + expression + "}"));
 			} else {
 				expression2.setText("$F{" + expression + "}");
 			}
@@ -357,6 +357,10 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 			}
 			return expression2;
 		}
+	}
+
+	private String getConverterExpression(String expression) {
+		return "((" + ReportBuilderValueConverter.class.getCanonicalName() + ")$P{" + BaseReportBuilder.CONVERTER + "}).apply(" + expression + ")";
 	}
 
 	private JRDesignParameter getParameter(String expression) {
@@ -1284,7 +1288,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		return null;
 	}
 
-	protected  List<JRChild> getAllChildrenFlat(List<JRChild> children) {
+	protected List<JRChild> getAllChildrenFlat(List<JRChild> children) {
 		List<JRChild> result = new ArrayList<JRChild>();
 		for (JRChild jrChild : children) {
 			result.add(jrChild);

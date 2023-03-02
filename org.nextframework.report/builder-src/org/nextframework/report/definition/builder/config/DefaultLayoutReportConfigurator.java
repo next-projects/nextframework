@@ -3,6 +3,8 @@ package org.nextframework.report.definition.builder.config;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.nextframework.bean.BeanDescriptor;
+import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.report.definition.ReportSection;
 import org.nextframework.report.definition.ReportSectionRow;
 import org.nextframework.report.definition.builder.BaseReportBuilder.FieldConfig;
@@ -69,7 +71,7 @@ public class DefaultLayoutReportConfigurator implements LayoutReportConfigurator
 		}
 	}
 
-	public void updateFieldConfig(FieldConfig fieldConfig) {
+	public void updateFieldConfig(LayoutReportBuilder layoutReportBuilder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, FieldConfig fieldConfig) {
 
 	}
 

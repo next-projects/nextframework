@@ -198,7 +198,6 @@ public class ColumnBuilder {
 
 	private void fieldDetailWithConfig(String label, FieldConfig configForRowField, int colspan, String pattern) {
 
-
 		ReportLabel labelElement = baseReportBuilder.label(label == null ? configForRowField.label : label);
 		labelElement.setColspan(colspan);
 
@@ -217,16 +216,7 @@ public class ColumnBuilder {
 		ReportTextField fieldElement;
 		String reportExpression = configForRowField.reportExpression;
 		if (group != null) {
-			String suffix = configForRowField.suffix;
-			if (suffix != null) {
-				if (reportExpression.indexOf(suffix) < 0) {
-					reportExpression = reportExpression + capitalize(group);
-				} else {
-					reportExpression = reportExpression.substring(0, reportExpression.length() - suffix.length()) + capitalize(group) + suffix;
-				}
-			} else {
-				reportExpression = reportExpression + capitalize(group);
-			}
+			reportExpression = reportExpression + capitalize(group);
 		}
 		fieldElement = baseReportBuilder.field(reportExpression, false);
 		fieldElement.setPattern(configForRowField.pattern);

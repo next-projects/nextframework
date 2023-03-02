@@ -318,15 +318,13 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		public String originalExpression;
 		public String reportExpression;
 		public String preffix;
-		public String suffix;
 		public String pattern;
 		public ReportAlignment alignment;
 
-		public FieldConfig(String label, String originalExpression, String preffix, String suffix, String reportExpression, String pattern, ReportAlignment alignment) {
+		public FieldConfig(String label, String originalExpression, String preffix, String reportExpression, String pattern, ReportAlignment alignment) {
 			this.label = label;
 			this.originalExpression = originalExpression;
 			this.preffix = preffix;
-			this.suffix = suffix;
 			this.reportExpression = reportExpression;
 			this.pattern = pattern;
 			this.alignment = alignment;
@@ -353,7 +351,6 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		String label = propertyDescriptor.getDisplayName();
 		String pattern = null;
 		ReportAlignment alignment = null;
-		String fieldSuffix = null;
 
 		Type type = propertyDescriptor.getType();
 		if (type instanceof Class<?>) {
@@ -376,7 +373,6 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 			} else if (Calendar.class.isAssignableFrom(clazz)) {
 
-				fieldSuffix = ".time";
 				pattern = "dd/MM/yyyy";
 
 			}
@@ -387,19 +383,16 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		if (fieldPreffix != null) {
 			reportExpression = fieldPreffix + fieldName;
 		}
-		if (fieldSuffix != null) {
-			reportExpression += fieldSuffix;
-		}
 
 		return createFieldConfig(this, beanDescriptor, propertyDescriptor,
-				label, fieldName, fieldPreffix, fieldSuffix, reportExpression,
+				label, fieldName, fieldPreffix, reportExpression,
 				pattern, alignment);
 	}
 
 	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor,
-			String label, String fieldName, String fieldPreffix, String fieldSuffix, String reportExpression,
+			String label, String fieldName, String fieldPreffix, String reportExpression,
 			String pattern, ReportAlignment alignment) {
-		return new FieldConfig(label, fieldName, fieldPreffix, fieldSuffix, reportExpression, pattern, alignment);
+		return new FieldConfig(label, fieldName, fieldPreffix, reportExpression, pattern, alignment);
 	}
 
 	protected ReportGrid grid() {

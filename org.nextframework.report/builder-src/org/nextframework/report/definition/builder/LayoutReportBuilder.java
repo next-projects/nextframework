@@ -31,7 +31,6 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 	protected void configureDefinition() {
 
 		super.configureDefinition();
-		getDefinition().getParameters().put(FILTER_PARAMETER, filter);
 		configureReport();
 
 		if (isSetupColumnWidths()) {
@@ -120,14 +119,14 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 
 	@Override
 	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String label,
-			String fieldName, String fieldPreffix, String fieldSuffix, String reportExpression,
+			String fieldName, String fieldPreffix, String reportExpression,
 			String pattern, ReportAlignment alignment) {
 
 		FieldConfig fieldConfig = super.createFieldConfig(builder, beanDescriptor, propertyDescriptor, label,
-				fieldName, fieldPreffix, fieldSuffix, reportExpression,
+				fieldName, fieldPreffix, reportExpression,
 				pattern, alignment);
 
-		getConfigurator().updateFieldConfig(fieldConfig);
+		getConfigurator().updateFieldConfig((LayoutReportBuilder) builder, beanDescriptor, propertyDescriptor, fieldConfig);
 
 		return fieldConfig;
 	}

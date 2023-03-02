@@ -29,7 +29,7 @@ public class ReportBuilderValueConverter extends org.nextframework.report.render
 	public Object apply(Object obj) {
 
 		if (obj == null) {
-			return trueFalseNullLabels[2];
+			return null;
 		} else if (obj instanceof Boolean) {
 			if (((Boolean) obj)) {
 				return trueFalseNullLabels[0];
@@ -37,8 +37,10 @@ public class ReportBuilderValueConverter extends org.nextframework.report.render
 			return trueFalseNullLabels[1];
 		} else if (obj instanceof String || obj instanceof Number ||
 				obj instanceof Date || obj instanceof java.sql.Date ||
-				obj instanceof Timestamp || obj instanceof Calendar) {
+				obj instanceof Timestamp) {
 			return obj;
+		} else if (obj instanceof Calendar) {
+			return ((Calendar) obj).getTime();
 		}
 
 		return Util.strings.toStringDescription(obj, locale);
