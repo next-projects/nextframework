@@ -1818,12 +1818,20 @@ NextEffects.prototype.showHideProperty = function(el, show){
 	
 	var panel = next.dom.id('p_' + el2.id);
 	if (panel != null) {
-		panel.style.display = show ? '' : 'none';
+		if (show) {
+			panel.style.setProperty("display", "");
+		}else{
+			panel.style.setProperty("display", "none", "important");
+		}
 	}
 	
 	var label = next.dom.id('l_' + el2.id);
 	if (label != null) {
-		label.style.display = show ? '' : 'none';
+		if (show) {
+			label.style.setProperty("display", "");
+		}else{
+			label.style.setProperty("display", "none", "important");
+		}
 	}
 	
 }

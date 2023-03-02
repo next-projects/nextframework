@@ -80,8 +80,15 @@
 	<c:forEach items="${model.properties}" var="property">
 		designer.addField('${property}', ${propertyMetadata[property]['json']});
 		<c:if test="${!propertyMetadata[property]['calculated']}">
-			document.getElementById('selProp_${property}').disabled = true;
-			document.getElementById('selProp_${property}').title = 'Essa propriedade não pode ser removida.';
+			{
+				var comp = document.getElementById('selProp_${property}');
+				if (comp == null) {
+					alert('O campo ${property} especificado no XML não existe mais!');
+				}else{
+					document.getElementById('selProp_${property}').disabled = true;
+					document.getElementById('selProp_${property}').title = 'Essa propriedade não pode ser removida.';
+				}
+			}
 		</c:if>
 		<c:if test="${propertyMetadata[property]['calculated']}">
 			designer.addCalculation('${property}', ${propertyMetadata[property]['json']});
