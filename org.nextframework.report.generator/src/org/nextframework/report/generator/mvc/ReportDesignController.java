@@ -29,7 +29,10 @@ import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
 import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.ReportSectionRow;
+import org.nextframework.report.definition.elements.ReportItem;
+import org.nextframework.report.definition.elements.ReportItemIterator;
 import org.nextframework.report.definition.elements.ReportLabel;
+import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.ReportGenerator;
 import org.nextframework.report.generator.ReportReader;
@@ -41,6 +44,7 @@ import org.nextframework.report.generator.generated.ReportSpec;
 import org.nextframework.report.generator.layout.DynamicBaseReportDefinition;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
+import org.nextframework.report.renderer.jasper.JasperUtils;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.view.progress.IProgressMonitor;
@@ -315,7 +319,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		Object propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), mainType, filterProperties);
 
 		setAttribute("filters", util.reorganizeFilters(mainType, filterProperties.keySet()));
-		setAttribute("filterMetadata", propertiesMetadata);
+		setAttribute("filterMetadataMap", propertiesMetadata);
 		setAttribute("model", model);
 		setAttribute("reportElement", reportElement);
 		setAttribute("crudPath", getPathForReportCrud());
@@ -404,7 +408,6 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.generatingPDF", null, "Gerando PDF"));
 				DynamicBaseReportDefinition definition2 = (DynamicBaseReportDefinition) definition;
 				if (Util.collections.isNotEmpty(definition2.getSummarizedData().getItems())) {
-					onDownloadDefinitionPDF(definition);
 					definition.getParameters().put("renderPDF", Boolean.TRUE);
 					byte[] pdfBytes = JasperReportsRenderer.renderAsPDF(definition);
 					return new Resource("application/pdf", definition.getReportName() + ".pdf", pdfBytes);
@@ -533,11 +536,16 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 		ReportGenerator rg = new ReportGenerator(reportElement, progressMonitor);
 		ReportSpec spec = rg.generateReportSpec(filterMap, locale, maxResults);
+
 		if (debugMode()) {
-			debugSource(rg.getSourceCode(), spec.getSummary().getSourceCode());
+			debug(reportElement.getName(), rg, spec);
 		}
 
 		ReportDefinition definition = spec.getReportBuilder().getDefinition();
+
+		if (debugMode()) {
+			debug(reportElement.getName(), definition);
+		}
 
 		int total = definition.getData().size();
 		if (definition instanceof DynamicBaseReportDefinition) {
@@ -596,17 +604,38 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 	protected abstract CUSTOM_BEAN loadPersistedReportById(Integer id);
 
-	protected void onDownloadDefinitionPDF(ReportDefinition definition) {
-
-	}
-
 	/////////////////////////////////////////////// DEBUG ///////////////////////////////////////////////
 
 	protected boolean debugMode() {
 		return false;
 	}
 
-	protected void debugSource(String sourceCodeReport, String sourceCodeSummary) {
+	private void debug(String title, ReportGenerator rg, ReportSpec spec) {
+		title = Util.strings.onlyAlphanumerics(title);
+		debugSource(title, rg.getSourceCode(), spec.getSummary().getSourceCode());
+	}
+
+	protected void debugSource(String title, String sourceCodeReport, String sourceCodeSummary) {
+	}
+
+	private void debug(String title, ReportDefinition definition) {
+		title = Util.strings.onlyAlphanumerics(title);
+		ReportItemIterator reportItemIterator = new ReportItemIterator(definition);
+		int i = 1;
+		while (reportItemIterator.hasNext()) {
+			ReportItem next = reportItemIterator.next();
+			if (next instanceof Subreport) {
+				debug(title + (i++), ((Subreport) next).getReport());
+			}
+		}
+		debugSource(title, JasperReportsRenderer.renderAsJRXML(definition));
+		debugDataCSV(title, JasperUtils.generateDataCSV(definition));
+	}
+
+	protected void debugSource(String title, byte[] jrxml) {
+	}
+
+	protected void debugDataCSV(String title, String csv) {
 	}
 
 }

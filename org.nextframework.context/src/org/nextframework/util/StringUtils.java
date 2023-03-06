@@ -324,8 +324,12 @@ public class StringUtils {
 		}
 		return string;
 	}
+	
+	public String onlyAlphanumerics(String s) {
+		return s.replaceAll("[^A-Za-z0-9]", "");
+	}
 
-	public static String onlyNumbers(String s) {
+	public String onlyNumbers(String s) {
 		int i;
 		String numeros = "0123456789";
 		int tamanho = s.length();
@@ -337,7 +341,7 @@ public class StringUtils {
 				sb.append(caractere);
 		}
 		return sb.toString();
-	} //SoNumero
+	}
 
 	public String stringCheia(String stringOriginal, String caractereCompleta, int tamanho, boolean direita) {
 		if (stringOriginal == null) {
