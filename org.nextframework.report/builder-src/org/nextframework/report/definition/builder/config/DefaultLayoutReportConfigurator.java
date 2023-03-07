@@ -1,5 +1,6 @@
 package org.nextframework.report.definition.builder.config;
 
+import java.awt.Color;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import org.nextframework.report.definition.builder.GroupSetup;
 import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.definition.elements.ReportConstants;
 import org.nextframework.report.definition.elements.ReportGrid;
+import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.definition.elements.style.Border;
 
 public class DefaultLayoutReportConfigurator implements LayoutReportConfigurator {
 
@@ -73,6 +76,12 @@ public class DefaultLayoutReportConfigurator implements LayoutReportConfigurator
 
 	public void updateFieldConfig(LayoutReportBuilder layoutReportBuilder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, FieldConfig fieldConfig) {
 
+	}
+
+	@Override
+	public void updateSeparator(LayoutReportBuilder layoutReportBuilder, ReportLabel line, ReportLabel space) {
+		line.getStyle().setBold(true);
+		line.getStyle().setBorderBottom(new Border(1, Color.gray));
 	}
 
 	public int getChartDefaultHeight() {

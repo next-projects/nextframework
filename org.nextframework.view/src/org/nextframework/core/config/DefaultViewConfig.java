@@ -138,6 +138,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(DataGridTag.class, "headerStyleClass", "table-light");
 			regDefaultStyleClasses(DataGridTag.class, "groupStyleClasses", "group1, group2, group3");
 			regDefaultStyleClasses(DataGridTag.class, "footerStyleClass", "table-light");
+			regDefaultStyleClasses(DataGridTag.class, "baseReportStyleClass", "w-100");
 
 			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border border-primary border-opacity-50 rounded p-2");
 			regDefaultStyleClasses(GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-75");

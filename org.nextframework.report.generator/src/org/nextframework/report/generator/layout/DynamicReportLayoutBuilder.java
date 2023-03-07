@@ -29,12 +29,13 @@ import org.nextframework.report.renderer.html.builder.HtmlReportBuilder;
 import org.nextframework.report.renderer.jasper.builder.JasperRenderParameters;
 import org.nextframework.summary.Summary;
 import org.nextframework.summary.compilation.SummaryResult;
+import org.nextframework.util.Util;
 
 import net.sf.jasperreports.engine.type.VerticalAlignEnum;
 
 public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 
-	private enum ReportCycle {
+	public enum ReportCycle {
 		BASE,
 		BASE_CONFIG,
 		CHARTS,
@@ -45,50 +46,99 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 	private ReportCycle cycle = ReportCycle.BASE;
 
 	@Override
-	protected boolean isSetupColumnWidths() {
-		return false;
+	public ReportDefinition getDefinition() {
+		if (cycle == ReportCycle.BASE) {
+			rendering = true;
+			cycle = ReportCycle.BASE_CONFIG;
+			definition = new DynamicBaseReportDefinition();
+			configureDefinition();
+			return definition;
+		}
+		return super.getDefinition();
 	}
 
 	@Override
 	protected boolean isSetupGroups() {
-		return false;
+		if (cycle == ReportCycle.BASE || cycle == ReportCycle.BASE_CONFIG || cycle == ReportCycle.CHARTS) {
+			return false;
+		}
+		return super.isSetupGroups();
 	}
 
 	@Override
-	public ReportDefinition getDefinition() {
+	protected boolean isSetupColumnWidths() {
+		if (cycle == ReportCycle.BASE || cycle == ReportCycle.BASE_CONFIG) {
+			return false;
+		}
+		return super.isSetupColumnWidths();
+	}
 
-		if (cycle == ReportCycle.BASE) {
+	@SuppressWarnings("all")
+	@Override
+	protected void layoutReport() {
 
-			cycle = ReportCycle.BASE_CONFIG;
+		getDefinition().getParameters().put("renderPDF", Boolean.FALSE);
+		getDefinition().getParameters().put(ReportCycle.class.getSimpleName(), cycle);
 
-			definition = new DynamicBaseReportDefinition();
+		switch (cycle) {
 
-			definition.setReportName(getReportName() + "BASE");
-			((DynamicBaseReportDefinition) definition).setSummarizedData((SummaryResult<?, ? extends Summary<?>>) summaryResult);
-			definition.setData(Arrays.asList(new Object()));
+			case BASE_CONFIG:
 
-			configureDefinition();
+				getDefinition().setReportName(getReportName() + "Base");
+				getDefinition().setData(Arrays.asList(new Object()));
+				((DynamicBaseReportDefinition) getDefinition()).setSummarizedData((SummaryResult<?, ? extends Summary<?>>) summaryResult);
+				getDefinition().setTitle(getTitle());
 
-			definition.setTitle(getTitle());
+				Subreport subCharts = new Subreport(createSubReportDefinition(ReportCycle.CHARTS));
+				if (Util.collections.isNotEmpty(subCharts.getReport().getChildren())) {
+					getDefinition().addItem(subCharts, getDefinition().getSectionDetail(), 0);
+					getDefinition().getSectionDetail().breakLine();
+				}
 
-			definition.addItem(new Subreport(createSubReportPart(ReportCycle.CHARTS).getDefinition()), definition.getSectionDetail(), 0);
-			definition.getSectionDetail().breakLine();
+				Subreport subResume = new Subreport(createSubReportDefinition(ReportCycle.RESUME));
+				if (Util.collections.isNotEmpty(subResume.getReport().getChildren())) {
+					subResume.setRenderParameter(JasperRenderParameters.PRINT_WHEN_EXPRESSION, "$P{renderPDF}");
+					getDefinition().addItem(subResume, getDefinition().getSectionDetail(), 0);
+					getDefinition().getSectionDetail().breakLine();
+				}
 
-			Subreport subResume = new Subreport(createSubReportPart(ReportCycle.RESUME).getDefinition());
-			subResume.setRenderParameter(JasperRenderParameters.PRINT_WHEN_EXPRESSION, "$P{renderPDF}");
-			definition.addItem(subResume, definition.getSectionDetail(), 0);
-			definition.getSectionDetail().breakLine();
+				Subreport subDetails = new Subreport(createSubReportDefinition(ReportCycle.DETAIL));
+				if (Util.collections.isNotEmpty(subDetails.getReport().getChildren())) {
+					getDefinition().addItem(subDetails, getDefinition().getSectionDetail(), 0);
+				}
 
-			definition.addItem(new Subreport(createSubReportPart(ReportCycle.DETAIL).getDefinition()), definition.getSectionDetail(), 0);
+				getDefinition().getParameters().put("no-detail-separator", true);
+				getDefinition().getParameters().put(HtmlReportBuilder.ENALBE_SUBREPORT, getReportName() + "Detail");
 
-			definition.getParameters().put("no-detail-separator", true);
-			definition.getParameters().put(HtmlReportBuilder.ENALBE_SUBREPORT, getReportName() + "Detail");
+				break;
 
-			return definition;
+			case CHARTS:
 
-		} else {
+				getDefinition().setReportName(getDefinition().getReportName() + "Charts");
+				getDefinition().setData(Arrays.asList(new Object()));
+				getDefinition().getSectionDetailHeader().setRender(false);
+				createCharts();
+				break;
 
-			return super.getDefinition();
+			case RESUME:
+
+				getDefinition().setReportName(getDefinition().getReportName() + "Resume");
+				getDefinition().getSectionDetailHeader().setRender(false);
+				getDefinition().getSectionDetail().setRender(false);
+				for (int i = 1; i < getDefinition().getGroups().size(); i++) {
+					getDefinition().getGroups().get(i).getSectionHeader().setRender(false);
+					getDefinition().getGroups().get(i).getSectionDetail().setRender(false);
+					getDefinition().getGroups().get(i).getSectionFooter().setRender(false);
+				}
+				layoutReportFields();
+				separator("", getColumnQuantity(), getDefinition().getSectionLastPageFooter());
+				break;
+
+			case DETAIL:
+
+				getDefinition().setReportName(getDefinition().getReportName() + "Detail");
+				layoutReportFields();
+				break;
 
 		}
 
@@ -96,6 +146,101 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 
 	protected String getTitle() {
 		return "-";
+	}
+
+	@SuppressWarnings("all")
+	private ReportDefinition createSubReportDefinition(ReportCycle cycle) {
+		DynamicReportLayoutBuilder r = newInstance();
+		r.setLocale(locale);
+		r.setData((SummaryResult) this.summaryResult);
+		r.cycle = cycle;
+		return r.getDefinition();
+	}
+
+	public DynamicReportLayoutBuilder newInstance() {
+		try {
+			return this.getClass().newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void createCharts() {
+
+	}
+
+	protected void layoutReportFields() {
+
+	}
+
+	protected SubreportTable getChartTable(final Chart chart0) {
+		final ReportDefinition definitionSuper = getDefinition();
+		return new SubreportTable(new TableInformationAdaptor() {
+
+			DecimalFormat df = new DecimalFormat("#,##0.00");
+
+			@Override
+			public void configureDefinition(ReportDefinition definition) {
+				definition.getParameters().putAll(definitionSuper.getParameters());
+			}
+
+			@Override
+			public void configureGroupField(ReportTextField groupField) {
+				super.configureGroupField(groupField);
+				groupField.getStyle().setFontSize(7);
+			}
+
+			@Override
+			public void configureHeaderField(ReportLabel headerField, int columnIndex) {
+				super.configureHeaderField(headerField, columnIndex);
+				headerField.getStyle().setFontSize(7);
+			}
+
+			@Override
+			public Collection<?> getColumnHeaderDataSet() {
+				ChartData data2 = chart0.getData();
+				return Arrays.asList(data2.getSeries());
+			}
+
+			@Override
+			public ReportItem getComponentFor(Object header, int i) {
+				ReportTextField component = (ReportTextField) super.getComponentFor(header, i);
+				component.getStyle().setFontSize(7);
+				component.getStyle().setAlignment(ReportAlignment.RIGHT);
+				return component;
+			}
+
+			@Override
+			public Collection<?> getRowGroupDataSet() {
+				List<ChartRow> data = chart0.getData().getData();
+				return data;
+			}
+
+			@Override
+			public String formatRowGroup(Object _row) {
+				ChartRow row = (ChartRow) _row;
+				PropertyEditor formatter = chart0.getStyle().getGroupFormatter();
+				String value = null;
+				if (formatter != null) {
+					formatter.setValue(row.getGroup());
+					value = formatter.getAsText();
+				}
+				return value;
+			}
+
+			@Override
+			public Object getValue(Object _row, Object header, int columnIndex) {
+				ChartRow row = (ChartRow) _row;
+				Number value = row.getValues()[columnIndex - 1];
+				if (value == null) {
+					return "";
+				}
+				return df.format(value);
+			}
+
+		});
 	}
 
 	public void onNewChart(Chart chart) {
@@ -154,55 +299,6 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 
 	}
 
-	@SuppressWarnings("all")
-	public DynamicReportLayoutBuilder createSubReportPart(ReportCycle cycle) {
-		DynamicReportLayoutBuilder r = newInstance();
-		r.setData((SummaryResult) this.summaryResult);
-		r.setLocale(locale);
-		r.cycle = cycle;
-		return r;
-	}
-
-	public DynamicReportLayoutBuilder newInstance() {
-		try {
-			return this.getClass().newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@SuppressWarnings("all")
-	@Override
-	protected void layoutReport() {
-		getDefinition().getParameters().put("renderPDF", Boolean.FALSE);
-		switch (cycle) {
-			case RESUME:
-				getDefinition().setReportName(getDefinition().getReportName() + "Resume");
-				getDefinition().getSectionFirstPageHeader().breakLine();
-				getDefinition().getSectionDetailHeader().setRender(false);
-				getDefinition().getSectionDetail().setRender(false);
-				for (int i = 1; i < getDefinition().getGroups().size(); i++) {
-					getDefinition().getGroups().get(i).getSectionHeader().setRender(false);
-					getDefinition().getGroups().get(i).getSectionDetail().setRender(false);
-					getDefinition().getGroups().get(i).getSectionFooter().setRender(false);
-				}
-				layoutReportFields();
-				break;
-			case CHARTS:
-				getDefinition().setReportName(getDefinition().getReportName() + "Charts");
-				getDefinition().getSectionDetailHeader().setRender(false);
-				getDefinition().setData(Arrays.asList(new Object()));
-				createCharts();
-				break;
-			case DETAIL:
-				getDefinition().setReportName(getDefinition().getReportName() + "Detail");
-				layoutReportFields();
-				break;
-		}
-	}
-
 	@Override
 	protected ReportItem addItemToDefinition(int column, ReportSection section, ReportItem reportItem) {
 		if (section.getType() == ReportSectionType.DETAIL_HEADER || section.getType() == ReportSectionType.SUMARY_DATA_HEADER) {
@@ -210,76 +306,6 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 			((ReportLabel) reportItem).setRenderParameter("jasper-vertical-alignment", VerticalAlignEnum.TOP);
 		}
 		return super.addItemToDefinition(column, section, reportItem);
-	}
-
-	protected void createCharts() {
-
-	}
-
-	protected void layoutReportFields() {
-
-	}
-
-	protected SubreportTable getChartTable(final Chart chart0) {
-		return new SubreportTable(new TableInformationAdaptor() {
-
-			DecimalFormat df = new DecimalFormat("#,##0.00");
-
-			@Override
-			public Collection<?> getRowGroupDataSet() {
-				List<ChartRow> data = chart0.getData().getData();
-				return data;
-			}
-
-			@Override
-			public String formatRowGroup(Object _row) {
-				ChartRow row = (ChartRow) _row;
-				PropertyEditor formatter = chart0.getStyle().getGroupFormatter();
-				String value = null;
-				if (formatter != null) {
-					formatter.setValue(row.getGroup());
-					value = formatter.getAsText();
-				}
-				return value;
-			}
-
-			@Override
-			public Collection<?> getColumnHeaderDataSet() {
-				ChartData data2 = chart0.getData();
-				return Arrays.asList(data2.getSeries());
-			}
-
-			@Override
-			public Object getValue(Object _row, Object header, int columnIndex) {
-				ChartRow row = (ChartRow) _row;
-				Number value = row.getValues()[columnIndex - 1];
-				if (value == null) {
-					return "";
-				}
-				return df.format(value);
-			}
-
-			@Override
-			public ReportItem getComponentFor(Object header, int i) {
-				ReportTextField component = (ReportTextField) super.getComponentFor(header, i);
-				component.getStyle().setFontSize(7);
-				component.getStyle().setAlignment(ReportAlignment.RIGHT);
-				return component;
-			}
-
-			@Override
-			public void configureGroupField(ReportTextField groupField) {
-				super.configureGroupField(groupField);
-				groupField.getStyle().setFontSize(7);
-			}
-
-			@Override
-			public void configureHeaderField(ReportLabel headerField, int columnIndex) {
-				super.configureHeaderField(headerField, columnIndex);
-				headerField.getStyle().setFontSize(7);
-			}
-
-		});
 	}
 
 }

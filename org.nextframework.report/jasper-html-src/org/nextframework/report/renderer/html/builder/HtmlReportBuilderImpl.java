@@ -123,8 +123,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		containerTag.getAttributes().put("data-report-name", definition.getReportName());
 
 		HtmlTag table = new HtmlTag("table");
-		containerTag.getChildren().add(table);
-		getConfigurator().configureTable(containerTag, table);
+		getConfigurator().configureTable(definition, containerTag, table);
 
 		int maxRow = getMaxRow(elements) + 1;
 		Map<Integer, Map<Integer, PrintElement>> elementsRowsColsMap = getElementsMap(elements);
@@ -152,13 +151,14 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 				if (element != null) {
 
 					ReportItem reportItem = element.getReportItem();
+					HtmlTag elementTag = getHtmlTagForElement(element);
 
 					trSection = reportItem.getRow().getSection();
 					boolean isFirstRowOfSection = lastSection == null || !lastSection.equals(trSection);
 					boolean isFirstRowOfBlock = lastSection == null || !lastSection.equals(trSection);
-					getConfigurator().configureTr(tr, reportItem.getRow().getStyleClass(), trSection, isFirstRowOfSection, isFirstRowOfBlock);
-
+					getConfigurator().configureTr(trSection, tr, reportItem.getRow().getStyleClass(), isFirstRowOfSection, isFirstRowOfBlock);
 					lastSection = trSection;
+
 					serialMap.setCurrentObjectLevel(trSection);
 
 					colspan = element.getColspan() != null ? element.getColspan() : 1;
@@ -169,52 +169,19 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 						}
 					}
 
-					HtmlTag tag = getHtmlTagForElement(element);
-					td.getChildren().add(tag);
-
-					Color backgroundColor = reportItem.getStyle().getBackgroundColor();
 					if (reportItem instanceof ReportOverlapComposite) {
 						JRPrintFrame frame = (JRPrintFrame) element.getJrPrintElement();
 						if (frame.getElements().size() > 0) {
-							backgroundColor = frame.getElements().get(0).getBackcolor();
+							Color backgroundColor = frame.getElements().get(0).getBackcolor();
+							reportItem.getStyle().setBackgroundColor(backgroundColor);
 						}
 					}
-					if (backgroundColor == null) {
-						backgroundColor = trSection.getStyle().getBackgroundColor();
-					}
-					if (backgroundColor != null) {
-						td.getStyle().put("background-color", toRgb(backgroundColor));
-					}
 
-					Color foregroundColor = reportItem.getStyle().getForegroundColor();
-					if (foregroundColor == null) {
-						foregroundColor = trSection.getStyle().getForegroundColor();
-					}
-					if (foregroundColor != null) {
-						td.getStyle().put("color", toRgb(foregroundColor));
-					}
+					configureStyle(trSection, reportItem, td);
 
-					ReportBasicStyle style = reportItem.getStyle();
-					if (style.getAlignment() != null) {
-						td.getStyle().put("text-align", style.getAlignment().toString().toLowerCase());
-					}
-					if (style.getPaddingLeft() > 0) {
-						td.getStyle().put("padding-left", style.getPaddingLeft() + "px");
-					}
-					if (style.getPaddingRight() > 0) {
-						td.getStyle().put("padding-right", style.getPaddingRight() + "px");
-					}
+					getConfigurator().configureTd(element, td);
 
-					moveStyle(tag, td, "padding-left");
-					moveStyle(tag, td, "padding-right");
-					moveStyle(tag, td, "padding-top");
-					moveStyle(tag, td, "padding-bottom");
-					moveStyle(tag, td, "border-left");
-					moveStyle(tag, td, "border-right");
-					moveStyle(tag, td, "border-top");
-					moveStyle(tag, td, "border-bottom");
-
-					getConfigurator().configureTd(td);
+					td.getChildren().add(elementTag);
 
 				} else {
 					colspan = 1;
@@ -236,6 +203,8 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 			}
 
 		}
+
+		containerTag.getChildren().add(table);
 
 	}
 
@@ -357,31 +326,13 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 				ReportTextElement reportTextElement = ((ReportTextElement) reportItem);
 
 				ReportItemStyle style = reportTextElement.getStyle();
-				if (Boolean.TRUE.equals(style.getBold())) {
-					tag.getStyle().put("font-weight", "bold");
-				}
-				if (style.getForegroundColor() != null) {
-					tag.getStyle().put("color", toRgb(style.getForegroundColor()));
-				}
-				if (style.getBackgroundColor() != null) {
-					tag.getStyle().put("background-color", toRgb(style.getBackgroundColor()));
-				}
 				if (style.getFontSize() != null) {
 					tag.getStyle().put("font-size", (style.getFontSize() + 4) + "px");
 				}
-				if (style.getAlignment() != null) {
-					tag.getStyle().put("text-align", style.getAlignment().toString());
+				if (Boolean.TRUE.equals(style.getBold())) {
+					tag.getStyle().put("font-weight", "bold");
 				}
-
-				configureBorder(tag, style.getBorderBottom(), "bottom");
-				configureBorder(tag, style.getBorderLeft(), "left");
-				configureBorder(tag, style.getBorderRight(), "right");
-				configureBorder(tag, style.getBorderTop(), "top");
-
-				configurePadding(tag, style.getPaddingBottom(), "bottom");
-				configurePadding(tag, style.getPaddingLeft(), "left");
-				configurePadding(tag, style.getPaddingRight(), "right");
-				configurePadding(tag, style.getPaddingTop(), "top");
+				configureStyle(null, reportItem, tag);
 
 			}
 
@@ -554,6 +505,42 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		return hexString;
 	}
 
+	private void configureStyle(ReportSection trSection, ReportItem reportItem, HtmlTag tag) {
+
+		ReportBasicStyle style = reportItem.getStyle();
+
+		Color backgroundColor = style.getBackgroundColor();
+		if (backgroundColor == null && trSection != null) {
+			backgroundColor = trSection.getStyle().getBackgroundColor();
+		}
+		if (backgroundColor != null) {
+			tag.getStyle().put("background-color", toRgb(backgroundColor));
+		}
+
+		Color foregroundColor = style.getForegroundColor();
+		if (foregroundColor == null && trSection != null) {
+			foregroundColor = trSection.getStyle().getForegroundColor();
+		}
+		if (foregroundColor != null) {
+			tag.getStyle().put("color", toRgb(foregroundColor));
+		}
+
+		configureBorder(tag, style.getBorderBottom(), "bottom");
+		configureBorder(tag, style.getBorderLeft(), "left");
+		configureBorder(tag, style.getBorderRight(), "right");
+		configureBorder(tag, style.getBorderTop(), "top");
+
+		configurePadding(tag, style.getPaddingBottom(), "bottom");
+		configurePadding(tag, style.getPaddingLeft(), "left");
+		configurePadding(tag, style.getPaddingRight(), "right");
+		configurePadding(tag, style.getPaddingTop(), "top");
+
+		if (style.getAlignment() != null) {
+			tag.getStyle().put("text-align", style.getAlignment().toString());
+		}
+
+	}
+
 	public void configureBorder(HtmlTag tag, Border b, String type) {
 		if (b != null && b.getWidth() > 0) {
 			tag.getStyle().put("border-" + type, b.getWidth() + "px solid " + toRgb(b.getColor()));
@@ -563,13 +550,6 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 	public void configurePadding(HtmlTag tag, Integer padding, String type) {
 		if (padding != null && padding > 0) {
 			tag.getStyle().put("padding-" + type, padding + "px ");
-		}
-	}
-
-	public void moveStyle(HtmlTag from, HtmlTag to, String styleName) {
-		Object value = from.getStyle().remove(styleName);
-		if (value != null) {
-			to.getStyle().put(styleName, value);
 		}
 	}
 

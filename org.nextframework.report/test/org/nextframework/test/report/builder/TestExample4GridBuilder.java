@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.definition.elements.SubreportTable;
 import org.nextframework.report.definition.elements.TableInformationAdaptor;
@@ -15,19 +16,24 @@ public class TestExample4GridBuilder extends LayoutReportBuilder {
 
 	@Override
 	protected void layoutReport() {
+
 		setTitle("Test Example 4 Grid");
 
 		column()
 				.detail(new SubreportTable(new TableInformationAdaptor() {
 
 					@Override
-					public Collection<?> getRowGroupDataSet() {
-						return gridData;
+					public void configureDefinition(ReportDefinition definition) {
 					}
 
 					@Override
 					public Collection<?> getColumnHeaderDataSet() {
 						return phases;
+					}
+
+					@Override
+					public Collection<?> getRowGroupDataSet() {
+						return gridData;
 					}
 
 					@Override
@@ -44,6 +50,7 @@ public class TestExample4GridBuilder extends LayoutReportBuilder {
 					}
 
 				}));
+
 	}
 
 	public void setPhases(Set<TestExample4PhaseBean> phases) {

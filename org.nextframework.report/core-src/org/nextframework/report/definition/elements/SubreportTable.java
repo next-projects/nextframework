@@ -33,30 +33,23 @@ public class SubreportTable extends Subreport {
 		ReportDefinition definition = new ReportDefinition();
 		definition.setReportName("subreporttable" + tableInformation.hashCode() + tableInformation.getClass().getSimpleName() + Math.random());
 
-		Collection<?> columnHeaderDataSet = tableInformation.getColumnHeaderDataSet();
-		Collection<?> rowGroupDataSet = tableInformation.getRowGroupDataSet();
-
+		tableInformation.configureDefinition(definition);
 		definition.getColumn(0).setWidth(tableInformation.getFirstColumnWidth());
-		ReportSection sectionForHeader = tableInformation.getSectionForHeader(definition);
-
-		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 
 		ReportTextField groupField = new ReportTextField("GROUP");
-		definition.addItem(groupField, definition.getSectionDetail(), 0);
 		tableInformation.configureGroupField(groupField);
+		definition.addItem(groupField, definition.getSectionDetail(), 0);
 
 		String firstColumnHeaderText = tableInformation.getFirstColumnHeader();
-		if (firstColumnHeaderText == null) {
-			firstColumnHeaderText = "";
-		}
-		if (firstColumnHeaderText != null) {
-			ReportLabel firstColumnHeaderField = new ReportLabel(firstColumnHeaderText);
-			tableInformation.configureHeaderField(firstColumnHeaderField, 0);
-			definition.addItem(firstColumnHeaderField, sectionForHeader, 0);
-		}
+		firstColumnHeaderText = firstColumnHeaderText != null ? firstColumnHeaderText : "";
+		ReportLabel firstColumnHeaderField = new ReportLabel(firstColumnHeaderText);
+		tableInformation.configureHeaderField(firstColumnHeaderField, 0);
+		ReportSection sectionForHeader = tableInformation.getSectionForHeader(definition);
+		definition.addItem(firstColumnHeaderField, sectionForHeader, 0);
 
 		int i = 1;
 		Map<Object, Set<String>> expressionsForColumns = new HashMap<Object, Set<String>>();
+		Collection<?> columnHeaderDataSet = tableInformation.getColumnHeaderDataSet();
 		for (Object headerValue : columnHeaderDataSet) {
 
 			ReportItem component = tableInformation.getComponentFor(headerValue, i);
@@ -73,6 +66,8 @@ public class SubreportTable extends Subreport {
 
 		}
 
+		List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+		Collection<?> rowGroupDataSet = tableInformation.getRowGroupDataSet();
 		for (Object rowGroup : rowGroupDataSet) {
 
 			Map<String, Object> rowMap = new HashMap<String, Object>();

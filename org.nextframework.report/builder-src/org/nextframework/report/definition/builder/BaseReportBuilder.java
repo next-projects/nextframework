@@ -33,9 +33,11 @@ import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
+import org.nextframework.report.definition.elements.style.Border;
 import org.nextframework.report.definition.elements.style.ReportAlignment;
 import org.nextframework.report.definition.elements.style.ReportItemStyle;
 import org.nextframework.report.renderer.ReportBuilderValueConverter;
+import org.nextframework.report.renderer.jasper.builder.JasperRenderParameters;
 import org.nextframework.summary.Summary;
 import org.nextframework.summary.SummaryRow;
 import org.nextframework.summary.compilation.SummaryResult;
@@ -43,18 +45,24 @@ import org.nextframework.summary.definition.SummaryDefinition;
 import org.nextframework.summary.definition.SummaryGroupDefinition;
 import org.nextframework.view.chart.aggregate.ChartSumAggregateFunction;
 
+import net.sf.jasperreports.engine.type.PositionTypeEnum;
+import net.sf.jasperreports.engine.type.VerticalAlignEnum;
+
 public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	public static final String LOCALE = "LOCALE";
 	public static final String CONVERTER = "CONVERTER";
 
+	protected Locale locale;
 	protected SummaryResult<?, ? extends Summary<?>> summaryResult;
 	protected boolean sumarizedData = false;
 	protected List<?> data;
 
-	protected Locale locale;
-
 	protected Map<String, GroupSetup> groupSetups = new HashMap<String, GroupSetup>();
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
 
 	public <E> void setData(SummaryResult<E, ? extends Summary<E>> summaryResult) {
 		this.summaryResult = summaryResult;
@@ -126,16 +134,10 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return summaryClassBeanDescriptorCache;
 	}
 
-	public Locale getLocale() {
-		return locale;
-	}
-
-	public void setLocale(Locale locale) {
-		this.locale = locale;
-	}
-
 	@Override
 	protected void configureDefinition() {
+
+		configureBasicParameters();
 
 		getDefinition().setData(data);
 
@@ -143,9 +145,11 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			setupGroups();
 		}
 
+	}
+
+	protected void configureBasicParameters() {
 		getDefinition().setParameter(LOCALE, locale);
 		getDefinition().setParameter(CONVERTER, new ReportBuilderValueConverter());
-
 	}
 
 	protected boolean isSetupGroups() {
@@ -227,8 +231,18 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		getDefinition().setSubtitle(subtitle);
 	}
 
-	public ReportItemStyle style() {
+	protected ReportItemStyle style() {
 		return new ReportItemStyle();
+	}
+
+	protected ReportLabel separator(String text, int colspan) {
+		ReportLabel reportLabel = new ReportLabel(text);
+		reportLabel.setColspan(colspan);
+		reportLabel.setHeight(2);
+		reportLabel.getStyle().setBorderBottom(new Border(1));
+		reportLabel.setRenderParameter(JasperRenderParameters.POSITION_TYPE, PositionTypeEnum.FLOAT);
+		reportLabel.setRenderParameter("jasper-vertical-alignment", VerticalAlignEnum.BOTTOM);
+		return reportLabel;
 	}
 
 	protected ReportLabel label(String text) {

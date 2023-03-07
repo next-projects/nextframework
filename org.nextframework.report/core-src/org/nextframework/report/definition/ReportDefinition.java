@@ -423,15 +423,15 @@ public class ReportDefinition implements ReportParent {
 	}
 
 	public List<Subreport> getSubreports() {
-		List<Subreport> images = new ArrayList<Subreport>();
+		List<Subreport> subreports = new ArrayList<Subreport>();
 		ReportItemIterator reportItemIterator = new ReportItemIterator(this);
 		while (reportItemIterator.hasNext()) {
 			ReportItem reportItem = reportItemIterator.next();
 			if (reportItem instanceof Subreport) {
-				images.add((Subreport) reportItem);
+				subreports.add((Subreport) reportItem);
 			}
 		}
-		return images;
+		return subreports;
 	}
 
 	public List<ReportImage> getImages() {

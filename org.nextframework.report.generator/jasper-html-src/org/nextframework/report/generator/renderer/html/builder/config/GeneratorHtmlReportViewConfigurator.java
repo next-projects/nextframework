@@ -1,8 +1,11 @@
 package org.nextframework.report.generator.renderer.html.builder.config;
 
 import org.nextframework.core.config.ViewConfig;
+import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.ReportSection;
 import org.nextframework.report.definition.ReportSectionType;
+import org.nextframework.report.generator.layout.DynamicReportLayoutBuilder.ReportCycle;
+import org.nextframework.report.renderer.html.builder.PrintElement;
 import org.nextframework.report.renderer.html.builder.config.DefaultHtmlReportViewConfigurator;
 import org.nextframework.report.renderer.html.design.HtmlTag;
 import org.nextframework.service.ServiceFactory;
@@ -12,12 +15,20 @@ public class GeneratorHtmlReportViewConfigurator extends DefaultHtmlReportViewCo
 
 	private ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
 
-	public void configureTable(HtmlTag containerTag, HtmlTag table) {
+	public void configureTable(ReportDefinition definition, HtmlTag containerTag, HtmlTag table) {
+
 		containerTag.getStyleClass().add(viewConfig.getDefaultStyleClass(DataGridTag.class, "containerStyleClass"));
-		table.getStyleClass().add(viewConfig.getDefaultStyleClass(DataGridTag.class, "styleClass"));
+
+		ReportCycle cycle = (ReportCycle) definition.getParameters().get(ReportCycle.class.getSimpleName());
+		if (cycle != null && cycle == ReportCycle.BASE_CONFIG || cycle == ReportCycle.CHARTS) {
+			table.getStyleClass().add(viewConfig.getDefaultStyleClass(DataGridTag.class, "baseReportStyleClass"));
+		} else {
+			table.getStyleClass().add(viewConfig.getDefaultStyleClass(DataGridTag.class, "styleClass"));
+		}
+
 	}
 
-	public void configureTr(HtmlTag tr, String styleClass, ReportSection trSection, boolean isFirstRowOfSection, boolean isFirstRowOfBlock) {
+	public void configureTr(ReportSection trSection, HtmlTag tr, String styleClass, boolean isFirstRowOfSection, boolean isFirstRowOfBlock) {
 
 		if (trSection.getType() == ReportSectionType.DETAIL_HEADER) {
 			tr.getStyleClass().add(viewConfig.getDefaultStyleClass(DataGridTag.class, "headerStyleClass"));
@@ -25,9 +36,9 @@ public class GeneratorHtmlReportViewConfigurator extends DefaultHtmlReportViewCo
 			tr.getStyleClass().add(getGroupStyleClassLevel(trSection));
 		} else if (trSection.getType() == ReportSectionType.SUMARY_DATA_HEADER) {
 			tr.getStyleClass().add(viewConfig.getDefaultStyleClass(DataGridTag.class, "headerStyleClass"));
-		} else {
-			//tr.getStyleClass().add(trSection.getType().toString());
 		}
+
+		tr.getStyleClass().add("SEC_" + trSection.getType().toString());
 
 		if (styleClass != null && !styleClass.startsWith("group") && !styleClass.startsWith("detail") && !styleClass.startsWith("summary")) {
 			tr.getStyleClass().add(styleClass);
@@ -46,7 +57,7 @@ public class GeneratorHtmlReportViewConfigurator extends DefaultHtmlReportViewCo
 		return split[Math.min(split.length - 1, index)];
 	}
 
-	public void configureTd(HtmlTag td) {
+	public void configureTd(PrintElement element, HtmlTag td) {
 
 	}
 

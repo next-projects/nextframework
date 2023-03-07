@@ -7,10 +7,14 @@ import java.util.List;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.report.definition.ReportColumn;
+import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.ReportGroup;
 import org.nextframework.report.definition.ReportSection;
+import org.nextframework.report.definition.ReportSectionRow;
 import org.nextframework.report.definition.builder.config.LayoutReportConfigurator;
 import org.nextframework.report.definition.elements.ReportGrid;
+import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextElement;
 import org.nextframework.report.definition.elements.ReportTextField;
@@ -31,7 +35,7 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 	protected void configureDefinition() {
 
 		super.configureDefinition();
-		configureReport();
+		getConfigurator().configureReport(this);
 
 		if (isSetupColumnWidths()) {
 			getDefinition().setColumnWidths(getColumnConfig());
@@ -45,10 +49,6 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 
 		afterLayout();
 
-	}
-
-	protected void configureReport() {
-		getConfigurator().configureReport(this);
 	}
 
 	public LayoutReportConfigurator getConfigurator() {
@@ -114,7 +114,47 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 	protected abstract void layoutReport();
 
 	protected void afterLayout() {
+		setMaxColspanInGroups();
 		getConfigurator().afterLayout(this);
+	}
+
+	private void setMaxColspanInGroups() {
+		ReportDefinition definition = getDefinition();
+		List<ReportGroup> groups = definition.getGroups();
+		for (ReportGroup reportGroup : groups) {
+			ReportItem element = definition.getElementFor(reportGroup.getSectionHeader().getRow(0), definition.getColumn(0));
+			if (element.getColspan() == 1) {
+				int colspan = getMaxColspan(element, reportGroup.getSectionHeader().getRow(0));
+				element.setColspan(colspan);
+			}
+		}
+	}
+
+	protected int getMaxColspan(ReportItem element, ReportSection section) {
+		ReportSectionRow elementRow = null;
+		for (ReportSectionRow row : section.getRows()) {
+			ReportItem element2 = getDefinition().getElementFor(row, element.getColumn());
+			if (element2 == element) {
+				elementRow = row;
+				break;
+			}
+		}
+		return getMaxColspan(element, elementRow);
+	}
+
+	protected int getMaxColspan(ReportItem element, ReportSectionRow elementRow) {
+		int colspan = 1;
+		ReportColumn nextColumn = element.getColumn().getNext();
+		while (nextColumn != null) {
+			ReportItem nextElement = getDefinition().getElementFor(elementRow, nextColumn);
+			if (nextElement == null) {
+				colspan++;
+				nextColumn = nextColumn.getNext();
+			} else {
+				break;
+			}
+		}
+		return colspan;
 	}
 
 	@Override
@@ -258,6 +298,20 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 				}
 			}
 		}
+	}
+
+	protected void separator(String text, int colspan, ReportSection section) {
+
+		section.breakLine();
+		ReportLabel line = separator(text, colspan);
+		getDefinition().addItem(line, section, 0);
+		section.breakLine();
+		ReportLabel space = label("").setHeight(line.getHeight());
+		getDefinition().addItem(space, section, 0);
+		section.breakLine();
+
+		getConfigurator().updateSeparator(this, line, space);
+
 	}
 
 	protected void breakGroupsLines() {

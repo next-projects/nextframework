@@ -121,8 +121,6 @@ public class HtmlTag {
 		builder.append(body.toString());
 		if (innerHTML != null) {
 			builder.append(innerHTML);
-		} else if (tagName.equalsIgnoreCase("td")) {
-			builder.append("<span style='font-size: 1px;'>&nbsp;</span>");
 		}
 		builder.append("</").append(tagName).append(">");
 

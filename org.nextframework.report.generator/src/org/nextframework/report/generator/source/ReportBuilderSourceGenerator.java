@@ -178,10 +178,6 @@ public class ReportBuilderSourceGenerator {
 		}
 		columnConfigMethod.append("};");
 		
-		SourceCodeBlock configureGroupMethod = source.declareMethod("protected void configureLabelForGroup(String groupName, GroupSetup groupSetup, int index, ReportTextField field)", true);
-		configureGroupMethod.statement("super.configureLabelForGroup(groupName, groupSetup, index, field)");
-		configureGroupMethod.statement("field.setColspan("+getFirstAggregateIndex()+")");
-		
 		source.declareMethod("public String getTitle()", true)
 				.append("return \""+ generator.getReportElement().getReportTitle() + "\";");
 		
@@ -209,27 +205,6 @@ public class ReportBuilderSourceGenerator {
 				generateChart(source, chatsMethod, i, chart, generator.getReportElement());
 			}
 		}
-		
-//		layoutMethod.append("if(Util.booleans.isTrue(resume)){");
-//		layoutMethod.append("    getDefinition().setReportName(getDefinition().getReportName()+\"Resume\");");
-////		layoutMethod.append("    column(0, getColumnQuantity()).firstPage(\"Resumo\");");
-//		layoutMethod.append("    getDefinition().getSectionFirstPageHeader().breakLine();");
-//		layoutMethod.append("    getDefinition().getSectionDetailHeader().setRender(false);");
-//		layoutMethod.append("    getDefinition().getSectionDetail().setRender(false);");
-//		layoutMethod.append("    for (int i = 1; i < getDefinition().getGroups().size(); i++) {");
-//		layoutMethod.append("        getDefinition().getGroups().get(i).getSectionHeader().setRender(false);");
-//		layoutMethod.append("        getDefinition().getGroups().get(i).getSectionDetail().setRender(false);");
-//		layoutMethod.append("        getDefinition().getGroups().get(i).getSectionFooter().setRender(false);");
-//		layoutMethod.append("    }");
-//		layoutMethod.append("} else {");
-//		layoutMethod.append("    "+getClassName()+" r = new "+getClassName()+"();");
-//		layoutMethod.append("    r.setData((SummaryResult) this.summaryResult);");
-//		layoutMethod.append("    r.setResume(true);");
-//		layoutMethod.append("    Subreport subreport = new Subreport(r.getDefinition());");
-//		layoutMethod.append("    subreport.getRenderParameters().put(JasperRenderParameters.PRINT_WHEN_EXPRESSION, \"$P{renderPDF}\");");
-//		layoutMethod.append("    column(0, getColumnQuantity()).firstPage(subreport);");
-//		layoutMethod.append("    getDefinition().getSectionFirstPageHeader().breakLine();");
-//		layoutMethod.append("}");
 		
 		LayoutElement layout = generator.getReportElement().getLayout();
 		
@@ -486,20 +461,6 @@ public class ReportBuilderSourceGenerator {
 			case Calendar.MINUTE: return "dd/MM/yyyy HH:mm";
 		}
 		return "dd/MM/yyyy HH:mm:ss";
-	}
-
-	private int getFirstAggregateIndex() {
-		int index = 0;
-		List<LayoutItem> items = generator.getReportElement().getLayout().getItems();
-		for (LayoutItem layoutItem : items) {
-			if(layoutItem instanceof FieldDetailElement){
-				if(((FieldDetailElement) layoutItem).isAggregateField()){
-					return index;
-				}
-			}
-			index++;
-		}
-		return index;
 	}
 
 	public String getClassName() {

@@ -18,8 +18,8 @@ import org.nextframework.util.Util;
 public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder {
 
 	@Override
-	protected void configureDefinition() {
-		super.configureDefinition();
+	protected void configureBasicParameters() {
+		super.configureBasicParameters();
 		getDefinition().setParameter(CONVERTER, new ReportBuilderValueConverter(locale));
 	}
 
@@ -76,7 +76,7 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 				label, fieldName, fieldPreffix, reportExpression,
 				pattern, alignment);
 
-		fieldConfig.label = Util.beans.getDisplayName(propertyDescriptor, getLocale());
+		fieldConfig.label = Util.beans.getDisplayName(propertyDescriptor, locale);
 
 		Type type = propertyDescriptor.getType();
 		if (type instanceof Class) {
