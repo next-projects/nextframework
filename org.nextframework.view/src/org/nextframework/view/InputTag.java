@@ -273,14 +273,14 @@ public class InputTag extends BaseTag {
 		return getDAAtribute("onKeyUp", true);
 	}
 
-	public Object getDAAtribute(String string, boolean remove) {
+	public Object getDAAtribute(String key, boolean remove) {
 		Set<String> keySet = getDynamicAttributesMap().keySet();
-		for (String string2 : keySet) {
-			if (string2.equalsIgnoreCase(string)) {
+		for (String key2 : keySet) {
+			if (key2.equalsIgnoreCase(key)) {
 				if (remove) {
-					return getDynamicAttributesMap().remove(string2);
+					return getDynamicAttributesMap().remove(key2);
 				} else {
-					return getDynamicAttributesMap().get(string2);
+					return getDynamicAttributesMap().get(key2);
 				}
 			}
 		}

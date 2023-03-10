@@ -120,7 +120,7 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	protected Map<Class<? extends BaseTag>, Map<String, String>> getStyleClasses() {
-		styleClassesMap.clear();
+		styleClassesMap.clear(); //TODO REMOVER ISSO EM PRODUCAO!!
 		if (styleClassesMap.isEmpty()) {
 			initStyleClasses();
 		}
@@ -152,6 +152,10 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(InputTag.class, "HIDDEN-class", " ");
 			regDefaultStyleClasses(InputTag.class, "RADIO-class", "form-check-input");
 			regDefaultStyleClasses(InputTag.class, "SELECT_ONE-class", "form-select");
+			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-group", "input-group flex-nowrap");
+			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-buttons", "input-group-text d-flex flex-column justify-content-center gap-2");
+			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-buttonAdd", "btn btn-primary bi bi-arrow-right");
+			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-buttonRemove", "btn btn-primary bi bi-arrow-left");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-group", "input-group flex-nowrap");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-button", "bi bi-three-dots input-group-text");
 
@@ -321,6 +325,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(DetailTag.class, "actionButtonStyleClass", "btn btn-sm btn-primary");
 			regDefaultStyleClasses(DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary mt-1");
 
+			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelPanelStyleClass", "d-flex align-items-center justify-content-end text-end");
+			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "d-flex align-items-center");
 			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
 			regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
 			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
