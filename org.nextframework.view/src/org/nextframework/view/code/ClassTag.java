@@ -39,7 +39,8 @@ import org.nextframework.view.LogicalTag;
 
 public class ClassTag extends BaseTag implements LogicalTag {
 
-	public static String RUN_METHOD_ATTRIBUTE = "RUN_METHOD_ATTRIBUTE";
+	public static final String RUN_METHOD_ATTRIBUTE = "RUN_METHOD_ATTRIBUTE";
+	public static final String CALL_BODY = "CALL_BODY";
 
 	public Map<String, JspFragment> metodos = new HashMap<String, JspFragment>();
 
@@ -50,12 +51,12 @@ public class ClassTag extends BaseTag implements LogicalTag {
 		out.close();
 		String runmethod = (String) getRequest().getAttribute(RUN_METHOD_ATTRIBUTE);
 		if (runmethod == null) {
-			runmethod = "main";
+			runmethod = MainTag.NAME;
 		}
-		executeMethod(runmethod, getDynamicAttributesMap());
+		executeMethod(runmethod, getDynamicAttributesMap(), null);
 	}
 
-	public void executeMethod(String name, Map<String, Object> parameters) throws JspException, IOException {
+	public void executeMethod(String name, Map<String, Object> parameters, String callBody) throws JspException, IOException {
 		JspFragment jspFragment = metodos.get(name);
 		if (jspFragment == null) {
 			throw new NextException("Método não encontrado: " + name);
@@ -64,15 +65,17 @@ public class ClassTag extends BaseTag implements LogicalTag {
 			for (String parameter : keySet) {
 				pushAttribute(parameter, parameters.get(parameter));
 			}
+			pushAttribute(CALL_BODY, callBody);
 			jspFragment.invoke(null);
+			popAttribute(CALL_BODY);
 			for (String parameter : keySet) {
 				popAttribute(parameter);
 			}
 		}
 	}
 
-	public void registerMethod(String method, JspFragment codigo) {
-		if (metodos.put(method, codigo) != null) {
+	public void registerMethod(String method, JspFragment jspFragment) {
+		if (metodos.put(method, jspFragment) != null) {
 			throw new NextException("Método JSP duplicado: " + method);
 		}
 	}

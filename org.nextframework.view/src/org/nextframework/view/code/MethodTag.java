@@ -29,15 +29,15 @@ import org.nextframework.view.LogicalTag;
 
 public class MethodTag extends BaseTag implements LogicalTag {
 
-	String name;
+	protected String name;
 
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
-		if ("main".equals(name)) {
-			throw new NextException("main é um nome reservado e não pode ser utilizado na tag method");
+		if (MainTag.NAME.equals(name)) {
+			throw new NextException(MainTag.NAME + " é um nome reservado e não pode ser utilizado na tag method");
 		}
 		this.name = name;
 	}

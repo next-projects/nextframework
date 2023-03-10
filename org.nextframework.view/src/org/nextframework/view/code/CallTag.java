@@ -30,7 +30,7 @@ import org.nextframework.view.LogicalTag;
 
 public class CallTag extends BaseTag implements LogicalTag {
 
-	String method;
+	private String method;
 
 	public String getMethod() {
 		return method;
@@ -39,15 +39,17 @@ public class CallTag extends BaseTag implements LogicalTag {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
-		findParent(ClassTag.class, true).executeMethod(getMethod(), getDynamicAttributesMap());
+		String body = getBody();
+		findParent(ClassTag.class, true).executeMethod(getMethod(), getDynamicAttributesMap(), body);
 	}
-	
+
 	@Override
 	public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
 		//como o setDynamicAttribute coloca em letras minusculas o atributo, precisamos sobrescrever
 		dynamicAttributesMap.put(localName, value);
 	}
+
 }

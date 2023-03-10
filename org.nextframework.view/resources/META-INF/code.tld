@@ -52,7 +52,7 @@
 		<description></description>
 		<name>call</name>
 		<tag-class>org.nextframework.view.code.CallTag</tag-class>
-		<body-content>empty</body-content>
+		<body-content>scriptless</body-content>
 		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
