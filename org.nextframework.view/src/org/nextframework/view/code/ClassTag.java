@@ -37,7 +37,7 @@ import org.nextframework.exception.NextException;
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.LogicalTag;
 
-public class ClassTag extends BaseTag implements LogicalTag {
+public class ClassTag extends BaseTag implements CodeTag, LogicalTag {
 
 	public static final String RUN_METHOD_ATTRIBUTE = "RUN_METHOD_ATTRIBUTE";
 	public static final String CALL_BODY = "CALL_BODY";

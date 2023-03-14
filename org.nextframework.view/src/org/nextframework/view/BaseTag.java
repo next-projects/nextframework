@@ -60,6 +60,7 @@ import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.TagNotFoundException;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
+import org.nextframework.view.code.CodeTag;
 import org.nextframework.web.WebUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
@@ -400,7 +401,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			//verificar se está dentro de um panelGrid
 			//panelGrid tem um comportamento especial para poder suportar tags dentro dele sem utilizar a tag Panel
 			BaseTag parent = getParent();
-			while (parent != null && parent instanceof LogicalTag) {
+			while (parent != null && parent instanceof LogicalTag && !(parent instanceof CodeTag)) {
 				parent = parent.getParent();
 			}
 			PanelGridTag panelGrid = parent instanceof PanelGridTag ? (PanelGridTag) parent : null;
@@ -411,18 +412,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			} else if (panelGrid != null && !(this instanceof PanelTag) && !(this instanceof LogicalTag)) {
 				doTagInPanelGrid(panelGrid);
 			} else {
-				try {
-					doComponent();
-				} catch (JspException e) {
-					throw e;
-				} catch (Exception e) {
-					try {
-						printException(e);
-					} catch (IOException e1) {
-						throw new JspException(e);
-					}
-					//throw new JspException(e);
-				}
+				doTagNormal(true);
 			}
 
 		} finally {
@@ -451,13 +441,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		PrintWriter printWriter = new PrintWriter(outputStream);
 		getPageContext().pushBody(printWriter);
-		try {
-			doComponent();
-		} catch (JspException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new JspException(e);
-		}
+		doTagNormal(false);
 		getPageContext().popBody();
 		printWriter.flush();
 		String body = outputStream.toString();
@@ -465,26 +449,42 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	private void doTagInPanelGrid(PanelGridTag panelGrid) throws JspException {
+
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		PrintWriter printWriter = new PrintWriter(outputStream);
 		getPageContext().pushBody(printWriter);
+		doTagNormal(false);
+		getPageContext().popBody();
+		printWriter.flush();
+		String body = outputStream.toString();
+
+		Map<String, Object> properties = new HashMap<String, Object>();
+		addBasicPanelProperties(properties);
+		addPanelProperties(properties);
+
+		PanelRenderedBlock block = new PanelRenderedBlock();
+		block.setBody(body);
+		block.setProperties(properties);
+		panelGrid.addBlock(block);
+
+	}
+
+	private void doTagNormal(boolean printException) throws JspException {
 		try {
 			doComponent();
 		} catch (JspException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new JspException(e);
+			if (printException) {
+				try {
+					printException(e);
+				} catch (IOException e1) {
+					throw new JspException(e);
+				}
+			}else {
+				throw new JspException(e);
+			}
 		}
-		getPageContext().popBody();
-		printWriter.flush();
-		String body = outputStream.toString();
-		PanelRenderedBlock block = new PanelRenderedBlock();
-		Map<String, Object> properties = new HashMap<String, Object>();
-		addBasicPanelProperties(properties);
-		addPanelProperties(properties);
-		block.setBody(body);
-		block.setProperties(properties);
-		panelGrid.addBlock(block);
 	}
 
 	protected void addBasicPanelProperties(Map<String, Object> properties) {
@@ -660,11 +660,6 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	protected void includeJspTemplateFile(String template) throws ServletException, IOException {
 
-		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-		PrintWriter writer = new PrintWriter(arrayOutputStream);
-
-		//Object lastBody = getRequest().getAttribute(JSPFRAGMENT);
-		//getRequest().setAttribute(JSPFRAGMENT, getJspBody());
 		TagUtils.pushJspFragment(getRequest(), getJspBody());
 
 		Object last = getRequest().getAttribute(TAG_ATTRIBUTE);
@@ -673,16 +668,17 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		String tagAttribute = Util.strings.uncaptalize(this.getClass().getSimpleName());
 		pushAttribute(tagAttribute, this);
 
-		dispatchToTemplate(template, writer);
+		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+		PrintWriter writer = new PrintWriter(arrayOutputStream);
 
-		popAttribute(tagAttribute);
+		dispatchToTemplate(template, writer);
 
 		writer.flush();
 		getOut().write(arrayOutputStream.toString());
-		//getOut().write(arrayOutputStream.toByteArray());
+
+		popAttribute(tagAttribute);
 
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
-		//getRequest().setAttribute(JSPFRAGMENT, lastBody);
 		TagUtils.popJspFragment(getRequest());
 
 	}
@@ -690,8 +686,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	//Faz o dispatch para determinada url, coloca a saida no writer
 	private void dispatchToTemplate(String template, PrintWriter writer) throws ServletException, IOException {
 		WrappedWriterResponse response = new WrappedWriterResponse(getResponse(), writer);
-		RequestDispatcher requestDispatcher = null;
-		requestDispatcher = getRequest().getRequestDispatcher(template);
+		RequestDispatcher requestDispatcher = getRequest().getRequestDispatcher(template);
 		requestDispatcher.include(getRequest(), response);
 	}
 
@@ -787,6 +782,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 			return value;
 		}
+
 	};
 
 	public Object getOgnlValue(String expression) {

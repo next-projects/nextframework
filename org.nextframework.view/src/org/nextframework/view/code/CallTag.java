@@ -28,7 +28,7 @@ import javax.servlet.jsp.JspException;
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.LogicalTag;
 
-public class CallTag extends BaseTag implements LogicalTag {
+public class CallTag extends BaseTag implements CodeTag, LogicalTag {
 
 	private String method;
 
