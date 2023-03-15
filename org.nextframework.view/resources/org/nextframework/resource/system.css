@@ -1,29 +1,31 @@
-.datagridcontainer {
-	width: 100%; 
-	/*overflow: auto; pra que isso?*/
+/* Block screen */
+
+.blockScreenTransparent {
+	background-color: white;
+	filter: alpha(opacity = 75);
+	-moz-opacity: 0.75;
+	opacity: 0.75;
 }
 
-.datagridblock {
-	position: relative; 
-}
 
-/*position: relative;*/
+/* Datagrid */
+
 th.datagridresizeblock {
 	vertical-align: middle;
 	background-position: center;
 	width: 16px;
 	min-width: 16px;
 	cursor: e-resize;
-	background-color: white;
-	/*opacity: 0.01;
-	filter:alpha(opacity=1);*/
-	background-image: url("../img/resize-bar-tiny.png"); 
+	background-image: url("../img/resize-bar-tiny.png");
 	z-index: 100;
 }
+
 .datagridoriginalcontents {
+	
 }
 
 .datagridresizeblocktable {
+	
 }
 
 .dataGrid thead * .datagridresizeblocktable {
@@ -37,24 +39,351 @@ th.datagridresizeblock {
 }
 
 /* Os dois estilos abaixo são necessários para corrigir o problema de background que pode acontecer nos datagrids*/
-TABLE.dataGrid TR.dataGridHeader TH TABLE.datagridresizeblocktable TR TH.datagridoriginalcontents {
+TABLE.dataGrid TR.dataGridHeader TH TABLE.datagridresizeblocktable TR TH.datagridoriginalcontents
+	{
 	background-image: none;
 	background-color: transparent;
 }
 
-TABLE.dataGrid TR.dataGridHeader TD TABLE.datagridresizeblocktable TR TH.datagridoriginalcontents {
+TABLE.dataGrid TR.dataGridHeader TD TABLE.datagridresizeblocktable TR TH.datagridoriginalcontents
+	{
 	background-image: none;
 	background-color: transparent;
 }
 
-TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock,TABLE.dataGrid TR.dataGridHeader TD th.datagridresizeblock {
+TABLE.dataGrid TR.dataGridHeader TH th.datagridresizeblock, TABLE.dataGrid TR.dataGridHeader TD th.datagridresizeblock
+	{
 	background-color: transparent;
 	background-position: center;
 	background-image: url("../img/resize-bar-tiny.png");
 }
 
-.blockScreenTransparent{
-	filter:alpha(opacity=40);
-	-moz-opacity: 0.4;
-	opacity: 0.4;
+
+/* Tabs */
+
+.tabPanel {
+	position: relative;
+	left: -1px;
+	right: 1px;
+	top: -1px;
+	background-color: white;
+	float: left;
+	width: 100%;
+	font-size: 93%;
+	line-height: normal;
+	background: #FFFFFF url("imgs/tab-bg.gif") repeat-x bottom;
+}
+
+.tabPanel ul {
+	margin: 0;
+	padding: 0px 0px 0;
+	list-style: none;
+}
+
+.tabPanel li {
+	float: left;
+	background: url("imgs/tab-right-off.gif") no-repeat right top;
+	margin: 0;
+	margin-right: 1px;
+	padding: 0px;
+}
+
+.tabPanel a {
+	display: block;
+	background: url("imgs/tab-left-off.gif") no-repeat left top;
+	padding: 5px 15px 4px;
+}
+
+.tabPanel a:hover {
+	text-decoration: none;
+}
+
+.tabPanel a:ACTIVE {
+	text-decoration: none;
+}
+
+.tabPanel .active {
+	background-image: url("imgs/tab-right.gif");
+}
+
+.tabPanel .active a {
+	background-image: url("imgs/tab-left.gif");
+	padding-bottom: 5px;
+}
+
+.tabPanel .clear {
+	background-color: white;
+	float: right;
+	position: relative;
+	right: -4px;
+	padding: 10px 0px 0px;
+}
+
+.tabSelected {
+	width: 100%;
+	clear: both;
+	display: unset;
+}
+
+.tabUnselected {
+	width: 100%;
+	clear: both;
+	display: none;
+}
+
+
+/* Report */
+
+.report-table {
+	cursor: default;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.report-table .report-table {
+	border: 0px solid white;
+}
+
+.summaryDetail {
+	background-color: #585858;
+	color: white;
+	font-weight: bold;
+}
+
+.report-table {
+	
+}
+
+.groupLabelRow_0 {
+	background-color: #888888;
+	color: white;
+	font-weight: bold;
+}
+
+.groupLabelRow_0 TD {
+	border-bottom: 1px solid #505050;
+}
+
+.groupLabelRow_1 {
+	background-color: #b8b8b8;
+	color: white;
+	font-weight: bold;
+}
+
+.groupLabelRow_1 TD {
+	border-bottom: 1px solid #808080;
+}
+
+.groupLabelRow_2 {
+	background-color: #d8d8d8;
+	color: black;
+	font-weight: bold;
+}
+
+.groupLabelRow_2 TD {
+	border-bottom: 1px solid #b0b0b0;
+}
+
+.groupLabelRow_3 {
+	background-color: #f8f8f8;
+	color: black;
+	font-weight: bold;
+}
+
+.groupLabelRow_3 TD {
+	border-bottom: 1px solid #d0d0d0;
+}
+
+.groupLabelRow_4 {
+	background-color: #f8f8f8;
+	color: black;
+	font-weight: bold;
+}
+
+.groupLabelRow_4 TD {
+	border-bottom: 1px solid #d0d0d0;
+}
+
+.groupLabelRow_5 {
+	background-color: #f8f8f8;
+	color: black;
+	font-weight: bold;
+}
+
+.groupLabelRow_6 {
+	background-color: #f8f8f8;
+	color: black;
+	font-weight: bold;
+}
+
+.GROUP_HEADER {
+	
+}
+
+.SUMARY_DATA_HEADER {
+	background-color: #cecece;
+	font-weight: bold;
+	color: #505050;
+	min-height: 20px;
+}
+
+
+/* Progress bar event */
+
+DIV.progressOverlay {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	text-align: center;
+	visibility: hidden;
+}
+
+DIV.progressOverlay div.progressbarBox {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 500px;
+	z-index: 1020;
+}
+
+DIV.progressOverlay div.progressbarBody {
+	position: relative;
+	top: -100px;
+	left: -250px;
+	font-size: 11px;
+	text-align: left;
+	padding: 20px;
+	border: 1px solid #eeeeee;
+	background-color: #FFFFFF;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 6px 8px 16px 0px #AAA;
+	-moz-box-shadow: 6px 8px 16px 0px #AAA;
+	box-shadow: 6px 8px 16px 0px #AAA;
+}
+
+div.progressbar {
+	border: 1px solid gray;
+}
+
+div.progressbar div {
+	background-color: #7fb871;
+	height: 12px;
+	width: 0px;
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#a0d7a7), to(#5c9839));
+	/* Safari 5.1, Chrome 10+ */
+	background: -webkit-linear-gradient(top, #a0d7a7, #5c9839);
+	/* Firefox 3.6+ */
+	background: -moz-linear-gradient(top, #a0d7a7, #5c9839);
+	/* IE 10 */
+	background: -ms-linear-gradient(top, #a0d7a7, #5c9839);
+	/* IE 9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#a0d7a7, endColorstr=#5c9839)";
+	/* IE <= 8*/
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a0d7a7', endColorstr='#5c9839');
+	/* Opera 11.10+ */
+	background: -o-linear-gradient(top, #a0d7a7, #5c9839);
+}
+
+div.progressbar div.progressBarError {
+	background-color: #red;
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d65656), to(#741414));
+	/* Safari 5.1, Chrome 10+ */
+	background: -webkit-linear-gradient(top, #d65656, #741414);
+	/* Firefox 3.6+ */
+	background: -moz-linear-gradient(top, #d65656, #741414);
+	/* IE 10 */
+	background: -ms-linear-gradient(top, #d65656, #741414);
+	/* IE 9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#d65656, endColorstr=#741414)";
+	/* IE <= 8*/
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d65656', endColorstr='#741414');
+	/* Opera 11.10+ */
+	background: -o-linear-gradient(top, #d65656, #741414);
+}
+
+div.progressStatus {
+	
+}
+
+div.progressTasks {
+	padding-left: 10px;
+	font-style: italic;
+}
+
+div.progressTasks *.progressInfoError {
+	color: red;
+}
+
+
+/* Popup */
+
+.popup_box {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-khtml-border-radius: 6px;
+	padding: 14px;
+	backgroundColor: 'white';
+	border: 1px solid #888888; 
+	border-radius: 6px;
+	box-shadow: 4px 4px 3px #888888;
+}
+
+.popup_box_header {
+	padding: 8px;
+}
+
+.popup_box_body {
+	padding: 2px;
+}
+
+.popup_box_footer {
+	padding: 8px;
+	text-align: right;
+}
+
+.popup_box_option {
+	width: 300px;
+	float: left;
+	margin-bottom: 2px;
+	margin-right: 2px;
+}
+
+.popup_box_option input{
+	margin-right: 10px;
+}
+
+/* Util */
+
+@media (min-width: 768px) {
+
+	.w-md-8 {
+		width: 8.33%!important;
+	}
+	
+	.w-md-16 {
+		width: 16.66%!important;
+	}
+
+	.w-md-25 {
+		width: 25%!important;
+	}
+
+	.w-md-33 {
+		width: 33%!important;
+	}
+
+	.w-md-50 {
+		width: 50%!important;
+	}
+
+	.w-md-75 {
+		width: 75%!important;
+	}
+
 }

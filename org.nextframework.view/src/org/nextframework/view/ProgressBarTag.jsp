@@ -1,5 +1,4 @@
 <div id="${tag.id}"></div>
-
 <script type="text/javascript">
 	var element = ProgressBar.setup({
 		id: "${tag.id}",
@@ -9,5 +8,4 @@
 		onComplete: function(element){${tag.onComplete}}
 	});
 	element.startSynchronization();
-	${tag.onProgressBarCreation}
 </script>

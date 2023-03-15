@@ -6,24 +6,24 @@ import org.nextframework.chart.ChartRendererFactory;
 import org.nextframework.chart.google.ChartRendererGoogleTools;
 
 public class ChartTag extends BaseTag {
-	
-	Chart chart;
-	Object chartRendered;
-	
+
+	private Chart chart;
+	private Object chartRendered;
+
 	@Override
 	protected void doComponent() throws Exception {
-		if(chart == null){
+		if (chart == null) {
 			return;
 		}
-		if(chart.getId() == null){
-			if(id == null){
-				id = "chart_"+generateUniqueId();
+		if (chart.getId() == null) {
+			if (id == null) {
+				id = "chart_" + generateUniqueId();
 			}
 			chart.setId(id);
 		}
 		ChartRenderer renderer = ChartRendererFactory.getRendererForOutput(ChartRendererGoogleTools.TYPE);
-		if(renderer == null){
-			throw new RuntimeException("Renderer para o tipo "+ChartRendererGoogleTools.TYPE+" não encontrado.");
+		if (renderer == null) {
+			throw new RuntimeException("Renderer para o tipo " + ChartRendererGoogleTools.TYPE + " não encontrado.");
 		}
 		this.chartRendered = renderer.renderChart(chart);
 
@@ -41,6 +41,5 @@ public class ChartTag extends BaseTag {
 	public Object getChartRendered() {
 		return chartRendered;
 	}
-	
-	
+
 }

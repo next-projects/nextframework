@@ -1,4 +1,4 @@
-var NextSuggestSuggestionProvider = function(){};
+﻿var NextSuggestSuggestionProvider = function(){};
 
 NextSuggestSuggestionProvider.SuggestItem = function(){};
 

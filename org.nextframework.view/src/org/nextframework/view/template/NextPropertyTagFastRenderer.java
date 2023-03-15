@@ -44,15 +44,12 @@ public class NextPropertyTagFastRenderer implements PropertyTagFastRenderer {
 				dataGrid.onRenderColumnHeader(tag.getLabel());
 				label = tag.getHeaderForLabel(tag.getLabel());
 			}
-			if (labelAndValue.id) {//se for id tem formatação especial como no template
-				tag.getOut().println("<th style=\"width: 40px; padding-right: 3px;" + tag.getHeaderStyle() + "\" class=\"" + tag.getHeaderStyleClass() + "\">");
-				dataGrid.onRenderColumnHeaderBody();
-				tag.getOut().println(ColumnTag.doResizeColumnContents(label, dataGrid) + "</th>");
-			} else {
-				tag.getOut().println("<th style=\"" + tag.getHeaderStyle() + "\" class=\"" + tag.getHeaderStyleClass() + "\">");
-				dataGrid.onRenderColumnHeaderBody();
-				tag.getOut().println(ColumnTag.doResizeColumnContents(label, dataGrid) + "</th>");
-			}
+
+			String styleString = tag.getHeaderStyle() != null ? " style=\"" + tag.getHeaderStyle() + "\"" : "";
+			String classString = tag.getHeaderStyleClass() != null ? " class=\"" + tag.getHeaderStyleClass() + "\"" : "";
+			tag.getOut().println("<th" + styleString + classString + ">");
+			dataGrid.onRenderColumnHeaderBody();
+			tag.getOut().println(ColumnTag.doResizeColumnContents(label, dataGrid) + "</th>");
 
 			return true;
 
@@ -62,7 +59,9 @@ public class NextPropertyTagFastRenderer implements PropertyTagFastRenderer {
 
 				labelAndValue = getLabelAndValue(tag);
 
-				tag.getOut().println("<td style=\"" + tag.getBodyStyle() + "\" class=\"" + tag.getBodyStyleClass() + "\" align=\"" + tag.getColumnAlignForType(labelAndValue.type) + "\">");
+				String styleString = tag.getBodyStyle() != null ? " style=\"" + tag.getBodyStyle() + "\"" : "";
+				String classString = tag.getBodyStyleClass() != null ? " class=\"" + tag.getBodyStyleClass() + "\"" : "";
+				tag.getOut().println("<td" + styleString + classString + " align=\"" + tag.getColumnAlignForType(labelAndValue.type) + "\">");
 
 				OutputTag outputTag = new OutputTag();
 				outputTag.setJspContext(tag.getPageContext());

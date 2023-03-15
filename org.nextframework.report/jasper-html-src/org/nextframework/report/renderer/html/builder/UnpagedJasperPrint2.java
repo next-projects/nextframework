@@ -95,8 +95,10 @@ public class UnpagedJasperPrint2 {
 					groupPrintElements.setGroupDefinition(next.definition);
 					groupPrintElements.setKeyInfo(new KeyInfo(key));
 					groupPrintElements.setReportItem(next.subreport);
-					group.getPrintElements().add(groupPrintElements);
 					createGroupsForSubReports(next, groupPrintElements, printElements);
+					if (!groupPrintElements.getPrintElements().isEmpty()) {
+						group.getPrintElements().add(groupPrintElements);
+					}
 				}
 			}
 		}

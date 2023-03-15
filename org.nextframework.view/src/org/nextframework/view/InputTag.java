@@ -28,10 +28,12 @@ import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import javax.servlet.ServletException;
+import javax.servlet.jsp.JspException;
 
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.core.config.ViewConfig;
+import org.nextframework.core.config.ViewConfig.RequiredMarkMode;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.service.ServiceFactory;
@@ -46,9 +48,9 @@ import org.springframework.beans.BeanUtils;
  * @version 1.1
  */
 public class InputTag extends BaseTag {
-	
+
 	public static Class<? extends InputTagHelper> inputTagHelperClass = InputTagHelper.class;
-	
+
 	InputTagHelper inputTagHelper = BeanUtils.instantiate(inputTagHelperClass);
 
 	// atributos
@@ -62,7 +64,7 @@ public class InputTag extends BaseTag {
 	protected Object value;
 
 	protected String pattern;
-	
+
 	protected Boolean autowire = true;
 
 	protected Boolean required;
@@ -117,7 +119,7 @@ public class InputTag extends BaseTag {
 
 	// extra
 	protected InputTagType selectedType = InputTagType.TEXT;
-	
+
 	private String selectoneblankoption;
 
 	private Boolean checked;
@@ -125,76 +127,73 @@ public class InputTag extends BaseTag {
 	private String checkboxValue = "true";
 
 	// estilos
-	private String labelStyle = "";
-
-	private String labelStyleClass = "";
+	private String labelStyle;
+	private String labelStyleClass;
+	private String requiredStyleClass;
 
 	// arquivo
 	protected Boolean transientFile;
 
 	private InputTagComponent inputComponent;
-	
+
 	public void setChecked(Boolean checked) {
 		this.checked = checked;
 	}
-	
+
 	public void setCheckboxValue(String checkboxValue) {
 		this.checkboxValue = checkboxValue;
 	}
-	
+
 	public void setSelectedType(InputTagType selectedType) {
 		this.selectedType = selectedType;
 	}
-	
+
 	public InputTagComponent getInputComponent() {
 		return inputComponent;
 	}
-	
+
 	public void setInputComponent(InputTagComponent inputComponent) {
 		this.inputComponent = inputComponent;
 	}
-	
-	@SuppressWarnings("unchecked")
+
+	@Override
+	protected void applyDefaultStyleClasses() throws JspException {
+		//Não aplica no fluxo natural.
+	}
+
+	@Override
+	protected String getSubComponentName() {
+		return selectedType != null ? selectedType.toString() : null;
+	}
+
 	@Override
 	protected void doComponent() throws Exception {
+
 		// boolean valueExplicito = value != null;
 		inputTagHelper.autowireAttributes(this);
 		selectedType = inputTagHelper.chooseType(this);
-		
+
+		//Aplica estilos padrão apenas após resolver o 'selectedType'
+		super.applyDefaultStyleClasses();
+
 		inputComponent = InputTagComponentManager.getInstance().getInputComponent(selectedType);
-		
+
 		inputComponent.setTag(this);
-		
+
 		inputComponent.setHelper(inputTagHelper);
-		
+
 		inputComponent.validateTag();
-		
+
 		inputComponent.prepare();
-		
-		if (Util.booleans.isTrue(showLabel)) {
-			if (label != null && label.trim().length() != 0) {
-				boolean usespan = labelStyle != null && labelStyle.length() > 0 || labelStyleClass != null && labelStyleClass.length() > 0;
-				if(getId() != null){
-					getOut().print("<label for=\"" + getId() + "\">");				
-				}
 
-				if (usespan) {
-					getOut().print("<span ");
-					getOut().print("style=\"" + labelStyle + "\" ");
-					getOut().print("class=\"" + labelStyleClass + "\"");
-					getOut().print(">");
-				}
-				// removido o (dois pontos) + ": "
-				getOut().print(label);
-				if (usespan) {
-					getOut().print("</span>");
-				}
-				if(getId() != null){
-					getOut().print("</label>");
-				}
-			}
+		if (Util.booleans.isTrue(showLabel) && Util.strings.isNotEmpty(label)) {
+			String id = getId() != null ? getId() : generateUniqueId();
+			String styleClass = Util.strings.isNotEmpty(labelStyleClass) ? " class=\"" + labelStyleClass + "\"" : "";
+			String style = Util.strings.isNotEmpty(labelStyle) ? " style=\"" + labelStyle + "\"" : "";
+			getOut().print("<label for=\"" + id + "\"" + styleClass + style + ">");
+			getOut().print(label);
+			getOut().print("</label>");
 		}
-
 
 		// fazer os listeners
 		for (Annotation annotation : getAnnotations()) {
@@ -213,7 +212,7 @@ public class InputTag extends BaseTag {
 				getDynamicAttributesMap().put("title", "Propriedade duplicada: " + name);
 			}
 			try {
-				Class class1 = debugInputsTag.getCommandClass();
+				Class<?> class1 = debugInputsTag.getCommandClass();
 				BeanDescriptorFactory.forClass(class1).getPropertyDescriptor(name);
 			} catch (Exception e) {
 				getDynamicAttributesMap().put("style", "border: 1px solid red");
@@ -221,28 +220,49 @@ public class InputTag extends BaseTag {
 			}
 		}
 
+		RequiredMarkMode requiredMarkMode = ServiceFactory.getService(ViewConfig.class).getRequiredMarkMode();
+		if (!inputComponent.isToPrintRequired()) {
+			requiredMarkMode = null;
+		}
+
+		if (requiredMarkMode == RequiredMarkMode.STYLECLASS) {
+			addRequiredStyle();
+		} else if (requiredMarkMode == RequiredMarkMode.BEFORE) {
+			printRequired();
+		}
+
 		includeTemplate();
-		printRequired();
-		
+
+		if (requiredMarkMode == RequiredMarkMode.AFTER) {
+			printRequired();
+		}
+
 		inputComponent.afterPrint();
 
-		// getOut().println("</nobr>");
 	}
 
-
-	protected void includeTemplate() throws ServletException, IOException {
-		includeJspTemplate(selectedType.toString().toLowerCase());
+	public boolean isRequiredResolved() {
+		return required != null && required && !getDynamicAttributesMap().containsKey("readonly") && !getDynamicAttributesMap().containsKey("disabled");
 	}
 
-	protected void printRequired() throws IOException {
-		if (inputComponent.printRequired()) {
-			String requiredMark = ServiceFactory.getService(ViewConfig.class).getRequiredMarkString();
-			getOut().println("<span class='requiredMark'>"+requiredMark+"</span>");
+	protected void addRequiredStyle() {
+		if (requiredStyleClass != null) {
+			String sc = (String) getDAAtribute("class", false);
+			sc = sc != null ? sc + " " + requiredStyleClass : requiredStyleClass;
+			getDynamicAttributesMap().put("class", sc);
 		}
 	}
 
-	public boolean isToPrintRequired() {
-		return required != null && required && !getDynamicAttributesMap().containsKey("readonly") && !getDynamicAttributesMap().containsKey("disabled");
+	protected void printRequired() throws IOException {
+		String requiredMark = ServiceFactory.getService(ViewConfig.class).getRequiredMarkString();
+		if (requiredMark != null) {
+			String sc = requiredStyleClass != null ? " class=\"" + requiredStyleClass + "\"" : "";
+			getOut().println("<span" + sc + ">" + requiredMark + "</span>");
+		}
+	}
+
+	protected void includeTemplate() throws ServletException, IOException {
+		includeJspTemplate(selectedType.toString().toLowerCase());
 	}
 
 	public Object getOnKeyPress() {
@@ -253,14 +273,14 @@ public class InputTag extends BaseTag {
 		return getDAAtribute("onKeyUp", true);
 	}
 
-	public Object getDAAtribute(String string, boolean remove) {
+	public Object getDAAtribute(String key, boolean remove) {
 		Set<String> keySet = getDynamicAttributesMap().keySet();
-		for (String string2 : keySet) {
-			if (string2.equalsIgnoreCase(string)) {
+		for (String key2 : keySet) {
+			if (key2.equalsIgnoreCase(key)) {
 				if (remove) {
-					return getDynamicAttributesMap().remove(string2);
+					return getDynamicAttributesMap().remove(key2);
 				} else {
-					return getDynamicAttributesMap().get(string2);
+					return getDynamicAttributesMap().get(key2);
 				}
 			}
 		}
@@ -273,18 +293,17 @@ public class InputTag extends BaseTag {
 			// MODIFICADO EM 10/08/2006
 			FormTag form = findParent(FormTag.class, true);
 			String lastAction = ((WebRequestContext) Next.getRequestContext()).getLastAction();
-			onchangestring = 
-					form.getName() + "." + MultiActionController.ACTION_PARAMETER + ".value = '" + (lastAction != null ? lastAction : "") + "';" +
+			onchangestring = form.getName() + "." + MultiActionController.ACTION_PARAMETER + ".value = '" + (lastAction != null ? lastAction : "") + "';" +
 					form.getName() + ".validate = 'false';" +
 					form.getName() + ".suppressErrors.value = 'true';" +
-					form.getName() + ".suppressValidation.value = 'true';" + 
+					form.getName() + ".suppressValidation.value = 'true';" +
 					form.getSubmitFunction() + "()";
 		} else {
 			ComboReloadGroupTag comboReloadGroupTag = findParent(ComboReloadGroupTag.class);
 			if (comboReloadGroupTag != null) {
 				FormTag form = findParent(FormTag.class, true);
 				if (selectedType == InputTagType.SELECT_ONE_BUTTON) {
-					onchangestring = comboReloadGroupTag.getFunctionName() + "('"+getName()+"', "+form.getName()+"['" + name + "'].value);";
+					onchangestring = comboReloadGroupTag.getFunctionName() + "('" + getName() + "', " + form.getName() + "['" + name + "'].value);";
 				} else {
 					onchangestring = comboReloadGroupTag.getFunctionName() + "(this.name, this.value, extrairNumeroDeIndexedProperty(this.name) );";
 				}
@@ -303,7 +322,7 @@ public class InputTag extends BaseTag {
 
 	private String computeValueToString() {
 		String valueAsString = inputComponent.getValueAsString();
-		if(valueAsString != null){
+		if (valueAsString != null) {
 			return valueAsString;
 		}
 		if (value instanceof String) {
@@ -327,7 +346,6 @@ public class InputTag extends BaseTag {
 		} else {
 			opValue = TagUtils.getObjectValueToString(value, false, null);
 		}
-
 		return escapeStringValueForAttribute(opValue);
 	}
 
@@ -401,8 +419,8 @@ public class InputTag extends BaseTag {
 	public Object getValue() {
 		return value;
 	}
-	
-	public Class<?> getValueClass(){
+
+	public Class<?> getValueClass() {
 		return value.getClass();
 	}
 
@@ -502,27 +520,34 @@ public class InputTag extends BaseTag {
 		return labelStyle;
 	}
 
-	public String getLabelStyleClass() {
-		return labelStyleClass;
-	}
-
 	public void setLabelStyle(String labelStyle) {
 		this.labelStyle = labelStyle;
+	}
+
+	public String getLabelStyleClass() {
+		return labelStyleClass;
 	}
 
 	public void setLabelStyleClass(String labelStyleClass) {
 		this.labelStyleClass = labelStyleClass;
 	}
 
+	public String getRequiredStyleClass() {
+		return requiredStyleClass;
+	}
+
+	public void setRequiredStyleClass(String requiredStyleClass) {
+		this.requiredStyleClass = requiredStyleClass;
+	}
+
 	public Boolean getUseAjax() {
-		if(useAjax == null){
+		if (useAjax == null) {
 			ComboReloadGroupTag comboReload = findParent(ComboReloadGroupTag.class);
 			if (comboReload != null) {
 				setUseAjax(comboReload.getUseAjax());
 			}
 		}
-			
-		if(useAjax == null){
+		if (useAjax == null) {
 			useAjax = false;
 		}
 		return useAjax;
@@ -587,6 +612,7 @@ public class InputTag extends BaseTag {
 	public boolean isShowDeleteButton() {
 		return showDeleteButton;
 	}
+
 	@Deprecated
 	public boolean isShowRemoverButton() {
 		return showDeleteButton;
@@ -595,6 +621,7 @@ public class InputTag extends BaseTag {
 	public void setShowDeleteButton(boolean showDeleteButton) {
 		this.showDeleteButton = showDeleteButton;
 	}
+
 	@Deprecated
 	public void setShowRemoverButton(boolean showDeleteButton) {
 		this.showDeleteButton = showDeleteButton;
@@ -639,7 +666,7 @@ public class InputTag extends BaseTag {
 	public void setSelectOneWindowSize(String selectOnePathWindowSize) {
 		this.selectOneWindowSize = selectOnePathWindowSize;
 	}
-	
+
 	public void setSelectoneblankoption(String selectoneblankoption) {
 		this.selectoneblankoption = selectoneblankoption;
 	}
@@ -667,4 +694,5 @@ public class InputTag extends BaseTag {
 	public PropertySetter getPropertySetter() {
 		return propertySetter;
 	}
+
 }

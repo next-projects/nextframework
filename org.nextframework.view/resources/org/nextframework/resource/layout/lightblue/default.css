@@ -3,21 +3,17 @@
  *
  * Se copiar esse CSS para o diretório /css da sua aplicação
  * será necessário refatorar o caminho das imagens para
- * ../resource/css/layout/lightblue/
+ * ../resource/layout/lightblue/
  * Exemplo: onde tiver url("header-background.jpg"); terá que ser url("../resource/css/layout/lightblue/header-background.jpg");
  *
  * Você poderá excluir o conteúdo desse arquivo e importar outro CSS se desejar, para isso basta ter um arquivo com o seguinte conteúdo:
  *
- * @IMPORT url("../resource/css/layout/lightblue/default.css");
+ * @IMPORT url("../resource/layout/lightblue/default.css");
  *
  * Isso importará o arquivo CSS padrão, você poderá adicionar regras CSS para incrementar ou alterar o estilo padrão.
  *
- * Os layouts disponíveis são:
- *   @IMPORT url("../resource/css/layout/lightblue/default.css"); //padrão
- *   @IMPORT url("../resource/css/layout/alternate/default.css");
- *   @IMPORT url("../resource/css/layout/simpleposts/default.css"); 
- *
  */
+
 BODY {
 	background-image: url("header-background.jpg");
 	background-position: top;
@@ -27,22 +23,12 @@ BODY {
 }
 
 .applicationTitle {
-	position: absolute;
-	top: 14px;
-	left: 14px;
+	margin:5px;
 	font-size: 12px;
-	display: none;
-}
-
-div.body {
-	margin: 5px;
-	position: relative;
-	top: -46px;
 }
 
 .menubar {
-	margin-left: 16%;
-	margin-right: 16%;
+	margin:5px;
 }
 
 .menubar-before {
@@ -75,63 +61,25 @@ div.body {
 	position: relative;
 }
 
-.pageTitle {
-	font-family: verdana;
-	font-size: 20px;
-	position: relative;
-	left: 2px;
-	top: -10px;
-}
-
-.linkBar {
-	font-size: 12px;
-	font-family: verdana;
-	padding-bottom: 6px;
-	padding-top: 6px;
-	padding-left: 2px;
-	border: 1px solid #83AADA;
-	background: #DDECFE;
-	background-position: center;
-}
-
-.linkBar A {
-	color: black;
-	text-decoration: none;
-	padding: 7px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	width: 180px;
-	min-width: 120px;
-}
-
-.linkBar A:hover {
-	border: 1px solid #83AADA;
-	text-decoration: none;
-	padding-left: 6px;
-	padding-right: 6px;
-	background: #CBE2FD;
-}
-
 .messageOuterDiv {
 	position: relative;
 	padding-top: 2px;
-	min-height: 80px;
 	padding-bottom: 3px;
 }
 
-.messageblock {
+.messageBlock {
 	margin-left: 240px;
 	margin-right: 60px;
 }
 
-.messageblock UL {
+.messageBlock UL {
 	display: inline;
 	margin: 0px;
 	font-family: tahoma;
 	font-size: 12px;
 }
 
-.messageblock LI {
+.messageBlock LI {
 	position: relative;
 	list-style: none;
 	list-style-position: outside;
@@ -154,7 +102,7 @@ div.body {
 	cursor: pointer;
 }
 
-.bindblock {
+.bindBlock {
 	padding: 4px;
 	margin-left: 240px;
 	margin-right: 60px;
@@ -164,7 +112,7 @@ div.body {
 	color: #555555;
 }
 
-.bindblock .messagetitle {
+.bindBlock .messageTitle {
 	background-color: #FFCCCC;
 	display: inline;
 	line-height: 2em;
@@ -174,24 +122,24 @@ div.body {
 	padding-left: 2px;
 }
 
-.bindblock UL {
+.bindBlock UL {
 	display: inline;
 	margin: 0px;
 	font-family: tahoma;
 	font-size: 12px;
 }
 
-.bindblock .fieldname {
+.bindBlock .fieldName {
 	font-weight: bold;
 }
 
-.bindblock LI {
+.bindBlock LI {
 	list-style: none;
 	list-style-position: outside;
 	padding-left: 2px;
 }
 
-LI.binderror {
+LI.bindError {
 	background-color: #FFCCCC;
 	color: #993333;
 	border-color: #993333;
@@ -269,16 +217,81 @@ LI.event, .event {
 	border-color: #006633;
 }
 
-LI.causeitem {
+LI.causeItem {
 	border: 0px;
 	font-weight: normal;
 }
 
+.messagetoast {
+	position: absolute;
+	top: 130px;
+	background-color: transparent;
+	z-index: 1000;
+	width: 100%;
+}
+
+.messagetoast div{
+	margin: auto;
+	display: block;
+	width: 300px;
+	text-align: center;
+	background-color: #555555;
+	border: 1px solid #222222;
+	border-radius: 10px;
+	color:#FFFFFF;
+	padding: 8px;
+	font-weight: 500;
+	opacity: 0.95;
+}
+
+div.body {
+	margin: 5px;
+}
+
+.pageTitle {
+	font-family: verdana;
+	font-size: 20px;
+}
+
+.linkBar {
+	font-size: 12px;
+	font-family: verdana;
+	padding-bottom: 6px;
+	padding-top: 6px;
+	padding-left: 2px;
+	border: 1px solid #83AADA;
+	background: #DDECFE;
+	background-position: center;
+}
+
+.linkBar A {
+	color: black;
+	text-decoration: none;
+	padding: 7px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	width: 180px;
+	min-width: 120px;
+}
+
+.linkBar A:hover {
+	border: 1px solid #83AADA;
+	text-decoration: none;
+	padding-left: 6px;
+	padding-right: 6px;
+	background: #CBE2FD;
+}
+
 .resultWindow {
 	margin: 0px;
-	margin-top: 1px;
+	margin-top: 12px;
 	border: 1px solid #CCCCCC;
 	border-collapse: collapse;
+}
+
+.datagridcontainer {
+	width: 100%; 
+	overflow: auto;
 }
 
 .dataGrid {
@@ -321,6 +334,45 @@ LI.causeitem {
 	background-color: #F9F9F9;
 }
 
+.order {
+	font-size: 12px;
+	text-decoration: none;
+	text-align: left;
+}
+
+UL.pagePanel {
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+}
+
+UL.pagePanel LI {
+	display: inline;
+	padding: 0;
+	margin: 0;
+}
+
+UL.pagePanel LI A {
+	padding: 4px 8px;
+	text-decoration: none;
+}
+
+UL.pagePanel LI A.pageSelected {
+	font-weight: bold;
+	background-color: #F9F9F9;
+}
+
+UL.pagePanel LI A:hover:not(.pageSelected) {
+	background-color: #F9F9F9;
+}
+
+.pagging {
+	text-align: right;
+	background-color: #EBF0F8;
+	padding: 4px;
+	font-size: 11px;
+}
+
 .filterWindow {
 	border: 1px solid #CCCCCC;
 	margin: 0px;
@@ -342,7 +394,11 @@ LI.causeitem {
 }
 
 .inputTable {
-	
+	margin: 4px;
+}
+
+.inputTable TD {
+	padding: 2px;
 }
 
 .sectionTitle {
@@ -353,23 +409,10 @@ LI.causeitem {
 	display: none;
 }
 
-.order {
-	font-size: 12px;
-	text-decoration: none;
-	text-align: left;
-}
-
-.pagging {
-	text-align: right;
-	background-color: #EBF0F8;
-	padding: 4px;
-	font-size: 11px;
-}
-
 .actionBar {
 	text-align: left;
 	background-color: #EBF0F8;
-	padding: 3px;
+	padding: 4px;
 	font-size: 11px;
 	border-top: 1px solid #CCCCCC;
 }
@@ -400,15 +443,7 @@ FORM {
 }
 
 /* Tabs */
-#tabPanelClear {
-	background-color: white;
-	float: right;
-	position: relative;
-	right: -4px;
-	padding: 10px 0px 0px;
-}
-
-#tabPanel {
+.tabPanel {
 	position: relative;
 	left: -1px;
 	right: 1px;
@@ -420,136 +455,52 @@ FORM {
 	line-height: normal;
 	background: #FFFFFF url("tab-bg.gif") repeat-x bottom;
 }
-
-#tabPanel ul {
+.tabPanel ul {
 	margin: 0;
 	padding: 0px 0px 0;
 	list-style: none;
 }
-
-#tabPanel li {
+.tabPanel li {
 	float: left;
 	background: url("tab-right-off.gif") no-repeat right top;
 	margin: 0;
 	margin-right: 1px;
 	padding: 0px;
 }
-
-#tabPanel a {
+.tabPanel a {
 	display: block;
 	background: url("tab-left-off.gif") no-repeat left top;
 	padding: 5px 15px 4px;
 }
-
-#tabPanel #current {
+.tabPanel a:hover {
+	text-decoration: none;
+}
+.tabPanel a:ACTIVE {
+	text-decoration: none;
+}
+.tabPanel .active {
 	background-image: url("tab-right.gif");
 }
-
-#tabPanel #current a {
+.tabPanel .active a {
 	background-image: url("tab-left.gif");
 	padding-bottom: 5px;
 }
-
-#tabPanel a:hover {
-	text-decoration: none;
-}
-
-#tabPanel a:ACTIVE {
-	text-decoration: none;
-}
-
-/**
-  Progress bar
- */
-div.progressbar {
-	border: 1px solid gray;
-}
-
-div.progressbar div {
-	background-color: #7fb871;
-	height: 12px;
-	width: 0px;
-	/* Safari 4-5, Chrome 1-9 */
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#a0d7a7), to(#5c9839));
-	/* Safari 5.1, Chrome 10+ */
-	background: -webkit-linear-gradient(top, #a0d7a7, #5c9839);
-	/* Firefox 3.6+ */
-	background: -moz-linear-gradient(top, #a0d7a7, #5c9839);
-	/* IE 10 */
-	background: -ms-linear-gradient(top, #a0d7a7, #5c9839);
-	/* IE 9 */
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#a0d7a7, endColorstr=#5c9839)";
-	/* IE <= 8*/
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a0d7a7', endColorstr='#5c9839');
-	/* Opera 11.10+ */
-	background: -o-linear-gradient(top, #a0d7a7, #5c9839);
-}
-
-div.progressbar div.progressBarError {
-	background-color: #red;
-	/* Safari 4-5, Chrome 1-9 */
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#d65656), to(#741414));
-	/* Safari 5.1, Chrome 10+ */
-	background: -webkit-linear-gradient(top, #d65656, #741414);
-	/* Firefox 3.6+ */
-	background: -moz-linear-gradient(top, #d65656, #741414);
-	/* IE 10 */
-	background: -ms-linear-gradient(top, #d65656, #741414);
-	/* IE 9 */
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#d65656, endColorstr=#741414)";
-	/* IE <= 8*/
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d65656', endColorstr='#741414');
-	/* Opera 11.10+ */
-	background: -o-linear-gradient(top, #d65656, #741414);
-}
-
-div.progressStatus {
-	
-}
-
-div.progressTasks {
-	padding-left: 10px;
-	font-style: italic;
-}
-
-div.progressTasks *.progressInfoError {
-	color: red;
-}
-
-/* PROGRESS BAR EVENT */
-DIV.progressOverlay {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	width: 100%;
-	height: 100%;
-	z-index: 1000;
-	text-align: center;
-	visibility: hidden;
-}
-
-DIV.progressOverlay div.progressbarBox {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	width: 500px;
-	z-index: 1020;
-}
-
-DIV.progressOverlay div.progressbarBody {
+.tabPanel .clear {
+	background-color: white;
+	float: right;
 	position: relative;
-	top: -100px;
-	left: -250px;
-	font-size: 11px;
-	text-align: left;
-	padding: 20px;
-	border: 1px solid #eeeeee;
-	background-color: #FFFFFF;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	-webkit-box-shadow: 6px 8px 16px 0px #AAA;
-	-moz-box-shadow: 6px 8px 16px 0px #AAA;
-	box-shadow: 6px 8px 16px 0px #AAA;
+	right: -4px;
+	padding: 10px 0px 0px;
+}
+.tabSelected {
+	width: 100%;
+	clear: both;
+	display: unset;
+}
+.tabUnselected {
+	width: 100%;
+	clear: both;
+	display: none;
 }
 
 button.calendarbutton {

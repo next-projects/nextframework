@@ -8,6 +8,8 @@ if(typeof(NEXT_MODULES_DEFINED) == "undefined"){
 
 next.util = new NextUtil();
 
+next.globalMap = new NextGlobalMap();
+
 next.numbers = new NextNumbers();
 
 next.log = new NextLog(); 

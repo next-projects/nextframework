@@ -1,4 +1,4 @@
-var NextSuggestStaticListProvider = function(items) {
+﻿var NextSuggestStaticListProvider = function(items) {
     NextSuggestSuggestionProvider.call(this);
     this.items = items;
 };

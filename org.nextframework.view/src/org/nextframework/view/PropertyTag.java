@@ -66,6 +66,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		String fullName = montarFullPropertyName();
 		final String fullNestedName = montarFullNestedName(this, name);
 
@@ -100,6 +101,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	private void setPropertySetter(final String fullNestedName, final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor) {
+
 		if (propertyDescriptor != null) {
 
 			PropertySetter propertySetter = new PropertySetter() {
@@ -114,8 +116,11 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 				}
 
 			};
+
 			pushAttribute(varPropertySetter, propertySetter);
+
 		}
+
 	}
 
 	private void setNameAttribute(String fullName) {
@@ -159,6 +164,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	public void setTypeAndValue(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, FieldError error) {
+
 		Object value = getPropertyValue(beanDescriptor, propertyDescriptor, error);
 		pushAttribute(varValue, value);
 
@@ -168,6 +174,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 		} else {
 			type = beanDescriptor.getTargetClass();
 		}
+
 		Type[] actualTypeArguments = new Type[0];
 		if (checkErrors(beanDescriptor, error)) {
 			pushAttribute(varError, error.getDefaultMessage());
@@ -189,6 +196,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 				pushAttribute(varType, String.class);
 			}
 		}
+
 	}
 
 	public static Object getPropertyValue(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, FieldError error) {

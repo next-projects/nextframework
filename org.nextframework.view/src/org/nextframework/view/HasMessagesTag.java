@@ -23,24 +23,11 @@
  */
 package org.nextframework.view;
 
-import org.nextframework.core.standard.Message;
-import org.nextframework.core.web.NextWeb;
-import org.nextframework.core.web.WebRequestContext;
-import org.springframework.validation.BindException;
-
-/**
- * @author Pedro Gonçalves
- * @since 31/07/2007
- * @version 1.0
- */
 public class HasMessagesTag extends BaseTag {
-	
+
 	@Override
 	protected void doComponent() throws Exception {
-		WebRequestContext requestContext = NextWeb.getRequestContext();
-		Message[] messages = requestContext.getMessages();
-		BindException errors = requestContext.getBindException();
-		if (errors.hasErrors() || messages.length > 0) {
+		if (NextFunctions.hasMessages()) {
 			doBody();
 		}
 	}

@@ -1,11 +1,9 @@
 ﻿/**
- * Fun??o utilizada como callback de janelas que foram criadas com o objectivo
- * de selecionar algum bean.
- * Possui as informa??es necess?rias para a janela saber como deve preencher o
- * formu?rio que a chamou
+ * Função utilizada como callback de janelas que foram criadas com o objectivo de selecionar algum bean.
+ * Possui as informações necessárias para a janela saber como deve preencher o formulário que a chamou
  */
 function selecionarCallbackObject(valueInput, labelInput, valueType, button, buttonUnselect, callback) {
-    this.valueInput = valueInput;
+	this.valueInput = valueInput;
 	this.labelInput = labelInput;
 	this.valueType = valueType;
 	this.button = button;
@@ -27,8 +25,8 @@ function refreshPai() {
 }
 
 /**
- * Imprime o bot?o selecionar onde for necess?rio
- * O bot?o selecionar s? ? impresso onde a classe for da hierarquia da classe que pediu para selecionar
+ * Imprime o botão selecionar onde for necessário.
+ * O botão selecionar só é impresso onde a classe for da hierarquia da classe que pediu para selecionar
  */
 function imprimirSelecionar(classesList, texto){
 	//alert('valor '+valor+'  label '+label+'    classesList '+classesList);
@@ -47,7 +45,7 @@ function imprimirSelecionar(classesList, texto){
 			//document.write("<a href=\"javascript:alert('Info: valor="+valor+" label="+label+"')\">info</a>&nbsp;");
 			document.write(texto);	
 		}
-		//DEBUG ----- c?digo abaixo ? debug descomente se nao aparecer o botao selecionar
+		//DEBUG ----- código abaixo é debug. descomente se nao aparecer o botao selecionar
 		//else {
 		//	alert('A classe \n'+classesList[0]+' \nnao eh a mesma ou uma subclasse de \n'+top.selecionarCallback.valueType);
 		//}
@@ -99,7 +97,6 @@ function selecionar(valor, label, forcombo){
 			callback.valueInput.value = valor;
 			callback.labelInput.value = label;
 
-//			alert(onchangeFunction);
 			if(onchangeFunction){
 				onchangeFunction();
 			}
@@ -162,6 +159,7 @@ function limparCombo(combo, includeblank, currentValue,blankLabel){
 	op.value = '<null>';
 	combo.options.add(op);//forçar o redimensionamento do form
 	combo.remove(pararEm + remove - 1);
+	
 	
 	if(includeblank){
 		op = new Option();

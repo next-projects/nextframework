@@ -56,22 +56,21 @@ public class BeanDataGridTag extends ComboTag implements LogicalTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		DataGridTag dataGridTag = new DataGridTag();
 		BeanTag beanTag = new BeanTag();
-		
+
 		dataGridTag.setVar(Util.strings.uncaptalize(itemType.getSimpleName()));
 		dataGridTag.setItens(itens);
-		
-		
+
 		beanTag.setName(Util.strings.uncaptalize(itemType.getSimpleName()));
 		beanTag.setValueType(itemType);
 		beanTag.setJspBody(getJspBody());
 
-		
 		TagHolder dataGridHolder = new TagHolder(dataGridTag);
 		dataGridHolder.addChild(new TagHolder(beanTag));
 		invoke(dataGridHolder);
-	}
 
+	}
 
 }

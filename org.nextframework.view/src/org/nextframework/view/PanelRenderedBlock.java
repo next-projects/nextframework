@@ -35,16 +35,19 @@ public class PanelRenderedBlock {
 
 	Map<String, Object> properties;
 	String body;
-	
+
 	public String getBody() {
 		return body;
 	}
+
 	public Map<String, Object> getProperties() {
 		return properties;
 	}
+
 	public void setBody(String body) {
 		this.body = body;
 	}
+
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
 	}

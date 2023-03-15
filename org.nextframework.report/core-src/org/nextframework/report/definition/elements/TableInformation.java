@@ -7,25 +7,28 @@ import org.nextframework.report.definition.ReportSection;
 
 public interface TableInformation {
 
-	Collection<?> getColumnHeaderDataSet();
-	
-	Collection<?> getRowGroupDataSet();
-	
-	String formatHeader(Object header);
-
-	ReportSection getSectionForHeader(ReportDefinition definition);
+	void configureDefinition(ReportDefinition definition);
 
 	int getFirstColumnWidth();
 
-	String formatRowGroup(Object object);
-
-	ReportItem getComponentFor(Object header, int columnIndex);
-
-	Object getValueForRowAndColumn(Object row, Object header, int columnIndex);
-
 	void configureGroupField(ReportTextField groupField);
+
+	String getFirstColumnHeader();
 
 	void configureHeaderField(ReportLabel headerField, int columnIndex);
 
-	String getFirstColumnHeader();
+	ReportSection getSectionForHeader(ReportDefinition definition);
+
+	Collection<?> getColumnHeaderDataSet();
+
+	ReportItem getComponentFor(Object header, int columnIndex);
+
+	String formatHeader(Object header);
+
+	Collection<?> getRowGroupDataSet();
+
+	String formatRowGroup(Object object);
+
+	Object getValueForRowAndColumn(Object row, Object header, int columnIndex);
+
 }

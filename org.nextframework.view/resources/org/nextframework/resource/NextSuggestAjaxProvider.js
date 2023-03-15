@@ -1,4 +1,4 @@
-var NextSuggestAjaxProvider = function(serverId, serverUrl) {
+﻿var NextSuggestAjaxProvider = function(serverId, serverUrl) {
     NextSuggestSuggestionProvider.call(this);
     this.serverId = serverId;
     this.serverUrl = serverUrl;

@@ -35,30 +35,31 @@ import org.nextframework.web.WebUtils;
  * @version 1.0
  */
 public class HasAuthorizationTag extends BaseTag {
-	
+
 	protected String url;
 	protected String action = "";
-	
+
 	@Override
 	protected void doComponent() throws Exception {
-		if(action != null && action.contains(",")){
+		if (action != null && action.contains(",")) {
 			String[] split = action.split(",");
 			boolean hasAuthorization = false;
 			for (String string : split) {
-				if(hasAuthorization(string))
+				if (hasAuthorization(string))
 					hasAuthorization = true;
 			}
-			if(hasAuthorization) doBody();
-				
-		} else if(hasAuthorization(action)){
+			if (hasAuthorization)
+				doBody();
+
+		} else if (hasAuthorization(action)) {
 			doBody();
 		}
 	}
-	
+
 	private boolean hasAuthorization(String action) {
-		try {		
+		try {
 			String partialURL = getPartialURL();
-			if(partialURL.contains("?")){
+			if (partialURL.contains("?")) {
 				partialURL = partialURL.substring(0, partialURL.indexOf('?'));
 			}
 			return Authorization.getAuthorizationManager().isAuthorized(partialURL, action, Authorization.getUserLocator().getUser());
@@ -66,28 +67,27 @@ public class HasAuthorizationTag extends BaseTag {
 			throw new NextException("Problema ao verificar autorização", e);
 		}
 	}
-	
-	
-	private String getPartialURL(){
+
+	private String getPartialURL() {
 		if (url != null && url.startsWith(getRequest().getContextPath())) {
 			return url.substring(getRequest().getContextPath().length());
 		}
-		String fullUrl = url == null ? WebUtils.getFirstUrl() : (url.startsWith("/") ?  url : url);
+		String fullUrl = url == null ? WebUtils.getFirstUrl() : (url.startsWith("/") ? url : url);
 		return fullUrl;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}
-	
+
 	public String getAction() {
 		return action;
 	}
-	
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	public void setAction(String action) {
 		this.action = action;
 	}

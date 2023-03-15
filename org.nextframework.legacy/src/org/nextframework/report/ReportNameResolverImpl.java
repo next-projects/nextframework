@@ -23,11 +23,9 @@
  */
 package org.nextframework.report;
 
-
 import java.io.InputStream;
 
 import javax.servlet.ServletContext;
-
 
 /**
  * @author rogelgarcia
@@ -36,11 +34,9 @@ import javax.servlet.ServletContext;
  */
 public class ReportNameResolverImpl implements ReportNameResolver {
 
-
 	protected String prefix;
 	protected String suffix;
 	protected ServletContext servletContext;
-	
 
 	public ReportNameResolverImpl(String prefix, String suffix, ServletContext context) {
 		this.prefix = prefix;
@@ -65,12 +61,11 @@ public class ReportNameResolverImpl implements ReportNameResolver {
 	}
 
 	public InputStream resolveName(String name) {
-		InputStream resourceAsStream = servletContext.getResourceAsStream(getPrefix()+name+getSuffix());
-		if(resourceAsStream == null){
-			throw new NullPointerException("Relatório não encontrado! "+name);
+		InputStream resourceAsStream = servletContext.getResourceAsStream(getPrefix() + name + getSuffix());
+		if (resourceAsStream == null) {
+			throw new NullPointerException("Relatório não encontrado! " + name);
 		}
 		return resourceAsStream;
 	}
-
 
 }

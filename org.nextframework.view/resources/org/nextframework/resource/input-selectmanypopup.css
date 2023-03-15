@@ -1,0 +1,12 @@
+.select_many_popup_container {
+	white-space: nowrap;
+	display: inline;
+}
+
+.select_many_popup_labels {
+	min-width: 100px;
+}
+
+.select_many_popup_button {
+	
+}

@@ -62,7 +62,13 @@ public class LinkTag extends BaseTag {
 	private String onclick;
 
 	@Override
+	protected String getSubComponentName() {
+		return getResolvedType().toString();
+	}
+
+	@Override
 	protected void doComponent() throws Exception {
+
 		boolean hasAuthorization = hasAuthorization();
 		url = buildFullUrl();
 
@@ -70,8 +76,10 @@ public class LinkTag extends BaseTag {
 			getOut().println("<!-- Sem autorização para acessar: " + url + "-->");
 			return;
 		}
+
 		//corpo = getBody();
-		Type tipo = configureType();
+
+		Type tipo = getResolvedType();
 
 		if (tipo == Type.BUTTON) {
 			boolean disabled = "disabled".equals(getDynamicAttributesMap().get("disabled"));
@@ -134,7 +142,7 @@ public class LinkTag extends BaseTag {
 		return fullUrl;
 	}
 
-	private Type configureType() {
+	private Type getResolvedType() {
 		Type type = Type.LINK;
 		if ("button".equalsIgnoreCase(this.type)) {
 			type = Type.BUTTON;
@@ -162,6 +170,7 @@ public class LinkTag extends BaseTag {
 			fullUrl += separator + MultiActionController.ACTION_PARAMETER + "=" + action;
 			separator = "&";
 		}
+
 		// adicionar parameters na url
 		if (parameters != null) {
 			fullUrl += separator + parameters.replace(";", "&");
@@ -198,7 +207,7 @@ public class LinkTag extends BaseTag {
 	}
 
 	public String getUrl() {
-		Type tipo = configureType();
+		Type tipo = getResolvedType();
 		if (confirmationMessage != null && (tipo == Type.LINK || tipo == Type.IMAGE)) {//TODO FAZER PARA OUTROS TIPOS
 			if (url.startsWith("javascript: ")) {
 				return "javascript: if(confirm('" + confirmationMessage + "')){" + url.substring("javascript:".length()) + "}";

@@ -56,9 +56,7 @@ public abstract class ColumnChildTag extends BaseTag {
 			if (doTd()) {
 				getOut().print("</td>");
 			}
-
 		}
-
 	}
 
 	protected boolean doTd() {

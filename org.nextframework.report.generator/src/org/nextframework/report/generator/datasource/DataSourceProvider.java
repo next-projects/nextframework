@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.nextframework.report.generator.ReportElement;
 
-public interface DataSourceProvider<ROW> {
+public interface DataSourceProvider {
 
-	public List<ROW> getResult(ReportElement reportElement, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults);
-	
-	public Class<ROW> getMainType();
+	public String getName();
+
+	public Class<?> getMainType(String fromClass);
+
+	public <ROW> List<ROW> getResult(Class<ROW> mainType, ReportElement reportElement, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults);
 
 }

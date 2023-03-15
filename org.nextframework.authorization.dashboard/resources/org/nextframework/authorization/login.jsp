@@ -1,21 +1,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="next"%>
-<%@ taglib prefix="t" uri="template"%>
+<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <n:form>
 	<n:bean name="user">
 		<div class="pageBody loginPanel">
-			<div class="pageTitle">
-				Login	
-			</div>
+			<div class="pageTitle">Login</div>
 			<t:propertyConfig renderAs="single" showLabel="true" mode="input">
 				<div class="loginForm">
 					<div class="loginProperties">
 						<div class="loginProperty">
-							<t:property name="username"/>
+							<t:property name="username" />
 						</div>
 						<div class="loginProperty">
-							<t:property name="password" type="password"/>
+							<t:property name="password" type="password" />
 						</div>
 					</div>
 					<div class="loginSubmitPanel">

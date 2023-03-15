@@ -23,6 +23,20 @@ public abstract class AbstractGroupPropertyAnaliser {
 	protected int changedIndex;
 	protected int uid;
 
+	public AbstractGroupPropertyAnaliser(String groupProperties) {
+		if (Util.strings.isNotEmpty(groupProperties)) {
+			List<String> grupos = new ArrayList<String>();
+			String[] split = groupProperties.split("(\\s*)?[,;](\\s*)?");
+			for (String string : split) {
+				if (Util.strings.isNotEmpty(string)) {
+					grupos.add(string);
+				}
+			}
+			String[] groupProperties2 = grupos.toArray(new String[grupos.size()]);
+			init(groupProperties2);
+		}
+	}
+
 	public AbstractGroupPropertyAnaliser(String[] groupProperties) {
 		init(groupProperties);
 	}

@@ -1,5 +1,7 @@
 <!ELEMENT menugroup (menu*)>
 
+<!ATTLIST menugroup appname CDATA "">
+
 <!ELEMENT menu (menu*)>
 
 <!ATTLIST menu icon CDATA "">

@@ -20,24 +20,24 @@ public class SuggestProviderTag extends BaseTag {
 
 	protected String name;
 	protected Object dataSource;
-	
+
 	@Override
 	protected void doComponent() throws Exception {
 		getOut().println("<script type=\"text/javascript\">");
-		getOut().println("next.suggest.providers['"+name+"'] = ");
-		if(dataSource != null){
-			if(dataSource instanceof Collection){
+		getOut().println("next.suggest.providers['" + name + "'] = ");
+		if (dataSource != null) {
+			if (dataSource instanceof Collection) {
 				JsonTranslator jsonTranslator = ServiceFactory.getService(JsonTranslator.class);
-				List<Map<String, String>> dataSourceMap = prepareDatasourceListForJson((Collection)dataSource);
+				List<Map<String, String>> dataSourceMap = prepareDatasourceListForJson((Collection) dataSource);
 				String json = jsonTranslator.toJson(dataSourceMap);
 				getOut().println("new NextSuggestStaticListProvider(");
 				getOut().println(json);
 				getOut().println(")");
-			} else if (dataSource instanceof SuggestCallback){
+			} else if (dataSource instanceof SuggestCallback) {
 				final SuggestCallback suggestCallback = (SuggestCallback) dataSource;
 				Callback callback = new SuggestTagCallback(suggestCallback);
 				int serverId = callback.register();
-				getOut().println("new NextSuggestAjaxProvider("+serverId+", \""+callback.getServerUrl()+"\")");
+				getOut().println("new NextSuggestAjaxProvider(" + serverId + ", \"" + callback.getServerUrl() + "\")");
 			}
 		} else {
 			throw new IllegalArgumentException("dataSource must be set");
@@ -47,8 +47,7 @@ public class SuggestProviderTag extends BaseTag {
 	}
 
 	public static List<Map<String, String>> prepareDatasourceListForJson(Collection<?> collection) {
-		List<Map<String, String>> dataSourceMap = new ArrayList<Map<String,String>>();
-		
+		List<Map<String, String>> dataSourceMap = new ArrayList<Map<String, String>>();
 		for (Object o : collection) {
 			BeanDescriptor bd = BeanDescriptorFactory.forBean(o);
 			String text = Util.strings.toStringDescription(o);
@@ -76,9 +75,9 @@ public class SuggestProviderTag extends BaseTag {
 	public void setDataSource(Object dataSourceList) {
 		this.dataSource = dataSourceList;
 	}
-	
-	
+
 	private static final class SuggestTagCallback extends Callback implements Serializable {
+
 		private final SuggestCallback suggestCallback;
 		private static final long serialVersionUID = 1L;
 
@@ -94,6 +93,7 @@ public class SuggestProviderTag extends BaseTag {
 			String json = jsonTranslator.toJson(dsMap);
 			return json;
 		}
+
 	}
 
 }

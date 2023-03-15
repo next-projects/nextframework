@@ -26,21 +26,33 @@ package org.nextframework.view.template;
 import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.persistence.PageAndOrder;
 
-/**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
- */
-public class FilterPanelTag extends TemplateTag {
+public class FilterPanelTag extends SimplePanelTag {
 
 	protected String name = "filter";
-	protected String sectionTitle;
+
+	protected Boolean showSubmit = true;
+	protected String submitUrl = null;
+	protected String submitAction = null;
+	protected Boolean validateForm = true;
+	protected String submitLabel = null;
+
+	protected String buttonStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
 
+		if (submitAction == null) {
+			if (findParent(ReportViewTag.class) != null) {
+				submitAction = "generate";
+			}
+		}
+
 		if (sectionTitle == null) {
-			sectionTitle = getDefaultViewLabel("sectionTitle", "Pesquisar");
+			sectionTitle = getDefaultViewLabel("sectionTitle", "Filtragem");
+		}
+
+		if (submitLabel == null) {
+			submitLabel = getDefaultViewLabel("submitLabel", "Pesquisar");
 		}
 
 		CrudContext crudContext = CrudContext.getCurrentInstance();
@@ -64,12 +76,52 @@ public class FilterPanelTag extends TemplateTag {
 		this.name = name;
 	}
 
-	public String getSectionTitle() {
-		return sectionTitle;
+	public Boolean getShowSubmit() {
+		return showSubmit;
 	}
 
-	public void setSectionTitle(String sectionTitle) {
-		this.sectionTitle = sectionTitle;
+	public void setShowSubmit(Boolean showSubmit) {
+		this.showSubmit = showSubmit;
+	}
+
+	public String getSubmitUrl() {
+		return submitUrl;
+	}
+
+	public void setSubmitUrl(String submitUrl) {
+		this.submitUrl = submitUrl;
+	}
+
+	public String getSubmitAction() {
+		return submitAction;
+	}
+
+	public void setSubmitAction(String submitAction) {
+		this.submitAction = submitAction;
+	}
+
+	public Boolean getValidateForm() {
+		return validateForm;
+	}
+
+	public void setValidateForm(Boolean validateForm) {
+		this.validateForm = validateForm;
+	}
+
+	public String getSubmitLabel() {
+		return submitLabel;
+	}
+
+	public void setSubmitLabel(String submitLabel) {
+		this.submitLabel = submitLabel;
+	}
+
+	public String getButtonStyleClass() {
+		return buttonStyleClass;
+	}
+
+	public void setButtonStyleClass(String buttonStyleClass) {
+		this.buttonStyleClass = buttonStyleClass;
 	}
 
 }

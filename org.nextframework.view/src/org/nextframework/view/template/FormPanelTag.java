@@ -23,18 +23,15 @@
  */
 package org.nextframework.view.template;
 
-/**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
- */
-public class FormPanelTag extends TemplateTag {
+public class FormPanelTag extends SimplePanelTag {
 
 	protected boolean showSubmit = true;
 	protected String updateLinkLabel = null;
 	protected String submitAction = "save";
 	protected String submitConfirmationScript;
 	protected String submitLabel = null;
+
+	private String buttonStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -43,13 +40,15 @@ public class FormPanelTag extends TemplateTag {
 			updateLinkLabel = getDefaultViewLabel("updateLinkLabel", "Editar");
 		}
 
+		if (sectionTitle == null) {
+			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+		}
+
 		if (submitLabel == null) {
 			submitLabel = getDefaultViewLabel("submitLabel", "Salvar");
 		}
 
-		pushAttribute("janelaEntradaTag", this); //Legacy
 		includeJspTemplate();
-		popAttribute("janelaEntradaTag");
 
 	}
 
@@ -95,6 +94,14 @@ public class FormPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
+	}
+
+	public String getButtonStyleClass() {
+		return buttonStyleClass;
+	}
+
+	public void setButtonStyleClass(String buttonStyleClass) {
+		this.buttonStyleClass = buttonStyleClass;
 	}
 
 }

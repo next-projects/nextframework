@@ -38,15 +38,17 @@ public class PropertyColumnTag extends ComboTag implements LogicalTag {
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		ColumnTag columnTag = new ColumnTag();
 		PropertyTag propertyTag = new PropertyTag();
 		propertyTag.setName(name);
-		
+
 		TagHolder propertyHolder = new TagHolder(propertyTag);
 		propertyHolder.addChild(new TagHolder(columnTag, "header", "${label}"));
 		columnTag.setJspBody(getJspBody());
-		
+
 		invoke(propertyHolder);
+
 	}
 
 	public String getName() {
@@ -56,4 +58,5 @@ public class PropertyColumnTag extends ComboTag implements LogicalTag {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

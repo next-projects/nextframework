@@ -35,26 +35,29 @@ import org.nextframework.service.ServiceFactory;
 import org.nextframework.web.WebContext;
 
 public class ResourceServlet extends HttpServlet {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	ResourceProvider delegate;
-	
+
+	private ResourceProvider delegate;
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
+
 		super.init(config);
+
 		//some containers do not use the same Thread for filter and servlet initialization
 		WebContext.setServletContext(config.getServletContext());
-		
+
 		delegate = ServiceFactory.getService(ResourceProvider.class);
 		delegate.init(config);
+
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		delegate.doGet(req, resp);
 	}
-	
+
 	@Override
 	protected long getLastModified(HttpServletRequest req) {
 		return delegate.getLastModified(req);

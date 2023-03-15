@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-	version="2.0">
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
 
 	<description>Next 1.1 combo library</description>
 	<display-name>Next combo</display-name>
@@ -23,8 +20,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
-	
+
 	<tag>
 		<description></description>
 		<name>propertyColumn</name>
@@ -37,8 +33,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
-	
+
 	<tag>
 		<description></description>
 		<name>beanDataGrid</name>
@@ -55,7 +50,7 @@
 			<name>itemType</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 	</tag>
 
 	<tag>
@@ -68,7 +63,7 @@
 			<name>name</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>columns</name>
@@ -80,10 +75,9 @@
 			<name>valueType</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 	</tag>
-	
-	
+
 	<tag>
 		<description></description>
 		<name>inputProperty</name>
@@ -94,12 +88,13 @@
 			<name>name</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>	
+		</attribute>
 		<attribute>
 			<description></description>
 			<name>showLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>					
+		</attribute>
 	</tag>
+
 </taglib>

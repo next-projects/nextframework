@@ -1,4 +1,4 @@
-var SelectView = function(){};
+﻿var SelectView = function(){};
 
 stjs.extend(SelectView, Selectable);
 

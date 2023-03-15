@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.nextframework.bean.BeanDescriptor;
+import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.controller.crud.CrudException;
 import org.nextframework.core.standard.Message;
@@ -44,7 +47,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
 /**
- * @author rogelgarcia
+ * @author rogelgarcia and marcusabreu
  * @since 02/02/2006
  * @version 1.1
  */
@@ -52,31 +55,39 @@ public class MessagesTag extends BaseTag {
 
 	private Boolean renderAsHtml;
 
-	protected String containerClass = "messagesContainer";
+	protected String containerClass;
 
-	protected String titleClass = "messagetitle";
+	protected String bindBlockClass;
 
-	protected String globalErrorclass = "globalerror";
+	protected String messageBlockClass;
 
-	protected String fieldName = "fieldname";
+	protected String titleClass;
 
-	protected String bindErrorClass = "binderror";
+	protected String globalErrorclass;
 
-	protected String validationErrorClass = "validationerror";
+	protected String fieldNameClass;
 
-	protected String debugClass = "debug";
+	protected String bindErrorClass;
 
-	protected String traceClass = "trace";
+	protected String validationErrorClass;
 
-	protected String infoClass = "info";
+	protected String debugClass;
 
-	protected String warnClass = "warn";
+	protected String traceClass;
 
-	protected String errorClass = "error";
+	protected String infoClass;
 
-	protected String exceptionClass = "exceptionitem";
+	protected String warnClass;
 
-	protected String exceptionCauseClass = "causeitem";
+	protected String errorClass;
+
+	protected String eventClass;
+
+	protected String toastClass;
+
+	protected String exceptionClass;
+
+	protected String exceptionCauseClass;
 
 	private String title;
 	private String invalidValueLabel;
@@ -86,14 +97,15 @@ public class MessagesTag extends BaseTag {
 
 		WebRequestContext requestContext = NextWeb.getRequestContext();
 		Locale locale = requestContext.getLocale();
-
-		title = getDefaultViewLabel("messagePanelTitle", "Valores incorretos encontrados em");
-		invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
-
 		boolean renderAsHtml = Util.booleans.isTrue(this.renderAsHtml);
 
+		String sc = containerClass != null ? " class='" + containerClass + "'" : "";
+		getOut().println("<div id='messagesContainer'" + sc + ">");
+
 		if (!renderAsHtml) {
-			getOut().println("<div id='messagesContainer' class='" + containerClass + "'></div><script type='text/javascript'>next.events.onLoad(function(){");
+			getOut().println("</div>"); //Fecha o container de uma vez, pois seu conteúdo será inserido via js.
+			getOut().println("<script type='text/javascript'>next.events.onLoad(function(){");
+			declareStyleClasses();
 		}
 
 		BindException errors = requestContext.getBindException();
@@ -119,9 +131,14 @@ public class MessagesTag extends BaseTag {
 		boolean suppressErrors = "true".equalsIgnoreCase(getRequest().getParameter(MultiActionController.SUPPRESS_ERRORS));
 		if (errors.hasErrors() && !suppressErrors) {
 
+			title = getDefaultViewLabel("messagePanelTitle", "Valores incorretos encontrados em");
+			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
+
 			if (renderAsHtml) {
-				getOut().println("<div class='bindblock' id='bindBlock'>");
-				getOut().println("<span id=\"bindTitle\" class=\"" + titleClass + "\">" + title + " '" + errors.getObjectName() + "'</span>");
+				String sc1 = bindBlockClass != null ? " class='" + bindBlockClass + "'" : "";
+				getOut().println("<div id='bindBlock'" + sc1 + ">");
+				String sc2 = titleClass != null ? " class='" + titleClass + "'" : "";
+				getOut().println("<div id=\"bindTitle\"" + sc2 + ">" + title + " '" + errors.getObjectName() + "'</div>");
 			} else {
 				getOut().println(String.format("next.messages.setBindTitle(\"%s\");", title + " '" + errors.getObjectName() + "'"));
 			}
@@ -138,9 +155,10 @@ public class MessagesTag extends BaseTag {
 					String msg = resolveMessage(objectError, locale);
 
 					if (renderAsHtml) {
-						getOut().println("<li class=\"" + globalErrorclass + "\">" + msg + "</li>");
+						String sc1 = globalErrorclass != null ? " class='" + globalErrorclass + "'" : "";
+						getOut().println("<li" + sc1 + ">" + msg + "</li>");
 					} else {
-						getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg, globalErrorclass));
+						getOut().println(String.format("next.messages.addBindMessage(\"%s\", 'globalError');", msg));
 					}
 
 				}
@@ -167,17 +185,23 @@ public class MessagesTag extends BaseTag {
 
 						if (fieldError.isBindingFailure()) {
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + bindErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + ": </span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg + "</li>");
+								String sc1 = bindErrorClass != null ? " class='" + bindErrorClass + "'" : "";
+								String sc2 = fieldNameClass != null ? " class='" + fieldNameClass + "'" : "";
+								getOut().println("<li" + sc1 + "> <span" + sc2 + ">" + field + ": </span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg + "</li>");
 							} else {
-								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg);
-								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, bindErrorClass));
+								String sc2 = fieldNameClass != null ? " class='" + fieldNameClass + "'" : "";
+								String msg2 = escapeText("<span" + sc2 + ">" + field + "</span> " + invalidValueLabel + ": " + fieldError.getRejectedValue() + " -> " + msg);
+								getOut().println(String.format("next.messages.addBindMessage(\"%s\", 'bindError');", msg2));
 							}
 						} else {
 							if (renderAsHtml) {
-								getOut().println("<li class=\"" + validationErrorClass + "\"> <span class=\"" + fieldName + "\">" + field + "</span> " + msg + "</li>");
+								String sc1 = validationErrorClass != null ? " class='" + validationErrorClass + "'" : "";
+								String sc2 = fieldNameClass != null ? " class='" + fieldNameClass + "'" : "";
+								getOut().println("<li" + sc1 + "> <span" + sc2 + ">" + field + "</span> " + msg + "</li>");
 							} else {
-								String msg2 = escapeText("<span class=\"" + fieldName + "\">" + field + "</span> " + msg);
-								getOut().println(String.format("next.messages.addBindMessage(\"%s\", '%s');", msg2, validationErrorClass));
+								String sc2 = fieldNameClass != null ? " class='" + fieldNameClass + "'" : "";
+								String msg2 = escapeText("<span" + sc2 + ">" + field + "</span> " + msg);
+								getOut().println(String.format("next.messages.addBindMessage(\"%s\", 'validationError');", msg2));
 							}
 						}
 
@@ -215,27 +239,28 @@ public class MessagesTag extends BaseTag {
 		if (messages.length > 0) {
 
 			if (renderAsHtml) {
-				getOut().println("<div class='messageblock' id='messageBlock'>");
+				String sc1 = messageBlockClass != null ? " class='" + messageBlockClass + "'" : "";
+				getOut().println("<div id='messageBlock'" + sc1 + ">");
 				getOut().println("<ul>");
 			}
 
 			for (Message message : messages) {
 				if (message != null && message.getSource() != null) {
-					String clazz = getMessageStyleClass(message);
 					String convertToMessage = convertToMessage(message.getSource(), locale);
 					if (Util.strings.isNotEmpty(convertToMessage)) {
 						convertToMessage = escapeText(convertToMessage);
 						if (renderAsHtml) {
-							getOut().println("<li class=\"" + clazz + "\">" + convertToMessage + "</li>");
+							String clazz = getMessageStyleClass(message);
+							String sc1 = clazz != null ? " class='" + clazz + "'" : "";
+							getOut().println("<li" + sc1 + ">" + convertToMessage + "</li>");
 						} else {
-							if (MessageType.TOAST.name().equalsIgnoreCase(clazz)) {
+							if (message.getType() == MessageType.TOAST) {
 								getOut().println(String.format("next.messages.toast(\"%s\");", convertToMessage));
 							} else {
-								getOut().println(String.format("next.messages.addMessage(\"%s\", \"%s\");", convertToMessage, clazz));
+								getOut().println(String.format("next.messages.addMessage(\"%s\", \"%s\");", convertToMessage, message.getType().name().toLowerCase()));
 							}
 						}
 					}
-
 				}
 			}
 
@@ -246,6 +271,15 @@ public class MessagesTag extends BaseTag {
 
 		}
 
+	}
+
+	private void declareStyleClasses() throws IOException {
+		BeanDescriptor bd = BeanDescriptorFactory.forBean(this);
+		for (PropertyDescriptor pd : bd.getPropertyDescriptors()) {
+			if (pd.getName().endsWith("Class") && pd.getValue() != null) {
+				getOut().println("next.messages.styleClasses['" + pd.getName() + "'] = '" + pd.getValue() + "';");
+			}
+		}
 	}
 
 	private String resolveMessage(MessageSourceResolvable msr, Locale locale) {
@@ -278,19 +312,22 @@ public class MessagesTag extends BaseTag {
 				exception = ((CrudException) exception).getCause();
 			}
 
+			String sc1 = exceptionClass != null ? " class='" + exceptionClass + "'" : "";
 			String exceptionDesc = resolveException(exception, locale);
-			builder.append("<span class=\"" + exceptionClass + "\">" + exceptionDesc + "</span>");
+			builder.append("<span" + sc1 + ">" + exceptionDesc + "</span>");
 
 			Set<Throwable> allCauses = new HashSet<Throwable>();
 			allCauses.add(exception);
 			Throwable cause = exception.getCause();
 			while (cause != null && !allCauses.contains(cause)) {
 
+				String sc2 = exceptionCauseClass != null ? " class='" + exceptionCauseClass + "'" : "";
 				exceptionDesc = resolveException(cause, locale);
-				builder.append("<ul><li class=\"" + exceptionCauseClass + "\">" + exceptionDesc + "</li></ul>");
+				builder.append("<ul><li" + sc2 + ">" + exceptionDesc + "</li></ul>");
 
 				allCauses.add(cause);
 				cause = cause.getCause();
+
 			}
 
 			return builder.toString();
@@ -317,6 +354,10 @@ public class MessagesTag extends BaseTag {
 				return warnClass;
 			case ERROR:
 				return errorClass;
+			case EVENT:
+				return eventClass;
+			case TOAST:
+				return toastClass;
 			default:
 				return message.getType().name().toLowerCase();
 		}
@@ -338,6 +379,22 @@ public class MessagesTag extends BaseTag {
 		this.containerClass = containerClass;
 	}
 
+	public String getBindBlockClass() {
+		return bindBlockClass;
+	}
+
+	public void setBindBlockClass(String bindBlockClass) {
+		this.bindBlockClass = bindBlockClass;
+	}
+
+	public String getMessageBlockClass() {
+		return messageBlockClass;
+	}
+
+	public void setMessageBlockClass(String messageBlockClass) {
+		this.messageBlockClass = messageBlockClass;
+	}
+
 	public String getTitleClass() {
 		return titleClass;
 	}
@@ -354,12 +411,12 @@ public class MessagesTag extends BaseTag {
 		this.globalErrorclass = globalErrorclass;
 	}
 
-	public String getFieldName() {
-		return fieldName;
+	public String getFieldNameClass() {
+		return fieldNameClass;
 	}
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public void setFieldNameClass(String fieldNameClass) {
+		this.fieldNameClass = fieldNameClass;
 	}
 
 	public String getBindErrorClass() {
@@ -416,6 +473,22 @@ public class MessagesTag extends BaseTag {
 
 	public void setErrorClass(String errorClass) {
 		this.errorClass = errorClass;
+	}
+
+	public String getEventClass() {
+		return eventClass;
+	}
+
+	public void setEventClass(String eventClass) {
+		this.eventClass = eventClass;
+	}
+
+	public String getToastClass() {
+		return toastClass;
+	}
+
+	public void setToastClass(String toastClass) {
+		this.toastClass = toastClass;
 	}
 
 	public String getExceptionClass() {

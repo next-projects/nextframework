@@ -1,37 +1,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="next"%>
-<%@ taglib prefix="t" uri="template"%>
+<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <script type="text/javascript">
-	function aplicaInputCaixaAltaAutomaticaHabilitado(){
+	function aplicaInputCaixaAltaAutomaticaHabilitado() {
 		return false;
 	}
 </script>
 
-<t:tela titulo="Erro no relatório" useBean="model">
+<t:view title="Erro no relatório" useBean="model">
 
 	<n:content id="context">
 		<n:link url="${crudPath}">Voltar para Relatórios</n:link>
 	</n:content>
-	
-	<n:panel style="color: #AA0000">
-		Ocorreu um erro ao ler as informações do relatório.
-		<a onclick="document.getElementById('edittable').style.display = ''" style="cursor: pointer">Resolver problema (requer conhecimentos avançados)</a> 
-	</n:panel>
-	
-	<div id="edittable" style="display:none">
-		<n:panelGrid columns="2" propertyRenderAsDouble="true">
-			<t:property name="id" type="hidden" write="true"/>
-			<t:property name="reportPublic" />
-			<t:property name="reportXml" rows="40" cols="180" style="text-transform: none;"/>
-		</n:panelGrid>
-		
-		<div style="clear:left">
-	 		<n:submit action="saveReport">Salvar Relatório</n:submit>
-		</div>
-	</div>
-	<%--
-	<n:submit action="showFilterView">Show Filter View</n:submit>
-	 --%>
 
-</t:tela>
+	<t:formPanel submitAction="saveReport">
+		<t:formTable columns="12">
+			<t:property name="reportXml" rows="40" style="text-transform: none;" colspan="12" />
+			<t:property name="reportPublic" colspan="12" />
+			<t:property name="id" type="hidden" renderAs="single" />
+		</t:formTable>
+	</t:formPanel>
+
+</t:view>

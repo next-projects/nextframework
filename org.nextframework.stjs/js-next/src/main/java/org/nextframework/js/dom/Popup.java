@@ -7,4 +7,5 @@ import org.stjs.javascript.dom.Div;
 public abstract class Popup extends Div {
 
 	public abstract void close();
+
 }

@@ -7,15 +7,13 @@ import org.nextframework.report.definition.builder.LayoutReportBuilder;
 public class TestExample4Builder extends LayoutReportBuilder {
 
 	Set<TestExample4PhaseBean> phases;
-	
+
 	@Override
 	protected void layoutReport() {
 		setTitle("Test Example 4");
-		
 		fieldDetail("name");
-		
 		for (TestExample4PhaseBean phase : phases) {
-			fieldDetail("mapPhase["+phase.getName()+"]", phase.getName());
+			fieldDetail("mapPhase[" + phase.getName() + "]", phase.getName());
 		}
 	}
 
@@ -27,4 +25,5 @@ public class TestExample4Builder extends LayoutReportBuilder {
 	public void setPhases(Set<TestExample4PhaseBean> phases) {
 		this.phases = phases;
 	}
+
 }

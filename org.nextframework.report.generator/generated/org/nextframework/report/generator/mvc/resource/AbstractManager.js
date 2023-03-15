@@ -121,6 +121,7 @@ ReportGroupManager.prototype.select = function(sno, cascadeToDefinition) {
     eval("showdesignerTab('designerTab_2', 2, 'designerTab_link_2'); ");
     (this.attachedView).markSelected(sno.name);
     if (ReportPropertyConfigUtils.isDate(sno.value)) {
+        next.effects.showProperty(this.designer.patternDateInputGroup);
         ReportPropertyConfigUtils.configurePatternInputToField(this.getElement(sno), this.designer.patternDateInputGroup);
     }
 };

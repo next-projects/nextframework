@@ -23,10 +23,10 @@
  */
 package org.nextframework.view.template;
 
-import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.DataGridTag;
+import org.nextframework.view.GroupTag;
 import org.nextframework.view.PanelGridTag;
 
 /**
@@ -35,18 +35,6 @@ import org.nextframework.view.PanelGridTag;
  * @version 1.1
  */
 public class PropertyConfigTag extends TemplateTag {
-
-	public static final String INPUT = "input";
-
-	public static final String OUTPUT = "output";
-
-	public static final String COLUMN = "column";
-
-	public static final String SINGLE = "single";
-
-	public static final String DOUBLE = "double";
-
-	public static final String DOUBLELINE = "doubleline";
 
 	protected String mode = null;
 	protected String renderAs = null;
@@ -61,9 +49,7 @@ public class PropertyConfigTag extends TemplateTag {
 
 		if (Util.strings.isNotEmpty(mode)) {
 			mode = mode.toLowerCase();
-			if (!INPUT.equals(mode) && !OUTPUT.equals(mode)) {
-				throw new NextException("A tag propertyConfig só aceita no atributo 'mode' os seguintes valores: input ou output. Valor encontrado: " + mode);
-			}
+			PropertyTag.validateMode(mode);
 		} else {
 			if (parent != null) {
 				this.mode = parent.getMode();
@@ -72,24 +58,23 @@ public class PropertyConfigTag extends TemplateTag {
 
 		if (Util.strings.isNotEmpty(renderAs)) {
 			renderAs = renderAs.toLowerCase();
-			if (!COLUMN.equals(renderAs) && !SINGLE.equals(renderAs) && !DOUBLE.equals(renderAs) && !DOUBLELINE.equals(renderAs)) {
-				throw new NextException("A tag propertyConfig só aceita no atributo 'renderAs' os seguintes valores: column, single, double ou doubleline. Valor encontrado: " + renderAs);
-			}
+			PropertyTag.validateRenderAs(renderAs);
 		} else {
-			BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class, DataGridTag.class);
+			BaseTag findFirst = findFirst(PropertyConfigTag.class, GroupTag.class, PanelGridTag.class, DataGridTag.class);
 			if (findFirst != null) {
 				if (findFirst instanceof PropertyConfigTag) {
 					this.renderAs = ((PropertyConfigTag) findFirst).getRenderAs();
+				} else if (findFirst instanceof GroupTag) {
+					this.renderAs = ((GroupTag) findFirst).getPropertyRenderAs();
 				} else if (findFirst instanceof PanelGridTag) {
-					Boolean propertyRenderAsDouble = ((PanelGridTag) findFirst).getPropertyRenderAsDouble();
-					this.renderAs = propertyRenderAsDouble != null ? (propertyRenderAsDouble ? DOUBLE : SINGLE) : null;
+					this.renderAs = ((PanelGridTag) findFirst).getPropertyRenderAs();
 				} else if (findFirst instanceof DataGridTag) {
-					this.renderAs = COLUMN;
+					this.renderAs = PropertyTag.COLUMN;
 				}
 			}
 		}
 
-		if (showLabel == null && DOUBLE.equals(renderAs)) {
+		if (showLabel == null && PropertyTag.DOUBLE.equals(renderAs)) {
 			showLabel = false;
 		}
 		if (showLabel == null && parent != null) {

@@ -1,15 +1,16 @@
 package org.nextframework.core.config;
 
 import java.util.Map;
+import java.util.Set;
 
+import org.nextframework.view.BaseTag;
 import org.nextframework.view.InputTagType;
 
 public interface ViewConfig {
 
-	//REFACTOR - This interface should be in the view module - IT WAS InputTagType instead of Object
-	Map<Class<?>, InputTagType> getCustomInputTypes();
+	String getJSPDefaultCharset();
 
-	String getRequiredMarkString();
+	Map<Class<?>, InputTagType> getCustomInputTypes();
 
 	boolean isDefaultShowCalendar();
 
@@ -21,6 +22,26 @@ public interface ViewConfig {
 
 	boolean isPersistTemporaryFiles();
 
-	String getDefaultJSPCharset();
+	boolean isUseBootstrap();
+
+	boolean isDefaultFlatMode();
+
+	Integer getDefaultColumns();
+
+	Integer getDefaultColspan(String renderAs);
+
+	String getDefaultPropertyRenderAs();
+
+	RequiredMarkMode getRequiredMarkMode();
+
+	public String getRequiredMarkString();
+
+	Set<String> getStyleClassFields(Class<? extends BaseTag> tagClass);
+
+	String getDefaultStyleClass(Class<? extends BaseTag> tagClass, String field);
+
+	public static enum RequiredMarkMode {
+		STYLECLASS, BEFORE, AFTER;
+	}
 
 }

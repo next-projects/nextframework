@@ -144,9 +144,12 @@ public class ComboTag extends BaseTag implements LogicalTag {
 		}
 
 		private void setProperty(BaseTag baseTag, String property, Object object) {
+
 			if (object != null) {
+
 				Method setter = null;
 				ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
+
 				try {
 					setter = reflectionCache.getMethod(baseTag.getClass(), "set" + Util.strings.captalize(property), object.getClass());
 				} catch (SecurityException e) {
@@ -165,13 +168,12 @@ public class ComboTag extends BaseTag implements LogicalTag {
 						} catch (NoSuchMethodException e2) {
 							throw new NextException("Cannot set property " + property + " of tag " + baseTag + " value " + object + "  " + e.getMessage(), e);
 						}
-
 					}
 				}
+
 				try {
 					//System.out.println("Setting property "+property+" value "+object);
 					setter.invoke(baseTag, object);
-
 				} catch (IllegalArgumentException e) {
 					throw new NextException("Cannot set property " + property + " of tag " + baseTag + " value " + object);
 				} catch (IllegalAccessException e) {
@@ -179,7 +181,9 @@ public class ComboTag extends BaseTag implements LogicalTag {
 				} catch (InvocationTargetException e) {
 					throw new NextException("Cannot set property " + property + " of tag " + baseTag + " value " + object);
 				}
+
 			}
+
 		}
 
 		@Override

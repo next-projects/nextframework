@@ -1,4 +1,4 @@
-var NextSuggest = function() {
+﻿var NextSuggest = function() {
 
     this.providers = {};
 };

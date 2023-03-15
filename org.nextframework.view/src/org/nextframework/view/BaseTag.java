@@ -54,11 +54,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
+import org.nextframework.core.config.ViewConfig;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.TagNotFoundException;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
+import org.nextframework.view.code.CodeTag;
 import org.nextframework.web.WebUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.NoSuchMessageException;
 
 /**
@@ -68,6 +73,9 @@ import org.springframework.context.NoSuchMessageException;
  */
 @SuppressWarnings("deprecation")
 public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
+
+	private static final String IDSEQUENCE = "IDSEQUENCE";
+	private static final String GENERATED = "GENERATED_";
 
 	protected static Log log = LogFactory.getLog(BaseTag.class);
 
@@ -129,8 +137,8 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
 		if (localName != null) {
 			localName = localName.toLowerCase();
+			dynamicAttributesMap.put(localName, value);
 		}
-		dynamicAttributesMap.put(localName, value);
 	}
 
 	public String getDynamicAttributesToString() {
@@ -149,12 +157,12 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	public String generateUniqueId() {
-		Integer idsequence = (Integer) getRequest().getAttribute("IDSEQUENCE");
+		Integer idsequence = (Integer) getRequest().getAttribute(IDSEQUENCE);
 		if (idsequence == null) {
 			idsequence = 0;
 		}
-		getRequest().setAttribute("IDSEQUENCE", idsequence + 1);
-		return ("GENERATED_") + idsequence;
+		getRequest().setAttribute(IDSEQUENCE, idsequence + 1);
+		return GENERATED + idsequence;
 	}
 
 	protected void pushAttribute(String name, Object value) {
@@ -202,10 +210,10 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		if (e.getClass().getName().startsWith("java.lang")) {
 			extype = e.getClass().getSimpleName() + ": ";
 		}
-		getOut().println("<font class=\"exceptionitem\" color=\"red\">" + extype + "<b>" + e.getMessage() + "</b>" + "</font>");
+		getOut().println("<font class=\"exceptionItem\" color=\"red\">" + extype + "<b>" + e.getMessage() + "</b>" + "</font>");
 		Throwable cause = getNextException(e);
 		while (cause != null) {
-			getOut().println("<font class=\"exceptionitem\" color=\"red\">" + cause.getMessage() + "</font>");
+			getOut().println("<font class=\"exceptionItem\" color=\"red\">" + cause.getMessage() + "</font>");
 			cause = getNextException(cause);
 		}
 		e.printStackTrace();
@@ -362,54 +370,53 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	@Override
 	public final void doTag() throws JspException, IOException {
+
 		if (Boolean.FALSE.equals(rendered)) {
 			return;
 		}
+
 		if (Boolean.TRUE.equals(bypass)) {
 			//se for para pular a funcionalidade dessa tag.. e utilizar só as tags filhas
 			doBody();
 			return;
 		}
+
 		boolean registeringDataGrid = getRequest().getAttribute(ColumnTag.REGISTERING_DATAGRID) != null;
 		if (registeringDataGrid && !(this instanceof ColumnChildTag)) {
 			//se estiver registrando o datagrid não precisa renderizar nada
 			return;
 		}
+
 		if (!getTagStack().isEmpty()) {
 			parent = getTagStack().peek();
 		}
+
 		try {
+
 			//coloca a tag no escopo
 			pushTagOnStack();
+
+			applyDefaultStyleClasses();
 
 			//verificar se está dentro de um panelGrid
 			//panelGrid tem um comportamento especial para poder suportar tags dentro dele sem utilizar a tag Panel
 			BaseTag parent = getParent();
-			while (parent != null && parent instanceof LogicalTag) {
+			while (parent != null && parent instanceof LogicalTag && !(parent instanceof CodeTag)) {
 				parent = parent.getParent();
 			}
 			PanelGridTag panelGrid = parent instanceof PanelGridTag ? (PanelGridTag) parent : null;
 			GetContentTag getContent = findParentGetContent();
+
 			if (getContent != null) {
 				doTagInGetContent(getContent);
 			} else if (panelGrid != null && !(this instanceof PanelTag) && !(this instanceof LogicalTag)) {
 				doTagInPanelGrid(panelGrid);
 			} else {
-				try {
-					doComponent();
-				} catch (JspException e) {
-					throw e;
-				} catch (Exception e) {
-					try {
-						printException(e);
-					} catch (IOException e1) {
-						throw new JspException(e);
-					}
-					//throw new JspException(e);
-				}
+				doTagNormal(true);
 			}
-			//tira a tag do escopo
+
 		} finally {
+			//tira a tag do escopo
 			popTagFromStack();
 		}
 
@@ -434,42 +441,50 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		PrintWriter printWriter = new PrintWriter(outputStream);
 		getPageContext().pushBody(printWriter);
-		try {
-			doComponent();
-		} catch (JspException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new JspException(e);
-		}
+		doTagNormal(false);
 		getPageContext().popBody();
 		printWriter.flush();
 		String body = outputStream.toString();
-
 		getContent.register(body);
 	}
 
 	private void doTagInPanelGrid(PanelGridTag panelGrid) throws JspException {
+
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		PrintWriter printWriter = new PrintWriter(outputStream);
 		getPageContext().pushBody(printWriter);
+		doTagNormal(false);
+		getPageContext().popBody();
+		printWriter.flush();
+		String body = outputStream.toString();
+
+		Map<String, Object> properties = new HashMap<String, Object>();
+		addBasicPanelProperties(properties);
+		addPanelProperties(properties);
+
+		PanelRenderedBlock block = new PanelRenderedBlock();
+		block.setBody(body);
+		block.setProperties(properties);
+		panelGrid.addBlock(block);
+
+	}
+
+	private void doTagNormal(boolean printException) throws JspException {
 		try {
 			doComponent();
 		} catch (JspException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new JspException(e);
+			if (printException) {
+				try {
+					printException(e);
+				} catch (IOException e1) {
+					throw new JspException(e);
+				}
+			}else {
+				throw new JspException(e);
+			}
 		}
-		getPageContext().popBody();
-		printWriter.flush();
-		String body = outputStream.toString();
-		PanelRenderedBlock block = new PanelRenderedBlock();
-		Map<String, Object> properties = new HashMap<String, Object>();
-		addBasicPanelProperties(properties);
-		addPanelProperties(properties);
-
-		block.setBody(body);
-		block.setProperties(properties);
-		panelGrid.addBlock(block);
 	}
 
 	protected void addBasicPanelProperties(Map<String, Object> properties) {
@@ -483,6 +498,51 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	protected void addPanelProperties(Map<String, Object> properties) {
 
+	}
+
+	protected void applyDefaultStyleClasses() throws JspException {
+		Set<String> fields = getViewConfig().getStyleClassFields(this.getClass());
+		if (fields != null) {
+			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+			for (String field : fields) {
+				String defaultStyleClass = getViewConfig().getDefaultStyleClass(this.getClass(), field);
+				if (defaultStyleClass != null) {
+					applyDefaultStyleClass(bw, field, defaultStyleClass);
+				}
+			}
+		}
+	}
+
+	protected void applyDefaultStyleClass(BeanWrapper bw, String field, String defaultStyleClass) throws JspException {
+		String sub = getSubComponentName();
+		if (sub != null && field.contains("-")) {
+			if (field.startsWith(sub.toUpperCase() + "-")) {
+				field = field.substring(sub.length() + 1);
+			} else {
+				return;
+			}
+		}
+		if (bw.isWritableProperty(field)) {
+			String value = (String) bw.getPropertyValue(field);
+			if (value == null || value.length() == 0) {
+				bw.setPropertyValue(field, defaultStyleClass);
+			} else if (value.contains("+")) {
+				value = value.replace("+", defaultStyleClass);
+				bw.setPropertyValue(field, value);
+			}
+		} else if ("class".equals(field)) {
+			String value = (String) getDynamicAttributesMap().get("class");
+			if (value == null || value.length() == 0) {
+				setDynamicAttribute(null, "class", defaultStyleClass);
+			} else if (value.contains("+")) {
+				value = value.replace("+", defaultStyleClass);
+				setDynamicAttribute(null, "class", value);
+			}
+		}
+	}
+
+	protected String getSubComponentName() {
+		return null;
 	}
 
 	protected void doComponent() throws Exception {
@@ -561,10 +621,11 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	protected void includeTextTemplateFile(String template) throws ServletException, IOException, ELException, JspException {
-		String[] text = templateManager.getTextFromTemplate(this, template);
+
 		Object last = getRequest().getAttribute(TAG_ATTRIBUTE);
 		getRequest().setAttribute(TAG_ATTRIBUTE, this);
 
+		String[] text = templateManager.getTextFromTemplate(this, template);
 		evaluateAndPrint(text[0]);
 		if (getJspBody() != null) {
 			getJspBody().invoke(null);
@@ -576,6 +637,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		}
 
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
+
 	}
 
 	protected void evaluateAndPrint(String expression) throws ELException, IOException {
@@ -597,10 +659,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	protected void includeJspTemplateFile(String template) throws ServletException, IOException {
-		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-		PrintWriter writer = new PrintWriter(arrayOutputStream);
-		//Object lastBody = getRequest().getAttribute(JSPFRAGMENT);
-		//getRequest().setAttribute(JSPFRAGMENT, getJspBody());
+
 		TagUtils.pushJspFragment(getRequest(), getJspBody());
 
 		Object last = getRequest().getAttribute(TAG_ATTRIBUTE);
@@ -609,24 +668,25 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		String tagAttribute = Util.strings.uncaptalize(this.getClass().getSimpleName());
 		pushAttribute(tagAttribute, this);
 
-		dispatchToTemplate(template, writer);
+		ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+		PrintWriter writer = new PrintWriter(arrayOutputStream);
 
-		popAttribute(tagAttribute);
+		dispatchToTemplate(template, writer);
 
 		writer.flush();
 		getOut().write(arrayOutputStream.toString());
-		//getOut().write(arrayOutputStream.toByteArray());
+
+		popAttribute(tagAttribute);
 
 		getRequest().setAttribute(TAG_ATTRIBUTE, last);
-		//getRequest().setAttribute(JSPFRAGMENT, lastBody);
 		TagUtils.popJspFragment(getRequest());
+
 	}
 
 	//Faz o dispatch para determinada url, coloca a saida no writer
 	private void dispatchToTemplate(String template, PrintWriter writer) throws ServletException, IOException {
 		WrappedWriterResponse response = new WrappedWriterResponse(getResponse(), writer);
-		RequestDispatcher requestDispatcher = null;
-		requestDispatcher = getRequest().getRequestDispatcher(template);
+		RequestDispatcher requestDispatcher = getRequest().getRequestDispatcher(template);
 		requestDispatcher.include(getRequest(), response);
 	}
 
@@ -672,17 +732,16 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	public String getDynamicAttributesToString(Map<String, Object> dynamicAttributesMap) {
+
 		StringBuilder builder = new StringBuilder(" ");
 		Set<String> keySet = dynamicAttributesMap.keySet();
+
 		for (String key : keySet) {
+
 			boolean inPanelGrid = findParent(PanelGridTag.class) != null;
 			if (inPanelGrid && key.startsWith("panel")) {
 				continue;//nao montar tags iniciadas com panel... provavelmente está configurando o panel externo
 			}
-			builder.append(" ");
-			builder.append(key);
-			builder.append("=");
-			builder.append("'");
 
 			Object object = dynamicAttributesMap.get(key);
 			if (object != null) {
@@ -691,10 +750,20 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 					object = getOgnlValue((String) object);
 				}
 				object = object.toString();
+				object = TagUtils.escapeSingleQuotes((String) object);
 			}
-			builder.append(TagUtils.escapeSingleQuotes((String) object));
-			builder.append("'");
+
+			if (object != null) {
+				builder.append(" ");
+				builder.append(key);
+				builder.append("=");
+				builder.append("'");
+				builder.append(object);
+				builder.append("'");
+			}
+
 		}
+
 		String toString = builder.toString();
 		return toString;
 	}
@@ -713,6 +782,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 			return value;
 		}
+
 	};
 
 	public Object getOgnlValue(String expression) {
@@ -721,6 +791,10 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	protected <E> E getOgnlValue(String expression, Class<E> expectedType) {
 		return evaluator.evaluate(expression, expectedType, this);
+	}
+
+	protected ViewConfig getViewConfig() {
+		return ServiceFactory.getService(ViewConfig.class);
 	}
 
 }

@@ -3,17 +3,15 @@ package org.nextframework.report.definition.elements;
 import org.nextframework.chart.Chart;
 
 public class ReportChart extends ReportItem {
-	
-	Chart chart;
-	String reference;
-	
-	int height;
-	
-	
+
+	private Chart chart;
+	private String reference;
+	private int height;
+
 	public ReportChart(String reference) {
 		this.reference = reference;
 	}
-	
+
 	public ReportChart(Chart chart, int width, int height) {
 		this.chart = chart;
 		this.width = width;
@@ -25,16 +23,15 @@ public class ReportChart extends ReportItem {
 		this.width = width;
 		this.height = height;
 	}
-	
-	public boolean isHeightAuto(){
-		return(height & ReportConstants.AUTO_HEIGHT) == ReportConstants.AUTO_HEIGHT;
+
+	public boolean isHeightAuto() {
+		return (height & ReportConstants.AUTO_HEIGHT) == ReportConstants.AUTO_HEIGHT;
 	}
-	
+
 	public ReportChart(Chart chart) {
 		this.chart = chart;
 	}
 
-	
 	public int getHeight() {
 		return height;
 	}
@@ -46,7 +43,7 @@ public class ReportChart extends ReportItem {
 	public Chart getChart() {
 		return chart;
 	}
-	
+
 	public void setChart(Chart chart) {
 		this.chart = chart;
 	}
@@ -58,17 +55,17 @@ public class ReportChart extends ReportItem {
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	
+
 	/**
 	 * Returns if the reference is a field reference. Otherwise it is a parameter reference.
 	 * The reference is a parameter reference when the reference starts with "param."
 	 * @return
 	 */
-	public boolean isFieldReference(){
+	public boolean isFieldReference() {
 		return reference != null && !reference.startsWith("param.");
 	}
-	
-	public boolean isRendered(){
+
+	public boolean isRendered() {
 		return chart != null;
 	}
 

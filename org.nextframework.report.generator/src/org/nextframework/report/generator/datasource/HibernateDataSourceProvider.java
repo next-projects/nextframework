@@ -40,18 +40,15 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-@SuppressWarnings("unchecked")
-public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
+public class HibernateDataSourceProvider implements DataSourceProvider {
 
-	String fromClass;
-
-	public void setFromClass(String fromClass) {
-		this.fromClass = fromClass;
+	@Override
+	public String getName() {
+		return "hibernateDataProvider";
 	}
 
 	@Override
-	@SuppressWarnings("rawtypes")
-	public Class getMainType() {
+	public Class<?> getMainType(String fromClass) {
 		try {
 			return Class.forName(fromClass);
 		} catch (ClassNotFoundException e) {
@@ -59,19 +56,18 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		}
 	}
 
-	@SuppressWarnings("all")
 	@Override
-	public List getResult(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
+	public <OBJ> List<OBJ> getResult(Class<OBJ> mainType, ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
 
 		ListViewFilter filter = new ListViewFilter();
 		filter.setPageSize(500);
 
-		List fullResult = new ArrayList();
-		QueryBuilder query = createQueryBuilder(element, filterMap, fixedCriteriaMap);
-		ResultListImpl rs = new ResultListImpl(query, filter);
+		List<OBJ> fullResult = new ArrayList<OBJ>();
+		QueryBuilder<OBJ> query = createQueryBuilder(mainType, element, filterMap, fixedCriteriaMap);
+		ResultListImpl<OBJ> rs = new ResultListImpl<OBJ>(query, filter);
 
 		while (true) {
-			List subResult = rs.list();
+			List<OBJ> subResult = rs.list();
 			fullResult.addAll(subResult);
 			if (rs.hasNextPage() && fullResult.size() < limitResults) {
 				rs.nextPage();
@@ -83,13 +79,11 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 		return fullResult;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public QueryBuilder createQueryBuilder(ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
+	protected <OBJ> QueryBuilder<OBJ> createQueryBuilder(Class<OBJ> mainType, ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
 
-		Class mainType = getMainType();
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(mainType);
 
-		QueryBuilder query = new QueryBuilder().from(ClassUtils.getUserClass(mainType));
+		QueryBuilder<OBJ> query = new QueryBuilder<OBJ>().from(ClassUtils.getUserClass(mainType));
 		Set<String> selectProperties = new LinkedHashSet<String>();
 		JoinManager joinManager = new JoinManager(query.getAlias());
 		Set<String> fetchCollections = new LinkedHashSet<String>();
@@ -160,7 +154,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			}
 		}
 
-		GenericDAO dao = null;
+		GenericDAO<OBJ> dao = null;
 		try {
 			dao = DAOUtils.getDAOForClass(mainType);
 		} catch (NoSuchBeanDefinitionException e) {
@@ -323,31 +317,6 @@ public class HibernateDataSourceProvider implements DataSourceProvider<Object> {
 			}
 		}
 		return properties;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((fromClass == null) ? 0 : fromClass.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HibernateDataSourceProvider other = (HibernateDataSourceProvider) obj;
-		if (fromClass == null) {
-			if (other.fromClass != null)
-				return false;
-		} else if (!fromClass.equals(other.fromClass))
-			return false;
-		return true;
 	}
 
 }

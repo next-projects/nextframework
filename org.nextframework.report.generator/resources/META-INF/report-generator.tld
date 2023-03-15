@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-	version="2.0">
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
 
 	<description>Next report generator library</description>
 	<display-name>Next report generator</display-name>
@@ -16,16 +13,15 @@
 		<name>designer</name>
 		<tag-class>org.nextframework.report.generator.mvc.ReportComponentTag</tag-class>
 		<body-content>empty</body-content>
-		
-		<dynamic-attributes>true</dynamic-attributes>		
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
+
 	<tag>
 		<description></description>
 		<name>chooseProperties</name>
 		<tag-class>org.nextframework.report.generator.mvc.ChoosePropertiesTag</tag-class>
 		<body-content>empty</body-content>
-		
-		<dynamic-attributes>true</dynamic-attributes>		
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 </taglib>

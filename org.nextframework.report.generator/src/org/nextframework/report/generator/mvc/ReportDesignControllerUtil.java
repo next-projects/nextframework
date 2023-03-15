@@ -28,7 +28,6 @@ import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.controller.ServletRequestDataBinderNext;
 import org.nextframework.core.web.NextWeb;
-import org.nextframework.persistence.QueryBuilder;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.annotation.ExtendBean;
 import org.nextframework.report.generator.annotation.ReportEntity;
@@ -60,16 +59,6 @@ public class ReportDesignControllerUtil {
 			}
 		});
 		return classesWithAnnotation;
-	}
-
-	@SuppressWarnings("unchecked")
-	List getPreviewData(ReportDesignModel model) {
-		QueryBuilder queryBuilder = new QueryBuilder();
-		List preview = queryBuilder.from(model.getSelectedType())
-				.orderBy("id desc")
-				.setMaxResults(30)
-				.list();
-		return preview;
 	}
 
 	public Set<String> getAvailablePropertiesForClass(Class<?> selectedType, String parentProperty, int deepLevel) {

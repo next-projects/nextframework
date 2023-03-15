@@ -35,8 +35,8 @@ public class DebugInputsTag extends BaseTag implements LogicalTag {
 	protected Set<String> propriedades = new HashSet<String>();
 	protected Set<String> propriedadesRepetidas = new HashSet<String>();
 
-	public boolean addProperty(String propriedade){
-		if(propriedades.contains(propriedade)){
+	public boolean addProperty(String propriedade) {
+		if (propriedades.contains(propriedade)) {
 			propriedadesRepetidas.add(propriedade);
 			return false;
 		} else {
@@ -52,12 +52,13 @@ public class DebugInputsTag extends BaseTag implements LogicalTag {
 	public void setCommandClass(Class<?> commandClass) {
 		this.commandClass = commandClass;
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
 		doBody();
 		for (String property : propriedadesRepetidas) {
-			getOut().println("Propriedade duplicada: "+property+"<BR>");
+			getOut().println("Propriedade duplicada: " + property + "<BR>");
 		}
 	}
+
 }

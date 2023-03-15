@@ -23,12 +23,12 @@
  */
 package org.nextframework.view.code;
 
-
 public class MainTag extends MethodTag {
 
-	public MainTag(){
-		name = "main";
+	public static final String NAME = "main";
+
+	public MainTag() {
+		name = NAME;
 	}
-	
-	
+
 }

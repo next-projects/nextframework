@@ -17,25 +17,34 @@ public class TabPanelBlock {
 	public String getId() {
 		return idTabPanel + "_" + tabNumber;
 	}
-	
-	public String getOnSelectTab(){
-		String string = (String) block.getProperties().get("onselecttab");
-		if(string == null){
-			string = "";
-		}
-		return TagUtils.escape(string);
-	}
-	
-	public String getTitle(){
+
+	public String getTitle() {
 		String title = (String) block.getProperties().get("title");
-		if(title == null){
-			return "No title attribute ("+tabNumber+")";
+		if (title == null) {
+			return "No title attribute (" + tabNumber + ")";
 		} else {
 			return title;
 		}
 	}
-	
-	public String getBody(){
+
+	public String getOnSelectTab() {
+		String string = (String) block.getProperties().get("onselecttab");
+		if (string == null) {
+			string = "";
+		}
+		return TagUtils.escape(string);
+	}
+
+	public String getStyle() {
+		return (String) block.getProperties().get("style");
+	}
+
+	public String getStyleClass() {
+		return (String) block.getProperties().get("class");
+	}
+
+	public String getBody() {
 		return block.getBody();
 	}
+
 }

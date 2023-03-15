@@ -32,19 +32,17 @@ import java.util.Map;
  * @version 1.1
  */
 public interface IReport {
-	
+
 	/**
-	 * 
 	 * @return nome do arquivo do relatório
 	 */
 	String getFileName();
-	
+
 	/**
-	 * 
 	 * @return nome do relatório
 	 */
 	String getName();
-	
+
 	/**
 	 * @return mapa de parametros do relatório
 	 */
@@ -56,10 +54,10 @@ public interface IReport {
 	 * @return objeto com os dados do relatório
 	 */
 	Object getDataSource();
-	
+
 	/**
-	 * 
 	 * @return mapa de subrelatórios
 	 */
 	Map<String, IReport> getSubReportMap();
+
 }

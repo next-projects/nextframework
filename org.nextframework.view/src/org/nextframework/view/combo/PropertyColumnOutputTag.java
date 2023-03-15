@@ -31,23 +31,25 @@ import org.nextframework.view.OutputTag;
  * @version 1.1
  */
 public class PropertyColumnOutputTag extends ComboTag {
-	
+
 	protected String name;
 
 	@Override
 	protected void doComponent() throws Exception {
+
 		PropertyColumnTag columnTag = new PropertyColumnTag();
 		columnTag.setName(name);
-		
+
 		TagHolder columnHolder = new TagHolder(columnTag);
 		if (getJspBody() == null) {
-			OutputTag outputTag = new OutputTag();			
+			OutputTag outputTag = new OutputTag();
 			columnHolder.addChild(new TagHolder(outputTag));
 		} else {
 			columnTag.setJspBody(getJspBody());
 		}
-		
+
 		invoke(columnHolder);
+
 	}
 
 	public String getName() {
@@ -57,4 +59,5 @@ public class PropertyColumnOutputTag extends ComboTag {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

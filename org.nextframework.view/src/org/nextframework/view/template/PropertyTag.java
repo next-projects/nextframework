@@ -24,6 +24,8 @@
 package org.nextframework.view.template;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -40,6 +42,7 @@ import org.nextframework.view.BeanTag;
 import org.nextframework.view.ColumnTag;
 import org.nextframework.view.ComboReloadGroupTag;
 import org.nextframework.view.DataGridTag;
+import org.nextframework.view.GroupTag;
 import org.nextframework.view.PanelGridTag;
 import org.nextframework.view.PanelTag;
 import org.nextframework.web.WebUtils;
@@ -64,9 +67,15 @@ public class PropertyTag extends TemplateTag {
 
 	public static final String DOUBLE = "double";
 
+	public static final String DOUBLELINE = "doubleline";
+
 	public static final String INVERT = "invert";
 
-	public static final String DOUBLELINE = "doubleline";
+	public static final String STACKED = "stacked";
+
+	public static final String STACKED_INVERT = "stacked_invert";
+
+	private static final List<String> RENDERAS_OPTIONS = Arrays.asList(COLUMN, SINGLE, DOUBLE, DOUBLELINE, INVERT, STACKED, STACKED_INVERT);
 
 	protected String name;
 	protected String renderAs = null;
@@ -121,27 +130,43 @@ public class PropertyTag extends TemplateTag {
 	protected boolean showDeleteButton = true;
 
 	//estilos
-	private String headerStyleClass = "";
-	private String headerStyle = "";
-	private String bodyStyleClass = "";
-	private String bodyStyle = "";
-	private String panelStyleClass = "";
-	private String panelStyle = "";
-	private String labelStyleClass = "";
-	private String labelStyle = "";
+	private String headerStyleClass;
+	private String headerStyle;
+	private String bodyStyleClass;
+	private String bodyStyle;
+	private String panelStyleClass;
+	private String panelStyle;
+	private String labelPanelStyleClass;
+	private String labelPanelStyle;
+	private String labelStyleClass;
+	private String labelStyle;
+	private String stackedPanelStyleClass;
+
+	@Override
+	protected void applyDefaultStyleClasses() throws JspException {
+		//Não aplica no fluxo natural.
+	}
+
+	@Override
+	protected String getSubComponentName() {
+		return renderAs;
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	protected void doComponent() throws Exception {
 
 		PropertyConfigTag configTag = findParent(PropertyConfigTag.class);
-		BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelTag.class, ColumnTag.class, DataGridTag.class, PanelGridTag.class);
+		BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelTag.class, ColumnTag.class, GroupTag.class, PanelGridTag.class, DataGridTag.class);
 
 		if (getId() == null || "".equals(getId())) {
 			id = generateUniqueId() + "_" + getName();
 		}
 
 		verifyRenderAs(configTag, findFirst);
+
+		//Aplica estilos padrão apenas após resolver o 'renderAs'
+		super.applyDefaultStyleClasses();
 
 		verifyMode(configTag);
 
@@ -175,56 +200,35 @@ public class PropertyTag extends TemplateTag {
 			renderAs = renderAs.toLowerCase();
 		}
 		if (Util.strings.isEmpty(renderAs)) {
-			do {
-				if (findFirst instanceof PropertyConfigTag && Util.strings.isNotEmpty(configTag.getRenderAs())) {
-					renderAs = configTag.getRenderAs();
-				} else if (findFirst instanceof PanelTag) {
-					PanelTag panel = (PanelTag) findFirst;
-					Boolean propertyRenderAsDouble = panel.getPropertyRenderAsDouble();
-					if (propertyRenderAsDouble != null) {
-						renderAs = Util.booleans.isTrue(propertyRenderAsDouble) ? DOUBLE : SINGLE;
-					} else {
-						// procurar opcoes de renderAs nas tags mais acima do panel, já que esse panel não está forçando a renderização double
-						if (configTag != null && Util.strings.isNotEmpty(configTag.getRenderAs())) {
-							if (configTag.getRenderAs().toLowerCase().equals(DOUBLELINE)) {
-								renderAs = DOUBLELINE;
-							} else {
-								renderAs = SINGLE;
-							}
-						} else {
-							renderAs = SINGLE;
-						}
-					}
-				} else if (findFirst instanceof PanelGridTag) {
-					PanelGridTag panelGrid = (PanelGridTag) findFirst;
-					Boolean propertyRenderAsDouble = panelGrid.getPropertyRenderAsDouble();
-					if (propertyRenderAsDouble != null) {
-						renderAs = Util.booleans.isTrue(propertyRenderAsDouble) ? DOUBLE : SINGLE;
-					} else {
-						//procurar opcoes de renderAs nas tags mais acima do panel, já que esse panel não está forçando a renderização double
-						if (configTag != null && Util.strings.isNotEmpty(configTag.getRenderAs())) {
-							if (configTag.getRenderAs().toLowerCase().equals(DOUBLELINE)) {
-								renderAs = DOUBLELINE;
-							} else {
-								renderAs = SINGLE;
-							}
-						} else {
-							renderAs = SINGLE;
-						}
-					}
-				} else if (findFirst instanceof DataGridTag) {
-					renderAs = COLUMN;
-				} else {
-					renderAs = SINGLE;
-				}
-				break;
-			} while (true);
+			if (findFirst instanceof PropertyConfigTag && Util.strings.isNotEmpty(configTag.getRenderAs())) {
+				renderAs = configTag.getRenderAs();
+			} else if (findFirst instanceof PanelTag) {
+				PanelTag panel = (PanelTag) findFirst;
+				renderAs = panel.getPropertyRenderAs();
+			} else if (findFirst instanceof PanelGridTag) {
+				PanelGridTag panelGrid = (PanelGridTag) findFirst;
+				renderAs = panelGrid.getPropertyRenderAs();
+			} else if (findFirst instanceof GroupTag) {
+				GroupTag groupTag = (GroupTag) findFirst;
+				renderAs = groupTag.getPropertyRenderAs();
+			} else if (findFirst instanceof DataGridTag) {
+				renderAs = COLUMN;
+			} else if (findFirst instanceof ColumnTag) {
+				renderAs = SINGLE;
+			}
+		}
+		if (Util.strings.isEmpty(renderAs)) {
+			renderAs = SINGLE;
 		}
 		if (DOUBLELINE.equals(renderAs)) {
 			renderAs = SINGLE;
 		}
-		if (!COLUMN.equals(renderAs) && !SINGLE.equals(renderAs) && !DOUBLE.equals(renderAs) && !INVERT.equals(renderAs) && !DOUBLELINE.equals(renderAs)) {
-			throw new NextException("A tag property só aceita no atributo 'renderAs' os seguintes valores: column, single, double, invert ou doubleline. Valor encontrado: " + renderAs);
+		validateRenderAs(renderAs);
+	}
+
+	public static void validateRenderAs(String renderAs) {
+		if (!RENDERAS_OPTIONS.contains(renderAs)) {
+			throw new NextException("Property 'renderAs' must be one of: " + RENDERAS_OPTIONS + ". Value found: " + renderAs);
 		}
 	}
 
@@ -243,8 +247,12 @@ public class PropertyTag extends TemplateTag {
 				}
 			}
 		}
+		validateMode(mode);
+	}
+
+	public static void validateMode(String mode) {
 		if (!INPUT.equals(mode) && !OUTPUT.equals(mode)) {
-			throw new NextException("A tag property só aceita no atributo 'mode' os seguintes valores: input ou output. Valor encontrado: " + mode);
+			throw new NextException("Property 'mode' must be one of: input, output. Value found: " + mode);
 		}
 	}
 
@@ -290,11 +298,14 @@ public class PropertyTag extends TemplateTag {
 	}
 
 	private void verifyColspan() {
-		if (colspan != null && (DOUBLE.equals(renderAs) || INVERT.equals(renderAs))) {
-			colspan = colspan - 1;
-		}
 		if (colspan == null || colspan == 0) {
-			colspan = 1;
+			colspan = getViewConfig().getDefaultColspan(renderAs);
+			if (colspan == null || colspan == 0) {
+				colspan = DOUBLE.equals(renderAs) || INVERT.equals(renderAs) ? 2 : 1;
+			}
+		}
+		if (DOUBLE.equals(renderAs) || INVERT.equals(renderAs)) {
+			colspan = colspan - 1;
 		}
 	}
 
@@ -378,23 +389,22 @@ public class PropertyTag extends TemplateTag {
 	 * Auto alinhamento dos valores de uma determinada coluna
 	 */
 	public String getColumnAlign() {
-		//em modo input nao alinhar a direita pois o proprio input terá alinhamento
 		Object type = getRequest().getAttribute("type");
 		return getColumnAlignForType(type);
 	}
 
 	public String getColumnAlignForType(Object type) {
+		//em modo input nao alinhar a direita pois o proprio input terá alinhamento
 		if ("input".equalsIgnoreCase(getMode())) {
-			return "";
+			return null;
 		}
 		if (Util.objects.isNotEmpty(getDynamicAttributesMap().get("align"))) {
 			return getDynamicAttributesMap().get("align").toString();
 		}
 		if (type != null && (type.equals(Money.class) || (type instanceof Class<?> && Number.class.isAssignableFrom((Class<?>) type)))) {
 			return "right";
-		} else {
-			return "";
 		}
+		return null;
 	}
 
 	public String getName() {
@@ -699,6 +709,22 @@ public class PropertyTag extends TemplateTag {
 		this.panelStyle = panelStyle;
 	}
 
+	public String getLabelPanelStyle() {
+		return labelPanelStyle;
+	}
+
+	public void setLabelPanelStyle(String labelPanelStyle) {
+		this.labelPanelStyle = labelPanelStyle;
+	}
+
+	public String getLabelPanelStyleClass() {
+		return labelPanelStyleClass;
+	}
+
+	public void setLabelPanelStyleClass(String labelPanelStyleClass) {
+		this.labelPanelStyleClass = labelPanelStyleClass;
+	}
+
 	public String getLabelStyleClass() {
 		return labelStyleClass;
 	}
@@ -715,21 +741,12 @@ public class PropertyTag extends TemplateTag {
 		this.labelStyle = labelStyle;
 	}
 
-	@Override
-	public void setDynamicAttribute(String uri, String localName, Object value) throws JspException {
-		//berga - 17/08/2009 : Ajuste para o framework aceitar panelStyle, PanelStyleClass e panelClass case insensitive
-		if (value != null) {
-			if ("panelStyle".equalsIgnoreCase(localName)) {
-				setPanelStyle(value.toString());
-			} else if ("panelStyleClass".equalsIgnoreCase(localName)) {
-				setPanelStyleClass(value.toString());
-			} else if ("panelClass".equalsIgnoreCase(localName)) {
-				setPanelStyleClass(value.toString());
-			} else if ("class".equalsIgnoreCase(localName)) {
-				super.setDynamicAttribute(uri, "styleClass", value);
-			}
-		}
-		super.setDynamicAttribute(uri, localName, value);
+	public String getStackedPanelStyleClass() {
+		return stackedPanelStyleClass;
+	}
+
+	public void setStackedPanelStyleClass(String stackedPanelStyleClass) {
+		this.stackedPanelStyleClass = stackedPanelStyleClass;
 	}
 
 }

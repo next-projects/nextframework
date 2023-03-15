@@ -29,7 +29,10 @@ import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
 import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.ReportSectionRow;
+import org.nextframework.report.definition.elements.ReportItem;
+import org.nextframework.report.definition.elements.ReportItemIterator;
 import org.nextframework.report.definition.elements.ReportLabel;
+import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.ReportGenerator;
 import org.nextframework.report.generator.ReportReader;
@@ -41,14 +44,14 @@ import org.nextframework.report.generator.generated.ReportSpec;
 import org.nextframework.report.generator.layout.DynamicBaseReportDefinition;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
+import org.nextframework.report.renderer.jasper.JasperUtils;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.view.progress.IProgressMonitor;
 import org.nextframework.view.progress.ProgressMonitor;
 import org.nextframework.view.progress.ProgressTask;
 import org.nextframework.view.progress.ProgressTaskFactory;
 import org.nextframework.web.WebUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindException;
@@ -77,12 +80,11 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("entities", entities);
 		setAttribute("displayNames", displayNames);
-
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.design1");
 	}
 
 	public ModelAndView selectProperties(ReportDesignModel model) throws SAXException, IOException {
-		
+
 		ReportElement reportElement = null;
 		if (model.getReportXml() != null) {
 			reportElement = new ReportReader(model.getReportXml()).getReportElement();
@@ -94,27 +96,13 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			model.getProperties().add("id");
 		}
 
-		if (getRequest().getParameter("visualizarDados") != null) {
-			List preview = util.getPreviewData(model);
-			setAttribute("preview", preview);
-		}
-
 		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), selectedGeneratedType, avaiableProperties);
-		
+
 		setAttribute("model", model);
 		setAttribute("avaiableProperties", avaiableProperties);
 		setAttribute("propertyMetadata", propertiesMetadata);
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("reportTypeDisplayName", BeanDescriptorFactory.forClass(ClassUtils.getUserClass(model.getSelectedType())).getDisplayName());
-
-		//for(String property: propertiesMetadata.keySet()){
-		//	Map<String, Object> map = propertiesMetadata.get(property);
-		//	if(map.get("requiredFilter") != null && Boolean.TRUE.equals(map.get("requiredFilter"))){
-		//		if(!model.getProperties().contains(property)){
-		//			model.getProperties().add(property);
-		//		}
-		//	}
-		//}
 
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.design2");
 	}
@@ -125,12 +113,9 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			return model.getSelectedGeneratedType();
 		}
 		try {
-			String defaultProvider = ReportReader.dataSourceProviders.keySet().iterator().next();
-			DataSourceProvider<?> dataProvider = ReportReader.getDataSourceProviderForType(defaultProvider);
-			BeanWrapper bw = new BeanWrapperImpl(dataProvider);
+			DataSourceProvider defaultDataSourceProvider = ServiceFactory.getService(DataSourceProvider.class);
 			Class<?> selectedGeneratedType = model.getSelectedType();
-			bw.setPropertyValue("fromClass", selectedGeneratedType.getName());
-			return dataProvider.getMainType();
+			return defaultDataSourceProvider.getMainType(selectedGeneratedType.getName());
 		} catch (Exception e) {
 			throw new RuntimeException("Verify datasourceprovider code", e);
 		}
@@ -156,7 +141,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				properties.remove(calculatedFieldElement.getName());
 			}
 		}
-		
+
 		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), reportType, properties);
 		//complete metadata with calculated fields
 		for (CalculatedFieldElement calculatedFieldElement : calculatedFields) {
@@ -319,7 +304,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		Object propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), mainType, filterProperties);
 
 		setAttribute("filters", util.reorganizeFilters(mainType, filterProperties.keySet()));
-		setAttribute("filterMetadata", propertiesMetadata);
+		setAttribute("filterMetadataMap", propertiesMetadata);
 		setAttribute("model", model);
 		setAttribute("reportElement", reportElement);
 		setAttribute("crudPath", getPathForReportCrud());
@@ -408,7 +393,6 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.generatingPDF", null, "Gerando PDF"));
 				DynamicBaseReportDefinition definition2 = (DynamicBaseReportDefinition) definition;
 				if (Util.collections.isNotEmpty(definition2.getSummarizedData().getItems())) {
-					onDownloadDefinitionPDF(definition);
 					definition.getParameters().put("renderPDF", Boolean.TRUE);
 					byte[] pdfBytes = JasperReportsRenderer.renderAsPDF(definition);
 					return new Resource("application/pdf", definition.getReportName() + ".pdf", pdfBytes);
@@ -456,9 +440,11 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	/////////////////////////////////////////////// EXECUTE TASKS ///////////////////////////////////////////////
 
 	public interface ReportDesignTask {
+
 		Object convertResults(ReportDefinition definition, IProgressMonitor progressMonitor) throws Exception;
 
 		ModelAndView showResults(WebRequestContext request, ReportDesignModel model, Object data) throws Exception;
+
 	}
 
 	protected ModelAndView executeTask(WebRequestContext request, ReportDesignModel model, final ReportDesignTask task) throws Exception {
@@ -480,6 +466,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 			//Se não existir, inicia a thread e obtém o monitor
 			ProgressTask pTask = new ProgressTask() {
+
 				@Override
 				public Object run(IProgressMonitor progressMonitor) throws Exception {
 					progressMonitor.beginTask(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.initializing", null, "Inicializando"), 120);
@@ -489,6 +476,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 					progressMonitor.worked(20);
 					return converted;
 				}
+
 			};
 
 			monitor = ProgressTaskFactory.startTask(pTask, ReportDesignTask.class.getSimpleName() + " " + model.getId(), logger);
@@ -533,11 +521,16 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 		ReportGenerator rg = new ReportGenerator(reportElement, progressMonitor);
 		ReportSpec spec = rg.generateReportSpec(filterMap, locale, maxResults);
+
 		if (debugMode()) {
-			debugSource(rg.getSourceCode(), spec.getSummary().getSourceCode());
+			debug(reportElement.getName(), rg, spec);
 		}
 
 		ReportDefinition definition = spec.getReportBuilder().getDefinition();
+
+		if (debugMode()) {
+			debug(reportElement.getName(), definition);
+		}
 
 		int total = definition.getData().size();
 		if (definition instanceof DynamicBaseReportDefinition) {
@@ -596,17 +589,38 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 	protected abstract CUSTOM_BEAN loadPersistedReportById(Integer id);
 
-	protected void onDownloadDefinitionPDF(ReportDefinition definition) {
-
-	}
-
 	/////////////////////////////////////////////// DEBUG ///////////////////////////////////////////////
 
 	protected boolean debugMode() {
 		return false;
 	}
 
-	protected void debugSource(String sourceCodeReport, String sourceCodeSummary) {
+	private void debug(String title, ReportGenerator rg, ReportSpec spec) {
+		title = Util.strings.onlyAlphanumerics(title);
+		debugSource(title, rg.getSourceCode(), spec.getSummary().getSourceCode());
+	}
+
+	protected void debugSource(String title, String sourceCodeReport, String sourceCodeSummary) {
+	}
+
+	private void debug(String title, ReportDefinition definition) {
+		title = Util.strings.onlyAlphanumerics(title);
+		ReportItemIterator reportItemIterator = new ReportItemIterator(definition);
+		int i = 1;
+		while (reportItemIterator.hasNext()) {
+			ReportItem next = reportItemIterator.next();
+			if (next instanceof Subreport) {
+				debug(title + (i++), ((Subreport) next).getReport());
+			}
+		}
+		debugSource(title, JasperReportsRenderer.renderAsJRXML(definition));
+		debugDataCSV(title, JasperUtils.generateDataCSV(definition));
+	}
+
+	protected void debugSource(String title, byte[] jrxml) {
+	}
+
+	protected void debugDataCSV(String title, String csv) {
 	}
 
 }

@@ -5,8 +5,8 @@ import java.io.InputStream;
 
 public class ReportImage extends ReportItem {
 
-	byte[] image;
-	int height;
+	private byte[] image;
+	private int height;
 	private String reference;
 
 	public ReportImage(byte[] image, int width, int height) {
@@ -28,21 +28,21 @@ public class ReportImage extends ReportItem {
 	public String getReference() {
 		return reference;
 	}
-	
+
 	/**
 	 * Returns if the reference is a field reference. Otherwise it is a parameter reference.
 	 * The reference is a parameter reference when the reference starts with "param."
 	 * @return
 	 */
-	public boolean isFieldReference(){
+	public boolean isFieldReference() {
 		return reference != null && !reference.startsWith("param.");
 	}
-	
+
 	/**
 	 * Get the rendered image input stream. Only available if the image is rendered
 	 * @return
 	 */
-	public InputStream getInputStream(){
+	public InputStream getInputStream() {
 		return new ByteArrayInputStream(image);
 	}
 
@@ -53,20 +53,20 @@ public class ReportImage extends ReportItem {
 	public int getHeight() {
 		return height;
 	}
-	
+
 	/**
 	 * Gets the image width
 	 */
 	public int getWidth() {
 		return super.getWidth();
 	}
-	
+
 	/**
 	 * Determines if this ReportImage already have the bytes set.
 	 * If the bytes are not set this image should be rendered reading a field or variable expression.
 	 * @return
 	 */
-	public boolean isRendered(){
+	public boolean isRendered() {
 		return image != null;
 	}
 
@@ -74,4 +74,5 @@ public class ReportImage extends ReportItem {
 	public String getDescriptionName() {
 		return "Image";
 	}
+
 }

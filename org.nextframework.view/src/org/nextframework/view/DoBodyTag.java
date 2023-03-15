@@ -25,7 +25,6 @@ package org.nextframework.view;
 
 import javax.servlet.jsp.tagext.JspFragment;
 
-
 /**
  * @author rogelgarcia
  * @since 25/01/2006
@@ -42,5 +41,5 @@ public class DoBodyTag extends BaseTag implements LogicalTag {
 		}
 		TagUtils.pushJspFragment(getRequest(), fragment);
 	}
-	
+
 }

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-	version="2.0">
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
 
 	<description>Next 1.1 ajax library</description>
 	<display-name>Next ajax</display-name>
@@ -21,7 +18,7 @@
 			<name>functionName</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Url do controller que deve ser chamado. Se não for informado valerá a url atual</description>
 			<name>url</name>
@@ -39,7 +36,7 @@
 			<name>parameters</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>		
+		</attribute>
 		<attribute>
 			<description>Nome da função callback que deve ser chamada ao retornar a requisicao. 
 			A função pode receber um parametro que é o texto retornado pelo controller. E também um segundo parametro, que é o array dos parametros passados para a função de javascript criada.
@@ -47,7 +44,12 @@
 			<name>callback</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-		</attribute>			
+		</attribute>
+		<attribute>
+			<name>rendered</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
-	
+
 </taglib>

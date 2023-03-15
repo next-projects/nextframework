@@ -23,45 +23,31 @@
  */
 package org.nextframework.view.template;
 
-/**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
- */
-public class ReportPanelTag extends TemplateTag {
+public class ReportPanelTag extends SimplePanelTag {
 
-	private String sectionTitle;
-	private String submitAction = "generate";
-	private String submitConfirmationScript = "true";
-	private String submitLabel;
+	protected String submitAction = "generate";
+	protected String submitConfirmationScript = "true";
+	protected String submitLabel;
+
+	protected String buttonStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
 
 		if (sectionTitle == null) {
-			sectionTitle = getDefaultViewLabel("sectionTitle", null);
+			sectionTitle = getDefaultViewLabel("sectionTitle", "Relatório");
 		}
 
 		if (submitLabel == null) {
 			submitLabel = getDefaultViewLabel("submitLabel", "Gerar relatório");
 		}
 
-		pushAttribute("TJanelaRelatorio", this);
 		includeJspTemplate();
-		popAttribute("TJanelaRelatorio");
 
 	}
 
 	public String getUniqueId() {
 		return generateUniqueId();
-	}
-
-	public String getSectionTitle() {
-		return sectionTitle;
-	}
-
-	public void setSectionTitle(String sectionTitle) {
-		this.sectionTitle = sectionTitle;
 	}
 
 	public String getSubmitAction() {
@@ -86,6 +72,14 @@ public class ReportPanelTag extends TemplateTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
+	}
+
+	public String getButtonStyleClass() {
+		return buttonStyleClass;
+	}
+
+	public void setButtonStyleClass(String buttonStyleClass) {
+		this.buttonStyleClass = buttonStyleClass;
 	}
 
 }

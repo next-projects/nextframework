@@ -1,4 +1,3 @@
-<!-- Valor selecionado ${tag.valueToString} -->
 <input type="text" name="${tag.name}_label" id="${tag.id}" onchange="${tag.reloadOnChangeString}" readonly="true" value="${tag.descriptionToString}" ${tag.dynamicAttributesToString}/>
 <input type="hidden" name="${tag.name}" value="${tag.valueWithDescriptionToString}" />
 <button id="${tag.name}_btn" name="${tag.name}_btn" type="button" onclick="${tag.inputComponent.selectOneButtonOnClick} " style='${tag.inputComponent.selectOneButtonStyle}'>Selecionar</button>

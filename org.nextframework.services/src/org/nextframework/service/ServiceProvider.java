@@ -1,6 +1,5 @@
 package org.nextframework.service;
 
-
 public interface ServiceProvider {
 
 	/**
@@ -11,7 +10,7 @@ public interface ServiceProvider {
 	 * @return
 	 */
 	<E> E getService(Class<E> serviceInterface);
-	
+
 	/**
 	 * Priority of this ServiceProvider. <BR>
 	 * Services providers with higher priority (ie lower priority number)
@@ -19,7 +18,7 @@ public interface ServiceProvider {
 	 * @return
 	 */
 	int priority();
-	
+
 	/**
 	 * Release all the resources associated with this provider.<BR>
 	 * After this call the ServiceProvider must not be used.
@@ -27,5 +26,5 @@ public interface ServiceProvider {
 	void release();
 
 	<E> E[] loadServices(Class<E> serviceInterface);
-	
+
 }

@@ -3,17 +3,27 @@
 <%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:bean name="filter">
+<div class="${reportPanelTag.panelStyleClass}" style="${reportPanelTag.panelStyle}">
 
 	<c:if test="${! empty reportPanelTag.sectionTitle }">
-		<div class="sectionTitle">${reportPanelTag.sectionTitle}</div>
+		<div class="${reportPanelTag.sectionTitleStyleClass}" style="${reportPanelTag.sectionTitleStyle}">${reportPanelTag.sectionTitle}</div>
 	</c:if>
 
-	<div class="filterWindow">
-		<n:doBody />
-		<div class="actionBar">
-			<n:submit action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
-		</div>
-	</div>
+	<n:bean name="filter">
 
-</n:bean>
+		<n:getContent tagName="actionPanelTag" vars="acoes">
+
+			<div class="${reportPanelTag.bodyStyleClass}" style="${reportPanelTag.bodyStyle}">
+				<n:doBody />
+			</div>
+
+			<div class="${reportPanelTag.actionBarStyleClass}" style="${reportPanelTag.actionBarStyle}">
+				${acoes}
+				<n:submit class="${reportPanelTag.buttonStyleClass}" action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
+			</div>
+
+		</n:getContent>
+
+	</n:bean>
+
+</div>

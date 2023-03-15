@@ -1,4 +1,4 @@
-var NextReload = function(){};
+﻿var NextReload = function(){};
 
 NextReload.FunctionCall = function(call) {
 

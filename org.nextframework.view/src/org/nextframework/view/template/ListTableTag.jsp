@@ -1,9 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:dataGrid itens="${listTableTag.itens}" var="${listTableTag.name}" cellspacing="0" groupProperty="${listTableTag.groupProperty}" >
+<n:dataGrid itens="${listTableTag.itens}" var="${listTableTag.name}" groupProperty="${listTableTag.groupProperty}" nocolumnresize="${listTableTag.dynamicAttributesMap['nocolumnresize']}">
 	<n:bean name="${listTableTag.name}" valueType="${listTableTag.valueType}">
 		<n:getContent tagName="actionPanelTag" vars="acoes">
 			<t:propertyConfig mode="output" renderAs="column">
@@ -11,9 +10,7 @@
 			</t:propertyConfig>
 			<c:if test="${ !empty acoes || listTableTag.showViewLink || listTableTag.showEditLink || listTableTag.showDeleteLink }">
 				<n:column header="${n:messageArgs('ListTableTag.actionColumnName', null, 'Ação')}" style="width: 1%; white-space: nowrap; padding-right: 3px;">
-
 					${acoes}
-
 					<script language="javascript">
 						<c:catch var="exSelecionar">
 							imprimirSelecionar(new Array(${n:hierarchy(listTableTag.valueType)}), "<a href=\"javascript:selecionar('${n:escape(n:valueToString(n:reevaluate(listTableTag.name, pageContext)))}','${n:escape(n:descriptionToString(n:reevaluate(listTableTag.name, pageContext)))}')\">${listTableTag.selectLinkLabel}</a>&nbsp;");
@@ -21,25 +18,25 @@
 					</script>
 					<c:if test="${!empty exSelecionar}">
 						${n:printStackTrace(exSelecionar)}
-						<span style="font-size: 10px; color: red; white-space: pre; display:block;">Erro ao imprimir botão selecionar: ${exSelecionar.message} <c:catch>${exSelecionar.rootCause.message}</c:catch></span>
+						<span style="font-size: 10px; color: red; white-space: pre; display: block;">Erro ao imprimir botão selecionar: ${exSelecionar.message} <c:catch>${exSelecionar.rootCause.message}</c:catch></span>
 					</c:if>
-
 					<c:if test="${listTableTag.showViewLink}">
 						<n:link action="view" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}">${listTableTag.viewLinkLabel}</n:link>
-					</c:if>						
+					</c:if>
 					<c:if test="${listTableTag.showEditLink}">
 						<n:link action="update" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}">${listTableTag.updateLinkLabel}</n:link>
 					</c:if>
 					<c:if test="${listTableTag.showDeleteLink}">
-						<n:link action="delete" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}" confirmationMessage="${n:messageArgs('ListTableTag.deleteLinkConfirmation', null, 'Deseja realmente excluir esse registro?')}" >${listTableTag.deleteLinkLabel}</n:link>
+						<n:link action="delete" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}" confirmationMessage="${n:messageArgs('ListTableTag.deleteLinkConfirmation', null, 'Deseja realmente excluir esse registro?')}">${listTableTag.deleteLinkLabel}</n:link>
 					</c:if>
-
 				</n:column>
 			</c:if>
 		</n:getContent>
 	</n:bean>
 </n:dataGrid>
 
-<div class="pagging" >
-	${n:messageArgs('ListTableTag.paginaLabel', null, 'Página')} <n:pagging currentPage="${listTableTag.currentPage}" totalNumberOfPages="${listTableTag.numberOfPages}" selectedClass="pageSelected" unselectedClass="pageUnselected" />
-</div>
+<c:if test="${! empty listTableTag.itens}">
+	<div class="${listTableTag.pagePanelStyleClass}">
+		${n:messageArgs('ListTableTag.pageLabel', null, 'Página')} <n:pagging currentPage="${listTableTag.currentPage}" totalNumberOfPages="${listTableTag.numberOfPages}" />
+	</div>
+</c:if>

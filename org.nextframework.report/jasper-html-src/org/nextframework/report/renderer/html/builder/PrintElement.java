@@ -2,26 +2,26 @@ package org.nextframework.report.renderer.html.builder;
 
 import java.util.List;
 
-import net.sf.jasperreports.engine.JRPrintElement;
-import net.sf.jasperreports.engine.JRPrintFrame;
-import net.sf.jasperreports.engine.JRPrintText;
-
 import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
 
+import net.sf.jasperreports.engine.JRPrintElement;
+import net.sf.jasperreports.engine.JRPrintFrame;
+import net.sf.jasperreports.engine.JRPrintText;
+
 public class PrintElement {
 
-	MappedJasperReport mappedJasperReport;
-	JRPrintElement jrPrintElement;
-	int y;
-	int row;
-	
+	private MappedJasperReport mappedJasperReport;
+	private JRPrintElement jrPrintElement;
+	private int y;
+	private int row;
+
 	//transients
-	KeyInfo keyInfo;
+	private KeyInfo keyInfo;
 	private String uniqueId;
-	ReportItem reportItem;
-	
+	private ReportItem reportItem;
+
 	public MappedJasperReport getMappedJasperReport() {
 		return mappedJasperReport;
 	}
@@ -33,61 +33,68 @@ public class PrintElement {
 	public void setReportItem(ReportItem reportItem) {
 		this.reportItem = reportItem;
 	}
-	public ReportItem getReportItem(){
-		if(reportItem != null){
+
+	public ReportItem getReportItem() {
+		if (reportItem != null) {
 			return reportItem;
 		}
-		if(getJrPrintElement().getKey() == null){
+		if (getJrPrintElement().getKey() == null) {
 			return null;
 		}
 		return getMappedJasperReport().getMappedKeys().get(getJrPrintElement().getKey());
 	}
-	
+
 	public KeyInfo getKeyInfo() {
-		if(keyInfo == null && jrPrintElement.getKey() != null){
+		if (keyInfo == null && jrPrintElement.getKey() != null) {
 			keyInfo = new KeyInfo(jrPrintElement.getKey());
 		}
 		return keyInfo;
 	}
-	
+
 	public void setKeyInfo(KeyInfo keyInfo) {
 		this.keyInfo = keyInfo;
 	}
-	
-	public Integer getColumn(){
+
+	public Integer getColumn() {
 		KeyInfo keyInfo = getKeyInfo();
-		if(keyInfo != null){
+		if (keyInfo != null) {
 			return keyInfo.getColumn();
 		}
 		return null;
 	}
-	
-	public Integer getColspan(){
+
+	public Integer getColspan() {
 		KeyInfo keyInfo = getKeyInfo();
-		if(keyInfo != null){
+		if (keyInfo != null) {
 			return keyInfo.getColspan();
 		}
 		return null;
 	}
-	
+
 	public int getY() {
 		return y;
 	}
+
 	public void setY(int y) {
 		this.y = y;
 	}
+
 	public ReportDefinition getSource() {
 		return mappedJasperReport.getReportDefinition();
 	}
+
 	public JRPrintElement getJrPrintElement() {
 		return jrPrintElement;
 	}
+
 	public void setJrPrintElement(JRPrintElement printElement) {
 		this.jrPrintElement = printElement;
 	}
+
 	public int getRow() {
 		return row;
 	}
+
 	public void setRow(int row) {
 		this.row = row;
 	}
@@ -95,37 +102,42 @@ public class PrintElement {
 	public String getUniqueId() {
 		return uniqueId;
 	}
-	
+
 	public void setUniqueId(String i) {
 		this.uniqueId = i;
 	}
-	
+
 	@Override
 	public String toString() {
-		if(jrPrintElement == null){
+		if (jrPrintElement == null) {
 			return "jrPrintElement=null";
 		}
-		if(jrPrintElement instanceof JRPrintText){
+		if (jrPrintElement instanceof JRPrintText) {
 			String reportName = jrPrintElement.getOrigin().getReportName();
-			if(reportName == null){
+			if (reportName == null) {
 				return ((JRPrintText) jrPrintElement).getText();
 			}
-			return ((JRPrintText) jrPrintElement).getText() +" ("+reportName+")";
+			return ((JRPrintText) jrPrintElement).getText() + " (" + reportName + ")";
 		}
-		if(jrPrintElement instanceof JRPrintFrame){
-			List<JRPrintElement> elements = ((JRPrintFrame)jrPrintElement).getElements();
-			if(elements.size() == 0){
+		if (jrPrintElement instanceof JRPrintFrame) {
+			List<JRPrintElement> elements = ((JRPrintFrame) jrPrintElement).getElements();
+			if (elements.size() == 0) {
 				return "[]";
 			}
 			StringBuilder sb = new StringBuilder("\n\t[");
 			for (final JRPrintElement jrpe : elements) {
-				sb.append(new PrintElement(){{setJrPrintElement(jrpe);}});
+				sb.append(new PrintElement() {
+					{
+						setJrPrintElement(jrpe);
+					}
+				});
 				sb.append(", ");
 			}
-			sb.setLength(sb.length()-2);
+			sb.setLength(sb.length() - 2);
 			sb.append("]");
 			return sb.toString();
 		}
 		return jrPrintElement.toString();
 	}
+
 }

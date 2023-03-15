@@ -40,7 +40,9 @@ public class MenuTag extends BaseTag {
 
 	private String menupath;
 	private Menu menu;
-	private String orientation = "hbr";
+	private String orientation;
+	private String panelStyleClass;
+	private String subPanelStyleClass;
 
 	@Override
 	public void doComponent() throws Exception {
@@ -49,33 +51,18 @@ public class MenuTag extends BaseTag {
 			throw new RuntimeException("Nenhum menu foi definido");
 		}
 
-		String cachedCode = null;
+		String code = null;
 		if (menu != null) {
-			cachedCode = getMenuCodeFromMenu();
+			code = getMenuCodeFromMenu(menu);
 		} else if (menupath != null) {
-			cachedCode = getMenuCodeFromPath();
+			code = getMenuCodeFromPath(menupath);
 		}
 
-		String menuId = generateUniqueId();
-		String divId = generateUniqueId();
-		cachedCode = "var " + menuId + " = \n" + cachedCode + ";";
-		String drawCode = "cmDraw ('" + divId + "', " + menuId + ", '" + orientation + "', cmThemeOffice, 'ThemeOffice');";
+		getOut().println(code);
 
-		getOut().print("<span class=\"menuClass\" id=\"" + divId + "\">");
-		getOut().print("</span>");
-
-		getOut().println("<script language=\"JavaScript\">");
-		getOut().println(cachedCode);
-		getOut().println(drawCode);
-		getOut().println("</script>");
 	}
 
-	private String getMenuCodeFromMenu() {
-		MenuBuilder menuBuilder = new MenuBuilder(getRequest().getContextPath());
-		return menuBuilder.build(menu);
-	}
-
-	private String getMenuCodeFromPath() throws Exception {
+	private String getMenuCodeFromPath(String menupath) throws Exception {
 
 		User user = Authorization.getUserLocator().getUser();
 		Locale locale = NextWeb.getRequestContext().getLocale();
@@ -86,13 +73,21 @@ public class MenuTag extends BaseTag {
 		}
 
 		Menu menu = MenuResolver.carregaMenu(menupath, user, locale);
-
-		MenuBuilder menuBuilder = new MenuBuilder(getRequest().getContextPath());
-		menuCode = menuBuilder.build(menu);
+		menuCode = getMenuCodeFromMenu(menu);
 
 		setCachedMenuCode(menupath, user, locale, menuCode);
 
 		return menuCode;
+	}
+
+	private String getMenuCodeFromMenu(Menu menu) {
+		MenuBuilder menuBuilder = null;
+		if (getViewConfig().isUseBootstrap()) {
+			menuBuilder = new MenuBuilderBootstrap(getRequest().getContextPath(), orientation, panelStyleClass, subPanelStyleClass);
+		} else {
+			menuBuilder = new MenuBuilderJS(generateUniqueId(), getRequest().getContextPath(), orientation, panelStyleClass);
+		}
+		return menuBuilder.build(menu);
 	}
 
 	public String getCachedMenuCode(String menupath, User user, Locale locale) {
@@ -155,6 +150,22 @@ public class MenuTag extends BaseTag {
 
 	public void setOrientation(String orientation) {
 		this.orientation = orientation;
+	}
+
+	public String getPanelStyleClass() {
+		return panelStyleClass;
+	}
+
+	public void setPanelStyleClass(String panelStyleClass) {
+		this.panelStyleClass = panelStyleClass;
+	}
+
+	public String getSubPanelStyleClass() {
+		return subPanelStyleClass;
+	}
+
+	public void setSubPanelStyleClass(String subPanelStyleClass) {
+		this.subPanelStyleClass = subPanelStyleClass;
 	}
 
 	private class MenuCache {

@@ -3,13 +3,13 @@
 <%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:panelGrid columns="${n:default(2, reportTableTag.columns)}" colspan="${reportTableTag.colspan}"
-	styleClass="${n:default('inputTable', reportTableTag.styleClass)}" style="${reportTableTag.style}"
-	columnStyleClasses="${n:default('labelColumn, propertyColumn', reportTableTag.columnStyleClasses)}" columnStyles="${reportTableTag.columnStyles}"
+<n:panelGrid colspan="${reportTableTag.colspan}" columns="${reportTableTag.columns}" flatMode="${reportTableTag.flatMode}"
+	styleClass="${reportTableTag.styleClass}" style="${reportTableTag.style}"
+	columnStyleClasses="${reportTableTag.columnStyleClasses}" columnStyles="${reportTableTag.columnStyles}"
 	rowStyleClasses="${reportTableTag.rowStyleClasses}" rowStyles="${reportTableTag.rowStyles}"
-	dynamicAttributesMap="${reportTableTag.dynamicAttributesMap}" propertyRenderAsDouble="${reportTableTag.propertyRenderAsDouble}" >
+	dynamicAttributesMap="${reportTableTag.dynamicAttributesMap}" propertyRenderAs="${reportTableTag.propertyRenderAs}" >
 
-	<t:propertyConfig mode="input" renderAs="double">
+	<t:propertyConfig mode="input" showLabel="${reportTableTag.propertyShowLabel}">
 		<n:doBody />
 	</t:propertyConfig>
 

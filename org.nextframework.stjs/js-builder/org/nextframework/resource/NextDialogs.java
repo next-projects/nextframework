@@ -9,186 +9,189 @@ import org.stjs.javascript.Global;
 import org.stjs.javascript.JSCollections;
 import org.stjs.javascript.Map;
 import org.stjs.javascript.dom.DOMEvent;
-import org.stjs.javascript.dom.Div;
 import org.stjs.javascript.dom.Element;
 import org.stjs.javascript.dom.Input;
 import org.stjs.javascript.functions.Function1;
 
 public class NextDialogs {
-	
+
 	public static final String CANCEL = "CANCEL";
 	public static final String OK = "OK";
-	
+
 	public abstract static class DialogCallback {
-		public abstract void onClose(String command, Object value);
+
+		public abstract boolean onClick(String command, Object value, Element button);
+
 	}
 
-	@SuppressWarnings("unchecked")
-	private static abstract class AbstractDialog<E extends AbstractDialog<?>> {
+	public static class MessageDialog {
 
-		protected String title;
-		protected Element body;
-		protected Map<String, String> commandsMap;
-		protected DialogCallback dialogCallback;
-		
-		public AbstractDialog(){
-			body = next.dom.newElement("div");
-			
+		private String title;
+		private Map<String, String> commandsMap;
+		private DialogCallback dialogCallback;
+
+		private Element titleDiv;
+		private Element bodyDiv;
+		private Element buttonsDiv;
+		private Popup popup;
+
+		public MessageDialog() {
+
+			titleDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.header", "separator")));
+
+			bodyDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.body", "popup_box_body")));
+
+			buttonsDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.footer", "popup_box_footer")));
+
 			commandsMap = $map(
-					"OK", "Ok",  
+					"OK", "Ok",
 					"CANCEL", "Cancelar"); //cannot use the constants .. causes bugs
-			
+
 			dialogCallback = new DialogCallback() {
-				public void onClose(String command, Object value) {
-					console.log("Command "+command);
-					console.log("Value "+value);
+
+				public boolean onClick(String command, Object value, Element button) {
+					console.log("Command " + command);
+					console.log("Value " + value);
+					return true;
 				}
+
 			};
+
 		}
-		
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public void appendToBody(Element disposableElement) {
+			this.bodyDiv.appendChild(disposableElement);
+		}
+
+		public void setCommandsMap(Map<String, String> commandsMap) {
+			this.commandsMap = commandsMap;
+		}
+
 		public void setCallback(DialogCallback dialogCallback) {
 			this.dialogCallback = dialogCallback;
 		}
-		
-		public E setCommandsMap(Map<String, String> commandsMap) {
-			this.commandsMap = commandsMap;
-			return (E)this;
-		}
-		
-		public E setTitle(String title) {
-			this.title = title;
-			return (E)this;
-		}
-		
-		public E setBody(Element body) {
-			this.body = body;
-			return (E)this;
-		}
-		
-		public abstract void show();
-		public abstract Object getValue();
-	}
-	
-	public static class MessageDialog extends AbstractDialog<MessageDialog> {
 
-		Popup popup;
-		
-		public void close(){
-			popup.close();
-		}
-		
-		@Override
 		public void show() {
+
 			popup = next.dom.getNewPopupDiv();
-			Element titleDiv = next.dom.newElement("h2", 
-					$map("innerHTML", title, "class", "separator"));
-			popup.appendChild(titleDiv);
-			popup.appendChild(body);
-			
-			if(commandsMap != null){
-				popup.appendChild(next.dom.newElement("div", 
-						$map("innerHTML", "&nbsp;", "class", "separator", "font-size", "1px;")));
-	
-				Div buttonDiv = next.dom.newElement("div");
-				buttonDiv.style.textAlign = "right";
-				
-				for(String key: commandsMap){
-					Element button = createButton(popup, key);
-					buttonDiv.appendChild(button);
-				}
-				popup.appendChild(buttonDiv);
+
+			if (title != null) {
+				titleDiv.innerHTML = title;
+				popup.appendChild(titleDiv);
 			}
 
-			next.style.centralize(popup);
-			popup.style.top = "120px";
+			popup.appendChild(bodyDiv);
+
+			if (commandsMap != null) {
+				for (String key : commandsMap) {
+					Element button = createButton(popup, key);
+					buttonsDiv.appendChild(button);
+				}
+				popup.appendChild(buttonsDiv);
+			}
+
+			updatePopup(popup);
+			centralize();
+
 		}
 
 		public Element createButton(final Popup popup, final String key) {
+
 			final MessageDialog bigThis = this;
-			Element button = next.dom.newElement("button");
+
+			final Element button = next.dom.newElement("button");
 			button.innerHTML = commandsMap.$get(key);
-			button.id = "dialog_btn_"+key;
-			button.style.margin = "4px";
+			button.id = "dialog_btn_" + key;
+			button.className = next.globalMap.get("NextDialogs.button", "button");
 			button.onclick = new Function1<DOMEvent, Boolean>() {
+
 				public Boolean $invoke(DOMEvent p1) {
-					popup.close();
-					bigThis.dialogCallback.onClose(key, bigThis.getValue());
+					boolean close = true;
+					if (bigThis.dialogCallback != null) {
+						close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
+					}
+					if (close) {
+						popup.close();
+					}
 					return true;
 				}
+
 			};
+
 			return button;
 		}
 
-		@Override
 		public Object getValue() {
 			return null;
 		}
-		
-	}
-	
-	public static class InputMessageDialog extends MessageDialog {
-		
-		protected Input input;
-		
-		@Override
-		public Object getValue() {
-			if(input == null){
-				Global.alert("The input has not been set for dialog");
+
+		public void updatePopup(Popup popup) {
+			
+		}
+
+		public void centralize() {
+			if (popup != null) {
+				next.style.centralize(popup);
 			}
-			return input.value;
 		}
-	}
-	
-	public static class InputNumberMessageDialog extends InputMessageDialog {
-		@Override
-		public Object getValue() {
-			String stringValue = (String) super.getValue();
-			stringValue = stringValue.replace(".", "").replace(",", ".");
-			return Global.parseFloat(stringValue);
+
+		public void close() {
+			if (popup != null) {
+				popup.close();
+			}
 		}
+
 	}
-	
-	public InputNumberMessageDialog showInputNumberDialog(String title, String mensagem){
-		InputNumberMessageDialog d = new InputNumberMessageDialog();
-		d.setTitle(title);
-		Div body = next.dom.newElement("div");
-		Div messageDiv = next.dom.newElement("div", 
-									JSCollections.$map("innerHTML", mensagem));
-		Div inputDiv = next.dom.newElement("div");
-		
+
+	public MessageDialog showInputNumberDialog(String title, String mensagem) {
+
 		final Input input = next.dom.newInput("text");
-		input.style.marginTop = "4px";
-		input.style.marginBottom = "4px";
-		d.input = input;
-		
-		//onKeyDown="return mascara_float(this,event)"
+		input.className = next.globalMap.get("NextDialogs.inputText", null);
 		input.onkeydown = new Function1<DOMEvent, Boolean>() {
+
 			public Boolean $invoke(DOMEvent event) {
-				return Global.eval("mascara_float(input, event)");
+				return Global.eval("mascara_float(this, event)");
 			}
+
 		};
-		
-		body.appendChild(messageDiv);
-		body.appendChild(inputDiv);
-		inputDiv.appendChild(input);
-		d.setBody(body);
-		d.show();
-		
+
+		MessageDialog dialog = new MessageDialog() {
+
+			@Override
+			public Object getValue() {
+				if (input.value != null && input.value != "") {
+					String stringValue = (String) input.value;
+					stringValue = stringValue.replace(".", "").replace(",", ".");
+					return Global.parseFloat(stringValue);
+				}
+				return null;
+			}
+
+		};
+
+		dialog.setTitle(title);
+
+		dialog.appendToBody(next.dom.newElement("div", JSCollections.$map("innerHTML", mensagem)));
+		dialog.appendToBody(input);
+
+		dialog.show();
+
 		input.focus();
-		
-		return d;
+
+		return dialog;
 	}
-	
-	public void showMessageDialog(String message){
-		
-	}
-	
-	public MessageDialog showDialog(String title, Element el){
+
+	public MessageDialog showDialog(String title, Element disposableBody) {
 		MessageDialog dialog = new MessageDialog();
 		dialog.setTitle(title);
-		dialog.commandsMap = null;
-		dialog.body.appendChild(el);
+		dialog.appendToBody(disposableBody);
+		dialog.setCommandsMap(null);
 		dialog.show();
 		return dialog;
 	}
+
 }

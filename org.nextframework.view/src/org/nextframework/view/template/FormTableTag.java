@@ -23,61 +23,48 @@
  */
 package org.nextframework.view.template;
 
-import org.nextframework.controller.crud.CrudContext;
+import org.nextframework.util.Util;
 
 /**
- * @author rogelgarcia
- * @since 03/02/2006
- * @version 1.1
+ * @author rogelgarcia e marcusabreu
  */
 public class FormTableTag extends TemplateTag {
 
-	protected String title;
 	protected Integer colspan;
-
-	protected int columns = 2;
+	protected Integer columns;
+	protected Boolean flatMode;
 
 	protected String styleClass;
 	protected String style;
-	protected String columnStyleClasses;
-	protected String columnStyles;
 	protected String rowStyleClasses;
 	protected String rowStyles;
+	protected String columnStyleClasses;
+	protected String columnStyles;
 
-	protected Boolean propertyRenderAsDouble = true;
+	protected String propertyRenderAs;
 	protected Boolean propertyShowLabel;
 
 	@Override
 	protected void doComponent() throws Exception {
 
-		CrudContext crudContext = CrudContext.getCurrentInstance();
+		if (flatMode == null) {
+			flatMode = getViewConfig().isDefaultFlatMode();
+		}
 
-		if (title == null && crudContext != null && crudContext.hasCustomDisplayName()) {
-			title = crudContext.getDisplayName();
+		if (columns == null) {
+			columns = getViewConfig().getDefaultColumns();
 		}
-		if (title == null) {
-			title = getDefaultViewLabel("title", null);
-		}
-		if (title == null && crudContext != null) {
-			title = crudContext.getDisplayName();
+
+		if (propertyRenderAs == null) {
+			propertyRenderAs = getViewConfig().getDefaultPropertyRenderAs();
 		}
 
 		if (propertyShowLabel == null) {
-			propertyShowLabel = propertyRenderAsDouble == null || !propertyRenderAsDouble;
+			propertyShowLabel = PropertyTag.SINGLE.equalsIgnoreCase(propertyRenderAs);
 		}
 
-		pushAttribute("TtabelaEntrada", this); //Legacy
 		includeJspTemplate();
-		popAttribute("TtabelaEntrada");
 
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public Integer getColspan() {
@@ -88,12 +75,20 @@ public class FormTableTag extends TemplateTag {
 		this.colspan = colspan;
 	}
 
-	public int getColumns() {
+	public Integer getColumns() {
 		return columns;
 	}
 
-	public void setColumns(int columns) {
+	public void setColumns(Integer columns) {
 		this.columns = columns;
+	}
+
+	public Boolean getFlatMode() {
+		return flatMode;
+	}
+
+	public void setFlatMode(Boolean flatMode) {
+		this.flatMode = flatMode;
 	}
 
 	public String getStyleClass() {
@@ -112,22 +107,6 @@ public class FormTableTag extends TemplateTag {
 		this.style = style;
 	}
 
-	public String getColumnStyleClasses() {
-		return columnStyleClasses;
-	}
-
-	public void setColumnStyleClasses(String columnStyleClasses) {
-		this.columnStyleClasses = columnStyleClasses;
-	}
-
-	public String getColumnStyles() {
-		return columnStyles;
-	}
-
-	public void setColumnStyles(String columnStyles) {
-		this.columnStyles = columnStyles;
-	}
-
 	public String getRowStyleClasses() {
 		return rowStyleClasses;
 	}
@@ -144,12 +123,42 @@ public class FormTableTag extends TemplateTag {
 		this.rowStyles = rowStyles;
 	}
 
-	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
+	public String getColumnStyleClasses() {
+		return columnStyleClasses;
 	}
 
+	public void setColumnStyleClasses(String columnStyleClasses) {
+		this.columnStyleClasses = columnStyleClasses;
+	}
+
+	public String getColumnStyles() {
+		return columnStyles;
+	}
+
+	public void setColumnStyles(String columnStyles) {
+		this.columnStyles = columnStyles;
+	}
+
+	public String getPropertyRenderAs() {
+		return propertyRenderAs;
+	}
+
+	public void setPropertyRenderAs(String propertyRenderAs) {
+		this.propertyRenderAs = propertyRenderAs;
+	}
+
+	@Deprecated
+	public Boolean getPropertyRenderAsDouble() {
+		return PropertyTag.DOUBLE.equalsIgnoreCase(propertyRenderAs);
+	}
+
+	@Deprecated
 	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
+		if (Util.booleans.isTrue(propertyRenderAsDouble)) {
+			this.propertyRenderAs = PropertyTag.DOUBLE;
+		} else {
+			this.propertyRenderAs = PropertyTag.SINGLE;
+		}
 	}
 
 	public Boolean getPropertyShowLabel() {

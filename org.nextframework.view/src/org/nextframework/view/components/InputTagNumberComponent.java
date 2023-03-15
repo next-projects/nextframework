@@ -6,14 +6,12 @@ import javax.servlet.jsp.JspException;
 
 import org.nextframework.util.Util;
 
-
 public class InputTagNumberComponent extends InputTagComponent {
 
-	
 	@Override
 	public void validateTag() {
 	}
-	
+
 	@Override
 	public void prepare() {
 		super.prepare();
@@ -22,18 +20,14 @@ public class InputTagNumberComponent extends InputTagComponent {
 
 	protected void alignToRight() {
 		Object style = inputTag.getDAAtribute("style", false);
-		if (style != null) {
-			style = "text-align: right; " + style;
-		} else {
-			style = "text-align: right; ";
-		}
+		style = "text-align: right;" + (style != null ? " " + style : "");
 		try {
 			inputTag.setDynamicAttribute(null, "style", style);
 		} catch (JspException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	@Override
 	public String getValueAsString() {
 		if (Util.strings.isNotEmpty(inputTag.getPattern()) && inputTag.getValue() != null) {
@@ -42,7 +36,7 @@ public class InputTagNumberComponent extends InputTagComponent {
 			if (formatedValue.startsWith(",")) {
 				formatedValue = "0" + formatedValue;
 			} else if (formatedValue.startsWith("-,")) {
-				formatedValue = "-0" + formatedValue.substring(1);										
+				formatedValue = "-0" + formatedValue.substring(1);
 			}
 			return formatedValue;
 		}

@@ -1,0 +1,2 @@
+org.nextframework.report.generator.datasource.HibernateDataSourceProvider=100
+org.nextframework.report.generator.renderer.html.builder.config.GeneratorHtmlReportViewConfigurator=50

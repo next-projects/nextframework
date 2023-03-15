@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="next"%>
-<%@ taglib prefix="t" uri="template"%>
+<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <form method="${tag.method}" enctype="${tag.enctype}" name="${tag.name}" action="${tag.url}" ${tag.dynamicAttributesToString} onsubmit="return false;" >
 	<input type="hidden" name="${tag.actionParameter}" value="${tag.action}"/>

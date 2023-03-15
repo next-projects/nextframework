@@ -5,24 +5,43 @@ import org.nextframework.view.ajax.ProgressBarCallback;
 import org.nextframework.view.progress.ProgressMonitor;
 
 public class ProgressBarTag extends BaseTag {
-	
-	String onProgressBarCreation = "___defaultProgressBarEvent(element)";
-	ProgressMonitor progressMonitor;
-	String serverId;
-	
-	String onError;
-	String onComplete;
-	
+
+	private ProgressMonitor progressMonitor;
+	private String onError;
+	private String onComplete;
+	private String serverId;
+
+	@Override
+	protected void doComponent() throws Exception {
+
+		if (progressMonitor == null) {
+			throw new NextException("O progressMonitor de um progressBar não pode ser nulo");
+		}
+
+		if (getId() == null) {
+			setId(generateUniqueId());
+		}
+
+		this.serverId = ProgressBarCallback.registerProgressMonitor(progressMonitor);
+
+		includeJspTemplate();
+
+	}
+
+	public void setProgressMonitor(ProgressMonitor progressMonitor) {
+		this.progressMonitor = progressMonitor;
+	}
+
 	public String getOnError() {
 		return onError;
 	}
 
-	public String getOnComplete() {
-		return onComplete;
-	}
-
 	public void setOnError(String onError) {
 		this.onError = onError;
+	}
+
+	public String getOnComplete() {
+		return onComplete;
 	}
 
 	public void setOnComplete(String onComplete) {
@@ -32,24 +51,5 @@ public class ProgressBarTag extends BaseTag {
 	public String getServerId() {
 		return serverId;
 	}
-	
-	public void setProgressMonitor(ProgressMonitor progressMonitor) {
-		this.progressMonitor = progressMonitor;
-	}
-	
-	public String getOnProgressBarCreation() {
-		return onProgressBarCreation;
-	}
 
-	@Override
-	protected void doComponent() throws Exception {
-		if(progressMonitor == null){
-			throw new NextException("O progressMonitor de um progressBar não pode ser nulo");
-		}
-		if(getId() == null) {
-			setId(generateUniqueId());
-		}
-		this.serverId = ProgressBarCallback.registerProgressMonitor(progressMonitor);
-		includeJspTemplate();
-	}
 }

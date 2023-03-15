@@ -1,28 +1,27 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="combo" uri="combo"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
 <n:panel title="${detailTag.detailDysplayName}" colspan="${detailTag.colspan}">
-	<div class="detailBlock">
+	<div class="${detailTag.panelStyleClass}">
 		<n:dataGrid id="${detailTag.tableId}" itens="${detailTag.itens}" var="${detailTag.detailVar}" indexProperty="${detailTag.indexProperty}" cellspacing="0" dynaLine="true"
 				headerStyle="${detailTag.dynamicAttributesMap['headerstyle']}"
 				bodyStyles="${detailTag.dynamicAttributesMap['bodystyles']}"
-				style="${detailTag.dynamicAttributesMap['style']}" >
+				style="${detailTag.dynamicAttributesMap['style']}" nocolumnresize="${detailTag.dynamicAttributesMap['nocolumnresize']}" >
 			<n:bean name="${detailTag.detailVar}" valueType="${detailTag.detailClass}" propertyPrefix="${detailTag.fullNestedName}" propertyIndex="${index}">
 				<n:getContent tagName="actionPanelTag" vars="acoes">
-					<t:propertyConfig renderAs="column">
+					<t:propertyConfig mode="input" renderAs="column">
 						<n:doBody />
 					</t:propertyConfig>
 					<c:if test="${(!empty acoes || detailTag.showDeleteButton) && detailTag.showActionColumn && !view}">
 						<n:column header="${detailTag.actionColumnName}" style="width: 1%; white-space: nowrap; padding-right: 3px;">
 							${acoes}
-							<c:if test="${detailTag.showDeleteButton}">
+							<c:if test="${detailTag.showDeleteButton && !view}">
 								<c:if test="${!propertyConfigDisabled || dataGridDynaline}">
-									<button type="button" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
+									<button type="button" class="${detailTag.actionButtonStyleClass}" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
 								</c:if>
 								<c:if test="${propertyConfigDisabled && !dataGridDynaline}">
-									<button type="button" disabled="disabled" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
+									<button type="button" class="${detailTag.actionButtonStyleClass}" disabled="disabled" onclick="_detail_deleteLine_${detailTag.tableId}(extrairIndiceDeNome(this.id)-1)" id="button.excluir[table_id=${detailTag.tableId}, indice=${rowIndex}]">${detailTag.deleteLinkLabel}</button>
 								</c:if>
 							</c:if>
 						</n:column>
@@ -32,10 +31,10 @@
 		</n:dataGrid>
 		<c:if test="${detailTag.showNewLineButton && !view}">
 			<c:if test="${!propertyConfigDisabled}">
-				<button type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="${detailTag.newLineButtonStyleClass}" type="button" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 			<c:if test="${propertyConfigDisabled}">
-				<button type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
+				<button class="${detailTag.newLineButtonStyleClass}" type="button" disabled="disabled" onclick="_detail_newLine_${detailTag.tableId}()">${detailTag.newLineButtonLabel}</button>
 			</c:if>
 		</c:if>
 	</div>

@@ -23,12 +23,14 @@
  */
 package org.nextframework.view;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.jsp.JspException;
+
 import org.nextframework.util.Util;
 import org.nextframework.view.combo.ComboTag;
+import org.nextframework.view.template.PropertyConfigTag;
 
 /**
  * @author rogelgarcia
@@ -36,18 +38,18 @@ import org.nextframework.view.combo.ComboTag;
  * @version 1.1
  */
 public class GroupTag extends ComboTag {
-	
-	protected Integer colspan;
-	
-	protected String legend;
-	
-	protected Boolean showBorder = true;
-	
-	protected Boolean useParentPanelGridProperties = true;
-	
-	// panelgridproperties
-	
-	protected int columns = 1;
+
+	protected Boolean flatMode;
+
+	protected Integer columns;
+
+	protected String fieldsetStyle;
+
+	protected String fieldsetStyleClass;
+
+	protected String legendStyle;
+
+	protected String legendStyleClass;
 
 	protected String style;
 
@@ -56,18 +58,29 @@ public class GroupTag extends ComboTag {
 	protected String rowStyleClasses;
 
 	protected String rowStyles;
-	
+
 	protected String columnStyleClasses;
 
 	protected String columnStyles;
 
-	
+	protected Integer colspan;
+
+	protected String propertyRenderAs;
+
+	protected String legend;
+
+	protected Boolean useParentPanelGridProperties = true;
+
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void doComponent() throws Exception {
-		
+
 		if (Util.booleans.isTrue(useParentPanelGridProperties)) {
 			PanelGridTag parentPanel = findParent(PanelGridTag.class);
 			if (parentPanel != null) {
+				if (flatMode == null) {
+					flatMode = parentPanel.getFlatMode();
+				}
 				if (Util.strings.isEmpty(style)) {
 					style = parentPanel.getStyle();
 				}
@@ -88,152 +101,212 @@ public class GroupTag extends ComboTag {
 				}
 			}
 		}
-		
+
+		if (flatMode == null) {
+			flatMode = false;
+		}
+
+		if (columns == null || columns == 0/*forçado*/) {
+			columns = 1;
+		}
+		if (columns <= 0) {
+			throw new IllegalArgumentException("O atributo columns da tag panelGrid deve ser positivo");
+		}
+
+		if (propertyRenderAs == null) {
+			BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class);
+			if (findFirst instanceof PropertyConfigTag) {
+				this.propertyRenderAs = ((PropertyConfigTag) findFirst).getRenderAs();
+			} else if (findFirst instanceof PanelGridTag) {
+				this.propertyRenderAs = ((PanelGridTag) findFirst).getPropertyRenderAs();
+			}
+		}
+
+		//Panel
+
 		PanelTag panelTag = new PanelTag();
-		PanelGridTag panelGridTag = new PanelGridTag();
-		
-		HashMap<String, Object> dynamicAttributesMapPanelGrid = new HashMap<String, Object>(getDynamicAttributesMap());
-		
-		Set<String> keySet = new HashSet<String>(getDynamicAttributesMap().keySet());
-		for (String string : keySet) {
-			if(string.startsWith("panel")){
-				panelTag.setDynamicAttribute(null, string.substring("panel".length()), getDynamicAttributesMap().get(string));
-				getDynamicAttributesMap().remove(string);
-				dynamicAttributesMapPanelGrid.remove(string);
-			}
-		}
-		for (String string : keySet) {
-			if(string.startsWith("panelgrid")){
-				getDynamicAttributesMap().remove(string);
-			}
-		}
-		
-		panelGridTag.setDynamicAttributesMap(dynamicAttributesMapPanelGrid);
-		getDynamicAttributesMap().remove("id");//nao duplicar o id
-		panelGridTag.setColumns(getColumns());
-		panelGridTag.setStyle(getStyle());
-		panelGridTag.setStyleClass(getStyleClass());
-		panelGridTag.setRowStyleClasses(getRowStyleClasses());
-		panelGridTag.setRowStyles(getRowStyles());
-		panelGridTag.setColumnStyleClasses(getColumnStyleClasses());
-		panelGridTag.setColumnStyles(getColumnStyles());
-		panelGridTag.setUseParentPanelGridProperties(false);
-		
-		
-		TextTag text = null; 
-			
-		if(colspan != null){
+		setDynamicAttributes("panel", panelTag);
+
+		if (colspan != null) {
 			panelTag.setDynamicAttribute(null, "colspan", colspan);
 		}
-		
-		
+
 		TagHolder panelHolder = new TagHolder(panelTag);
-		TagHolder panelGridHolder = new TagHolder(panelGridTag);
-		TagHolder textHolder = null;
-		if(showBorder){
-			if(legend != null){
-				for (String string : keySet) {
-					if(string.startsWith("legend")){
-						Object value = getDynamicAttributesMap().remove(string);
-						getDynamicAttributesMap().put(string.substring("legend".length()), value);
-					}
-				}
-				text = new TextTag("<fieldset "+getDynamicAttributesToString()+"><legend>"+legend+"</legend>","</fieldset>");
-			} else {
-				text = new TextTag("<fieldset>","</fieldset>");
-			}
-			textHolder = new TagHolder(text);
+
+		//Fieldset and Legend
+
+		SimpleTag fieldsetTag = new SimpleTag("fieldset", null);
+		setDynamicAttributes("fieldset", fieldsetTag);
+		fieldsetTag.setDynamicAttribute(null, "id", id);
+		fieldsetTag.setDynamicAttribute(null, "style", fieldsetStyle);
+		fieldsetTag.setDynamicAttribute(null, "class", fieldsetStyleClass);
+
+		TagHolder fieldsetHolder = new TagHolder(fieldsetTag);
+		panelHolder.addChild(fieldsetHolder);
+
+		if (legend != null) {
+
+			SimpleTag legendTag = new SimpleTag("legend", legend);
+			setDynamicAttributes("legend", legendTag);
+			legendTag.setDynamicAttribute(null, "style", legendStyle);
+			legendTag.setDynamicAttribute(null, "class", legendStyleClass);
+
+			TagHolder legendHolder = new TagHolder(legendTag);
+			fieldsetHolder.addChild(legendHolder);
+
 		}
-		if(textHolder != null){
-			panelHolder.addChild(textHolder);
-			textHolder.addChild(panelGridHolder);
-		} else {
-			panelHolder.addChild(panelGridHolder);	
-		}
-		
+
+		//Panelgrid
+
+		PanelGridTag panelGridTag = new PanelGridTag();
+		setDynamicAttributes("panelGrid", panelGridTag);
+		panelGridTag.setFlatMode(flatMode);
+		panelGridTag.setColumns(columns);
+		panelGridTag.setStyle(style);
+		panelGridTag.setStyleClass(styleClass);
+		panelGridTag.setRowStyleClasses(rowStyleClasses);
+		panelGridTag.setRowStyles(rowStyles);
+		panelGridTag.setColumnStyleClasses(columnStyleClasses);
+		panelGridTag.setColumnStyles(columnStyles);
+		panelGridTag.setPropertyRenderAs(propertyRenderAs);
+		panelGridTag.setUseParentPanelGridProperties(false);
 		panelGridTag.setJspBody(getJspBody());
-		
+
+		TagHolder panelGridHolder = new TagHolder(panelGridTag);
+		fieldsetHolder.addChild(panelGridHolder);
+
 		invoke(panelHolder);
+
 	}
 
-	public Integer getColspan() {
-		return colspan;
+	private void setDynamicAttributes(String prefix, BaseTag tag) throws JspException {
+		Set<String> keySet = new HashSet<String>(getDynamicAttributesMap().keySet());
+		for (String key : keySet) {
+			if (key.startsWith(prefix)) {
+				tag.setDynamicAttribute(null, key.substring(prefix.length()), getDynamicAttributesMap().get(key));
+				getDynamicAttributesMap().remove(key);
+			}
+		}
 	}
 
-	public int getColumns() {
+	public Boolean getFlatMode() {
+		return flatMode;
+	}
+
+	public void setFlatMode(Boolean flatMode) {
+		this.flatMode = flatMode;
+	}
+
+	public Integer getColumns() {
 		return columns;
 	}
 
-	public String getColumnStyleClasses() {
-		return columnStyleClasses;
+	public void setColumns(Integer columns) {
+		this.columns = columns;
 	}
 
-	public String getColumnStyles() {
-		return columnStyles;
+	public String getFieldsetStyle() {
+		return fieldsetStyle;
 	}
 
-	public String getLegend() {
-		return legend;
+	public void setFieldsetStyle(String fieldsetStyle) {
+		this.fieldsetStyle = fieldsetStyle;
 	}
 
-	public String getRowStyleClasses() {
-		return rowStyleClasses;
+	public String getFieldsetStyleClass() {
+		return fieldsetStyleClass;
 	}
 
-	public String getRowStyles() {
-		return rowStyles;
+	public void setFieldsetStyleClass(String fieldsetStyleClass) {
+		this.fieldsetStyleClass = fieldsetStyleClass;
 	}
 
-	public Boolean getShowBorder() {
-		return showBorder;
+	public String getLegendStyle() {
+		return legendStyle;
 	}
 
-	public String getStyle() {
-		return style;
+	public void setLegendStyle(String legendStyle) {
+		this.legendStyle = legendStyle;
+	}
+
+	public String getLegendStyleClass() {
+		return legendStyleClass;
+	}
+
+	public void setLegendStyleClass(String legendStyleClass) {
+		this.legendStyleClass = legendStyleClass;
 	}
 
 	public String getStyleClass() {
 		return styleClass;
 	}
 
-	public void setColspan(Integer colspan) {
-		this.colspan = colspan;
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
 	}
 
-	public void setColumns(int columns) {
-		this.columns = columns;
-	}
-
-	public void setColumnStyleClasses(String columnStyleClasses) {
-		this.columnStyleClasses = columnStyleClasses;
-	}
-
-	public void setColumnStyles(String columnStyles) {
-		this.columnStyles = columnStyles;
-	}
-
-	public void setLegend(String legend) {
-		this.legend = legend;
-	}
-
-	public void setRowStyleClasses(String rowStyleClasses) {
-		this.rowStyleClasses = rowStyleClasses;
-	}
-
-	public void setRowStyles(String rowStyles) {
-		this.rowStyles = rowStyles;
-	}
-
-	public void setShowBorder(Boolean showBorder) {
-		this.showBorder = showBorder;
+	public String getStyle() {
+		return style;
 	}
 
 	public void setStyle(String style) {
 		this.style = style;
 	}
 
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
+	public String getRowStyleClasses() {
+		return rowStyleClasses;
+	}
+
+	public void setRowStyleClasses(String rowStyleClasses) {
+		this.rowStyleClasses = rowStyleClasses;
+	}
+
+	public String getRowStyles() {
+		return rowStyles;
+	}
+
+	public void setRowStyles(String rowStyles) {
+		this.rowStyles = rowStyles;
+	}
+
+	public String getColumnStyleClasses() {
+		return columnStyleClasses;
+	}
+
+	public void setColumnStyleClasses(String columnStyleClasses) {
+		this.columnStyleClasses = columnStyleClasses;
+	}
+
+	public String getColumnStyles() {
+		return columnStyles;
+	}
+
+	public void setColumnStyles(String columnStyles) {
+		this.columnStyles = columnStyles;
+	}
+
+	public Integer getColspan() {
+		return colspan;
+	}
+
+	public void setColspan(Integer colspan) {
+		this.colspan = colspan;
+	}
+
+	public String getPropertyRenderAs() {
+		return propertyRenderAs;
+	}
+
+	public void setPropertyRenderAs(String propertyRenderAs) {
+		this.propertyRenderAs = propertyRenderAs;
+	}
+
+	public String getLegend() {
+		return legend;
+	}
+
+	public void setLegend(String legend) {
+		this.legend = legend;
 	}
 
 	public Boolean getUseParentPanelGridProperties() {
@@ -243,23 +316,28 @@ public class GroupTag extends ComboTag {
 	public void setUseParentPanelGridProperties(Boolean useParentPanelGridProperties) {
 		this.useParentPanelGridProperties = useParentPanelGridProperties;
 	}
-	
+
 }
 
-class TextTag extends BaseTag {
-	
-	protected String parte1;
-	protected String parte2;
-	
-	public TextTag(String parte1, String parte2){
-		this.parte1 = parte1;
-		this.parte2 = parte2;
+class SimpleTag extends BaseTag {
+
+	protected String tag;
+	protected String content;
+
+	public SimpleTag(String tag, String content) {
+		this.tag = tag;
+		this.content = content;
 	}
-	
+
 	@Override
 	protected void doComponent() throws Exception {
-		getOut().println(parte1);
-		doBody();
-		getOut().println(parte2);
+		getOut().println("<" + tag + " " + getDynamicAttributesToString() + ">");
+		if (this.content != null) {
+			getOut().println(this.content);
+		} else {
+			doBody();
+		}
+		getOut().println("</" + tag + ">");
 	}
+
 }

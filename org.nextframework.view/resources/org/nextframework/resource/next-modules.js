@@ -261,11 +261,11 @@ NextUtil.prototype.fromSeparatorToCamel = function(name, separator){
 }
 
 NextUtil.prototype.getYearFromDate = function(date){
-    if(date.getFullYear){
-    	return date.getFullYear();
-    } else {
-    	return date.getYear() + 1900; 
-    }
+	if(date.getFullYear){
+		return date.getFullYear();
+	} else {
+		return date.getYear() + 1900; 
+	}
 }
 
 /**
@@ -281,7 +281,32 @@ NextUtil.prototype.toArray = function(el){
 	return r;
 }
 
+/**************************************************************************************  GLOBAL MAP  **/
+
+NextGlobalMap = function(){
+	this.map = {};
+};
+
+NextGlobalMap.prototype.put = function(key, value){
+	if (key != null) {
+		this.map[key] = value;
+	}
+}
+
+NextGlobalMap.prototype.get = function(key, defaultValue){
+	if (key != null && key != 'null') {
+		var value = this.map[key];
+		if (value != null) {
+			return value;
+		}
+	}
+	return defaultValue;
+}
+
+new NextGlobalMap();
+
 /**************************************************************************************  NUMBERS  **/
+
 NextNumbers = function(){};
 
 /**
@@ -301,6 +326,7 @@ NextNumbers.prototype.formataDecimal = function(n, c, d, t){
 }
 
 /**************************************************************************************  LOG  **/
+
 NextLog = function(){};
 NextLog.enabled = false;
 
@@ -350,6 +376,7 @@ NextLog.prototype.getLogDiv = function(){
 new NextLog();
 
 /**************************************************************************************  EVENTS  **/
+
 NextEvents = function(){
 	this.loaded = false;
 };
@@ -411,9 +438,9 @@ NextEvents.prototype.attachEvent = function(el, event, func){
 		var newFunc = function(e){
 			var ret = func.call(el, e);
 			if (ret === false) {
-	            window.event.returnValue = false;
-	            window.event.cancelBubble = true;
-	        }			
+				window.event.returnValue = false;
+				window.event.cancelBubble = true;
+			}			
 		};
 		el.attachEvent('on'+event, newFunc);
 		return newFunc;
@@ -463,6 +490,7 @@ NextEvents.prototype.cancelEvent = function(event){
 new NextEvents();
 
 /**************************************************************************************  HTTP  **/
+
 NextHttp = function(){};
 
 /**
@@ -518,12 +546,15 @@ NextHttp.prototype.getApplicationContext = function(){
 }
 
 new NextHttp();
+
 /**************************************************************************************  DOM  **/
+
 NextDom = function(){};
 NextDom.sequenceGenerator = 1;
 NextDom.prototype.id = function(id){
 	return document.getElementById(id);
 }
+
 /**
  * Gera um id único
  * @return
@@ -531,6 +562,7 @@ NextDom.prototype.id = function(id){
 NextDom.prototype.generateUniqueId = function(){
 	return "__uid"+ (NextDom.sequenceGenerator++);
 }
+
 /**
  * Cria um elemento DOM com os atributos. Podem ser informados eventos e estilo.<BR>
  * Exemplo:<BR> 
@@ -559,6 +591,7 @@ NextDom.prototype.newElement = function(tag, options){
 	this.attachAttributes(element, options);
 	return element;
 }
+
 NextDom.prototype.newSpanElement = function(text, options){
 	var div = this.newElement("span", options);
 	if(text){
@@ -566,6 +599,7 @@ NextDom.prototype.newSpanElement = function(text, options){
 	}
 	return div;
 }
+
 NextDom.prototype.newDivElement = function(text, options){
 	var div = this.newElement("div", options);
 	if(text){
@@ -573,6 +607,7 @@ NextDom.prototype.newDivElement = function(text, options){
 	}
 	return div;
 }
+
 /**
  * Cria um novo input
  * @param type
@@ -711,6 +746,7 @@ NextDom.prototype.setSelectedValueWithId = function(el, id, dispatchEvent){
 	}
 	return false;
 }
+
 NextDom.prototype.setSelectedValue = function(el, value, dispatchEvent){
 	el = next.dom.toElement(el);
 	var ops = el.options;
@@ -746,6 +782,7 @@ NextDom.prototype.getSelectedValues = function(el){
 	el = next.dom.toElement(el);
 	return next.dom.getSelectedValue(el);
 }
+
 /**
  * Retorna o valor selecionado de um combobox.<BR>
  * Exemplo: next.dom.getSelectedValue(combo);
@@ -797,6 +834,7 @@ NextDom.prototype.getSelectedText = function(el){
 NextDom.prototype.newCheckbox = function(name, label, options){
 	return this.newInput("checkbox", name, label, options);
 }
+
 /**
  * Se o elemento passado como parâmetro for um elemento, retorna o próprio elemento.<BR>
  * Se for uma string, será pesquisada na página um elemento com ID ou NAME igual a string.<BR>
@@ -854,6 +892,7 @@ NextDom.prototype.getParentTagById = function(el, parentTagId){
 	}
 	return el;
 }
+
 NextDom.prototype.getParentTagByClass = function(el, className){
 	el = el.parentNode;
 	while(next.util.isDefined(el) && !next.style.hasClass(el, className)) {
@@ -903,6 +942,7 @@ NextDom.prototype.getInnerElementById = function(parent, innerId, innerTagName){
 	}
 	return null;
 }
+
 NextDom.prototype.getInnerElementByClass = function(parent, className, innerTagName){
 	if(parent && parent.childNodes){
 		for(var i = 0; i < parent.childNodes.length; i++){
@@ -924,6 +964,7 @@ NextDom.prototype.getInnerElementByClass = function(parent, className, innerTagN
 	}
 	return null;
 }
+
 NextDom.prototype.getInnerElementByName = function(parent, innerName, innerTagName){
 	if(parent && parent.childNodes){
 		for(var i = 0; i < parent.childNodes.length; i++){
@@ -951,28 +992,29 @@ NextDom.prototype.getForm = function(name, elements){
 }
 
 NextDom.zIndexCount = 10000;
+NextDom.prototype.getNextZIndex = function(){
+	return NextDom.zIndexCount++;
+}
 
 /**
  * Creates and return a new div popup, the screen will be blocked.
  * Call the div's close() method on finish.
  */
 NextDom.prototype.getNewPopupDiv = function (){
-	next.effects.blockScreen();
+	var blockScreenId = next.effects.blockScreen();
 	var popupdiv = next.dom.newElement('DIV',
 			{
-				className: 'select_many_popup_box popup_box',
+				className: next.globalMap.get('PopupDiv.box', 'popup_box'),
 				style : {
-					zIndex: NextDom.zIndexCount++,
-					position: 'absolute',
-					backgroundColor: 'white'
+					zIndex: next.dom.getNextZIndex(),
+					position: 'absolute'
 				}
 			}
 		);
 	next.dom.insertFirstChild(document.body, popupdiv);
-	
 	popupdiv.close = function(){
 		popupdiv.parentNode.removeChild(popupdiv);
-		next.effects.unblockScreen();
+		next.effects.unblockScreen(blockScreenId);
 	}
 	return popupdiv;
 }
@@ -1009,6 +1051,7 @@ NextDomForm.prototype.getElements = function(){
 	
 	return this.elements;
 }
+
 /**
  * Retorna um novo formulário com apenas os elementos determinados.
  * <BR>
@@ -1172,7 +1215,7 @@ NextStyle = function(){}
  * @return
  */
 NextStyle.prototype.hasClass = function(ele, cls) {
-	if(ele.className){
+	if(ele.className && cls){
 		return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
 	} else {
 		return false;
@@ -1185,7 +1228,10 @@ NextStyle.prototype.hasClass = function(ele, cls) {
  * @return
  */
 NextStyle.prototype.addClass = function(ele, cls) {
-    if (!this.hasClass(ele, cls)) ele.className += " " + cls;
+	if (!this.hasClass(ele, cls) && cls != null && cls.length > 0){
+		ele.className += " " + cls;
+		ele.className = ele.className.trim();
+	}
 }
 /**
  * Remove uma classe CSS do elemento
@@ -1194,10 +1240,11 @@ NextStyle.prototype.addClass = function(ele, cls) {
  * @return
  */
 NextStyle.prototype.removeClass = function(ele, cls) {
-    if (this.hasClass(ele, cls)) {
-        var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
-        ele.className = ele.className.replace(reg, ' ');
-    }
+	if (this.hasClass(ele, cls)) {
+		var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+		ele.className = ele.className.replace(reg, ' ');
+		ele.className = ele.className.trim();
+	}
 }
 /**
  * Transforma um valor em pixels em um inteiro (faz as conversões necessárias)
@@ -1241,14 +1288,14 @@ NextStyle.prototype.getStylePropertyGeneric = function(obj, IEStyleProp, CSSStyl
 }
 
 NextStyle.prototype.getOffset = function ( el ) {
-    var _x = 0;
-    var _y = 0;
-    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-        _x += el.offsetLeft - el.scrollLeft;
-        _y += el.offsetTop - el.scrollTop;
-        el = el.offsetParent;
-    }
-    return { top: _y, left: _x };
+	var _x = 0;
+	var _y = 0;
+	while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+		_x += el.offsetLeft - el.scrollLeft;
+		_y += el.offsetTop - el.scrollTop;
+		el = el.offsetParent;
+	}
+	return { top: _y, left: _x };
 }
 
 NextStyle.prototype.getTop = function ( el ) {
@@ -1389,10 +1436,10 @@ NextStyle.prototype.setShadow = function(el, shadow){
 	el.style.boxShadow = shadow;
 }
 
-//	filter: alpha(opacity=1); /* internet explorer */
-//	-khtml-opacity: 0.01;      /* khtml, old safari */
-//	-moz-opacity: 0.01;       /* mozilla, netscape */
-//	opacity: 0.01;           /* fx, safari, opera */
+//	filter: alpha(opacity=1);	/* internet explorer */
+//	-khtml-opacity: 0.01;		/* khtml, old safari */
+//	-moz-opacity: 0.01;	 		/* mozilla, netscape */
+//	opacity: 0.01;				/* fx, safari, opera */
 NextStyle.prototype.setOpacity = function(el, opacity){
 	el.style.filter = "alpha(opacity="+opacity+")";
 	if(opacity < 100){
@@ -1408,72 +1455,39 @@ NextStyle.prototype.setOpacity = function(el, opacity){
 
 NextStyle.prototype.centralizeHorizontal = function(element){
 	var width = next.style.getFullWidth(element);
-	
 	var windowWidth = next.style.getWindowSize()[0];
-	
 	var left = (windowWidth /2) - (width/2);
 	element.style.left = left + 'px';
 }
 
 NextStyle.prototype.centralizeVerticalMiddleLine = function(element){
 	var height = next.style.getFullHeight(element);
-	
 	var windowHeight = next.style.getWindowSize()[1];
-	
 	var top = (windowHeight /2) - (height);
 	element.style.top = top + 'px';
 }
 
 NextStyle.prototype.centralizeVertical = function(element){
 	var height = next.style.getFullHeight(element);
-	
 	var windowHeight = next.style.getWindowSize()[1];
-	
 	var top = (windowHeight /2) - (height/2);
 	element.style.top = top + 'px';
 }
 
 NextStyle.prototype.centralize = function(element){
-	{
-		var height = next.style.getFullHeight(element);
-		
-		var windowHeight = next.style.getWindowSize()[1];
-		
-		var top = (windowHeight /2) - (height/2);
-		element.style.top = top + 'px';
-	}
-	{
-		var width = next.style.getFullWidth(element);
-		
-		var windowWidth = next.style.getWindowSize()[0];
-		
-		var left = (windowWidth /2) - (width/2);
-		element.style.left = left + 'px';		
-	}
+	next.style.centralizeHorizontal(element);
+	next.style.centralizeVertical(element);
 }
 
 NextStyle.prototype.centralizeMiddleLine = function(element){
-	{
-		var height = next.style.getFullHeight(element);
-		
-		var windowHeight = next.style.getWindowSize()[1];
-		
-		var top = (windowHeight /2) - (height);
-		element.style.top = top + 'px';
-	}
-	{
-		var width = next.style.getFullWidth(element);
-		
-		var windowWidth = next.style.getWindowSize()[0];
-		
-		var left = (windowWidth /2) - (width/2);
-		element.style.left = left + 'px';		
-	}
+	next.style.centralizeHorizontal(element);
+	next.style.centralizeVerticalMiddleLine(element);
 }
 
 new NextStyle();
 
 /**************************************************************************************  AJAX  **/
+
 /**** CALLBACKS *****/
 NextAjaxCallBacks = function(){};
 NextAjaxCallBacks.prototype.eval = function(){
@@ -1484,12 +1498,6 @@ NextAjaxCallBacks.prototype.alert = function(){
 };
 NextAjaxCallBacks.prototype.evalScripts = function(){
 	return function(contents){
-//		var scripts = '';
-//		var text = contents.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, function(all, code){
-//			scripts += code + '\n';
-//			return '';
-//		});
-//		eval(scripts);
 		next.util.evalScripts(contents);
 	}
 }
@@ -1525,8 +1533,8 @@ NextAjax.READY_STATE_COMPLETE=4;
  *		params: 'ACTION=filtrar&id=5', 
  *		evalScripts: true,
  *		onComplete: function(data){
- *		                document.getElementById('container').innerHTML = data;
- *		            }
+ *						document.getElementById('container').innerHTML = data;
+ *					}
  *	});
  * </PRE>
  * @param options
@@ -1746,119 +1754,85 @@ NextAjax.prototype.Request = NextAjaxRequest;
 /**************************************************************************************  EFFECTS  **/
 NextEffects = function(){};
 
-NextEffects.blockScreenColor = 'white';
-
+NextEffects.lastBlockScreenId = 0;
 NextEffects.prototype.blockScreen = function(){
-	var blockScreenId = '__block_screen';
-	var blockScreen = document.getElementById(blockScreenId);
-	var innerElement;
-	if(!next.util.isDefined(blockScreen)){
-		blockScreen = next.dom.newElement('DIV', {'id':blockScreenId});
-		next.dom.insertFirstChild(document.body, blockScreen);
-		
-		innerElement = next.dom.newElement('DIV',
-				{
-			    	className: 'blockScreenTransparent',
-					style: {
-						position: 'absolute',
-						left:'0px',
-						top:'0px',
-						width:'500px',
-						height: '500px',
-						backgroundColor: NextEffects.blockScreenColor,
-						display: 'none'
-					}
-				});
-		
-		next.dom.insertFirstChild(blockScreen, innerElement);
-	} else {
-		innerElement = 	blockScreen.childNodes[0];	
-	}
-	var winW = 630, winH = 460;
-	if (document.body && document.body.offsetWidth) {
-		winW = document.body.offsetWidth;
-		winH = document.body.offsetHeight;
-	}
-	if (document.compatMode == 'CSS1Compat' && document.documentElement
-			&& document.documentElement.offsetWidth) {
-		winW = document.documentElement.offsetWidth;
-		winH = document.documentElement.offsetHeight;
-	}
-	if (window.innerWidth && window.innerHeight) {
-		winW = window.innerWidth;
-		winH = window.innerHeight;
-	}
-	
-	var documentHeight = next.style.getFullHeight(document.body);
-	if(documentHeight > winH){
-		winH = documentHeight;
-	}
-	innerElement.style.height = winH + 'px';
-	innerElement.style.width = winW + 'px';
-	innerElement.style.zIndex = 100;
-	innerElement.style.display = 'block';
-	
-	//<DIV style="position: relative;">
-	//	<DIV id="telaBranca" class="transparent" style="position: absolute; left: 0px; top: 0px; width: 500px; height: 500px; background-color: white; display: none;"></DIV>
-	//</DIV>
-	
+	var blockScreen = next.dom.newElement('DIV',
+		{
+			'id': '__block_screen_' + next.dom.generateUniqueId(),
+			className: 'blockScreenTransparent',
+			style: {
+				position: 'fixed',
+				top:'0px',
+				left:'0px',
+				width: '100vw',
+				height: '100vh',
+				display: 'block',
+				zIndex: next.dom.getNextZIndex()
+			}
+		});
+	next.dom.insertFirstChild(document.body, blockScreen);
+	NextEffects.lastBlockScreenId = blockScreen.id;
+	return NextEffects.lastBlockScreenId;
 }
 
-NextEffects.prototype.unblockScreen = function(){
-	var blockScreenId = '__block_screen';
+NextEffects.prototype.unblockScreen = function(blockScreenId){
+	if (!next.util.isDefined(blockScreenId)) {
+		blockScreenId = NextEffects.lastBlockScreenId;
+	}
 	var blockScreen = document.getElementById(blockScreenId);
 	if(next.util.isDefined(blockScreen)){
-		var innerElement = 	blockScreen.childNodes[0];
-		innerElement.style.display = 'none';
+		blockScreen.parentNode.removeChild(blockScreen);
 	}
-	
 }
+
 NextEffects.prototype.show = function(el){
-	
 	el = next.dom.toElement(el);
 	el.style.display = '';  
 }
+
 NextEffects.prototype.hide = function(el){
 	el = next.dom.toElement(el);
-	el.style.display = 'none';  
+	el.style.display = 'none';
 }
-NextEffects.prototype.showProperty = function(el, type, form){
-	if(!next.util.isDefined(type) && !next.util.isDefined(form)){
-		next.dom.getParentTag(el, 'tr').style.display = '';		
-	} else {
-		next.effects.hideShowProperty(el, type, form, '');
-	}
+
+NextEffects.prototype.showProperty = function(el){
+	next.effects.showHideProperty(el, true);
 }
-NextEffects.prototype.hideProperty = function(el, type, form){
-	if(!next.util.isDefined(type) && !next.util.isDefined(form)){
-		next.dom.getParentTag(el, 'tr').style.display = 'none';		
-	} else {
-		next.effects.hideShowProperty(el, type, form, 'none');
-	}
+
+NextEffects.prototype.hideProperty = function(el){
+	next.effects.showHideProperty(el, false);
 }
-NextEffects.prototype.hideShowProperty = function(el, type, form, operation){
-	if(type != 'double'){
-		alert('Only type=double supported by hideProperty.');
-		return;
+
+NextEffects.prototype.showHideProperty = function(el, show){
+	
+	var el2 = el;
+	if (typeof(el) == 'string') {
+		el2 = next.dom.toElement(el);
 	}
-	if(!next.util.isDefined(form)){
-		form = document.forms[0];
+	
+	if (el2 == null) {
+		alert("Elemento '" + el + "' não encontrado!");
 	}
-	var input = form[el];
-	//var label = null;
-	var labels = document.getElementsByTagName('label');
-	for(var i = 0; i < labels.length; i++){
-		if(labels[i].getAttribute("for") == el.id){
-			//label = labels[i];
-			break;
+	
+	var panel = next.dom.id('p_' + el2.id);
+	if (panel != null) {
+		if (show) {
+			panel.style.setProperty("display", "");
+		}else{
+			panel.style.setProperty("display", "none", "important");
 		}
 	}
-	if(type == 'double'){
-		next.dom.getParentTag(input, 'tr').style.display = operation;
-	}	
+	
+	var label = next.dom.id('l_' + el2.id);
+	if (label != null) {
+		if (show) {
+			label.style.setProperty("display", "");
+		}else{
+			label.style.setProperty("display", "none", "important");
+		}
+	}
+	
 }
-
-
 
 NextEffects.prototype.highlightOnOver = function(el, overColor, outColor){
 	next.events.attachEvent(el, 'mouseover', function(){
@@ -2069,13 +2043,12 @@ NextMessageTypes = function(){
 	this.MESSAGE = 'message';
 };
 
-
 NextMessages = function(){
 	this.types = new NextMessageTypes();
+	this.styleClasses = {};
 	this.onAddMessageEvents = new Array();
 	this.onRemoveMessageEvents = new Array();
 };
-
 
 NextMessagesMessage = function(message, type, li, div, block){
 	this.message = message;
@@ -2083,6 +2056,10 @@ NextMessagesMessage = function(message, type, li, div, block){
 	this.li = li;
 	this.div = div;
 	this.block = block;
+}
+
+NextMessages.prototype.getStyleClass = function(type){
+	return type != null && type != 'null' ? this.styleClasses[type + 'Class'] : null;
 }
 
 NextMessagesMessage.prototype.remove = function(){
@@ -2102,20 +2079,19 @@ NextMessagesMessage.prototype.remove = function(){
 NextMessages.prototype.Message = NextMessagesMessage;
 
 NextMessages.prototype.toast = function(msg){
-	var toastDiv = next.dom.newElement('div', {className:"messagetoast", innerHTML: "<div>"+msg+"</div>"});
+	var toastDiv = next.dom.newElement('div', { className:this.getStyleClass('toast'), innerHTML: "<div>"+msg+"</div>" });
 	next.dom.insertFirstChild(document.body, toastDiv);
-	
-	
 	setTimeout(function(){
 		next.effects.fade(toastDiv, 0.9, 0, {}, function(){
 			document.body.removeChild(toastDiv);
-		})}, msg.length > 30? 4000 : 2000);
+		})}, 2000 + msg.length * 100);
 }
 
 NextMessages.prototype.initialize = function(div, blockId){
 	if(next.util.isDefined(div.messageBlocks) && next.util.isDefined(div.messageBlocks[blockId])){
 		return;
 	}
+	var bigThis = this;
 	var originalDiv = div;
 	if(div.id != blockId){
 		var childNodes = div.childNodes;
@@ -2161,14 +2137,15 @@ NextMessages.prototype.initialize = function(div, blockId){
 		}
 		ul.addMessage = function(message, type){
 			var li = document.createElement('li');
-			li.className = type;
+			var sc = bigThis.getStyleClass(type);
+			if (sc != null) {
+				li.className = sc;
+			}
 			li.innerHTML = message;
-			
 			var closeIcon = document.createElement('div');
 			closeIcon.className = 'messageCloseIcon';
 			closeIcon.innerHTML = 'x';
 			li.appendChild(closeIcon);
-			
 			next.events.attachEvent(closeIcon, 'click', function(){
 				var li = this.parentNode;
 				var ul = li.parentNode; 
@@ -2178,7 +2155,6 @@ NextMessages.prototype.initialize = function(div, blockId){
 				});
 				ul.removeMessage(null);
 			});
-			
 			ul.appendChild(li);
 			return li;
 		}
@@ -2209,7 +2185,7 @@ NextMessages.prototype.initialize = function(div, blockId){
 		}
 		return ul;
 	}
-	next.style.addClass(div.messageBlocks[blockId], blockId.toLowerCase());
+	next.style.addClass(div.messageBlocks[blockId], this.getStyleClass(blockId));
 }
 
 /**
@@ -2263,7 +2239,6 @@ NextMessages.prototype.setBindTitle = function(title, div){
 		div = document.getElementById('messagesContainer');
 	}
 	this.initialize(div, 'bindBlock');
-	
 	if(title == ''){
 		var t = next.dom.id('bindTitle');
 		if(next.util.isDefined(t)){
@@ -2274,8 +2249,10 @@ NextMessages.prototype.setBindTitle = function(title, div){
 	if(!next.util.isDefined(t)){
 		t = document.createElement('div');
 		t.id = 'bindTitle';
-		t.className = 'messagetitle';
-		
+		var sc = this.getStyleClass('title');
+		if (sc != null) {
+			t.className = sc;
+		}
 		var bb = document.getElementById('bindBlock');
 		if(bb.hasChildNodes()){
 			bb.insertBefore(t, bb.childNodes[0]);
@@ -2294,25 +2271,21 @@ NextMessages.prototype.addMessageToBlock = function(message, type, div, block){
 		div = document.getElementById('messagesContainer');
 	}
 	this.initialize(div, block);
-
 	var li = div.messageBlocks[block].getUL().addMessage(message, type);
 	var messageObj = new NextMessagesMessage(message, type, li, div, block);
-	
 	next.util.each(this.onAddMessageEvents, function(e){
 		e(message, type, block, div, li);
 	});
-	
 	return messageObj;
 }
 
-NextMessages.prototype.removeMessageFromBlock  = function(message, div, block){
+NextMessages.prototype.removeMessageFromBlock = function(message, div, block){
 	if(next.util.isDefined(div)){
 		div = next.dom.toElement(div);
 	} else {
 		div = document.getElementById('messagesContainer');
 	}
 	this.initialize(div, block);
-	
 	div.messageBlocks[block].getUL().removeMessage(message);
 }
 
@@ -2448,7 +2421,7 @@ NextBrowser.browser = {
 				   string: navigator.userAgent,
 				   subString: "iPhone",
 				   identity: "iPhone/iPod"
-		    },
+			},
 			{
 				string: navigator.platform,
 				subString: "Linux",

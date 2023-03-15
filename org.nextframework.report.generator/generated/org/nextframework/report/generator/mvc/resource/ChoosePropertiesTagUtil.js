@@ -1,4 +1,4 @@
-var ChoosePropertiesTagUtil = function(){};
+﻿var ChoosePropertiesTagUtil = function(){};
 
 ChoosePropertiesTagUtil.OPEN = "/resource/org/nextframework/report/renderer/html/resource/mais.gif";
 ChoosePropertiesTagUtil.CLOSE = "/resource/org/nextframework/report/renderer/html/resource/menos.gif";

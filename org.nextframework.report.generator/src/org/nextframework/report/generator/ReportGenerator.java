@@ -22,6 +22,7 @@ import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.compilation.SourceCodeBuilder;
 import org.nextframework.exception.NextException;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.builder.IReportBuilder;
 import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
@@ -92,7 +93,7 @@ public class ReportGenerator {
 			progressMonitor.setTaskName(Util.objects.newMessage("org.nextframework.report.generator.ReportGenerator.gettingResult", null, "Obtendo registros"));
 		}
 
-		List<?> result = reportElement.getData().getDataSourceProvider().getResult(reportElement, filterMap, fixedCriteriaMap, limitResults);
+		List<?> result = reportElement.getData().getResult(reportElement, filterMap, fixedCriteriaMap, limitResults);
 
 		if (progressMonitor != null) {
 			progressMonitor.worked(60);
@@ -101,14 +102,19 @@ public class ReportGenerator {
 
 		reorderResult(result);
 
-		List<GroupElement> groups = reportElement.getData().getGroups();
+		if (reportBuilder instanceof LayoutReportBuilder) {
+			LayoutReportBuilder layoutBuilder = (LayoutReportBuilder) reportBuilder;
+			layoutBuilder.setFilter(createFilter(filterMap, layoutBuilder));
+			layoutBuilder.setLocale(locale);
+		}
+
 		DynamicSummary summary = createSummary();
-		LayoutReportBuilder layoutBuilder = (LayoutReportBuilder) reportBuilder;
-		layoutBuilder.setFilter(createFilter(filterMap, layoutBuilder));
-		layoutBuilder.setLocale(locale);
 		SummaryResult summaryResult = summary.getSummaryResult(result);
+
+		List<GroupElement> groups = reportElement.getData().getGroups();
 		for (final GroupElement groupElement : groups) {
 			if (isDateType(getTypeForProperty(groupElement.getName()))) {
+
 				String pattern = groupElement.getPattern() != null ? groupElement.getPattern() : "MM/yyyy";
 				final SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 
@@ -139,11 +145,14 @@ public class ReportGenerator {
 							throw new RuntimeException("Error reordering date group", e);
 						}
 					}
+
 				});
 			}
 		}
 
-		layoutBuilder.setData(summaryResult);
+		if (reportBuilder instanceof BaseReportBuilder) {
+			((BaseReportBuilder) reportBuilder).setData(summaryResult);
+		}
 
 		if (progressMonitor != null) {
 			progressMonitor.worked(40);
@@ -151,6 +160,7 @@ public class ReportGenerator {
 
 		spec.setReportBuilder(reportBuilder);
 		spec.setSummary(summary);
+
 		return spec;
 	}
 
@@ -169,7 +179,7 @@ public class ReportGenerator {
 					try {
 						ds1 = bd1.getPropertyDescriptor(property).getValue();
 						ds2 = bd2.getPropertyDescriptor(property).getValue();
-					}catch(InvalidPropertyException ex) {
+					} catch (InvalidPropertyException ex) {
 						continue;
 					}
 					if ((ds1 == null && ds2 == null) || (ds1 != null && ds1.equals(ds2))) {
@@ -273,11 +283,13 @@ public class ReportGenerator {
 
 	@SuppressWarnings("serial")
 	private static Map<String, String> formatTimeMap = new HashMap<String, String>() {
+
 		{
 			put("minutes", " / (1000.0 * 60)");
 			put("hours", " / (1000.0 * 60 * 60)");
 			put("days", " / (1000.0 * 60 * 60 * 24)");
 		}
+
 	};
 
 	public static String convertToTimeFormula(String formatTimeDetail) {

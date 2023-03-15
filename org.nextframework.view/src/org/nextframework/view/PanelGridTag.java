@@ -30,6 +30,7 @@ import java.util.Map;
 
 import org.nextframework.util.Util;
 import org.nextframework.view.template.PropertyConfigTag;
+import org.nextframework.view.template.PropertyTag;
 
 /**
  * @author rogelgarcia
@@ -40,35 +41,27 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 	protected List<PanelRenderedBlock> blocks = new ArrayList<PanelRenderedBlock>();
 
+	protected Boolean flatMode;
+
 	protected Integer columns = null;
 
-	protected String style;
-
 	protected String styleClass;
+
+	protected String style;
 
 	protected String rowStyleClasses;
 
 	protected String rowStyles;
-	
+
 	protected String columnStyleClasses;
 
 	protected String columnStyles;
-	
+
 	protected Integer colspan;
-	
-	protected Boolean propertyRenderAsDouble;
-	
+
+	protected String propertyRenderAs;
+
 	protected Boolean useParentPanelGridProperties = true;
-
-	Iterator<String> rowStyleIterator;
-
-	Iterator<String> rowStyleClassIterator;
-	
-	Iterator<String> columnStyleIterator;
-
-	Iterator<String> columnStyleClassIterator;
-	
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -77,6 +70,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		if (Util.booleans.isTrue(useParentPanelGridProperties)) {
 			PanelGridTag parentPanel = findParent(PanelGridTag.class);
 			if (parentPanel != null) {
+				if (flatMode == null) {
+					flatMode = parentPanel.getFlatMode();
+				}
 				if (Util.strings.isEmpty(style)) {
 					style = parentPanel.getStyle();
 				}
@@ -97,98 +93,128 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 				}
 			}
 		}
-		if(columns == null || columns == 0/*forçado*/){
+
+		if (flatMode == null) {
+			flatMode = false;
+		}
+
+		if (columns == null || columns == 0/*forçado*/) {
 			columns = 1;
 		}
 		if (columns <= 0) {
 			throw new IllegalArgumentException("O atributo columns da tag panelGrid deve ser positivo");
 		}
-		if(propertyRenderAsDouble == null){
-			BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class);
-			if(findFirst instanceof PropertyConfigTag){
-				this.propertyRenderAsDouble = PropertyConfigTag.DOUBLE.equals(((PropertyConfigTag)findFirst).getRenderAs());	
-			} else if(findFirst instanceof PanelGridTag){
-				Boolean propertyRenderAsDouble = ((PanelGridTag)findFirst).getPropertyRenderAsDouble();
-				this.propertyRenderAsDouble = propertyRenderAsDouble;
-			}
-			
-		}
-		doBody();
-		{
-			String styleString = style != null ? " style=\"" + style + "\"" : "";
-			String classString = styleClass != null ? " class=\"" + styleClass + "\"" : "";
 
-			getOut().println("<table" + styleString + classString + getDynamicAttributesToString() + ">");
+		if (propertyRenderAs == null) {
+			BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelGridTag.class);
+			if (findFirst instanceof PropertyConfigTag) {
+				this.propertyRenderAs = ((PropertyConfigTag) findFirst).getRenderAs();
+			} else if (findFirst instanceof PanelGridTag) {
+				this.propertyRenderAs = ((PanelGridTag) findFirst).getPropertyRenderAs();
+			}
 		}
-		rowStyleIterator = getRowStyleIterator();
-		rowStyleClassIterator = getRowStyleClassIterator();
-		
-		columnStyleIterator = getColumnStyleIterator();
-		columnStyleClassIterator = getColumnStyleClassIterator();
+
+		doBody();
+
+		String mainTag = flatMode ? "div" : "table";
+		String rowTag = flatMode ? "div" : "tr";
+		String blockTag = flatMode ? "div" : "td";
+
+		{
+			String classString = styleClass != null ? " class=\"" + styleClass + "\"" : "";
+			String styleString = style != null ? " style=\"" + style + "\"" : "";
+			getOut().println("<" + mainTag + classString + styleString + getDynamicAttributesToString() + ">");
+		}
+
+		CyclicIterator rowStyleClassIterator = Util.strings.isEmpty(rowStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(rowStyleClasses);
+		CyclicIterator rowStyleIterator = Util.strings.isEmpty(rowStyles) ? new CyclicIterator(null) : new CyclicIterator(rowStyles);
+		CyclicIterator columnStyleClassIterator = Util.strings.isEmpty(columnStyleClasses) ? new CyclicIterator(null) : new CyclicIterator(columnStyleClasses);
+		CyclicIterator columnStyleIterator = Util.strings.isEmpty(columnStyles) ? new CyclicIterator(null) : new CyclicIterator(columnStyles);
 
 		int remainingColumns = columns;
 		int rowCount = 0;
 		for (PanelRenderedBlock block : blocks) {
-			
-			Integer colspanColumn = asInteger(block.getProperties().get("colspan"));
-			
-			if (remainingColumns <= 0) {
+
+			Integer colspanBlock = asInteger(block.getProperties().remove("colspan"));
+			colspanBlock = colspanBlock != null ? colspanBlock : 1;
+
+			if (remainingColumns - colspanBlock < 0 && remainingColumns != columns) {
+
 				remainingColumns = columns;
-				getOut().println("</tr>");
+
+				getOut().println("</" + rowTag + ">");
+
 			}
+
 			if (remainingColumns == columns) {
-				{
-					String style = rowStyleIterator.next();
-					String styleClass = rowStyleClassIterator.next();
-					String styleString = style != null ? " style=\"" + style + "\"" : "";
-					String classString = styleClass != null ? " class=\"" + styleClass + "\"" : "";
-					getOut().print("<tr" + styleString + classString + ">");
-					rowCount++;
-				}
+
+				String styleClass = rowStyleClassIterator.next();
+				String rowStyleClass = Util.strings.isNotEmpty(styleClass) ? " class=\"" + styleClass + "\"" : "";
+				String style = rowStyleIterator.next();
+				String rowStyle = Util.strings.isNotEmpty(style) ? " style=\"" + style + "\"" : "";
+
+				getOut().print("<" + rowTag + rowStyleClass + rowStyle + ">");
+
+				rowCount++;
+
+				columnStyleClassIterator.reset();
+				columnStyleIterator.reset();
+
 			}
-			
+
 			{
-				
-				String style = columnStyleIterator.next();
-				String styleClass = columnStyleClassIterator.next();
-				
-				String styleClasses = (styleClass != null ? styleClass : "") + " ";
-				
-				if (block.getProperties().containsKey("class")) { 
-					Object remove = block.getProperties().remove("class");
-					styleClasses += remove;
+
+				String colspan = "";
+				if (!flatMode) {
+					colspan = " colspan=\"" + colspanBlock + "\"";
 				}
 
-				//BUG 0003
-				style = (style != null? style : "")+"; ";
-				if(block.getProperties().containsKey("style")){
-					style += block.getProperties().remove("style");
+				String columnStyleClass = columnStyleClassIterator.next();
+				String blockClass = (String) block.getProperties().remove("class");
+				if (blockClass != null) {
+					columnStyleClass = (Util.strings.isNotEmpty(columnStyleClass) ? columnStyleClass + " " : "") + blockClass;
 				}
-								
-				String styleString = " style=\"" + style + "\"";
-				String classString = " class=\"" + styleClasses + "\"";//BUG 0006
-				getOut().print("<td" + styleString + classString + getDynamicAttributesToString(block.getProperties()) + ">");
+
+				String classString = "";
+				if (Util.strings.isNotEmpty(columnStyleClass)) {
+					columnStyleClass = columnStyleClass.replaceAll("\\{CS\\}", colspanBlock.toString());
+					classString = " class=\"" + columnStyleClass + "\"";
+				}
+
+				String columnStyle = columnStyleIterator.next();
+				String blockStyle = (String) block.getProperties().remove("style");
+				if (blockStyle != null) {
+					columnStyle = (Util.strings.isNotEmpty(columnStyle) ? columnStyle + "; " : "") + blockStyle;
+				}
+				String styleString = columnStyle != null ? " style=\"" + columnStyle + "\"" : "";
+
+				getOut().print("<" + blockTag + colspan + classString + styleString + getDynamicAttributesToString(block.getProperties()) + ">");
 				getOut().print(block.body);
-				getOut().println("</td>");
-				
-				if (colspanColumn.intValue() > 1) {
-					for (int i = 0; i < (colspanColumn -1); i++) {
+				getOut().println("</" + blockTag + ">");
+
+				if (colspanBlock.intValue() > 1) {
+					for (int i = 0; i < (colspanBlock - 1); i++) {
 						columnStyleClassIterator.next();
 					}
 				}
-				
+
 			}
 
-			remainingColumns -= Math.max(colspanColumn, 1);
+			remainingColumns -= colspanBlock;
+
 		}
-		while (remainingColumns-- > 0 && rowCount > 1) {
-			getOut().print("<td>");
-			getOut().print(
-					"<!-- BLOCO VAZIO " + "(Não existe panels suficientes dentro do panel grid para satisfazer todas as colunas, " + "então esse panel foi criado para não quebrar a tabela) -->");
-			getOut().println("</td>");
+
+		if (!flatMode) {
+			while (remainingColumns-- > 0 && rowCount > 1) {
+				getOut().print("<td><!-- VAZIO --></td>");
+			}
 		}
-		getOut().println("</tr>");
-		getOut().println("</table>");
+
+		if (rowCount > 0) {
+			getOut().println("</" + rowTag + ">");
+		}
+		getOut().println("</" + mainTag + ">");
+
 	}
 
 	public Integer asInteger(Object value) {
@@ -207,64 +233,23 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		}
 	}
 
-	private Iterator<String> getRowStyleClassIterator() {
-		if (Util.strings.isEmpty(rowStyleClasses))
-			return new CyclicIterator(null);
-		return new CyclicIterator(rowStyleClasses.split(","));
-	}
-
-	private Iterator<String> getRowStyleIterator() {
-		if (Util.strings.isEmpty(rowStyles))
-			return new CyclicIterator(null);
-		return new CyclicIterator(rowStyles.split(","));
-	}
-	
-	private Iterator<String> getColumnStyleClassIterator() {
-		if (Util.strings.isEmpty(columnStyleClasses))
-			return new CyclicIterator(null);
-		return new CyclicIterator(columnStyleClasses.split(","));
-	}
-
-	private Iterator<String> getColumnStyleIterator() {
-		if (Util.strings.isEmpty(columnStyles))
-			return new CyclicIterator(null);
-		return new CyclicIterator(columnStyles.split(","));
-	}
-
-	public String getRowStyleClasses() {
-		return rowStyleClasses;
-	}
-
-	public String getRowStyles() {
-		return rowStyles;
-	}
-
-	public String getStyle() {
-		return style;
-	}
-
-	public String getStyleClass() {
-		return styleClass;
-	}
-
-	public void setRowStyleClasses(String rowStyleClasses) {
-		this.rowStyleClasses = rowStyleClasses;
-	}
-
-	public void setRowStyles(String rowStyles) {
-		this.rowStyles = rowStyles;
-	}
-
-	public void setStyle(String style) {
-		this.style = style;
-	}
-
-	public void setStyleClass(String styleClass) {
-		this.styleClass = styleClass;
+	@Override
+	protected void addPanelProperties(Map<String, Object> properties) {
+		if (colspan != null) {
+			properties.put("colspan", colspan);
+		}
 	}
 
 	public boolean addBlock(PanelRenderedBlock o) {
 		return blocks.add(o);
+	}
+
+	public Boolean getFlatMode() {
+		return flatMode;
+	}
+
+	public void setFlatMode(Boolean flatMode) {
+		this.flatMode = flatMode;
 	}
 
 	public Integer getColumns() {
@@ -275,49 +260,48 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		this.columns = columns;
 	}
 
-	private static class CyclicIterator implements Iterator<String> {
+	public String getStyleClass() {
+		return styleClass;
+	}
 
-		private String[] strings;
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
+	}
 
-		int i = 0;
+	public String getStyle() {
+		return style;
+	}
 
-		public CyclicIterator(String[] strings) {
-			this.strings = strings;
-		}
+	public void setStyle(String style) {
+		this.style = style;
+	}
 
-		public boolean hasNext() {
-			return true;
-		}
+	public String getRowStyleClasses() {
+		return rowStyleClasses;
+	}
 
-		public String next() {
-			if (strings == null || strings.length == 0)
-				return null;
-			if (i >= strings.length) {
-				i = 0;
-			}
-			return strings[i++];
-		}
+	public void setRowStyleClasses(String rowStyleClasses) {
+		this.rowStyleClasses = rowStyleClasses;
+	}
 
-		@SuppressWarnings("unused")
-		public String[] getStrings() {
-			return strings;
-		}
+	public String getRowStyles() {
+		return rowStyles;
+	}
 
-		public void remove() {
-		}
-
+	public void setRowStyles(String rowStyles) {
+		this.rowStyles = rowStyles;
 	}
 
 	public String getColumnStyleClasses() {
 		return columnStyleClasses;
 	}
 
-	public String getColumnStyles() {
-		return columnStyles;
-	}
-
 	public void setColumnStyleClasses(String columnStyleClasses) {
 		this.columnStyleClasses = columnStyleClasses;
+	}
+
+	public String getColumnStyles() {
+		return columnStyles;
 	}
 
 	public void setColumnStyles(String columnStyles) {
@@ -332,19 +316,26 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		this.colspan = colspan;
 	}
 
-	@Override
-	protected void addPanelProperties(Map<String, Object> properties) {
-		if(colspan != null){
-			properties.put("colspan", colspan);
-		}
+	public String getPropertyRenderAs() {
+		return propertyRenderAs;
 	}
 
+	public void setPropertyRenderAs(String propertyRenderAs) {
+		this.propertyRenderAs = propertyRenderAs;
+	}
+
+	@Deprecated
 	public Boolean getPropertyRenderAsDouble() {
-		return propertyRenderAsDouble;
+		return PropertyTag.DOUBLE.equalsIgnoreCase(propertyRenderAs);
 	}
 
+	@Deprecated
 	public void setPropertyRenderAsDouble(Boolean propertyRenderAsDouble) {
-		this.propertyRenderAsDouble = propertyRenderAsDouble;
+		if (Util.booleans.isTrue(propertyRenderAsDouble)) {
+			this.propertyRenderAs = PropertyTag.DOUBLE;
+		} else {
+			this.propertyRenderAs = PropertyTag.SINGLE;
+		}
 	}
 
 	public Boolean getUseParentPanelGridProperties() {
@@ -353,6 +344,45 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 	public void setUseParentPanelGridProperties(Boolean useParentPanelGridProperties) {
 		this.useParentPanelGridProperties = useParentPanelGridProperties;
+	}
+
+	private static class CyclicIterator implements Iterator<String> {
+
+		private static String SEP = ",";
+
+		private String[] strings;
+		int i = 0;
+
+		public CyclicIterator(String strings) {
+			this.strings = strings != null ? strings.split(SEP) : null;
+		}
+
+		public boolean hasNext() {
+			return true;
+		}
+
+		public String next() {
+			if (strings == null || strings.length == 0)
+				return null;
+			if (i >= strings.length) {
+				reset();
+			}
+			return strings[i++];
+		}
+
+		public void reset() {
+			i = 0;
+		}
+
+		@SuppressWarnings("unused")
+		public String[] getStrings() {
+			return strings;
+		}
+
+		public void remove() {
+
+		}
+
 	}
 
 }

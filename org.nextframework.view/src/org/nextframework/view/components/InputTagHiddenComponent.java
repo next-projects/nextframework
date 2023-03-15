@@ -12,15 +12,14 @@ import org.nextframework.view.TagUtils;
 
 public class InputTagHiddenComponent extends InputTagComponent {
 
-	
 	@Override
 	public void validateTag() {
 	}
-	
+
 	@Override
 	public void prepare() {
 		super.prepare();
-		if(Util.strings.isEmpty(inputTag.getPattern()) && (isDateOrTime())){
+		if (Util.strings.isEmpty(inputTag.getPattern()) && (isDateOrTime())) {
 			inputTag.setPattern("dd/MM/yyyy HH:mm:ss");
 		}
 	}
@@ -28,28 +27,27 @@ public class InputTagHiddenComponent extends InputTagComponent {
 	public boolean isDateOrTime() {
 		return helper.isDateOrTime(inputTag.getValue()) || helper.isDateOrTime(inputTag.getAutowiredType());
 	}
-	
+
 	@Override
 	protected void configureValidation(boolean disabled) {
-		if(inputTag.isForceValidation()){
+		if (inputTag.isForceValidation()) {
 			super.configureValidation(disabled);
 		}
 	}
-	
+
 	@Override
-	public boolean printRequired() {
+	public boolean isToPrintRequired() {
 		return false;
 	}
-	
+
 	@Override
 	public String getValueAsString() {
-		if(inputTag.getValue() == null){
+		if (inputTag.getValue() == null) {
 			return "<null>";
 		}
 		return super.getValueAsString();
 	}
 
-	
 	public String getBooleanDescriptionToString() {
 		if (inputTag.getWrite() != null && inputTag.getWrite()) {
 			String booleanDescription = null;
@@ -86,18 +84,18 @@ public class InputTagHiddenComponent extends InputTagComponent {
 				} else if ((inputTag.getValue() instanceof Date || inputTag.getValue() instanceof Calendar) && Util.strings.isNotEmpty(inputTag.getPattern())) {
 					DateFormat dateFormat = new SimpleDateFormat(inputTag.getPattern());
 					Object value = inputTag.getValue();
-					if(value instanceof Calendar){
-						value = ((Calendar)value).getTime();
+					if (value instanceof Calendar) {
+						value = ((Calendar) value).getTime();
 					}
 					return dateFormat.format(value);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				throw new NextException("trueFalseNullLabels inválido " + inputTag.getTrueFalseNullLabels() + ". Esse atributo deve ser uma string separada por vírgula indicando o valor de TRUE FALSE e NULL. ex.: sim,não,vazio");
 			}
-
 			return TagUtils.getObjectDescriptionToString(inputTag.getValue());
 		} else {
 			return "";
 		}
 	}
+
 }

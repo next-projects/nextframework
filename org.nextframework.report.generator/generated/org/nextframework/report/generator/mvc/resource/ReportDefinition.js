@@ -1,4 +1,4 @@
-var ReportDefinition = function(designer, table) {
+﻿var ReportDefinition = function(designer, table) {
 
     this.designTable = table;
     this.elements = [];
@@ -202,7 +202,6 @@ ReportDefinition.prototype.addElementToRowAndColumn = function(element, row, col
     var td = row.getTdForColumn(column);
     var div = window.document.createElement("DIV");
     div.innerHTML = element.toString();
-    div.style.padding = "1px";
     td.appendChild(div);
     element.setNode(div);
     var bigThis = this;
@@ -212,7 +211,6 @@ ReportDefinition.prototype.addElementToRowAndColumn = function(element, row, col
     };
 };
 ReportDefinition.prototype.selectItem = function(el, blur) {
-    //		designer.filterArea.blur();
     if (blur) {
         this.designer.blurAllBut(this);
     }
@@ -238,7 +236,6 @@ ReportDefinition.prototype.selectItem = function(el, blur) {
         el.onFocus();
     }
 };
-//		}
 ReportDefinition.prototype.unselectSelectedItem = function() {
     if (this.selectedElement != null) {
         if (this.selectedElement.layoutItem != null) {
@@ -261,15 +258,11 @@ ReportDefinition.prototype.blur = function() {
     this.unselectSelectedItem();
     this.selectedElement = null;
 };
-ReportDefinition.prototype.markSelectItem = function(el) {
-    el.getNode().style.border = "1px dotted gray";
-    el.getNode().style.backgroundColor = "#FFD";
-    el.getNode().style.padding = "0px";
+ReportDefinition.prototype.markSelectItem = function(reportElement) {
+    next.style.addClass(reportElement.getNode(), "selected");
 };
 ReportDefinition.prototype.unselectItem = function(reportElement) {
-    reportElement.getNode().style.border = "";
-    reportElement.getNode().style.backgroundColor = "";
-    reportElement.getNode().style.padding = "1px";
+    next.style.removeClass(reportElement.getNode(), "selected");
 };
 ReportDefinition.prototype.getColumnByIndex = function(column) {
     while (this.columns.length <= column) {
@@ -309,7 +302,6 @@ var ReportSection = function(sectionType, definition, group) {
     }
     this.labelRow = definition.designTable.insertRow(insertAt);
     this.labelRow.id = "section" + sectionType + (group != null ? group : "") + "-L";
-    next.style.addClass(this.labelRow, "sectiondecorator");
     var labelRowTd = this.labelRow.insertCell(0);
     labelRowTd.innerHTML = sectionType.toString() + (group != null ? " [" + group + "]" : "");
     if (definition.columns.length > 0) {
@@ -347,7 +339,6 @@ ReportSection.prototype.createRow = function() {
     var labelRowIndex = this.labelRow.rowIndex;
     var insertInIndex = labelRowIndex + this.rows.length + 1;
     var row = this.definition.designTable.insertRow(insertInIndex);
-    //next.style.addClass(row, sectionType.toString());
     for (var i = 0; i < this.definition.columns.length; i++) {
         row.insertCell(0);
     }
@@ -380,7 +371,6 @@ var ReportColumn = function(reportDefinition) {
 };
 ReportColumn.prototype.reportDefinition = null;
 ReportColumn.prototype.getIndex = function() {
-    //return reportDefinition.columns.indexOf(this);
     return next.util.indexOf(this.reportDefinition.columns, this);
 };
 ReportColumn.$typeDescription={"reportDefinition":"ReportDefinition"};

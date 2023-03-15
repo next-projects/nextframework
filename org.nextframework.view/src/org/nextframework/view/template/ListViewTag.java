@@ -42,6 +42,9 @@ public class ListViewTag extends TemplateTag {
 	protected String newLinkLabel = null;
 	protected JspFragment linkArea;
 
+	protected String linkBarStyleClass = null;
+	protected String linkStyleClass = null;
+
 	@Override
 	protected void doComponent() throws Exception {
 
@@ -61,9 +64,15 @@ public class ListViewTag extends TemplateTag {
 			newLinkLabel = getDefaultViewLabel("newLinkLabel", "Novo");
 		}
 
+		if (crudContext != null) {
+			pushAttribute("crudContext", crudContext);
+		}
 		pushAttribute("listagemTag", this); //Legacy
 		includeJspTemplate();
 		popAttribute("listagemTag");
+		if (crudContext != null) {
+			popAttribute("crudContext");
+		}
 
 	}
 
@@ -122,6 +131,22 @@ public class ListViewTag extends TemplateTag {
 
 	public void setLinkArea(JspFragment linkArea) {
 		this.linkArea = linkArea;
+	}
+
+	public String getLinkBarStyleClass() {
+		return linkBarStyleClass;
+	}
+
+	public void setLinkBarStyleClass(String linkBarStyleClass) {
+		this.linkBarStyleClass = linkBarStyleClass;
+	}
+
+	public String getLinkStyleClass() {
+		return linkStyleClass;
+	}
+
+	public void setLinkStyleClass(String linkStyleClass) {
+		this.linkStyleClass = linkStyleClass;
 	}
 
 }
