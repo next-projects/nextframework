@@ -1,7 +1,6 @@
 ﻿var ChartWizzard = function(element, designer) {
 
     this.mainDiv = element;
-    this.nextButton = next.dom.getInnerElementById(this.mainDiv, "nextButton");
     this.pages = [];
     this.designer = designer;
     this.chartGroupBy = next.dom.getInnerElementById(this.mainDiv, "chartGroupBy");
@@ -50,7 +49,6 @@ ChartWizzard.AGGREGATE_FUNCTION = "aggregateFunction";
 ChartWizzard.SERIE_LABEL = "label";
 ChartWizzard.ATTR_ISDATE = "data-isdate";
 ChartWizzard.prototype.mainDiv = null;
-ChartWizzard.prototype.nextButton = null;
 ChartWizzard.prototype.currentPage = 110;
 ChartWizzard.prototype.pages = null;
 ChartWizzard.prototype.designer = null;
@@ -75,6 +73,7 @@ ChartWizzard.prototype.editing = null;
 ChartWizzard.prototype.propertiesAsSeries = null;
 ChartWizzard.prototype.chartAggregateTypeSerie = null;
 ChartWizzard.prototype.chartLabelSerie = null;
+ChartWizzard.prototype.chartConfigurationToSave = null;
 ChartWizzard.createInstance = function() {
     return new ChartWizzard(window.document.getElementById("chartWizzard"), ReportDesigner.getInstance());
 };
@@ -117,7 +116,6 @@ ChartWizzard.prototype.configureSerieLabel = function() {
         properties[ChartWizzard.SERIE_LABEL] = this.chartLabelSerie.value;
     }
 };
-//			Global.alert("changing "+selectedOption+ " to "+aggregateFunction);
 ChartWizzard.prototype.configureSerieAggregateType = function() {
     if (this.propertiesAsSeries.getTo().selectedIndex >= 0) {
         var aggregateFunction = next.dom.getSelectedValue(this.chartAggregateTypeSerie);
@@ -127,7 +125,6 @@ ChartWizzard.prototype.configureSerieAggregateType = function() {
         properties[ChartWizzard.AGGREGATE_FUNCTION] = aggregateFunction;
     }
 };
-//			Global.alert("changing "+selectedOption+ " to "+aggregateFunction);
 ChartWizzard.prototype.getPropertiesFromOption = function(optionSelected) {
     var optionObject = optionSelected;
     var properties = optionObject["properties"];
@@ -177,7 +174,7 @@ ChartWizzard.prototype.configureGroupItens = function() {
     this.propertiesAsSeries.setUsePropertyAsLabel("displayName");
     this.chartGroupBy.innerHTML = "";
     this.chartGroupByLevel.selectedIndex = 1;
-    ReportPropertyConfigUtils.hideElement(this.chartGroupByLevel);
+    next.effects.hideProperty(this.chartGroupByLevel);
     for (var key in this.designer.fields) {
         var properties = this.designer.fields[key];
         if (ReportPropertyConfigUtils.isNumber(properties)) {
@@ -203,9 +200,9 @@ ChartWizzard.prototype.configureGroupItens = function() {
 ChartWizzard.prototype.configureGroupDateLevel = function() {
     var isdate = this.chartGroupBy.options.item(this.chartGroupBy.selectedIndex).getAttribute(ChartWizzard.ATTR_ISDATE);
     if (isdate != null && (isdate == "true")) {
-        ReportPropertyConfigUtils.showElement(this.chartGroupByLevel);
+        next.effects.showProperty(this.chartGroupByLevel);
     } else {
-        ReportPropertyConfigUtils.hideElement(this.chartGroupByLevel);
+        next.effects.hideProperty(this.chartGroupByLevel);
     }
 };
 ChartWizzard.prototype.addPage = function(pageName) {
@@ -231,17 +228,7 @@ ChartWizzard.prototype.getSelectedChartType = function() {
     alert("Erro: Nenhum tipo de gráfico selecionado");
     return null;
 };
-ChartWizzard.prototype.next = function() {
-    switch(this.currentPage) {
-        case 110:
-            this.gotoChartConfig();
-            break;
-        case 121:
-            this.gotoConfirmationView();
-            break;
-    }
-};
-ChartWizzard.prototype.gotoConfirmationView = function() {
+ChartWizzard.prototype.gotoConfirmationView = function(button) {
     this.hideAllPages();
     this.showPage("chartWizzard_page_3");
     this.currentPage = 131;
@@ -257,25 +244,19 @@ ChartWizzard.prototype.gotoConfirmationView = function() {
     if (this.chartSeries.selectedIndex >= 0) {
         seriesProperty = this.chartSeries.options.item(this.chartSeries.selectedIndex).value;
     }
-    var configuration = new ChartConfiguration(this.getSelectedChartType(), groupByProperty.value, groupByLevelProperty.value, (this.getSelectedChartType() == "pie") ? "" : (this.propertyTypeDefault.checked ? seriesProperty : ""), useCount ? "count" : valueProperty.value, aggregate.value, title, groupTitle, seriesTitle, this.propertyTypeAsSeries.checked ? "true" : "false", this.getSeriesLimitType(), this.getChartIgnoreEmptySeriesAndGroups());
+    this.chartConfigurationToSave = new ChartConfiguration(this.getSelectedChartType(), groupByProperty.value, groupByLevelProperty.value, (this.getSelectedChartType() == "pie") ? "" : (this.propertyTypeDefault.checked ? seriesProperty : ""), useCount ? "count" : valueProperty.value, aggregate.value, title, groupTitle, seriesTitle, this.propertyTypeAsSeries.checked ? "true" : "false", this.getSeriesLimitType(), this.getChartIgnoreEmptySeriesAndGroups());
     var options = this.propertiesAsSeries.getTo().options;
     for (var i = 0; i < options.length; i++) {
         var option = options[i];
         var properties = this.getPropertiesFromOption(option);
         var aggregateFunction = properties[ChartWizzard.AGGREGATE_FUNCTION];
         var label = properties[ChartWizzard.SERIE_LABEL];
-        configuration.addSerie(option.value, aggregateFunction, label);
+        this.chartConfigurationToSave.addSerie(option.value, aggregateFunction, label);
     }
-    this.setSpanText("chartTitleSpan", configuration.title);
-    this.setSpanText("chartGroupSpan", configuration.groupProperty);
-    this.setSpanText("chartValueSpan", (configuration.valueProperty == "count") ? "Contagem dos itens" : configuration.valueProperty + " (" + configuration.valueAggregate + ")");
-    this.nextButton.innerHTML = "Concluido";
-    var bigThis = this;
-    this.nextButton.onclick = function(p1) {
-        bigThis.saveConfiguration(configuration);
-        bigThis.dismiss();
-        return true;
-    };
+    this.setSpanText("chartTitleSpan", this.chartConfigurationToSave.title);
+    this.setSpanText("chartGroupSpan", this.chartConfigurationToSave.groupProperty);
+    this.setSpanText("chartValueSpan", (this.chartConfigurationToSave.valueProperty == "count") ? "Contagem dos itens" : this.chartConfigurationToSave.valueProperty + " (" + this.chartConfigurationToSave.valueAggregate + ")");
+    button.innerHTML = "Concluir";
 };
 ChartWizzard.prototype.getChartIgnoreEmptySeriesAndGroups = function() {
     return this.chartIgnoreEmptySeriesAndGroups.checked;
@@ -288,14 +269,13 @@ ChartWizzard.prototype.getSeriesLimitType = function() {
             return radio.value;
         }
     }
-    //		Global.alert("Erro: Nenhum tipo de limitador de séries selecionado");
     return "showall";
 };
-ChartWizzard.prototype.saveConfiguration = function(configuration) {
+ChartWizzard.prototype.saveConfiguration = function() {
     if (this.editing == null) {
-        this.designer.addChart(configuration);
+        this.designer.addChart(this.chartConfigurationToSave);
     } else {
-        this.designer.updateChart(this.editing.option, configuration);
+        this.designer.updateChart(this.editing.option, this.chartConfigurationToSave);
     }
 };
 ChartWizzard.prototype.setSpanText = function(id, text) {
@@ -311,13 +291,9 @@ ChartWizzard.prototype.configureChartSeriesSectionType = function() {
 };
 ChartWizzard.prototype.gotoChartConfig = function() {
     this.hideAllPages();
-    next.effects.hide("chartLabelTypePie");
-    next.effects.hide("chartLabelTypeColumn");
-    next.effects.hide("chartLabelTypeLine");
     this.propertyTypeDefault.checked = true;
     this.configurePropertyType();
     this.configureChartSeriesSectionType();
-    next.effects.show("chartLabelType" + this.getSelectedChartTypeCapitalized());
     if ((this.getSelectedChartType() == "pie")) {
         this.chartSeriesSection.style.display = "none";
     } else {
@@ -345,28 +321,62 @@ ChartWizzard.prototype.showPage = function(string) {
     }
 };
 ChartWizzard.prototype.show = function() {
-    this.editing = null;
-    this.nextButton.innerHTML = "Proximo";
     var bigThis = this;
-    this.nextButton.onclick = function(p1) {
-        bigThis.next();
-        return true;
-    };
+    this.editing = null;
+    this.chartConfigurationToSave = null;
     this.configureGroupItens();
     this.configureSeries();
     this.configureValues();
     this.hideAllPages();
     this.showPage("chartWizzard_page_1");
     this.currentPage = 110;
-    this.mainDiv.style.visibility = "";
     (window.document.getElementById("chartTypePie")).checked = true;
+    var panelDiv = this.mainDiv;
+    var panelDivParent = panelDiv.parentNode;
+    var dialog = new NextDialogs.MessageDialog();
+    dialog.setTitle("Configurar gráfico");
+    dialog.appendToBody(panelDiv);
+    dialog.setCommandsMap({"CANCEL": "Cancelar", 
+        "NEXT": "Proximo"});
+    dialog.setCallback((function(){
+    var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
+
+    stjs.extend(_InlineType, NextDialogs.DialogCallback);
+
+    _InlineType.prototype.onClick = function(command, value, button) {
+        if ((command == "NEXT")) {
+            var close = bigThis.next(button);
+            if (!close) {
+                dialog.centralize();
+                return false;
+            }
+        }
+        panelDivParent.appendChild(panelDiv);
+        return true;
+    };
+    _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
+    
+    return new _InlineType();
+    })());
+    dialog.show();
+};
+ChartWizzard.prototype.next = function(button) {
+    if (this.currentPage == 110) {
+        this.gotoChartConfig();
+    } else if (this.currentPage == 121) {
+        this.gotoConfirmationView(button);
+    } else if (this.currentPage == 131) {
+        this.saveConfiguration();
+        return true;
+    }
+    return false;
 };
 ChartWizzard.prototype.edit = function(chartConfiguration) {
     if (chartConfiguration != null) {
         this.show();
         this.checkChartType(chartConfiguration);
         this.checkLimitSeriesType(chartConfiguration);
-        this.next();
+        this.next(null);
         if (("true" == chartConfiguration.propertiesAsSeries)) {
             this.propertyTypeAsSeries.checked = true;
             var series = chartConfiguration.series;
@@ -393,10 +403,10 @@ ChartWizzard.prototype.edit = function(chartConfiguration) {
         if (chartGroup != null) {
             var isdate = chartGroup.getAttribute(ChartWizzard.ATTR_ISDATE);
             if (isdate != null && (isdate == "true")) {
-                ReportPropertyConfigUtils.showElement(this.chartGroupByLevel);
+                next.effects.showProperty(this.chartGroupByLevel);
                 this.setValue(this.chartGroupByLevel, chartConfiguration.groupLevel);
             } else {
-                ReportPropertyConfigUtils.hideElement(this.chartGroupByLevel);
+                next.effects.hideProperty(this.chartGroupByLevel);
             }
         }
         this.setValue(this.chartSeries, chartConfiguration.seriesProperty);
@@ -446,10 +456,7 @@ ChartWizzard.prototype.checkChartType = function(chartConfiguration) {
         }
     }
 };
-ChartWizzard.prototype.dismiss = function() {
-    this.mainDiv.style.visibility = "hidden";
-};
-ChartWizzard.$typeDescription={"mainDiv":"Div", "nextButton":"Button", "pages":{name:"Array", arguments:["Div"]}, "designer":"ReportDesigner", "chartGroupBy":"Select", "chartGroupByLevel":"Select", "chartSeries":"Select", "chartValue":"Select", "chartAggregateType":"Select", "chartTitle":"Input", "chartGroupTitle":"Input", "chartSeriesTitle":"Input", "chartIgnoreEmptySeriesAndGroups":"Input", "chartCountTrue":"Input", "chartCountFalse":"Input", "propertyTypeDefault":"Input", "propertyTypeAsSeries":"Input", "chartConfigLimitSeriesShowAll":"Input", "chartConfigLimitSeriesLimit":"Input", "chartConfigLimitSeriesGroup":"Input", "chartSeriesSection":"Div", "editing":"ChartConfiguration", "propertiesAsSeries":"ReportGeneratorSelectManyBoxView", "chartAggregateTypeSerie":"Select", "chartLabelSerie":"Input"};
+ChartWizzard.$typeDescription={"mainDiv":"Div", "pages":{name:"Array", arguments:["Div"]}, "designer":"ReportDesigner", "chartGroupBy":"Select", "chartGroupByLevel":"Select", "chartSeries":"Select", "chartValue":"Select", "chartAggregateType":"Select", "chartTitle":"Input", "chartGroupTitle":"Input", "chartSeriesTitle":"Input", "chartIgnoreEmptySeriesAndGroups":"Input", "chartCountTrue":"Input", "chartCountFalse":"Input", "propertyTypeDefault":"Input", "propertyTypeAsSeries":"Input", "chartConfigLimitSeriesShowAll":"Input", "chartConfigLimitSeriesLimit":"Input", "chartConfigLimitSeriesGroup":"Input", "chartSeriesSection":"Div", "editing":"ChartConfiguration", "propertiesAsSeries":"ReportGeneratorSelectManyBoxView", "chartAggregateTypeSerie":"Select", "chartLabelSerie":"Input", "chartConfigurationToSave":"ChartConfiguration"};
 
 
 var ChartConfiguration = function(type, groupProperty, groupLevel, seriesProperty, valueProperty, valueAggregate, title, groupTitle, seriesTitle, propertiesAsSeries, seriesLimitType, ignoreEmptySeriesAndGroups) {

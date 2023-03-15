@@ -80,7 +80,6 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("entities", entities);
 		setAttribute("displayNames", displayNames);
-
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.design1");
 	}
 
@@ -97,11 +96,6 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			model.getProperties().add("id");
 		}
 
-		if (getRequest().getParameter("visualizarDados") != null) {
-			List preview = util.getPreviewData(model);
-			setAttribute("preview", preview);
-		}
-
 		Map<String, Map<String, Object>> propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), selectedGeneratedType, avaiableProperties);
 
 		setAttribute("model", model);
@@ -109,15 +103,6 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		setAttribute("propertyMetadata", propertiesMetadata);
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("reportTypeDisplayName", BeanDescriptorFactory.forClass(ClassUtils.getUserClass(model.getSelectedType())).getDisplayName());
-
-		//for(String property: propertiesMetadata.keySet()){
-		//	Map<String, Object> map = propertiesMetadata.get(property);
-		//	if(map.get("requiredFilter") != null && Boolean.TRUE.equals(map.get("requiredFilter"))){
-		//		if(!model.getProperties().contains(property)){
-		//			model.getProperties().add(property);
-		//		}
-		//	}
-		//}
 
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.design2");
 	}

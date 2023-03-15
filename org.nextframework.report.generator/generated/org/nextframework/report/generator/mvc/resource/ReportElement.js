@@ -1,4 +1,4 @@
-var ReportElement = function(name) {
+﻿var ReportElement = function(name) {
 
     this.name = name;
 };
@@ -97,7 +97,6 @@ FieldDetail.prototype.toString = function() {
     var result = "<fieldDetail name='" + this.name + "'";
     if (this.field != null && this.field.pattern != null && !(this.field.pattern == "")) {
         var pattern = this.field.pattern;
-        //pattern = next.util.escapeSingleQuotes(pattern);
         result += " pattern=\"" + pattern + "\"";
     }
     if (this.label != null && this.label.name != null && !(this.label.name == "") && this.label.changed) {

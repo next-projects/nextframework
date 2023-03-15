@@ -1,44 +1,41 @@
-﻿var ReportDesigner = //	ReportGeneratorSelectView filterArea;
-//	private Button moveRightButton;
-function(divId, textAreaId) {
+﻿var ReportDesigner = function(divId, textAreaId) {
 
     var bigThis = this;
     this.selectables = [];
     this.avaiableProperties = [];
     this.mainDiv = next.dom.toElement(divId);
     this.outputXml = next.dom.toElement(textAreaId);
-    //		filterArea = addSelectComponent("filterArea");
     this.fields = {};
+    this.definition = new ReportDefinition(this, next.dom.getInnerElementById(this.mainDiv, "designTable"));
+    this.selectables.push(this.definition);
+    this.reportTitleInput = next.dom.getInnerElementById(this.mainDiv, "reportTitle");
+    this.reportTitleInput.onkeyup = function(p1) {
+        bigThis.updateTitle();
+        return true;
+    };
+    this.fieldSelect = this.addSelectManyComponent("fields");
     this.groupSelect = this.addSelectManyComponent("groups");
     this.filterSelect = this.addSelectManyComponent("filters");
-    this.fieldSelect = this.addSelectManyComponent("fields");
-    this.calculatedFieldsSelect = next.dom.toElement("calculatedFields");
-    //		};
     this.labelInput = next.dom.getInnerElementById(this.mainDiv, "label");
+    this.patternDateInput = next.dom.getInnerElementById(this.mainDiv, "patternDate");
+    this.patternNumberInput = next.dom.getInnerElementById(this.mainDiv, "patternNumber");
+    this.aggregateInput = next.dom.getInnerElementById(this.mainDiv, "aggregate");
+    this.aggregateTypeInput = next.dom.getInnerElementById(this.mainDiv, "aggregateType");
+    this.patternDateInputGroup = next.dom.getInnerElementById(this.mainDiv, "patternDateGroup");
     this.filterLabel = next.dom.getInnerElementById(this.mainDiv, "filterLabel");
     this.filterFixedCriteria = next.dom.getInnerElementById(this.mainDiv, "filterFixedCriteria");
     this.filterPreSelectDate = next.dom.getInnerElementById(this.mainDiv, "filterPreSelectDate");
     this.filterPreSelectEntity = next.dom.getInnerElementById(this.mainDiv, "filterPreSelectEntity");
     this.filterSelectMultiple = next.dom.getInnerElementById(this.mainDiv, "filterSelectMultiple");
     this.filterRequired = next.dom.getInnerElementById(this.mainDiv, "filterRequired");
-    this.patternDateInput = next.dom.getInnerElementById(this.mainDiv, "patternDate");
-    this.patternNumberInput = next.dom.getInnerElementById(this.mainDiv, "patternNumber");
-    this.patternDateInputGroup = next.dom.getInnerElementById(this.mainDiv, "patternDateGroup");
-    this.reportTitleInput = next.dom.getInnerElementById(this.mainDiv, "reportTitle");
-    this.reportTitleInput.onkeyup = function(p1) {
-        bigThis.updateTitle();
-        return true;
-    };
-    this.aggregateInput = next.dom.getInnerElementById(this.mainDiv, "aggregate");
-    this.aggregateTypeInput = next.dom.getInnerElementById(this.mainDiv, "aggregateType");
+    this.calculatedFieldsSelect = next.dom.toElement("calculatedFields");
     this.charts = next.dom.getInnerElementById(this.mainDiv, "charts");
-    this.definition = new ReportDefinition(this, next.dom.getInnerElementById(this.mainDiv, "designTable"));
-    this.selectables.push(this.definition);
     this.groupManager = new ReportGroupManager(this, this.groupSelect);
     this.filterManager = new ReportFilterManager(this, this.filterSelect);
     this.layoutManager = new ReportLayoutManager(this, this.fieldSelect);
     this.calculatedFieldsManager = new ReportCalculatedFieldsManager(this, this.calculatedFieldsSelect);
     this.reportData = new ReportData(this);
+    this.hideAll();
 };
 ReportDesigner.instance = null;
 ReportDesigner.getInstance = function() {
@@ -66,17 +63,17 @@ ReportDesigner.prototype.filterManager = null;
 ReportDesigner.prototype.reportTitleInput = null;
 ReportDesigner.prototype.reportData = null;
 ReportDesigner.prototype.labelInput = null;
+ReportDesigner.prototype.patternDateInput = null;
+ReportDesigner.prototype.patternNumberInput = null;
+ReportDesigner.prototype.aggregateInput = null;
+ReportDesigner.prototype.aggregateTypeInput = null;
+ReportDesigner.prototype.patternDateInputGroup = null;
 ReportDesigner.prototype.filterLabel = null;
 ReportDesigner.prototype.filterFixedCriteria = null;
 ReportDesigner.prototype.filterPreSelectDate = null;
 ReportDesigner.prototype.filterPreSelectEntity = null;
 ReportDesigner.prototype.filterSelectMultiple = null;
 ReportDesigner.prototype.filterRequired = null;
-ReportDesigner.prototype.patternDateInput = null;
-ReportDesigner.prototype.patternNumberInput = null;
-ReportDesigner.prototype.patternDateInputGroup = null;
-ReportDesigner.prototype.aggregateInput = null;
-ReportDesigner.prototype.aggregateTypeInput = null;
 ReportDesigner.prototype.charts = null;
 ReportDesigner.prototype.selectables = null;
 ReportDesigner.prototype.addSelectManyComponent = function(name) {
@@ -89,14 +86,27 @@ ReportDesigner.prototype.addSelectManyComponent = function(name) {
     this.selectables.push(result);
     return result;
 };
-ReportDesigner.prototype.selectTypeCalculatedProperty = function(type) {
-    if (type == "custom") {
-        next.dom.toElement("c_customized").style.display = "";
-        next.dom.toElement("c_system").style.display = "none";
-    } else {
-        next.dom.toElement("c_customized").style.display = "none";
-        next.dom.toElement("c_system").style.display = "";
+ReportDesigner.prototype.blurAllBut = function(select) {
+    for (var key in this.selectables) {
+        if (!(this.selectables).hasOwnProperty(key)) continue;
+        var value = this.selectables[key];
+        if (value != select) {
+            value.blur();
+        }
     }
+};
+ReportDesigner.prototype.hideAll = function() {
+    this.hideInputLabel();
+    this.hideInputDatePattern();
+    this.hideInputNumberPattern();
+    this.hideAggregate();
+    this.hideInputPatternGroup();
+    this.hideFilterLabel();
+    this.hideFilterFixedCriteria();
+    this.hideFilterPreSelectDate();
+    this.hideFilterPreSelectEntity();
+    this.hideFilterSelectMultiple();
+    this.hideFilterRequired();
 };
 ReportDesigner.prototype.removeSelectedCalculatedProperty = function() {
     var selectedIndex = this.calculatedFieldsSelect.selectedIndex;
@@ -113,7 +123,6 @@ ReportDesigner.prototype.removeSelectedCalculatedProperty = function() {
 ReportDesigner.prototype.editCalculatedProperty = function() {
     var calculatedFields = next.dom.toElement("calculatedFields");
     var calculatedFieldSelected = next.dom.getSelectedValue(calculatedFields);
-    //		Global.alert(calculatedFieldSelected);
     if (calculatedFieldSelected == null) {
         return;
     }
@@ -142,9 +151,8 @@ ReportDesigner.prototype.editCalculatedProperty = function() {
     next.dom.setSelectedValue(calculationFormatAsTimeDetail, formatTimeDetail);
     next.dom.setSelectedValues(calculationProcessor, processors);
 };
-//		next.dom.getSelectedText(el)
 ReportDesigner.prototype.showAddCalculatedProperty = function() {
-    window.document.getElementById("calculatedPropertiesWizzard").style.display = "";
+    var bigThis = this;
     var calculationExpression = next.dom.toElement("calculationExpression");
     var calculationDisplayName = next.dom.toElement("calculationDisplayName");
     var calculationName = next.dom.toElement("calculationName");
@@ -162,7 +170,6 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
     calculationProcessor.selectedIndex = 0;
     calculationFormatAsNumber.checked = true;
     calculationFormatAsTimeDetail.selectedIndex = 1;
-    var bigThis = this;
     for (var key in this.avaiableProperties) {
         if (!(this.avaiableProperties).hasOwnProperty(key)) continue;
         var property = this.avaiableProperties[key];
@@ -170,7 +177,7 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
         console.info(property + " " + options);
         if (options != null && (ReportPropertyConfigUtils.isNumber(options) || ReportPropertyConfigUtils.isDate(options))) {
             var b = next.dom.newElement("button");
-            b.className = "calculationButton calculationPropertyButton";
+            b.className = next.globalMap.get("NextDialogs.button", "button");
             b.innerHTML = options["displayName"];
             this.configureButtonAppendCalculatedVar(b, property, options);
             varDiv.appendChild(b);
@@ -181,8 +188,29 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
             bigThis.onChangeCalculationVarName(calculationDisplayName, calculationName);
         });
     }
+    var panelDiv = window.document.getElementById("calculatedPropertiesWizzard");
+    var panelDivParent = panelDiv.parentNode;
+    var dialog = new NextDialogs.MessageDialog();
+    dialog.setTitle("Configurar campo calculado");
+    dialog.appendToBody(panelDiv);
+    dialog.setCallback((function(){
+    var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
+
+    stjs.extend(_InlineType, NextDialogs.DialogCallback);
+
+    _InlineType.prototype.onClick = function(command, value, button) {
+        if ((command == "OK")) {
+            bigThis.saveCalculatedProperty();
+        }
+        panelDivParent.appendChild(panelDiv);
+        return true;
+    };
+    _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
+    
+    return new _InlineType();
+    })());
+    dialog.show();
 };
-//		ReportDesigner.getInstance().selectTypeCalculatedProperty("custom");
 ReportDesigner.prototype.configureButtonAppendCalculatedVar = function(b, property, options) {
     var bigThis = this;
     b.onclick = function(p1) {
@@ -198,10 +226,11 @@ ReportDesigner.prototype.appendNumberToExpression = function() {
 
     stjs.extend(_InlineType, NextDialogs.DialogCallback);
 
-    _InlineType.prototype.onClose = function(command, value) {
+    _InlineType.prototype.onClick = function(command, value, button) {
         if (command == NextDialogs.OK) {
             bigThis.appendToExpression("" + value);
         }
+        return true;
     };
     _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
     
@@ -254,7 +283,6 @@ ReportDesigner.prototype.onChangeCalculationVarName = function(calculationDispla
     calculationName.value = result;
 };
 ReportDesigner.prototype.showConfigureProperties = function() {
-    window.document.getElementById("propertiesWizzard").style.display = "";
     for (var key in this.avaiableProperties) {
         if (!(this.avaiableProperties).hasOwnProperty(key)) continue;
         var field = this.avaiableProperties[key];
@@ -263,15 +291,42 @@ ReportDesigner.prototype.showConfigureProperties = function() {
             checkbox.checked = false;
         }
     }
+    var dialog = new NextDialogs.MessageDialog();
+    dialog.setTitle("Configurar campos");
+    var panelDiv = window.document.getElementById("propertiesWizzard");
+    var panelDivParent = panelDiv.parentNode;
+    dialog.appendToBody(panelDiv);
+    var bigThis = this;
+    dialog.setCallback((function(){
+    var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
+
+    stjs.extend(_InlineType, NextDialogs.DialogCallback);
+
+    _InlineType.prototype.onClick = function(command, value, button) {
+        panelDivParent.appendChild(panelDiv);
+        if ((command == "OK")) {
+            bigThis.saveConfigureProperties();
+        }
+        return true;
+    };
+    _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
+    
+    return new _InlineType();
+    })());
+    dialog.show();
 };
-ReportDesigner.prototype.hideConfigureProperties = function() {
-    window.document.getElementById("propertiesWizzard").style.display = "none";
-};
-ReportDesigner.prototype.hideAddCalculatedProperty = function() {
-    window.document.getElementById("calculatedPropertiesWizzard").style.display = "none";
+ReportDesigner.prototype.saveConfigureProperties = function() {
+    for (var key in this.avaiableProperties) {
+        if (!(this.avaiableProperties).hasOwnProperty(key)) continue;
+        var field = this.avaiableProperties[key];
+        var checkbox = window.document.getElementById("selProp_" + field);
+        if (!checkbox.disabled && checkbox.checked) {
+            this.addField(checkbox.value, (checkbox)["propertyMetadata"]);
+            checkbox.disabled = true;
+        }
+    }
 };
 ReportDesigner.prototype.saveCalculatedProperty = function() {
-    //		if(calculatedCustom.checked){
     var calculationExpression = next.dom.toElement("calculationExpression");
     var calculationDisplayName = next.dom.toElement("calculationDisplayName");
     var calculationName = next.dom.toElement("calculationName");
@@ -307,8 +362,6 @@ ReportDesigner.prototype.saveCalculatedProperty = function() {
         this.addField(calculationName.value, calculationProperties);
     }
     this.addCalculation(calculationName.value, calculationProperties);
-    //		}
-    this.hideAddCalculatedProperty();
 };
 ReportDesigner.prototype.getValidationErrorMessage = function(calculationExpression) {
     var exp = calculationExpression.value;
@@ -317,24 +370,9 @@ ReportDesigner.prototype.getValidationErrorMessage = function(calculationExpress
 ReportDesigner.prototype.addCalculation = function(value, calculationProperties) {
     this.calculatedFieldsManager.add(value, calculationProperties);
 };
-ReportDesigner.prototype.saveConfigureProperties = function() {
-    this.hideConfigureProperties();
-    for (var key in this.avaiableProperties) {
-        if (!(this.avaiableProperties).hasOwnProperty(key)) continue;
-        var field = this.avaiableProperties[key];
-        var checkbox = window.document.getElementById("selProp_" + field);
-        if (!checkbox.disabled) {
-            if (checkbox.checked) {
-                this.addField(checkbox.value, (checkbox)["propertyMetadata"]);
-                checkbox.disabled = true;
-            }
-        }
-    }
-};
 ReportDesigner.prototype.addAvaiableProperty = function(prop) {
     this.avaiableProperties.push(prop);
 };
-//	}
 ReportDesigner.prototype.moveItem = function(i) {
     var selectedElement = this.definition.selectedElement;
     this.moveElement(i, selectedElement);
@@ -367,19 +405,15 @@ ReportDesigner.prototype.removeSelectedDefinitionItem = function() {
     }
 };
 ReportDesigner.prototype.removeFilter = function() {
-    //		}
     this.writeXml();
 };
 ReportDesigner.prototype.removeGroup = function() {
-    //		}
     this.writeXml();
 };
 ReportDesigner.prototype.filterCurrentSelectedField = function() {
-    //		}
     this.writeXml();
 };
 ReportDesigner.prototype.groupCurrentSelectedField = function() {
-    //		}
     this.writeXml();
 };
 ReportDesigner.prototype.setReportTitle = function(reportTitle) {
@@ -397,7 +431,6 @@ ReportDesigner.prototype.updateTitle = function() {
     this.writeXml();
 };
 ReportDesigner.prototype.addField = function(name, properties) {
-    //fieldArea.select(name, properties);
     this.fields[name] = properties;
     this.fieldSelect.add(name, properties);
     if (this.groupManager.accept(name, properties)) {
@@ -407,7 +440,6 @@ ReportDesigner.prototype.addField = function(name, properties) {
         this.filterSelect.add(name, properties);
     }
 };
-//}
 ReportDesigner.prototype.setDataSourceHibernate = function(from) {
     this.reportData.dataSourceProvider = new HibernateDataSourceProvider(from);
 };
@@ -429,78 +461,69 @@ ReportDesigner.prototype.getChartsXmlString = function() {
     return chartXml;
 };
 ReportDesigner.prototype.showInputLabel = function() {
-    (this.labelInput.parentNode.parentNode).style.display = "";
+    next.effects.showProperty(this.labelInput);
 };
 ReportDesigner.prototype.hideInputLabel = function() {
-    (this.labelInput.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.showFilterLabel = function() {
-    (this.filterLabel.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.hideFilterLabel = function() {
-    (this.filterLabel.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.showFilterFixedCriteria = function() {
-    (this.filterFixedCriteria.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.hideFilterFixedCriteria = function() {
-    (this.filterFixedCriteria.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.showFilterPreSelectDate = function() {
-    (this.filterPreSelectDate.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.hideFilterPreSelectDate = function() {
-    (this.filterPreSelectDate.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.showFilterPreSelectEntity = function() {
-    (this.filterPreSelectEntity.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.hideFilterPreSelectEntity = function() {
-    (this.filterPreSelectEntity.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.showFilterSelectMultiple = function() {
-    (this.filterSelectMultiple.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.hideFilterSelectMultiple = function() {
-    (this.filterSelectMultiple.parentNode.parentNode).style.display = "none";
-};
-ReportDesigner.prototype.showFilterRequired = function() {
-    (this.filterRequired.parentNode.parentNode).style.display = "";
-};
-ReportDesigner.prototype.hideFilterRequired = function() {
-    (this.filterRequired.parentNode.parentNode).style.display = "none";
+    next.effects.hideProperty(this.labelInput);
 };
 ReportDesigner.prototype.showInputDatePattern = function() {
-    ReportPropertyConfigUtils.showElement(this.patternDateInput);
+    next.effects.showProperty(this.patternDateInput);
 };
 ReportDesigner.prototype.hideInputDatePattern = function() {
-    (this.patternDateInput.parentNode.parentNode).style.display = "none";
+    next.effects.hideProperty(this.patternDateInput);
 };
 ReportDesigner.prototype.showInputNumberPattern = function() {
-    ReportPropertyConfigUtils.showElement(this.patternNumberInput);
+    next.effects.showProperty(this.patternNumberInput);
 };
 ReportDesigner.prototype.hideInputNumberPattern = function() {
-    ReportPropertyConfigUtils.hideElement(this.patternNumberInput);
-};
-ReportDesigner.prototype.hideInputPatternGroup = function() {
-    ReportPropertyConfigUtils.hideElement(this.patternDateInputGroup);
+    next.effects.hideProperty(this.patternNumberInput);
 };
 ReportDesigner.prototype.showAggregate = function() {
-    (this.aggregateInput.parentNode.parentNode).style.display = "";
-    (this.aggregateTypeInput.parentNode.parentNode).style.display = "";
+    next.effects.showProperty(this.aggregateInput);
+    next.effects.showProperty(this.aggregateTypeInput);
 };
 ReportDesigner.prototype.hideAggregate = function() {
-    (this.aggregateInput.parentNode.parentNode).style.display = "none";
-    (this.aggregateTypeInput.parentNode.parentNode).style.display = "none";
+    next.effects.hideProperty(this.aggregateInput);
+    next.effects.hideProperty(this.aggregateTypeInput);
 };
-ReportDesigner.prototype.blurAllBut = function(select) {
-    for (var key in this.selectables) {
-        if (!(this.selectables).hasOwnProperty(key)) continue;
-        var value = this.selectables[key];
-        if (value != select) {
-            value.blur();
-        }
-    }
+ReportDesigner.prototype.hideInputPatternGroup = function() {
+    next.effects.hideProperty(this.patternDateInputGroup);
+};
+ReportDesigner.prototype.showFilterLabel = function() {
+    next.effects.showProperty(this.filterLabel);
+};
+ReportDesigner.prototype.hideFilterLabel = function() {
+    next.effects.hideProperty(this.filterLabel);
+};
+ReportDesigner.prototype.showFilterFixedCriteria = function() {
+    next.effects.showProperty(this.filterFixedCriteria);
+};
+ReportDesigner.prototype.hideFilterFixedCriteria = function() {
+    next.effects.hideProperty(this.filterFixedCriteria);
+};
+ReportDesigner.prototype.showFilterPreSelectDate = function() {
+    next.effects.showProperty(this.filterPreSelectDate);
+};
+ReportDesigner.prototype.hideFilterPreSelectDate = function() {
+    next.effects.hideProperty(this.filterPreSelectDate);
+};
+ReportDesigner.prototype.showFilterPreSelectEntity = function() {
+    next.effects.showProperty(this.filterPreSelectEntity);
+};
+ReportDesigner.prototype.hideFilterPreSelectEntity = function() {
+    next.effects.hideProperty(this.filterPreSelectEntity);
+};
+ReportDesigner.prototype.showFilterSelectMultiple = function() {
+    next.effects.showProperty(this.filterSelectMultiple);
+};
+ReportDesigner.prototype.hideFilterSelectMultiple = function() {
+    next.effects.hideProperty(this.filterSelectMultiple);
+};
+ReportDesigner.prototype.showFilterRequired = function() {
+    next.effects.showProperty(this.filterRequired);
+};
+ReportDesigner.prototype.hideFilterRequired = function() {
+    next.effects.hideProperty(this.filterRequired);
 };
 ReportDesigner.prototype.addChart = function(configuration) {
     var op = new Option(configuration.title, configuration.toXmlString());
@@ -537,7 +560,7 @@ ReportDesigner.prototype.removeSelectedChart = function() {
     }
     this.writeXml();
 };
-ReportDesigner.$typeDescription={"instance":"ReportDesigner", "mainDiv":"Div", "outputXml":"TextArea", "fields":{name:"Map", arguments:[null,{name:"Map", arguments:[null,"Object"]}]}, "avaiableProperties":{name:"Array", arguments:[null]}, "fieldSelect":"ReportGeneratorSelectManyBoxView", "groupSelect":"ReportGeneratorSelectManyBoxView", "filterSelect":"ReportGeneratorSelectManyBoxView", "calculatedFieldsSelect":"Select", "definition":"ReportDefinition", "calculatedFieldsManager":"ReportCalculatedFieldsManager", "layoutManager":"ReportLayoutManager", "groupManager":"ReportGroupManager", "filterManager":"ReportFilterManager", "reportTitleInput":"Input", "reportData":"ReportData", "labelInput":"Input", "filterLabel":"Input", "filterFixedCriteria":"Select", "filterPreSelectDate":"Select", "filterPreSelectEntity":"Select", "filterSelectMultiple":"Input", "filterRequired":"Input", "patternDateInput":"Select", "patternNumberInput":"Select", "patternDateInputGroup":"Select", "aggregateInput":"Input", "aggregateTypeInput":"Select", "charts":"Select", "selectables":{name:"Array", arguments:["Selectable"]}};
+ReportDesigner.$typeDescription={"instance":"ReportDesigner", "mainDiv":"Div", "outputXml":"TextArea", "fields":{name:"Map", arguments:[null,{name:"Map", arguments:[null,"Object"]}]}, "avaiableProperties":{name:"Array", arguments:[null]}, "fieldSelect":"ReportGeneratorSelectManyBoxView", "groupSelect":"ReportGeneratorSelectManyBoxView", "filterSelect":"ReportGeneratorSelectManyBoxView", "calculatedFieldsSelect":"Select", "definition":"ReportDefinition", "calculatedFieldsManager":"ReportCalculatedFieldsManager", "layoutManager":"ReportLayoutManager", "groupManager":"ReportGroupManager", "filterManager":"ReportFilterManager", "reportTitleInput":"Input", "reportData":"ReportData", "labelInput":"Input", "patternDateInput":"Select", "patternNumberInput":"Select", "aggregateInput":"Input", "aggregateTypeInput":"Select", "patternDateInputGroup":"Select", "filterLabel":"Input", "filterFixedCriteria":"Select", "filterPreSelectDate":"Select", "filterPreSelectEntity":"Select", "filterSelectMultiple":"Input", "filterRequired":"Input", "charts":"Select", "selectables":{name:"Array", arguments:["Selectable"]}};
 
 
 var ReportData = function(designer) {
@@ -589,7 +612,6 @@ var ReportLayoutManager = function(designer, fieldSelect) {
         var properties = (p1)["properties"];
         bigThis.addFieldDetail(p1.value, properties);
     };
-    //				}
     (fieldSelect.getFrom())["onRemove"] = function(p1) {
         var properties = (p1)["properties"];
         bigThis.removeByName(p1.value);
@@ -629,16 +651,20 @@ ReportLayoutManager.prototype.select = function(fd, cascadeToDefinition) {
     }
     eval("showdesignerTab('designerTab_1', 1, 'designerTab_link_1');");
     //passar para a aba de fields
+    next.effects.showProperty(this.designer.labelInput);
     ReportPropertyConfigUtils.configureInputToLabel(fd.label, this.designer.labelInput);
-    //		Global.console.info("fd.isAggregatable() = "+fd.isAggregatable());
-    if (fd.isAggregatable()) {
-        ReportPropertyConfigUtils.configureFieldToAggregateInputs(fd, this.designer.aggregateInput, this.designer.aggregateTypeInput);
-    }
     if (fd.isDate()) {
+        next.effects.showProperty(this.designer.patternDateInput);
         ReportPropertyConfigUtils.configurePatternInputToField(fd.field, this.designer.patternDateInput);
     }
     if (fd.isNumber()) {
+        next.effects.showProperty(this.designer.patternNumberInput);
         ReportPropertyConfigUtils.configurePatternInputToField(fd.field, this.designer.patternNumberInput);
+    }
+    if (fd.isAggregatable()) {
+        next.effects.showProperty(this.designer.aggregateInput);
+        next.effects.showProperty(this.designer.aggregateTypeInput);
+        ReportPropertyConfigUtils.configureFieldToAggregateInputs(fd, this.designer.aggregateInput, this.designer.aggregateTypeInput);
     }
 };
 ReportLayoutManager.prototype.selectAndRemove = function(layoutItem) {
@@ -646,10 +672,6 @@ ReportLayoutManager.prototype.selectAndRemove = function(layoutItem) {
         this.fieldSelect.unselect((layoutItem).name);
     }
 };
-/*
-	 * Called from the view
-	 * Select a property and set the saved attributes
-	 */
 ReportLayoutManager.prototype.selectElement = function(name, value, label, pattern, aggregate, aggregateType) {
     this.fieldSelect.select(name, null);
     //to select in the selectmanybox the properties are not necessary
@@ -672,7 +694,6 @@ ReportLayoutManager.prototype.selectElement = function(name, value, label, patte
         }
     }
 };
-//	}
 ReportLayoutManager.prototype.removeByName = function(value) {
     for (var key in this.items) {
         if (!(this.items).hasOwnProperty(key)) continue;
@@ -729,7 +750,6 @@ ReportLayoutManager.prototype.moveFieldDetail = function(layoutItem, i) {
         this.items.splice(index, 1);
         this.items.splice(index + i, 0, layoutItem);
     }
-    //		}
     this.writeXML();
 };
 ReportLayoutManager.prototype.addFieldDetail = function(fieldName, value) {

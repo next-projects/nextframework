@@ -98,7 +98,6 @@ ReportPropertyConfigUtils.isGroupable = function(properties) {
     return !ReportPropertyConfigUtils.isNumber(properties);
 };
 ReportPropertyConfigUtils.configureInputToLabel = function(labelElement, labelInput) {
-    ReportPropertyConfigUtils.showElement(labelInput);
     labelInput.value = labelElement.label;
     labelInput.onkeyup = function(p1) {
         labelElement.label = labelInput.value;
@@ -112,7 +111,6 @@ ReportPropertyConfigUtils.configureInputToLabel = function(labelElement, labelIn
     };
 };
 ReportPropertyConfigUtils.configurePatternInputToField = function(field, patternInput) {
-    ReportPropertyConfigUtils.showElement(patternInput);
     if (field.pattern != null && field.pattern != "") {
         patternInput.value = field.pattern;
     } else {
@@ -133,8 +131,6 @@ ReportPropertyConfigUtils.configureFieldToAggregateInputs = function(fieldDetail
         aggregateInput.disabled = false;
         aggregateTypeInput.disabled = false;
     }
-    ReportPropertyConfigUtils.showElement(aggregateInput);
-    ReportPropertyConfigUtils.showElement(aggregateTypeInput);
     aggregateInput.checked = fieldDetail.isAggregate();
     aggregateInput.onclick = function(p1) {
         if (fieldDetail.label.column.getIndex() == 0) {
@@ -155,12 +151,6 @@ ReportPropertyConfigUtils.configureFieldToAggregateInputs = function(fieldDetail
         ReportDesigner.getInstance().writeXml();
         return true;
     };
-};
-ReportPropertyConfigUtils.hideElement = function(node) {
-    (node.parentNode.parentNode).style.display = "none";
-};
-ReportPropertyConfigUtils.showElement = function(node) {
-    (node.parentNode.parentNode).style.display = "";
 };
 ReportPropertyConfigUtils.ANY = 1;
 ReportPropertyConfigUtils.IN_VAR = 2;

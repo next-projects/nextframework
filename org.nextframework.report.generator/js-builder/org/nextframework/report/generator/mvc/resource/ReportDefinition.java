@@ -19,52 +19,55 @@ public class ReportDefinition implements Selectable {
 	ReportSection sectionTitle;
 	ReportSection sectionDetailHeader;
 	ReportSection sectionDetail;
-	
+
 	Array<ReportColumn> columns;
 	Array<ReportGroup> groups;
-	
+
 	Array<ReportElement> elements;
 	ReportDesigner designer;
-	
+
 	ReportElement selectedElement;
-	
-	public ReportDefinition(ReportDesigner designer, Table table){
+
+	public ReportDefinition(ReportDesigner designer, Table table) {
 		this.designTable = table;
 		this.elements = $array();
 		this.columns = $array();
 		this.groups = $array();
 		this.designer = designer;
-		
+
 		this.sectionTitle = new ReportSection(SectionType.TITLE, this, null);
 		this.sectionTitle.rows.$get(0).row.insertCell(0);
 		this.sectionDetailHeader = new ReportSection(SectionType.DETAIL_HEADER, this, null);
 		this.sectionDetail = new ReportSection(SectionType.DETAIL, this, null);
 	}
-	
+
 	interface RowIterator {
+
 		void titleRow(ReportRow reportRow);
+
 		void labelRow(TableRow reportRow);
+
 		void row(ReportRow reportRow);
+
 	}
-	
-	public Array<ReportSection> getAllSections(){
+
+	public Array<ReportSection> getAllSections() {
 		Array<ReportSection> array = $array(
 				sectionDetailHeader,
-				sectionDetail
-		);
+				sectionDetail);
 		for (int i = 0; i < groups.$length(); i++) {
 			array.push(groups.$get(i).groupHeader);
 		}
 		return array;
 	}
-	
+
 	public ReportGroup removeGroup(String groupName) {
 		ReportGroup group = getReportGroup(groupName);
 		ReportSection section = group.groupHeader;
 		section.clear();
 		for (int i = 0; i < groups.$length(); i++) {
 			group = groups.$get(i);
-			if(group.groupName.equals(groupName)){
+			if (group.groupName.equals(groupName)) {
 				groups.splice(i, 1);
 				break;
 			}
@@ -76,82 +79,91 @@ public class ReportDefinition implements Selectable {
 		ReportGroup group = null;
 		for (int i = 0; i < groups.$length(); i++) {
 			group = groups.$get(i);
-			if(group.groupName.equals(groupName)){
+			if (group.groupName.equals(groupName)) {
 				break;
 			}
 		}
 		return group;
 	}
+
 	public ReportGroup addGroup(String groupName) {
 		ReportSection groupHeader = new ReportSection(SectionType.GROUP_HEADER, this, groupName);
 		ReportGroup reportGroup = new ReportGroup(groupHeader, groupName);
-		
 		groups.push(reportGroup);
-		
 		return reportGroup;
 	}
-	
-	public void removeColumn(int index){
+
+	public void removeColumn(int index) {
+
 		final ReportColumn column = columns.$get(index);
-		
-		if(column == null){
+
+		if (column == null) {
 			Global.alert("Coluna nao encontrada");
 			return;
 		}
-		
+
 		removeColumnElements(column);
 
 		iteratorOverRows(new RowIterator() {
-			
+
 			@Override
 			public void row(ReportRow reportRow) {
 				TableCell tdForColumn = reportRow.getTdForColumn(column);
 				reportRow.row.removeChild(tdForColumn);
 			}
-			
+
 			@Override
 			public void titleRow(ReportRow reportRow) {
 				readjustColspan(reportRow.row);
 			}
+
 			@Override
 			public void labelRow(TableRow reportRow) {
 				readjustColspan(reportRow);
 			}
 
 			private void readjustColspan(TableRow reportRow) {
-				if(reportRow.cells.length > 0){
-					if(reportRow.cells.$get(0).colSpan > 1){
+				if (reportRow.cells.length > 0) {
+					if (reportRow.cells.$get(0).colSpan > 1) {
 						reportRow.cells.$get(0).colSpan--;
 					}
 				}
 			}
+
 		});
-		
+
 		next.util.removeItem(columns, column);
-		
+
 		designer.writeXml();
+
 	}
 
-
 	private void removeColumnElements(final ReportColumn column) {
+
 		final ReportDefinition bigThis = this;
 		iteratorOverRows(new RowIterator() {
-			public void titleRow(ReportRow reportRow) {}
-			public void labelRow(TableRow reportRow) {}
-			
+
+			public void titleRow(ReportRow reportRow) {
+			}
+
+			public void labelRow(TableRow reportRow) {
+			}
+
 			public void row(ReportRow reportRow) {
 				ReportElement element = bigThis.getElementForRowAndColumn(reportRow, column);
-				if(element != null){
-					if(element.layoutItem != null){
+				if (element != null) {
+					if (element.layoutItem != null) {
 						bigThis.designer.layoutManager.remove(element.layoutItem);
 					} else {
 						bigThis.remove(element);
 					}
 				}
 			}
+
 		});
+
 	}
-	
+
 	public void remove(ReportElement element) {
 		TableCell cell = getCellForElement(element);
 		cell.removeChild(element.getNode());
@@ -168,26 +180,32 @@ public class ReportDefinition implements Selectable {
 		return row.row.cells.$get(column.getIndex());
 	}
 
-	public void addColumn(){
+	public void addColumn() {
+
 		final ReportColumn reportColumn = new ReportColumn(this);
 		columns.push(reportColumn);
-		
+
 		iteratorOverRows(new RowIterator() {
+
 			@Override
 			public void titleRow(ReportRow reportRow) {
-				if(reportRow.row.cells.length > 0){
+				if (reportRow.row.cells.length > 0) {
 					reportRow.row.cells.$get(0).colSpan = reportColumn.getIndex() + 1;
 				}
 			}
+
 			@Override
 			public void row(ReportRow reportRow) {
 				reportRow.row.insertCell(reportColumn.getIndex());
 			}
+
 			@Override
 			public void labelRow(TableRow reportRow) {
 				reportRow.cells.$get(0).colSpan = reportColumn.getIndex() + 1;
 			}
+
 		});
+
 	}
 
 	private void iteratorOverRows(RowIterator rowIterator) {
@@ -205,17 +223,17 @@ public class ReportDefinition implements Selectable {
 			}
 		}
 	}
-	
-	public void addElement(ReportElement element, ReportSection section, int columnIndex){
+
+	public void addElement(ReportElement element, ReportSection section, int columnIndex) {
 		ReportRow row = section.getLastRow();
 		ReportColumn column = getColumnByIndex(columnIndex);
 		addElementToRowAndColumn(element, row, column);
 	}
-	
-	public ReportElement getElementForRowAndColumn(ReportRow row, ReportColumn column){
+
+	public ReportElement getElementForRowAndColumn(ReportRow row, ReportColumn column) {
 		for (String key : elements) {
 			ReportElement element = elements.$get(key);
-			if(element.row.equals(row) && element.column.equals(column)){
+			if (element.row.equals(row) && element.column.equals(column)) {
 				return element;
 			}
 		}
@@ -223,82 +241,71 @@ public class ReportDefinition implements Selectable {
 	}
 
 	public void addElementToRowAndColumn(final ReportElement element, final ReportRow row, ReportColumn column) {
+
 		element.row = row;
 		element.column = column;
-		
+
 		elements.push(element);
-		
-		
+
 		TableCell td = row.getTdForColumn(column);
-		
+
 		final Div div = (Div) Global.window.document.createElement("DIV");
 		div.innerHTML = element.toString();
-		div.style.padding = "1px";
-		
+
 		td.appendChild(div);
-		
+
 		element.setNode(div);
-		
+
 		final ReportDefinition bigThis = this;
-		
+
 		div.onclick = new Function1<DOMEvent, Boolean>() {
+
 			@Override
 			public Boolean $invoke(DOMEvent p1) {
 				bigThis.selectItem(element, true);
 				return true;
 			}
+
 		};
+
 	}
 
 	protected void selectItem(ReportElement el, boolean blur) {
-//		designer.fieldArea.blur();
-//		designer.groupArea.blur();
-//		designer.filterArea.blur();
-		if(blur){
+
+		if (blur) {
 			designer.blurAllBut(this);
 		}
-		
-		if(el.layoutItem != null){
+
+		if (el.layoutItem != null) {
 			el = el.layoutItem.getElements().$get(0);
 		}
-		if(selectedElement != null){
+
+		if (selectedElement != null) {
 			unselectSelectedItem();
-			if(selectedElement.equals(el)){
+			if (selectedElement.equals(el)) {
 				selectedElement = null;
 				return;
 			}
 		}
-		if(el.layoutItem != null){
+
+		if (el.layoutItem != null) {
 			for (int i = 0; i < el.layoutItem.getElements().$length(); i++) {
 				markSelectItem(el.layoutItem.getElements().$get(i));
 			}
 		} else {
 			markSelectItem(el);
 		}
+
 		this.selectedElement = el;
-		if(el.onFocus != null){
+		if (el.onFocus != null) {
 			el.onFocus.$invoke();
 		}
-		
-		
-//		if(el instanceof FieldReportElement){
-//			designer.patternInput.value = ((FieldReportElement)el).pattern;
-//			final ReportDefinition bigThis = this;
-//			ReportElement bigEl = el;
-//			designer.patternInput.onkeyup = new Function1<DOMEvent, Boolean>() {
-//				public Boolean $invoke(DOMEvent p1) {
-//					FieldReportElement fieldReportElement = ((FieldReportElement)bigThis.selectedElement);
-//					fieldReportElement.pattern = bigThis.designer.patternInput.value;
-//					bigThis.designer.writeXml();
-//					return true;
-//				}
-//			};
-//		}
+
 	}
 
 	private void unselectSelectedItem() {
-		if(selectedElement != null){ 
-			if(selectedElement.layoutItem != null){
+		if (selectedElement != null) {
+			if (selectedElement.layoutItem != null) {
 				for (int i = 0; i < selectedElement.layoutItem.getElements().$length(); i++) {
 					unselectItem(selectedElement.layoutItem.getElements().$get(i));
 				}
@@ -314,26 +321,22 @@ public class ReportDefinition implements Selectable {
 		designer.labelInput.value = "";
 		designer.patternDateInput.value = "";
 	}
-	
-	public void blur(){
+
+	public void blur() {
 		unselectSelectedItem();
 		selectedElement = null;
 	}
 
-	private void markSelectItem(ReportElement el) {
-		el.getNode().style.border = "1px dotted gray";
-		el.getNode().style.backgroundColor = "#FFD";
-		el.getNode().style.padding = "0px";
+	private void markSelectItem(ReportElement reportElement) {
+		next.style.addClass(reportElement.getNode(), "selected");
 	}
 
 	private void unselectItem(ReportElement reportElement) {
-		reportElement.getNode().style.border = "";
-		reportElement.getNode().style.backgroundColor = "";
-		reportElement.getNode().style.padding = "1px";
+		next.style.removeClass(reportElement.getNode(), "selected");
 	}
 
 	public ReportColumn getColumnByIndex(int column) {
-		while(columns.$length() <= column){
+		while (columns.$length() <= column) {
 			addColumn();
 		}
 		return columns.$get(column);
@@ -342,9 +345,9 @@ public class ReportDefinition implements Selectable {
 }
 
 class ReportGroup {
-	
+
 	ReportSection groupHeader;
-	
+
 	String groupName;
 
 	public ReportGroup(ReportSection groupHeader, String groupName) {
@@ -352,20 +355,20 @@ class ReportGroup {
 		this.groupHeader = groupHeader;
 		this.groupName = groupName;
 	}
-	
+
 }
 
 enum SectionType {
-	TITLE, 
-	GROUP_HEADER, 
-	DETAIL_HEADER, 
+	TITLE,
+	GROUP_HEADER,
+	DETAIL_HEADER,
 	DETAIL
 }
 
 class ReportSection {
-	
+
 	Array<ReportRow> rows;
-	
+
 	String group = null;
 
 	ReportDefinition definition;
@@ -373,32 +376,33 @@ class ReportSection {
 	TableRow labelRow;
 
 	SectionType sectionType;
-	
-	public ReportSection(SectionType sectionType, ReportDefinition definition, String group){
+
+	public ReportSection(SectionType sectionType, ReportDefinition definition, String group) {
+
 		this.sectionType = sectionType;
 		this.definition = definition;
 		this.group = group;
 		rows = $array();
-		
+
 		int insertAt = definition.designTable.rows.length;
-		if(group != null){
+		if (group != null) {
 			insertAt -= 4;
 		}
 		this.labelRow = (TableRow) definition.designTable.insertRow(insertAt);
-		labelRow.id = "section"+sectionType+(group!= null? group:"")+"-L";
-		next.style.addClass(labelRow, "sectiondecorator");
-		
+		labelRow.id = "section" + sectionType + (group != null ? group : "") + "-L";
+
 		TableCell labelRowTd = (TableCell) labelRow.insertCell(0);
-		labelRowTd.innerHTML = sectionType.toString() + (group != null? " ["+group+"]": "");
-		if(definition.columns.$length() > 0){
-			labelRowTd.colSpan = definition.columns.$length(); 
+		labelRowTd.innerHTML = sectionType.toString() + (group != null ? " [" + group + "]" : "");
+		if (definition.columns.$length() > 0) {
+			labelRowTd.colSpan = definition.columns.$length();
 		}
-			
+
 		next.style.addClass(labelRowTd, "sectionLabel");
-		
+
 		rows.push(createRow());
+
 	}
-	
+
 	public void clear() {
 		labelRow.parentNode.removeChild(labelRow);
 		for (int i = 0; i < rows.$length(); i++) {
@@ -408,15 +412,15 @@ class ReportSection {
 	}
 
 	public ReportRow getLastRow() {
-		if(rows.$length() == 0){
-			Global.alert("error: report section "+this.sectionType+" does not have rows");
+		if (rows.$length() == 0) {
+			Global.alert("error: report section " + this.sectionType + " does not have rows");
 			return null;
 		}
-		return rows.$get(rows.$length()-1);
+		return rows.$get(rows.$length() - 1);
 	}
 
-	public ReportRow getRow(int index){
-		while(rows.$length() <= index){
+	public ReportRow getRow(int index) {
+		while (rows.$length() <= index) {
 			rows.push(createRow());
 		}
 		return rows.$get(index);
@@ -426,21 +430,20 @@ class ReportSection {
 		int labelRowIndex = labelRow.rowIndex;
 		int insertInIndex = labelRowIndex + rows.$length() + 1;
 		TableRow row = (TableRow) definition.designTable.insertRow(insertInIndex);
-		//next.style.addClass(row, sectionType.toString());
-		for(int i = 0; i < definition.columns.$length(); i++){
+		for (int i = 0; i < definition.columns.$length(); i++) {
 			row.insertCell(0);
 		}
 		return new ReportRow(this, row, rows.$length());
 	}
-	
+
 }
 
 class ReportRow {
-	
+
 	TableRow row;
 	int index;
 	ReportSection section;
-	
+
 	public ReportRow(ReportSection section, TableRow row, int index) {
 		this.section = section;
 		this.row = row;
@@ -448,11 +451,12 @@ class ReportRow {
 	}
 
 	public TableCell getTdForColumn(ReportColumn column) {
-		if(column.getIndex() >= row.cells.length){
-			Global.alert("Error: There is no column "+column.getIndex()+" for row "+row.rowIndex);
+		if (column.getIndex() >= row.cells.length) {
+			Global.alert("Error: There is no column " + column.getIndex() + " for row " + row.rowIndex);
 		}
 		return row.cells.$get(column.getIndex());
 	}
+
 }
 
 class ReportColumn {
@@ -462,9 +466,9 @@ class ReportColumn {
 	public ReportColumn(ReportDefinition reportDefinition) {
 		this.reportDefinition = reportDefinition;
 	}
-	
-	public int getIndex(){
-		//return reportDefinition.columns.indexOf(this);
+
+	public int getIndex() {
 		return NextGlobalJs.next.util.indexOf(reportDefinition.columns, this);
 	}
+
 }

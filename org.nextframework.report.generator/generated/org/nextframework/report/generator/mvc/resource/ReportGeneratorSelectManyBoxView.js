@@ -1,4 +1,4 @@
-var ReportGeneratorSelectManyBoxView = function(inputFrom) {
+﻿var ReportGeneratorSelectManyBoxView = function(inputFrom) {
 
     var name = inputFrom.name.substring(0, inputFrom.name.length - 6);
     this.from = inputFrom;
