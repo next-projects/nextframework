@@ -19,9 +19,9 @@ public abstract class NextEffects {
 
 	public abstract void blink(Element el);
 
-	public abstract void blockScreen();
+	public abstract String blockScreen();
 
-	public abstract void unblockScreen();
+	public abstract void unblockScreen(String blockScreenId);
 
 	public abstract void fade(Element el, int fromOpacity, int toOpacity, Map<String, Object> options);
 

@@ -86,4 +86,6 @@ public abstract class NextDom {
 
 	public abstract Element getParentTag(Element el, String parentTagName);
 
+	public abstract Integer getNextZIndex();
+
 }

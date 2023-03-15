@@ -992,18 +992,21 @@ NextDom.prototype.getForm = function(name, elements){
 }
 
 NextDom.zIndexCount = 10000;
+NextDom.prototype.getNextZIndex = function(){
+	return NextDom.zIndexCount++;
+}
 
 /**
  * Creates and return a new div popup, the screen will be blocked.
  * Call the div's close() method on finish.
  */
 NextDom.prototype.getNewPopupDiv = function (){
-	next.effects.blockScreen();
+	var blockScreenId = next.effects.blockScreen();
 	var popupdiv = next.dom.newElement('DIV',
 			{
 				className: next.globalMap.get('PopupDiv.box', 'popup_box'),
 				style : {
-					zIndex: NextDom.zIndexCount++,
+					zIndex: next.dom.getNextZIndex(),
 					position: 'absolute'
 				}
 			}
@@ -1011,7 +1014,7 @@ NextDom.prototype.getNewPopupDiv = function (){
 	next.dom.insertFirstChild(document.body, popupdiv);
 	popupdiv.close = function(){
 		popupdiv.parentNode.removeChild(popupdiv);
-		next.effects.unblockScreen();
+		next.effects.unblockScreen(blockScreenId);
 	}
 	return popupdiv;
 }
@@ -1751,39 +1754,34 @@ NextAjax.prototype.Request = NextAjaxRequest;
 /**************************************************************************************  EFFECTS  **/
 NextEffects = function(){};
 
+NextEffects.lastBlockScreenId = 0;
 NextEffects.prototype.blockScreen = function(){
-	var blockScreenId = '__block_screen';
-	var blockScreen = document.getElementById(blockScreenId);
-	var innerElement;
-	if(!next.util.isDefined(blockScreen)){
-		blockScreen = next.dom.newElement('DIV', {'id':blockScreenId});
-		next.dom.insertFirstChild(document.body, blockScreen);
-		innerElement = next.dom.newElement('DIV',
-				{
-					className: 'blockScreenTransparent',
-					style: {
-						position: 'fixed',
-						top:'0px',
-						left:'0px',
-						zIndex: 1050,
-						width: '100vw',
-						height: '100vh',
-						display: 'none'
-					}
-				});
-		next.dom.insertFirstChild(blockScreen, innerElement);
-	} else {
-		innerElement = 	blockScreen.childNodes[0];	
-	}
-	innerElement.style.display = 'block';
+	var blockScreen = next.dom.newElement('DIV',
+		{
+			'id': '__block_screen_' + next.dom.generateUniqueId(),
+			className: 'blockScreenTransparent',
+			style: {
+				position: 'fixed',
+				top:'0px',
+				left:'0px',
+				width: '100vw',
+				height: '100vh',
+				display: 'block',
+				zIndex: next.dom.getNextZIndex()
+			}
+		});
+	next.dom.insertFirstChild(document.body, blockScreen);
+	NextEffects.lastBlockScreenId = blockScreen.id;
+	return NextEffects.lastBlockScreenId;
 }
 
-NextEffects.prototype.unblockScreen = function(){
-	var blockScreenId = '__block_screen';
+NextEffects.prototype.unblockScreen = function(blockScreenId){
+	if (!next.util.isDefined(blockScreenId)) {
+		blockScreenId = NextEffects.lastBlockScreenId;
+	}
 	var blockScreen = document.getElementById(blockScreenId);
 	if(next.util.isDefined(blockScreen)){
-		var innerElement = 	blockScreen.childNodes[0];
-		innerElement.style.display = 'none';
+		blockScreen.parentNode.removeChild(blockScreen);
 	}
 }
 

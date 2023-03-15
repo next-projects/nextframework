@@ -10,22 +10,23 @@
 </div>
 
 <script type="text/javascript">
-	function hideModal_${modalTag.id}(){
-		var div = document.getElementById("${modalTag.id}");
-		div.style.display = "none";
-		<c:if test="${useBootstrap}">next.style.removeClass(div, 'show');</c:if>
-		next.effects.unblockScreen();
-	}
+	var blockScreenId_${modalTag.id} = 0;
 	function showModal_${modalTag.id}(){
 		var div = document.getElementById("${modalTag.id}");
 		div.style.display = "block";
 		<c:if test="${useBootstrap}">next.style.addClass(div, 'show');</c:if>
-		next.effects.blockScreen();
+		blockScreenId_${modalTag.id} = next.effects.blockScreen();
 	}
-	<c:if test="${!modalTag.visible}">
-		hideModal_${modalTag.id}();
-	</c:if>
+	function hideModal_${modalTag.id}(){
+		var div = document.getElementById("${modalTag.id}");
+		div.style.display = "none";
+		<c:if test="${useBootstrap}">next.style.removeClass(div, 'show');</c:if>
+		next.effects.unblockScreen(blockScreenId_${modalTag.id});
+	}
 	<c:if test="${modalTag.visible}">
 		showModal_${modalTag.id}();
+	</c:if>
+	<c:if test="${!modalTag.visible}">
+		hideModal_${modalTag.id}();
 	</c:if>
 </script>

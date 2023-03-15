@@ -132,27 +132,30 @@ public class NextDataGrid {
 		public void showConfigurationDialog() {
 
 			MessageDialog dialog = new MessageDialog();
+
 			dialog.setTitle("Configurar colunas");
 
 			Element panelDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDataGrid.panel", "")));
-			dialog.body.appendChild(panelDiv);
-
 			for (String c : columns) {
 				Column column = columns.$get(c);
 				Element divOp = next.dom.newElement("div", $map("class", next.globalMap.get("NextDataGrid.option", "popup_box_option")));
 				column.appendColumn(divOp);
 				panelDiv.appendChild(divOp);
 			}
+			dialog.appendToBody(panelDiv);
 
 			final OptionalColumnsComponent bigThis = this;
 			dialog.setCallback(new NextDialogs.DialogCallback() {
-				public void onClose(String command, Object value) {
+
+				public boolean onClick(String command, Object value, Element button) {
 					if (command.equals("CANCEL")) {
 						bigThis.cancel();
 					} else {
 						bigThis.saveColumns();
 					}
+					return true;
 				}
+
 			});
 
 			dialog.show();

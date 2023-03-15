@@ -34,24 +34,18 @@ import javax.servlet.http.HttpServletResponseWrapper;
  * @since 26/01/2006
  * @version 1.1
  */
-public class WrappedWriterResponse extends HttpServletResponseWrapper{
+public class WrappedWriterResponse extends HttpServletResponseWrapper {
 
 	private PrintWriter writer;
-	
 
 	public WrappedWriterResponse(HttpServletResponse response, PrintWriter printWriter) {
 		super(response);
 		this.writer = printWriter;
-
 	}
-
-
 
 	@Override
 	public PrintWriter getWriter() throws IOException {
-		//System.out.println("writer");
 		return writer;
 	}
-
 
 }

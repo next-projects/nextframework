@@ -7,10 +7,11 @@ NextDialogs.DialogCallback = function(){};
 
 NextDialogs.DialogCallback.$typeDescription={};
 
-NextDialogs.AbstractDialog = function() {
+NextDialogs.MessageDialog = function() {
 
-    this.body = next.dom.newElement("div");
-    this.body.className = next.globalMap.get("NextDialogs.body", "popup_box_body");
+    this.titleDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.header", "separator")});
+    this.bodyDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.body", "popup_box_body")});
+    this.buttonsDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.footer", "popup_box_footer")});
     this.commandsMap = {"OK": "Ok", 
         "CANCEL": "Cancelar"};
     //cannot use the constants .. causes bugs
@@ -19,63 +20,51 @@ NextDialogs.AbstractDialog = function() {
 
     stjs.extend(_InlineType, NextDialogs.DialogCallback);
 
-    _InlineType.prototype.onClose = function(command, value) {
+    _InlineType.prototype.onClick = function(command, value, button) {
         console.log("Command " + command);
         console.log("Value " + value);
+        return true;
     };
     _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
     
     return new _InlineType();
     })();
 };
-NextDialogs.AbstractDialog.prototype.title = null;
-NextDialogs.AbstractDialog.prototype.body = null;
-NextDialogs.AbstractDialog.prototype.commandsMap = null;
-NextDialogs.AbstractDialog.prototype.dialogCallback = null;
-NextDialogs.AbstractDialog.prototype.setCallback = function(dialogCallback) {
-    this.dialogCallback = dialogCallback;
-};
-NextDialogs.AbstractDialog.prototype.setCommandsMap = function(commandsMap) {
-    this.commandsMap = commandsMap;
-    return this;
-};
-NextDialogs.AbstractDialog.prototype.setTitle = function(title) {
-    this.title = title;
-    return this;
-};
-NextDialogs.AbstractDialog.prototype.setBody = function(body) {
-    this.body = body;
-    return this;
-};
-
-
-NextDialogs.AbstractDialog.$typeDescription={"body":"Element", "commandsMap":{name:"Map", arguments:[null,null]}, "dialogCallback":"NextDialogs.DialogCallback"};
-
-NextDialogs.MessageDialog = function(){NextDialogs.AbstractDialog.call(this);};
-
-stjs.extend(NextDialogs.MessageDialog, NextDialogs.AbstractDialog);
-
+NextDialogs.MessageDialog.prototype.title = null;
+NextDialogs.MessageDialog.prototype.commandsMap = null;
+NextDialogs.MessageDialog.prototype.dialogCallback = null;
+NextDialogs.MessageDialog.prototype.titleDiv = null;
+NextDialogs.MessageDialog.prototype.bodyDiv = null;
+NextDialogs.MessageDialog.prototype.buttonsDiv = null;
 NextDialogs.MessageDialog.prototype.popup = null;
-NextDialogs.MessageDialog.prototype.close = function() {
-    this.popup.close();
+NextDialogs.MessageDialog.prototype.setTitle = function(title) {
+    this.title = title;
+};
+NextDialogs.MessageDialog.prototype.appendToBody = function(disposableElement) {
+    this.bodyDiv.appendChild(disposableElement);
+};
+NextDialogs.MessageDialog.prototype.setCommandsMap = function(commandsMap) {
+    this.commandsMap = commandsMap;
+};
+NextDialogs.MessageDialog.prototype.setCallback = function(dialogCallback) {
+    this.dialogCallback = dialogCallback;
 };
 NextDialogs.MessageDialog.prototype.show = function() {
     this.popup = next.dom.getNewPopupDiv();
-    var titleDiv = next.dom.newElement("div", {"innerHTML": this.title, 
-        "class": next.globalMap.get("NextDialogs.header", "separator")});
-    this.popup.appendChild(titleDiv);
-    this.popup.appendChild(this.body);
+    if (this.title != null) {
+        this.titleDiv.innerHTML = this.title;
+        this.popup.appendChild(this.titleDiv);
+    }
+    this.popup.appendChild(this.bodyDiv);
     if (this.commandsMap != null) {
-        var buttonDiv = next.dom.newElement("div");
-        buttonDiv.className = next.globalMap.get("NextDialogs.footer", "popup_box_footer");
         for (var key in this.commandsMap) {
             var button = this.createButton(this.popup, key);
-            buttonDiv.appendChild(button);
+            this.buttonsDiv.appendChild(button);
         }
-        this.popup.appendChild(buttonDiv);
+        this.popup.appendChild(this.buttonsDiv);
     }
-    next.style.centralize(this.popup);
-    this.popup.style.top = "120px";
+    this.updatePopup(this.popup);
+    this.centralize();
 };
 NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
     var bigThis = this;
@@ -84,8 +73,13 @@ NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
     button.id = "dialog_btn_" + key;
     button.className = next.globalMap.get("NextDialogs.button", "button");
     button.onclick = function(p1) {
-        popup.close();
-        bigThis.dialogCallback.onClose(key, bigThis.getValue());
+        var close = true;
+        if (bigThis.dialogCallback != null) {
+            close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
+        }
+        if (close) {
+            popup.close();
+        }
         return true;
     };
     return button;
@@ -93,60 +87,55 @@ NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
 NextDialogs.MessageDialog.prototype.getValue = function() {
     return null;
 };
-NextDialogs.MessageDialog.$typeDescription=stjs.copyProps(NextDialogs.AbstractDialog.$typeDescription, {"popup":"Popup"});
-
-NextDialogs.InputMessageDialog = function(){NextDialogs.MessageDialog.call(this);};
-
-stjs.extend(NextDialogs.InputMessageDialog, NextDialogs.MessageDialog);
-
-NextDialogs.InputMessageDialog.prototype.input = null;
-NextDialogs.InputMessageDialog.prototype.getValue = function() {
-    if (this.input == null) {
-        alert("The input has not been set for dialog");
+NextDialogs.MessageDialog.prototype.updatePopup = function(popup) {
+};
+NextDialogs.MessageDialog.prototype.centralize = function() {
+    if (this.popup != null) {
+        next.style.centralize(this.popup);
     }
-    return this.input.value;
 };
-NextDialogs.InputMessageDialog.$typeDescription=stjs.copyProps(NextDialogs.MessageDialog.$typeDescription, {"input":"Input"});
-
-NextDialogs.InputNumberMessageDialog = function(){NextDialogs.InputMessageDialog.call(this);};
-
-stjs.extend(NextDialogs.InputNumberMessageDialog, NextDialogs.InputMessageDialog);
-
-NextDialogs.InputNumberMessageDialog.prototype.getValue = function() {
-    var stringValue = NextDialogs.InputMessageDialog.prototype.getValue.call(this);
-    stringValue = stringValue.replace(".", "").replace(",", ".");
-    return parseFloat(stringValue);
+NextDialogs.MessageDialog.prototype.close = function() {
+    if (this.popup != null) {
+        this.popup.close();
+    }
 };
-NextDialogs.InputNumberMessageDialog.$typeDescription=stjs.copyProps(NextDialogs.InputMessageDialog.$typeDescription, {});
+NextDialogs.MessageDialog.$typeDescription={"commandsMap":{name:"Map", arguments:[null,null]}, "dialogCallback":"NextDialogs.DialogCallback", "titleDiv":"Element", "bodyDiv":"Element", "buttonsDiv":"Element", "popup":"Popup"};
 
 NextDialogs.prototype.showInputNumberDialog = function(title, mensagem) {
-    var d = new NextDialogs.InputNumberMessageDialog();
-    d.setTitle(title);
-    var body = next.dom.newElement("div");
-    var messageDiv = next.dom.newElement("div", {"innerHTML": mensagem});
-    var inputDiv = next.dom.newElement("div");
     var input = next.dom.newInput("text");
-    input.style.marginTop = "4px";
-    input.style.marginBottom = "4px";
-    d.input = input;
+    input.className = next.globalMap.get("NextDialogs.inputText", null);
     input.onkeydown = function(event) {
-        return eval("mascara_float(input, event)");
+        return eval("mascara_float(this, event)");
     };
-    body.appendChild(messageDiv);
-    body.appendChild(inputDiv);
-    inputDiv.appendChild(input);
-    d.setBody(body);
-    d.show();
+    var dialog = (function(){
+    var _InlineType = function(){NextDialogs.MessageDialog.call(this);};
+
+    stjs.extend(_InlineType, NextDialogs.MessageDialog);
+
+    _InlineType.prototype.getValue = function() {
+        if (input.value != null && input.value != "") {
+            var stringValue = input.value;
+            stringValue = stringValue.replace(".", "").replace(",", ".");
+            return parseFloat(stringValue);
+        }
+        return null;
+    };
+    _InlineType.$typeDescription=stjs.copyProps(NextDialogs.MessageDialog.$typeDescription, {});
+    
+    return new _InlineType();
+    })();
+    dialog.setTitle(title);
+    dialog.appendToBody(next.dom.newElement("div", {"innerHTML": mensagem}));
+    dialog.appendToBody(input);
+    dialog.show();
     input.focus();
-    return d;
+    return dialog;
 };
-NextDialogs.prototype.showMessageDialog = function(message) {
-};
-NextDialogs.prototype.showDialog = function(title, el) {
+NextDialogs.prototype.showDialog = function(title, disposableBody) {
     var dialog = new NextDialogs.MessageDialog();
     dialog.setTitle(title);
-    dialog.commandsMap = null;
-    dialog.body.appendChild(el);
+    dialog.appendToBody(disposableBody);
+    dialog.setCommandsMap(null);
     dialog.show();
     return dialog;
 };

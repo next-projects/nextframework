@@ -92,7 +92,6 @@ NextDataGrid.OptionalColumnsComponent.prototype.showConfigurationDialog = functi
     var dialog = new NextDialogs.MessageDialog();
     dialog.setTitle("Configurar colunas");
     var panelDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDataGrid.panel", "")});
-    dialog.body.appendChild(panelDiv);
     for (var c in this.columns) {
         if (!(this.columns).hasOwnProperty(c)) continue;
         var column = this.columns[c];
@@ -100,18 +99,20 @@ NextDataGrid.OptionalColumnsComponent.prototype.showConfigurationDialog = functi
         column.appendColumn(divOp);
         panelDiv.appendChild(divOp);
     }
+    dialog.appendToBody(panelDiv);
     var bigThis = this;
     dialog.setCallback((function(){
     var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
 
     stjs.extend(_InlineType, NextDialogs.DialogCallback);
 
-    _InlineType.prototype.onClose = function(command, value) {
+    _InlineType.prototype.onClick = function(command, value, button) {
         if ((command == "CANCEL")) {
             bigThis.cancel();
         } else {
             bigThis.saveColumns();
         }
+        return true;
     };
     _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
     
