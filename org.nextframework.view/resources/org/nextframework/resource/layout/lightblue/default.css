@@ -222,6 +222,28 @@ LI.causeItem {
 	font-weight: normal;
 }
 
+.messagetoast {
+	position: absolute;
+	top: 130px;
+	background-color: transparent;
+	z-index: 1000;
+	width: 100%;
+}
+
+.messagetoast div{
+	margin: auto;
+	display: block;
+	width: 300px;
+	text-align: center;
+	background-color: #555555;
+	border: 1px solid #222222;
+	border-radius: 10px;
+	color:#FFFFFF;
+	padding: 8px;
+	font-weight: 500;
+	opacity: 0.95;
+}
+
 div.body {
 	margin: 5px;
 }
@@ -312,6 +334,45 @@ div.body {
 	background-color: #F9F9F9;
 }
 
+.order {
+	font-size: 12px;
+	text-decoration: none;
+	text-align: left;
+}
+
+UL.pagePanel {
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+}
+
+UL.pagePanel LI {
+	display: inline;
+	padding: 0;
+	margin: 0;
+}
+
+UL.pagePanel LI A {
+	padding: 4px 8px;
+	text-decoration: none;
+}
+
+UL.pagePanel LI A.pageSelected {
+	font-weight: bold;
+	background-color: #F9F9F9;
+}
+
+UL.pagePanel LI A:hover:not(.pageSelected) {
+	background-color: #F9F9F9;
+}
+
+.pagging {
+	text-align: right;
+	background-color: #EBF0F8;
+	padding: 4px;
+	font-size: 11px;
+}
+
 .filterWindow {
 	border: 1px solid #CCCCCC;
 	margin: 0px;
@@ -346,45 +407,6 @@ div.body {
 	margin-top: 8px;
 	color: #006699;
 	display: none;
-}
-
-.order {
-	font-size: 12px;
-	text-decoration: none;
-	text-align: left;
-}
-
-.pagging {
-	text-align: right;
-	background-color: #EBF0F8;
-	padding: 4px;
-	font-size: 11px;
-}
-
-UL.pagePanel {
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-}
-
-UL.pagePanel LI {
-	display: inline;
-	padding: 0;
-	margin: 0;
-}
-
-UL.pagePanel LI A {
-	padding: 4px 8px;
-	text-decoration: none;
-}
-
-UL.pagePanel LI A.pageSelected {
-	font-weight: bold;
-	background-color: #F9F9F9;
-}
-
-UL.pagePanel LI A:hover:not(.pageSelected) {
-	background-color: #F9F9F9;
 }
 
 .actionBar {

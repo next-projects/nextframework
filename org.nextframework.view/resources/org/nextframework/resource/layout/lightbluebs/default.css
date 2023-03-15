@@ -33,6 +33,7 @@ A.btn:HOVER {
 	--bs-light-rgb: 238,239,240; /* #eeeff0 */
 	--sl-disabled-bg: var(--bs-gray-200);
 	--sl-alert-bg: #fffaeb;
+	--sl-alert-border: #e5dbba;
 }
 
 
@@ -41,7 +42,7 @@ A.btn:HOVER {
 .alert-primary {
 	--bs-alert-color: var(--bs-primary);
 	--bs-alert-bg: var(--sl-alert-bg);
-	--bs-alert-border-color: #e5dbba;
+	--bs-alert-border-color: var(--sl-alert-border);
 }
 
 .messageBlock UL {
@@ -112,6 +113,17 @@ LI.event, .event {
 	background-position: 5px 4px;
 }
 
+.alert-toast {
+	position: absolute;
+	z-index: 20000;
+	max-width: 50%;
+	margin-left: 50%;
+	transform: translate(-50%, 0);
+	--bs-alert-margin-bottom: 0px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+
 .exceptionItem, .messageBlock UL LI .exceptionItemm {
 	color: var(--bs-danger);
 }
@@ -120,6 +132,21 @@ LI.event, .event {
 	color: var(--bs-dark);
 	font-size: 0.75rem;
 	padding-left: 0px;
+}
+
+
+/* Popup */
+
+.smallPopup {
+	max-width: 30em;
+}
+
+.mediumPopup {
+	max-width: 60em;
+}
+
+.largePopup {
+	max-width: 90em;
 }
 
 
@@ -275,5 +302,5 @@ TABLE .group3 TD:first-child:before{
 /* Popover */
 
 .popover {
-	--bs-popover-max-width: 500px;
+	--bs-popover-max-width: 60em;
 }

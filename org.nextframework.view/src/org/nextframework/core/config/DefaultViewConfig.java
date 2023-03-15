@@ -2,6 +2,7 @@ package org.nextframework.core.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.nextframework.view.BaseTag;
@@ -25,6 +26,7 @@ import org.nextframework.view.template.FormViewTag;
 import org.nextframework.view.template.ListPanelTag;
 import org.nextframework.view.template.ListTableTag;
 import org.nextframework.view.template.ListViewTag;
+import org.nextframework.view.template.PropertyLayoutTag;
 import org.nextframework.view.template.PropertyTag;
 import org.nextframework.view.template.ReportPanelTag;
 import org.nextframework.view.template.ReportTableTag;
@@ -120,7 +122,7 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	protected Map<Class<? extends BaseTag>, Map<String, String>> getStyleClasses() {
-		styleClassesMap.clear(); //TODO REMOVER ISSO EM PRODUCAO!!
+		//styleClassesMap.clear(); //TODO REMOVER ISSO EM PRODUCAO!!
 		if (styleClassesMap.isEmpty()) {
 			initStyleClasses();
 		}
@@ -177,7 +179,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(MessagesTag.class, "warnClass", "warn");
 			regDefaultStyleClasses(MessagesTag.class, "errorClass", "error");
 			regDefaultStyleClasses(MessagesTag.class, "eventClass", "event");
-			regDefaultStyleClasses(MessagesTag.class, "toastClass", "messageToast");
+			regDefaultStyleClasses(MessagesTag.class, "toastClass", "alert alert-primary alert-toast");
 			regDefaultStyleClasses(MessagesTag.class, "exceptionClass", "exceptionItem");
 			regDefaultStyleClasses(MessagesTag.class, "exceptionCauseClass", "causeItem");
 
@@ -279,7 +281,7 @@ public class DefaultViewConfig implements ViewConfig {
 				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(FilterTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "p-2");
 			}
 
 			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "card mb-4");
@@ -304,7 +306,7 @@ public class DefaultViewConfig implements ViewConfig {
 				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(FormTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "p-2");
 			}
 
 			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "card mb-4");
@@ -319,19 +321,41 @@ public class DefaultViewConfig implements ViewConfig {
 				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
 			} else {
 				regDefaultStyleClasses(ReportTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "text-end p-2,p-2");
+				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "p-2");
 			}
 
 			regDefaultStyleClasses(DetailTag.class, "actionButtonStyleClass", "btn btn-sm btn-primary");
 			regDefaultStyleClasses(DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary mt-1");
 
-			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelPanelStyleClass", "d-flex align-items-center justify-content-end text-end");
-			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "d-flex align-items-center");
-			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
-			regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
-			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
-			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
-			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
+			if (isDefaultFlatMode()) {
+				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelPanelStyleClass", "d-flex align-items-center justify-content-end text-end");
+				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
+				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "d-flex align-items-center");
+				regDefaultStyleClasses(PropertyTag.class, "INVERT-panelStyleClass", "d-flex align-items-center justify-content-end");
+				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelPanelStyleClass", "d-flex align-items-center form-check text-wrap text-truncate");
+				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelStyleClass", "form-check-label");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
+			}else {
+				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelPanelStyleClass", "text-end");
+				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
+				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "align-middle");
+				regDefaultStyleClasses(PropertyTag.class, "INVERT-panelStyleClass", "align-middle text-end");
+				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelPanelStyleClass", "align-middle text-wrap text-truncate");
+				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelStyleClass", "form-check-label");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "align-bottom");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
+				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
+			}
+
+			//TODO Fazer a tag PropertyTag utilizar PropertyLayoutTag
+			Map<String, String> propertyTagMap = styleClassesMap.get(PropertyTag.class);
+			for (Entry<String, String> entry : propertyTagMap.entrySet()) {
+				regDefaultStyleClasses(PropertyLayoutTag.class, entry.getKey(), entry.getValue());
+			}
 
 		} else {
 
