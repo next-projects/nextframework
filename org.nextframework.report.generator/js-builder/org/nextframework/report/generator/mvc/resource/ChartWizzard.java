@@ -479,6 +479,7 @@ public class ChartWizzard {
 		final Element panelDivParent = panelDiv.parentNode;
 
 		final MessageDialog dialog = new MessageDialog();
+		dialog.setSize(NextDialogs.SIZE_EXTRALARGE);
 		dialog.setTitle("Configurar gráfico");
 		dialog.appendToBody(panelDiv);
 		dialog.setCommandsMap($map("CANCEL", "Cancelar", "NEXT", "Proximo"));
@@ -488,7 +489,6 @@ public class ChartWizzard {
 				if (command.equals("NEXT")) {
 					boolean close = bigThis.next(button);
 					if (!close) {
-						dialog.centralize();
 						return false;
 					}
 				}

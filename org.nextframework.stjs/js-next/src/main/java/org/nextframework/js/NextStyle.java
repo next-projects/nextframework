@@ -47,10 +47,6 @@ public abstract class NextStyle {
 
 	public abstract void centralizeVertical(Element el);
 
-	public abstract void centralizeVerticalMiddleLine(Element el);
-
-	public abstract void centralizeMiddleLine(Element el);
-
 	public abstract void centralize(Element el);
 
 }

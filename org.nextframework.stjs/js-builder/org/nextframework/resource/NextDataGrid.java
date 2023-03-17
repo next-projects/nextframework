@@ -14,7 +14,6 @@ import org.stjs.javascript.dom.DOMEvent;
 import org.stjs.javascript.dom.Element;
 import org.stjs.javascript.dom.HTMLCollection;
 import org.stjs.javascript.dom.Input;
-import org.stjs.javascript.dom.Label;
 import org.stjs.javascript.dom.Table;
 import org.stjs.javascript.dom.TableCell;
 import org.stjs.javascript.dom.TableRow;
@@ -51,15 +50,15 @@ public class NextDataGrid {
 			}
 
 			public void appendColumn(Element p) {
-				this.check = next.dom.newInput("checkbox");
+				Map<String, Object> optionsMap = $map();
+				optionsMap.$put("id", next.dom.generateUniqueId());
+				optionsMap.$put("className", next.globalMap.get("NextDataGrid.optionInput", null));
+				optionsMap.$put("labelOptions", $map("className", next.globalMap.get("NextDataGrid.optionLabel", null)));
+				optionsMap.$put("containerOptions", $map("className", next.globalMap.get("NextDataGrid.optionContainer", null)));
+				Element panelSpan = next.dom.newInput("checkbox", null, label, optionsMap);
+				this.check = (Input) panelSpan.getElementsByTagName("input").$get(0);
 				check.checked = showColumn;
-				check.style.margin = "6px";
-				p.appendChild(check);
-				Label labelEl = next.dom.newElement("label");
-				labelEl.htmlFor = check.id;
-				labelEl.innerHTML = label;
-				labelEl.style.verticalAlign = "2px";
-				p.appendChild(labelEl);
+				p.appendChild(panelSpan);
 			}
 
 			private int getColumnIndex() {

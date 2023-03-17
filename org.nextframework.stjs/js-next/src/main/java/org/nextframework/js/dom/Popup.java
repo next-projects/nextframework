@@ -6,6 +6,8 @@ import org.stjs.javascript.dom.Div;
 @STJSBridge
 public abstract class Popup extends Div {
 
+	public abstract void setSize(String size);
+
 	public abstract void close();
 
 }

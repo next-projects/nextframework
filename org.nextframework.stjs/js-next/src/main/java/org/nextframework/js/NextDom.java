@@ -37,7 +37,7 @@ public abstract class NextDom {
 
 	public abstract <X extends Div> X newSpanElement();
 
-	public abstract <X extends Input> X newInput(String type, String name, String label, Map<String, Object> options);
+	public abstract <X extends Input> X newInput(String type, String name, String label, Map<String, ?> options);
 
 	public abstract <X extends Input> X newInput(String type, String name, String label);
 

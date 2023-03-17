@@ -293,6 +293,7 @@ public class ReportDesigner {
 		final Element panelDivParent = panelDiv.parentNode;
 
 		final MessageDialog dialog = new MessageDialog();
+		dialog.setSize(NextDialogs.SIZE_LARGE);
 		dialog.setTitle("Configurar campo calculado");
 		dialog.appendToBody(panelDiv);
 		dialog.setCallback(new NextDialogs.DialogCallback() {
@@ -398,6 +399,7 @@ public class ReportDesigner {
 		}
 
 		MessageDialog dialog = new MessageDialog();
+		dialog.setSize(NextDialogs.SIZE_LARGE);
 		dialog.setTitle("Configurar campos");
 
 		final Element panelDiv = Global.window.document.getElementById("propertiesWizzard");

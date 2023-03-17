@@ -15,6 +15,10 @@ import org.stjs.javascript.functions.Function1;
 
 public class NextDialogs {
 
+	public static final String SIZE_SMALL = "SM";
+	public static final String SIZE_LARGE = "LG";
+	public static final String SIZE_EXTRALARGE = "XL";
+
 	public static final String CANCEL = "CANCEL";
 	public static final String OK = "OK";
 
@@ -26,18 +30,20 @@ public class NextDialogs {
 
 	public static class MessageDialog {
 
-		private String title;
-		private Map<String, String> commandsMap;
-		private DialogCallback dialogCallback;
+		private String size;
 
 		private Element titleDiv;
 		private Element bodyDiv;
 		private Element buttonsDiv;
+
+		private Map<String, String> commandsMap;
+		private DialogCallback dialogCallback;
+
 		private Popup popup;
 
 		public MessageDialog() {
 
-			titleDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.header", "separator")));
+			titleDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.header", "popup_box_header")));
 
 			bodyDiv = next.dom.newElement("div", $map("class", next.globalMap.get("NextDialogs.body", "popup_box_body")));
 
@@ -59,8 +65,16 @@ public class NextDialogs {
 
 		}
 
+		public void setSize(String size) {
+			this.size = size;
+		}
+
 		public void setTitle(String title) {
-			this.title = title;
+			this.titleDiv.innerHTML = title;
+		}
+
+		public void appendToTitle(Element disposableElement) {
+			this.titleDiv.appendChild(disposableElement);
 		}
 
 		public void appendToBody(Element disposableElement) {
@@ -79,8 +93,11 @@ public class NextDialogs {
 
 			popup = next.dom.getNewPopupDiv();
 
-			if (title != null) {
-				titleDiv.innerHTML = title;
+			if (size != null) {
+				popup.setSize(size);
+			}
+
+			if (titleDiv.textContent.trim().length() > 0) {
 				popup.appendChild(titleDiv);
 			}
 
@@ -91,11 +108,11 @@ public class NextDialogs {
 					Element button = createButton(popup, key);
 					buttonsDiv.appendChild(button);
 				}
-				popup.appendChild(buttonsDiv);
 			}
 
-			updatePopup(popup);
-			centralize();
+			if (buttonsDiv.textContent.trim().length() > 0) {
+				popup.appendChild(buttonsDiv);
+			}
 
 		}
 
@@ -127,16 +144,6 @@ public class NextDialogs {
 
 		public Object getValue() {
 			return null;
-		}
-
-		public void updatePopup(Popup popup) {
-			
-		}
-
-		public void centralize() {
-			if (popup != null) {
-				next.style.centralize(popup);
-			}
 		}
 
 		public void close() {

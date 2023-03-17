@@ -31,15 +31,15 @@ NextDataGrid.OptionalColumnsComponent.Column.prototype.check = null;
 NextDataGrid.OptionalColumnsComponent.Column.prototype.columnIndex = null;
 NextDataGrid.OptionalColumnsComponent.Column.prototype.table = null;
 NextDataGrid.OptionalColumnsComponent.Column.prototype.appendColumn = function(p) {
-    this.check = next.dom.newInput("checkbox");
+    var optionsMap = {};
+    optionsMap["id"] = next.dom.generateUniqueId();
+    optionsMap["className"] = next.globalMap.get("NextDataGrid.optionInput", null);
+    optionsMap["labelOptions"] = {"className": next.globalMap.get("NextDataGrid.optionLabel", null)};
+    optionsMap["containerOptions"] = {"className": next.globalMap.get("NextDataGrid.optionContainer", null)};
+    var panelSpan = next.dom.newInput("checkbox", null, this.label, optionsMap);
+    this.check = panelSpan.getElementsByTagName("input")[0];
     this.check.checked = this.showColumn;
-    this.check.style.margin = "6px";
-    p.appendChild(this.check);
-    var labelEl = next.dom.newElement("label");
-    labelEl.htmlFor = this.check.id;
-    labelEl.innerHTML = this.label;
-    labelEl.style.verticalAlign = "2px";
-    p.appendChild(labelEl);
+    p.appendChild(panelSpan);
 };
 NextDataGrid.OptionalColumnsComponent.Column.prototype.getColumnIndex = function() {
     var tableCell = this.getTableHeaderCell();

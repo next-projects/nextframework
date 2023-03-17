@@ -191,6 +191,7 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
     var panelDiv = window.document.getElementById("calculatedPropertiesWizzard");
     var panelDivParent = panelDiv.parentNode;
     var dialog = new NextDialogs.MessageDialog();
+    dialog.setSize(NextDialogs.SIZE_LARGE);
     dialog.setTitle("Configurar campo calculado");
     dialog.appendToBody(panelDiv);
     dialog.setCallback((function(){
@@ -292,6 +293,7 @@ ReportDesigner.prototype.showConfigureProperties = function() {
         }
     }
     var dialog = new NextDialogs.MessageDialog();
+    dialog.setSize(NextDialogs.SIZE_LARGE);
     dialog.setTitle("Configurar campos");
     var panelDiv = window.document.getElementById("propertiesWizzard");
     var panelDivParent = panelDiv.parentNode;

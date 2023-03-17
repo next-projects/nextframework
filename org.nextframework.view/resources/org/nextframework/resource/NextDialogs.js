@@ -1,5 +1,8 @@
 ﻿var NextDialogs = function(){};
 
+NextDialogs.SIZE_SMALL = "SM";
+NextDialogs.SIZE_LARGE = "LG";
+NextDialogs.SIZE_EXTRALARGE = "XL";
 NextDialogs.CANCEL = "CANCEL";
 NextDialogs.OK = "OK";
 NextDialogs.DialogCallback = function(){};
@@ -9,7 +12,7 @@ NextDialogs.DialogCallback.$typeDescription={};
 
 NextDialogs.MessageDialog = function() {
 
-    this.titleDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.header", "separator")});
+    this.titleDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.header", "popup_box_header")});
     this.bodyDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.body", "popup_box_body")});
     this.buttonsDiv = next.dom.newElement("div", {"class": next.globalMap.get("NextDialogs.footer", "popup_box_footer")});
     this.commandsMap = {"OK": "Ok", 
@@ -30,15 +33,21 @@ NextDialogs.MessageDialog = function() {
     return new _InlineType();
     })();
 };
-NextDialogs.MessageDialog.prototype.title = null;
-NextDialogs.MessageDialog.prototype.commandsMap = null;
-NextDialogs.MessageDialog.prototype.dialogCallback = null;
+NextDialogs.MessageDialog.prototype.size = null;
 NextDialogs.MessageDialog.prototype.titleDiv = null;
 NextDialogs.MessageDialog.prototype.bodyDiv = null;
 NextDialogs.MessageDialog.prototype.buttonsDiv = null;
+NextDialogs.MessageDialog.prototype.commandsMap = null;
+NextDialogs.MessageDialog.prototype.dialogCallback = null;
 NextDialogs.MessageDialog.prototype.popup = null;
+NextDialogs.MessageDialog.prototype.setSize = function(size) {
+    this.size = size;
+};
 NextDialogs.MessageDialog.prototype.setTitle = function(title) {
-    this.title = title;
+    this.titleDiv.innerHTML = title;
+};
+NextDialogs.MessageDialog.prototype.appendToTitle = function(disposableElement) {
+    this.titleDiv.appendChild(disposableElement);
 };
 NextDialogs.MessageDialog.prototype.appendToBody = function(disposableElement) {
     this.bodyDiv.appendChild(disposableElement);
@@ -51,8 +60,10 @@ NextDialogs.MessageDialog.prototype.setCallback = function(dialogCallback) {
 };
 NextDialogs.MessageDialog.prototype.show = function() {
     this.popup = next.dom.getNewPopupDiv();
-    if (this.title != null) {
-        this.titleDiv.innerHTML = this.title;
+    if (this.size != null) {
+        this.popup.setSize(this.size);
+    }
+    if (this.titleDiv.textContent.trim().length > 0) {
         this.popup.appendChild(this.titleDiv);
     }
     this.popup.appendChild(this.bodyDiv);
@@ -61,10 +72,10 @@ NextDialogs.MessageDialog.prototype.show = function() {
             var button = this.createButton(this.popup, key);
             this.buttonsDiv.appendChild(button);
         }
+    }
+    if (this.buttonsDiv.textContent.trim().length > 0) {
         this.popup.appendChild(this.buttonsDiv);
     }
-    this.updatePopup(this.popup);
-    this.centralize();
 };
 NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
     var bigThis = this;
@@ -87,19 +98,12 @@ NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
 NextDialogs.MessageDialog.prototype.getValue = function() {
     return null;
 };
-NextDialogs.MessageDialog.prototype.updatePopup = function(popup) {
-};
-NextDialogs.MessageDialog.prototype.centralize = function() {
-    if (this.popup != null) {
-        next.style.centralize(this.popup);
-    }
-};
 NextDialogs.MessageDialog.prototype.close = function() {
     if (this.popup != null) {
         this.popup.close();
     }
 };
-NextDialogs.MessageDialog.$typeDescription={"commandsMap":{name:"Map", arguments:[null,null]}, "dialogCallback":"NextDialogs.DialogCallback", "titleDiv":"Element", "bodyDiv":"Element", "buttonsDiv":"Element", "popup":"Popup"};
+NextDialogs.MessageDialog.$typeDescription={"titleDiv":"Element", "bodyDiv":"Element", "buttonsDiv":"Element", "commandsMap":{name:"Map", arguments:[null,null]}, "dialogCallback":"NextDialogs.DialogCallback", "popup":"Popup"};
 
 NextDialogs.prototype.showInputNumberDialog = function(title, mensagem) {
     var input = next.dom.newInput("text");

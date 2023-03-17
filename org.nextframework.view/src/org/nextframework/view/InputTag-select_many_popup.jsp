@@ -10,5 +10,5 @@
 <select id="${tag.id}" name="${tag.name}" onchange="${tag.reloadOnChangeString}" multiple="multiple" style="display:none">${tag.inputComponent.selectItensString}</select>
 <input type="hidden" name="_${tag.name}" value=" "/>
 <script type="text/javascript">
-	SelectManyPopup.install('${tag.name}', '${tag.inputComponent.styleString}');
+	SelectManyPopup.install('${tag.name}');
 </script>

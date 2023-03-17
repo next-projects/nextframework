@@ -135,18 +135,17 @@ LI.event, .event {
 }
 
 
+/* BlockScreen */
+
+.modal-backdrop {
+	--bs-backdrop-bg: #FFFFFF;
+	--bs-backdrop-opacity: 0.75;
+}
+
 /* Popup */
 
-.smallPopup {
-	max-width: 30em;
-}
-
-.mediumPopup {
-	max-width: 60em;
-}
-
-.largePopup {
-	max-width: 90em;
+.modal {
+	display: unset;
 }
 
 

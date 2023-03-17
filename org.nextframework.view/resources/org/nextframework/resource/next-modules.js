@@ -630,13 +630,11 @@ NextDom.prototype.newInput = function(type, name, label, options){
 		options.name = name;
 	}
 	this.attachAttributes(element, options);
-	
 	if(next.util.isDefined(label)){
 		var labelTag = document.createElement("label");
 		labelTag.setAttribute("for", options.id);
 		labelTag.innerHTML = label;
 		this.attachAttributes(labelTag, options.labelOptions);
-		
 		var container = document.createElement("span");
 		this.attachAttributes(container, options.containerOptions);
 		if(type == "checkbox"){
@@ -646,7 +644,6 @@ NextDom.prototype.newInput = function(type, name, label, options){
 			container.appendChild(labelTag);
 			container.appendChild(element);
 		}
-		
 		element = container;
 	}
 	return element;
@@ -1001,22 +998,38 @@ NextDom.prototype.getNextZIndex = function(){
  * Call the div's close() method on finish.
  */
 NextDom.prototype.getNewPopupDiv = function (){
+
 	var blockScreenId = next.effects.blockScreen();
-	var popupdiv = next.dom.newElement('DIV',
-			{
-				className: next.globalMap.get('PopupDiv.box', 'popup_box'),
-				style : {
-					zIndex: next.dom.getNextZIndex(),
-					position: 'absolute'
-				}
-			}
-		);
-	next.dom.insertFirstChild(document.body, popupdiv);
-	popupdiv.close = function(){
-		popupdiv.parentNode.removeChild(popupdiv);
+
+	var modalDiv = next.dom.newElement('DIV');
+	modalDiv.className = next.globalMap.get('PopupDiv.modal', 'popup_modal');
+	modalDiv.style.zIndex = next.dom.getNextZIndex();
+	next.dom.insertFirstChild(document.body, modalDiv);
+
+	var dialogDiv = next.dom.newElement('DIV');
+	dialogDiv.className = next.globalMap.get('PopupDiv.dialog', 'popup_dialog');
+	next.dom.insertFirstChild(modalDiv, dialogDiv);
+
+	var popupDiv = next.dom.newElement('DIV');
+	popupDiv.className = next.globalMap.get('PopupDiv.box', 'popup_box');
+	popupDiv.setSize = function(size){
+		if (size == 'SM') {
+			next.style.addClass(dialogDiv, next.globalMap.get("PopupDiv.smallDialog", "popup_smallSize"));
+		} else if (size == 'LG') {
+			next.style.addClass(dialogDiv, next.globalMap.get("PopupDiv.largeDialog", "popup_largeSize"));
+		} else if (size == 'XL') {
+			next.style.addClass(dialogDiv, next.globalMap.get("PopupDiv.extraDialog", "popup_extraSize"));
+		} else {
+			throw ("Invalid size '"+size+"'. Choose between SM, LG or XL.");
+		}
+	}
+	popupDiv.close = function(){
+		modalDiv.parentNode.removeChild(modalDiv);
 		next.effects.unblockScreen(blockScreenId);
 	}
-	return popupdiv;
+	next.dom.insertFirstChild(dialogDiv, popupDiv);
+
+	return popupDiv;
 }
 
 /**
@@ -1460,13 +1473,6 @@ NextStyle.prototype.centralizeHorizontal = function(element){
 	element.style.left = left + 'px';
 }
 
-NextStyle.prototype.centralizeVerticalMiddleLine = function(element){
-	var height = next.style.getFullHeight(element);
-	var windowHeight = next.style.getWindowSize()[1];
-	var top = (windowHeight /2) - (height);
-	element.style.top = top + 'px';
-}
-
 NextStyle.prototype.centralizeVertical = function(element){
 	var height = next.style.getFullHeight(element);
 	var windowHeight = next.style.getWindowSize()[1];
@@ -1477,11 +1483,6 @@ NextStyle.prototype.centralizeVertical = function(element){
 NextStyle.prototype.centralize = function(element){
 	next.style.centralizeHorizontal(element);
 	next.style.centralizeVertical(element);
-}
-
-NextStyle.prototype.centralizeMiddleLine = function(element){
-	next.style.centralizeHorizontal(element);
-	next.style.centralizeVerticalMiddleLine(element);
 }
 
 new NextStyle();
@@ -1759,17 +1760,17 @@ NextEffects.prototype.blockScreen = function(){
 	var blockScreen = next.dom.newElement('DIV',
 		{
 			'id': '__block_screen_' + next.dom.generateUniqueId(),
-			className: 'blockScreenTransparent',
+			className: next.globalMap.get('BlockScreen.panel', 'blockScreenTransparent'),
 			style: {
 				position: 'fixed',
 				top:'0px',
 				left:'0px',
 				width: '100vw',
 				height: '100vh',
-				display: 'block',
 				zIndex: next.dom.getNextZIndex()
 			}
 		});
+	blockScreen
 	next.dom.insertFirstChild(document.body, blockScreen);
 	NextEffects.lastBlockScreenId = blockScreen.id;
 	return NextEffects.lastBlockScreenId;

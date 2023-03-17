@@ -334,6 +334,7 @@ ChartWizzard.prototype.show = function() {
     var panelDiv = this.mainDiv;
     var panelDivParent = panelDiv.parentNode;
     var dialog = new NextDialogs.MessageDialog();
+    dialog.setSize(NextDialogs.SIZE_EXTRALARGE);
     dialog.setTitle("Configurar gráfico");
     dialog.appendToBody(panelDiv);
     dialog.setCommandsMap({"CANCEL": "Cancelar", 
@@ -347,7 +348,6 @@ ChartWizzard.prototype.show = function() {
         if ((command == "NEXT")) {
             var close = bigThis.next(button);
             if (!close) {
-                dialog.centralize();
                 return false;
             }
         }

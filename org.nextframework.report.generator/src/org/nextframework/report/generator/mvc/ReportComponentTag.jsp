@@ -242,7 +242,7 @@
 				</n:panel>
 			</t:formTable>
 		</div>
-		<div id="chartWizzard_page_2" style="max-width: 60em; display: none">
+		<div id="chartWizzard_page_2" style="display: none">
 			<t:formTable columns="12">
 				
 				<t:propertyLayout label="Título do gráfico" bodyId="chartTitle" colspan="12">
@@ -379,7 +379,7 @@
 
 			</t:formTable>
 		</div>
-		<div id="chartWizzard_page_3" style="max-width: 60em; display: none">
+		<div id="chartWizzard_page_3" style="display: none">
 			<t:formTable columns="12">
 
 				<t:propertyLayout label="Título do gráfico" bodyId="chartTitleSpan">
@@ -399,7 +399,7 @@
 	</div>
 
 	<div id="calculatedPropertiesWizzard">
-		<t:formTable style="max-width: 60em;" columns="12">
+		<t:formTable columns="12">
 
 			<t:propertyLayout label="Nome" bodyId="calculationDisplayName" colspan="12">
 				<input type="text" name="calculationDisplayName" id="calculationDisplayName" value="" class="${inputTagClass}"/>
