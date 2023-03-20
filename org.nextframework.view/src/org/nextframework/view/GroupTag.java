@@ -103,7 +103,7 @@ public class GroupTag extends ComboTag {
 		}
 
 		if (flatMode == null) {
-			flatMode = false;
+			flatMode = getViewConfig().isDefaultFlatMode();
 		}
 
 		if (columns == null || columns == 0/*forçado*/) {

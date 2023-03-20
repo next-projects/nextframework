@@ -17,7 +17,7 @@ A:HOVER {
 	text-decoration: underline;
 }
 
-A.btn:HOVER {
+.dropdown-item:focus, .dropdown-item:hover, A.btn:HOVER {
 	text-decoration: none;
 }
 

@@ -12,10 +12,11 @@
 <script type="text/javascript">
 	var blockScreenId_${modalTag.id} = 0;
 	function showModal_${modalTag.id}(){
+		blockScreenId_${modalTag.id} = next.effects.blockScreen();
 		var div = document.getElementById("${modalTag.id}");
 		div.style.display = "block";
+		div.style.zIndex = next.dom.getNextZIndex();
 		<c:if test="${useBootstrap}">next.style.addClass(div, 'show');</c:if>
-		blockScreenId_${modalTag.id} = next.effects.blockScreen();
 	}
 	function hideModal_${modalTag.id}(){
 		var div = document.getElementById("${modalTag.id}");

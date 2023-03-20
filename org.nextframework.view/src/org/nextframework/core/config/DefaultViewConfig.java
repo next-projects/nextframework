@@ -1,6 +1,7 @@
 package org.nextframework.core.config;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class DefaultViewConfig implements ViewConfig {
 
 	protected Map<Class<?>, InputTagType> customInputTypesMap = new HashMap<Class<?>, InputTagType>();
 
-	protected Map<Class<? extends BaseTag>, Map<String, String>> styleClassesMap = new HashMap<Class<? extends BaseTag>, Map<String, String>>();
+	protected Map<Class<? extends BaseTag>, Map<String, String>> styleClassesMap = new LinkedHashMap<Class<? extends BaseTag>, Map<String, String>>();
 
 	@Override
 	public String getJSPDefaultCharset() {
@@ -145,12 +146,10 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border border-primary border-opacity-50 rounded p-2");
 			regDefaultStyleClasses(GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-75");
 
-			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
-			regDefaultStyleClasses(InputTag.class, "class", "form-control");
-			regDefaultStyleClasses(InputTag.class, "DATE-group", "input-group flex-nowrap");
-			regDefaultStyleClasses(InputTag.class, "DATE-button", "bi bi-calendar3 pe-auto input-group-text");
 			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "form-check-input");
 			regDefaultStyleClasses(InputTag.class, "CHECKLIST-class", "form-check-input");
+			regDefaultStyleClasses(InputTag.class, "DATE-group", "input-group flex-nowrap");
+			regDefaultStyleClasses(InputTag.class, "DATE-button", "bi bi-calendar3 pe-auto input-group-text");
 			regDefaultStyleClasses(InputTag.class, "HIDDEN-class", " ");
 			regDefaultStyleClasses(InputTag.class, "RADIO-class", "form-check-input");
 			regDefaultStyleClasses(InputTag.class, "SELECT_ONE-class", "form-select");
@@ -160,6 +159,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-buttonRemove", "btn btn-primary bi bi-arrow-left");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-group", "input-group flex-nowrap");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-button", "bi bi-three-dots input-group-text");
+			regDefaultStyleClasses(InputTag.class, "class", "form-control");
+			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
 
 			regDefaultStyleClasses(LinkTag.class, "BUTTON-class", "btn btn-primary");
 
@@ -192,9 +193,6 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(PaggingTag.class, "selectedClass", "page-link active");
 			regDefaultStyleClasses(PaggingTag.class, "unselectedClass", "page-link");
 
-			regDefaultStyleClasses(FormTableTag.class, "styleClass", "m-2");
-			regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "p-2");
-
 			regDefaultStyleClasses(SubmitTag.class, "BUTTON-class", "btn btn-primary");
 			regDefaultStyleClasses(SubmitTag.class, "SUBMIT-class", "btn btn-primary");
 
@@ -215,10 +213,10 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(DataGridTag.class, "footerStyleClass", "dataGridFooter");
 			regDefaultStyleClasses(DataGridTag.class, "groupStyleClasses", "dataGridGroup1, dataGridGroup2, dataGridGroup3");
 
-			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
 			regDefaultStyleClasses(InputTag.class, "DATE-button", "calendarbutton");
 			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "checkboxClass");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_POPUP-button", "select_many_popup_button");
+			regDefaultStyleClasses(InputTag.class, "requiredStyleClass", "requiredMark");
 
 			regDefaultStyleClasses(MenuTag.class, "panelStyleClass", "menuClass");
 
@@ -275,14 +273,11 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
-			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(FilterTableTag.class, "styleClass", "container-fluid");
-				regDefaultStyleClasses(FilterTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
-			} else {
-				regDefaultStyleClasses(FilterTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "p-2");
-			}
+			regDefaultStyleClasses(FilterTableTag.class, "NORMAL-styleClass", "m-2");
+			regDefaultStyleClasses(FilterTableTag.class, "NORMAL-columnStyleClasses", "p-2");
+			regDefaultStyleClasses(FilterTableTag.class, "FLAT-styleClass", "container-fluid");
+			regDefaultStyleClasses(FilterTableTag.class, "FLAT-rowStyleClasses", "row");
+			regDefaultStyleClasses(FilterTableTag.class, "FLAT-columnStyleClasses", "col-md-{CS} p-2");
 
 			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(ListPanelTag.class, "sectionTitleStyleClass", "card-header h5");
@@ -300,14 +295,11 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
-			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(FormTableTag.class, "styleClass", "container-fluid");
-				regDefaultStyleClasses(FormTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
-			} else {
-				regDefaultStyleClasses(FormTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "p-2");
-			}
+			regDefaultStyleClasses(FormTableTag.class, "NORMAL-styleClass", "m-2");
+			regDefaultStyleClasses(FormTableTag.class, "NORMAL-columnStyleClasses", "p-2");
+			regDefaultStyleClasses(FormTableTag.class, "FLAT-styleClass", "container-fluid");
+			regDefaultStyleClasses(FormTableTag.class, "FLAT-rowStyleClasses", "row");
+			regDefaultStyleClasses(FormTableTag.class, "FLAT-columnStyleClasses", "col-md-{CS} p-2");
 
 			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "card-header h5");
@@ -315,41 +307,25 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
 			regDefaultStyleClasses(ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
-			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(ReportTableTag.class, "styleClass", "container-fluid");
-				regDefaultStyleClasses(ReportTableTag.class, "rowStyleClasses", "row");
-				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "col-md-{CS} p-2");
-			} else {
-				regDefaultStyleClasses(ReportTableTag.class, "styleClass", "m-2");
-				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "p-2");
-			}
+			regDefaultStyleClasses(ReportTableTag.class, "NORMAL-styleClass", "m-2");
+			regDefaultStyleClasses(ReportTableTag.class, "NORMAL-columnStyleClasses", "p-2");
+			regDefaultStyleClasses(ReportTableTag.class, "FLAT-styleClass", "container-fluid");
+			regDefaultStyleClasses(ReportTableTag.class, "FLAT-rowStyleClasses", "row");
+			regDefaultStyleClasses(ReportTableTag.class, "FLAT-columnStyleClasses", "col-md-{CS} p-2");
 
 			regDefaultStyleClasses(DetailTag.class, "actionButtonStyleClass", "btn btn-sm btn-primary");
 			regDefaultStyleClasses(DetailTag.class, "newLineButtonStyleClass", "btn btn-sm btn-primary mt-1");
 
-			if (isDefaultFlatMode()) {
-				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelPanelStyleClass", "d-flex align-items-center justify-content-end text-end");
-				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
-				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "d-flex align-items-center");
-				regDefaultStyleClasses(PropertyTag.class, "INVERT-panelStyleClass", "d-flex align-items-center justify-content-end");
-				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelPanelStyleClass", "d-flex align-items-center form-check text-wrap text-truncate");
-				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelStyleClass", "form-check-label");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
-			}else {
-				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelPanelStyleClass", "text-end");
-				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
-				regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "align-middle");
-				regDefaultStyleClasses(PropertyTag.class, "INVERT-panelStyleClass", "align-middle text-end");
-				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelPanelStyleClass", "align-middle text-wrap text-truncate");
-				regDefaultStyleClasses(PropertyTag.class, "INVERT-labelStyleClass", "form-check-label");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "align-bottom");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
-				regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
-			}
+			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelPanelStyleClass", "text-end"); //"d-flex align-items-center justify-content-end text-end"
+			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
+			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "align-middle"); //d-flex align-items-center
+			regDefaultStyleClasses(PropertyTag.class, "INVERT-panelStyleClass", "align-middle text-end"); //d-flex align-items-center justify-content-end
+			regDefaultStyleClasses(PropertyTag.class, "INVERT-labelPanelStyleClass", "align-middle text-wrap text-truncate"); //d-flex align-items-center form-check text-wrap text-truncate
+			regDefaultStyleClasses(PropertyTag.class, "INVERT-labelStyleClass", "form-check-label");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
 
 			//TODO Fazer a tag PropertyTag utilizar PropertyLayoutTag
 			Map<String, String> propertyTagMap = styleClassesMap.get(PropertyTag.class);
@@ -369,12 +345,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FilterPanelTag.class, "sectionTitleStyleClass", "sectionTitle");
 			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "actionBar");
 
+			regDefaultStyleClasses(FilterTableTag.class, "NORMAL-columnStyleClasses", "labelColumn, propertyColumn");
 			regDefaultStyleClasses(FilterTableTag.class, "styleClass", "inputTable");
-			if (isDefaultFlatMode()) {
-
-			} else {
-				regDefaultStyleClasses(FilterTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
-			}
 
 			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "resultWindow");
 
@@ -385,23 +357,15 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FormPanelTag.class, "panelStyleClass", "inputWindow");
 			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "actionBar");
 
+			regDefaultStyleClasses(FormTableTag.class, "NORMAL-columnStyleClasses", "labelColumn, propertyColumn");
 			regDefaultStyleClasses(FormTableTag.class, "styleClass", "inputTable");
-			if (isDefaultFlatMode()) {
-
-			} else {
-				regDefaultStyleClasses(FormTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
-			}
 
 			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "filterWindow");
 			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "sectionTitle");
 			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "actionBar");
 
+			regDefaultStyleClasses(ReportTableTag.class, "NORMAL-columnStyleClasses", "labelColumn, propertyColumn");
 			regDefaultStyleClasses(ReportTableTag.class, "styleClass", "inputTable");
-			if (isDefaultFlatMode()) {
-
-			} else {
-				regDefaultStyleClasses(ReportTableTag.class, "columnStyleClasses", "labelColumn, propertyColumn");
-			}
 
 			regDefaultStyleClasses(DetailTag.class, "panelStyleClass", "inputTable");
 
@@ -412,7 +376,7 @@ public class DefaultViewConfig implements ViewConfig {
 	protected void regDefaultStyleClasses(Class<? extends BaseTag> tagClass, String field, String styleClass) {
 		Map<String, String> tagMap = styleClassesMap.get(tagClass);
 		if (tagMap == null) {
-			tagMap = new HashMap<String, String>();
+			tagMap = new LinkedHashMap<String, String>();
 			styleClassesMap.put(tagClass, tagMap);
 		}
 		tagMap.put(field, styleClass);

@@ -144,7 +144,7 @@ public class PropertyTag extends TemplateTag {
 
 	@Override
 	protected void applyDefaultStyleClasses() throws JspException {
-		//Não aplica no fluxo natural.
+		//Não aplica no fluxo natural, pois é necessário chamar 'verifyRenderAs' para definir o atributo que será getSubComponent.
 	}
 
 	@Override

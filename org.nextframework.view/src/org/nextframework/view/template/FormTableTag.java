@@ -30,6 +30,9 @@ import org.nextframework.util.Util;
  */
 public class FormTableTag extends TemplateTag {
 
+	private static final String SUBCOMPONENT_NORMAL = "NORMAL";
+	private static final String SUBCOMPONENT_FLAT = "FLAT";
+
 	protected Integer colspan;
 	protected Integer columns;
 	protected Boolean flatMode;
@@ -43,6 +46,12 @@ public class FormTableTag extends TemplateTag {
 
 	protected String propertyRenderAs;
 	protected Boolean propertyShowLabel;
+
+	@Override
+	protected String getSubComponentName() {
+		boolean flatMode = this.flatMode != null ? this.flatMode : getViewConfig().isDefaultFlatMode();
+		return flatMode ? SUBCOMPONENT_FLAT : SUBCOMPONENT_NORMAL;
+	}
 
 	@Override
 	protected void doComponent() throws Exception {
