@@ -99,7 +99,7 @@
 
 <%-- GLOBAL MAP --%>
 <c:if test="${useBootstrap}">
-	<st:staticResource resource="/resource/bootstrap/js/globalMap.js" />
+	<script src="${app}/resource/bootstrap/js/globalMap.js" language="JavaScript"></script>
 </c:if>
 
 <%-- DEFAULT CSS --%>

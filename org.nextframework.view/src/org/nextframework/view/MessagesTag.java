@@ -120,6 +120,8 @@ public class MessagesTag extends BaseTag {
 			getOut().println("<script language='javascript'>function clearMessages(){" +
 					"if(next.util.isDefined(document.getElementById('messagesContainer')))document.getElementById('messagesContainer').style.display = 'none';" +
 					"}</script>");
+		}else {
+			getOut().println("</div>");
 		}
 
 		requestContext.clearMessages();

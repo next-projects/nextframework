@@ -35,6 +35,7 @@ public class ListTableTag extends TemplateTag {
 
 	protected Object itens;
 	protected String name;
+	protected String statusName;
 	protected Class<?> valueType;
 	protected String groupProperty;
 
@@ -103,6 +104,10 @@ public class ListTableTag extends TemplateTag {
 			}
 		}
 
+		if (Util.strings.isEmpty(statusName) && Util.strings.isNotEmpty(name)) {
+			statusName = name + "Status";
+		}
+
 		if (valueType == null && crudContext != null) {
 			valueType = crudContext.getBeanClass();
 		}
@@ -137,6 +142,14 @@ public class ListTableTag extends TemplateTag {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 
 	public Class<?> getValueType() {
