@@ -320,11 +320,11 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-labelStyleClass", "col-form-label");
 			regDefaultStyleClasses(PropertyTag.class, "DOUBLE-panelStyleClass", "align-middle"); //d-flex align-items-center
 			regDefaultStyleClasses(PropertyTag.class, "INVERT-panelStyleClass", "align-middle text-end"); //d-flex align-items-center justify-content-end
-			regDefaultStyleClasses(PropertyTag.class, "INVERT-labelPanelStyleClass", "align-middle text-wrap text-truncate"); //d-flex align-items-center form-check text-wrap text-truncate
+			regDefaultStyleClasses(PropertyTag.class, "INVERT-labelPanelStyleClass", "align-middle text-wrap"); //d-flex align-items-center form-check text-wrap text-truncate
 			regDefaultStyleClasses(PropertyTag.class, "INVERT-labelStyleClass", "form-check-label");
 			regDefaultStyleClasses(PropertyTag.class, "STACKED-labelStyleClass", "w-100 text-nowrap text-truncate");
 			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-panelStyleClass", "d-flex align-items-end");
-			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap text-truncate");
+			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-stackedPanelStyleClass", "form-check text-wrap");
 			regDefaultStyleClasses(PropertyTag.class, "STACKED_INVERT-labelStyleClass", "form-check-label");
 
 			//TODO Fazer a tag PropertyTag utilizar PropertyLayoutTag
