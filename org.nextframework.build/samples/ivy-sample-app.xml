@@ -5,22 +5,18 @@
 		<include file="extras/ivy/configurations.xml" />
 		<!-- "../org.nextframework.build/configurations.xml" to use next workspace project -->
 	</configurations>
-    <dependencies>
-    	<!--
-    	HSQLDB database 
-   		<dependency org="org.hsqldb" 	name="hsqldb"	rev="2.3.3"	conf="lib"/>
-    	 -->
-    	
-    	<!--
-    	STJS - Convert Java files to Javascript 
-    	<dependency org="org.apache.bcel" 			name="bcel" 				rev="5.2"		conf="extras/stjs" />
+	<dependencies>
+		<!--
+		HSQLDB database 
+		<dependency org="org.hsqldb" 	name="hsqldb"	rev="2.3.3"	conf="lib"/>
+		 -->
+		<!--
+		STJS - Convert Java files to Javascript 
+		<dependency org="org.apache.bcel" 			name="bcel" 				rev="5.2"		conf="extras/stjs" />
 		<dependency org="com.google.code.gson" 		name="gson"					rev="2.1"		conf="extras/stjs" />
 		<dependency org="com.google.guava" 			name="guava" 				rev="11.0.1"	conf="extras/stjs" />
-		<dependency org="org.codehaus.jackson" 		name="jackson-mapper-asl" 	rev="1.9.4"		conf="extras/stjs" />
-		<dependency org="org.codehaus.jackson" 		name="jackson-core-asl" 	rev="1.9.4"		conf="extras/stjs" />
 		<dependency org="com.google.code.javaparser" name="javaparser" 			rev="1.0.8"		conf="extras/stjs"/>
-    	 -->
-    	
+		 -->
 		<!--
 		Example conf="provided" - Libs provided by the server at runtime, will not be deployed
 		<dependency org="javax.el"				name="javax.el-api"				rev="2.2.1"		conf="provided" />
