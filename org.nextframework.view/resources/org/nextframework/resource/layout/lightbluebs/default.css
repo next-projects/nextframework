@@ -54,7 +54,6 @@ A:HOVER {
 	position: relative;
 	list-style-type: none;
 	padding-left: 30px;
-	line-height: 2em;
 }
 
 .messageCloseIcon {
@@ -70,48 +69,48 @@ A:HOVER {
 LI.debug, .debug {
 	background-image: url("debug.png");
 	background-repeat: no-repeat;
-	background-position: 5px 5px;
+	background-position: 5px 2px;
 	color: var(--bs-green);
 }
 
 LI.trace, .trace {
 	background-image: url("trace.png");
 	background-repeat: no-repeat;
-	background-position: 5px 5px;
+	background-position: 5px 2px;
 }
 
 LI.info, .info {
 	background-image: url("ok.png");
 	background-repeat: no-repeat;
-	background-position: 5px 5px;
+	background-position: 5px 2px;
 	color: var(--bs-success);
 }
 
 LI.warn, .warn {
 	background-image: url("warn.png");
 	background-repeat: no-repeat;
-	background-position: 5px 5px;
+	background-position: 5px 2px;
 	color: var(--bs-warning);
 }
 
 LI.error, .error {
 	background-image: url("error.png");
 	background-repeat: no-repeat;
-	background-position: 5px 5px;
+	background-position: 5px 2px;
 	color: var(--bs-danger);
 }
 
 LI.validation, .validation {
 	background-image: url("validation.png");
 	background-repeat: no-repeat;
-	background-position: 5px 5px;
+	background-position: 5px 2px;
 	color: var(--bs-danger);
 }
 
 LI.event, .event {
 	background-image: url("event.png");
 	background-repeat: no-repeat;
-	background-position: 5px 5px;
+	background-position: 5px 2px;
 }
 
 .alert-toast {
