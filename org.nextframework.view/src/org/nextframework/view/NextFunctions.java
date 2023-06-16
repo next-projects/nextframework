@@ -46,6 +46,7 @@ import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.validation.BindException;
 
 /**
@@ -215,7 +216,11 @@ public class NextFunctions {
 		codes[1] = field;
 		Object[] argumentsArray = resolveArguments(arguments);
 		Locale locale = NextWeb.getRequestContext().getLocale();
-		return Next.getMessageSource().getMessage(Util.objects.newMessage(codes, argumentsArray, defaultValue), locale);
+		try {
+			return Next.getMessageSource().getMessage(Util.objects.newMessage(codes, argumentsArray, defaultValue), locale);
+		} catch (NoSuchMessageException e) {
+			throw new NextException("Nenhuma mensagem encontrada com os códigos '" + codes[0] + "' ou '" + codes[1] + "'.", e);
+		}
 	}
 
 	public static String messageResolvable(MessageSourceResolvable resolvable) {
