@@ -36,54 +36,54 @@ public class JasperDataConverter {
 		ReportItemIterator iterator = new ReportItemIterator(report);
 		while (iterator.hasNext()) {
 			ReportItem reportItem = iterator.next();
-			if(reportItem instanceof ReportChart){
-				if(((ReportChart) reportItem).isRendered()){
-					parameters.put("chart"+report.getChartIndex((ReportChart) reportItem), ((ReportChart) reportItem).getChart());
+			if (reportItem instanceof ReportChart) {
+				if (((ReportChart) reportItem).isRendered()) {
+					parameters.put("chart" + report.getChartIndex((ReportChart) reportItem), ((ReportChart) reportItem).getChart());
 				}
-			} else if(reportItem instanceof ReportImage){
-				if(((ReportImage) reportItem).isRendered()){
-					parameters.put("image"+report.getImageIndex((ReportImage) reportItem), ((ReportImage) reportItem).getInputStream());
+			} else if (reportItem instanceof ReportImage) {
+				if (((ReportImage) reportItem).isRendered()) {
+					parameters.put("image" + report.getImageIndex((ReportImage) reportItem), ((ReportImage) reportItem).getInputStream());
 				}
-			} else if(reportItem instanceof Subreport){
+			} else if (reportItem instanceof Subreport) {
 				Subreport subreport = (Subreport) reportItem;
 				ReportDefinition subreportDefinition = subreport.getReport();
 				ReportDefinitionStyle styleClone = subreportDefinition.getStyle().clone();
 				styleClone.setNoMargin(true);
 				styleClone.setNoTitle(true);
-				
+
 				boolean renderPageFooter = subreportDefinition.getSectionPageFooter().isRender();
 				boolean renderTitle = subreportDefinition.getSectionTitle().isRender();
-				
+
 				//TODO REFACTOR THIS
 				//subreportDefinition.getSectionPageFooter().setRender(false);
 				subreportDefinition.getSectionTitle().setRender(false);
-				
+
 				subreportDefinition.setStyle(styleClone);
 				//TODO SET DIFERENT REPORT NAMES
 				MappedJasperReport mappedJasperReport = JasperReportsRenderer.renderAsMappedJasperReport(subreportDefinition);
 				result.subreports.add(mappedJasperReport);
-				
+
 				subreportDefinition.getSectionPageFooter().setRender(renderPageFooter);
 				subreportDefinition.getSectionTitle().setRender(renderTitle);
-				
-				parameters.put("subreport"+report.getSubreportIndex(subreport), mappedJasperReport.getJasperReport());
+
+				parameters.put("subreport" + report.getSubreportIndex(subreport), mappedJasperReport.getJasperReport());
 				JasperDataParametersResult subReportParametersResult = getParametersMap(subreportDefinition);
 				result.subreports.addAll(subReportParametersResult.getSubreports());
-				
+
 				Map<String, Object> subreportParametersMap = subReportParametersResult.getParameters();
 				subreportParametersMap.put("isSubreport", true);
-				parameters.put("subreport"+report.getSubreportIndex(subreport)+"_params", subreportParametersMap);
-				if(subreport.getExpression() == null){
-					parameters.put("subreport"+report.getSubreportIndex(subreport)+"_ds", 	  getDataSource(subreportDefinition));
+				parameters.put("subreport" + report.getSubreportIndex(subreport) + "_params", subreportParametersMap);
+				if (subreport.getExpression() == null) {
+					parameters.put("subreport" + report.getSubreportIndex(subreport) + "_ds", getDataSource(subreportDefinition));
 				} else {
-					parameters.put("subreport"+report.getSubreportIndex(subreport)+"_ds_map", 	  new SubreportExpressionMap(subreportDefinition));
+					parameters.put("subreport" + report.getSubreportIndex(subreport) + "_ds_map", new SubreportExpressionMap(subreportDefinition));
 				}
 			}
 		}
 		Set<String> reportParameters = report.getParameters().keySet();
 		for (String param : reportParameters) {
 			Object object = report.getParameters().get(param);
-			if(object != null){
+			if (object != null) {
 				parameters.put(param, object);
 			} else {
 				parameters.put(param, null);
@@ -95,13 +95,12 @@ public class JasperDataConverter {
 
 	public JRDataSource getDataSource(ReportDefinition definition) {
 		List<?> data = definition.getData();
-		if(data == null){
+		if (data == null) {
 			throw new NullPointerException("reportData is null");
 		}
 		return toMap(data, definition);
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	public static JRMapCollectionDataSource toMap(List<?> rows, ReportDefinition report) {
 		List<Map<String, ?>> lista = new ArrayList<Map<String, ?>>();
@@ -109,7 +108,7 @@ public class JasperDataConverter {
 			BeanDescriptor bd = BeanDescriptorFactory.forBean(registro);
 			Map mapa = new HashMap();
 			List<ReportItem> reportItens = report.getReportItens();
-			if(registro instanceof Map){
+			if (registro instanceof Map) {
 				mapa.putAll((Map) registro);
 			} else {
 				for (ReportItem reportItem : reportItens) {
@@ -118,15 +117,15 @@ public class JasperDataConverter {
 					} catch (Exception e) {
 						Object bean = registro;
 						if (bean instanceof SummaryRow) {
-							bean = ((SummaryRow)bean).getRow();
+							bean = ((SummaryRow) bean).getRow();
 						}
 						throw new RuntimeException("Cannot get report item " + reportItem + " of " + bean.toString() + " of class " + bean.getClass(), e);
 					}
 				}
 			}
-			for (ReportGroup group: report.getGroups()) {
+			for (ReportGroup group : report.getGroups()) {
 				Object groupValue = bd.getPropertyDescriptor(group.getExpression()).getValue();
-				mapa.put(group.getExpression(), groupValue != null? groupValue.toString() : null);
+				mapa.put(group.getExpression(), groupValue);
 			}
 //			List<ReportColumn> columns = report.getColumns();
 //			for (ReportColumn reportColumn : columns) {
@@ -140,21 +139,21 @@ public class JasperDataConverter {
 
 	@SuppressWarnings("unchecked")
 	private static void addItemToMap(Map mapa, ReportItem reportItem, BeanDescriptor bd) {
-		if(reportItem instanceof ReportTextField){
+		if (reportItem instanceof ReportTextField) {
 			ReportTextField reportTextField = (ReportTextField) reportItem;
-			if(reportTextField.isFieldReference()){
+			if (reportTextField.isFieldReference()) {
 				PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(reportTextField.getExpression());
 				Object value = propertyDescriptor.getValue();
-				if(StringUtils.hasLength(reportTextField.getPattern())){
-					if(propertyDescriptor.getType().equals(boolean.class) || propertyDescriptor.getType().equals(Boolean.class)){
+				if (StringUtils.hasLength(reportTextField.getPattern())) {
+					if (propertyDescriptor.getType().equals(boolean.class) || propertyDescriptor.getType().equals(Boolean.class)) {
 						String[] values = reportTextField.getPattern().split("/");
-						if(values.length == 2){
-							values = new String[]{values[0], values[1], values[1]};
+						if (values.length == 2) {
+							values = new String[] { values[0], values[1], values[1] };
 						}
-						if(values.length == 3){
-							if(Boolean.TRUE.equals(value)){
+						if (values.length == 3) {
+							if (Boolean.TRUE.equals(value)) {
 								value = values[0];
-							} else if(Boolean.FALSE.equals(value)){
+							} else if (Boolean.FALSE.equals(value)) {
 								value = values[1];
 							} else {
 								value = values[2];
@@ -162,37 +161,37 @@ public class JasperDataConverter {
 						}
 					}
 				} else {
-					if(value instanceof Formattable) {
+					if (value instanceof Formattable) {
 						value = String.format("%s", value);
 					}
 				}
 				mapa.put(reportTextField.getExpression(), value);
 			}
 		}
-		if(reportItem instanceof Subreport){
+		if (reportItem instanceof Subreport) {
 			String expression = ((Subreport) reportItem).getExpression();
-			if(expression != null){
+			if (expression != null) {
 				//TODO CHECK TYPE.. MUST BE LIST
 				mapa.put(expression, bd.getPropertyDescriptor(expression).getValue());
 			}
 		}
-		if(reportItem instanceof ReportImage){
+		if (reportItem instanceof ReportImage) {
 			ReportImage reportImage = (ReportImage) reportItem;
-			if(!reportImage.isRendered() && reportImage.isFieldReference()){
+			if (!reportImage.isRendered() && reportImage.isFieldReference()) {
 				Object value = bd.getPropertyDescriptor(reportImage.getReference()).getValue();
 				//System.out.println(isReportImageOK((InputStream) value));
 				mapa.put(reportImage.getReference(), value);
 			}
 		}
-		if(reportItem instanceof ReportChart){
+		if (reportItem instanceof ReportChart) {
 			ReportChart reportChart = (ReportChart) reportItem;
-			if(!reportChart.isRendered() && reportChart.isFieldReference()){
+			if (!reportChart.isRendered() && reportChart.isFieldReference()) {
 				Object value = bd.getPropertyDescriptor(reportChart.getReference()).getValue();
 				//System.out.println(isReportImageOK((InputStream) value));
 				mapa.put(reportChart.getReference(), value);
 			}
 		}
-		if(reportItem instanceof ReportParent){
+		if (reportItem instanceof ReportParent) {
 			List<ReportItem> itens = ((ReportParent) reportItem).getChildren();
 			for (ReportItem reportItem2 : itens) {
 				addItemToMap(mapa, reportItem2, bd);
