@@ -940,24 +940,24 @@ NextDom.prototype.getInnerElementById = function(parent, innerId, innerTagName){
 	return null;
 }
 
-NextDom.prototype.getInnerElementByClass = function(parent, className, innerTagName){
+NextDom.prototype.getInnerElementsByClass = function(parent, className, innerTagName){
 	if(parent && parent.childNodes){
+		var elements = new Array();
 		for(var i = 0; i < parent.childNodes.length; i++){
-			if(innerTagName){
-				if(parent.childNodes[i].tagName != innerTagName){
-					continue;
-				}
+			if(innerTagName && parent.childNodes[i].tagName != innerTagName){
+				continue;
 			}
 			if(next.style.hasClass(parent.childNodes[i], className)){
-				return parent.childNodes[i];
+				elements.push(parent.childNodes[i]);
 			}
 		}
 		for(var i = 0; i < parent.childNodes.length; i++){
-			var child=next.dom.getInnerElementByClass(parent.childNodes[i], className, innerTagName);
-			if(child){
-				return child;
+			var childElements = next.dom.getInnerElementsByClass(parent.childNodes[i], className, innerTagName);
+			if(childElements){
+				elements.push(...childElements);
 			}
 		}
+		return elements;
 	}
 	return null;
 }
