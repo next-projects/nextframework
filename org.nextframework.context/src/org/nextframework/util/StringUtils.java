@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -232,12 +233,31 @@ public class StringUtils {
 		} else if (value instanceof MessageSourceResolvable) {
 			return Next.getMessageSource().getMessage((MessageSourceResolvable) value, locale);
 		} else if (value.getClass().isArray()) {
+			if (value.getClass().getComponentType().isPrimitive()) {
+				if (value instanceof boolean[]) {
+					return Arrays.toString((boolean[]) value);
+				} else if (value instanceof byte[]) {
+					return Arrays.toString((byte[]) value);
+				} else if (value instanceof short[]) {
+					return Arrays.toString((short[]) value);
+				} else if (value instanceof char[]) {
+					return Arrays.toString((char[]) value);
+				} else if (value instanceof int[]) {
+					return Arrays.toString((int[]) value);
+				} else if (value instanceof long[]) {
+					return Arrays.toString((long[]) value);
+				} else if (value instanceof float[]) {
+					return Arrays.toString((float[]) value);
+				} else if (value instanceof double[]) {
+					return Arrays.toString((double[]) value);
+				} else {
+					throw new IllegalArgumentException("Unexpected type: " + value.getClass().getComponentType());
+				}
+			}
 			Object[] array = (Object[]) value;
 			String description = "";
-			if (array.length > 0) {
-				for (Object o : array) {
-					description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber, locale);
-				}
+			for (Object o : array) {
+				description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber, locale);
 			}
 			return description;
 		}
@@ -324,7 +344,7 @@ public class StringUtils {
 		}
 		return string;
 	}
-	
+
 	public String onlyAlphanumerics(String s) {
 		return s.replaceAll("[^A-Za-z0-9]", "");
 	}
