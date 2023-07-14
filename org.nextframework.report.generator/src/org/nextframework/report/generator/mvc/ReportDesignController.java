@@ -11,6 +11,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.Id;
+
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
@@ -24,6 +26,7 @@ import org.nextframework.controller.resource.Resource;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
+import org.nextframework.exception.BusinessException;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
@@ -453,6 +456,9 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		final ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
 		final Map<String, Object> filterMap = getFilterMap(model, reportElement, true);
 
+		//Valida campos permitidos
+		validadeAllowedProperties(reportElement);
+
 		//Obtem o objeto de controle do monitoramento
 		Map<Integer, ProgressMonitor> monitorMap = getMonitorMap(request);
 		synchronized (monitorMap) {
@@ -460,7 +466,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			//Se já existir, dá bomba
 			ProgressMonitor monitor = monitorMap.get(model.getId());
 			if (monitor != null) {
-				request.addError(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.alreadyRunning", null, "Não é possível executar o relatório, pois uma requisição ainda está em andamento"));
+				request.addError(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.alreadyRunning", null, "Não é possível executar o relatório, pois uma requisição ainda está em andamento!"));
 				return showFilterView(request, model);
 			}
 
@@ -485,6 +491,20 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 
 		return continueOnAction("showFilterView", model);
+	}
+
+	private void validadeAllowedProperties(final ReportElement reportElement) {
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
+		for (String property : reportElement.getProperties()) {
+			if (!reportElement.getData().isCalculated(property)) {
+				PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(property);
+				ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
+				Id idField = propertyDescriptor.getAnnotation(Id.class);
+				if (reportField == null && idField == null) {
+					throw new BusinessException("org.nextframework.report.generator.mvc.ReportDesignController.invalidProperty", new Object[] { property, reportElement.getData().getMainType().getSimpleName() }, "Não é possível executar o relatório, pois a propriedade {0} de {1} não é permitida!");
+				}
+			}
+		}
 	}
 
 	@Deprecated
