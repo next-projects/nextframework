@@ -495,7 +495,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 					mapaQueryFindByForCombo.put(propertyClass, queryString);
 				}
 			} else if (propertiesForClass.length > 1) {// mais de uma propriedade do mesmo tipo
-				throw new RuntimeException("Não foi possível executar findBy(..). Existe mais de uma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName() + "  " + Arrays.deepToString(propertiesForClass));
+				throw new RuntimeException("Não foi possível executar findBy(..). Existe mais de uma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName());
 			} else {//nenhuma propriedade do tipo fornecido
 				throw new RuntimeException("Não foi possível executar findBy(..). Não existe nenhuma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName());
 			}
