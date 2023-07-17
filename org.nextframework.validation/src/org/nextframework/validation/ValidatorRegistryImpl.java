@@ -33,10 +33,10 @@ import java.util.Map;
 import org.nextframework.types.Cep;
 import org.nextframework.types.Cnpj;
 import org.nextframework.types.Cpf;
-import org.nextframework.types.SimpleTime;
 import org.nextframework.types.InscricaoEstadual;
 import org.nextframework.types.Phone;
 import org.nextframework.types.PhoneBrazil;
+import org.nextframework.types.SimpleTime;
 import org.nextframework.validation.annotation.Email;
 import org.nextframework.validation.annotation.MaxLength;
 import org.nextframework.validation.annotation.MaxValue;
@@ -58,12 +58,11 @@ import org.nextframework.validation.validators.MaxLengthValidator;
 import org.nextframework.validation.validators.MaxValueValidator;
 import org.nextframework.validation.validators.MinLengthValidator;
 import org.nextframework.validation.validators.MinValueValidator;
+import org.nextframework.validation.validators.PhoneValidator;
 import org.nextframework.validation.validators.RequiredValidator;
 import org.nextframework.validation.validators.ShortValidator;
-import org.nextframework.validation.validators.PhoneValidator;
 import org.nextframework.validation.validators.TimeValidator;
 import org.nextframework.validation.validators.YearValidator;
-
 
 /**
  * Onde são registrados todos os validadores
@@ -78,85 +77,83 @@ public class ValidatorRegistryImpl implements ValidatorRegistry {
 	protected Map<String, PropertyValidator> typeValidatorsString = new HashMap<String, PropertyValidator>();
 
 	//public static final String validatorUtilities = "org/nextframework/validation/validators/javascript/validateUtilities.js";
-	
+
 	protected ValidatorAnnotationExtractor annotationExtractor = new ValidatorAnnotationExtractorImpl(this);
-	
-	public ValidatorRegistryImpl(){
+
+	public ValidatorRegistryImpl() {
 		init();
 	}
 
-
 	protected void init() {
+
 		register(Required.class, new RequiredValidator());
 		register(Email.class, new EmailValidator());
 		register(MaxLength.class, new MaxLengthValidator());
 		register(MinLength.class, new MinLengthValidator());
-		
+
 		register(MaxValue.class, new MaxValueValidator());
 		register(MinValue.class, new MinValueValidator());
-		
+
 		register(Year.class, new YearValidator());
-		
+
 		registerType(Float.class, new FloatValidator());
 		registerType(Double.class, new FloatValidator());
-		
+
 		registerType(Integer.class, new IntegerValidator());
 		registerType(Long.class, new LongValidator());
 		registerType(Byte.class, new ByteValidator());
 		registerType(Short.class, new ShortValidator());
-		
+
 		registerType(Date.class, new DateValidator());
 		registerType(java.util.Date.class, new DateValidator());
 		registerType(Time.class, new TimeValidator());
 		registerType(SimpleTime.class, new TimeValidator());
-		
+
 		registerType(Cpf.class, new CpfValidator());
 		registerType(Cnpj.class, new CnpjValidator());
 		registerType(InscricaoEstadual.class, new InscricaoEstadualValidator());
 		registerType(Cep.class, new CepValidator());
 		registerType(PhoneBrazil.class, new PhoneValidator());
 		registerType(Phone.class, new PhoneValidator());
-		
+
 		registerType("integer", new IntegerValidator());
 		registerType("long", new LongValidator());
 		registerType("float", new FloatValidator());
 		registerType("date", new DateValidator());
-	}
 
+	}
 
 	public PropertyValidator getPropertyValidator(Class<? extends Annotation> key) {
 		return validators.get(key);
 	}
-	
+
 	public PropertyValidator getTypeValidator(Class<?> key) {
 		return typeValidators.get(key);
 	}
 
-
 	public PropertyValidator register(Class<? extends Annotation> key, PropertyValidator value) {
 		return validators.put(key, value);
 	}
-	
+
 	public PropertyValidator registerType(Class<?> key, PropertyValidator value) {
 		return typeValidators.put(key, value);
 	}
-	
-	public PropertyValidator registerType(String key, PropertyValidator value){
+
+	public PropertyValidator registerType(String key, PropertyValidator value) {
 		return typeValidatorsString.put(key, value);
 	}
-	
+
 	public void clear() {
 		validators.clear();
 		typeValidators.clear();
 	}
 
-
 	public ValidatorAnnotationExtractor getExtractor() {
 		return annotationExtractor;
 	}
 
-
 	public PropertyValidator getTypeValidator(String key) {
 		return typeValidatorsString.get(key);
-	}	
+	}
+
 }

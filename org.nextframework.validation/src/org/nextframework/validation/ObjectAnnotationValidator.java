@@ -48,14 +48,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
  * @author rogelgarcia | marcusabreu
  */
 public class ObjectAnnotationValidator extends WebApplicationObjectSupport implements Validator {
-	
+
 	private ValidatorRegistry validatorRegistry;
 	private HttpServletRequest servletRequest;
 
 	//private static final Log log = LogFactory.getLog(ObjectAnnotationValidator.class);
-	
+
 	public ObjectAnnotationValidator(ValidatorRegistry validatorRegistry, HttpServletRequest servletRequest) {
-		this.validatorRegistry =validatorRegistry;
+		this.validatorRegistry = validatorRegistry;
 		this.servletRequest = servletRequest;
 	}
 
@@ -66,33 +66,31 @@ public class ObjectAnnotationValidator extends WebApplicationObjectSupport imple
 
 	@SuppressWarnings("unchecked")
 	public void validate(Object obj, Errors errors) {
-		//ValidatorAnnotationExtractor extractor = validatorRegistry.getExtractor();
-		//validar arquivos
-		if(servletRequest instanceof MultipartHttpServletRequest){
-			MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)servletRequest;
+		if (servletRequest instanceof MultipartHttpServletRequest) {
+			MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) servletRequest;
 			Iterator fileNames = multipartHttpServletRequest.getFileNames();
-			while(fileNames.hasNext()){
+			while (fileNames.hasNext()) {
 				String filename = (String) fileNames.next();
 				MultipartFile file = multipartHttpServletRequest.getFile(filename);
-				if(file.getOriginalFilename() != null && file.getOriginalFilename().length() > 0){
-					if(file.getSize() == 0){
-						errors.reject("", "O arquivo '"+filename+"' não pode ter tamanho 0 (zero)");
-					}	
+				if (file.getOriginalFilename() != null && file.getOriginalFilename().length() > 0) {
+					if (file.getSize() == 0) {
+						errors.reject("", "O arquivo '" + filename + "' não pode ter tamanho 0 (zero)");
+					}
 				}
-				
+
 			}
 		}
 		Map<String, ?> parameterMap = servletRequest.getParameterMap();
 		Set<String> keySet = parameterMap.keySet();
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(obj);
 		for (String parametro : keySet) {
-			if(parametro.startsWith("_")){
+			if (parametro.startsWith("_")) {
 				parametro = parametro.substring(1);
 			}
 			validate(obj, errors, beanDescriptor, validatorRegistry, parametro);
 		}
 	}
-	
+
 	public void validate(Object obj, Errors errors, BeanDescriptor beanDescriptor, ValidatorRegistry validatorRegistry, String parametro) {
 		PropertyDescriptor propertyDescriptor;
 		try {
@@ -104,46 +102,14 @@ public class ObjectAnnotationValidator extends WebApplicationObjectSupport imple
 			// se nao for uma propriedade do bean.. nao fazer nada
 			return;
 		}
-		//System.out.println("Validando ... "+propertyDescriptor.getDisplayName());
-		
 		Annotation[] annotations = propertyDescriptor.getAnnotations();
 		for (Annotation annotation : annotations) {
 			PropertyValidator propertyValidator = validatorRegistry.getPropertyValidator(annotation.annotationType());
-			if(propertyValidator != null){
+			if (propertyValidator != null) {
 				String displayName = Util.beans.getDisplayName(propertyDescriptor, NextWeb.getRequestContext().getLocale());
 				propertyValidator.validate(obj, propertyDescriptor.getValue(), parametro, displayName, annotation, errors, this);
 			}
 		}
 	}
 
-//	public void validateIndexed(Object obj, Errors errors, String nestedPath){
-//		Class objClass = obj.getClass();
-//		
-//		List<ValidationItem> validationItens = extractor.getValidationItens(objClass);
-//		
-//		for (ValidationItem item : validationItens) {
-//			try {
-//				//Method method = item.getMethod();
-//				//Object value = method.invoke(obj);
-//				List<Annotation> validations = item.getValidations();
-//				for (Annotation validation : validations) {
-//					PropertyValidator validator = extractor.getValidatorRegistry().getPropertyValidator(validation.annotationType());
-//					
-//					
-//					String fieldDisplayName = null;
-//					if(nestedPath == null){
-//						fieldDisplayName = item.getFieldName();	
-//					} else {
-//						fieldDisplayName = item.getFieldName() + " em " + StringUtils.uncapitalize(nestedPath);
-//					}
-//					
-//					//validator.validate(obj, value, item.getFieldName(), fieldDisplayName, validation, errors, this);
-//				}
-//			} catch (Exception e) {
-//				errors.reject("validation.error", new Object[]{e}, "Não foi possível efetuar a validação");
-//			}
-//		}
-//	}
-
-	
 }

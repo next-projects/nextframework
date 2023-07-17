@@ -16,9 +16,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 class BeanWrapperForDirectClassAccess extends AbstractPropertyAccessor implements BeanWrapper {
-	
+
 	Class<?> targetClass;
-	
+
 	BeanWrapperForDirectClassAccess(Class<?> targetClass) {
 		this.targetClass = targetClass;
 	}
@@ -31,18 +31,18 @@ class BeanWrapperForDirectClassAccess extends AbstractPropertyAccessor implement
 
 	private PropertyDescriptor getProperty(String propertyName) {
 		PropertyDescriptor pd = BeanUtils.getPropertyDescriptor(getWrappedClass(), propertyName);
-		if(pd == null){
+		if (pd == null) {
 			//try super interfaces if it is an interface 
-			if(getWrappedClass().isInterface()){
+			if (getWrappedClass().isInterface()) {
 				Class<?>[] interfaces = getWrappedClass().getInterfaces();
 				for (Class<?> class1 : interfaces) {
 					pd = BeanUtils.getPropertyDescriptor(class1, propertyName);
-					if(pd != null){
+					if (pd != null) {
 						break;
 					}
 				}
 			}
-			if(pd == null){
+			if (pd == null) {
 				//FIXME TODO use root object and nested path
 				throw new InvalidPropertyException(getWrappedClass(), propertyName, "No property '" + propertyName + "' found");
 			}
@@ -58,8 +58,7 @@ class BeanWrapperForDirectClassAccess extends AbstractPropertyAccessor implement
 	@Override
 	public TypeDescriptor getPropertyTypeDescriptor(String propertyName) throws BeansException {
 		int pos = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(propertyName);
-		Assert.isTrue(pos <= -1, "The "+BeanWrapperForDirectClassAccess.class+" does not handle nested properties");
-		
+		Assert.isTrue(pos <= -1, "The " + BeanWrapperForDirectClassAccess.class + " does not handle nested properties");
 		PropertyTokenHolder tokens = getPropertyNameTokens(propertyName);
 		PropertyDescriptor pd = getProperty(tokens.actualName);
 		if (tokens.keysLength > 0) {
@@ -69,17 +68,15 @@ class BeanWrapperForDirectClassAccess extends AbstractPropertyAccessor implement
 		}
 	}
 
-
 	private Property property(PropertyDescriptor pd) {
 		return new Property(getWrappedClass(), pd.getReadMethod(), pd.getWriteMethod());
 	}
-	
 
 	@Override
 	public Object getPropertyValue(String propertyName) throws BeansException {
 		return null;
 	}
-	
+
 	@Override
 	public Class<?> getWrappedClass() {
 		return targetClass;
@@ -130,8 +127,6 @@ class BeanWrapperForDirectClassAccess extends AbstractPropertyAccessor implement
 		throw new RuntimeException("Operation not supported");
 	}
 
-	
-
 	//---------------------------------------------------------------------
 	// Inner class for internal use (copied from BeanWrapperImpl)
 	//---------------------------------------------------------------------
@@ -141,12 +136,13 @@ class BeanWrapperForDirectClassAccess extends AbstractPropertyAccessor implement
 		public String actualName;
 
 		public int keysLength = 0;
+
 	}
-	
+
 	private PropertyTokenHolder getPropertyNameTokens(String propertyName) {
 		PropertyTokenHolder tokens = new PropertyTokenHolder();
 		tokens.keysLength = StringUtils.countOccurrencesOf(propertyName, PROPERTY_KEY_PREFIX);
-		if(tokens.keysLength > 0){
+		if (tokens.keysLength > 0) {
 			int keyStart = propertyName.indexOf(PROPERTY_KEY_PREFIX);
 			tokens.actualName = propertyName.substring(0, keyStart);
 		} else {
@@ -154,4 +150,5 @@ class BeanWrapperForDirectClassAccess extends AbstractPropertyAccessor implement
 		}
 		return tokens;
 	}
+
 }
