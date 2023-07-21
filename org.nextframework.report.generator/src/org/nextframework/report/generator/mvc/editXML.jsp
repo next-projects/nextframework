@@ -2,12 +2,6 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<script type="text/javascript">
-	function aplicaInputCaixaAltaAutomaticaHabilitado() {
-		return false;
-	}
-</script>
-
 <t:view title="Erro no relatório" useBean="model">
 
 	<n:content id="context">

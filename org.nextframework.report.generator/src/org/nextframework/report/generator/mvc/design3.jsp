@@ -16,18 +16,6 @@
 
 <link rel="StyleSheet" href="${app}/resource/org/nextframework/report/generator/mvc/resource/report-generator.css" type="text/css">
 
-<script type="text/javascript">
-	function aplicaInputCaixaAltaAutomaticaHabilitado(){
-		return false;
-	}
-</script>
-
-<style>
-	INPUT[type=text], option {
-		text-transform: none;
-	}
-</style>
-
 <t:view useBean="model">
 
 	<n:content id="context">
