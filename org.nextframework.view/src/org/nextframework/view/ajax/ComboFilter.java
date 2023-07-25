@@ -32,14 +32,15 @@ import org.nextframework.view.ComboReloadGroupTag;
 
 public class ComboFilter {
 
-	Class<?> type;
-	Object parentValue;
-	String loadFunction;
-	String label;
-	String parameterList;
-	String classesList;
-	public Class<?>[] getClasses(){
-		if(classesList.length() == 0){
+	private Class<?> type;
+	private Object parentValue;
+	private String loadFunction;
+	private String label;
+	private String parameterList;
+	private String classesList;
+
+	public Class<?>[] getClasses() {
+		if (classesList.length() == 0) {
 			return new Class[0];
 		}
 		String[] split = classesList.split(ComboReloadGroupTag.CLASS_SEPARATOR);
@@ -48,14 +49,14 @@ public class ComboFilter {
 			try {
 				classes[i] = Class.forName(split[i]);
 			} catch (ClassNotFoundException e) {
-				throw new RuntimeException("Classe "+split[i] +" não encontrada");
+				throw new RuntimeException("Classe " + split[i] + " não encontrada");
 			}
 		}
 		return classes;
 	}
-	
-	public Object[] getValues(Class<?>[] classes){
-		if(classes.length == 0){
+
+	public Object[] getValues(Class<?>[] classes) {
+		if (classes.length == 0) {
 			return new Object[0];
 		}
 		Object[] values = new Object[classes.length];
@@ -63,17 +64,17 @@ public class ComboFilter {
 		ExtendedBeanWrapper beanWrapper = new ExtendedBeanWrapper();
 		for (int i = 0; i < split.length; i++) {
 			Object value = split[i];
-			if(ServletRequestDataBinderNext.isObjectValue(value)){
+			if (ServletRequestDataBinderNext.isObjectValue(value)) {
 				//Quando chega uma string "com.app.Bean[id=1],com.app.Bean[id=2]", quebra em um array
-				if (List.class.isAssignableFrom(classes[i]) && value instanceof String && ((String)value).contains(",") ) {
-					value = ((String)value).split(",");
+				if (List.class.isAssignableFrom(classes[i]) && value instanceof String && ((String) value).contains(",")) {
+					value = ((String) value).split(",");
 				}
 				value = ServletRequestDataBinderNext.translateObjectValue("[?]", value, null);
 			}
-			if("user".equals(value)){
+			if ("user".equals(value)) {
 				value = Authorization.getUserLocator().getUser();
 			}
-			if(!classes[i].equals(Void.class)){
+			if (!classes[i].equals(Void.class)) {
 				values[i] = beanWrapper.convertIfNecessary(value, classes[i]);
 			} else {
 				values[i] = value;
@@ -81,22 +82,27 @@ public class ComboFilter {
 		}
 		return values;
 	}
-	
+
 	public String getClassesList() {
 		return classesList;
 	}
+
 	public void setClassesList(String classesList) {
 		this.classesList = classesList;
 	}
+
 	public String getParameterList() {
 		return parameterList;
 	}
+
 	public void setParameterList(String parameterList) {
 		this.parameterList = parameterList;
 	}
+
 	public String getLabel() {
 		return label;
 	}
+
 	public void setLabel(String label) {
 		this.label = label;
 	}
@@ -104,6 +110,7 @@ public class ComboFilter {
 	public String getLoadFunction() {
 		return loadFunction;
 	}
+
 	public void setLoadFunction(String loadFunction) {
 		this.loadFunction = loadFunction;
 	}
@@ -111,13 +118,17 @@ public class ComboFilter {
 	public Object getParentValue() {
 		return parentValue;
 	}
+
 	public void setParentValue(Object parentValue) {
 		this.parentValue = parentValue;
 	}
+
 	public Class<?> getType() {
 		return type;
 	}
+
 	public void setType(Class<?> type) {
 		this.type = type;
 	}
+
 }

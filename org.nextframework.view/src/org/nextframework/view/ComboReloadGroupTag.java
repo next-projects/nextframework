@@ -103,12 +103,6 @@ public class ComboReloadGroupTag extends BaseTag implements LogicalTag {
 		propertyCalls.add(propertyCall);
 	}
 
-	StringBuilder builder = new StringBuilder();
-
-	private void println(String code) {
-		builder.append(code + "\n");
-	}
-
 	@Override
 	protected void doComponent() throws Exception {
 
@@ -127,25 +121,24 @@ public class ComboReloadGroupTag extends BaseTag implements LogicalTag {
 		FormTag formTag = findParent(FormTag.class, true);
 		String form = formTag.getName();
 
-		//IE7: precisa de ter esse <table></table> nao retirar!
-		println("<table style='display:none'></table>  <script language='javascript'>");
-		println("    function " + functionName + "(prop, value, currentIndex) { ");
-		for (PropertyCall propertyCall : propertyCalls) {
+		StringBuilder builder = new StringBuilder();
 
-			println("        if(" + ifDependencies(propertyCall).replaceAll("\\{index\\}", "'+currentIndex+'") + "){");
+		//IE7: precisa de ter esse <table></table> nao retirar!
+		builder.append("<table style='display:none'></table>\n");
+		builder.append("<script language='javascript'>\n");
+		builder.append("	function " + functionName + "(prop, value, currentIndex) {\n");
+		for (PropertyCall propertyCall : propertyCalls) {
+			builder.append("		if(" + ifDependencies(propertyCall).replaceAll("\\{index\\}", "'+currentIndex+'") + "){\n");
 			if (useAjax) {
 				String property = propertyCall.property;
 				String currentIndexVar = "currentIndex";
-				String code = InputTagSelectComponent.getDynamicProperty(form, property, currentIndexVar);
-				code += ".loadItens();";
-				println(code);
+				builder.append("			" + InputTagSelectComponent.getDynamicProperty(form, property, currentIndexVar) + ".loadItens();\n");
 			} else {
-				println("		     " + functionName + "_reload();");
+				builder.append("			" + functionName + "_reload();\n");
 			}
-
-			println("        }");
+			builder.append("		}\n");
 		}
-		println("    }");
+		builder.append("	}\n");
 
 		String url = formTag.getUrl();
 		String action;
@@ -154,17 +147,17 @@ public class ComboReloadGroupTag extends BaseTag implements LogicalTag {
 		} else {
 			action = "";
 		}
-		println("    function " + functionName + "_reload() {");
-		println("\n        " + formTag.getName() + ".action = '" + url + "'; ");
-		println("\n        " + formTag.getName() + "." + MultiActionController.ACTION_PARAMETER + ".value = '" + action + "';");
-		println("\n        " + formTag.getName() + ".validate = 'false';");
-		println("\n        " + formTag.getName() + ".suppressErrors.value = 'true';");
-		println("\n        " + formTag.getName() + ".suppressValidation.value = 'true';");
-		println("\n        " + formTag.getSubmitFunction() + "();");
-		println("\n   }");
-		println("\n");
 
-		println("</script>");
+		builder.append("	function " + functionName + "_reload() {\n");
+		builder.append("		" + formTag.getName() + ".action = '" + url + "';\n");
+		builder.append("		" + formTag.getName() + "." + MultiActionController.ACTION_PARAMETER + ".value = '" + action + "';\n");
+		builder.append("		" + formTag.getName() + ".validate = 'false';\n");
+		builder.append("		" + formTag.getName() + ".suppressErrors.value = 'true';\n");
+		builder.append("		" + formTag.getName() + ".suppressValidation.value = 'true';\n");
+		builder.append("		" + formTag.getSubmitFunction() + "();\n");
+		builder.append("	}\n");
+		builder.append("</script>");
+
 		getOut().println(builder.toString());
 
 	}

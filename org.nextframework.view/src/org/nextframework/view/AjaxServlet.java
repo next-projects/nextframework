@@ -42,26 +42,28 @@ import org.nextframework.view.ajax.ProgressBarCallback;
 import org.nextframework.web.WebContext;
 
 public class AjaxServlet extends HttpServlet {
-	
+
 	Map<String, AjaxCallbackController> callbacks = new HashMap<String, AjaxCallbackController>();
-	
+
 	@Override
 	public void init() throws ServletException {
+
 		super.init();
+
 		//some containers do not use the same Thread for filter and servlet initialization
 		WebContext.setServletContext(getServletContext());
-		
+
 		callbacks.put("combo", new ComboCallback());
 		callbacks.put("progressbar", new ProgressBarCallback());
 		callbacks.put("callbacksupport", new AjaxCallbackSupport());
-		
+
 		ClassManager classManager = ClassManagerFactory.getClassManager();
 		Class<AjaxCallbackController>[] callbackClasses = classManager.getAllClassesOfType(AjaxCallbackController.class);
 		callbackClasses = Util.objects.removeInterfaces(callbackClasses);
-		
+
 		for (Class<AjaxCallbackController> class1 : callbackClasses) {
 			String simpleName = class1.getSimpleName().toLowerCase();
-			if(simpleName.endsWith("callback")){
+			if (simpleName.endsWith("callback")) {
 				simpleName = simpleName.substring(0, simpleName.length() - "callback".length());
 			}
 			try {
@@ -70,6 +72,7 @@ public class AjaxServlet extends HttpServlet {
 				throw new RuntimeException(e);
 			}
 		}
+
 	}
 
 	/**
@@ -81,43 +84,42 @@ public class AjaxServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String requestURI = request.getRequestURI();
 		String servletPath = request.getServletPath();
-		int s = requestURI.indexOf(servletPath)+servletPath.length()+1;
+		int s = requestURI.indexOf(servletPath) + servletPath.length() + 1;
 		String requestResource = requestURI.substring(s);
 		String item;
-		if(requestResource.indexOf('/')>=0){
-			item = requestResource.substring(requestResource.indexOf('/'));	
+		if (requestResource.indexOf('/') >= 0) {
+			item = requestResource.substring(requestResource.indexOf('/'));
 		} else {
 			item = requestResource;
 		}
-		
 		AjaxCallbackController ajaxCallback = callbacks.get(item);
-		if(ajaxCallback != null){
+		if (ajaxCallback != null) {
 			response.addHeader("Content-Type", "text/html; charset=iso-8859-1");
 			try {
 				ajaxCallback.doAjax(request, response);
 			} catch (Exception e) {
 				String message = escapeSingleQuotes(e.getMessage());
-				if(e != null && e.getCause() != null){
-					message += "\\nCause: "+escapeSingleQuotes(e.getCause().getMessage());
+				if (e != null && e.getCause() != null) {
+					message += "\\nCause: " + escapeSingleQuotes(e.getCause().getMessage());
 				}
-				response.getWriter().println("alert('"+e.getClass().getSimpleName()+": "+message+"')");
+				response.getWriter().println("alert('" + e.getClass().getSimpleName() + ": " + message + "')");
 				e.printStackTrace();
-			} catch(Throwable t){
+			} catch (Throwable t) {
 				String message = escapeSingleQuotes(t.getMessage());
-				if(t != null && t.getCause() != null){
-					message += "\\nCause: "+escapeSingleQuotes(t.getCause().getMessage());
+				if (t != null && t.getCause() != null) {
+					message += "\\nCause: " + escapeSingleQuotes(t.getCause().getMessage());
 				}
-				response.getWriter().println("alert('"+t.getClass().getSimpleName()+": "+message+"')");
+				response.getWriter().println("alert('" + t.getClass().getSimpleName() + ": " + message + "')");
 				t.printStackTrace();
 			}
 		}
 	}
 
 	private String escapeSingleQuotes(String message) {
-		if(message == null){
+		if (message == null) {
 			return "";
 		}
-		return message.replace((CharSequence)"'", "\\'");
+		return message.replace((CharSequence) "'", "\\'");
 	}
 
 	@Override

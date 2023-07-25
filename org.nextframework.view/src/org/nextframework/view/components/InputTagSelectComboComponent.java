@@ -116,7 +116,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				}
 				String functionName = call.getFunctionName();
 				Object bean = WebApplicationContextUtils.getRequiredWebApplicationContext(WebContext.getServletContext()).getBean(call.getObject());
-				Class<?>[] classes = null;
+				Class<?>[] paramClasses = null;
 				Object[] values = null;
 				boolean ignorecall = false;
 				FunctionParameter[] callParameterArray = call.getParameterArray();
@@ -127,15 +127,15 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 						values = new Object[0];
 						ignorecall = true;
 					} else {
-						classes = new Class[] { lastInput.getValue().getClass() };
+						paramClasses = new Class[] { lastInput.getValue().getClass() };
 						values = new Object[] { lastInput.getValue() };
 					}
 				} else {
-					classes = new Class[callParameterArray.length];
+					paramClasses = new Class[callParameterArray.length];
 					values = new Object[callParameterArray.length];
 				}
 				for (int i = 0; i < callParameterArray.length; i++) {
-					classes[i] = call.getCallInfo().getType(callParameterArray[i]);
+					paramClasses[i] = call.getCallInfo().getType(callParameterArray[i]);
 					values[i] = call.getCallInfo().getValue(callParameterArray[i]);
 				}
 				boolean anynull = false;
@@ -153,19 +153,19 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				}
 
 				// registrar a chamada
-				ComboCallback.register(call.getObject(), call.getFunctionName(), classes);
+				ComboCallback.register(call.getObject(), call.getFunctionName(), paramClasses);
 
 				ignorecall = (ignorecall || anynull) && (callParameterArray.length != 0);
 				if (!ignorecall) {
 					Object lista = null;
 					CacheControl cacheControl = null;
-					if(classes.length == 0){
+					if(paramClasses.length == 0){
 						//try cache
 						cacheControl = CacheControl.get(inputTag.getRequest());
 						lista = cacheControl.getCache().get(inputTag.getItens());
 					}
 					if(lista == null){
-						lista = Util.objects.findAndInvokeMethod(bean, functionName, values, classes);
+						lista = Util.objects.findAndInvokeMethod(bean, functionName, values, paramClasses);
 						if (!(lista instanceof List)) {
 							throw new RuntimeException("O retorno do método " + functionName + " não foi uma lista");
 						}
@@ -572,7 +572,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		String addItensHoldValue = Util.booleans.isTrue(inputTag.getHoldValue()) ? "true" : "false";
 		ifcode += "1 == 1";
 		String functionCode = "";
-		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), "'"+beanTag.getPropertyIndex()+"'") + ".loadItens = function(){\n";
+		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), (beanTag.getPropertyIndex() != null ? "'"+beanTag.getPropertyIndex()+"'" : null)) + ".loadItens = function(){\n";
 		//functionCode += "    alert('loading itens '+this.name);\n";
 		functionCode += "    var executeOnchange = " + comp + ".value != '<null>' && " + comp + ".value != '';\n";
 		functionCode += "    " + comp + ".wasEmpty = !executeOnchange;\n";
@@ -591,7 +591,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 
 		functionCode += "};\n\n";
 
-		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), "'"+beanTag.getPropertyIndex()+"'") + ".setItens = function(lista){\n";
+		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), (beanTag.getPropertyIndex() != null ? "'"+beanTag.getPropertyIndex()+"'" : null)) + ".setItens = function(lista){\n";
 		//functionCode += "    alert('seting itens '+this.name);\n";
 		functionCode += "      var valorMantido = addItensToCombo(" + comp + ", lista, " + addItensHoldValue + ");\n";
 

@@ -192,7 +192,7 @@ public class InputTagSelectComponent extends InputTagComponent {
 	
 	public static String getDynamicProperty(String form, String property, String currentIndexVar) {
 		String code;
-		if(property.contains("[")){
+		if(property.contains("[") && currentIndexVar != null){
 			String open = property.substring(0, property.indexOf('[')+1);
 			String close = property.substring(property.indexOf(']'));
 			code = form+"['"+open+"'+ "+currentIndexVar+" +'"+close+"']";

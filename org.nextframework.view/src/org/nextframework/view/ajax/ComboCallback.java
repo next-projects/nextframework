@@ -170,14 +170,14 @@ public class ComboCallback implements AjaxCallbackController {
 				.replace((CharSequence) "\r", " ");
 	}
 
-	public static boolean isRegistered(String object, String functionName, Class<?>[] classes) {
+	public static boolean isRegistered(String object, String functionName, Class<?>[] paramClasses) {
 		Set<CallbackFunctionRegistration> set = getCallbackRegistrationList();
-		return set.contains(new CallbackFunctionRegistration(object, functionName, classes));
+		return set.contains(new CallbackFunctionRegistration(object, functionName, paramClasses));
 	}
 
-	public static void register(String object, String functionName, Class<?>[] classes) {
+	public static void register(String object, String functionName, Class<?>[] paramClasses) {
 		Set<CallbackFunctionRegistration> set = getCallbackRegistrationList();
-		set.add(new CallbackFunctionRegistration(object, functionName, classes));
+		set.add(new CallbackFunctionRegistration(object, functionName, paramClasses));
 	}
 
 	private static Set<CallbackFunctionRegistration> getCallbackRegistrationList() {
