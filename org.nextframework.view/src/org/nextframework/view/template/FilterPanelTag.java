@@ -33,8 +33,9 @@ public class FilterPanelTag extends SimplePanelTag {
 	protected Boolean showSubmit = true;
 	protected String submitUrl = null;
 	protected String submitAction = null;
-	protected Boolean validateForm = true;
+	protected String submitParameters = null;
 	protected String submitLabel = null;
+	protected Boolean validateForm = true;
 
 	protected String buttonStyleClass;
 
@@ -100,12 +101,12 @@ public class FilterPanelTag extends SimplePanelTag {
 		this.submitAction = submitAction;
 	}
 
-	public Boolean getValidateForm() {
-		return validateForm;
+	public String getSubmitParameters() {
+		return submitParameters;
 	}
 
-	public void setValidateForm(Boolean validateForm) {
-		this.validateForm = validateForm;
+	public void setSubmitParameters(String submitParameters) {
+		this.submitParameters = submitParameters;
 	}
 
 	public String getSubmitLabel() {
@@ -114,6 +115,14 @@ public class FilterPanelTag extends SimplePanelTag {
 
 	public void setSubmitLabel(String submitLabel) {
 		this.submitLabel = submitLabel;
+	}
+
+	public Boolean getValidateForm() {
+		return validateForm;
+	}
+
+	public void setValidateForm(Boolean validateForm) {
+		this.validateForm = validateForm;
 	}
 
 	public String getButtonStyleClass() {

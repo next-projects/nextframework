@@ -312,18 +312,24 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>submitAction</name>
+			<name>submitParameters</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>validateForm</name>
+			<description></description>
+			<name>submitAction</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description></description>
 			<name>submitLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>validateForm</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

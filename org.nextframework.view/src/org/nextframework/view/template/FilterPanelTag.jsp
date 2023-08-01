@@ -20,7 +20,7 @@
 				<div class="${filterPanelTag.actionBarStyleClass}" style="${filterPanelTag.actionBarStyle}">
 					${acoes}
 					<c:if test="${filterPanelTag.showSubmit}">
-						<n:submit class="${filterPanelTag.buttonStyleClass}" url="${filterPanelTag.submitUrl}" action="${filterPanelTag.submitAction}" validate="${filterPanelTag.validateForm}">${filterPanelTag.submitLabel}</n:submit>
+						<n:submit class="${filterPanelTag.buttonStyleClass}" url="${filterPanelTag.submitUrl}" action="${filterPanelTag.submitAction}" parameters="${filterPanelTag.submitParameters}" validate="${filterPanelTag.validateForm}">${filterPanelTag.submitLabel}</n:submit>
 					</c:if>
 				</div>
 			</c:if>
