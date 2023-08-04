@@ -1,5 +1,6 @@
 package org.nextframework.report.definition.builder;
 
+import java.beans.PropertyEditor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -37,6 +38,7 @@ import org.nextframework.report.definition.elements.style.Border;
 import org.nextframework.report.definition.elements.style.ReportAlignment;
 import org.nextframework.report.definition.elements.style.ReportItemStyle;
 import org.nextframework.report.renderer.ReportBuilderValueConverter;
+import org.nextframework.report.renderer.ValueConverter;
 import org.nextframework.report.renderer.jasper.builder.JasperRenderParameters;
 import org.nextframework.summary.Summary;
 import org.nextframework.summary.SummaryRow;
@@ -54,6 +56,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	public static final String CONVERTER = "CONVERTER";
 
 	protected Locale locale;
+	protected ValueConverter valueConverter = new ReportBuilderValueConverter();
 	protected SummaryResult<?, ? extends Summary<?>> summaryResult;
 	protected boolean sumarizedData = false;
 	protected List<?> data;
@@ -62,6 +65,10 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public void setValueConverter(ValueConverter valueConverter) {
+		this.valueConverter = valueConverter;
 	}
 
 	public <E> void setData(SummaryResult<E, ? extends Summary<E>> summaryResult) {
@@ -149,7 +156,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	protected void configureBasicParameters() {
 		getDefinition().setParameter(LOCALE, locale);
-		getDefinition().setParameter(CONVERTER, new ReportBuilderValueConverter());
+		getDefinition().setParameter(CONVERTER, valueConverter);
 	}
 
 	protected boolean isSetupGroups() {
@@ -235,6 +242,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return new ReportItemStyle();
 	}
 
+	@SuppressWarnings("deprecation")
 	protected ReportLabel separator(String text, int colspan) {
 		ReportLabel reportLabel = new ReportLabel(text);
 		reportLabel.setColspan(colspan);
@@ -479,6 +487,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	protected ReportChart chart(ChartType chartType, String chartTitle, List<?> chartData, String groupProperty, String seriesProperty, String valueProperty) {
 
 		Chart chart = createChart(chartType, chartTitle);
+
 		ChartData data = null;
 		if (ChartType.PIE.equals(chartType) && seriesProperty != null) {
 			if (isAutoAggregateGroups(chartTitle)) {
@@ -493,14 +502,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				data = ChartDataBuilder.build(chartData, groupProperty, seriesProperty, valueProperty);
 			}
 		}
-
 		chart.setData(data);
-
-		ReportChart reportChart = new ReportChart(chart);
-		reportChart.getStyle().setAlignment(ReportAlignment.CENTER);
-		reportChart.setHeight(125);
-		reportChart.getStyle().setPaddingTop(2);
-		reportChart.getStyle().setPaddingBottom(2);
 
 		if (seriesProperty == null && valueProperty != null) {
 			chart.getStyle().setLegendPosition(LegendPosition.NONE);
@@ -512,11 +514,22 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 			chart.setData(data);
 		}
 
+		ReportChart reportChart = new ReportChart(chart);
+		reportChart.getStyle().setAlignment(ReportAlignment.CENTER);
+		reportChart.setHeight(125);
+		reportChart.getStyle().setPaddingTop(2);
+		reportChart.getStyle().setPaddingBottom(2);
+
 		return reportChart;
 	}
 
 	public Chart createChart(ChartType chartType, String chartTitle) {
-		return new Chart(chartType, chartTitle, "500", "300");
+		Chart chart = new Chart(chartType, chartTitle, "500", "300");
+		if (valueConverter instanceof PropertyEditor) {
+			PropertyEditor valueConverterPe = (PropertyEditor) valueConverter;
+			chart.setFormatters(valueConverterPe);
+		}
+		return chart;
 	}
 
 	protected ReportChart chartPropertiesAsSeries(ChartType chartType, String w, String h, String chartTitle, String groupProperty, String... seriesProperties) {
@@ -534,15 +547,16 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	protected ReportChart chartPropertiesAsSeries(ChartType chartType, String w, String h, String chartTitle, List<?> chartData, String groupProperty, String... seriesProperties) {
 
 		Chart chart = createChart(chartType, chartTitle);
-		if (w != null && h != null) {
-			chart.setDimension(w, h);
-		}
 
 		ChartData data = ChartDataBuilder.buildPropertiesAsSeries(chartData, groupProperty, seriesProperties);
 		if (isAutoAggregateGroups(chartTitle)) {
 			aggregateGroups(data);
 		}
 		chart.setData(data);
+
+		if (w != null && h != null) {
+			chart.setDimension(w, h);
+		}
 
 		ReportChart reportChart = new ReportChart(chart);
 		reportChart.getStyle().setAlignment(ReportAlignment.CENTER);

@@ -203,7 +203,7 @@ public class StringUtils {
 		} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
 			if (Util.strings.isEmpty(formatDate)) {
 				if (value instanceof Time) {
-					formatDate = "HH:mm";
+					formatDate = "HH:mm:ss";
 				} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp || value instanceof Calendar) {
 					formatDate = "dd/MM/yyyy";
 				}

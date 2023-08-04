@@ -221,13 +221,12 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 			@Override
 			public String formatRowGroup(Object _row) {
 				ChartRow row = (ChartRow) _row;
-				PropertyEditor formatter = chart0.getStyle().getGroupFormatter();
-				String value = null;
+				PropertyEditor formatter = chart0.getGroupFormatter();
 				if (formatter != null) {
 					formatter.setValue(row.getGroup());
-					value = formatter.getAsText();
+					return formatter.getAsText();
 				}
-				return value;
+				return null;
 			}
 
 			@Override
@@ -244,6 +243,14 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 	}
 
 	public void onNewChart(Chart chart) {
+
+		if (valueConverter instanceof PropertyEditor) {
+			PropertyEditor valueConverterPe = (PropertyEditor) valueConverter;
+			chart.setFormatters(valueConverterPe);
+		}
+
+		chart.getStyle().setLegendPosition(LegendPosition.RIGHT);
+
 		ChartData chartData = chart.getData();
 		if (chartData.getData().size() >= 1) {
 			ChartRow row = chartData.getData().get(0);
@@ -255,6 +262,7 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 				reorderGroupsByValue(chartData.getData()); //reorder when only one serie
 			}
 		}
+
 	}
 
 	private void reorderGroupsByValue(List<ChartRow> data) {

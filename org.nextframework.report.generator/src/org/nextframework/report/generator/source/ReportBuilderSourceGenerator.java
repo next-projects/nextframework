@@ -265,7 +265,7 @@ public class ReportBuilderSourceGenerator {
 		String groupProperty = chart.getGroupProperty();
 		
 		//do not use description property for groups anymore
-//		groupProperty = checkDescriptor(groupProperty);
+		//groupProperty = checkDescriptor(groupProperty);
 		
 		String classSimpleName = getMainType().getSimpleName();
 		chartMethod.append("Class<Summary<"+classSimpleName + ">> summaryClass = DynamicSummary.getInstance("+classSimpleName + ".class)");
@@ -360,7 +360,7 @@ public class ReportBuilderSourceGenerator {
 					"\"summary."+property+groupPropertyForValueCap+"\"," + //value
 					aggregateFunction + ");"); //aggregate
 		}
-		
+
 		if(StringUtils.hasText(chart.getGroupTitle())){
 			String groupTitle = safeString(chart.getGroupTitle());
 			chartMethod.append("sData.setGroupTitle(\""+groupTitle+"\");"); 
@@ -371,7 +371,7 @@ public class ReportBuilderSourceGenerator {
 		}
 
 		chartMethod.append("Chart chart = new Chart(ChartType."+chart.getType().toUpperCase()+");");
-		
+
 		if(groupType instanceof Class<?>){
 			if(Calendar.class.isAssignableFrom((Class<?>) groupType) || 
 					Date.class.isAssignableFrom((Class<?>) groupType)){
@@ -395,9 +395,10 @@ public class ReportBuilderSourceGenerator {
 					chartMethod.append("tsData.groupBy("+chart.getGroupLevel()+", "+aggregateFunction+");"); //TODO consider aggregation function
 				}
 				chartMethod.append("sData = tsData;");
-				chartMethod.append("chart.getStyle().setGroupFormatterPattern(\""+getPatternForGroupLevel(chart.getGroupLevel())+"\");");
+				chartMethod.append("chart.setGroupPattern(\""+getPatternForGroupLevel(chart.getGroupLevel())+"\");");
 			}
 		}
+
 		if(org.springframework.util.StringUtils.hasText(chart.getSeriesProperty())){
 			chartMethod.append("//"+chart.getSeriesLimitType());
 			if(ChartElement.SHOW_ALL.equals( chart.getSeriesLimitType())){
@@ -412,10 +413,11 @@ public class ReportBuilderSourceGenerator {
 			chartMethod.append("sData.removeEmptySeries();");
 			chartMethod.append("sData.removeEmptyGroups();");
 		}
+
 		chartMethod.append("chart.setData(sData);");
-		chartMethod.append("chart.getStyle().setLegendPosition(LegendPosition.RIGHT);");
 		chartMethod.append("chart.setTitle(\""+(chart.getTitle().replace('"', ' '))+"\");");
 		chartMethod.append("onNewChart(chart);");
+
 		chartMethod.append("return chart;");
 	}
 

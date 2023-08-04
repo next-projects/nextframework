@@ -1,19 +1,21 @@
-package org.nextframework.report.generator.layout;
+package org.nextframework.report.generator.data;
 
+import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import org.nextframework.core.standard.Next;
+import org.nextframework.report.renderer.ValueConverter;
 import org.nextframework.util.Util;
 
-public class ReportBuilderValueConverter extends org.nextframework.report.renderer.ReportBuilderValueConverter {
+public class ResolvableValueConverter extends PropertyEditorSupport implements ValueConverter {
 
 	private Locale locale;
 	private String[] trueFalseNullLabels;
 
-	public ReportBuilderValueConverter(Locale locale) {
+	public ResolvableValueConverter(Locale locale) {
 		this.locale = locale;
 		this.trueFalseNullLabels = getTrueFalseNullLabels();
 	}
@@ -27,7 +29,6 @@ public class ReportBuilderValueConverter extends org.nextframework.report.render
 
 	@Override
 	public Object apply(Object obj) {
-
 		if (obj == null) {
 			return null;
 		} else if (obj instanceof Boolean) {
@@ -42,8 +43,12 @@ public class ReportBuilderValueConverter extends org.nextframework.report.render
 		} else if (obj instanceof Calendar) {
 			return ((Calendar) obj).getTime();
 		}
-
 		return Util.strings.toStringDescription(obj, locale);
+	}
+
+	public String getAsText() {
+		Object obj = apply(getValue());
+		return obj != null ? String.valueOf(obj) : null;
 	}
 
 }

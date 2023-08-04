@@ -1,6 +1,7 @@
 package org.nextframework.report.generator.layout;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 
@@ -12,15 +13,20 @@ import org.nextframework.persistence.GenericDAO;
 import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.builder.LayoutReportBuilder;
 import org.nextframework.report.definition.elements.style.ReportAlignment;
+import org.nextframework.report.generator.data.ResolvableValueConverter;
 import org.nextframework.types.Money;
 import org.nextframework.util.Util;
 
 public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder {
 
+	public RepositoryReportLayoutBuilder() {
+		setLocale(null);
+	}
+
 	@Override
-	protected void configureBasicParameters() {
-		super.configureBasicParameters();
-		getDefinition().setParameter(CONVERTER, new ReportBuilderValueConverter(locale));
+	public void setLocale(Locale locale) {
+		super.setLocale(locale);
+		this.valueConverter = new ResolvableValueConverter(locale);
 	}
 
 	@Override

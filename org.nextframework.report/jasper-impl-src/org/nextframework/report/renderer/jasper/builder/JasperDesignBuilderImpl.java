@@ -32,7 +32,7 @@ import org.nextframework.report.definition.elements.ReportOverlapComposite;
 import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.definition.elements.style.Border;
-import org.nextframework.report.renderer.ReportBuilderValueConverter;
+import org.nextframework.report.renderer.ValueConverter;
 
 import net.sf.jasperreports.engine.JRChild;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -360,7 +360,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 	}
 
 	private String getConverterExpression(String expression) {
-		return "((" + ReportBuilderValueConverter.class.getCanonicalName() + ")$P{" + BaseReportBuilder.CONVERTER + "}).apply(" + expression + ")";
+		return "((" + ValueConverter.class.getCanonicalName() + ")$P{" + BaseReportBuilder.CONVERTER + "}).apply(" + expression + ")";
 	}
 
 	private JRDesignParameter getParameter(String expression) {

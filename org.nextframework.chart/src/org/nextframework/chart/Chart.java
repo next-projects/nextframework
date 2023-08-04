@@ -1,5 +1,6 @@
 package org.nextframework.chart;
 
+import java.beans.PropertyEditor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,46 +12,39 @@ public class Chart implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
-	private String title;
-	private ChartData data;
+	private Object title;
+
+	private ChartData data = new ChartData();
+
+	private PropertyEditor labelsFormatter = new ChartDefaultPropertyEditor();
+	private PropertyEditor groupFormatter = new ChartDefaultPropertyEditor();
+	private PropertyEditor seriesFormatter = new ChartDefaultPropertyEditor();
+	private PropertyEditor valuesFormatter = new ChartDefaultPropertyEditor();
+	private String groupPattern;
+	private String valuePattern;
+
 	private ChartStyle style;
 	private ChartType comboDefaultChartType = ChartType.COLUMN;
 	private List<ChartType> comboSeriesType = new ArrayList<ChartType>();
 	private Map<Object, Object> properties = new LinkedHashMap<Object, Object>();
 
-	public Chart(ChartType type, String title, String width, String height) {
-		this(type, width, height);
-		this.title = title;
-	}
-
-	public Chart(ChartType type, String width, String height) {
-		this(type, new ChartData());
+	public Chart(ChartType type, Object title, String width, String height) {
+		this(type, title);
 		this.style.setDimension(width, height);
 	}
 
-	public Chart(ChartType type, String title) {
-		this(type, new ChartData());
-		this.title = title;
+	public Chart(ChartType type, String width, String height) {
+		this(type, null);
+		this.style.setDimension(width, height);
 	}
 
 	public Chart(ChartType type) {
-		this(type, new ChartData());
+		this(type, null);
 	}
 
-	public Chart(ChartType type, String title, ChartData data) {
+	public Chart(ChartType type, Object title) {
 		this.style = new ChartStyle(type);
 		this.title = title;
-		this.data = data;
-	}
-
-	public Chart(ChartType type, ChartData data) {
-		this.style = new ChartStyle(type);
-		this.data = data;
-	}
-
-	public Chart(ChartStyle style, ChartData data) {
-		this.style = style;
-		this.data = data;
 	}
 
 	public String getId() {
@@ -61,11 +55,11 @@ public class Chart implements Serializable {
 		this.id = id;
 	}
 
-	public String getTitle() {
+	public Object getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(Object title) {
 		this.title = title;
 	}
 
@@ -75,6 +69,61 @@ public class Chart implements Serializable {
 
 	public void setData(ChartData data) {
 		this.data = data;
+	}
+
+	public void setFormatters(PropertyEditor labelsFormatter) {
+		setLabelsFormatter(labelsFormatter);
+		setGroupFormatter(labelsFormatter);
+		setSeriesFormatter(labelsFormatter);
+		setValuesFormatter(labelsFormatter);
+	}
+
+	public PropertyEditor getLabelsFormatter() {
+		return labelsFormatter;
+	}
+
+	public void setLabelsFormatter(PropertyEditor labelsFormatter) {
+		this.labelsFormatter = labelsFormatter;
+	}
+
+	public PropertyEditor getGroupFormatter() {
+		return groupFormatter;
+	}
+
+	public void setGroupFormatter(PropertyEditor groupFormatter) {
+		this.groupFormatter = groupFormatter;
+	}
+
+	public PropertyEditor getSeriesFormatter() {
+		return seriesFormatter;
+	}
+
+	public void setSeriesFormatter(PropertyEditor seriesFormatter) {
+		this.seriesFormatter = seriesFormatter;
+	}
+
+	public PropertyEditor getValuesFormatter() {
+		return valuesFormatter;
+	}
+
+	public void setValuesFormatter(PropertyEditor valuesFormatter) {
+		this.valuesFormatter = valuesFormatter;
+	}
+
+	public String getGroupPattern() {
+		return groupPattern;
+	}
+
+	public void setGroupPattern(String groupPattern) {
+		this.groupPattern = groupPattern;
+	}
+
+	public String getValuePattern() {
+		return valuePattern;
+	}
+
+	public void setValuePattern(String valuePattern) {
+		this.valuePattern = valuePattern;
 	}
 
 	public ChartStyle getStyle() {

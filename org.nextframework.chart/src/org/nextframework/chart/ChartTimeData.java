@@ -9,7 +9,7 @@ public class ChartTimeData extends ChartData {
 		MONTH,
 		YEAR
 	}
-	
+
 	private TimeInterval timeInterval = TimeInterval.DAY;
 
 	public TimeInterval getTimeInterval() {
@@ -19,5 +19,5 @@ public class ChartTimeData extends ChartData {
 	public void setTimeInterval(TimeInterval timeInterval) {
 		this.timeInterval = timeInterval;
 	}
-	
+
 }

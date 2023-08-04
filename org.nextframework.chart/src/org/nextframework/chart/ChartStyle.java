@@ -1,7 +1,6 @@
 package org.nextframework.chart;
 
 import java.awt.Color;
-import java.beans.PropertyEditor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +43,6 @@ public class ChartStyle implements Serializable {
 
 	private List<PieSlice> slices = new DynamicList<ChartStyle.PieSlice>();
 
-	private PropertyEditor groupFormatter = new ChartDefaultPropertyEditor();
-	private PropertyEditor seriesFormatter = new ChartDefaultPropertyEditor();
-	private PropertyEditor valuesFormatter;
-
 	private String topPadding = "20";
 	private String bottomPadding = "20";
 	private String leftPadding;
@@ -59,9 +54,6 @@ public class ChartStyle implements Serializable {
 	private Integer pointSize;
 
 	private boolean continuous;
-
-	private String groupPattern;
-	private String valuePattern;
 
 	private Object groupMinValue;
 	private Object groupMaxValue;
@@ -235,39 +227,6 @@ public class ChartStyle implements Serializable {
 		this.slices.addAll(slices);
 	}
 
-	public PropertyEditor getGroupFormatter() {
-		return groupFormatter;
-	}
-
-	public void setGroupFormatter(PropertyEditor groupFormatter) {
-		this.groupFormatter = groupFormatter;
-	}
-
-	public PropertyEditor getSeriesFormatter() {
-		return seriesFormatter;
-	}
-
-	public void setSeriesFormatter(PropertyEditor seriesFormatter) {
-		this.seriesFormatter = seriesFormatter;
-	}
-
-	public void setSeriesFormatterPattern(String pattern) {
-		this.seriesFormatter = new ChartDefaultPropertyEditor(pattern);
-	}
-
-	public PropertyEditor getValuesFormatter() {
-		return valuesFormatter;
-	}
-
-	public void setValuesFormatter(PropertyEditor valuesFormatter) {
-		this.valuePattern = null;
-		this.valuesFormatter = valuesFormatter;
-	}
-
-	public PropertyEditor getValuesFormatterForSerie(int serieIndex) {
-		return valuesFormatter;
-	}
-
 	/**
 	 * Google chart tools
 	 * @param leftPadding
@@ -372,23 +331,6 @@ public class ChartStyle implements Serializable {
 		this.continuous = continuous;
 	}
 
-	public String getGroupPattern() {
-		return groupPattern;
-	}
-
-	public void setGroupFormatterPattern(String pattern) {
-		this.groupPattern = pattern;
-		this.groupFormatter = new ChartDefaultPropertyEditor(pattern);
-	}
-
-	public String getValuePattern() {
-		return valuePattern;
-	}
-
-	public void setValueFormatterPattern(String valuePattern) {
-		this.valuePattern = valuePattern;
-	}
-
 	public Object getGroupMinValue() {
 		return groupMinValue;
 	}
@@ -406,6 +348,8 @@ public class ChartStyle implements Serializable {
 	}
 
 	private static class DynamicList<E> extends ArrayList<E> {
+
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void add(int index, E element) {

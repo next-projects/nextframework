@@ -10,7 +10,7 @@
 
 	<t:formPanel submitAction="saveReport">
 		<t:formTable columns="12">
-			<t:property name="reportXml" rows="40" style="text-transform: none;" colspan="12" />
+			<t:property name="reportXml" rows="40" normalCase="true" style="text-transform: none;" colspan="12" />
 			<t:property name="reportPublic" colspan="12" />
 			<t:property name="id" type="hidden" renderAs="single" />
 		</t:formTable>
