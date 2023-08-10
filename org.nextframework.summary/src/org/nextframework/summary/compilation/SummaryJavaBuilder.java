@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
-import org.nextframework.bean.BeanDescriptor;
-import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.BeanDescriptorUtils;
 import org.nextframework.exception.NextException;
 import org.nextframework.summary.Summary;
@@ -161,34 +159,14 @@ public class SummaryJavaBuilder {
 			String groupName = summaryGroupDefinition.getName();
 			String groupNameCap = StringUtils.capitalize(summaryGroupDefinition.getName());
 			String groupGetter = BeanDescriptorUtils.getGetterFromProperty(groupName);
-			String comparableMethodName = "getComparable"+groupNameCap;
-			
 			out.println("");
+			String comparableMethodName = "getComparable"+groupNameCap;
 			String summaryClassName = summaryClass.getCanonicalName();
-			
 			out.println("    protected Comparable<?> " + comparableMethodName + "(" + summaryClassName + " proxy) {");
-			if(isComparableType(summaryGroupDefinition)){
-				out.println("            return proxy."+groupGetter+"();");
-			} else {
-				out.println("            "+summaryGroupDefinition.getType().getSimpleName()+" var = proxy."+groupGetter+"();");
-				out.println("            return var != null? proxy."+groupGetter+"()."+getComparableMethodFor(summaryGroupDefinition)+"() : null;");
-			}
+			out.println("        "+summaryGroupDefinition.getType().getSimpleName()+" var = proxy."+groupGetter+"();");
+			out.println("        return convertComparable(var);");
 			out.println("    }");
 		}
-	}
-	
-	private String getComparableMethodFor(SummaryGroupDefinition summaryGroupDefinition) {
-		Class<?> type = summaryGroupDefinition.getType();
-		BeanDescriptor bd = BeanDescriptorFactory.forClass(type);
-		String descriptionProperty = bd.getDescriptionPropertyName();
-		if(descriptionProperty != null){
-			return BeanDescriptorUtils.getGetterFromProperty(descriptionProperty);
-		}
-		return "toString";
-	}
-	
-	private boolean isComparableType(SummaryGroupDefinition summaryGroupDefinition) {
-		return Comparable.class.isAssignableFrom(summaryGroupDefinition.getType());
 	}
 	
 	private String getImportName(Class<?> summaryClass) {

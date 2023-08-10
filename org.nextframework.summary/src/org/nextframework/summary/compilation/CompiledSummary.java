@@ -7,23 +7,28 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
 
+import org.nextframework.bean.BeanDescriptor;
+import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.summary.Summary;
 import org.nextframework.summary.SummaryRow;
 
 public abstract class CompiledSummary<SUMARY extends Summary<ROW>, ROW> {
 
 	public SummaryResult<ROW, SUMARY> createSummaryResult(Collection<ROW> rows) {
-		if(rows instanceof SortedSet<?>){
+		if (rows instanceof SortedSet<?>) {
 			return createSummaryResult(rows, false);
 		}
 		return createSummaryResult(rows, true);
 	}
-	
+
 	public SummaryResult<ROW, SUMARY> createSummaryResult(Collection<ROW> rows, boolean reorderGroups) {
-		if(rows == null){
+
+		if (rows == null) {
 			throw new IllegalArgumentException("rows cannot be null");
 		}
-		if(reorderGroups){
+
+		if (reorderGroups) {
+
 			List<RowHolder<ROW>> holdersCollection = getHolders(rows);
 			Collections.sort(holdersCollection, new Comparator<RowHolder<ROW>>() {
 
@@ -35,18 +40,18 @@ public abstract class CompiledSummary<SUMARY extends Summary<ROW>, ROW> {
 					for (int i = 0; i < groupValues1.length; i++) {
 						Comparable comparable1 = groupValues1[i];
 						Comparable comparable2 = groupValues2[i];
-						if((comparable1 == null && comparable2 == null)
-							 || (comparable1 != null && comparable1.equals(comparable2))){
+						if ((comparable1 == null && comparable2 == null)
+								|| (comparable1 != null && comparable1.equals(comparable2))) {
 							continue;
 						}
-						if(comparable2 == null && comparable1 != null){
+						if (comparable2 == null && comparable1 != null) {
 							return 1;
 						}
-						if(comparable1 == null && comparable2 != null){
+						if (comparable1 == null && comparable2 != null) {
 							return -1;
 						}
 						int diference = comparable1.compareTo(comparable2);
-						if(diference != 0){
+						if (diference != 0) {
 							return diference;
 						}
 					}
@@ -54,13 +59,15 @@ public abstract class CompiledSummary<SUMARY extends Summary<ROW>, ROW> {
 				}
 
 			});
+
 			rows = new ArrayList<ROW>();
 			for (RowHolder<ROW> rowHolder : holdersCollection) {
 				rows.add(rowHolder.row);
 			}
-			
+
 		}
-		List<SummaryRow<ROW, SUMARY>> result = new ArrayList<SummaryRow<ROW,SUMARY>>();
+
+		List<SummaryRow<ROW, SUMARY>> result = new ArrayList<SummaryRow<ROW, SUMARY>>();
 		SummaryResult<ROW, SUMARY> summaryResult = new SummaryResult<ROW, SUMARY>(result, getSummaryClass());
 		int i = 0;
 		for (ROW row : rows) {
@@ -68,6 +75,7 @@ public abstract class CompiledSummary<SUMARY extends Summary<ROW>, ROW> {
 			summaryRow.setResult(summaryResult);
 			result.add(summaryRow);
 		}
+
 		return summaryResult;
 	}
 
@@ -79,20 +87,38 @@ public abstract class CompiledSummary<SUMARY extends Summary<ROW>, ROW> {
 		}
 		return result;
 	}
-	
+
 	protected abstract Comparable<?>[] getGroupValuesForRow(ROW o1);
-	
+
+	protected Comparable<?> convertComparable(Object var) {
+		if (var == null) {
+			return null;
+		}
+		if (var instanceof Comparable) {
+			return (Comparable<?>) var;
+		}
+		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(var);
+		if (beanDescriptor.getDescriptionPropertyName() != null) {
+			Object varDesc = beanDescriptor.getDescription();
+			return convertComparable(varDesc);
+		}
+		return var.toString();
+	}
+
 	protected abstract SummaryRow<ROW, SUMARY> onNewRow(ROW row, int rowIndex);
-	
+
 	protected abstract Class<SUMARY> getSummaryClass();
 
 	private static class RowHolder<ROW> {
+
 		ROW row;
 		int rowIndex;
+
 		public RowHolder(ROW row, int rowIndex) {
 			this.row = row;
 			this.rowIndex = rowIndex;
 		}
+
 	}
-	
+
 }
