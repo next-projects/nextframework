@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.nextframework.exception.NextException;
 import org.nextframework.message.NextMessageSourceResolvable;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -64,6 +65,30 @@ public class ObjectUtils {
 
 	public boolean isNotEmpty(Object type) {
 		return !isEmpty(type);
+	}
+
+	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
+		try {
+			Method method = enumClass.getMethod("values");
+			Enum<?>[] enumValues = (Enum[]) method.invoke(null);
+			return enumValues;
+		} catch (Exception ex) {
+			throw new NextException("Erro ao obter itens do enum " + enumClass + ".");
+		}
+	}
+
+	public <T extends Enum<T>> T getEnumItem(Class<T> enumClass, String name, T defaultValue) {
+		if (Util.strings.isEmpty(name)) {
+			return defaultValue != null ? defaultValue : null;
+		}
+		try {
+			return Enum.valueOf(enumClass, name);
+		} catch (IllegalStateException ex) {
+			if (defaultValue != null) {
+				return defaultValue;
+			}
+			throw ex;
+		}
 	}
 
 	/**

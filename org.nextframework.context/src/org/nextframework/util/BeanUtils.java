@@ -25,10 +25,7 @@ package org.nextframework.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -36,7 +33,6 @@ import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.core.standard.Next;
-import org.nextframework.exception.NextException;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -46,6 +42,61 @@ import org.springframework.context.MessageSourceResolvable;
  * @version 1.1
  */
 public class BeanUtils {
+
+	public Object getId(Object obj) {
+		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(obj);
+		return beanDescriptor.getId();
+	}
+
+	public Set<String> getProperties(Class<?> clazz) {
+		Set<String> properties = new HashSet<String>();
+		Method[] declaredMethods = clazz.getDeclaredMethods();
+		for (Method method : declaredMethods) {
+			if (isGetter(method)) {
+				String property = getPropertyFromGetter(method.getName());
+				properties.add(property);
+			}
+		}
+		return properties;
+	}
+
+	public Set<Method> getPropertyGetters(Class<?> clazz) {
+		Set<Method> getters = new HashSet<Method>();
+		Method[] methods = clazz.getMethods();
+		for (Method method : methods) {
+			if (isGetter(method)) {
+				getters.add(method);
+			}
+		}
+		return getters;
+	}
+
+	public boolean isGetter(Method method) {
+		return (method.getName().startsWith("get") || method.getName().startsWith("is"))
+				&& !method.getReturnType().isAssignableFrom(Void.TYPE)
+				&& method.getParameterTypes().length == 0;
+	}
+
+	public boolean isSetter(Method method) {
+		return (method.getName().startsWith("set"))
+				&& method.getReturnType().isAssignableFrom(Void.TYPE)
+				&& method.getParameterTypes().length == 1;
+	}
+
+	public Method getGetterMethod(Class<?> clazz, String property) {
+		ReflectionCache cache = ReflectionCacheFactory.getReflectionCache();
+		Method[] methods = cache.getMethods(clazz);
+		Method method = null;
+		String getterName = "get" + Util.strings.captalize(property);
+		String getterName1 = "is" + Util.strings.captalize(property);
+		for (int j = 0; j < methods.length; j++) {
+			if ((methods[j].getName().equals(getterName) || methods[j].getName().equals(getterName1)) && methods[j].getParameterTypes().length == 0) {
+				method = methods[j];
+				return method;
+			}
+		}
+		return null;
+	}
 
 	public Method getSetterMethod(Class<?> clazz, String property) {
 		ReflectionCache cache = ReflectionCacheFactory.getReflectionCache();
@@ -62,8 +113,27 @@ public class BeanUtils {
 		return null;
 	}
 
-	public String getGetterFromProperty(String propertyName) {
-		return "get" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+	public Set<Method> getPropertiesAsGettersWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+		Set<Method> properties = new HashSet<Method>();
+		Method[] declaredMethods = clazz.getDeclaredMethods();
+		for (Method method : declaredMethods) {
+			if (isGetter(method) && method.isAnnotationPresent(annotationClass)) {
+				properties.add(method);
+			}
+		}
+		return properties;
+	}
+
+	public Set<String> getPropertiesWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+		Set<String> properties = new HashSet<String>();
+		Method[] declaredMethods = clazz.getDeclaredMethods();
+		for (Method method : declaredMethods) {
+			if (isGetter(method) && method.isAnnotationPresent(annotationClass)) {
+				String property = getPropertyFromGetter(method.getName());
+				properties.add(property);
+			}
+		}
+		return properties;
 	}
 
 	public String getPropertyFromGetter(String getterMethodName) {
@@ -82,102 +152,12 @@ public class BeanUtils {
 		}
 	}
 
-	public Set<String> getPropertiesWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
-		Set<String> properties = new HashSet<String>();
-		Method[] declaredMethods = clazz.getDeclaredMethods();
-		for (Method method : declaredMethods) {
-			if (isGetter(method) && method.isAnnotationPresent(annotationClass)) {
-				String property = getPropertyFromGetter(method.getName());
-				properties.add(property);
-			}
-		}
-		return properties;
+	public Object getPropertyValue(Object bean, String property) {
+		return PropertyAccessorFactory.forBeanPropertyAccess(bean).getPropertyValue(property);
 	}
 
-	public Set<Method> getPropertiesAsGettersWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotationClass) {
-		Set<Method> properties = new HashSet<Method>();
-		Method[] declaredMethods = clazz.getDeclaredMethods();
-		for (Method method : declaredMethods) {
-			if (isGetter(method) && method.isAnnotationPresent(annotationClass)) {
-				properties.add(method);
-			}
-		}
-		return properties;
-	}
-
-	public List<Method> getPropertyGetters(Class<?> clazz) {
-		Method[] methods = clazz.getMethods();
-		List<Method> getters = new ArrayList<Method>();
-		for (Method method : methods) {
-			if (isGetter(method)) {
-				getters.add(method);
-			}
-		}
-		return getters;
-	}
-
-	public Set<String> getProperties(Class<?> clazz) {
-		Set<String> properties = new HashSet<String>();
-		Method[] declaredMethods = clazz.getDeclaredMethods();
-		for (Method method : declaredMethods) {
-			if (isGetter(method)) {
-				String property = getPropertyFromGetter(method.getName());
-				properties.add(property);
-			}
-		}
-		return properties;
-	}
-
-	public boolean isGetter(Method method) {
-		return (method.getName().startsWith("get") || method.getName().startsWith("is")) && method.getParameterTypes().length == 0;
-	}
-
-	public Method getGetterMethod(Class<?> clazz, String property) {
-		ReflectionCache cache = ReflectionCacheFactory.getReflectionCache();
-		Method[] methods = cache.getMethods(clazz);
-		Method method = null;
-		String getterName = "get" + Util.strings.captalize(property);
-		String getterName1 = "is" + Util.strings.captalize(property);
-		for (int j = 0; j < methods.length; j++) {
-			if ((methods[j].getName().equals(getterName) || methods[j].getName().equals(getterName1)) && methods[j].getParameterTypes().length == 0) {
-				method = methods[j];
-				return method;
-			}
-		}
-		return null;
-	}
-
-	public Object getId(Object obj) {
-		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(obj);
-		return beanDescriptor.getId();
-	}
-
-	public Collection<?> getPropertyValue(Object owner, String role) {
-		return (Collection<?>) PropertyAccessorFactory.forBeanPropertyAccess(owner).getPropertyValue(role);
-	}
-
-	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
-		try {
-			Method method = enumClass.getMethod("values");
-			Enum<?>[] enumValues = (Enum[]) method.invoke(null);
-			return enumValues;
-		} catch (Exception ex) {
-			throw new NextException("Erro ao obter itens do enum " + enumClass + ".");
-		}
-	}
-
-	public <T extends Enum<T>> T getEnumItem(Class<T> enumClass, String name, T defaultValue) {
-		if (Util.strings.isEmpty(name)) {
-			return defaultValue != null ? defaultValue : null;
-		}
-		try {
-			return Enum.valueOf(enumClass, name);
-		} catch (IllegalStateException ex) {
-			if (defaultValue != null) {
-				return defaultValue;
-			}
-			throw ex;
-		}
+	public void setPropertyValue(Object bean, String property, Object value) {
+		PropertyAccessorFactory.forBeanPropertyAccess(bean).setPropertyValue(property, value);
 	}
 
 	public String getDisplayName(Class<?> beanClass) {

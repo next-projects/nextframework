@@ -759,7 +759,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				.entity(owner)
 				.fetchCollection(role)
 				.unique();
-		return Util.beans.getPropertyValue(owner, role);
+		return (Collection<?>) Util.beans.getPropertyValue(owner, role);
 	}
 
 	public void loadDescriptionProperty(BEAN object) {

@@ -65,7 +65,7 @@ public class ReportDesignControllerUtil {
 		if (deepLevel < 0) {
 			return new HashSet<String>();
 		}
-		List<Method> propertyGetters = Util.beans.getPropertyGetters(selectedType);
+		Set<Method> propertyGetters = Util.beans.getPropertyGetters(selectedType);
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(selectedType);
 		Set<String> avaiableProperties = createPropertyListTreeSet(bd);
 		for (Method method : propertyGetters) {
