@@ -48,7 +48,6 @@ import org.nextframework.persistence.QueryBuilderException;
 
 public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTranslator {
 
-	private boolean debug = false;
 	private SessionFactory sessionFactory;
 	private String resultAlias;
 
@@ -61,8 +60,12 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 
 		this.resultAlias = queryBuilder.getTranslatorAlias();
 
+		Set<String> aliases = new HashSet<String>();
 		List<AliasMap> aliasMaps = new ArrayList<AliasMap>();
+
+		aliases.add(queryBuilder.getFrom().getAlias());
 		aliasMaps.add(new AliasMap(queryBuilder.getFrom().getAlias(), null, queryBuilder.getFrom().getFromClass()));
+
 		for (Join join : queryBuilder.getJoins()) {
 			String[] joinpath = join.getPath().split(" +");
 			if (join.isFetch()) {
@@ -73,6 +76,12 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 			}
 			if (queryBuilder.getIgnoreJoinPaths().contains(joinpath[1])) {
 				continue;
+			}
+			if (!aliases.add(joinpath[1])) {
+				throw new QueryBuilderException("O alias " + joinpath[1] + " está repetido. Erro no join: " + join);
+			}
+			if (joinpath[0].split("\\.").length > 2) {
+				throw new QueryBuilderException("Não é possível ter propriedade de propriedade nos joins: " + joinpath[0]);
 			}
 			aliasMaps.add(new AliasMap(joinpath[1], joinpath[0], null));
 		}
@@ -85,17 +94,39 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 			}
 		}
 
-		String[] selectedProperties = selectString.split("( )*?,( )*?");
+		String[] selectedProperties = selectString.split("(\\s*)?[,](\\s*)?");
 		for (int j = 0; j < selectedProperties.length; j++) {
 			String property = selectedProperties[j];
-			if (!property.trim().matches("[^ ]+\\.[^ ]+( +as +[^ ]+)?")) {
-				throw new RuntimeException("O campo \"" + property + "\" do select não é válido.");
-			}
 			int indexOfAs = property.indexOf(" as");
 			if (indexOfAs > 0) {
 				selectedProperties[j] = property.substring(0, indexOfAs);
 			}
 			selectedProperties[j] = selectedProperties[j].trim();
+		}
+
+		Set<String> fullProperties = new HashSet<String>();
+		for (String property : selectedProperties) {
+			if (aliases.contains(property)) {
+				fullProperties.add(property);
+			}
+		}
+
+		Set<String> uniqueProperties = new HashSet<String>();
+		for (String property : selectedProperties) {
+			if (!uniqueProperties.add(property)) {
+				throw new QueryBuilderException("O campo \"" + property + "\" do select está repetido.");
+			}
+			String[] propertyParts = property.split("\\.");
+			if (propertyParts.length > 2) {
+				throw new QueryBuilderException("Não é possível ter propriedade de propriedade no select: " + property);
+			}
+			String propertyOwner = propertyParts[0];
+			if (!aliases.contains(propertyOwner)) {
+				throw new QueryBuilderException("O campo \"" + property + "\" do select não é válido, pois seu alias não foi declarado.");
+			}
+			if (property.contains(".") && fullProperties.contains(propertyOwner)) {
+				throw new QueryBuilderException("O campo \"" + property + "\" do select não é válido, pois já existe uma declaração de propriedade completa (sem ponto) com o alias \"" + propertyOwner + "\".");
+			}
 		}
 
 		init(sessionFactory, selectedProperties, aliasMaps.toArray(new AliasMap[aliasMaps.size()]));
@@ -105,14 +136,6 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 	public void init(SessionFactory sessionFactory, String[] selectedProperties, AliasMap[] aliasMaps) {
 
 		this.sessionFactory = sessionFactory;
-
-		//verificar alias iguais
-		Set<String> aliases = new HashSet<String>();
-		for (AliasMap map : aliasMaps) {
-			if (!aliases.add(map.alias)) {
-				throw new RuntimeException("Alias duplicado na query: " + map.alias);
-			}
-		}
 
 		organizeAliasMaps(aliasMaps, selectedProperties);
 		treeBuilder.init(aliasMaps);
@@ -128,110 +151,119 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 	}
 
 	protected void organizeAliasMaps(AliasMap[] aliasMaps, String[] selectedProperties) {
-		for (int i = 0; i < aliasMaps.length; i++) {
-			AliasMap aliasMap = aliasMaps[i];
-			if (aliasMap.type == null) {
-				Type type = getAliasType(aliasMaps, aliasMap.path);
-				if (type instanceof Class<?>) {
-					aliasMap.type = (Class<?>) type;
-					if (aliasMap.type.isInterface()) {
-						String ownerproperty = aliasMap.path.substring(0, aliasMap.path.indexOf('.'));
-						Class<?> clazz = getOwner(aliasMaps, ownerproperty);
-						aliasMap.type = PersistenceUtils.getPropertyAssociationType(sessionFactory, clazz, aliasMap.alias);
-					}
-				} else if (type instanceof ParameterizedType) {
-					ParameterizedType parameterizedType = (ParameterizedType) type;
-					if (Set.class.isAssignableFrom((Class<?>) parameterizedType.getRawType())) {
-						aliasMap.collectionType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-						aliasMap.type = LinkedHashSet.class;
-					} else if (List.class.isAssignableFrom((Class<?>) parameterizedType.getRawType())) {
-						aliasMap.collectionType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-						aliasMap.type = ArrayList.class;
-					} else {
-						throw new RuntimeException("Tipo não suportado: " + parameterizedType.getRawType() + " alias: " + aliasMap.alias);
-					}
-					//precisamos fazer o array de dependencias porque é do tipo collection
-					if (aliasMap.dependencias == null) {
-						if (debug) {
-							System.out.println("\nProcurando dependencias (método inicial) de " + aliasMap);
-						}
-						aliasMap.dependencias = getDependencias(aliasMaps, aliasMap);
-					}
-				} else {
-					throw new RuntimeException("Tipo não suportado: " + type + " alias: " + aliasMap.alias);
-				}
+		for (AliasMap aliasMap : aliasMaps) {
+
+			checkAliasMap(aliasMaps, aliasMap);
+
+			Integer propertyIndex = lookForFullProperty(aliasMap, selectedProperties);
+			if (propertyIndex != null) {
+				aliasMap.setPkPropertyIndex(propertyIndex);
+				aliasMap.setFullProperty(true);
+			} else {
+				propertyIndex = lookForPkProperty(aliasMap, selectedProperties);
+				aliasMap.setPkPropertyIndex(propertyIndex);
 			}
-			if (aliasMap.pkPropertyIndex == -1) {
-				aliasMap.pkPropertyIndex = lookForPk(aliasMap, selectedProperties);
+
+		}
+	}
+
+	private void checkAliasMap(AliasMap[] aliasMaps, AliasMap aliasMap) {
+		if (aliasMap.getType() == null) {
+			Type type = getAliasType(aliasMaps, aliasMap.getPath(), false);
+			if (type instanceof Class<?>) {
+				if (((Class<?>) type).isInterface()) {
+					type = getAliasType(aliasMaps, aliasMap.getPath(), true);
+				}
+				aliasMap.setType((Class<?>) type);
+			} else if (type instanceof ParameterizedType) {
+				ParameterizedType parameterizedType = (ParameterizedType) type;
+				if (Set.class.isAssignableFrom((Class<?>) parameterizedType.getRawType())) {
+					aliasMap.setCollectionType((Class<?>) parameterizedType.getActualTypeArguments()[0]);
+					aliasMap.setType(LinkedHashSet.class);
+				} else if (List.class.isAssignableFrom((Class<?>) parameterizedType.getRawType())) {
+					aliasMap.setCollectionType((Class<?>) parameterizedType.getActualTypeArguments()[0]);
+					aliasMap.setType(ArrayList.class);
+				} else {
+					throw new QueryBuilderException("Tipo não suportado: " + parameterizedType.getRawType() + " alias: " + aliasMap.getAlias());
+				}
+				//precisamos fazer o array de dependencias porque é do tipo collection
+				if (aliasMap.getDependencias() == null) {
+					aliasMap.setDependencias(getDependencias(aliasMaps, aliasMap));
+				}
+			} else {
+				throw new QueryBuilderException("Tipo não suportado: " + type + " alias: " + aliasMap.getAlias());
 			}
 		}
 	}
 
-	private Set<AliasMap> getDependencias(AliasMap[] aliasMaps, AliasMap aliasMap) {
-		if (aliasMap.dependencias != null) {
-			if (debug) {
-				System.out.println("\nJá foi configurado as dependencias de " + aliasMap);
-			}
-			return aliasMap.dependencias;
+	private Type getAliasType(AliasMap[] aliasMaps, String path, boolean checkSessionFactory) {
+		String ownerProperty = path.substring(0, path.indexOf('.'));
+		String property = path.substring(path.indexOf('.') + 1);
+		AliasMap ownerAliasMap = getAliasMap(aliasMaps, ownerProperty);
+		checkAliasMap(aliasMaps, ownerAliasMap);
+		Class<?> ownerpropertyType = ownerAliasMap.getOwner();
+		if (checkSessionFactory) {
+			return PersistenceUtils.getPropertyAssociationType(sessionFactory, ownerpropertyType, property);
 		}
+		return PersistenceUtils.getPropertyDescriptor(ownerpropertyType, property).getReadMethod().getGenericReturnType();
+	}
+
+	public static AliasMap getAliasMap(AliasMap[] aliasMaps, String alias) {
+		for (AliasMap aliasMap : aliasMaps) {
+			if (aliasMap.getAlias().equals(alias)) {
+				return aliasMap;
+			}
+		}
+		return null;
+	}
+
+	private Set<AliasMap> getDependencias(AliasMap[] aliasMaps, AliasMap aliasMap) {
 		Set<AliasMap> dependencias = new HashSet<AliasMap>();
-		if (aliasMap.path == null) {//root nao tem dependencias
+		if (aliasMap.getPath() == null) {//root nao tem dependencias
 			//acho que esse código não é necessário.. 
 			dependencias.add(aliasMap);
-			if (debug) {
-				System.out.println("\nRoot encontrado " + aliasMap + ". Retornando dependencia simples");
-			}
 			return dependencias;
 		}
-		String ownerProperty = aliasMap.path.split("\\.")[0];
-		if (debug) {
-			System.out.println("\nEntrando no loop para procurar alias " + ownerProperty + " referenciado em " + aliasMap);
-		}
-		for (int i = 0; i < aliasMaps.length; i++) {
-			AliasMap map = aliasMaps[i];
-			if (map.alias.equals(ownerProperty)) {
+		String ownerProperty = aliasMap.getPath().split("\\.")[0];
+		for (AliasMap aliasMap2 : aliasMaps) {
+			if (aliasMap2.getAlias().equals(ownerProperty)) {
 				dependencias.add(aliasMap);
-				if (debug) {
-					System.out.println("\nEncontrado alias " + ownerProperty + ". Procurando dependencias de " + ownerProperty);
+				if (aliasMap2.getDependencias() == null) {
+					aliasMap2.setDependencias(getDependencias(aliasMaps, aliasMap2));
 				}
-				dependencias.addAll(getDependencias(aliasMaps, map));
+				dependencias.addAll(aliasMap2.getDependencias());
 			}
 		}
 		return dependencias;
 	}
 
-	private int lookForPk(AliasMap aliasMap, String[] selectedProperties) {
-//		Class type = aliasMap.getType();
-//		if(aliasMap.collectionType != null){
-//			type = aliasMap.collectionType;
-//		}
-		//String pkname = "id"; //id property is universal in hibernate
-		String pkname = PersistenceUtils.getIdPropertyName(aliasMap.type, sessionFactory);
-		String fullProperty = aliasMap.alias + "." + pkname;
+	private Integer lookForFullProperty(AliasMap aliasMap, String[] selectedProperties) {
+		for (int i = 0; i < selectedProperties.length; i++) {
+			if (selectedProperties[i].equals(aliasMap.getAlias())) {
+				return i;
+			}
+		}
+		return null;
+	}
+
+	private int lookForPkProperty(AliasMap aliasMap, String[] selectedProperties) {
+
+		//Verifica se existe propriedade id
+		String pkname = PersistenceUtils.getIdPropertyName(aliasMap.getType(), sessionFactory);
+		String fullProperty = aliasMap.getAlias() + "." + pkname;
 		for (int i = 0; i < selectedProperties.length; i++) {
 			if (selectedProperties[i].equals(fullProperty)) {
 				return i;
 			}
 		}
+
+		//Se nao existirem as situações acima, adiciona forçadp
 		extraFields.add(fullProperty);
 		return extraFields.size() + selectedProperties.length - 1;
 	}
 
-	public static Type getAliasType(AliasMap[] aliasMaps, String path) {
-		Type type = null;
-		String ownerproperty = path.substring(0, path.indexOf('.'));
-		String property = path.substring(path.indexOf('.') + 1);
-		Class<?> ownerpropertyType = getOwner(aliasMaps, ownerproperty);
-		if (property.contains(".")) {
-			throw new RuntimeException("não é possível ter propriedade de propriedade nos joins: " + path);
-		}
-		type = PersistenceUtils.getPropertyDescriptor(ownerpropertyType, property).getReadMethod().getGenericReturnType();
-		return type;
-	}
-
 	/**
 	 * Thread-safe
-	 * 
 	 */
 	public List<?> translate(List<?> values) {
 		List<Object> list = new ArrayList<Object>();
@@ -257,13 +289,13 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		mapper.map(values, objectTree);
 		if (objectTree.isNew) {
 			if (resultAlias != null) {
-				Object object = objectTree.getAliasObject().get(resultAlias);
+				Object object = objectTree.aliasObjectMap.get(resultAlias);
 				if (object == null) {
 					throw new QueryBuilderException("Tentativa de achar um objeto falhou ao traduzir o resultado. Alias não encontrado: " + resultAlias + ".");
 				}
 				return object;
 			}
-			return objectTree.getRoot();
+			return objectTree.root;
 		} else {
 			return null;
 		}
@@ -277,13 +309,13 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		mapper.map(values, objectTree);
 		if (objectTree.isNew) {
 			if (resultAlias != null) {
-				Object object = objectTree.getAliasObject().get(resultAlias);
+				Object object = objectTree.aliasObjectMap.get(resultAlias);
 				if (object == null) {
 					throw new QueryBuilderException("Tentativa de achar um objeto falhou ao traduzir o resultado. Alias não encontrado: " + resultAlias + ".");
 				}
 				return object;
 			}
-			return objectTree.getRoot();
+			return objectTree.root;
 		} else {
 			return null;
 		}
@@ -291,51 +323,6 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 
 	public String[] getExtraFields() {
 		return extraFields.toArray(new String[extraFields.size()]);
-	}
-
-	//métodos utilitários
-
-	/**
-	 * Retorna o tipo da classe do alias informado
-	 */
-	public static Class<?> getOwner(AliasMap[] aliasMaps, String owneralias) {
-		Class<?> owner = null;
-		for (int j = 0; j < aliasMaps.length; j++) {
-			AliasMap aliasMap = aliasMaps[j];
-			if (aliasMap.alias.equals(owneralias)) {
-				if (aliasMap.type == null) {
-					Type type = getAliasType(aliasMaps, aliasMap.path);
-					if (type instanceof Class<?>) {
-						aliasMap.type = (Class<?>) type;
-						//if (aliasMap.type.isInterface()) {
-						//	String ownerproperty = aliasMap.path.substring(0, aliasMap.path.indexOf('.'));
-						//	Class<?> clazz = getOwner(aliasMaps, ownerproperty);
-						//	aliasMap.type = PersistenceUtils.getPropertyAssociationType(sessionFactory, clazz, aliasMap.alias);
-						//}
-					} else if (type instanceof ParameterizedType) {
-						ParameterizedType parameterizedType = (ParameterizedType) type;
-						if (Set.class.isAssignableFrom((Class<?>) parameterizedType.getRawType())) {
-							aliasMap.collectionType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-							aliasMap.type = LinkedHashSet.class;
-						} else if (List.class.isAssignableFrom((Class<?>) parameterizedType.getRawType())) {
-							aliasMap.collectionType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-							aliasMap.type = ArrayList.class;
-						} else {
-							throw new RuntimeException("Tipo não suportado: " + parameterizedType.getRawType() + " alias: " + aliasMap.alias);
-						}
-					} else {
-						throw new RuntimeException("Tipo não suportado: " + type + " alias: " + aliasMap.alias);
-					}
-				}
-				if (aliasMap.collectionType != null) {
-					owner = aliasMap.collectionType;
-				} else {
-					owner = aliasMap.type;
-				}
-				break;
-			}
-		}
-		return owner;
 	}
 
 	protected Object newInstance(Class<?> clazz) throws InstantiationException, IllegalAccessException {
@@ -359,13 +346,13 @@ class ObjectTreeBuilder {
 	}
 
 	void init(AliasMap[] aliasMaps) {
-		for (AliasMap map : aliasMaps) {
-			if (map.path == null) {
-				creators.add(new RootObjectCreator(map.type, map.alias, map.pkPropertyIndex));
-			} else if (map.collectionType != null) {
-				creators.add(new CollectionObjectCreator(map, map.collectionType, map.type, map.alias, map.path, aliasMaps, map.pkPropertyIndex));
+		for (AliasMap aliasMap : aliasMaps) {
+			if (aliasMap.getPath() == null) {
+				creators.add(new RootObjectCreator(aliasMap));
+			} else if (aliasMap.getCollectionType() != null) {
+				creators.add(new CollectionObjectCreator(aliasMap, aliasMaps));
 			} else {
-				creators.add(new ReferenceObjectCreator(map.type, map.alias, map.path, aliasMaps, map.pkPropertyIndex));
+				creators.add(new ReferenceObjectCreator(aliasMap, aliasMaps));
 			}
 		}
 	}
@@ -383,7 +370,7 @@ class ObjectTreeBuilder {
 		for (ObjectCreator creator : creators) {
 			CreateResult create = creator.create(objectTree, values);
 			String alias = creator.getAlias();
-			objectTree.aliasObject.put(alias, create.object);
+			objectTree.aliasObjectMap.put(alias, create.object);
 			if (creator instanceof RootObjectCreator) {
 				objectTree.root = create.object;
 				objectTree.isNew = create.isNew;
@@ -434,39 +421,45 @@ class ObjectTreeBuilder {
 		private String alias;
 		private Class<?> clazz;
 		private String path;
-		private String owneralias;
+		private String ownerAlias;
 		private Method setter;
 		private Object lastCreatedObject;
-		private int i;
+		private int pkPropertyIndex;
+		private boolean fullProperty;
 
-		public ReferenceObjectCreator(Class<?> clazz, String alias, String path, AliasMap[] aliasMaps, int i) {
-			this.alias = alias;
-			this.clazz = clazz;
-			this.path = path;
-			this.owneralias = path.substring(0, path.indexOf('.'));
-			this.i = i;
+		public ReferenceObjectCreator(AliasMap aliasMap, AliasMap[] aliasMaps) {
+			this.clazz = aliasMap.getType();
+			this.alias = aliasMap.getAlias();
+			this.path = aliasMap.getPath();
+			this.ownerAlias = path.substring(0, path.indexOf('.'));
 			String property = path.substring(path.indexOf('.') + 1);
-			Class<?> owner = QueryBuilderResultTranslatorImpl.getOwner(aliasMaps, owneralias);
-			this.setter = PersistenceUtils.getPropertyDescriptor(owner, property).getWriteMethod();
+			Class<?> ownerClass = QueryBuilderResultTranslatorImpl.getAliasMap(aliasMaps, ownerAlias).getOwner();
+			this.setter = PersistenceUtils.getPropertyDescriptor(ownerClass, property).getWriteMethod();
+			this.pkPropertyIndex = aliasMap.getPkPropertyIndex();
+			this.fullProperty = aliasMap.isFullProperty();
 		}
 
 		public CreateResult create(ObjectTree objectTree, Object[] values) {
 			try {
-				Object newInstance = null;
-				if (values[i] != null) {
-					newInstance = qbrt.newInstance(clazz);
+				Object object = null;
+				if (values[pkPropertyIndex] != null) {
+					if (fullProperty) {
+						object = values[pkPropertyIndex];
+					} else {
+						object = qbrt.newInstance(clazz);
+					}
 				}
-				this.lastCreatedObject = newInstance;
-				CreateResult createResult = new CreateResult(false, newInstance);
+				this.lastCreatedObject = object;
+				CreateResult createResult = new CreateResult(false, object);
 				return createResult;
 			} catch (InstantiationException e) {
 				if (Collection.class.isAssignableFrom(this.clazz)) {
-					throw new RuntimeException("Erro ao criar o objeto da query: " + this.clazz.getName() + "  " + path + ". Joins com tipos Collection (Set, List) não são suportados", e);
+					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.clazz.getName() + "  " + path + ". Joins com tipos Collection (Set, List) não são suportados", e);
 				} else {
-					throw new RuntimeException("Erro ao criar o objeto da query: " + this.clazz.getName() + "  " + path, e);
+					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.clazz.getName() + "  " + path, e);
 				}
 			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Erro ao criar o objeto da query. " + this.clazz.getSimpleName() + "  " + path, e);
+				throw new QueryBuilderException("Erro ao criar o objeto da query. " + this.clazz.getSimpleName() + "  " + path, e);
 			}
 		}
 
@@ -475,12 +468,12 @@ class ObjectTreeBuilder {
 		}
 
 		public void setMapping(ObjectTree objectTree) {
-			Object owner = objectTree.aliasObject.get(owneralias);
+			Object owner = objectTree.aliasObjectMap.get(ownerAlias);
 			if (owner != null) {
 				try {
 					setter.invoke(owner, lastCreatedObject);
 				} catch (Exception e) {
-					throw new RuntimeException(e);
+					throw new QueryBuilderException(e);
 				}
 			}
 		}
@@ -496,32 +489,32 @@ class ObjectTreeBuilder {
 		private String alias;
 		private Class<?> collectionItemClass;
 		private String path;
-		private String owneralias;
+		private String ownerAlias;
 		private Method setter;
 		private Object lastCreatedObject;
-		private int i;
+		private int pkPropertyIndex;
 		private Class<?> collectionClass;
 		private Method getter;
 		private Set<AliasMap> dependencias;
 
-		private Map</*ID*/Map</*ALIAS*/String, /*VALORPK*/Object>, /*VALUE*/Object> objects = new HashMap</*ID*/Map</*ALIAS*/String, /*VALORPK*/Object>, /*VALUE*/Object>();
+		private Map<Map<String, Object>, Object> objects = new HashMap<Map<String, Object>, Object>();
 
 		public CollectionObjectCreator() {
 
 		}
 
-		public CollectionObjectCreator(AliasMap map, Class<?> collectionItemClass, Class<?> collectionClass, String alias, String path, AliasMap[] aliasMaps, int i) {
-			this.alias = alias;
-			this.collectionItemClass = collectionItemClass;
-			this.collectionClass = collectionClass;
-			this.path = path;
-			this.owneralias = path.substring(0, path.indexOf('.'));
-			this.i = i;
+		public CollectionObjectCreator(AliasMap aliasMap, AliasMap[] aliasMaps) {
+			this.collectionItemClass = aliasMap.getCollectionType();
+			this.collectionClass = aliasMap.getType();
+			this.alias = aliasMap.getAlias();
+			this.path = aliasMap.getPath();
+			this.ownerAlias = path.substring(0, path.indexOf('.'));
 			String property = path.substring(path.indexOf('.') + 1);
-			Class<?> owner = QueryBuilderResultTranslatorImpl.getOwner(aliasMaps, owneralias);
-			this.setter = PersistenceUtils.getPropertyDescriptor(owner, property).getWriteMethod();
-			this.getter = PersistenceUtils.getPropertyDescriptor(owner, property).getReadMethod();
-			this.dependencias = map.dependencias;
+			Class<?> ownerClass = QueryBuilderResultTranslatorImpl.getAliasMap(aliasMaps, ownerAlias).getOwner();
+			this.setter = PersistenceUtils.getPropertyDescriptor(ownerClass, property).getWriteMethod();
+			this.getter = PersistenceUtils.getPropertyDescriptor(ownerClass, property).getReadMethod();
+			this.pkPropertyIndex = aliasMap.getPkPropertyIndex();
+			this.dependencias = aliasMap.getDependencias();
 		}
 
 		public CreateResult create(ObjectTree objectTree, Object[] values) {
@@ -529,10 +522,10 @@ class ObjectTreeBuilder {
 				Object newInstance = null;
 				Map</*ALIAS*/String, /*VALORPK*/Object> chave = new HashMap</*ALIAS*/String, /*VALORPK*/Object>();
 				for (AliasMap dp : dependencias) {
-					chave.put(dp.alias, values[dp.pkPropertyIndex]);
+					chave.put(dp.getAlias(), values[dp.getPkPropertyIndex()]);
 				}
 				boolean usenull = false;
-				if (values[i] != null && ((newInstance = objects.get(chave)) == null)) {
+				if (values[pkPropertyIndex] != null && ((newInstance = objects.get(chave)) == null)) {
 					newInstance = collectionItemClass.newInstance();
 					objects.put(chave, newInstance);
 				} else {
@@ -546,12 +539,12 @@ class ObjectTreeBuilder {
 				return createResult;
 			} catch (InstantiationException e) {
 				if (Collection.class.isAssignableFrom(this.collectionItemClass)) {
-					throw new RuntimeException("Erro ao criar o objeto da query: " + this.collectionItemClass.getName() + "  " + path + ". Joins com tipos Collection (Set, List) não são suportados", e);
+					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.collectionItemClass.getName() + "  " + path + ". Joins com tipos Collection (Set, List) não são suportados", e);
 				} else {
-					throw new RuntimeException("Erro ao criar o objeto da query: " + this.collectionItemClass.getName() + "  " + path, e);
+					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.collectionItemClass.getName() + "  " + path, e);
 				}
 			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Erro ao criar o objeto da query. " + this.collectionItemClass.getSimpleName() + "  " + path, e);
+				throw new QueryBuilderException("Erro ao criar o objeto da query. " + this.collectionItemClass.getSimpleName() + "  " + path, e);
 			}
 		}
 
@@ -561,9 +554,9 @@ class ObjectTreeBuilder {
 
 		@SuppressWarnings("unchecked")
 		public void setMapping(ObjectTree objectTree) {
-			Object owner = objectTree.aliasObject.get(owneralias);
+			Object owner = objectTree.aliasObjectMap.get(ownerAlias);
 			try {
-				if (owner == null && objectTree.getAliasObject().get(alias) == null) {
+				if (owner == null && objectTree.aliasObjectMap.get(alias) == null) {
 					return;
 					//throw new NullPointerException("Não é possível achar o alias: "+owneralias+" . Tentando configurar alias: "+alias+" ("+objectTree.getAliasObject().get(alias)+")"+" root: "+objectTree.getRoot());
 				}
@@ -576,7 +569,7 @@ class ObjectTreeBuilder {
 				}
 				setter.invoke(owner, collection);
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				throw new QueryBuilderException(e);
 			}
 		}
 
@@ -585,10 +578,10 @@ class ObjectTreeBuilder {
 			collectionObjectCreator.alias = alias;
 			collectionObjectCreator.collectionItemClass = collectionItemClass;
 			collectionObjectCreator.path = path;
-			collectionObjectCreator.owneralias = owneralias;
+			collectionObjectCreator.ownerAlias = ownerAlias;
 			collectionObjectCreator.setter = setter;
 			collectionObjectCreator.lastCreatedObject = lastCreatedObject;
-			collectionObjectCreator.i = i;
+			collectionObjectCreator.pkPropertyIndex = pkPropertyIndex;
 			collectionObjectCreator.collectionClass = collectionClass;
 			collectionObjectCreator.getter = getter;
 			collectionObjectCreator.dependencias = dependencias;
@@ -601,13 +594,15 @@ class ObjectTreeBuilder {
 
 		private Class<?> clazz;
 		private String alias;
-		private Map</*ID*/Object, /*BEAN*/Object> resultados = new HashMap<Object, Object>();
-		private int i;
+		private Map<Object, Object> resultados = new HashMap<Object, Object>();
+		private int pkPropertyIndex;
+		private boolean fullProperty;
 
-		public RootObjectCreator(Class<?> clazz, String alias, int i) {
-			this.clazz = clazz;
-			this.alias = alias;
-			this.i = i;
+		public RootObjectCreator(AliasMap aliasMap) {
+			this.clazz = aliasMap.getType();
+			this.alias = aliasMap.getAlias();
+			this.pkPropertyIndex = aliasMap.getPkPropertyIndex();
+			this.fullProperty = aliasMap.isFullProperty();
 		}
 
 		public RootObjectCreator() {
@@ -615,20 +610,24 @@ class ObjectTreeBuilder {
 
 		public CreateResult create(ObjectTree objectTree, Object[] values) {
 			try {
-				Object id = values[i];
+				Object id = values[pkPropertyIndex];
 				Object object = resultados.get(id);
 				boolean isNew = false;
 				if (object == null) {
-					object = qbrt.newInstance(clazz);
+					if (fullProperty) {
+						object = id;
+					} else {
+						object = qbrt.newInstance(clazz);
+					}
 					resultados.put(id, object);
 					isNew = true;
 				}
 				CreateResult createResult = new CreateResult(isNew, object);
 				return createResult;
 			} catch (InstantiationException e) {
-				throw new RuntimeException("Erro ao criar o objeto raiz da query. " + this.clazz.getSimpleName(), e);
+				throw new QueryBuilderException("Erro ao criar o objeto raiz da query. " + this.clazz.getSimpleName(), e);
 			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Erro ao criar o objeto raiz da query. " + this.clazz.getSimpleName(), e);
+				throw new QueryBuilderException("Erro ao criar o objeto raiz da query. " + this.clazz.getSimpleName(), e);
 			}
 		}
 
@@ -637,14 +636,14 @@ class ObjectTreeBuilder {
 		}
 
 		public void setMapping(ObjectTree objectTree) {
-			//o objeto root nao precisa fazer mapeamento de nada			
+			//o objeto root nao precisa fazer mapeamento de nada
 		}
 
 		public ObjectCreator getThreadSafeObjectCretor() {
 			RootObjectCreator rootObjectCreator = new RootObjectCreator();
 			rootObjectCreator.clazz = clazz;
 			rootObjectCreator.alias = alias;
-			rootObjectCreator.i = i;
+			rootObjectCreator.pkPropertyIndex = pkPropertyIndex;
 			return rootObjectCreator;
 		}
 
@@ -658,30 +657,35 @@ class ObjectMapper {
 
 	void init(AliasMap[] aliasMaps, String[] propriedades) {
 		for (int i = 0; i < propriedades.length; i++) {
+
 			String full = propriedades[i];
 			StringTokenizer stringTokenizer = new StringTokenizer(full, ".");
-			String owneralias = stringTokenizer.nextToken();
-			String property = stringTokenizer.nextToken();
-			if (stringTokenizer.hasMoreTokens()) {
-				throw new RuntimeException("não é possível ter uma propriedade de propriedade " + full);
+			String ownerAlias = stringTokenizer.nextToken();
+			String property = stringTokenizer.hasMoreTokens() ? stringTokenizer.nextToken() : null;
+			if (property == null) {
+				continue;
 			}
-			Class<?> owner = QueryBuilderResultTranslatorImpl.getOwner(aliasMaps, owneralias);
-			if (owner == null) {
-				throw new QueryBuilderException("Não foi encontrada a classe para o alias '" + owneralias + "'");
+
+			AliasMap ownerAliasMap = QueryBuilderResultTranslatorImpl.getAliasMap(aliasMaps, ownerAlias);
+			Class<?> ownerClass = ownerAliasMap != null ? ownerAliasMap.getOwner() : null;
+			if (ownerClass == null) {
+				throw new QueryBuilderException("Não foi encontrada a classe para o alias '" + ownerAlias + "'");
 			}
-			PropertyDescriptor propertyDescriptor = PersistenceUtils.getPropertyDescriptor(owner, property);
+			PropertyDescriptor propertyDescriptor = PersistenceUtils.getPropertyDescriptor(ownerClass, property);
 			Method method = propertyDescriptor.getWriteMethod();
-			PropertyMapper propertyMapper = new PropertyMapper();
-			propertyMapper.index = i;
-			propertyMapper.alias = owneralias;
 			if (method == null) {
 				boolean isTransient = false;
 				if (propertyDescriptor.getReadMethod() != null && (propertyDescriptor.getReadMethod().isAnnotationPresent(Transient.class))) {
 					isTransient = true;
 				}
-				throw new RuntimeException("No setter method found for '" + property + "' in class " + owner.getName() + ". " + (isTransient ? " This property is transient and must not be used on queries." : ""));
+				throw new QueryBuilderException("No setter method found for '" + property + "' in class " + ownerClass.getName() + ". " + (isTransient ? " This property is transient and must not be used on queries." : ""));
 			}
+
+			PropertyMapper propertyMapper = new PropertyMapper();
+			propertyMapper.index = i;
+			propertyMapper.alias = ownerAlias;
 			propertyMapper.setter = method;
+
 			mappers.add(propertyMapper);
 		}
 	}
@@ -703,15 +707,15 @@ class ObjectMapper {
 			boolean usertype = value instanceof UserType;
 			boolean hasValue = (!usertype && value != null) || (usertype && ((UserType) value).toString() != null && ((UserType) value).toString().length() > 0);
 			//TODO MELHORARA A FORMA DE VERIFICAR SE UM USERTYPE É NULO
-			Object object = objectTree.getAliasObject().get(alias);
+			Object object = objectTree.aliasObjectMap.get(alias);
 			if (object != null) {
 				try {
 					setter.invoke(object, value);
 				} catch (Exception e) {
-					throw new RuntimeException("Erro ao configurar propriedade de " + alias + " ... " + setter, e);
+					throw new QueryBuilderException("Erro ao configurar propriedade de " + alias + " ... " + setter, e);
 				}
 			} else if (hasValue) {
-				throw new RuntimeException("Erro ao configurar propriedade de " + alias + " ... " + setter + ". O objeto com alias " + alias + " não foi criado!! Valor: " + value);
+				throw new QueryBuilderException("Erro ao configurar propriedade de " + alias + " ... " + setter + ". O objeto com alias " + alias + " não foi criado!! Valor: " + value);
 			}
 		}
 
@@ -725,16 +729,8 @@ class ObjectMapper {
  */
 class ObjectTree {
 
-	Map<String, Object> aliasObject = new HashMap<String, Object>();
+	Map<String, Object> aliasObjectMap = new HashMap<String, Object>();
 	Object root;
 	boolean isNew;
-
-	public Map<String, Object> getAliasObject() {
-		return aliasObject;
-	}
-
-	public Object getRoot() {
-		return root;
-	}
 
 }

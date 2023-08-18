@@ -27,24 +27,18 @@ import java.util.Set;
 
 public class AliasMap {
 
-	String alias;
-	String path;
-	Class<?> type;
-	Class<?> collectionType;
-	int pkPropertyIndex = -1;
-	Set<AliasMap> dependencias;
+	private String alias;
+	private String path;
+	private Class<?> type;
+	private Class<?> collectionType;
+	private int pkPropertyIndex = -1;
+	private boolean fullProperty;
+	private Set<AliasMap> dependencias;
 
 	public AliasMap(String alias, String path, Class<?> type) {
 		this.alias = alias;
 		this.path = path;
 		this.type = type;
-	}
-
-	public AliasMap(String alias, String path, Class<?> type, Class<?> collectionType) {
-		this.alias = alias;
-		this.path = path;
-		this.type = type;
-		this.collectionType = collectionType;
 	}
 
 	public String getAlias() {
@@ -59,24 +53,31 @@ public class AliasMap {
 		return type;
 	}
 
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public void setType(Class<?> type) {
-		this.type = type;
-	}
-
 	public Class<?> getCollectionType() {
 		return collectionType;
 	}
 
+	public Class<?> getOwner() {
+		if (collectionType != null) {
+			return collectionType;
+		}
+		return type;
+	}
+
 	public int getPkPropertyIndex() {
 		return pkPropertyIndex;
+	}
+
+	public boolean isFullProperty() {
+		return fullProperty;
+	}
+
+	public Set<AliasMap> getDependencias() {
+		return dependencias;
+	}
+
+	public void setType(Class<?> type) {
+		this.type = type;
 	}
 
 	public void setCollectionType(Class<?> collectionType) {
@@ -85,6 +86,14 @@ public class AliasMap {
 
 	public void setPkPropertyIndex(int pkPropertyIndex) {
 		this.pkPropertyIndex = pkPropertyIndex;
+	}
+
+	public void setFullProperty(boolean fullProperty) {
+		this.fullProperty = fullProperty;
+	}
+
+	public void setDependencias(Set<AliasMap> dependencias) {
+		this.dependencias = dependencias;
 	}
 
 	@Override
