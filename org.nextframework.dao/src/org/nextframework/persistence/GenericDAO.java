@@ -297,6 +297,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		if (autoManageFileProperties() && fileDAO != null) {
 			for (final PropertyDescriptor pd : fileProperties) {
 				save.attachBefore(new HibernateCommand() {
+
 					@Override
 					public Object doInHibernate(Session session) throws HibernateException {
 						session.flush();
@@ -304,6 +305,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 						fileDAO.saveFile(bean, pd.getName());
 						return null;
 					}
+
 				});
 			}
 		}
@@ -707,6 +709,14 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	}
 
 	/**
+	 * Override this method to update the collection fetch query
+	 * @param query
+	 */
+	public void updateCollectionFetchQuery(QueryBuilder<BEAN> query, Object owner, String collectionProperty) {
+		updateFormQuery(query);
+	}
+
+	/**
 	 * Override this method to update the strategy to save the bean
 	 * @param save
 	 */
@@ -720,6 +730,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	public void delete(final BEAN bean) {
 		HibernateTransactionSessionProvider sessionProvider = (HibernateTransactionSessionProvider) PersistenceConfiguration.getConfig().getSessionProvider();
 		sessionProvider.executeInTransaction(new HibernateTransactionCommand() {
+
 			@Override
 			public Object doInHibernate(Session session, Object transactionStatus) {
 
@@ -750,6 +761,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				session.flush();
 				return null;
 			}
+
 		});
 	}
 
@@ -790,18 +802,6 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 			}
 		}
 
-	}
-
-	public static CollectionFetcher getDAODelegateCollectionFetcher() {
-		return new CollectionFetcher() {
-			@SuppressWarnings("unchecked")
-			public List<?> load(QueryBuilder<?> qb, Object owner, String collectionProperty, Class<?> itemType) {
-				@SuppressWarnings("rawtypes")
-				GenericDAO daoForClass = DAOUtils.getDAOForClass(itemType);
-				daoForClass.updateFormQuery(qb);
-				return qb.list();
-			}
-		};
 	}
 
 	@Override

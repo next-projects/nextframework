@@ -22,4 +22,5 @@ public interface CollectionFetcher {
 	 * @return
 	 */
 	List<?> load(QueryBuilder<?> qb, Object owner, String collectionProperty, Class<?> itemType);
+
 }
