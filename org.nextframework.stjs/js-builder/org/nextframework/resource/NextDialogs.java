@@ -104,6 +104,7 @@ public class NextDialogs {
 			popup.appendChild(bodyDiv);
 
 			if (commandsMap != null) {
+				buttonsDiv.textContent = "";
 				for (String key : commandsMap) {
 					Element button = createButton(popup, key);
 					buttonsDiv.appendChild(button);

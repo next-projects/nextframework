@@ -71,22 +71,14 @@ SelectManyPopup.prototype.configure = function(){
 				optionsDiv.appendChild(optionDiv);
 			}
 
-			dialog.setCallback(
-				(
-					function(){
-						var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
-						stjs.extend(_InlineType, NextDialogs.DialogCallback);
-						_InlineType.prototype.onClick = function(command, value, button) {
-							if ((command == "OK")) {
-								bigThis.checkItems(checkList, options);
-							}
-							return true;
-						};
-						_InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
-						return new _InlineType();
+			dialog.setCallback({
+				onClick: function(command, value, button) {
+					if ((command == "OK")) {
+						bigThis.checkItems(checkList, options);
 					}
-				)()
-			);
+					return true;
+				}
+			});
 
 			dialog.show();
 

@@ -14,6 +14,8 @@ public interface ViewConfig {
 
 	boolean isDefaultShowCalendar();
 
+	boolean isInputSelectLoadAllItemsIfDisabled();
+
 	boolean isDefaultResizeDatagridColumns();
 
 	boolean isDefaultHideDatagridWhileLoading();

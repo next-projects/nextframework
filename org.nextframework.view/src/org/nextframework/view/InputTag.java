@@ -200,10 +200,6 @@ public class InputTag extends BaseTag {
 			inputTagHelper.getInputListener(this, annotation).onRender(this, annotation);
 		}
 
-//		if (selectedType == InputTagType.FILE && propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled())) {
-//			this.showDeleteButton = false;
-//		}
-
 		DebugInputsTag debugInputsTag = findParent(DebugInputsTag.class, false);
 		if (debugInputsTag != null) {
 			boolean add = debugInputsTag.addProperty(name);
@@ -242,7 +238,11 @@ public class InputTag extends BaseTag {
 	}
 
 	public boolean isRequiredResolved() {
-		return required != null && required && !getDynamicAttributesMap().containsKey("readonly") && !getDynamicAttributesMap().containsKey("disabled");
+		return Util.booleans.isTrue(required) && !isReadOnlyOrDisabled();
+	}
+
+	public boolean isReadOnlyOrDisabled() {
+		return getDynamicAttributesMap().containsKey("readonly") || getDynamicAttributesMap().containsKey("disabled");
 	}
 
 	protected void addRequiredStyle() {
@@ -382,6 +382,13 @@ public class InputTag extends BaseTag {
 			return "checked";
 		}
 		return null;
+	}
+
+	public boolean isLoadAllItems() {
+		if (isReadOnlyOrDisabled()) {
+			return getViewConfig().isInputSelectLoadAllItemsIfDisabled();
+		}
+		return true;
 	}
 
 	public Boolean getAutowire() {

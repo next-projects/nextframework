@@ -72,7 +72,6 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 	@Override
 	protected void prepareItems(InputTag lastInput) {
 		Object itemsValue = getItemsValue(lastInput);
-		
 		setSelectItensString(toString(organizeItens(inputTag, inputTag.getValue(), itemsValue)));
 	}
 	
@@ -86,17 +85,14 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 	}
 	
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Object getItemsValue(InputTag lastInput) {
 		Object itemsValue;
-		
 		if (inputTag.getItens() instanceof String) { //user defined function
 			if (inputTag.getUseAjax() == null || inputTag.getUseAjax() == false) {
 				String expression = (String) inputTag.getItens();
 				CacheControl cacheControl = null;
 				Object value = null;
 				if(isCacheable()){
-					//try cache
 					cacheControl = CacheControl.get(inputTag.getRequest());
 					value = cacheControl.getCache().get(expression);
 				}
@@ -106,11 +102,9 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 						cacheControl.getCache().put(expression, value);
 					}
 				}
-				//organizeItens = organizeItens(inputTag, value);
 				itemsValue = value;
 			} else {
 				FunctionCall call = getFunctionCall();
-				// String expression = (String) itens;
 				if (call  == null) {
 					throw new NullPointerException("Resultado inesperado. call nulo. O algoritmo do framework não está correto");
 				}
@@ -122,7 +116,6 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				FunctionParameter[] callParameterArray = call.getParameterArray();
 				if (callParameterArray.length == 0 && !call.getCall().endsWith("()")) {
 					if (lastInput.getValue() == null) {
-						//organizeItens = new ArrayList<String>();
 						itemsValue = new ArrayList<Object>();
 						values = new Object[0];
 						ignorecall = true;
@@ -151,16 +144,12 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 					}
 					i++;
 				}
-
-				// registrar a chamada
 				ComboCallback.register(call.getObject(), call.getFunctionName(), paramClasses);
-
 				ignorecall = (ignorecall || anynull) && (callParameterArray.length != 0);
 				if (!ignorecall) {
 					Object lista = null;
 					CacheControl cacheControl = null;
 					if(paramClasses.length == 0){
-						//try cache
 						cacheControl = CacheControl.get(inputTag.getRequest());
 						lista = cacheControl.getCache().get(inputTag.getItens());
 					}
@@ -173,37 +162,37 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 							cacheControl.getCache().put((String) inputTag.getItens(), lista);
 						}
 					}
-					//organizeItens = organizeItens(inputTag, (List<String>) lista);
 					itemsValue = lista;
 				} else {
-					//organizeItens = new ArrayList<String>();
 					itemsValue = new ArrayList<Object>();
 				}
-
 			}
 		} else if (inputTag.getItens() != null) {
-			//organizeItens = organizeItens(inputTag, inputTag.getItens());
 			itemsValue = inputTag.getItens();
 		} else {
-			if (Enum.class.isAssignableFrom(getRawClassType())) {
-				Method method;
-				try {
-					method = getRawClassType().getMethod("values");
-					Enum<?>[] enumValues = (Enum[]) method.invoke(null);
-					itemsValue = Arrays.asList(enumValues);
-				} catch (Exception e) {
-					throw new NextException(e);
+			if (!inputTag.isLoadAllItems()) {
+				List<Object> items = new ArrayList<Object>();
+				if (inputTag.getValue() != null) {
+					items.add(inputTag.getValue());
 				}
-			} else {
-				//organizeItens = organizeItens(inputTag, doSelectAllFromService(lastInput, getRawClassType()));
-				itemsValue = doSelectAllFromService(lastInput, getRawClassType());
+				itemsValue = items;
+			}else {
+				if (Enum.class.isAssignableFrom(getRawClassType())) {
+					Method method;
+					try {
+						method = getRawClassType().getMethod("values");
+						Enum<?>[] enumValues = (Enum[]) method.invoke(null);
+						itemsValue = Arrays.asList(enumValues);
+					} catch (Exception e) {
+						throw new NextException(e);
+					}
+				} else {
+					itemsValue = doSelectAllFromService(lastInput, getRawClassType());
+				}
 			}
 		}
 		
 		if (Util.strings.isNotEmpty(inputTag.getTrueFalseNullLabels())) {
-//			if (selectedType == InputTagType.CHECKBOX) {
-//				selectedType = InputTagType.SELECT_ONE;
-//			}
 			String[] split = inputTag.getTrueFalseNullLabels().split(",");
 			Map<Boolean, String> mapa = new LinkedHashMap<Boolean, String>();
 			if (split.length == 3) {
@@ -213,7 +202,6 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			}
 			mapa.put(Boolean.TRUE, split[0]);
 			mapa.put(Boolean.FALSE, split[1]);
-			//setSelectItensString(toString(organizeItens(inputTag, mapa)));
 			itemsValue = mapa;
 		}
 		
@@ -382,10 +370,6 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				try {
 					findAll = dao.findForCombo(extraFields);
 				} catch (Exception e) {
-					// se acontecer algum erro no findForCombo.. tentar o
-					// findAll
-					//inputTag.log.warn("findForCombo (propriedade: " + name + ") jogou exeção: " + e.getMessage() + "   Utilizando findAll()");
-					e.printStackTrace();
 					findAll = dao.findAll();
 				}
 				inputTag.getRequest().setAttribute(finAllAttribute, findAll);
@@ -396,10 +380,6 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 					try {
 						findAll = dao.findBy(lastInput.getValue(), true, extraFields);
 					} catch (Exception e) {
-						// se acontecer algum erro no findForCombo.. tentar o findAll
-						//log.warn("findBy(" + lastInput.getValue().getClass().getSimpleName() + ") (propriedade: " + name + ") jogou exeção: " + e.getMessage() + "   Utilizando findBy sem especificar os campos");
-//						e.printStackTrace();
-//						findAll = dao.findBy(lastInput.getValue(), false, extraFields);
 						throw new NextException("Could not execute findBy "+lastInput.getValue()+" for property "+inputTag.getName(), e);
 					}
 				} else {

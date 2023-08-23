@@ -68,6 +68,7 @@ NextDialogs.MessageDialog.prototype.show = function() {
     }
     this.popup.appendChild(this.bodyDiv);
     if (this.commandsMap != null) {
+        this.buttonsDiv.textContent = "";
         for (var key in this.commandsMap) {
             var button = this.createButton(this.popup, key);
             this.buttonsDiv.appendChild(button);

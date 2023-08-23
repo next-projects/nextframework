@@ -56,6 +56,11 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
+	public boolean isInputSelectLoadAllItemsIfDisabled() {
+		return true;
+	}
+
+	@Override
 	public boolean isDefaultResizeDatagridColumns() {
 		return false;
 	}
