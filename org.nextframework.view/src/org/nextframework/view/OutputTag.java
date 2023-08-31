@@ -108,13 +108,6 @@ public class OutputTag extends BaseTag {
 			value = ((Message) value).getSource();
 		}
 
-		//Simple types
-		if (value instanceof String || value instanceof Number ||
-				value instanceof Date || value instanceof java.sql.Date ||
-				value instanceof Timestamp || value instanceof Calendar) {
-			return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getLocale());
-		}
-
 		//Special types
 		if (value == null) {
 			String[] split = getResolvedTrueFalseNullLabels();

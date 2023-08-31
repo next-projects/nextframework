@@ -127,8 +127,8 @@ public class TagUtils {
 
 		try {
 
-			boolean usePattern = value instanceof Number || value instanceof Date || value instanceof Calendar;
-			if (Util.strings.isNotEmpty(pattern) && usePattern || value instanceof MessageSourceResolvable) {
+			boolean usePattern = Util.strings.isNotEmpty(pattern) && (value instanceof Number || value instanceof Date || value instanceof Calendar);
+			if (usePattern || value instanceof MessageSourceResolvable) {
 				return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getLocale());
 			}
 
@@ -192,6 +192,12 @@ public class TagUtils {
 
 			if (HibernateUtils.isLazy(value)) {
 				value = HibernateUtils.getLazyValue(value);
+			}
+
+			boolean usePattern = (value instanceof Number && Util.strings.isNotEmpty(formatNumber)) ||
+					((value instanceof Date || value instanceof Calendar) && Util.strings.isNotEmpty(formatDate));
+			if (usePattern || value instanceof MessageSourceResolvable) {
+				return Util.strings.toStringDescription(value, formatDate, formatNumber, NextWeb.getRequestContext().getLocale());
 			}
 
 			PropertyEditor propertyEditor = getPropertyEditorsFromRequest().get(value.getClass());

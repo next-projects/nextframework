@@ -214,7 +214,7 @@ public class StringUtils {
 			if (Util.strings.isEmpty(formatNumber)) {
 				if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {
 					formatNumber = "#,##0.00";
-				} else if (value instanceof Number) {
+				} else {
 					formatNumber = "#,##0.##";
 				}
 			}
