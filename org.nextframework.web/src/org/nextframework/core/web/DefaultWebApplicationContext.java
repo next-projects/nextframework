@@ -24,8 +24,6 @@
 package org.nextframework.core.web;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.ServletContext;
 
@@ -61,9 +59,9 @@ public class DefaultWebApplicationContext extends AbstractApplicationContext imp
 
 	@Override
 	public String getApplicationName() {
+		/* Sometimes, the app folder is not equals to the context path
 		try {
 			URL resource = getServletContext().getResource("/");
-
 			String path = resource.getPath();
 			path = path.substring(0, path.lastIndexOf('/'));
 			path = path.substring(path.lastIndexOf('/')+1);
@@ -71,6 +69,8 @@ public class DefaultWebApplicationContext extends AbstractApplicationContext imp
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
+		*/
+		return getServletContext().getContextPath().substring(1); 
 	}
 	
 	private String cachedApplicationDir = null;
