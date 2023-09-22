@@ -281,6 +281,22 @@ public class StringUtils {
 		return toStringDescription(value, formatDate, formatNumber, locale);
 	}
 
+	public String getMessage(String code, Locale locale) {
+		return getMessage(Util.objects.newMessage(code), locale);
+	}
+
+	public String getMessage(String code, Object[] args, Locale locale) {
+		return getMessage(Util.objects.newMessage(code, args), locale);
+	}
+
+	public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
+		return getMessage(Util.objects.newMessage(code, args, defaultMessage), locale);
+	}
+
+	public String getMessage(MessageSourceResolvable msr, Locale locale) {
+		return Next.getMessageSource().getMessage(msr, locale);
+	}
+
 	public String removeAccents(String string) {
 		//copied from apache commons lang
 		String str = string;
