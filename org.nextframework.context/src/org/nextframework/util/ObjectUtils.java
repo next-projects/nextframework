@@ -239,6 +239,10 @@ public class ObjectUtils {
 		return clazz2;
 	}
 
+	public MessageSourceResolvable newSimpleMessage(String value) {
+		return new NextMessageSourceResolvable((String) null, null, value);
+	}
+
 	public MessageSourceResolvable newMessage(String code) {
 		return new NextMessageSourceResolvable(code);
 	}
