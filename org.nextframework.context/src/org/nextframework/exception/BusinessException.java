@@ -25,6 +25,7 @@ package org.nextframework.exception;
 
 import org.nextframework.util.Util;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.util.ObjectUtils;
 
 public class BusinessException extends ApplicationException implements MessageSourceResolvable {
 
@@ -91,6 +92,28 @@ public class BusinessException extends ApplicationException implements MessageSo
 	@Override
 	public String getDefaultMessage() {
 		return this.resolvable.getDefaultMessage();
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof BusinessException)) {
+			return false;
+		}
+		BusinessException otherResolvable = (BusinessException) other;
+		return ObjectUtils.nullSafeEquals(getCodes(), otherResolvable.getCodes()) &&
+				ObjectUtils.nullSafeEquals(getArguments(), otherResolvable.getArguments()) &&
+				ObjectUtils.nullSafeEquals(getDefaultMessage(), otherResolvable.getDefaultMessage());
+	}
+
+	@Override
+	public int hashCode() {
+		int hashCode = ObjectUtils.nullSafeHashCode(getCodes());
+		hashCode = 29 * hashCode + ObjectUtils.nullSafeHashCode(getArguments());
+		hashCode = 29 * hashCode + ObjectUtils.nullSafeHashCode(getDefaultMessage());
+		return hashCode;
 	}
 
 }
