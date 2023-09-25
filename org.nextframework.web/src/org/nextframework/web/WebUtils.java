@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.nextframework.core.web.DefaultWebRequestContext;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.service.ServiceFactory;
+import org.nextframework.util.Util;
 import org.nextframework.web.service.UrlRewriter;
 
 /**
@@ -13,6 +14,35 @@ import org.nextframework.web.service.UrlRewriter;
  * @version 1.1
  */
 public class WebUtils {
+
+	private static final String[] IP_HEADER_CANDIDATES = {
+			"X-Forwarded-For",
+			"X-Real-IP",
+			"Proxy-Client-IP",
+			"WL-Proxy-Client-IP",
+			"HTTP_X_FORWARDED_FOR",
+			"HTTP_X_FORWARDED",
+			"HTTP_X_CLUSTER_CLIENT_IP",
+			"HTTP_CLIENT_IP",
+			"HTTP_FORWARDED_FOR",
+			"HTTP_FORWARDED",
+			"HTTP_VIA",
+			"REMOTE_ADDR" };
+
+	public static String getClientIpAddress() {
+		return getClientIpAddress(NextWeb.getRequestContext().getServletRequest());
+	}
+
+	public static String getClientIpAddress(HttpServletRequest request) {
+		for (String header : IP_HEADER_CANDIDATES) {
+			String value = request.getHeader(header);
+			if (Util.strings.isNotEmpty(value) && !"unknown".equalsIgnoreCase(value)) {
+				String[] parts = value.split("(\\s*)?,(\\s*)?");
+				return parts[0];
+			}
+		}
+		return request.getRemoteAddr();
+	}
 
 	/**
 	 * Usa o URL Rewriter para reescrever a URL

@@ -41,6 +41,7 @@ import org.nextframework.authorization.User;
 import org.nextframework.authorization.web.impl.WebUserLocator;
 import org.nextframework.core.config.ViewConfig;
 import org.nextframework.service.ServiceFactory;
+import org.nextframework.web.WebUtils;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -187,7 +188,7 @@ public class NextFilter implements Filter {
 	public String getUserProcessPrefix(HttpServletRequest request) {
 		User user = WebUserLocator.getSessionUser(request);
 		String userStr = user != null ? user.getUsername() : "?";
-		String ip = request.getRemoteAddr();
+		String ip = WebUtils.getClientIpAddress(request);
 		return userStr + " (" + ip + ") -> " + request.getRequestURI();
 	}
 
