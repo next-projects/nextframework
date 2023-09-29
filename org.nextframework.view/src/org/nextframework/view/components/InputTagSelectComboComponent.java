@@ -37,15 +37,14 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class InputTagSelectComboComponent extends InputTagSelectComponent {
 
-	
 	private String loadItensFunction;
-	
-	String selectItensString;
-	
+
+	private String selectItensString;
+
 	public String getSelectItensString() {
 		return selectItensString;
 	}
-	
+
 	public void setSelectItensString(String selectItensString) {
 		this.selectItensString = selectItensString;
 	}
@@ -54,7 +53,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 	public void prepare() {
 		super.prepare();
 	}
-	
+
 	@Override
 	public void afterPrint() {
 		super.afterPrint();
@@ -68,13 +67,13 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void prepareItems(InputTag lastInput) {
 		Object itemsValue = getItemsValue(lastInput);
 		setSelectItensString(toString(organizeItens(inputTag, inputTag.getValue(), itemsValue)));
 	}
-	
+
 	protected String toString(List<String> organizeItens) {
 		StringBuilder builder = new StringBuilder();
 		for (String string : organizeItens) {
@@ -83,29 +82,30 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		}
 		return builder.toString();
 	}
-	
-	
+
 	protected Object getItemsValue(InputTag lastInput) {
+
 		Object itemsValue;
+
 		if (inputTag.getItens() instanceof String) { //user defined function
 			if (inputTag.getUseAjax() == null || inputTag.getUseAjax() == false) {
 				String expression = (String) inputTag.getItens();
 				CacheControl cacheControl = null;
 				Object value = null;
-				if(isCacheable()){
+				if (isCacheable()) {
 					cacheControl = CacheControl.get(inputTag.getRequest());
 					value = cacheControl.getCache().get(expression);
 				}
-				if(value == null){
+				if (value == null) {
 					value = inputTag.getOgnlValue(expression);
-					if(cacheControl != null){
+					if (cacheControl != null) {
 						cacheControl.getCache().put(expression, value);
 					}
 				}
 				itemsValue = value;
 			} else {
 				FunctionCall call = getFunctionCall();
-				if (call  == null) {
+				if (call == null) {
 					throw new NullPointerException("Resultado inesperado. call nulo. O algoritmo do framework não está correto");
 				}
 				String functionName = call.getFunctionName();
@@ -149,16 +149,16 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				if (!ignorecall) {
 					Object lista = null;
 					CacheControl cacheControl = null;
-					if(paramClasses.length == 0){
+					if (paramClasses.length == 0) {
 						cacheControl = CacheControl.get(inputTag.getRequest());
 						lista = cacheControl.getCache().get(inputTag.getItens());
 					}
-					if(lista == null){
+					if (lista == null) {
 						lista = Util.objects.findAndInvokeMethod(bean, functionName, values, paramClasses);
 						if (!(lista instanceof List)) {
 							throw new RuntimeException("O retorno do método " + functionName + " não foi uma lista");
 						}
-						if(cacheControl != null){
+						if (cacheControl != null) {
 							cacheControl.getCache().put((String) inputTag.getItens(), lista);
 						}
 					}
@@ -171,12 +171,8 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			itemsValue = inputTag.getItens();
 		} else {
 			if (!inputTag.isLoadAllItems()) {
-				List<Object> items = new ArrayList<Object>();
-				if (inputTag.getValue() != null) {
-					items.add(inputTag.getValue());
-				}
-				itemsValue = items;
-			}else {
+				itemsValue = doUseSelectedOnly(getRawClassType());
+			} else {
 				if (Enum.class.isAssignableFrom(getRawClassType())) {
 					Method method;
 					try {
@@ -191,7 +187,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				}
 			}
 		}
-		
+
 		if (Util.strings.isNotEmpty(inputTag.getTrueFalseNullLabels())) {
 			String[] split = inputTag.getTrueFalseNullLabels().split(",");
 			Map<Boolean, String> mapa = new LinkedHashMap<Boolean, String>();
@@ -204,16 +200,16 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			mapa.put(Boolean.FALSE, split[1]);
 			itemsValue = mapa;
 		}
-		
+
 		return itemsValue;
 	}
-	
+
 	private boolean isCacheable() {
-		if(inputTag.getItens() instanceof String){
+		if (inputTag.getItens() instanceof String) {
 			String itensCall = (String) inputTag.getItens();
-			if(itensCall.endsWith("()")){
+			if (itensCall.endsWith("()")) {
 				int indexOfPoint = itensCall.indexOf('.');
-				if(indexOfPoint > 0 && itensCall.indexOf('.', indexOfPoint+1) < 0){
+				if (indexOfPoint > 0 && itensCall.indexOf('.', indexOfPoint + 1) < 0) {
 					//has the following format bean.method()
 					return true;
 				}
@@ -242,8 +238,8 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		if (itens == null) {
 			return valores;
 		}
-		if(itens.getClass().isArray()){
-			itens = Arrays.asList((Object[])itens);
+		if (itens.getClass().isArray()) {
+			itens = Arrays.asList((Object[]) itens);
 		}
 		if (itens instanceof Map) {
 			Map map = (Map) itens;
@@ -271,7 +267,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		} else if (itens instanceof Collection) {
 			Collection collection = (Collection) itens;
 			sugest = collection.size() == 1 && sugest;
-			for (Object object : (Iterable)itens) {
+			for (Object object : (Iterable) itens) {
 				setSelectedValueIfNeeded(input, value, sugest, first, object);
 				String opDesc = getSelectLabel(object);
 				String opValue = getSelectVaue(object);
@@ -286,27 +282,27 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 
 	protected void setSelectedValueIfNeeded(InputTag input, Object value, boolean sugest, boolean first, Object object) {
 		if (sugest || (first && value == null && !isIncludeBlank() && !isSelectMany())) {
-			input.setValue(object); 
+			input.setValue(object);
 			try {
 				input.getPropertySetter().set(object);
 			} catch (Exception e) {
-				throw new RuntimeException("Could not set value for property "+input.getName()+", using autoSelectUniqueItem. Check if bean is null.");
+				throw new RuntimeException("Could not set value for property " + input.getName() + ", using autoSelectUniqueItem. Check if bean is null.");
 			}
 		}
 	}
 
 	protected boolean isSelectMany() {
-		return selectedType == InputTagType.SELECT_MANY || 
-				selectedType == InputTagType.SELECT_MANY_POPUP || 
+		return selectedType == InputTagType.SELECT_MANY ||
+				selectedType == InputTagType.SELECT_MANY_POPUP ||
 				selectedType == InputTagType.SELECT_MANY_BOX;
 	}
 
 	protected String getSelectVaue(Object key) {
 		return TagUtils.getObjectValueToString(key, false, null);
 	}
-	
+
 	private String getSelectedString(Object optionValue) {
-		return isValueSelected(optionValue)? " selected='selected'" : "";
+		return isValueSelected(optionValue) ? " selected='selected'" : "";
 	}
 
 	private String getSelectLabel(Object value) {
@@ -318,42 +314,62 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			return TagUtils.getObjectDescriptionToString(value);
 		}
 	}
-	
-	protected boolean isValueSelected(Object optionValue){
+
+	protected boolean isValueSelected(Object optionValue) {
 		Iterable<?> value = getValueAsIterable();
-		if(value != null){
-			for(Object object: value){
-				if(inputTag.areEqual(optionValue, object)){
+		if (value != null) {
+			for (Object object : value) {
+				if (inputTag.areEqual(optionValue, object)) {
 					return true;
 				}
 			}
 		}
 		return false;
-	}	
-	
+	}
+
 	private Iterable<?> cacheValueAsIterable = null;
+
 	private Iterable<?> getValueAsIterable() {
-		if(inputTag.getValue() == null){
+		if (inputTag.getValue() == null) {
 			return null;
 		}
-		if(cacheValueAsIterable == null){
-			cacheValueAsIterable =  getObjectAsIterable(inputTag.getValue());
+		if (cacheValueAsIterable == null) {
+			cacheValueAsIterable = getObjectAsIterable(inputTag.getValue());
 		}
 		return cacheValueAsIterable;
-	}	
-	
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Object doUseSelectedOnly(Class<?> usingType) {
+		List<Object> items = new ArrayList<Object>();
+		if (inputTag.getValue() != null) {
+			Object selectedValue = inputTag.getValue();
+			if (!Enum.class.isAssignableFrom(getRawClassType())) {
+				GenericDAO dao = DAOUtils.getDAOForClass(usingType);
+				if (dao != null) {
+					String[] extraFields = null;
+					if (inputTag.getSelectLabelProperty() != null && inputTag.getSelectLabelProperty().trim().length() > 0) {
+						extraFields = new String[] { inputTag.getSelectLabelProperty() };
+					}
+					dao.loadDescriptionProperty(selectedValue, extraFields);
+				}
+			}
+			items.add(selectedValue);
+		}
+		return items;
+	}
+
 	protected Object doSelectAllFromService(InputTag lastInput, Class<?> usingType) {
 		GenericDAO<?> dao;
 		String parentProperty = "";
 		if (lastInput != null) {
 			parentProperty = "by_" + lastInput.getName();
 		}
-		Class<?> rawClassType = usingType;
-		String finAllAttribute = rawClassType.getSimpleName() + "FINDALL_" + parentProperty;
+		String finAllAttribute = usingType.getSimpleName() + "FINDALL_" + parentProperty;
 		try {
 			Object attribute = inputTag.getRequest().getAttribute(finAllAttribute);
 			if (attribute == null) {
-				dao = DAOUtils.getDAOForClass(rawClassType);//Next.getApplicationContext().getBean(beanName + "DAO");
+				dao = DAOUtils.getDAOForClass(usingType);//Next.getApplicationContext().getBean(beanName + "DAO");
 			} else {
 				return attribute;
 			}
@@ -376,11 +392,11 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				return findAll;
 			} else {
 				List<?> findAll;
-				if (lastInput.getValue() != null && ( lastInput.getValue().getClass().isEnum() || !DAOUtils.isTransient(lastInput.getValue()) ) ) {
+				if (lastInput.getValue() != null && (lastInput.getValue().getClass().isEnum() || !DAOUtils.isTransient(lastInput.getValue()))) {
 					try {
 						findAll = dao.findBy(lastInput.getValue(), true, extraFields);
 					} catch (Exception e) {
-						throw new NextException("Could not execute findBy "+lastInput.getValue()+" for property "+inputTag.getName(), e);
+						throw new NextException("Could not execute findBy " + lastInput.getValue() + " for property " + inputTag.getName(), e);
 					}
 				} else {
 					findAll = new ArrayList<Object>();
@@ -389,22 +405,23 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				return findAll;
 			}
 		} else {
-			if(rawClassType != null){
+			if (usingType != null) {
 				//TODO TROCAR POR LOG
-				System.out.println("GenericDAO não encontrado para o tipo "+rawClassType.getName()+". Ignorando busca de itens de combo.");
+				System.out.println("GenericDAO não encontrado para o tipo " + usingType.getName() + ". Ignorando busca de itens de combo.");
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected InputTag prepareComboReload(ComboReloadGroupTag comboReload) {
+
 		FunctionCall call;
 		String itensFunction = getItensFunction();
 
 		call = getFunctionCall();
 		InputTag lastInput = null;
-		
+
 		if (!Enum.class.isAssignableFrom(getRawClassType()) || (itensFunction != null && itensFunction.contains("("))) {
 			if (!isSelectAll()) {
 				comboReload.registerProperty(inputTag.getName(), call, isIncludeBlank());
@@ -430,37 +447,38 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		// if(lastInput == null){
 		// useAjax = false;
 		// }
-		
-		this.loadItensFunction = createLoadItensFunction(getFunctionCall(), lastInput , getRawClassType());
-		
+
+		this.loadItensFunction = createLoadItensFunction(getFunctionCall(), lastInput, getRawClassType());
+
 		return lastInput;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private String createLoadItensFunction(FunctionCall call, InputTag lastInput, Class<?> usingType) {
+
 		if (inputTag.getUseAjax() == null || !inputTag.getUseAjax()) {
 			return null;
 		}
-		
+
 		FunctionParameter[] parameterArray = call != null ? call.getParameterArray() : null;
-		
+
 		//Define caminho absoluto no HTML
 		BeanTag beanTag = inputTag.findParent(BeanTag.class);
 		if (parameterArray != null && beanTag != null) {
 			for (FunctionParameter parameter : parameterArray) {
-				if (parameter.getParameterType() == ParameterType.REFERENCE ) {
+				if (parameter.getParameterType() == ParameterType.REFERENCE) {
 					String prefix = "";
-					if( Util.strings.isNotEmpty(beanTag.getPropertyPrefix()) ){
+					if (Util.strings.isNotEmpty(beanTag.getPropertyPrefix())) {
 						prefix += beanTag.getPropertyPrefix();
-					} 
-					if( Util.strings.isNotEmpty(beanTag.getPropertyIndex()) ){
-						if(beanTag.getPropertyIndex().contains("{index}")){
+					}
+					if (Util.strings.isNotEmpty(beanTag.getPropertyIndex())) {
+						if (beanTag.getPropertyIndex().contains("{index}")) {
 							prefix += "[{indexSequence}]";
 						} else {
-							prefix += "["+beanTag.getPropertyIndex()+"]";
+							prefix += "[" + beanTag.getPropertyIndex() + "]";
 						}
-					} 
-					if(prefix.length()!=0){
+					}
+					if (prefix.length() != 0) {
 						prefix += ".";
 					}
 					String fullName = prefix + parameter.getParameterValue();
@@ -468,7 +486,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				}
 			}
 		}
-		
+
 		FormTag formTag = inputTag.findParent(FormTag.class, true);
 		String form = formTag.getName();
 		String ifcode = "";
@@ -492,46 +510,47 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				String param = parameterArray[j].getParameterValue();
 				String absParam = parameterArray[j].getAbsoluteParameterValue();
 				switch (parameterArray[j].getParameterType()) {
-				case REFERENCE:
-					//listaParametrosFuncao += "'+getInputValue(" + formTag.getName() + "['" + absParam + "'])+'";
-					parameterListFunction += "'+getInputValue(" + InputTagSelectComponent.getDynamicProperty(formTag.getName(), absParam, "extrairNumeroDeIndexedProperty(this.name)")+")+'";
-					classesListFunction += call.getCallInfo().getType(parameterArray[j]).getName();
-					classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
-					parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
-					break;
-				case STRING:
-					parameterListFunction += param;
-					classesListFunction += String.class.getName();
-					classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
-					parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
-					break;
-				case BOOLEAN:
-					parameterListFunction += param;
-					classesListFunction += Boolean.class.getName();
-					classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
-					parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
-					break;
-				case USER:
-					parameterListFunction += param;
-					classesListFunction += User.class.getName();
-					classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
-					parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
-					break;
-				default:
-					throw new RuntimeException("Tipo não suportado: " + parameterArray[j].getParameterType());
+					case REFERENCE:
+						//listaParametrosFuncao += "'+getInputValue(" + formTag.getName() + "['" + absParam + "'])+'";
+						parameterListFunction += "'+getInputValue(" + InputTagSelectComponent.getDynamicProperty(formTag.getName(), absParam, "extrairNumeroDeIndexedProperty(this.name)") + ")+'";
+						classesListFunction += call.getCallInfo().getType(parameterArray[j]).getName();
+						classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
+						parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
+						break;
+					case STRING:
+						parameterListFunction += param;
+						classesListFunction += String.class.getName();
+						classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
+						parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
+						break;
+					case BOOLEAN:
+						parameterListFunction += param;
+						classesListFunction += Boolean.class.getName();
+						classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
+						parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
+						break;
+					case USER:
+						parameterListFunction += param;
+						classesListFunction += User.class.getName();
+						classesListFunction += ComboReloadGroupTag.CLASS_SEPARATOR;
+						parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
+						break;
+					default:
+						throw new RuntimeException("Tipo não suportado: " + parameterArray[j].getParameterType());
 				}
 			}
 		}
+
 		parameterListFunction += "';";
 		classesListFunction += "';";
 		String parentValue = "";
 		if (call == null && lastInput != null) {
 			//parentValue = form + "['" + lastInput.getName() + "'].value";
-			parentValue =  getDynamicProperty(form, lastInput.getName(), "extrairNumeroDeIndexedProperty(this.name)") + ".value";
+			parentValue = getDynamicProperty(form, lastInput.getName(), "extrairNumeroDeIndexedProperty(this.name)") + ".value";
 		} else {
 			parentValue = "''";
 		}
-		
+
 		/*
 		String absoluteCall = "";
 		if (parameterArray != null && parameterArray.length > 0) {
@@ -547,31 +566,29 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 
 		//String comp = form + "['" + getName() + "']";
 		String comp = getDynamicProperty(form, inputTag.getName(), "extrairNumeroDeIndexedProperty(this.name)");
-		
+
 		String holdValue = Util.booleans.isTrue(inputTag.getHoldValue()) ? ", " + comp + ".value" : "";
 		String addItensHoldValue = Util.booleans.isTrue(inputTag.getHoldValue()) ? "true" : "false";
 		ifcode += "1 == 1";
 		String functionCode = "";
-		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), (beanTag.getPropertyIndex() != null ? "'"+beanTag.getPropertyIndex()+"'" : null)) + ".loadItens = function(){\n";
+		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), (beanTag.getPropertyIndex() != null ? "'" + beanTag.getPropertyIndex() + "'" : null)) + ".loadItens = function(){\n";
 		//functionCode += "    alert('loading itens '+this.name);\n";
 		functionCode += "    var executeOnchange = " + comp + ".value != '<null>' && " + comp + ".value != '';\n";
 		functionCode += "    " + comp + ".wasEmpty = !executeOnchange;\n";
-
 		functionCode += "    if(" + ifcode + "){\n";
 		functionCode += "        limparCombo(" + comp + ", " + isIncludeBlank() + " " + holdValue + ", '', '" + inputTag.getBlankLabel() + "');\n";
 		functionCode += "        " + parameterListFunction + "\n";
 		functionCode += "        " + classesListFunction + "\n";
-		functionCode += "        ajaxLoadCombo('" + inputTag.getRequest().getContextPath() + "', " + comp + ", '" + usingType.getName() + "', '" + Util.strings.escape(absoluteCall) 
-					 + "', classesList, parameterList, '" + inputTag.getSelectLabelProperty() + "', " + parentValue	+ ");\n";
+		functionCode += "        ajaxLoadCombo('" + inputTag.getRequest().getContextPath() + "', " + comp + ", '" + usingType.getName() + "', '" + Util.strings.escape(absoluteCall)
+				+ "', classesList, parameterList, '" + inputTag.getSelectLabelProperty() + "', " + parentValue + ");\n";
 		functionCode += "    }\n";
 		functionCode += "    else {\n";
 		functionCode += "        limparCombo(" + comp + ", " + isIncludeBlank() + ", '', '" + inputTag.getBlankLabel() + "');\n";
 		functionCode += "        if(executeOnchange) " + comp + ".onchange();\n";
 		functionCode += "    }\n";
-
 		functionCode += "};\n\n";
 
-		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), (beanTag.getPropertyIndex() != null ? "'"+beanTag.getPropertyIndex()+"'" : null)) + ".setItens = function(lista){\n";
+		functionCode += InputTagSelectComponent.getDynamicProperty(form, inputTag.getName(), (beanTag.getPropertyIndex() != null ? "'" + beanTag.getPropertyIndex() + "'" : null)) + ".setItens = function(lista){\n";
 		//functionCode += "    alert('seting itens '+this.name);\n";
 		functionCode += "      var valorMantido = addItensToCombo(" + comp + ", lista, " + addItensHoldValue + ");\n";
 
@@ -586,25 +603,27 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		functionCode += "        " + inputTag.getOnLoadItens() + "\n";
 
 		functionCode += "};\n";
+
 		return functionCode;
 	}
-	
-	
+
 	private static class CacheControl {
-		
+
 		Map<String, Object> cache = new HashMap<String, Object>();
-		
-		public static CacheControl get(HttpServletRequest request){
+
+		public static CacheControl get(HttpServletRequest request) {
 			String id = CacheControl.class.getName();
 			CacheControl cc = null;
-			if((cc = (CacheControl) request.getAttribute(id)) == null){
+			if ((cc = (CacheControl) request.getAttribute(id)) == null) {
 				request.setAttribute(id, cc = new CacheControl());
 			}
 			return cc;
 		}
-		
+
 		public Map<String, Object> getCache() {
 			return cache;
 		}
+
 	}
+
 }
