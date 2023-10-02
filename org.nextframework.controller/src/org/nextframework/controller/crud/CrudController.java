@@ -25,6 +25,7 @@ package org.nextframework.controller.crud;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,44 +48,37 @@ import org.springframework.web.servlet.ModelAndView;
  * @since 01/02/2006
  * @version 1.1
  */
-public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> extends AbstractCrudController<FILTER, FORMBEAN>{
-	
-//	public static final String CRUD_REQUEST = "crudRequest";
-//	public static final String CRUD_CLASS = "crudClass";
-	
+public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> extends AbstractCrudController<FILTER, FORMBEAN> {
+
 	protected Class<? extends FILTER> listCommandClass;
 	protected Class<FORMBEAN> formCommandClass;
 	protected Class<BEAN> beanClass;
-	
+
 	protected GenericService<BEAN> genericService;
-	
-//	protected String displayNameCache;
-//	protected String beanNameCache;
-	
-	public CrudController(){
+
+	public CrudController() {
 		initGenericClasses();
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void initGenericClasses() {
 		@SuppressWarnings("rawtypes")
-		Class[] classes =  GenericTypeResolver.resolveTypeArguments(this.getClass(), CrudController.class);
+		Class[] classes = GenericTypeResolver.resolveTypeArguments(this.getClass(), CrudController.class);
 		setListCommandClass(classes[0]);
 		setFormCommandClass(classes[1]);
 		setBeanClass(classes[2]);
 	}
-	
-	public CrudController(Class<FILTER> listCommandClass, Class<FORMBEAN> formCommandClass, Class<BEAN> beanClass){
+
+	public CrudController(Class<FILTER> listCommandClass, Class<FORMBEAN> formCommandClass, Class<BEAN> beanClass) {
 		setListCommandClass(listCommandClass);
 		setFormCommandClass(formCommandClass);
 		setBeanClass(beanClass);
 	}
-	
-	
+
 	public void setGenericService(GenericService<BEAN> genericService) {
 		this.genericService = genericService;
 	}
-	
+
 	public void setBeanClass(Class<BEAN> beanClass) {
 		this.beanClass = beanClass;
 	}
@@ -96,12 +90,11 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 	public void setListCommandClass(Class<FILTER> listCommandClass) {
 		this.listCommandClass = listCommandClass;
 	}
-	
+
 	public GenericService<BEAN> getGenericService() {
 		return genericService;
 	}
-	
-	
+
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CrudContext.setCurrentInstance(createCrudContext());
@@ -115,23 +108,23 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void validate(Object obj, BindException errors, String action) {
-		if(obj != null){
-			if(listCommandClass.isAssignableFrom(obj.getClass())){
-				validateFilter((FILTER)obj, errors);
+		if (obj != null) {
+			if (listCommandClass.isAssignableFrom(obj.getClass())) {
+				validateFilter((FILTER) obj, errors);
 			}
-			if(formCommandClass.isAssignableFrom(obj.getClass())){
-				validateBean((FORMBEAN)obj, errors);
+			if (formCommandClass.isAssignableFrom(obj.getClass())) {
+				validateBean((FORMBEAN) obj, errors);
 			}
 		}
 	}
-	
+
 	/**
 	 * Override to validate bean
 	 * @param bean
 	 * @param errors
 	 */
 	protected void validateBean(FORMBEAN bean, BindException errors) {
-		
+
 	}
 
 	/**
@@ -140,13 +133,12 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 	 * @param errors
 	 */
 	protected void validateFilter(FILTER filter, BindException errors) {
-		
+
 	}
 
 	@Override
 	public ModelAndView doList(WebRequestContext request, FILTER filter) throws CrudException {
 		try {
-//			setInfoForTemplate(request);
 			List<BEAN> list = configureListModel(request, filter);
 			list(request, filter, list);
 		} catch (Exception e) {
@@ -154,7 +146,6 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 		}
 		return getListModelAndView(request, filter);
 	}
-	
 
 	protected void list(WebRequestContext request, FILTER filter, List<BEAN> list) throws Exception {
 		list(request, filter);
@@ -163,21 +154,6 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 	@Deprecated
 	protected void list(WebRequestContext request, FILTER filter) throws Exception {
 	}
-	
-//	protected void setInfoForTemplate(WebRequestContext request) {
-//		request.setAttribute("TEMPLATE_listagem", "true");
-//		request.setAttribute("TEMPLATE_beanNameUncaptalized", getBeanName());
-//		request.setAttribute("TEMPLATE_beanName", getBeanName());
-//		request.setAttribute("TEMPLATE_beanDisplayName", getBeanDisplayName());
-//		request.setAttribute("TEMPLATE_beanClass", beanClass);
-//	}
-//
-//	protected void setInfoForTemplate(WebRequestContext request, FORMBEAN form) {
-//		setInfoForTemplate(request);
-//		request.setAttribute("TEMPLATE_enviar", "salvar");
-//		request.setAttribute("TEMPLATE_voltar", "listagem");
-//	}
-
 
 	protected List<BEAN> configureListModel(WebRequestContext request, FILTER filter) throws Exception {
 		List<BEAN> list;
@@ -199,18 +175,14 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 	protected ResultList<BEAN> getList(WebRequestContext request, FILTER filter) {
 		return genericService.loadListModel(filter);
 	}
-	
+
 	protected boolean listEmptyOnFirstRequest() {
 		return false;
 	}
 
 	@Override
 	public ModelAndView doForm(WebRequestContext request, FORMBEAN form) throws CrudException {
-//		if("true".equals(request.getParameter("forcarConsulta"))){
-//			request.setAttribute(VIEW, true);
-//		}
 		try {
-//			setInfoForTemplate(request, form);
 			setFormDefaultInfo(request, form);
 			form(request, form);
 		} catch (Exception e) {
@@ -219,11 +191,10 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 		return getFormModelAndView(request, form);
 	}
 
-
 	protected void setFormDefaultInfo(WebRequestContext request, FORMBEAN form) throws Exception {
-		request.setAttribute(CrudContext.getCurrentInstance().getBeanName(), form);		
+		request.setAttribute(CrudContext.getCurrentInstance().getBeanName(), form);
 	}
-	
+
 	protected void form(WebRequestContext request, FORMBEAN form) throws Exception {
 	}
 
@@ -239,25 +210,18 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 		return getCreateModelAndView(request, form);
 	}
 
-
 	protected BEAN create(WebRequestContext request, BEAN form) throws Exception {
 		try {
 			return beanClass.newInstance();
 		} catch (InstantiationException e) {
-			throw new NextException("cannot instantiate "+formCommandClass, e);
+			throw new NextException("cannot instantiate " + formCommandClass, e);
 		} catch (IllegalAccessException e) {
-			throw new NextException("cannot instantiate "+formCommandClass, e);
+			throw new NextException("cannot instantiate " + formCommandClass, e);
 		}
 	}
 
 	@Override
 	public ModelAndView doUpdate(WebRequestContext request, FORMBEAN form) throws CrudException {
-//		if(request.getAttribute(VIEW) == null){
-//			request.setAttribute(VIEW, false);
-//		}
-//		if("true".equals(request.getParameter("forcarConsulta"))){
-//			request.setAttribute(VIEW, true);
-//		}
 		try {
 			BEAN bean = formToBean(form);
 			bean = load(request, bean);
@@ -271,11 +235,10 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 
 	@Deprecated
 	private void checkIfNull(BEAN bean) {
-		if(bean == null){
+		if (bean == null) {
 			throw new NextException("Registro não encontrado no banco de dados!");
 		}
 	}
-
 
 	protected BEAN load(WebRequestContext request, BEAN bean) throws Exception {
 		return genericService.loadFormModel(bean);
@@ -293,15 +256,13 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 		return getSaveModelAndView(request, bean);
 	}
 
-
-
 	protected void save(WebRequestContext request, BEAN bean) throws Exception {
 		genericService.saveOrUpdate(bean);
 	}
 
 	@Override
 	public ModelAndView doDelete(WebRequestContext request, FORMBEAN form) throws CrudException {
-		BEAN bean = null; 
+		BEAN bean = null;
 		try {
 			bean = formToBean(form);
 			delete(request, bean);
@@ -310,94 +271,74 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 		}
 		return getDeleteModelAndView(request, bean);
 	}
-	
 
 	protected void delete(WebRequestContext request, BEAN bean) throws Exception {
 		genericService.delete(bean);
 	}
 
 	@SuppressWarnings("unchecked")
-	public FORMBEAN beanToForm(BEAN bean){
-		if(formCommandClass.equals(beanClass)){
-			return (FORMBEAN)bean;
+	public FORMBEAN beanToForm(BEAN bean) {
+		if (formCommandClass.equals(beanClass)) {
+			return (FORMBEAN) bean;
 		}
 		throw new NextException("cannot convert bean to form, override beanToForm method");
 	}
 
 	@SuppressWarnings("unchecked")
-	public BEAN formToBean(FORMBEAN form){
-		if(beanClass.equals(formCommandClass)){
-			return (BEAN)form;
+	public BEAN formToBean(FORMBEAN form) {
+		if (beanClass.equals(formCommandClass)) {
+			return (BEAN) form;
 		}
 		throw new NextException("cannot convert form to bean, override formToBean method");
 	}
-	
-//	public String getBeanName() {
-//		//Faz cache do beanName para otimizar
-//		if(beanNameCache == null){
-//			beanNameCache = Util.strings.uncaptalize(beanClass.getSimpleName());
-//		}
-//		return beanNameCache;
-//	}
-	
-	
-	
-//	protected String getBeanDisplayName() {
-//		//Faz cache do displayName para otimizar
-//		if(displayNameCache == null){
-//			displayNameCache = BeanDescriptorFactory.forClass(beanClass).getDisplayName();
-//		}
-//		return displayNameCache;
-//	}
-//	
+
 	protected ModelAndView getListModelAndView(WebRequestContext request, FILTER filter) {
-		return new ModelAndView("crud/"+CrudContext.getCurrentInstance().getBeanName()+"List");
+		return new ModelAndView("crud/" + CrudContext.getCurrentInstance().getBeanName() + "List");
 	}
 
 	protected ModelAndView getFormModelAndView(WebRequestContext request, FORMBEAN form) {
-		if(Boolean.TRUE.equals(request.getAttribute(VIEW))){
-			return new ModelAndView("crud/"+CrudContext.getCurrentInstance().getBeanName()+"View");
+		if (Boolean.TRUE.equals(request.getAttribute(VIEW))) {
+			return new ModelAndView("crud/" + CrudContext.getCurrentInstance().getBeanName() + "View");
 		} else {
-			return new ModelAndView("crud/"+CrudContext.getCurrentInstance().getBeanName()+"Form");	
+			return new ModelAndView("crud/" + CrudContext.getCurrentInstance().getBeanName() + "Form");
 		}
 	}
-	
+
 	protected ModelAndView getCreateModelAndView(WebRequestContext request, FORMBEAN form) throws CrudException {
 		//return continueOnAction(FORM, form);
 		//TODO FAZER O CONTINUETOACTION
-		((DefaultWebRequestContext)request).setLastAction(FORM);
+		((DefaultWebRequestContext) request).setLastAction(FORM);
 		return doForm(request, form);
 	}
 
 	protected ModelAndView getUpdateModelAndView(WebRequestContext request, FORMBEAN form) throws CrudException {
 		//TODO FAZER O CONTINUETOACTION
-		((DefaultWebRequestContext)request).setLastAction(FORM);
+		((DefaultWebRequestContext) request).setLastAction(FORM);
 		return doForm(request, form);
 	}
-	
+
 	protected ModelAndView getSaveModelAndView(WebRequestContext request, BEAN bean) {
-		if("true".equals(request.getParameter("fromInsertOne"))){
+		if ("true".equals(request.getParameter("fromInsertOne"))) {
 			Object id = Util.beans.getId(bean);
 			String description = Util.strings.toStringDescription(bean);
-			
 			PrintWriter out;
 			try {
 				out = request.getServletResponse().getWriter();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-			request.getServletResponse().setCharacterEncoding("UTF-8");
+			request.getServletResponse().setCharacterEncoding(StandardCharsets.UTF_8.name());
 			out
-				.println("<html>" +
-						"<script language=\"JavaScript\" src=\""+request.getServletRequest().getContextPath()+"/resource/js/util.js\"></script>" +
-						"<script language=\"JavaScript\">selecionar('"+id+"', '"+description+"', true);</script>" +
-						"</html>");
+					.println("<html>" +
+							"<script language=\"JavaScript\" src=\"" + request.getServletRequest().getContextPath() + "/resource/js/util.js\"></script>" +
+							"<script language=\"JavaScript\">selecionar('" + id + "', '" + description + "', true);</script>" +
+							"</html>");
 			return null;
 		} else {
 			return sendRedirectToAction(LIST);
 		}
 	}
-	
+
 	protected ModelAndView getDeleteModelAndView(WebRequestContext request, BEAN bean) {
 		return sendRedirectToAction(LIST);
 	}

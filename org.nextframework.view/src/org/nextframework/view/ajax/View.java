@@ -25,6 +25,7 @@ package org.nextframework.view.ajax;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class View {
 	public View(WebRequestContext request) {
 		this.request = request;
 		response = request.getServletResponse();
-		response.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 	}
 
 	public static View getCurrent() {
@@ -91,8 +92,7 @@ public class View {
 			} catch (IOException e) {
 				throw new NextException("Erro ao enviar código para o cliente na chamada ajax", e);
 			}
-			//SETAR O CHARSET
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		}
 		out.println(s);
 		return this;
@@ -109,9 +109,9 @@ public class View {
 			} catch (IOException e) {
 				throw new NextException("Erro ao enviar código para o cliente na chamada ajax", e);
 			}
-			//SETAR O CHARSET
-			response.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		}
 		out.flush();
 	}
+
 }

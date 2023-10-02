@@ -32,6 +32,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -131,7 +132,7 @@ public class JavaSourceCompiler {
 		URLClassLoader urlClassLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 		for (URL url : urlClassLoader.getURLs()) {
 			try {
-				sb.append(URLDecoder.decode(url.getFile(), "UTF-8")).append(File.pathSeparator);
+				sb.append(URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8.name())).append(File.pathSeparator);
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
