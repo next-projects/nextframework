@@ -159,6 +159,18 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>showNewLink</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>newLinkLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>showListLink</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -931,6 +943,12 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>actionColumnName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>showViewLink</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -968,6 +986,18 @@
 		<attribute>
 			<description></description>
 			<name>deleteLinkLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>deleteLinkConfirmation</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>pageLabel</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

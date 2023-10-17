@@ -133,7 +133,7 @@ public class MessagesTag extends BaseTag {
 		boolean suppressErrors = "true".equalsIgnoreCase(getRequest().getParameter(MultiActionController.SUPPRESS_ERRORS));
 		if (errors.hasErrors() && !suppressErrors) {
 
-			title = getDefaultViewLabel("messagePanelTitle", "Valores incorretos encontrados em");
+			title = getDefaultViewLabel("title", "Valores incorretos encontrados em");
 			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inválido");
 
 			if (renderAsHtml) {

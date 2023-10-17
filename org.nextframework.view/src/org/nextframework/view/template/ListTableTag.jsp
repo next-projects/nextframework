@@ -9,7 +9,7 @@
 				<n:doBody />
 			</t:propertyConfig>
 			<c:if test="${ !empty acoes || listTableTag.showViewLink || listTableTag.showEditLink || listTableTag.showDeleteLink }">
-				<n:column header="${n:messageArgs('ListTableTag.actionColumnName', null, 'Ação')}" style="width: 1%; white-space: nowrap; padding-right: 3px;">
+				<n:column header="${listTableTag.actionColumnName}" style="width: 1%; white-space: nowrap; padding-right: 3px;">
 					${acoes}
 					<script language="javascript">
 						<c:catch var="exSelecionar">
@@ -27,7 +27,7 @@
 						<n:link action="update" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}">${listTableTag.updateLinkLabel}</n:link>
 					</c:if>
 					<c:if test="${listTableTag.showDeleteLink}">
-						<n:link action="delete" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}" confirmationMessage="${n:messageArgs('ListTableTag.deleteLinkConfirmation', null, 'Deseja realmente excluir esse registro?')}">${listTableTag.deleteLinkLabel}</n:link>
+						<n:link action="delete" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}" confirmationMessage="${listTableTag.deleteLinkConfirmation}">${listTableTag.deleteLinkLabel}</n:link>
 					</c:if>
 				</n:column>
 			</c:if>
@@ -37,6 +37,6 @@
 
 <c:if test="${! empty listTableTag.itens}">
 	<div class="${listTableTag.pagePanelStyleClass}">
-		${n:messageArgs('ListTableTag.pageLabel', null, 'Página')} <n:pagging currentPage="${listTableTag.currentPage}" totalNumberOfPages="${listTableTag.numberOfPages}" />
+		${listTableTag.pageLabel} <n:pagging currentPage="${listTableTag.currentPage}" totalNumberOfPages="${listTableTag.numberOfPages}" />
 	</div>
 </c:if>

@@ -38,6 +38,9 @@ import org.nextframework.exception.NextException;
 public class FormViewTag extends TemplateTag {
 
 	protected String title;
+
+	protected boolean showNewLink = true;
+	protected String newLinkLabel = null;
 	protected boolean showListLink = true;
 	protected String listLinkLabel = null;
 	protected JspFragment linkArea;
@@ -58,6 +61,10 @@ public class FormViewTag extends TemplateTag {
 		}
 		if (title == null && crudContext != null) {
 			title = crudContext.getDisplayName();
+		}
+
+		if (newLinkLabel == null) {
+			newLinkLabel = getDefaultViewLabel("newLinkLabel", "Novo");
 		}
 
 		if (listLinkLabel == null) {
@@ -107,6 +114,22 @@ public class FormViewTag extends TemplateTag {
 	@Deprecated
 	public void setTitulo(String titulo) {
 		this.title = titulo;
+	}
+
+	public boolean isShowNewLink() {
+		return showNewLink;
+	}
+
+	public void setShowNewLink(boolean showNewLink) {
+		this.showNewLink = showNewLink;
+	}
+
+	public String getNewLinkLabel() {
+		return newLinkLabel;
+	}
+
+	public void setNewLinkLabel(String newLinkLabel) {
+		this.newLinkLabel = newLinkLabel;
 	}
 
 	public boolean isShowListLink() {

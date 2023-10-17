@@ -35,7 +35,7 @@ public class ProgressBarCallback implements AjaxCallbackController {
 			if (progressMonitor == null) {
 				progressMonitor = new ProgressMonitor();
 				progressMonitor.subTask(Util.objects.newMessage("org.nextframework.view.ajax.ProgressBarCallback.noSubTask", null, "..."));
-				progressMonitor.setError(new BusinessException("org.nextframework.view.ajax.ProgressBarCallback.noSubTaskError", null, "Atualização de progresso não disponível"));
+				progressMonitor.setError(new BusinessException("org.nextframework.view.ajax.ProgressBarCallback.noSubTaskError", null, "Atualização de progresso não disponível!"));
 			}
 			String progressBarId = request.getParameter("progressbarid");
 			int percentDone = progressMonitor.getPercentDone();

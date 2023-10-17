@@ -561,7 +561,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		if (comboSelect == null) {
 			String[] selectedProperties = getComboSelectedProperties(alias);
 			selectedProperties = organizeExtraFields(alias, selectedProperties, extraFields);
-			comboSelect = Util.collections.join(Arrays.asList(selectedProperties), ", ");
+			comboSelect = Util.collections.join(Arrays.asList(selectedProperties), ",");
 			comboSelectCache.put(key, comboSelect);
 		}
 		return comboSelect;

@@ -27,7 +27,7 @@ import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.util.Util;
 
 /**
- * @author rogelgarcia
+ * @author rogelgarcia | marcusabreu
  * @since 03/02/2006
  * @version 1.1
  */
@@ -42,12 +42,15 @@ public class ListTableTag extends TemplateTag {
 	protected boolean showViewLink = false;
 	protected boolean showEditLink = true;
 	protected boolean showDeleteLink = true;
+	protected String actionColumnName;
 
 	protected String selectLinkLabel;
 	protected String viewLinkLabel;
 	protected String updateLinkLabel;
 	protected String deleteLinkLabel;
+	protected String deleteLinkConfirmation;
 
+	protected String pageLabel;
 	protected Number currentPage;
 	protected Number numberOfPages;
 
@@ -57,6 +60,10 @@ public class ListTableTag extends TemplateTag {
 	protected void doComponent() throws Exception {
 
 		autowireValues();
+
+		if (actionColumnName == null) {
+			actionColumnName = getDefaultViewLabel("actionColumnName", "Ação");
+		}
 
 		if (selectLinkLabel == null) {
 			selectLinkLabel = getDefaultViewLabel("selectLinkLabel", "Selecionar");
@@ -72,6 +79,14 @@ public class ListTableTag extends TemplateTag {
 
 		if (deleteLinkLabel == null) {
 			deleteLinkLabel = getDefaultViewLabel("deleteLinkLabel", "Excluir");
+		}
+
+		if (deleteLinkConfirmation == null) {
+			deleteLinkConfirmation = getDefaultViewLabel("deleteLinkConfirmation", "Deseja realmente excluir esse registro?");
+		}
+
+		if (pageLabel == null) {
+			pageLabel = getDefaultViewLabel("pageLabel", "Página");
 		}
 
 		if (name == null) {
@@ -168,6 +183,14 @@ public class ListTableTag extends TemplateTag {
 		this.groupProperty = groupProperty;
 	}
 
+	public String getActionColumnName() {
+		return actionColumnName;
+	}
+
+	public void setActionColumnName(String actionColumnName) {
+		this.actionColumnName = actionColumnName;
+	}
+
 	public boolean isShowViewLink() {
 		return showViewLink;
 	}
@@ -252,6 +275,22 @@ public class ListTableTag extends TemplateTag {
 
 	public void setDeleteLinkLabel(String deleteLinkLabel) {
 		this.deleteLinkLabel = deleteLinkLabel;
+	}
+
+	public String getDeleteLinkConfirmation() {
+		return deleteLinkConfirmation;
+	}
+
+	public void setDeleteLinkConfirmation(String deleteLinkConfirmation) {
+		this.deleteLinkConfirmation = deleteLinkConfirmation;
+	}
+
+	public String getPageLabel() {
+		return pageLabel;
+	}
+
+	public void setPageLabel(String pageLabel) {
+		this.pageLabel = pageLabel;
 	}
 
 	public Number getCurrentPage() {

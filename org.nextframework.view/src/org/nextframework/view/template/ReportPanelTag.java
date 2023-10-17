@@ -35,7 +35,7 @@ public class ReportPanelTag extends SimplePanelTag {
 	protected void doComponent() throws Exception {
 
 		if (sectionTitle == null) {
-			sectionTitle = getDefaultViewLabel("sectionTitle", "Relatório");
+			sectionTitle = getDefaultViewLabel("sectionTitle", "Filtragem");
 		}
 
 		if (submitLabel == null) {

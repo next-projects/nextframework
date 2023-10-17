@@ -9,9 +9,12 @@
 		<input type="hidden" name="fromInsertOne" value="true" />
 	</c:if>
 
-	<c:if test="${formViewTag.showListLink || !empty formViewTag.linkArea}">
+	<c:if test="${!empty formViewTag.linkArea || formViewTag.showNewLink || formViewTag.showListLink}">
 		<div class="${formViewTag.linkBarStyleClass}">
 			${formViewTag.invokeLinkArea}
+			<c:if test="${formViewTag.showNewLink}">
+				<n:link action="create" class="${formViewTag.linkStyleClass}">${formViewTag.newLinkLabel}</n:link>
+			</c:if>
 			<c:if test="${formViewTag.showListLink}">
 				<n:link action="list" class="${formViewTag.linkStyleClass}">${formViewTag.listLinkLabel}</n:link>
 			</c:if>

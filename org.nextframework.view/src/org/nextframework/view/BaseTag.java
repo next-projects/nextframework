@@ -250,8 +250,8 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		String[] codes = new String[2];
 		//Simple class name (from the tag) and field with viewCode prefix (Ex: module.Controller.view.FilterPanelTag.sectionTitle)
 		codes[0] = WebUtils.getMessageCodeViewPrefix() + "." + this.getClass().getSimpleName() + "." + field;
-		//Simple class name (from the tag) and field (Ex: FilterPanelTag.sectionTitle)
-		codes[1] = this.getClass().getSimpleName() + "." + field;
+		//Full class name (from the tag) and field (Ex: org.nextframework.view.FilterPanelTag.sectionTitle)
+		codes[1] = this.getClass().getName() + "." + field;
 
 		String message = null;
 
