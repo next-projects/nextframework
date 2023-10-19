@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <%
 	response.setHeader("P3P","CP='IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT'");
 	response.setHeader("pragma", "no-cache");
@@ -130,3 +131,9 @@
 	<script language="JavaScript" src="${app}${js}"></script>
 	</c:forEach>
 </c:if>
+
+<%-- USER LOCALE --%>
+<c:set var="userLocale" value="${pageContext.response.locale}" scope="request" />
+<script type="text/javascript">
+	var userLocale = ["${pageContext.response.locale}", "<%= pageContext.getResponse().getLocale().toLanguageTag() %>"];
+</script>
