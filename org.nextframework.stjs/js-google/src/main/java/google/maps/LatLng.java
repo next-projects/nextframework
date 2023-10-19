@@ -1,26 +1,29 @@
 package google.maps;
 
-
 public class LatLng {
-	
-	public LatLng(Double lat, Double lng){
-		
+
+	public LatLng(Double lat, Double lng) {
+
 	}
-	public LatLng(Double lat, Double lng, boolean noWrap){
-		
+
+	public LatLng(Double lat, Double lng, boolean noWrap) {
+
 	}
-	
-	public Double lat(){
+
+	public Double lat() {
 		return null;
 	}
-	public Double lng(){
+
+	public Double lng() {
 		return null;
 	}
-	
-	public String toUrlValue(Integer precision){
+
+	public String toUrlValue(Integer precision) {
 		return null;
 	}
-	public String toUrlValue(){
+
+	public String toUrlValue() {
 		return null;
 	}
+
 }

@@ -6,4 +6,5 @@ public enum TravelMode {
 	DRIVING,	//Specifies a driving directions request.
 	TRANSIT,	//Specifies a transit directions request.
 	WALKING;	//Specifies a walking directions request.
+
 }

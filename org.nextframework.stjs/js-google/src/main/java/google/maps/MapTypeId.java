@@ -6,4 +6,5 @@ public enum MapTypeId {
 	ROADMAP,
 	SATELLITE,
 	TERRAIN
+
 }

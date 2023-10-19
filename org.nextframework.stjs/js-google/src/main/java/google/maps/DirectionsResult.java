@@ -11,4 +11,5 @@ public class DirectionsResult {
 	 * provideRouteAlternatives set to true.
 	 */
 	public Array<DirectionsRoute> routes;
+
 }

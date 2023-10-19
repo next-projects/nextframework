@@ -25,6 +25,19 @@ import org.stjs.javascript.annotation.Adapter;
  */
 @Adapter
 public class JSNumberAdapter {
+
+	public static String toLocaleString(Number n) {
+		throw new UnsupportedOperationException();
+	}
+
+	public static String toLocaleString(Number n, String locale) {
+		throw new UnsupportedOperationException();
+	}
+
+	public static String toLocaleString(Number n, String locale, Map<String, String> options) {
+		throw new UnsupportedOperationException();
+	}
+
 	public static String toFixed(Number n, int positions) {
 		throw new UnsupportedOperationException();
 	}

@@ -10,6 +10,8 @@ public class NextGlobalJs {
 
 	public static NextBridge next;
 
+	public static String[] userLocale;
+
 	public static void selectManyAddOption(Select inputFrom, String label, String value, Map<String, Object> properties) {
 
 	}

@@ -4,11 +4,12 @@ import org.stjs.javascript.dom.Input;
 
 public class Autocomplete {
 
-	public Autocomplete(Input input){
-		
+	public Autocomplete(Input input) {
+
 	}
-	
-	public PlaceResult getPlace(){
+
+	public PlaceResult getPlace() {
 		return null;
 	}
+
 }

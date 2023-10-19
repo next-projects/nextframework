@@ -33,7 +33,7 @@ public class Marker {
 
 	public Map getMap() { // can return StreetViewPanorama
 		return null;
-	} 
+	}
 
 	public String getTitle() {
 		return null;
@@ -46,9 +46,8 @@ public class Marker {
 	public Integer getZIndex() {
 		return null;
 	}
-	
-	public void setMap(Map map){
-		
+
+	public void setMap(Map map) {
 	}
 
 	public void setClickable(boolean flag) {
@@ -71,17 +70,16 @@ public class Marker {
 
 	public void setZIndex(Integer zIndex) {
 	}
-	
-	public	void	setIcon(Icon icon)	{
-		
+
+	public void setIcon(Icon icon) {
 	}
-	public	void	setIcon(String icon)	{
-		
+
+	public void setIcon(String icon) {
 	}
-	public	void	setIcon(org.stjs.javascript.Map<String, ? extends Object> icon)	{
-		
+
+	public void setIcon(org.stjs.javascript.Map<String, ? extends Object> icon) {
 	}
-	
+
 //	public	Animation	getAnimation()	{}
 //	public	string|Icon|Symbol	getIcon()	{}
 //	public	string|Icon|Symbol	getShadow()	{}

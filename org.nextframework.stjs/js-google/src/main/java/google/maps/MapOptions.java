@@ -39,4 +39,5 @@ public class MapOptions {
 	public Object tilt;
 	public Object zoomControl;
 	public Object zoomControlOptions;
+
 }
