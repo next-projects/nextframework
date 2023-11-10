@@ -25,20 +25,19 @@ package org.nextframework.persistence;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.WeakHashMap;
 
-import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.sql.DataSource;
 
@@ -52,9 +51,7 @@ import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.annotation.DescriptionProperty;
 import org.nextframework.controller.crud.ListViewFilter;
 import org.nextframework.exception.NextException;
-import org.nextframework.persistence.translator.AliasMap;
-import org.nextframework.persistence.translator.QueryBuilderResultTranslator;
-import org.nextframework.persistence.translator.QueryBuilderResultTranslatorImpl;
+import org.nextframework.persistence.QueryBuilder.JoinMode;
 import org.nextframework.types.File;
 import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
@@ -69,6 +66,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.GenericTypeResolver;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -87,19 +85,98 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 
 	protected Class<BEAN> beanClass;
 	protected String orderBy;
-	protected TransactionTemplate transactionTemplate;
-	protected FileDAO<File> fileDAO;
-	protected JdbcTemplate jdbcTemplate;
 
 	private String persistenceContext;
+	private ApplicationContext applicationContext;
+	protected JdbcTemplate jdbcTemplate;
+	protected TransactionTemplate transactionTemplate;
+
+	protected List<PropertyDescriptor> fileProperties = new ArrayList<PropertyDescriptor>();
+	protected FileDAO<File> fileDAO;
+
+	public GenericDAO(Class<BEAN> beanClass) {
+		this.beanClass = beanClass;
+		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
+		DefaultOrderBy orderBy = reflectionCache.getAnnotation(this.getClass(), DefaultOrderBy.class);
+		if (orderBy != null) {
+			this.orderBy = orderBy.value();
+		}
+		checkFileProperties();
+	}
+
+	@SuppressWarnings("unchecked")
+	public GenericDAO() {
+		beanClass = (Class<BEAN>) GenericTypeResolver.resolveTypeArgument(this.getClass(), DAO.class);
+		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
+		DefaultOrderBy orderBy = reflectionCache.getAnnotation(this.getClass(), DefaultOrderBy.class);
+		if (orderBy != null) {
+			this.orderBy = orderBy.value();
+		}
+		checkFileProperties();
+	}
+
+	protected void checkFileProperties() {
+		if (isDetectFileProperties()) {
+			BeanWrapper beanWrapper;
+			try {
+				beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(beanClass.newInstance());
+				PropertyDescriptor[] propertyDescriptors = beanWrapper.getPropertyDescriptors();
+				for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+					if (File.class.isAssignableFrom(propertyDescriptor.getPropertyType())) {
+						if (propertyDescriptor.getReadMethod().getAnnotation(Transient.class) == null) {
+							fileProperties.add(propertyDescriptor);
+						}
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Cannot check file type for dao", e);
+			}
+		}
+	}
 
 	/**
-	 * Spring application context
+	 * Indica se os atributos do tipo File devem ser detectados automaticamente para salvar e carregar ao carregar o bean
+	 * @return
 	 */
-	private ApplicationContext applicationContext;
+	protected boolean isDetectFileProperties() {
+		return true;
+	}
 
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+	protected void init() {
+
+	}
+
+	@SuppressWarnings("all")
+	@Override
+	protected final void initDao() throws Exception {
+		if (fileProperties.size() > 0 && this.fileDAO == null) {
+			//achar o DAO para os files...
+			Map<String, FileDAO> beans = applicationContext.getBeansOfType(FileDAO.class);
+			if (beans.size() == 1) {
+				this.fileDAO = beans.values().iterator().next();
+			} else if (beans.size() == 0) {
+				//nao existe um DAO definido na aplicacao, definir um default
+				this.fileDAO = new FileDAO((Class<File>) fileProperties.get(0).getPropertyType(), true);//todas as propriedades do tipo arquivo devem ser da mesma classe
+				this.fileDAO.setHibernateTemplate(getHibernateTemplate());
+				this.fileDAO.setJdbcTemplate(getJdbcTemplate());
+				this.fileDAO.setSessionFactory(getSessionFactory());
+				this.fileDAO.setTransactionTemplate(getTransactionTemplate());
+			}
+		}
+		init();
+	}
+
+	public String getPersistenceContext() {
+		return persistenceContext;
+	}
+
+	public void setPersistenceContext(String persistenceContext) {
+		this.persistenceContext = persistenceContext;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	public JdbcTemplate getJdbcTemplate() {
@@ -130,32 +207,8 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		return jdbcTemplate;
 	}
 
-	/**
-	 * Cria um saveOrUpdateStrategy e salva o objeto (Não executa)
-	 * @param entity
-	 */
-	protected SaveOrUpdateStrategy save(Object entity) {
-		return new SaveOrUpdateStrategy(getPersistenceContext(), entity).saveEntity();
-	}
-
-	/**
-	 * Cria um saveOrUpdateStrategy e salva o objeto (Não executa)
-	 * @param entity
-	 */
-	protected SaveOrUpdateStrategy save(Object entity, boolean clearSession) {
-		return new SaveOrUpdateStrategy(getPersistenceContext(), entity).saveEntity(clearSession);
-	}
-
-	protected final List<BEAN> empty() {
-		return new ArrayList<BEAN>();
-	}
-
-	@Override
-	protected HibernateTemplate createHibernateTemplate(SessionFactory sessionFactory) {
-		if (getHibernateTemplate() != null) {
-			return getHibernateTemplate();
-		}
-		return super.createHibernateTemplate(sessionFactory);
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public TransactionTemplate getTransactionTemplate() {
@@ -166,86 +219,151 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		this.transactionTemplate = transactionTemplate;
 	}
 
-	public String getPersistenceContext() {
-		return persistenceContext;
-	}
-
-	public void setPersistenceContext(String persistenceContext) {
-		this.persistenceContext = persistenceContext;
-	}
-
-	public GenericDAO(Class<BEAN> beanClass) {
-		this.beanClass = beanClass;
-		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-		DefaultOrderBy orderBy = reflectionCache.getAnnotation(this.getClass(), DefaultOrderBy.class);
-		if (orderBy != null) {
-			this.orderBy = orderBy.value();
-		}
-		checkFileProperties();
-	}
-
-	@SuppressWarnings("unchecked")
-	public GenericDAO() {
-		beanClass = (Class<BEAN>) GenericTypeResolver.resolveTypeArgument(this.getClass(), DAO.class);
-		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-		DefaultOrderBy orderBy = reflectionCache.getAnnotation(this.getClass(), DefaultOrderBy.class);
-		if (orderBy != null) {
-			this.orderBy = orderBy.value();
-		}
-		checkFileProperties();
-	}
-
-	protected void init() {
-
-	}
-
-	protected List<PropertyDescriptor> fileProperties = new ArrayList<PropertyDescriptor>();
-
-	protected void checkFileProperties() {
-		if (isDetectFileProperties()) {
-			BeanWrapper beanWrapper;
-			try {
-				beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(beanClass.newInstance());
-				PropertyDescriptor[] propertyDescriptors = beanWrapper.getPropertyDescriptors();
-				for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-					if (File.class.isAssignableFrom(propertyDescriptor.getPropertyType())) {
-						if (propertyDescriptor.getReadMethod().getAnnotation(Transient.class) == null) {
-							fileProperties.add(propertyDescriptor);
-						}
-					}
-				}
-			} catch (Exception e) {
-				throw new RuntimeException("Cannot check file type for dao", e);
-			}
-		}
-	}
-
-	@SuppressWarnings("unchecked")
 	@Override
-	protected final void initDao() throws Exception {
-		if (fileProperties.size() > 0 && this.fileDAO == null) {
-			//achar o DAO para os files...
-			Map<String, FileDAO> beans = applicationContext.getBeansOfType(FileDAO.class);
-			if (beans.size() == 1) {
-				this.fileDAO = beans.values().iterator().next();
-			} else if (beans.size() == 0) {
-				//nao existe um DAO definido na aplicacao, definir um default
-				this.fileDAO = new FileDAO((Class<File>) fileProperties.get(0).getPropertyType(), true);//todas as propriedades do tipo arquivo devem ser da mesma classe
-				this.fileDAO.setHibernateTemplate(getHibernateTemplate());
-				this.fileDAO.setJdbcTemplate(getJdbcTemplate());
-				this.fileDAO.setSessionFactory(getSessionFactory());
-				this.fileDAO.setTransactionTemplate(getTransactionTemplate());
-			}
+	protected HibernateTemplate createHibernateTemplate(SessionFactory sessionFactory) {
+		if (getHibernateTemplate() != null) {
+			return getHibernateTemplate();
 		}
-		init();
+		return super.createHibernateTemplate(sessionFactory);
 	}
+
+	//cache
+	private Map<String, QueryBuilder<BEAN>> queryWithSimpleFieldsCache = new HashMap<String, QueryBuilder<BEAN>>();
 
 	/**
-	 * Indica se os atributos do tipo File devem ser detectados automaticamente para salvar e carregar ao carregar o bean
-	 * @return
+	 * Retorna a query contendo apenas o @Id e o @DescriptionProperty, além de campos extras.
 	 */
-	protected boolean isDetectFileProperties() {
-		return true;
+	protected QueryBuilder<BEAN> queryWithSimpleFields(String... extraFields) {
+
+		String key = extraFields != null && extraFields.length > 0 ? Arrays.toString(extraFields) : beanClass.getSimpleName();
+		QueryBuilder<BEAN> queryModel = queryWithSimpleFieldsCache.get(key);
+		if (queryModel == null) {
+			queryModel = newQueryWithSimpleFields(extraFields);
+			queryWithSimpleFieldsCache.put(key, queryModel);
+		}
+
+		QueryBuilder<BEAN> query = new QueryBuilder<BEAN>();
+		query.select(queryModel.getSelect());
+		query.from(queryModel.getFrom());
+		query.joinAll(queryModel.getJoins());
+		query.fetchAllCollections(queryModel.getFetches());
+		query.setResultTranslatorClass(queryModel.getResultTranslatorClass());
+
+		return query;
+	}
+
+	private QueryBuilder<BEAN> newQueryWithSimpleFields(String... extraFields) {
+
+		String[] selectedProperties = getSimpleFields();
+
+		if (extraFields != null && extraFields.length > 0) {
+			String[] selectedProperties2 = new String[selectedProperties.length + extraFields.length];
+			System.arraycopy(selectedProperties, 0, selectedProperties2, 0, selectedProperties.length);
+			System.arraycopy(extraFields, 0, selectedProperties2, selectedProperties.length, extraFields.length);
+			selectedProperties = selectedProperties2;
+		}
+
+		return queryWithFields(selectedProperties);
+	}
+
+	public String[] getSimpleFields() {
+
+		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
+		String descriptionPropertyName = beanDescriptor.getDescriptionPropertyName();
+		String idPropertyName = beanDescriptor.getIdPropertyName();
+
+		String[] selectedProperties;
+		if (descriptionPropertyName == null) {
+			selectedProperties = new String[] { idPropertyName };
+		} else {
+
+			org.nextframework.bean.PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(descriptionPropertyName);
+			DescriptionProperty descriptionProperty = propertyDescriptor.getAnnotation(DescriptionProperty.class);
+			String[] usingFields = descriptionProperty != null ? descriptionProperty.usingFields() : null; //TODO PROCURAR O @DescriptionProperty nas classes superiores
+
+			if (usingFields != null && usingFields.length > 0) {
+				selectedProperties = new String[usingFields.length + 1];
+				selectedProperties[0] = idPropertyName;
+				for (int i = 0; i < usingFields.length; i++) {
+					selectedProperties[i + 1] = usingFields[i];
+				}
+			} else {
+				selectedProperties = new String[] { idPropertyName, descriptionPropertyName };
+				if (beanDescriptor.getPropertyDescriptor(descriptionPropertyName).getAnnotation(Transient.class) != null) {
+					log.warn("@DescriptionProperty of " + beanDescriptor.getTargetClass() + " is transient and must declare usingFields!");
+				}
+			}
+
+		}
+
+		return selectedProperties;
+	}
+
+	protected QueryBuilder<BEAN> queryWithFields(String... fields) {
+
+		QueryBuilder<BEAN> query = new QueryBuilder<BEAN>();
+
+		String fromAlias = Util.strings.uncaptalize(beanClass.getSimpleName());
+		query.from(beanClass, fromAlias);
+
+		if (fields != null && fields.length > 0) {
+
+			String select = "";
+
+			for (String field : fields) {
+
+				String mainAttribute = field;
+				if (mainAttribute.contains(".")) {
+					mainAttribute = field.substring(0, field.indexOf("."));
+				}
+
+				Method getterMethod = Util.beans.getGetterMethod(beanClass, mainAttribute);
+				if (getterMethod != null) {
+
+					OneToMany otm = AnnotationUtils.getAnnotation(getterMethod, OneToMany.class);
+					if (otm != null) {
+
+						if (mainAttribute != field) {
+							throw new IllegalArgumentException("Atributos OneToMany não podem ter sub-atributos especificados com ponto!");
+						}
+
+						query.fetchCollection(mainAttribute);
+
+					} else {
+
+						ManyToOne mto = AnnotationUtils.getAnnotation(getterMethod, ManyToOne.class);
+						OneToOne oto = AnnotationUtils.getAnnotation(getterMethod, OneToOne.class);
+
+						if (mto != null || oto != null) {
+
+							select += (select.length() == 0 ? "" : ", ") + field;
+							query.join(JoinMode.LEFT_OUTER, false, fromAlias + "." + mainAttribute + " " + mainAttribute);
+
+						} else {
+
+							if (mainAttribute != field) {
+								throw new IllegalArgumentException("Atributos primitivos não podem ter sub-atributos especificados com ponto!");
+							}
+
+							select += (select.length() == 0 ? "" : ", ") + (field.contains(".") ? field : fromAlias + "." + field);
+
+						}
+
+					}
+
+				} else {
+					throw new IllegalArgumentException("O atributo " + mainAttribute + " é inváldo!");
+				}
+
+			}
+
+			if (Util.strings.isNotEmpty(select)) {
+				query.select(select);
+			}
+
+		}
+
+		return query;
 	}
 
 	protected QueryBuilder<BEAN> queryWithOrderBy() {
@@ -256,11 +374,6 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		return query;
 	}
 
-	/**
-	 * Cria um QueryBuilder para esse DAO já com o from configurado
-	 * (O From pode ser alterado)
-	 * @return
-	 */
 	protected QueryBuilder<BEAN> query() {
 		return query(beanClass);
 	}
@@ -292,6 +405,14 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		return save;
 	}
 
+	/**
+	 * Cria um saveOrUpdateStrategy e salva o objeto (Não executa)
+	 * @param entity
+	 */
+	protected SaveOrUpdateStrategy save(Object entity) {
+		return new SaveOrUpdateStrategy(getPersistenceContext(), entity).saveEntity();
+	}
+
 	/** Verifica necessidade de persistir no banco algum atributo do tipo 'file'.**/
 	protected void verifyFileToSave(final BEAN bean, SaveOrUpdateStrategy save) {
 		if (autoManageFileProperties() && fileDAO != null) {
@@ -309,6 +430,25 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				});
 			}
 		}
+	}
+
+	protected boolean autoManageFileProperties() {
+		return true;
+	}
+
+	/**
+	 * Override this method to update the strategy to save the bean
+	 * @param save
+	 */
+	public void updateSaveOrUpdate(SaveOrUpdateStrategy save) {
+	}
+
+	/**
+	 * Cria um saveOrUpdateStrategy e salva o objeto (Não executa)
+	 * @param entity
+	 */
+	protected SaveOrUpdateStrategy save(Object entity, boolean clearSession) {
+		return new SaveOrUpdateStrategy(getPersistenceContext(), entity).saveEntity(clearSession);
 	}
 
 	public void bulkSaveOrUpdate(Collection<BEAN> list) {
@@ -348,9 +488,91 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				.unique();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#loadForEntrada(BEAN)
-	 */
+	@SuppressWarnings("all")
+	public Collection loadCollection(Object owner, String role) {
+		owner = query()
+				.entity(owner)
+				.fetchCollection(role)
+				.unique();
+		return (Collection<?>) Util.beans.getPropertyValue(owner, role);
+	}
+
+	public BEAN loadWithIdAndDescription(BEAN bean) {
+		if (bean == null) {
+			return null;
+		}
+		return queryWithSimpleFields()
+				.entity(bean)
+				.unique();
+	}
+
+	public BEAN loadWithIdAndDescriptionById(Serializable id) {
+		if (id == null) {
+			return null;
+		}
+		return queryWithSimpleFields()
+				.idEq(id)
+				.unique();
+	}
+
+	public BEAN load(BEAN bean, String[] attributesToLoad) {
+
+		if (bean == null || attributesToLoad == null || attributesToLoad.length == 0 || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
+			throw new IllegalArgumentException("Para carregar o atributo de algum bean é necessário informar um bean já persistido e os atributos");
+		}
+
+		return queryWithFields(attributesToLoad)
+				.entity(bean)
+				.unique();
+	}
+
+	/** Carrega os atributos de um bean.
+	 *  @param bean Entidade com a PK definida que será usada como referencia.
+	 *  @param attributesToLoad Array de strings com os nomes dos atributos que devem ser carregados.
+	 **/
+	@SuppressWarnings("all")
+	public void loadAttributes(BEAN bean, String[] attributesToLoad) {
+
+		if (bean == null || attributesToLoad == null || attributesToLoad.length == 0 || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
+			throw new IllegalArgumentException("Para carregar o atributo de algum bean é necessário informar um bean já persistido e os atributos!");
+		}
+
+		QueryBuilder<BEAN> query = queryWithFields(attributesToLoad);
+		if (query.getSelect().getValue().equals(query.getAlias())) {
+			//Se apenas atributos do tipo feche forem informados, é importante forçar um atributo simples para evitar carregar a entidade inteira.
+			BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
+			String idPropertyName = beanDescriptor.getIdPropertyName();
+			query.select(query.getAlias() + "." + idPropertyName);
+		}
+
+		BEAN newBean = query
+				.entity(bean)
+				.unique();
+
+		Objects.requireNonNull(newBean, "Bean não encontrado!");
+
+		Util.beans.copyAttributes(newBean, bean, attributesToLoad);
+
+	}
+
+	public void loadDescriptionProperty(BEAN bean, String... extraFields) {
+
+		if (bean == null || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
+			throw new IllegalArgumentException("Para carregar o atributo de algum bean é necessário informar um bean já persistido!");
+		}
+
+		QueryBuilder<BEAN> query = queryWithSimpleFields(extraFields);
+		BEAN newBean = query
+				.entity(bean)
+				.unique();
+
+		Objects.requireNonNull(newBean, "Bean não encontrado!");
+
+		String[] simpleFields = getSimpleFields();
+		Util.beans.copyAttributes(newBean, bean, simpleFields);
+
+	}
+
 	public BEAN loadFormModel(BEAN bean) {
 		if (bean == null) {
 			return null;
@@ -367,53 +589,43 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		return query.unique();
 	}
 
-	protected boolean autoManageFileProperties() {
-		return true;
-	}
-
-	// campos uteis para fazer cache dos findAlls dos combos
-	protected long cacheTime = 0;
-	protected QueryBuilderResultTranslator translatorQueryFindForCombo;
-	private String queryFindForCombo;
-	private long lastRead;
-	private WeakReference<List<?>> findForComboCache = new WeakReference<List<?>>(null);
-
-	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#findForCombo(java.lang.String)
+	/**
+	 * Override this method to update the form view query
+	 * @param query
 	 */
-	@SuppressWarnings("unchecked")
-	public List<BEAN> findForCombo(String... extraFields) {
-		if (extraFields != null && extraFields.length > 0) {
-			return newQueryBuilder(beanClass)
-					.select(getSelectClauseForIdAndDescription(extraFields))
-					.from(beanClass)
-					.orderBy(orderBy)
-					.list();
-		} else {
-			if (queryFindForCombo == null) {
-				initQueryFindForCombo();
-			}
-			List<?> listCached = findForComboCache.get();
-			if (listCached == null || (System.currentTimeMillis() - lastRead > cacheTime)) {
-				listCached = getHibernateTemplate().find(queryFindForCombo);
-				listCached = translatorQueryFindForCombo.translate(listCached);
-				findForComboCache = new WeakReference<List<?>>(listCached);
-				lastRead = System.currentTimeMillis();
-			}
-			return (List<BEAN>) listCached;
-		}
+	public void updateFormQuery(QueryBuilder<BEAN> query) {
 	}
 
-	@Deprecated
-	public List<BEAN> findForCombo() {
-		return findForCombo((String[]) null);
+	/**
+	 * Override this method to update the collection fetch query
+	 * @param query
+	 */
+	public void updateCollectionFetchQuery(QueryBuilder<BEAN> query, Object owner, String collectionProperty) {
+		updateFormQuery(query);
+	}
+
+	public boolean isEmpty() {
+		return query()
+				.setUseTranslator(false)
+				.select("1")
+				.setMaxResults(1)
+				.unique() == null;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#findBy(java.lang.Object)
+	 * @see org.nextframework.persistence.DAO#findAll()
 	 */
-	public List<BEAN> findBy(Object o) {
-		return findBy(o, false, (String[]) null);
+	public List<BEAN> findAll() {
+		return findAll(this.orderBy);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.nextframework.persistence.DAO#findAll(java.lang.String)
+	 */
+	public List<BEAN> findAll(String orderBy) {
+		return query()
+				.orderBy(orderBy)
+				.list();
 	}
 
 	public List<BEAN> findByProperty(String propertyName, Object o) {
@@ -430,86 +642,25 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				.unique();
 	}
 
-	//cache
-	private Map<Class<?>, String> mapaQueryFindByForCombo = new WeakHashMap<Class<?>, String>();
-	private Map<Class<?>, String> mapaQueryFindBy = new WeakHashMap<Class<?>, String>();
-
-	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#findBy(java.lang.Object, boolean, java.lang.String)
-	 */
-	@SuppressWarnings("unchecked")
-	public List<BEAN> findBy(Object o, boolean forCombo, String... extraFields) {
+	public List<BEAN> findBy(Object o, String... extraFields) {
 
 		if (o == null) {
 			return new ArrayList<BEAN>();
 		}
 
 		Class<?> propertyClass = Util.objects.getRealClass(o.getClass());
-
-		String queryString = null;
-		if ((extraFields != null && extraFields.length > 0) ||
-				(forCombo && (queryString = mapaQueryFindByForCombo.get(propertyClass)) == null) ||
-				(!forCombo && (queryString = mapaQueryFindBy.get(propertyClass)) == null)) {
-			//inicializa a query para essa classe
-			//System.out.println("\n\n\nLOADING CLASSE "+this.beanClass+"  PROPRIEDADE CLASSE: "+o.getClass());
-			String[] propertiesForClass = findPropertiesForClass(propertyClass);
-			if (propertiesForClass.length == 1) {// achou uma propriedade
-				String alias = Util.strings.uncaptalize(this.beanClass.getSimpleName());
-				String property = propertiesForClass[0];
-				QueryBuilder qb = queryWithOrderBy();
-				qb.where(alias + "." + property + " = ? ", o);
-				updateFindByQuery(qb);
-				if (forCombo) {
-					if (extraFields != null && extraFields.length > 0) {
-						//verifcar se precisa fazer joins extras
-						int i = 0;
-						for (int j = 0; j < extraFields.length; j++) {
-							String extra = extraFields[j];
-							BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(this.beanClass);
-							Type type = beanDescriptor.getPropertyDescriptor(extra).getType();
-							if (type instanceof Class) {
-								if (((Class) type).isAnnotationPresent(Entity.class)) {
-									extra += "." + BeanDescriptorFactory.forClass((Class) type).getDescriptionPropertyName();
-								}
-							}
-							if (extra.contains(".")) {
-								int ultimoponto = extra.lastIndexOf(".");
-								String path = extra.substring(0, ultimoponto);
-								qb.join(alias + "." + path + " autojoin" + i);
-								extraFields[j] = "autojoin" + i + extra.substring(ultimoponto);
-							}
-							i++;
-						}
-						//se for com extraFields não pode usar o cache (não existe cache do select quando tem extra properties)						
-						qb.select(getSelectClauseForIdAndDescription(extraFields));
-						//String hbquery = qb.getQuery();	
-						//queryString = hbquery;
-						return qb.list();
-					} else {
-						qb.select(getSelectClauseForIdAndDescription());
-						String hbquery = qb.getQuery();
-						queryString = hbquery.replaceAll(":param0", "?");
-						mapaQueryFindByForCombo.put(propertyClass, queryString);
-					}
-				} else {
-					String hbquery = qb.getQuery();
-					queryString = hbquery.replaceAll(":param0", "?");
-					mapaQueryFindByForCombo.put(propertyClass, queryString);
-				}
-			} else if (propertiesForClass.length > 1) {// mais de uma propriedade do mesmo tipo
-				throw new RuntimeException("Não foi possível executar findBy(..). Existe mais de uma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName());
-			} else {//nenhuma propriedade do tipo fornecido
-				throw new RuntimeException("Não foi possível executar findBy(..). Não existe nenhuma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName());
-			}
+		String[] propertiesForClass = findPropertiesForClass(propertyClass);
+		if (propertiesForClass.length == 0 || propertiesForClass.length > 1) {
+			throw new IllegalArgumentException("Não foi possível executar findBy(..). Deve haver apenas uma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName());
 		}
 
-		List list = getHibernateTemplate().find(queryString, o);
-		if (forCombo) {
-			initQueryFindForCombo();
-			list = translatorQueryFindForCombo.translate(list);
-		}
+		QueryBuilder<BEAN> query = queryWithSimpleFields(extraFields);
+		query.where(query.getAlias() + "." + propertiesForClass[0] + " = ? ", o);
+		query.orderBy(orderBy);
 
-		return list;
+		updateFindByQuery(query);
+
+		return query.list();
 	}
 
 	/**
@@ -535,154 +686,18 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		return properties.toArray(new String[properties.size()]);
 	}
 
-	//cache
-	private Map<String, String> comboSelectCache = new HashMap<String, String>();
-
-	/**
-	 * Retorna o select necessário para apenas o @Id e o @DescriptionProperty
-	 * ex.: new QueryBuilder(...).select(getSelectClauseForIdAndDescription()).from(X.class);
-	 * @param extraFields Outros campos além do @Id e o @DescriptionProperty que devem ser carregados
-	 * @return Clausula select montada
-	 */
-	protected String getSelectClauseForIdAndDescription(String... extraFields) {
-		String alias = Util.strings.uncaptalize(beanClass.getSimpleName());
-		return getSelectClauseForIdAndDescription(alias, extraFields);
+	public List<BEAN> findForCombo(String... extraFields) {
+		QueryBuilder<BEAN> query = queryWithSimpleFields(extraFields).orderBy(orderBy);
+		updateFindForComboQuery(query);
+		return query.list();
 	}
 
 	/**
-	 * Retorna o select necessário para apenas o @Id e o @DescriptionProperty
-	 * ex.: new QueryBuilder(...).select(getSelectClauseForIdAndDescription()).from(X.class);
-	 * @param extraFields Outros campos além do @Id e o @DescriptionProperty que devem ser carregados
-	 * @return Clausula select montada
+	 * Permite alterar a query que será utilizada no findForCombo.
 	 */
-	protected String getSelectClauseForIdAndDescription(String alias, String... extraFields) {
-		String key = alias + Arrays.toString(extraFields);
-		String comboSelect = comboSelectCache.get(key);
-		if (comboSelect == null) {
-			String[] selectedProperties = getComboSelectedProperties(alias);
-			selectedProperties = organizeExtraFields(alias, selectedProperties, extraFields);
-			comboSelect = Util.collections.join(Arrays.asList(selectedProperties), ",");
-			comboSelectCache.put(key, comboSelect);
-		}
-		return comboSelect;
+	protected void updateFindForComboQuery(QueryBuilder<BEAN> query) {
 	}
 
-	protected String[] getComboSelectedProperties(String alias) {
-		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
-		String descriptionPropertyName = beanDescriptor.getDescriptionPropertyName();
-		String idPropertyName = beanDescriptor.getIdPropertyName();
-		String[] selectedProperties;
-		if (descriptionPropertyName == null) {
-			selectedProperties = new String[] { alias + "." + idPropertyName };
-		} else {
-			//verificar se o descriptionproperty utiliza outros campos
-			String[] usingFields = getUsingFieldsForDescriptionProperty(beanDescriptor, descriptionPropertyName);
-			if (usingFields != null && usingFields.length > 0) {
-				selectedProperties = new String[usingFields.length + 1];
-				selectedProperties[0] = alias + "." + idPropertyName;
-				for (int i = 0; i < usingFields.length; i++) {
-					selectedProperties[i + 1] = alias + "." + usingFields[i];
-				}
-			} else {
-				selectedProperties = new String[] { alias + "." + idPropertyName, alias + "." + descriptionPropertyName };
-				if (beanDescriptor.getPropertyDescriptor(descriptionPropertyName).getAnnotation(Transient.class) != null) {
-					new RuntimeException("@DescriptionProperty of " + beanDescriptor.getTargetClass() + " must declare usingFields").printStackTrace();
-				}
-			}
-		}
-		return selectedProperties;
-	}
-
-	private String[] getUsingFieldsForDescriptionProperty(BeanDescriptor beanDescriptor, String descriptionPropertyName) {
-		Annotation[] annotations = beanDescriptor.getPropertyDescriptor(descriptionPropertyName).getAnnotations();
-		DescriptionProperty descriptionProperty = null;
-		for (Annotation annotation : annotations) {
-			if (DescriptionProperty.class.isAssignableFrom(annotation.annotationType())) {
-				descriptionProperty = (DescriptionProperty) annotation;
-				break;
-			}
-		}
-		Transient transientAnn = beanDescriptor.getPropertyDescriptor(descriptionPropertyName).getAnnotation(Transient.class);
-		String[] usingFields = null;
-		if (descriptionProperty != null) {
-			//TODO PROCURAR O @DescriptionProperty nas classes superiores
-			usingFields = descriptionProperty.usingFields();
-		}
-		if (usingFields.length == 0 && transientAnn != null) {
-			log.warn("Description property of " + beanDescriptor.getTargetClass() + " is transient and does not declare usingFields");
-		}
-		return usingFields;
-	}
-
-	private String[] organizeExtraFields(String alias, String[] selectedProperties, String... extraFields) {
-		if (extraFields != null && extraFields.length > 0) {
-			for (int i = 0; i < extraFields.length; i++) {
-				if (!extraFields[i].contains(".")) {
-					extraFields[i] = alias + "." + extraFields[i];
-				}
-			}
-			String[] oldselectedProperties = selectedProperties;
-			selectedProperties = new String[selectedProperties.length + extraFields.length];
-			System.arraycopy(oldselectedProperties, 0, selectedProperties, 0, oldselectedProperties.length);
-			System.arraycopy(extraFields, 0, selectedProperties, oldselectedProperties.length, extraFields.length);
-		}
-		return selectedProperties;
-	}
-
-	protected void initQueryFindForCombo() {
-		if (translatorQueryFindForCombo == null) {
-			String alias = Util.strings.uncaptalize(beanClass.getSimpleName());
-			String[] selectedProperties = getComboSelectedProperties(alias);
-			String hbQueryFindForCombo = Util.collections.join(Arrays.asList(selectedProperties), ", ");
-			hbQueryFindForCombo = "select " + hbQueryFindForCombo + " from " + beanClass.getName() + " " + alias;
-			hbQueryFindForCombo = getQueryFindForCombo(hbQueryFindForCombo);
-			if (orderBy != null && !hbQueryFindForCombo.contains("order by")) {
-				hbQueryFindForCombo += "  order by " + orderBy;
-			}
-			translatorQueryFindForCombo = new QueryBuilderResultTranslatorImpl();
-			translatorQueryFindForCombo.init(getSessionFactory(), selectedProperties, new AliasMap[] { new AliasMap(alias, null, beanClass) });
-			queryFindForCombo = hbQueryFindForCombo;
-		}
-	}
-
-	//TODO RENOMEAR PARA UPDATEFINDFORCOMBOQUERY
-	/**
-	 * Permite alterar a query que será utilizada no findForCombo. O parametro é a query montada automaticamente.
-	 * Será feito cache dessa query entao esse método só será chamado uma vez.
-	 * @param hbQueryFindForCombo
-	 * @return
-	 */
-	protected String getQueryFindForCombo(String hbQueryFindForCombo) {
-		return hbQueryFindForCombo;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#findAll()
-	 */
-	public List<BEAN> findAll() {
-		return findAll(this.orderBy);
-	}
-
-	public boolean isEmpty() {
-		return query()
-				.setUseTranslator(false)
-				.select("1")
-				.setMaxResults(1)
-				.unique() == null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#findAll(java.lang.String)
-	 */
-	public List<BEAN> findAll(String orderBy) {
-		return query()
-				.orderBy(orderBy)
-				.list();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#findForListagem(org.nextframework.controller.crud.ListingFilter)
-	 */
 	public ResultList<BEAN> loadListModel(ListViewFilter filter) {
 		QueryBuilder<BEAN> query = queryWithOrderBy();
 		if (orderBy == null) {//ordenação default para telas de listagem de dados
@@ -701,31 +716,6 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	public void updateListQuery(QueryBuilder<BEAN> query, ListViewFilter _filter) {
 	}
 
-	/**
-	 * Override this method to update the form view query
-	 * @param query
-	 */
-	public void updateFormQuery(QueryBuilder<BEAN> query) {
-	}
-
-	/**
-	 * Override this method to update the collection fetch query
-	 * @param query
-	 */
-	public void updateCollectionFetchQuery(QueryBuilder<BEAN> query, Object owner, String collectionProperty) {
-		updateFormQuery(query);
-	}
-
-	/**
-	 * Override this method to update the strategy to save the bean
-	 * @param save
-	 */
-	public void updateSaveOrUpdate(SaveOrUpdateStrategy save) {
-	}
-
-	/* (non-Javadoc)
-	 * @see org.nextframework.persistence.DAO#delete(BEAN)
-	 */
 	@SuppressWarnings("all")
 	public void delete(final BEAN bean) {
 		HibernateTransactionSessionProvider sessionProvider = (HibernateTransactionSessionProvider) PersistenceConfiguration.getConfig().getSessionProvider();
@@ -763,50 +753,6 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 			}
 
 		});
-	}
-
-	@SuppressWarnings("all")
-	public Collection loadCollection(Object owner, String role) {
-		owner = query()
-				.entity(owner)
-				.fetchCollection(role)
-				.unique();
-		return (Collection<?>) Util.beans.getPropertyValue(owner, role);
-	}
-
-	public void loadDescriptionProperty(BEAN object, String... extraFields) {
-
-		String properties = getSelectClauseForIdAndDescription(extraFields);
-
-		BEAN newValue = query()
-				.select(properties)
-				.entity(object)
-				.unique();
-
-		if (newValue == null) {
-			throw new RuntimeException("Bean não encontrado!");
-		}
-
-		BeanWrapper pafOld = PropertyAccessorFactory.forBeanPropertyAccess(object);
-		BeanWrapper pafNew = PropertyAccessorFactory.forBeanPropertyAccess(newValue);
-
-		String alias = Util.strings.uncaptalize(beanClass.getSimpleName()) + ".";
-		String[] propertiesArray = properties.split("\\s*[,|;]\\s*");
-		for (String propertyFull : propertiesArray) {
-			try {
-				String property = propertyFull.replace(alias, "");
-				Object value = pafNew.getPropertyValue(property);
-				pafOld.setPropertyValue(property, value);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
 	}
 
 }

@@ -33,6 +33,11 @@ import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.core.standard.Next;
+import org.nextframework.exception.NextException;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.NotWritablePropertyException;
+import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.MessageSourceResolvable;
 
@@ -152,12 +157,71 @@ public class BeanUtils {
 		}
 	}
 
+	public Object getPropertyValueNullSafe(Object bean, String property) {
+		try {
+			return getPropertyValue(bean, property);
+		} catch (NullValueInNestedPathException e) {
+			//Se o caminho está incompleto até o valor, considera nulo mesmo. 
+			return null;
+		}
+	}
+
 	public Object getPropertyValue(Object bean, String property) {
 		return PropertyAccessorFactory.forBeanPropertyAccess(bean).getPropertyValue(property);
 	}
 
+	public void setPropertyValueNullSafe(Object bean, String property, Object value) {
+		BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(bean);
+		try {
+			bw.setPropertyValue(property, value);
+		} catch (NullValueInNestedPathException e) {
+			//Se o caminho está incompleto, mas existe valor a ser definido, completa.
+			if (value != null) {
+				bw = PropertyAccessorFactory.forBeanPropertyAccess(bean); //buscar instancia novamente para limpar o cache de 'setAutoGrowNestedPaths' 
+				bw.setAutoGrowNestedPaths(true);
+				bw.setPropertyValue(property, value);
+			}
+		}
+	}
+
 	public void setPropertyValue(Object bean, String property, Object value) {
 		PropertyAccessorFactory.forBeanPropertyAccess(bean).setPropertyValue(property, value);
+	}
+
+	public <B> void copyAttributes(B bOrigem, B bDestivo, String... atributos) {
+		for (String attributo : atributos) {
+			Object valor = getPropertyValueNullSafe(bOrigem, attributo);
+			setPropertyValueNullSafe(bDestivo, attributo, valor);
+		}
+	}
+
+	@SuppressWarnings("all")
+	public <E> E clone(E o) {
+		BeanDescriptor baseDescriptor = BeanDescriptorFactory.forBean(o);
+		E o2;
+		try {
+			o2 = (E) o.getClass().newInstance();
+			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(o2);
+			PropertyDescriptor[] propertyDescriptors = baseDescriptor.getPropertyDescriptors();
+			for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+				if (propertyDescriptor.getName().equals("class")) {
+					continue;
+				}
+				Object value = propertyDescriptor.getValue();
+				try {
+					wrapper.setPropertyValue(propertyDescriptor.getName(), value);
+				} catch (NotWritablePropertyException e) {
+					//if the property is not writable.. do not write
+				}
+			}
+		} catch (InstantiationException e1) {
+			throw new NextException("Não foi possível clonar o bean. Não foi possível criar outra instancia.", e1);
+		} catch (IllegalAccessException e1) {
+			throw new NextException("Não foi possível clonar o bean. Acesso ilegal.", e1);
+		} catch (BeansException e) {
+			throw new NextException("Não foi possível clonar o bean. ", e);
+		}
+		return o2;
 	}
 
 	public String getDisplayName(Class<?> beanClass) {

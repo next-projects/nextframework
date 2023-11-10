@@ -12,6 +12,8 @@ import org.nextframework.controller.crud.ListViewFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 public interface DAO<BEAN> {
+	
+	public abstract void setPersistenceContext(String persistenceContext);
 
 	/**
 	 * Salva determinado bean.
@@ -22,7 +24,7 @@ public interface DAO<BEAN> {
 	 * @param bean O objeto a ser salvo.
 	 */
 	public abstract void saveOrUpdate(BEAN bean);
-	
+
 	public abstract void bulkSaveOrUpdate(Collection<BEAN> list);
 
 	/**
@@ -32,8 +34,21 @@ public interface DAO<BEAN> {
 	 * @return
 	 */
 	public abstract BEAN load(BEAN bean);
-	
+
 	public abstract BEAN loadById(Serializable id);
+	
+	@SuppressWarnings("all")
+	public Collection loadCollection(Object owner, String attribute);
+	
+	public BEAN loadWithIdAndDescription(BEAN bean);
+	
+	public BEAN loadWithIdAndDescriptionById(Serializable id);
+	
+	public BEAN load(BEAN bean, String[] attributesToLoad);
+	
+	public void loadAttributes(BEAN bean, String[] attributesToLoad);
+	
+	public void loadDescriptionProperty(BEAN bean, String... extraFields);
 
 	/**
 	 * Carrega o bean para a tela de entrada de dados, no caso de um CRUD.
@@ -43,37 +58,8 @@ public interface DAO<BEAN> {
 	 */
 	public abstract BEAN loadFormModel(BEAN bean);
 
-	/**
-	 * Retorna todos os objetos encontrados no banco de dados.
-	 * Pode ser informado quais campos devem ser carregados.
-	 * Esse método é utilizado pelos combo boxes nos JSPs.
-	 * @param extraFields
-	 * @return
-	 */
-	public abstract List<BEAN> findForCombo(String... extraFields);
 
-	/**
-	 * Executa um find utilizando como filtro o objeto passado. <BR>
-	 * Por exemplo, supondo que estamos em um DAO de municipio, e passamos como parâmetro um objeto do tipo estado.
-	 * Será procurado no bean municipio qual campo da classe faz referencia ao estado, e esse campo será utilizado como filtro.
-	 * O parametro do filtro será o objeto passado para esse método.
-	 * @see findBy(Object o, boolean forCombo, String... extraFields)
-	 * @param o Objeto que deve ser utilizado como filtro.
-	 * @return
-	 */
-	public abstract List<BEAN> findBy(Object o);
-
-	/**
-	 * Executa um find utilizando como filtro o objeto passado. <BR>
-	 * Por exemplo, supondo que estamos em um DAO de municipio, e passamos como parâmetro um objeto do tipo estado.
-	 * Será procurado no bean municipio qual campo da classe faz referencia ao estado, e esse campo será utilizado como filtro.
-	 * O parametro do filtro será o objeto passado para esse método.
-	 * @param o Objeto que deve ser utilizado como filtro.
-	 * @param forCombo indica se é para carregar somente o id e o descriptionProperty (Utilizado em combo boxes nos JSPs)
-	 * @param extraFields Campos extras que devem ser carregados
-	 * @return
-	 */
-	public abstract List<BEAN> findBy(Object o, boolean forCombo, String... extraFields);
+	public boolean isEmpty();
 
 	/**
 	 * Retorna uma lista com todos os beans encontrados no banco, ordenados pela anotação @OrderBy da classe
@@ -88,6 +74,32 @@ public interface DAO<BEAN> {
 	 * @return
 	 */
 	public abstract List<BEAN> findAll(String orderBy);
+	
+	public List<BEAN> findByProperty(String propertyName, Object o);
+	
+	public BEAN findByPropertyUnique(String propertyName, Object o);
+	
+	/**
+	 * Executa um find utilizando como filtro o objeto passado. <BR>
+	 * Por exemplo, supondo que estamos em um DAO de municipio, e passamos como parâmetro um objeto do tipo estado.
+	 * Será procurado no bean municipio qual campo da classe faz referencia ao estado, e esse campo será utilizado como filtro.
+	 * O parametro do filtro será o objeto passado para esse método.
+	 * @param o Objeto que deve ser utilizado como filtro.
+	 * @param extraFields Campos extras que devem ser carregados
+	 * @return
+	 */
+	public abstract List<BEAN> findBy(Object o, String... extraFields);
+	
+	/**
+	 * Retorna todos os objetos encontrados no banco de dados.
+	 * Pode ser informado quais campos devem ser carregados.
+	 * Esse método é utilizado pelos combo boxes nos JSPs.
+	 * @param extraFields
+	 * @return
+	 */
+	public abstract List<BEAN> findForCombo(String... extraFields);
+
+
 
 	/**
 	 * Executa um find para a tela de listagem de dados, utilizando determinado filtro.
@@ -103,22 +115,22 @@ public interface DAO<BEAN> {
 	 * @param bean
 	 */
 	public abstract void delete(final BEAN bean);
-	
-	public abstract void setPersistenceContext(String persistenceContext);
-	
-	@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
+
+	@Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Qualifier
 	public @interface EntityType {
+
 		Class<?> value();
+
 	}
-	
+
 	/**
 	 * Tells that this annotated DAO must not be used by GenericService autowire
 	 * @author rogelgarcia
 	 *
 	 */
-	@Target({ElementType.TYPE})
+	@Target({ ElementType.TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface NoGenericServiceInjection {
 	}

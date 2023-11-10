@@ -394,7 +394,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				List<?> findAll;
 				if (lastInput.getValue() != null && (lastInput.getValue().getClass().isEnum() || !DAOUtils.isTransient(lastInput.getValue()))) {
 					try {
-						findAll = dao.findBy(lastInput.getValue(), true, extraFields);
+						findAll = dao.findBy(lastInput.getValue(), extraFields);
 					} catch (Exception e) {
 						throw new NextException("Could not execute findBy " + lastInput.getValue() + " for property " + inputTag.getName(), e);
 					}

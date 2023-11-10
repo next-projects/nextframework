@@ -87,7 +87,7 @@ public class ComboCallback implements AjaxCallbackController {
 				String daoName = Util.strings.uncaptalize(simpleName) + "DAO";
 				DAO<?> service = (DAO<?>) WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext()).getBean(daoName);
 				String[] label = Util.strings.isEmpty(comboFilter.getLabel()) ? new String[0] : new String[] { comboFilter.getLabel() };
-				List<?> lista = service.findBy(comboFilter.getParentValue(), true, label);
+				List<?> lista = service.findBy(comboFilter.getParentValue(), label);
 				String listaAttr = convertToJavaScript(lista, comboFilter.getLabel());
 
 				response.getWriter().println(listaAttr);
