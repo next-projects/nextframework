@@ -9,4 +9,8 @@ public class Polyline {
 
 	}
 
+	public void setMap(Map map) {
+
+	}
+
 }
