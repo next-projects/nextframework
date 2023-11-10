@@ -792,7 +792,9 @@ public class QueryBuilder<E> {
 	protected Object organizeUniqueResultWithTranslator(QueryBuilderResultTranslator qbt, Object resultadoOriginal) {
 		if (resultadoOriginal instanceof List) {
 			List<Object> resultadoOriginalList = (List<Object>) resultadoOriginal;
-			if (resultadoOriginalList.size() > 1) {
+			if (resultadoOriginalList.isEmpty()) {
+				return null;
+			} else if (resultadoOriginalList.size() > 1) {
 				throw new IllegalArgumentException("Vários registros foram encontrados!");
 			}
 			return qbt.translate((Object[]) resultadoOriginalList.get(0));
