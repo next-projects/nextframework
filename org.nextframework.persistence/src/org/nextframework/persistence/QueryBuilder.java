@@ -817,7 +817,7 @@ public class QueryBuilder<E> {
 
 		QueryBuilderResultTranslator qbt = null;
 
-		if (useTranslator && resultTranslatorClass != null && select.select.contains(".")) {
+		if (useTranslator && resultTranslatorClass != null && (select.select.contains(",") || select.select.contains("."))) {
 
 			try {
 				qbt = resultTranslatorClass.newInstance();

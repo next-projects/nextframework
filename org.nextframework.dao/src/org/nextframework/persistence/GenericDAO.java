@@ -517,7 +517,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 
 	public BEAN load(BEAN bean, String[] attributesToLoad) {
 
-		if (bean == null || attributesToLoad == null || attributesToLoad.length == 0 || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
+		if (bean == null || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
 			throw new IllegalArgumentException("Para carregar o atributo de algum bean é necessário informar um bean já persistido e os atributos");
 		}
 
@@ -538,11 +538,11 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		}
 
 		QueryBuilder<BEAN> query = queryWithFields(attributesToLoad);
-		if (query.getSelect().getValue().equals(query.getAlias())) {
-			//Se apenas atributos do tipo feche forem informados, é importante forçar um atributo simples para evitar carregar a entidade inteira.
+		if (!query.getSelect().getValue().contains(",")) {
+			//Se apenas 1 atributo foi informado, é importante forçar um atributo simples
 			BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
 			String idPropertyName = beanDescriptor.getIdPropertyName();
-			query.select(query.getAlias() + "." + idPropertyName);
+			query.select(query.getSelect().getValue() + "," + query.getAlias() + "." + idPropertyName);
 		}
 
 		BEAN newBean = query
