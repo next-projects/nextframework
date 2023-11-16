@@ -148,7 +148,7 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(DataGridTag.class, "footerStyleClass", "table-light");
 			regDefaultStyleClasses(DataGridTag.class, "baseReportStyleClass", "w-100");
 
-			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border border-primary border-opacity-50 rounded p-2");
+			regDefaultStyleClasses(GroupTag.class, "fieldsetStyleClass", "border border-primary border-opacity-50 rounded p-2 pt-0");
 			regDefaultStyleClasses(GroupTag.class, "legendStyleClass", "float-none w-auto m-0 p-2 h6 text-primary text-opacity-75");
 
 			regDefaultStyleClasses(InputTag.class, "CHECKBOX-class", "form-check-input");
@@ -158,6 +158,10 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(InputTag.class, "HIDDEN-class", " ");
 			regDefaultStyleClasses(InputTag.class, "RADIO-class", "form-check-input");
 			regDefaultStyleClasses(InputTag.class, "SELECT_ONE-class", "form-select");
+			regDefaultStyleClasses(InputTag.class, "SELECT_ONE_RADIO-class", "d-flex flex-column gap-1");
+			regDefaultStyleClasses(InputTag.class, "SELECT_ONE_RADIO-group", "form-check");
+			regDefaultStyleClasses(InputTag.class, "SELECT_ONE_RADIO-button", "form-check-input");
+			regDefaultStyleClasses(InputTag.class, "SELECT_ONE_RADIO-label", "form-check-label");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-group", "input-group flex-nowrap");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-buttons", "input-group-text d-flex flex-column justify-content-center gap-2");
 			regDefaultStyleClasses(InputTag.class, "SELECT_MANY_BOX-buttonAdd", "btn btn-primary bi bi-arrow-right");

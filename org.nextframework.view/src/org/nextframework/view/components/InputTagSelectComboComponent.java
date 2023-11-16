@@ -21,6 +21,7 @@ import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
+import org.nextframework.persistence.HibernateUtils;
 import org.nextframework.util.Util;
 import org.nextframework.view.BeanTag;
 import org.nextframework.view.ComboReloadGroupTag;
@@ -351,7 +352,11 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 					if (inputTag.getSelectLabelProperty() != null && inputTag.getSelectLabelProperty().trim().length() > 0) {
 						extraFields = new String[] { inputTag.getSelectLabelProperty() };
 					}
-					dao.loadDescriptionProperty(selectedValue, extraFields);
+					if (HibernateUtils.isLazy(selectedValue)) {
+						selectedValue = dao.load(selectedValue, extraFields);
+					}else {
+						dao.loadDescriptionProperty(selectedValue, extraFields);
+					}
 				}
 			}
 			items.add(selectedValue);
