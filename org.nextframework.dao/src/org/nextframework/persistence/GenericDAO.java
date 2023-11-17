@@ -358,7 +358,16 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 			}
 
 			if (Util.strings.isNotEmpty(select)) {
+
+				//Se apenas 1 atributo foi informado, é importante forçar um atributo simples para que o select tenha mais de 1 coluna.
+				if (!select.contains(",")) {
+					BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
+					String idPropertyName = beanDescriptor.getIdPropertyName();
+					select += "," + fromAlias + "." + idPropertyName;
+				}
+
 				query.select(select);
+
 			}
 
 		}
@@ -537,15 +546,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 			throw new IllegalArgumentException("Para carregar o atributo de algum bean é necessário informar um bean já persistido e os atributos!");
 		}
 
-		QueryBuilder<BEAN> query = queryWithFields(attributesToLoad);
-		if (!query.getSelect().getValue().contains(",")) {
-			//Se apenas 1 atributo foi informado, é importante forçar um atributo simples
-			BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
-			String idPropertyName = beanDescriptor.getIdPropertyName();
-			query.select(query.getSelect().getValue() + "," + query.getAlias() + "." + idPropertyName);
-		}
-
-		BEAN newBean = query
+		BEAN newBean = queryWithFields(attributesToLoad)
 				.entity(bean)
 				.unique();
 
