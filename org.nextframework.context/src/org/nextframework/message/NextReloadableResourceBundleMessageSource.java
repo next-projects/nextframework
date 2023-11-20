@@ -16,10 +16,11 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 public class NextReloadableResourceBundleMessageSource extends ReloadableResourceBundleMessageSource implements ResourceLoaderAware {
 
-	private long cacheMillis2 = -1;
-
-	//https://www.tabnine.com/web/assistant/code/rs/5c66e35d1095a50001e73891#L21
+	private static final String PROPERTIES_ASTERIX = "*";
 	private static final String PROPERTIES_SUFFIX = ".properties";
+	private static final String PROPERTIES_LOCALEDIV = "_";
+
+	private long cacheMillis2 = -1;
 	private final ConcurrentMap<String, PropertiesHolder> cachedClasspathProperties = new ConcurrentHashMap<String, PropertiesHolder>();
 	private PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
@@ -53,9 +54,13 @@ public class NextReloadableResourceBundleMessageSource extends ReloadableResourc
 	private PropertiesHolder refreshClassPathProperties(String filename, PropertiesHolder propHolder) {
 		Properties properties = new Properties();
 		long lastModified = -1;
+		boolean avoidSpecificLocale = filename.endsWith(PROPERTIES_ASTERIX);
 		try {
 			Resource[] resources = resolver.getResources(filename + PROPERTIES_SUFFIX);
 			for (Resource resource : resources) {
+				if (avoidSpecificLocale && resource.getFilename().contains(PROPERTIES_LOCALEDIV)) {
+					continue;
+				}
 				String sourcePath = resource.getURI().toString().replace(PROPERTIES_SUFFIX, "");
 				PropertiesHolder holder = super.refreshProperties(sourcePath, propHolder);
 				properties.putAll(holder.getProperties());
