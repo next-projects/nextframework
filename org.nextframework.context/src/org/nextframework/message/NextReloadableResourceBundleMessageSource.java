@@ -18,7 +18,7 @@ public class NextReloadableResourceBundleMessageSource extends ReloadableResourc
 
 	private static final String PROPERTIES_ASTERIX = "*";
 	private static final String PROPERTIES_SUFFIX = ".properties";
-	private static final String PROPERTIES_LOCALEDIV = "_";
+	private static final String SPECIFIC_LOCALE_REGEX = ".*(_\\w{2})+(_\\w*)?\\.properties";
 
 	private long cacheMillis2 = -1;
 	private final ConcurrentMap<String, PropertiesHolder> cachedClasspathProperties = new ConcurrentHashMap<String, PropertiesHolder>();
@@ -58,7 +58,7 @@ public class NextReloadableResourceBundleMessageSource extends ReloadableResourc
 		try {
 			Resource[] resources = resolver.getResources(filename + PROPERTIES_SUFFIX);
 			for (Resource resource : resources) {
-				if (avoidSpecificLocale && resource.getFilename().contains(PROPERTIES_LOCALEDIV)) {
+				if (avoidSpecificLocale && resource.getFilename().matches(SPECIFIC_LOCALE_REGEX)) {
 					continue;
 				}
 				String sourcePath = resource.getURI().toString().replace(PROPERTIES_SUFFIX, "");

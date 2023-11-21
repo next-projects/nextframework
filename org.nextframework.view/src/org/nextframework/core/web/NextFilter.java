@@ -25,6 +25,7 @@ package org.nextframework.core.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -55,6 +56,8 @@ public class NextFilter implements Filter {
 	private static final String APPLICATION_ATTRIB = "application";
 	private static final String APP_ATTRIB = "app";
 	private static final String BOOTSTRAP_ATTRIB = "useBootstrap";
+	private static final String LOCALE_ATTRIB = "locale";
+	private static final String SYSTEM_LOCALE_ATTRIB = "systemLocale";
 
 	private static final String URL_NEXT = "/next";
 	private static final String URL_LOGOUT = "/logout";
@@ -107,6 +110,10 @@ public class NextFilter implements Filter {
 
 			//Uso de bootstrap
 			request.setAttribute(BOOTSTRAP_ATTRIB, ServiceFactory.getService(ViewConfig.class).isUseBootstrap());
+
+			//Locale do usuário e do sistema
+			request.setAttribute(LOCALE_ATTRIB, NextWeb.getRequestContext().getLocale());
+			request.setAttribute(SYSTEM_LOCALE_ATTRIB, Locale.getDefault());
 
 			//colocar um flag na requisição indicando que esta é uma página selectone ou cadastrar
 			String parameter = request.getParameter(INSELECTONE);
