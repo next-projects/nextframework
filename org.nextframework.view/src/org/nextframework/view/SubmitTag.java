@@ -206,12 +206,11 @@ public class SubmitTag extends BaseTag {
 			return url;
 		}
 
-		//updated in 2012-09-05 url.length == 0
-		String fullUrl = url == null || url.length() == 0 ? WebUtils.getFirstFullUrl() : (url.startsWith("/") ? WebUtils.getFullUrl(getRequest(), url) : url);
-		String separator = fullUrl.contains("?") ? "&" : "?";
-		// adicionar parameters na url
-		if (parameters != null) {
-			fullUrl += separator + parameters.replace(";", "&");
+		String fullUrl = Util.strings.isEmpty(url) ? WebUtils.getFirstFullUrl() : (url.startsWith("/") ? WebUtils.getFullUrl(getRequest(), url) : url);
+		if (Util.strings.isNotEmpty(parameters)) {
+			String parameters = this.parameters.replace(";", "&");
+			parameters = parameters.startsWith("?") || parameters.startsWith("&") ? parameters.substring(1) : parameters;
+			fullUrl += (fullUrl.contains("?") ? "&" : "?") + parameters;
 		}
 
 		//Verifica URL Sufix
