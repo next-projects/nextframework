@@ -9,11 +9,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -54,20 +54,24 @@ public class ReportDesignControllerUtil {
 	Class<?>[] getAvaiableEntities() {
 		Class<?>[] classesWithAnnotation = ClassManagerFactory.getClassManager().getClassesWithAnnotation(ReportEntity.class);
 		Arrays.sort(classesWithAnnotation, new Comparator<Class>() {
+
 			public int compare(Class o1, Class o2) {
 				return o1.getSimpleName().compareTo(o2.getSimpleName());
 			}
+
 		});
 		return classesWithAnnotation;
 	}
 
 	public Set<String> getAvailablePropertiesForClass(Class<?> selectedType, String parentProperty, int deepLevel) {
+
 		if (deepLevel < 0) {
 			return new HashSet<String>();
 		}
-		Set<Method> propertyGetters = Util.beans.getPropertyGetters(selectedType);
-		BeanDescriptor bd = BeanDescriptorFactory.forClass(selectedType);
-		Set<String> avaiableProperties = createPropertyListTreeSet(bd);
+
+		Set<String> avaiableProperties = new LinkedHashSet<String>();
+
+		List<Method> propertyGetters = getOrderedProperties(selectedType);
 		for (Method method : propertyGetters) {
 			String property = Util.beans.getPropertyFromGetter(method.getName());
 			if (parentProperty != null && parentProperty.equals(property)) {
@@ -82,7 +86,7 @@ public class ReportDesignControllerUtil {
 					Embedded embedded = method.getAnnotation(Embedded.class);
 					ExtendBean extendBean = method.getAnnotation(ExtendBean.class);
 					ReportEntity refereceReportEntity = method.getReturnType().getAnnotation(ReportEntity.class);
-					if(manyToOne != null || oneToOne != null || extendBean != null || embedded != null || refereceReportEntity != null){
+					if (manyToOne != null || oneToOne != null || extendBean != null || embedded != null || refereceReportEntity != null) {
 						Class<?> subPropertyClass = method.getReturnType();
 						Set<String> subProperties = getAvailablePropertiesForClass(subPropertyClass, property, deepLevel - 1);
 						for (String subProperty : subProperties) {
@@ -94,49 +98,38 @@ public class ReportDesignControllerUtil {
 				}
 			}
 		}
+
 		return avaiableProperties;
 	}
 
-	private TreeSet<String> createPropertyListTreeSet(final BeanDescriptor bd) {
-		return new TreeSet<String>(new Comparator<String>() {
-			
+	private List<Method> getOrderedProperties(final Class<?> selectedType) {
+		final BeanDescriptor bd = BeanDescriptorFactory.forClass(selectedType);
+		Set<Method> propertyGettersSet = Util.beans.getPropertyGetters(selectedType);
+		List<Method> propertyGetters = new ArrayList<Method>(propertyGettersSet);
+		propertyGetters.sort(new Comparator<Method>() {
+
 			@Override
-			public int compare(String o1, String o2) {
+			public int compare(Method m1, Method m2) {
 				//Para subir o ID
-				if (o1.toLowerCase().equals("id"))
+				if (m1.getAnnotation(Id.class) != null) {
 					return -1;
-				if (o2.toLowerCase().equals("id"))
+				}
+				if (m2.getAnnotation(Id.class) != null) {
 					return 1;
-				if (o1.toLowerCase().startsWith("id"))
-					return -1;
-				if (o2.toLowerCase().startsWith("id"))
-					return 1;
+				}
 				//Restante ordena pela descrição
-				String o1Desc = toFullDescription(bd, o1);
-				String o2Desc = toFullDescription(bd, o2);
+				String o1Desc = toFullDescription(m1);
+				String o2Desc = toFullDescription(m2);
 				return o1Desc.compareTo(o2Desc);
 			}
 
-			private String toFullDescription(final BeanDescriptor bd, String oX) {
-				String oDesc = "";
-				if (oX.indexOf(".") > -1) {
-					String[] oSplit = oX.split("\\.");
-					String oAcu = "";
-					for (String os : oSplit) {
-						oAcu += (oAcu.length() > 0 ? "." : "") + os;
-						oDesc += (oDesc.length() > 0 ? "-" : "") + bd.getPropertyDescriptor(oAcu).getDisplayName().toUpperCase();
-					}
-				} else {
-					oDesc = bd.getPropertyDescriptor(oX).getDisplayName().toUpperCase();
-				}
-				//Correção para item principal de 'subárvore' ficar próximo aos itens 'galhos'
-				if (bd.getPropertyDescriptor(oX).getAnnotation(ManyToOne.class) != null || bd.getPropertyDescriptor(oX).getAnnotation(OneToOne.class) != null) {
-					oDesc += "-";
-				}
-				return oDesc;
+			private String toFullDescription(Method m) {
+				String property = Util.beans.getPropertyFromGetter(m.getName());
+				return Util.beans.getDisplayName(bd.getPropertyDescriptor(property), null, null);
 			}
-			
+
 		});
+		return propertyGetters;
 	}
 
 	HashMap<String, Object> getPropertiesMapForCalculatedField(CalculatedFieldElement calculatedFieldElement) {
@@ -149,7 +142,6 @@ public class ReportDesignControllerUtil {
 		map.put("calculated", true);
 		map.put("formatAs", calculatedFieldElement.getFormatAs());
 		map.put("formatTimeDetail", calculatedFieldElement.getFormatTimeDetail());
-
 		setJsonMetadata(map);
 		return map;
 	}
@@ -437,4 +429,5 @@ public class ReportDesignControllerUtil {
 		}
 		return properties;
 	}
+
 }
