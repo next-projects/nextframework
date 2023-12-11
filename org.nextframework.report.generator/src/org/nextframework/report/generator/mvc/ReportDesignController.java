@@ -205,6 +205,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	@SuppressWarnings("all")
 	@OnErrors("editDesignForId")
 	public ModelAndView saveReport(WebRequestContext request, ReportDesignModel model) throws Exception {
+
 		CUSTOM_BEAN customBean = (CUSTOM_BEAN) customBeanClass.newInstance();
 
 		//Faz o bind no bean customizado

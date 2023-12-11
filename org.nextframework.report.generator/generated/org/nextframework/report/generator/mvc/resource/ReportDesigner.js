@@ -9,7 +9,7 @@
     this.definition = new ReportDefinition(this, next.dom.getInnerElementById(this.mainDiv, "designTable"));
     this.selectables.push(this.definition);
     this.reportTitleInput = next.dom.getInnerElementById(this.mainDiv, "reportTitle");
-    this.reportTitleInput.onkeyup = function(p1) {
+    this.reportTitleInput.onchange = function(p1) {
         bigThis.updateTitle();
         return true;
     };

@@ -34,6 +34,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.nextframework.core.config.ViewConfig;
+import org.nextframework.service.ServiceFactory;
+
 /**
  * @author fabricio
  */
@@ -44,30 +47,33 @@ public class IncludeTag extends TagSupport {
 	protected String url;
 
 	public int doEndTag() throws JspException {
+
 		JspWriter saida = pageContext.getOut();
 		HttpURLConnection urlConnection = null;
+
 		try {
+
 			URL requisicao = new URL(((HttpServletRequest) pageContext.getRequest()).getRequestURL().toString());
 			URL link = new URL(requisicao, url);
 
 			urlConnection = (HttpURLConnection) link.openConnection();
-			BufferedReader entrada = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "ISO-8859-1"));
+			ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
+			BufferedReader entrada = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), viewConfig.getJSPDefaultCharset()));
 
 			String linha = entrada.readLine();
 			while (linha != null) {
 				saida.write(linha + "\n");
 				linha = entrada.readLine();
 			}
+
 			entrada.close();
-		}
-		catch (Exception e) {
+
+		} catch (Exception e) {
 			try {
 				saida.write("Erro ao incluir o conteúdo da URL \"" + url + "\"");
+			} catch (IOException e1) {
 			}
-			catch (IOException e1) {
-			}
-		}
-		finally {
+		} finally {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
 			}
