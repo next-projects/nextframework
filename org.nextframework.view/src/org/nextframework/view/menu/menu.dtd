@@ -4,6 +4,7 @@
 
 <!ELEMENT menu (menu*)>
 
+<!ATTLIST menu id CDATA "">
 <!ATTLIST menu icon CDATA "">
 <!ATTLIST menu title CDATA "">
 <!ATTLIST menu url CDATA "">

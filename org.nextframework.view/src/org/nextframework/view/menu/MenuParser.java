@@ -31,8 +31,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.nextframework.core.standard.Next;
 import org.nextframework.util.StringUtils;
 import org.nextframework.util.Util;
+import org.springframework.context.NoSuchMessageException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -60,6 +62,7 @@ public class MenuParser {
 	}
 
 	public Menu parse(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
+
 		if (inputStream == null) {
 			throw new NullPointerException("O arquivo de menu não foi encontrado");
 		}
@@ -91,15 +94,13 @@ public class MenuParser {
 	private Menu createMenu(Node node) {
 
 		NamedNodeMap map = node.getAttributes();
+		String id = map.getNamedItem("id").getNodeValue();
 		String icon = map.getNamedItem("icon").getNodeValue();
 		String title = map.getNamedItem("title").getNodeValue();
 		String description = map.getNamedItem("description").getNodeValue();
 		String url = map.getNamedItem("url").getNodeValue();
 		String target = map.getNamedItem("target").getNodeValue();
 
-		if (icon.contains(StringUtils.REPLACE_OPEN)) {
-			icon = Util.strings.replaceString(icon, locale);
-		}
 		if (title.contains(StringUtils.REPLACE_OPEN)) {
 			title = Util.strings.replaceString(title, locale);
 		}
@@ -107,7 +108,17 @@ public class MenuParser {
 			description = Util.strings.replaceString(description, locale);
 		}
 
+		if (Util.strings.isNotEmpty(id)) {
+			if (title == null || title.length() == 0) {
+				title = getDefaultViewLabel(id, "title");
+			}
+			if (description == null || description.length() == 0) {
+				description = getDefaultViewLabel(id, "description");
+			}
+		}
+
 		Menu menu = new Menu();
+		menu.setId(id);
 		menu.setIcon(icon);
 		menu.setTitle(title);
 		menu.setUrl(url);
@@ -115,6 +126,21 @@ public class MenuParser {
 		menu.setDescription(description);
 
 		return menu;
+	}
+
+	protected String getDefaultViewLabel(String id, String field) {
+
+		String[] codes = new String[2];
+		codes[0] = id + "." + field;
+		codes[1] = id;
+
+		try {
+			return Next.getMessageSource().getMessage(Util.objects.newMessage(codes, null, id), locale);
+		} catch (NoSuchMessageException e) {
+			//Se não foi encontrado, não dispara o erro, pois, nas tags, os atributos são opcionais
+		}
+
+		return null;
 	}
 
 	class MenuEntityResolver implements EntityResolver {

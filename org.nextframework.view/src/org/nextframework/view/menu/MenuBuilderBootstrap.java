@@ -75,7 +75,7 @@ public class MenuBuilderBootstrap implements MenuBuilder {
 
 	private void build(StringBuilder code, Menu menu, boolean isDropdown) {
 
-		if (menu.getTitle() != null && menu.getTitle().startsWith("---")) {
+		if (menu.getTitle() != null && menu.getTitle().startsWith(Menu.SEPARATOR)) {
 			code.append("<li><hr class=\"dropdown-divider\"></li>");
 			return;
 		}

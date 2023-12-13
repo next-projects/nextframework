@@ -67,7 +67,7 @@ public class MenuResolver {
 		Menu ultimo = null;
 		for (Iterator<Menu> it = menu.getSubmenus().iterator(); it.hasNext();) {
 			Menu atual = it.next();
-			boolean separacao = atual.getTitle().startsWith("---");
+			boolean separacao = atual.getTitle().startsWith(Menu.SEPARATOR);
 			if (separacao) {
 				if (ultimo != null) {
 					it.remove();

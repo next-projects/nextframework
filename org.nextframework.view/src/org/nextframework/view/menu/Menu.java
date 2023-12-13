@@ -33,9 +33,12 @@ public class Menu implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final String SEPARATOR = "---";
+
 	private Menu parent;
 	private List<Menu> submenus = new ArrayList<Menu>();
 
+	private String id;
 	private String icon;
 	private String title;
 	private String url;
@@ -57,6 +60,10 @@ public class Menu implements Cloneable, Serializable {
 
 	public List<Menu> getSubmenus() {
 		return submenus;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public String getIcon() {
@@ -87,6 +94,10 @@ public class Menu implements Cloneable, Serializable {
 		this.submenus = submenus;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
@@ -110,6 +121,7 @@ public class Menu implements Cloneable, Serializable {
 	@Override
 	public Object clone() {
 		Menu clone = new Menu();
+		clone.setId(this.getId());
 		clone.setIcon(this.getIcon());
 		clone.setTitle(this.getTitle());
 		clone.setUrl(this.getUrl());

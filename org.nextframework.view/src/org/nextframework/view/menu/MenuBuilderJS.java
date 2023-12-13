@@ -72,7 +72,7 @@ public class MenuBuilderJS implements MenuBuilder {
 
 	private void build(StringBuilder code, Menu menu, boolean hasNext, boolean iconePadrao) {
 
-		if (menu.getTitle() != null && menu.getTitle().startsWith("---")) {
+		if (menu.getTitle() != null && menu.getTitle().startsWith(Menu.SEPARATOR)) {
 			code.append("_cmSplit");
 			if (hasNext) {
 				code.append(',');
