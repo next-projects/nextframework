@@ -308,7 +308,9 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 
 	@SuppressWarnings("deprecation")
 	protected JRDesignExpression createExpression(String expression, Class<?> class1, boolean callToString) {
+
 		if (expression.startsWith("param.")) {
+
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (expression.contains(LayoutReportBuilder.FILTER_PARAMETER)) {
 				expression2.setText(getConverterExpression("$P{" + expression.substring(6) + "}"));
@@ -323,14 +325,18 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				expression2.setValueClassName("java.lang.Object");
 			}
 			return expression2;
+
 		} else if (isLiteral(expression)) {
+
 			if (expression.startsWith("\'")) {
 				expression = "\"" + expression.substring(1, expression.length() - 1) + "\"";
 			}
 			JRDesignExpression expression2 = new JRDesignExpression();
 			expression2.setText(expression);
 			return expression2;
+
 		} else if (expression.startsWith("$")) {
+
 			JRDesignExpression expression2 = new JRDesignExpression();
 			expression2.setText(expression);
 			if (class1 != null) {
@@ -341,7 +347,9 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				expression2.setValueClassName("java.lang.Object");
 			}
 			return expression2;
+
 		} else {
+
 			JRDesignExpression expression2 = new JRDesignExpression();
 			if (callToString) {
 				expression2.setText(getConverterExpression("$F{" + expression + "}"));
@@ -356,7 +364,9 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				expression2.setValueClassName("java.lang.Object");
 			}
 			return expression2;
+
 		}
+
 	}
 
 	private String getConverterExpression(String expression) {

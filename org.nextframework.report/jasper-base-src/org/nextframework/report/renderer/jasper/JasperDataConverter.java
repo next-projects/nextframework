@@ -142,7 +142,8 @@ public class JasperDataConverter {
 		if (reportItem instanceof ReportTextField) {
 			ReportTextField reportTextField = (ReportTextField) reportItem;
 			if (reportTextField.isFieldReference()) {
-				PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(reportTextField.getExpression());
+				String expression = reportTextField.getExpression();
+				PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(expression);
 				Object value = propertyDescriptor.getValue();
 				if (StringUtils.hasLength(reportTextField.getPattern())) {
 					if (propertyDescriptor.getType().equals(boolean.class) || propertyDescriptor.getType().equals(Boolean.class)) {
@@ -165,50 +166,34 @@ public class JasperDataConverter {
 						value = String.format("%s", value);
 					}
 				}
-				mapa.put(reportTextField.getExpression(), value);
+				mapa.put(expression, value);
 			}
-		}
-		if (reportItem instanceof Subreport) {
+		} else if (reportItem instanceof Subreport) {
 			String expression = ((Subreport) reportItem).getExpression();
 			if (expression != null) {
 				//TODO CHECK TYPE.. MUST BE LIST
 				mapa.put(expression, bd.getPropertyDescriptor(expression).getValue());
 			}
-		}
-		if (reportItem instanceof ReportImage) {
+		} else if (reportItem instanceof ReportImage) {
 			ReportImage reportImage = (ReportImage) reportItem;
 			if (!reportImage.isRendered() && reportImage.isFieldReference()) {
 				Object value = bd.getPropertyDescriptor(reportImage.getReference()).getValue();
 				//System.out.println(isReportImageOK((InputStream) value));
 				mapa.put(reportImage.getReference(), value);
 			}
-		}
-		if (reportItem instanceof ReportChart) {
+		} else if (reportItem instanceof ReportChart) {
 			ReportChart reportChart = (ReportChart) reportItem;
 			if (!reportChart.isRendered() && reportChart.isFieldReference()) {
 				Object value = bd.getPropertyDescriptor(reportChart.getReference()).getValue();
 				//System.out.println(isReportImageOK((InputStream) value));
 				mapa.put(reportChart.getReference(), value);
 			}
-		}
-		if (reportItem instanceof ReportParent) {
+		} else if (reportItem instanceof ReportParent) {
 			List<ReportItem> itens = ((ReportParent) reportItem).getChildren();
 			for (ReportItem reportItem2 : itens) {
 				addItemToMap(mapa, reportItem2, bd);
 			}
 		}
-//		if(reportItem instanceof ReportBlock){
-//			List<ReportItem> itens = ((ReportBlock) reportItem).getItems();
-//			for (ReportItem reportItem2 : itens) {
-//				addItemToMap(mapa, reportItem2, bd);
-//			}
-//		}
-//		if(reportItem instanceof ReportComposite){
-//			List<ReportItem> itens = ((ReportComposite) reportItem).getItems();
-//			for (ReportItem reportItem2 : itens) {
-//				addItemToMap(mapa, reportItem2, bd);
-//			}
-//		}
 	}
 
 }

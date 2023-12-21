@@ -363,7 +363,10 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	}
 
 	protected FieldConfig getConfigForRowField(String fieldName) {
-		String fieldPreffix = sumarizedData ? "row." : "";
+		if (fieldName.startsWith("row.")) {
+			fieldName = fieldName.substring("row.".length());
+		}
+		String fieldPreffix = sumarizedData ? "row." : null;
 		return getConfigForBeanDescriptor(fieldName, fieldPreffix, getRowClassBeanDescriptorCache());
 	}
 
