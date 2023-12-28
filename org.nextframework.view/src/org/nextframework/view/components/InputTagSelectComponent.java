@@ -20,9 +20,10 @@ public class InputTagSelectComponent extends InputTagComponent {
 			throw new NextException("Não é possível utilizar onLoadItens se useAjax não for true");
 		}
 	}
-	
+
 	@Override
 	public void prepare() {
+		
 		super.prepare();
 		prepareBlankOption();
 
@@ -33,6 +34,7 @@ public class InputTagSelectComponent extends InputTagComponent {
 		}
 
 		prepareItems(lastInput);
+		
 	}
 
 	protected void prepareItems(InputTag lastInput) {
@@ -54,22 +56,23 @@ public class InputTagSelectComponent extends InputTagComponent {
 		HashSet<String> optionalParametersSet = new HashSet<String>(Arrays.asList(split));
 		return optionalParametersSet;
 	}
-	
+
 	protected boolean isSelectAll() {
 		return inputTag.getItens() instanceof String && "all".equalsIgnoreCase((String) inputTag.getItens());
 	}
 
 	private boolean cacheFunctionCallExecuted = false;
 	private FunctionCall cacheFunctionCall = null;
+
 	protected FunctionCall getFunctionCall() {
-		if(!cacheFunctionCallExecuted){
+		if (!cacheFunctionCallExecuted) {
 			String itensFunction = getItensFunction();
 			if (itensFunction != null) {
 				BeanTag beanTag = inputTag.findParent(BeanTag.class);
 				if (beanTag == null && inputTag.getUseAjax()) {
 					throw new RuntimeException("A tag input deve estar aninhada a uma tag bean para poder utilizar useAjax=true");
 				} else {
-					if (beanTag != null && inputTag.getUseAjax() && !"all".equalsIgnoreCase(itensFunction)) { 
+					if (beanTag != null && inputTag.getUseAjax() && !"all".equalsIgnoreCase(itensFunction)) {
 						cacheFunctionCall = new FunctionCall(itensFunction, beanTag.getBeanDescriptor());
 					}
 				}
@@ -81,11 +84,12 @@ public class InputTagSelectComponent extends InputTagComponent {
 
 	private boolean cacheItensFunctionExecuted = false;
 	private String cacheItensFunction = null;
+
 	protected String getItensFunction() {
-		if(!cacheItensFunctionExecuted){
+		if (!cacheItensFunctionExecuted) {
 			Object inputTagItems = inputTag.getItens();
 			cacheItensFunction = null;
-			if(inputTagItems instanceof String){
+			if (inputTagItems instanceof String) {
 				String itensFunction = (String) inputTagItems;
 				cacheItensFunction = itensFunction.trim();
 			}
@@ -93,55 +97,54 @@ public class InputTagSelectComponent extends InputTagComponent {
 		}
 		return cacheItensFunction;
 	}
-	
-	
-	
-	protected String createOption(String value, String label, boolean selected) {
-		return createOption(value, label, (selected ? "selected=\"selected\"" : ""));
+
+	protected String createOption(Integer index, String label, String value, boolean selected) {
+		return createOption(index, label, value, (selected ? "selected=\"selected\"" : ""));
 	}
 
-	protected String createOption(String value, String label, String selected) {
+	protected String createOption(Integer index, String label, String value, String selected) {
 		return "<option value='" + (value != null ? value : "<null>") + "' " + selected + ">" + label + "</option>";
 	}
 
 	protected Iterable<?> getObjectAsIterable(Object value) {
-		if(value instanceof Iterable<?>){
+		if (value instanceof Iterable<?>) {
 			value = (Iterable<?>) value;
-		} else if(value != null && value.getClass().isArray()){
-			value = Arrays.asList((Object[])value);
-		} else if(value != null){
+		} else if (value != null && value.getClass().isArray()) {
+			value = Arrays.asList((Object[]) value);
+		} else if (value != null) {
 			value = Arrays.asList(value);
 		}
 		return (Iterable<?>) value;
 	}
-	
-	private Class<?> cacheRawClassType = null; 
+
+	private Class<?> cacheRawClassType = null;
+
 	public Class<?> getRawClassType() {
-		if(cacheRawClassType == null){
-			cacheRawClassType = getRawClassType(inputTag.getType(), inputTag.getItens(), inputTag.getAutowiredType()); 
+		if (cacheRawClassType == null) {
+			cacheRawClassType = getRawClassType(inputTag.getType(), inputTag.getItens(), inputTag.getAutowiredType());
 		}
-		return cacheRawClassType; 
+		return cacheRawClassType;
 	}
 
 	protected Class<?> getRawClassType(Object type, Object items, Object autowiredtype) {
-		if(type instanceof String){
+		if (type instanceof String) {
 			type = autowiredtype;
 		}
-		if(type == null){ //type is null or String and autowired is null
+		if (type == null) { //type is null or String and autowired is null
 			//read attribute
 			type = inputTag.getDAAtribute("useType", true);
-			if(type != null){
-				if(type instanceof String){
+			if (type != null) {
+				if (type instanceof String) {
 					try {
 						type = Class.forName((String) type);
 					} catch (ClassNotFoundException e) {
-						throw new NextException("Cannot convert "+type+" to class", e);
+						throw new NextException("Cannot convert " + type + " to class", e);
 					}
 				}
 			}
 		}
-		if(type == null){
-			throw new NextException("Cannot determine type for input"+(inputTag.getName() != null?" with name '"+inputTag.getName()+"'":"")+". Set useType attribute with a value of type java.lang.Class");
+		if (type == null) {
+			throw new NextException("Cannot determine type for input" + (inputTag.getName() != null ? " with name '" + inputTag.getName() + "'" : "") + ". Set useType attribute with a value of type java.lang.Class");
 		}
 		Class<?> class1 = getRawType(type, autowiredtype);
 		if (class1 == null) {
@@ -160,16 +163,16 @@ public class InputTagSelectComponent extends InputTagComponent {
 
 	@SuppressWarnings("unchecked")
 	private Class<? extends Object> getRawType(Object type, Object autowiredtype) {
-		if(type instanceof Class){
+		if (type instanceof Class) {
 			return (Class<? extends Object>) type;
 		} else {
-			if(type instanceof ParameterizedType){
+			if (type instanceof ParameterizedType) {
 				ParameterizedType pt = (ParameterizedType) type;
 				type = pt.getActualTypeArguments()[0]; //first item of the collection
-				if(type instanceof Class){
+				if (type instanceof Class) {
 					return (Class<? extends Object>) type;
 				} else {
-					return (Class<? extends Object>) ((ParameterizedType)type).getRawType();
+					return (Class<? extends Object>) ((ParameterizedType) type).getRawType();
 				}
 			} else {
 				return (Class<? extends Object>) autowiredtype;
@@ -178,31 +181,29 @@ public class InputTagSelectComponent extends InputTagComponent {
 	}
 
 	protected void prepareBlankOption() {
-		if(isIncludeBlank()){
-			String value = "<null>";
-			String label = inputTag.getBlankLabel();
-			inputTag.setSelectoneblankoption(createOption(value, label, inputTag.getValue() == null));
+		if (isIncludeBlank()) {
+			inputTag.setSelectoneblankoption(createOption(0, inputTag.getBlankLabel(), "<null>", inputTag.getValue() == null));
 		}
 	}
-
 
 	public boolean isIncludeBlank() {
 		return Util.booleans.isTrue(inputTag.getIncludeBlank());
 	}
-	
+
 	public static String getDynamicProperty(String form, String property, String currentIndexVar) {
 		String code;
-		if(property.contains("[") && currentIndexVar != null){
-			String open = property.substring(0, property.indexOf('[')+1);
+		if (property.contains("[") && currentIndexVar != null) {
+			String open = property.substring(0, property.indexOf('[') + 1);
 			String close = property.substring(property.indexOf(']'));
-			code = form+"['"+open+"'+ "+currentIndexVar+" +'"+close+"']";
+			code = form + "['" + open + "'+ " + currentIndexVar + " +'" + close + "']";
 		} else {
-			code = form+"['"+property+"']";	
+			code = form + "['" + property + "']";
 		}
 		return code;
 	}
 
 	public void afterPrint(InputTag lastInput) {
-		
+
 	}
+
 }

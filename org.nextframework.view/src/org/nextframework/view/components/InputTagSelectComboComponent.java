@@ -193,9 +193,9 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			String[] split = inputTag.getTrueFalseNullLabels().split(",");
 			Map<Boolean, String> mapa = new LinkedHashMap<Boolean, String>();
 			if (split.length == 3) {
-				inputTag.setSelectoneblankoption(createOption("<null>", split[2], inputTag.getValue() == null));
+				inputTag.setSelectoneblankoption(createOption(0, split[2], "<null>", inputTag.getValue() == null));
 			} else if (isIncludeBlank()) {
-				inputTag.setSelectoneblankoption(createOption("<null>", inputTag.getBlankLabel(), inputTag.getValue() == null));
+				inputTag.setSelectoneblankoption(createOption(0, inputTag.getBlankLabel(), "<null>", inputTag.getValue() == null));
 			}
 			mapa.put(Boolean.TRUE, split[0]);
 			mapa.put(Boolean.FALSE, split[1]);
@@ -248,6 +248,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			sugest = sugest && keySet.size() == 1;
 			for (Object key : keySet) {
 				Object mapValue = map.get(key);
+				int index = isIncludeBlank() ? 1 : 0;
 				if (mapValue instanceof Collection || mapValue instanceof Map || mapValue.getClass().isArray()) {
 					if (selectedType != InputTagType.SELECT_ONE_RADIO)
 						valores.add("<optgroup label=\"" + key + "\">");
@@ -260,21 +261,21 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 					String opValue = getSelectVaue(key);
 					opValue = TagUtils.escapeSingleQuotes(opValue);
 					String selected = getSelectedString(key);
-					valores.add(createOption(opValue, opDesc, selected)); // "<option
-					// value='"+opValue+"'"+selected+">"+opDesc+"</option>")
+					valores.add(createOption(index++, opDesc, opValue, selected));
 				}
 				first = false;
 			}
 		} else if (itens instanceof Collection) {
 			Collection collection = (Collection) itens;
 			sugest = collection.size() == 1 && sugest;
+			int index = isIncludeBlank() ? 1 : 0;
 			for (Object object : (Iterable) itens) {
 				setSelectedValueIfNeeded(input, value, sugest, first, object);
 				String opDesc = getSelectLabel(object);
 				String opValue = getSelectVaue(object);
 				opValue = TagUtils.escapeSingleQuotes(opValue);
 				String selected = getSelectedString(object);
-				valores.add(createOption(opValue, opDesc, selected));
+				valores.add(createOption(index++, opDesc, opValue, selected));
 				first = false;
 			}
 		}

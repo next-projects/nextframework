@@ -7,9 +7,10 @@ import org.nextframework.view.InputTag;
 
 public class InputTagSelectOneRadioComponent extends InputTagSelectComboComponent {
 
-	protected String createOption(String value, String label, String selected) {
+	@Override
+	protected String createOption(Integer index, String label, String value, String selected) {
 
-		String id = inputTag.getId();
+		String id = inputTag.getId() + "_" + index;
 
 		String itemClass = (String) inputTag.getDAAtribute("itemClass", true);
 		String itemStyle = (String) inputTag.getDAAtribute("itemStyle", true);

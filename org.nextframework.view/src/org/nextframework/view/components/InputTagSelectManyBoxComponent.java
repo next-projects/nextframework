@@ -66,8 +66,8 @@ public class InputTagSelectManyBoxComponent extends InputTagSelectComboComponent
 	}
 
 	@Override
-	protected String createOption(String value, String label, String selected) {
-		return super.createOption(value, label, "");
+	protected String createOption(Integer index, String label, String value, String selected) {
+		return super.createOption(index, label, value, "");
 	}
 
 }
