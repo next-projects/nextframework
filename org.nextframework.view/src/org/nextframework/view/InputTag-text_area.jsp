@@ -1,1 +1,2 @@
-<textarea name="${tag.name}" cols="${tag.cols}" id="${tag.id}" rows="${tag.rows}" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}>${tag.valueToString}</textarea>
+<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<textarea name="${tag.name}" cols="${tag.cols}" id="${tag.id}" rows="${tag.rows}" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} ${tag.dynamicAttributesToString}>${tag.valueToString}</textarea>

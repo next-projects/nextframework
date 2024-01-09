@@ -1,1 +1,2 @@
-<input type="text" id="${tag.id}" name="${tag.name}" maxlength="15" value="${tag.valueToString}" onKeyUp="mascara_telefone(this)" onKeyPress="return valida_tecla(this, event)" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}/>
+<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<input type="text" id="${tag.id}" name="${tag.name}" maxlength="15" value="${tag.valueToString}" onKeyUp="mascara_telefone(this)" onKeyPress="return valida_tecla(this, event)" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} ${tag.dynamicAttributesToString}/>

@@ -1729,6 +1729,12 @@
 	</function>
 
 	<function>
+		<name>attributeNotEmpty</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String attributeNotEmpty(java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
 		<name>ognl</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Object ognl(java.lang.String)</function-signature>

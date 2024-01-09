@@ -1,1 +1,2 @@
-<input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" onchange="${tag.reloadOnChangeString}" ${tag.dynamicAttributesToString}/>
+<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} ${tag.dynamicAttributesToString}/>

@@ -99,6 +99,13 @@ public class NextFunctions {
 		return def;
 	}
 
+	public static String attributeNotEmpty(String attribute, String value) {
+		if (Util.strings.isNotEmpty(value)) {
+			return attribute + "=\"" + value + "\"";
+		}
+		return null;
+	}
+
 	public static Object reevaluate(String expr, PageContext context) throws ELException {
 		return ViewUtils.evaluate("${" + expr + "}", context, Object.class);
 	}
