@@ -23,7 +23,7 @@
     this.propertiesAsSeries = new ReportGeneratorSelectManyBoxView(next.dom.toElement("chartPropertiesAsSeries_from_"));
     var bigThis = this;
     this.chartLabelSerie = next.dom.getInnerElementById(this.mainDiv, "chartLabelSerie");
-    this.chartLabelSerie.onchange = function(p1) {
+    this.chartLabelSerie.onblur = function(p1) {
         bigThis.configureSerieLabel();
         return true;
     };
@@ -32,7 +32,7 @@
         bigThis.configureSerieAggregateType();
         return true;
     };
-    this.propertiesAsSeries.getTo().onchange = function(p1) {
+    this.propertiesAsSeries.getTo().onblur = function(p1) {
         bigThis.resetSerieLabel();
         bigThis.resetAggregateType();
         return true;

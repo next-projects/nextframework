@@ -216,7 +216,7 @@ ReportFilterManager.prototype.configureFilterLabel = function(properties) {
     var bigThis = this;
     var filterLabel = ReportPropertyConfigUtils.getFilterDisplayName(properties);
     this.designer.filterLabel.value = filterLabel;
-    this.designer.filterLabel.onchange = function(p1) {
+    this.designer.filterLabel.onblur = function(p1) {
         ReportPropertyConfigUtils.setFilterDisplayName(properties, bigThis.designer.filterLabel.value);
         bigThis.designer.writeXml();
         return true;

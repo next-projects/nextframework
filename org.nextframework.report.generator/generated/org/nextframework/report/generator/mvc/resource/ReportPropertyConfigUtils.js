@@ -99,13 +99,10 @@ ReportPropertyConfigUtils.isGroupable = function(properties) {
 };
 ReportPropertyConfigUtils.configureInputToLabel = function(labelElement, labelInput) {
     labelInput.value = labelElement.label;
-    labelInput.onkeyup = function(p1) {
+    labelInput.onblur = function(p1) {
         labelElement.label = labelInput.value;
         labelElement.changed = true;
         labelElement.getNode().innerHTML = labelElement.label;
-        return true;
-    };
-    labelInput.onchange = function(p1) {
         ReportDesigner.getInstance().writeXml();
         return true;
     };

@@ -302,7 +302,7 @@ class ReportFilterManager extends AbstractManager {
 		final ReportFilterManager bigThis = this;
 		String filterLabel = ReportPropertyConfigUtils.getFilterDisplayName(properties);
 		designer.filterLabel.value = filterLabel;
-		designer.filterLabel.onchange = new Function1<DOMEvent, Boolean>() {
+		designer.filterLabel.onblur = new Function1<DOMEvent, Boolean>() {
 
 			public Boolean $invoke(DOMEvent p1) {
 				ReportPropertyConfigUtils.setFilterDisplayName(properties, bigThis.designer.filterLabel.value);

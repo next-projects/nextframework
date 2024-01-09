@@ -109,7 +109,7 @@ public class ChartWizzard {
 		final ChartWizzard bigThis = this;
 
 		this.chartLabelSerie = (Input) NextGlobalJs.next.dom.getInnerElementById(mainDiv, "chartLabelSerie");
-		this.chartLabelSerie.onchange = new Function1<DOMEvent, Boolean>() {
+		this.chartLabelSerie.onblur = new Function1<DOMEvent, Boolean>() {
 
 			public Boolean $invoke(DOMEvent p1) {
 				bigThis.configureSerieLabel();
@@ -128,7 +128,7 @@ public class ChartWizzard {
 
 		};
 
-		this.propertiesAsSeries.getTo().onchange = new Function1<DOMEvent, Boolean>() {
+		this.propertiesAsSeries.getTo().onblur = new Function1<DOMEvent, Boolean>() {
 
 			public Boolean $invoke(DOMEvent p1) {
 				bigThis.resetSerieLabel();

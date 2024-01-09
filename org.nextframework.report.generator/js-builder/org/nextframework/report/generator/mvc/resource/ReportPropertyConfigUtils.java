@@ -137,19 +137,12 @@ public class ReportPropertyConfigUtils {
 
 	public static void configureInputToLabel(final LabelReportElement labelElement, final Input labelInput) {
 		labelInput.value = labelElement.label;
-		labelInput.onkeyup = new Function1<DOMEvent, Boolean>() {
+		labelInput.onblur = new Function1<DOMEvent, Boolean>() {
 
 			public Boolean $invoke(DOMEvent p1) {
 				labelElement.label = labelInput.value;
 				labelElement.changed = true;
 				labelElement.getNode().innerHTML = labelElement.label;
-				return true;
-			}
-
-		};
-		labelInput.onchange = new Function1<DOMEvent, Boolean>() {
-
-			public Boolean $invoke(DOMEvent p1) {
 				ReportDesigner.getInstance().writeXml();
 				return true;
 			}

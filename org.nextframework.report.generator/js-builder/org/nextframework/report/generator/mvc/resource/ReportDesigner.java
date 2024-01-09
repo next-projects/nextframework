@@ -99,7 +99,7 @@ public class ReportDesigner {
 		selectables.push(definition);
 
 		reportTitleInput = (Input) next.dom.getInnerElementById(mainDiv, "reportTitle");
-		reportTitleInput.onchange = new Function1<DOMEvent, Boolean>() {
+		reportTitleInput.onblur = new Function1<DOMEvent, Boolean>() {
 
 			@Override
 			public Boolean $invoke(DOMEvent p1) {
