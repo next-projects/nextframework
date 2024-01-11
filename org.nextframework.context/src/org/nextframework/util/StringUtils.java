@@ -362,21 +362,17 @@ public class StringUtils {
 	}
 
 	public String onlyAlphanumerics(String s) {
+		if (s == null) {
+			return null;
+		}
 		return s.replaceAll("[^A-Za-z0-9]", "");
 	}
 
 	public String onlyNumbers(String s) {
-		int i;
-		String numeros = "0123456789";
-		int tamanho = s.length();
-		StringBuilder sb = new StringBuilder();
-		String caractere = "";
-		for (i = 0; i < tamanho; i++) {
-			caractere = s.substring(i, i + 1);
-			if (numeros.indexOf(caractere) != -1)
-				sb.append(caractere);
+		if (s == null) {
+			return null;
 		}
-		return sb.toString();
+		return s.replaceAll("[^0-9]", "");
 	}
 
 	public String stringCheia(String stringOriginal, String caractereCompleta, int tamanho, boolean direita) {

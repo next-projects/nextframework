@@ -46,6 +46,8 @@
 
 <script language="JavaScript" src="${app}/resource/report/report.js"></script>
 
+<script language="JavaScript" src="${app}/resource/js/imask.js"></script>
+
 <script language="JavaScript" src="${app}/resource/js/ajax.js"></script>
 <script language="JavaScript" src="${app}/resource/js/input.js"></script>
 <script language="JavaScript" src="${app}/resource/js/input-selectmanypopup.js"></script>

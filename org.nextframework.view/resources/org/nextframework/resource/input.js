@@ -1,10 +1,7 @@
-﻿//------------------------------------------------------------
-
-function getTecla(event){
+﻿function getTecla(event){
 	if(navigator.appName.indexOf("Netscape")!= -1) {
 		return event.which;
-	}
-	else {
+	} else {
 		return event.keyCode;
 	}
 }
@@ -12,8 +9,7 @@ function getTecla(event){
 function getChar(event){
 	if(navigator.appName.indexOf("Netscape")!= -1) {
 		return String.fromCharCode(event.which);
-	}
-	else {
+	} else {
 		return String.fromCharCode(event.keyCode);
 	}
 }
@@ -25,8 +21,7 @@ function valida_tecla(campo, event, acceptEnter) {
 	CheckTAB=true;
 	if(navigator.appName.indexOf("Netscape")!= -1) {
 		tecla = event.which;
-	}
-	else {
+	} else {
 		tecla = event.keyCode;
 	}
 	key = String.fromCharCode(tecla);
@@ -313,34 +308,24 @@ function formata_cnpj (numCICEl) {
 
 function mascara_float(campo, teclapres) {
 	var tecla = 0;
-    if(navigator.appName.indexOf("Netscape")!= -1) {
-   		tecla= teclapres.which;
-   	}
-    else {
+	if(navigator.appName.indexOf("Netscape")!= -1) {
+		tecla= teclapres.which;
+	} else {
 		tecla = teclapres.keyCode;
 	}
-	/*
-	if(tecla == 190 || tecla == 110) {
-		//alert(tecla);
-		campo.value = campo.value + ',';
-		return false;
-	}
-	*/
-
 	// Falta o caractere ',' (vírgula) do teclado numérico.
 	if (  (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (só é possivel se for a primeira posicao)
 			|| (tecla >= 48 && tecla <= 57) || (tecla >= 96 && tecla <= 105)
-	 		|| tecla == 110 || tecla == 188 || tecla == 190
-	  		|| tecla == 8 || tecla == 9 || tecla == 13
-	    	|| tecla == 37 || tecla == 39
-	    	|| tecla == 45 || tecla == 46 || tecla == 35 || tecla == 36
-		    || (tecla == 67 || tecla == 86 && teclapres.ctrlKey)) {
+			|| tecla == 110 || tecla == 188 || tecla == 190
+			|| tecla == 8 || tecla == 9 || tecla == 13
+			|| tecla == 37 || tecla == 39
+			|| tecla == 45 || tecla == 46 || tecla == 35 || tecla == 36
+			|| (tecla == 67 || tecla == 86 && teclapres.ctrlKey)) {
 		if(tecla == 188){// não pode inserir duas virgulas (TODO colocar a condicao da virgula do teclado numerico)
 			return campo.value.indexOf(',') < 0;
 		}
 		return true;
 	}
-
 	return false; 
 }
 
@@ -354,37 +339,13 @@ function mascara_inscricaoestadual(el) {
 		el.value = mydata;
 	}
 }
-//------------------------------------------------------------
 
-function mascara_integer(campo, teclapres) {
-	var tecla = 0;
-    if(navigator.appName.indexOf("Netscape")!= -1) {
-   		tecla= teclapres.which;
-   	}
-    else {
-		tecla = teclapres.keyCode;
-	}
-
-	// Falta o caractere ',' (vírgula) do teclado numérico.
-	if ( (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (só é possivel se for a primeira posicao)
-		  ||(tecla >= 48 && tecla <= 57) || (tecla >= 96 && tecla <= 105)
-	      || tecla == 8 || tecla == 9 || tecla == 13
-	      || tecla == 37 || tecla == 39
-	      || tecla == 45 || tecla == 46 || tecla == 35 || tecla == 36
-	      || ((tecla == 67 || tecla == 86) && teclapres.ctrlKey)) {
-		return true; 
-	}
-
-	return false; 
-}
-	
 //------------------------------------------------------------
 
 function formata_money(campo, teclapres) {
 	if(navigator.appName.indexOf("Netscape")!= -1) {
 		var tecla= teclapres.which;
-	}
-    else {
+	} else {
 		var tecla = teclapres.keyCode;
 	}
 
@@ -431,14 +392,13 @@ function formata_money(campo, teclapres) {
 		}
 	}
 	
-	
 	//verifica a tecla
 	if ( (tecla == 109 && campo.value == '') || (tecla == 189 && campo.value == '') // tecla '-' (só é possivel se for a primeira posicao)
-		  ||(tecla >= 48 && tecla <= 57) || (tecla >= 96 && tecla <= 105)
-	      || tecla == 8 || tecla == 9 || tecla == 13
-	      || tecla == 37 || tecla == 39
-	      || tecla == 45 || tecla == 46 || tecla == 35 || tecla == 36
-	      || ((tecla == 67 || tecla == 86) && teclapres.ctrlKey)) {
+		||(tecla >= 48 && tecla <= 57) || (tecla >= 96 && tecla <= 105)
+		|| tecla == 8 || tecla == 9 || tecla == 13
+		|| tecla == 37 || tecla == 39
+		|| tecla == 45 || tecla == 46 || tecla == 35 || tecla == 36
+		|| ((tecla == 67 || tecla == 86) && teclapres.ctrlKey)) {
 		return true; 
 	}
 
@@ -500,16 +460,15 @@ function selectManyBoxCancelTo(from){
 	to    = next.dom.toElement(name + '_to___');
 	left  = next.dom.toElement(name + '_left_');
 	right = next.dom.toElement(name + '_right');
-	
 	selectManyBoxCancel(to, right, left);
 }
+
 function selectManyBoxCancelFrom(to){
 	var name = to.name.substring(0, to.name.length - 6);
 	to    = next.dom.toElement(to);
 	from  = next.dom.toElement(name + '_from_');
 	left  = next.dom.toElement(name + '_left_');
 	right = next.dom.toElement(name + '_right');
-
 	selectManyBoxCancel(from, left, right);
 }
 
@@ -525,22 +484,19 @@ function selectManyBoxAdd(btn){
 	to    = next.dom.toElement(name + '_to___');
 	left  = next.dom.toElement(name + '_left_');
 	right = next.dom.toElement(name + '_right');	
-	
 	selectManyBoxMove(from, to, true);
 	selectManyBoxCancel(from, left, right);
-	
 	selectManyBoxUpdateData(to);
 }
+
 function selectManyBoxRemove(btn){
 	var name = btn.name.substring(0, btn.name.length - 6);
 	from  = next.dom.toElement(name + '_from_');
 	to    = next.dom.toElement(name + '_to___');
 	left  = next.dom.toElement(name + '_left_');
 	right = next.dom.toElement(name + '_right');	
-	
 	selectManyBoxMove(to, from, false);
 	selectManyBoxCancel(to, right, left);
-	
 	selectManyBoxUpdateData(to);
 }
 
@@ -580,11 +536,8 @@ function selectManyBoxUpdateData(to){
 	var name = to.name.substring(0, to.name.length - 6);
 	value    = next.dom.toElement(name + '_value');
 	value.innerHTML = '';
-
 	for(var i = 0; i < to.options.length; i++){
 		var input = next.dom.newInput('hidden', name, null, {'value': to.options[i].value, 'name': name+'['+i+']'});
 		value.appendChild(input);
 	}
 }
-
-

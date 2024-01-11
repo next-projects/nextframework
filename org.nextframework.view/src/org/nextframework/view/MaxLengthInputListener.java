@@ -33,17 +33,16 @@ import org.nextframework.validation.annotation.MaxLength;
  * @version 1.1
  */
 public class MaxLengthInputListener implements InputListener<MaxLength> {
-	
-	
+
 	public void onRender(InputTag input, MaxLength maxLength) {
 		Map<String, Object> attributes = input.getDynamicAttributesMap();
-		Object maxlengthinput = attributes.get("maxlength");
-		Object sizeinput = attributes.get("size");
-		if(maxlengthinput == null) {
+		Object maxlengthInput = attributes.get("maxlength");
+		Object sizeInput = attributes.get("size");
+		if (maxlengthInput == null && input.getPattern() == null) {
 			attributes.put("maxlength", maxLength.value());
 		}
-		if(sizeinput == null) {
-			attributes.put("size", Math.min(maxLength.value(),50));
+		if (sizeInput == null) {
+			attributes.put("size", Math.min(maxLength.value(), 50));
 		}
 	}
 

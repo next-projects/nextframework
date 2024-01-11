@@ -10,18 +10,18 @@
 </div>
 <c:if test="${empty tag.dynamicAttributesMap['disabled'] || tag.dynamicAttributesMap['disabled'] == 'false' }">
 	<input type="hidden" name="${tag.name}_datePattern" value="${tag.pattern}" />
-</c:if>
-<c:if test="${(empty tag.dynamicAttributesMap['disabled'] || tag.dynamicAttributesMap['disabled'] == 'false') && tag.inputComponent.showCalendar}">
-	<script type="text/javascript">
-		Calendar.setup(
-			{
-				inputField  : "${tag.id}",
-				ifFormat    : "${tag.inputComponent.calendarPattern}",
-				button      : "${tag.id}_trigger",
-				showsTime   : ${tag.inputComponent.showCalendarTime},
-				showsSeconds: ${tag.inputComponent.showCalendarSeconds},
-				weekNumbers : false
-			}
-		);
-	</script>
+	<c:if test="${tag.inputComponent.showCalendar}">
+		<script type="text/javascript">
+			Calendar.setup(
+				{
+					inputField  : "${tag.id}",
+					ifFormat    : "${tag.inputComponent.calendarPattern}",
+					button      : "${tag.id}_trigger",
+					showsTime   : ${tag.inputComponent.showCalendarTime},
+					showsSeconds: ${tag.inputComponent.showCalendarSeconds},
+					weekNumbers : false
+				}
+			);
+		</script>
+	</c:if>
 </c:if>
