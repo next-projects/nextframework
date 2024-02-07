@@ -764,6 +764,9 @@ NextDom.prototype.setSelectedValue = function(el, value, dispatchEvent){
 
 NextDom.prototype.getInputValue = function(el){
 	el = next.dom.toElement(el);
+	if(el == null){
+		return null;
+	}
 	if(el.tagName.toLowerCase() == 'select'){
 		return this.getSelectedValue(el);
 	} else {
