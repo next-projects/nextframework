@@ -17,23 +17,23 @@
 	<t:simplePanel>
 		<t:formTable columns="8">
 			<c:forEach items="${filters}" var="filter">
-				<c:if test="${empty filterMetadataMap[filter].fixedCriteria}">
-					<t:propertyLayout label="${filterMetadataMap[filter].displayName}" colspan="4">
+				<c:if test="${empty filtersMetadataMap[filter].fixedCriteria}">
+					<t:propertyLayout label="${filtersMetadataMap[filter].displayName}" colspan="4">
 						<c:choose>
-							<c:when test="${filterMetadataMap[filter].dateType}">
+							<c:when test="${filtersMetadataMap[filter].dateType}">
 								<c:set var="begin" value="${filter}_begin" />
 								<c:set var="end" value="${filter}_end" />
 								<div class="${useBootstrap ? 'd-flex' : ''}">
-									<n:input name="${filter}_begin" value="${filterValuesMap[begin]}" type="${filterMetadataMap[filter].type}" id="filter_${filter}_b" label="${filterMetadataMap[filter].displayName}" required="${filterMetadataMap[filter].requiredFilter}" />
+									<n:input name="${filter}_begin" value="${filterValuesMap[begin]}" type="${filtersMetadataMap[filter].type}" id="filter_${filter}_b" label="${filtersMetadataMap[filter].displayName}" required="${filtersMetadataMap[filter].requiredFilter}" />
 									<span class="${useBootstrap ? 'm-1' : ''}">até</span>
-									<n:input name="${filter}_end" value="${filterValuesMap[end]}" type="${filterMetadataMap[filter].type}" id="filter_${filter}_e" label="${filterMetadataMap[filter].displayName} (até)" required="${filterMetadataMap[filter].requiredFilter}" />
+									<n:input name="${filter}_end" value="${filterValuesMap[end]}" type="${filtersMetadataMap[filter].type}" id="filter_${filter}_e" label="${filtersMetadataMap[filter].displayName} (até)" required="${filtersMetadataMap[filter].requiredFilter}" />
 								</div>
 							</c:when>
-							<c:when test="${filterMetadataMap[filter].filterSelectMultiple}">
-								<n:input name="${filter}" value="${filterValuesMap[filter]}" useType="${filterMetadataMap[filter].type}" type="select-many-popup" id="filter_${filter}" label="${filterMetadataMap[filter].displayName}" required="${filterMetadataMap[filter].requiredFilter}" />
+							<c:when test="${filtersMetadataMap[filter].filterSelectMultiple}">
+								<n:input name="${filter}" value="${filterValuesMap[filter]}" useType="${filtersMetadataMap[filter].type}" type="select-many-popup" id="filter_${filter}" label="${filtersMetadataMap[filter].displayName}" required="${filtersMetadataMap[filter].requiredFilter}" selectLabelProperty="${filtersMetadataMap[filter].selectLabelProperty}" />
 							</c:when>
 							<c:otherwise>
-								<n:input name="${filter}" value="${filterValuesMap[filter]}" type="${filterMetadataMap[filter].type}" id="filter_${filter}" label="${filterMetadataMap[filter].displayName}" required="${filterMetadataMap[filter].requiredFilter}" />
+								<n:input name="${filter}" value="${filterValuesMap[filter]}" type="${filtersMetadataMap[filter].type}" id="filter_${filter}" label="${filtersMetadataMap[filter].displayName}" required="${filtersMetadataMap[filter].requiredFilter}" selectLabelProperty="${filtersMetadataMap[filter].selectLabelProperty}" />
 							</c:otherwise>
 						</c:choose>
 					</t:propertyLayout>

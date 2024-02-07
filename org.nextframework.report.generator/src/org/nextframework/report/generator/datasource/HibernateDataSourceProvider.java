@@ -34,8 +34,10 @@ import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.chart.ChartElement;
 import org.nextframework.report.generator.data.GroupElement;
+import org.nextframework.report.generator.datasource.extension.GeneratedReportListener;
 import org.nextframework.report.generator.layout.FieldDetailElement;
 import org.nextframework.report.generator.layout.LayoutItem;
+import org.nextframework.service.ServiceFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -123,26 +125,40 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 
 		};
 
+		GeneratedReportListener[] grListeners = ServiceFactory.loadServices(GeneratedReportListener.class);
+
 		for (String filter : filterMap.keySet()) {
+
 			String filterNoSuffix = removeSuffix(filter);
 			PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(filterNoSuffix);
+			Type type = propertyDescriptor.getType();
 			Object parameterValue = filterMap.get(filter);
 			if (propertyDescriptor.getAnnotation(Transient.class) != null) {
 				transients.put(filterNoSuffix, parameterValue);
 				continue;
 			}
-			Type type = propertyDescriptor.getType();
-			if (filter.contains("_begin")) {
-				query.where(query.getAlias() + "." + filterNoSuffix + " >= ?", parameterValue);
-			} else if (filter.contains("_end")) {
-				query.where(query.getAlias() + "." + filterNoSuffix + " < ?", max(parameterValue));
-			} else if (String.class.equals(type)) {
-				query.whereLike(query.getAlias() + "." + filter, (String) parameterValue);
-			} else if (parameterValue != null && parameterValue.getClass().isArray()) {
-				query.whereIn(query.getAlias() + "." + filter, Arrays.asList((Object[]) parameterValue));
-			} else {
-				query.where(query.getAlias() + "." + filter + " = ?", parameterValue);
+
+			boolean applied = false;
+			for (GeneratedReportListener filterListener : grListeners) {
+				if (filterListener.getFromClass() == query.getFrom().getFromClass()) {
+					applied = applied || filterListener.setWhereClause(query, filter, filterNoSuffix, parameterValue, type);
+				}
 			}
+
+			if (!applied && parameterValue != null) {
+				if (filter.contains("_begin")) {
+					query.where(query.getAlias() + "." + filterNoSuffix + " >= ?", parameterValue);
+				} else if (filter.contains("_end")) {
+					query.where(query.getAlias() + "." + filterNoSuffix + " < ?", max(parameterValue));
+				} else if (String.class.equals(type)) {
+					query.whereLike(query.getAlias() + "." + filter, (String) parameterValue);
+				} else if (parameterValue.getClass().isArray()) {
+					query.whereIn(query.getAlias() + "." + filter, Arrays.asList((Object[]) parameterValue));
+				} else {
+					query.where(query.getAlias() + "." + filter + " = ?", parameterValue);
+				}
+			}
+
 		}
 
 		for (String filter : fixedCriteriaMap.keySet()) {

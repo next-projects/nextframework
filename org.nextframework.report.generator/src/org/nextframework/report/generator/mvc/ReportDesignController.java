@@ -43,6 +43,7 @@ import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
 import org.nextframework.report.generator.data.FilterElement;
 import org.nextframework.report.generator.datasource.DataSourceProvider;
+import org.nextframework.report.generator.datasource.extension.GeneratedReportListener;
 import org.nextframework.report.generator.generated.ReportSpec;
 import org.nextframework.report.generator.layout.DynamicBaseReportDefinition;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
@@ -292,8 +293,8 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
 
 		Map<String, Map<String, Object>> filterProperties = new LinkedHashMap<String, Map<String, Object>>();
-		List<FilterElement> filters = reportElement.getData().getFilters();
-		for (FilterElement filterElement : filters) {
+		List<FilterElement> filtersElements = reportElement.getData().getFilters();
+		for (FilterElement filterElement : filtersElements) {
 			Map<String, Object> properties = new HashMap<String, Object>();
 			if (Util.strings.isNotEmpty(filterElement.getFilterDisplayName())) {
 				properties.put("displayName", filterElement.getFilterDisplayName());
@@ -305,10 +306,13 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		model.setReportTitle(reportElement.getReportTitle());
 
 		Class<?> mainType = reportElement.getData().getMainType();
-		Object propertiesMetadata = util.getPropertiesMetadata(reportElement, getLocale(), mainType, filterProperties);
+		Map<String, Map<String, Object>> filtersMetadataMap = util.getPropertiesMetadata(reportElement, getLocale(), mainType, filterProperties);
+		List<String> filters = util.reorganizeFilters(mainType, filterProperties.keySet());
 
-		setAttribute("filters", util.reorganizeFilters(mainType, filterProperties.keySet()));
-		setAttribute("filterMetadataMap", propertiesMetadata);
+		checkFiltersMap(model, reportElement, filters, filtersMetadataMap);
+
+		setAttribute("filters", filters);
+		setAttribute("filtersMetadataMap", filtersMetadataMap);
 		setAttribute("model", model);
 		setAttribute("reportElement", reportElement);
 		setAttribute("crudPath", getPathForReportCrud());
@@ -353,6 +357,19 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 
 		return mv;
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected void checkFiltersMap(ReportDesignModel model, ReportElement reportElement, List<String> filters, Map<String, Map<String, Object>> filtersMetadataMap) {
+		GeneratedReportListener[] grListeners = ServiceFactory.loadServices(GeneratedReportListener.class);
+		Class mainType = Util.objects.getRealClass(reportElement.getData().getMainType());
+		for (String filter : filters) {
+			for (GeneratedReportListener filterListener : grListeners) {
+				if (filterListener.getFromClass() == mainType) {
+					filterListener.checkFilters(model, reportElement, filter, filtersMetadataMap);
+				}
+			}
+		}
 	}
 
 	@SuppressWarnings("all")
