@@ -32,7 +32,6 @@ import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.util.Util;
-import org.nextframework.web.WebUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -156,7 +155,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	public static String getLabel(final BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor) {
-		String viewCode = WebUtils.getMessageCodeViewPrefix();
+		String viewCode = ViewUtils.getMessageCodeViewPrefix();
 		if (propertyDescriptor != null) {
 			return Util.beans.getDisplayName(propertyDescriptor, viewCode, NextWeb.getRequestContext().getLocale());
 		}

@@ -16,18 +16,12 @@ import org.apache.commons.logging.LogFactory;
 import org.nextframework.core.web.NextWeb;
 
 public class WebContextFilter implements Filter, ServletContextListener {
-	
+
 	static Log log = LogFactory.getLog("WebContext");
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		WebContext.setServletRequest(request);
-		chain.doFilter(request, response);
-	}
-	
-	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		if(log.isInfoEnabled()){
+		if (log.isInfoEnabled()) {
 			log.info("Initialized");
 		}
 		WebContext.setServletContext(sce.getServletContext());
@@ -35,22 +29,27 @@ public class WebContextFilter implements Filter, ServletContextListener {
 	}
 
 	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+
+	}
+
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		if(log.isDebugEnabled()){
+		if (log.isDebugEnabled()) {
 			log.debug("Filter Initialized");
 		}
 		WebContext.setServletContext(filterConfig.getServletContext());
 		NextWeb.createApplicationContext(filterConfig.getServletContext());
 	}
-	
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		WebContext.setServletRequest(request);
+		chain.doFilter(request, response);
+	}
+
 	@Override
 	public void destroy() {
 	}
-
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		
-	}
-
 
 }

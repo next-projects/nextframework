@@ -19,8 +19,8 @@ import org.nextframework.view.InputTag;
 import org.nextframework.view.InputTagHelper;
 import org.nextframework.view.InputTagType;
 import org.nextframework.view.ValidationTag;
+import org.nextframework.view.ViewUtils;
 import org.nextframework.view.template.PropertyConfigTag;
-import org.nextframework.web.WebUtils;
 import org.springframework.context.NoSuchMessageException;
 
 public class InputTagComponent {
@@ -52,9 +52,11 @@ public class InputTagComponent {
 			}
 			if (inputTag.getRequired() != null) {
 				Required requiredValidation = new Required() {
+
 					public Class<? extends Annotation> annotationType() {
 						return Required.class;
 					}
+
 				};
 				if (inputTag.getRequired() && !containsRequired(validationItem.getValidations())) {
 					validationItem.getValidations().add(requiredValidation);
@@ -135,7 +137,7 @@ public class InputTagComponent {
 
 		String[] codes = new String[2];
 		//Simple class name (from the tag) and field with viewCode prefix (Ex: module.Controller.view.FilterPanelTag.sectionTitle)
-		codes[0] = WebUtils.getMessageCodeViewPrefix() + "." + inputTag.getClass().getSimpleName() + "." + field;
+		codes[0] = ViewUtils.getMessageCodeViewPrefix() + "." + inputTag.getClass().getSimpleName() + "." + field;
 		//Simple class name (from the tag) and field (Ex: FilterPanelTag.sectionTitle)
 		codes[1] = inputTag.getClass().getSimpleName() + "." + field;
 
@@ -150,7 +152,7 @@ public class InputTagComponent {
 
 		return message;
 	}
-	
+
 	public void setTag(InputTag inputTag) {
 		this.inputTag = inputTag;
 	}

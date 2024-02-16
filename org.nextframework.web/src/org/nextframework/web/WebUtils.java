@@ -1,9 +1,20 @@
 package org.nextframework.web;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.text.Normalizer;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.DefaultWebRequestContext;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.core.web.WebApplicationContext;
+import org.nextframework.exception.ApplicationException;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.service.UrlRewriter;
@@ -42,6 +53,11 @@ public class WebUtils {
 			}
 		}
 		return request.getRemoteAddr();
+	}
+
+	public static String getServerRealPath() {
+		WebApplicationContext appContext = (WebApplicationContext) Next.getApplicationContext();
+		return appContext.getServletContext().getRealPath("/");
 	}
 
 	/**
@@ -94,6 +110,11 @@ public class WebUtils {
 		return NextWeb.getRequestContext().getServletPath() + "/" + (controller != null ? controller : "");
 	}
 
+	public static String getRequestAction() {
+		HttpServletRequest httpServletRequest = WebContext.getRequest();
+		return httpServletRequest.getParameter(DefaultWebRequestContext.ACTION_PARAMETER);
+	}
+
 	public static String getModelAndViewName() {
 		String view = (String) NextWeb.getRequestContext().getAttribute("viewName");
 		if (view == null) {
@@ -112,18 +133,85 @@ public class WebUtils {
 		return view;
 	}
 
-	public static String getMessageCodeViewPrefix() {
-		String messageCodeViewPrefix = (String) NextWeb.getRequestContext().getAttribute("messageCodeViewPrefix");
-		if (messageCodeViewPrefix != null) {
-			return messageCodeViewPrefix;
+	private static Pattern scriptPattern1 = Pattern.compile("<(\"[^\"]*\"|'[^']*'|[^'\">])*>", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+	private static Pattern scriptPattern2 = Pattern.compile("eval\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	private static Pattern scriptPattern3 = Pattern.compile("expression\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+	private static Pattern scriptPattern4 = Pattern.compile("script:", Pattern.CASE_INSENSITIVE);
+
+	public static boolean containsTagsOrCodes(String source) {
+		if (source == null || "<null>".equalsIgnoreCase(source)) {
+			return false;
 		}
-		String view = getModelAndViewName();
-		return getRequestModule() + "." + getRequestController() + "." + (view != null ? view : "view");
+		return scriptPattern1.matcher(source).find() ||
+				scriptPattern2.matcher(source).find() ||
+				scriptPattern3.matcher(source).find() ||
+				scriptPattern4.matcher(source).find();
 	}
 
-	public static String getRequestAction() {
-		HttpServletRequest httpServletRequest = WebContext.getRequest();
-		return httpServletRequest.getParameter(DefaultWebRequestContext.ACTION_PARAMETER);
+	public static String removeTagsAndCodes(String source) {
+		if (source == null) {
+			return null;
+		}
+		String cleanValue = Normalizer.normalize(source, Normalizer.Form.NFD);
+		cleanValue = cleanValue.replaceAll("\0", "");
+		cleanValue = scriptPattern1.matcher(cleanValue).replaceAll("");
+		cleanValue = scriptPattern2.matcher(cleanValue).replaceAll("");
+		cleanValue = scriptPattern3.matcher(cleanValue).replaceAll("");
+		cleanValue = scriptPattern4.matcher(cleanValue).replaceAll("");
+		return cleanValue;
+	}
+
+	public static void verificaMapComHTML(Map<String, ?> parameters, String propertiesToIgnore) {
+
+		String[] propertiesToIgnoreArray = Util.strings.splitFields(propertiesToIgnore);
+		List<String> propertiesToIgnoreList = propertiesToIgnoreArray != null && propertiesToIgnoreArray.length > 0 ? Arrays.asList(propertiesToIgnoreArray) : null;
+
+		for (String parametro : parameters.keySet()) {
+			if (propertiesToIgnoreList != null && propertiesToIgnoreList.contains(parametro)) {
+				continue;
+			}
+			Object valor = parameters.get(parametro);
+			verificaValorComHTML(valor, parametro);
+		}
+
+	}
+
+	public static void verificaAtributosComHTML(Object bean, String propertiesToIgnore) {
+
+		String[] propertiesToIgnoreArray = Util.strings.splitFields(propertiesToIgnore);
+		List<String> propertiesToIgnoreList = propertiesToIgnoreArray != null && propertiesToIgnoreArray.length > 0 ? Arrays.asList(propertiesToIgnoreArray) : null;
+
+		Field[] fields = bean.getClass().getDeclaredFields();
+		for (Field field : fields) {
+			if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
+				continue;
+			}
+			if (propertiesToIgnoreList != null && propertiesToIgnoreList.contains(field.getName())) {
+				continue;
+			}
+			Method getterMethod = Util.beans.getGetterMethod(bean.getClass(), field.getName());
+			if (getterMethod != null) {
+				Object valor = Util.beans.getPropertyValue(bean, field.getName());
+				verificaValorComHTML(valor, field.getName());
+			}
+		}
+
+	}
+
+	private static void verificaValorComHTML(Object valor, String parametro) {
+		if (valor instanceof String) {
+			String valorStr = (String) valor;
+			if (containsTagsOrCodes(valorStr)) {
+				throw new ApplicationException("O valor do parâmetro " + parametro + " contém marcações HTML não permitidas!");
+			}
+		} else if (valor instanceof String[]) {
+			String[] valoresArray = (String[]) valor;
+			for (String valorStr : valoresArray) {
+				if (containsTagsOrCodes(valorStr)) {
+					throw new ApplicationException("O valor do parâmetro " + parametro + " contém marcações HTML não permitidas!");
+				}
+			}
+		}
 	}
 
 }

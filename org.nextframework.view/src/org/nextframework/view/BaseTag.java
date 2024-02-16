@@ -61,7 +61,6 @@ import org.nextframework.exception.TagNotFoundException;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.view.code.CodeTag;
-import org.nextframework.web.WebUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.NoSuchMessageException;
@@ -249,7 +248,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 		String[] codes = new String[2];
 		//Simple class name (from the tag) and field with viewCode prefix (Ex: module.Controller.view.FilterPanelTag.sectionTitle)
-		codes[0] = WebUtils.getMessageCodeViewPrefix() + "." + this.getClass().getSimpleName() + "." + field;
+		codes[0] = ViewUtils.getMessageCodeViewPrefix() + "." + this.getClass().getSimpleName() + "." + field;
 		//Full class name (from the tag) and field (Ex: org.nextframework.view.FilterPanelTag.sectionTitle)
 		codes[1] = this.getClass().getName() + "." + field;
 
@@ -481,7 +480,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 				} catch (IOException e1) {
 					throw new JspException(e);
 				}
-			}else {
+			} else {
 				throw new JspException(e);
 			}
 		}

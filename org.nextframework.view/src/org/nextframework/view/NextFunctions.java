@@ -44,7 +44,6 @@ import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
 import org.nextframework.util.Util;
-import org.nextframework.web.WebUtils;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.validation.BindException;
@@ -219,7 +218,7 @@ public class NextFunctions {
 
 	public static String messageViewArgs(String field, Object arguments, String defaultValue) {
 		String[] codes = new String[2];
-		codes[0] = WebUtils.getMessageCodeViewPrefix() + "." + field;
+		codes[0] = ViewUtils.getMessageCodeViewPrefix() + "." + field;
 		codes[1] = field;
 		Object[] argumentsArray = resolveArguments(arguments);
 		Locale locale = NextWeb.getRequestContext().getLocale();

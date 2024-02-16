@@ -112,6 +112,13 @@ public class StringUtils {
 		return builder.toString();
 	}
 
+	public String[] splitFields(String fields) {
+		if (fields == null) {
+			return null;
+		}
+		return fields.split("(\\s*)?[,;](\\s*)?");
+	}
+
 	/**
 	 * Cria uma string com o nome da classe e o parametro id
 	 * Ex.: pacote.Classe[campoid=5]

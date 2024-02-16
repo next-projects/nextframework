@@ -29,7 +29,9 @@ import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.el.ELException;
 
+import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
+import org.nextframework.web.WebUtils;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -55,6 +57,15 @@ public class ViewUtils {
 			E evaluate = (E) ve.getValue(pageContext.getELContext());
 			return evaluate;
 		}
+	}
+
+	public static String getMessageCodeViewPrefix() {
+		String messageCodeViewPrefix = (String) NextWeb.getRequestContext().getAttribute("messageCodeViewPrefix");
+		if (messageCodeViewPrefix != null) {
+			return messageCodeViewPrefix;
+		}
+		String view = WebUtils.getModelAndViewName();
+		return WebUtils.getRequestModule() + "." + WebUtils.getRequestController() + "." + (view != null ? view : "view");
 	}
 
 }
