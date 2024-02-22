@@ -1776,12 +1776,13 @@ NextEffects.prototype.blockScreen = function(){
 	blockScreen
 	next.dom.insertFirstChild(document.body, blockScreen);
 	NextEffects.lastBlockScreenId = blockScreen.id;
-	return NextEffects.lastBlockScreenId;
+	return blockScreen.id;
 }
 
 NextEffects.prototype.unblockScreen = function(blockScreenId){
 	if (!next.util.isDefined(blockScreenId)) {
 		blockScreenId = NextEffects.lastBlockScreenId;
+		NextEffects.lastBlockScreenId = 0;
 	}
 	var blockScreen = document.getElementById(blockScreenId);
 	if(next.util.isDefined(blockScreen)){

@@ -209,7 +209,11 @@ public class NextFunctions {
 	public static String messageArgs(String code, Object arguments, String defaultValue) {
 		Object[] argumentsArray = resolveArguments(arguments);
 		Locale locale = NextWeb.getRequestContext().getLocale();
-		return Next.getMessageSource().getMessage(code, argumentsArray, defaultValue, locale);
+		try {
+			return Next.getMessageSource().getMessage(code, argumentsArray, defaultValue, locale);
+		} catch (NoSuchMessageException e) {
+			throw new NextException("Nenhuma mensagem encontrada com o código '" + code + "'.", e);
+		}
 	}
 
 	public static String messageView(String field) {
@@ -234,7 +238,11 @@ public class NextFunctions {
 			return null;
 		}
 		Locale locale = NextWeb.getRequestContext().getLocale();
-		return Next.getMessageSource().getMessage(resolvable, locale);
+		try {
+			return Next.getMessageSource().getMessage(resolvable, locale);
+		} catch (NoSuchMessageException e) {
+			throw new NextException("Nenhuma mensagem encontrada com o código '" + resolvable.getCodes()[0] + "'.", e);
+		}
 	}
 
 	private static Object[] resolveArguments(Object arguments) {
