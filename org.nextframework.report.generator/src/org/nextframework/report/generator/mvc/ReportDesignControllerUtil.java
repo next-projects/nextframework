@@ -43,10 +43,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SuppressWarnings("rawtypes")
 public class ReportDesignControllerUtil {
 
-	Map<Class, String> getDisplayNameForEntities(Class<?>[] entities) {
+	Map<Class, String> getDisplayNameForEntities(Class<?>[] entities, Locale locale) {
 		Map<Class, String> displayNames = new HashMap<Class, String>();
 		for (Class<?> class1 : entities) {
-			displayNames.put(class1, BeanDescriptorFactory.forClass(class1).getDisplayName());
+			displayNames.put(class1, Util.beans.getDisplayName(class1, locale));
 		}
 		return displayNames;
 	}

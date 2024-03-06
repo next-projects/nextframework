@@ -78,9 +78,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	/////////////////////////////////////////////// EDIT ///////////////////////////////////////////////
 
 	@DefaultAction
-	public ModelAndView index() {
+	@SuppressWarnings("rawtypes")
+	public ModelAndView index(WebRequestContext request) {
 		Class<?>[] entities = util.getAvaiableEntities();
-		Map<Class, String> displayNames = util.getDisplayNameForEntities(entities);
+		Map<Class, String> displayNames = util.getDisplayNameForEntities(entities, request.getLocale());
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("entities", entities);
 		setAttribute("displayNames", displayNames);
