@@ -20,8 +20,10 @@
 	}
 	function hideModal_${modalTag.id}(){
 		var div = document.getElementById("${modalTag.id}");
-		div.style.display = "none";
-		<c:if test="${useBootstrap}">next.style.removeClass(div, 'show');</c:if>
+		if (div != null) {
+			div.style.display = "none";
+			<c:if test="${useBootstrap}">next.style.removeClass(div, 'show');</c:if>
+		}
 		next.effects.unblockScreen(blockScreenId_${modalTag.id});
 	}
 	<c:if test="${modalTag.visible}">

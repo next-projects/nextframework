@@ -1545,12 +1545,14 @@ NextAjax.READY_STATE_COMPLETE=4;
  * @return
  */
 NextAjax.prototype.send = function(options){
+
 	var p = next.util.defaultParam(options);
 	p("url", window.location.pathname);
 	p("appendContext", options.url == window.location.pathname? false:NextAjax.appendContext);
 	p("params", "");
 	p("async", true);
 	p("charset", "UTF-8");
+	p("contentType", "application/x-www-form-urlencoded; charset="+options.charset);
 	p("method", "POST");
 	p("callbackParameters", {});
 	p("onComplete", function(data){});
@@ -1574,18 +1576,21 @@ NextAjax.prototype.send = function(options){
 	if(options.appendContext){
 		options.url = next.http.getApplicationContext()+options.url;
 	}
-	//console.log(options.url);
+
 	if(next.util.typeOf(options.onComplete) != 'array'){
 		var f = options.onComplete;
 		options.onComplete = new Array();
 		options.onComplete.push(f);
 	}
+
 	if(options.evalResponse){
 		options.onComplete.push(next.ajax.callbacks.eval());
 	}
+
 	if(options.evalScripts){
 		options.onComplete.push(next.ajax.callbacks.evalScripts());
 	}
+
 	if(next.util.typeOf(options.onComplete) == 'array'){
 		var ops = options.onComplete;
 		options.onComplete = function(data, callbackParameters){
@@ -1594,14 +1599,13 @@ NextAjax.prototype.send = function(options){
 			}
 		};
 	}
-	
+
 	var request = next.ajax.getXMLHTTPRequest();
-	
 	request.onreadystatechange = function () {
 		if(request.readyState == NextAjax.READY_STATE_COMPLETE) {
 			if(request.status && request.status == 200){
-				options.onComplete(request.responseText, options.callbackParameters, request);				
-				options.afterComplete(request.responseText, options.callbackParameters, request);				
+				options.onComplete(request.responseText, options.callbackParameters, request);
+				options.afterComplete(request.responseText, options.callbackParameters, request);
 			} else if(request.status && request.status == 404){
 				options.on404(request.responseText, request.status, options.callbackParameters, request);
 			} else {
@@ -1610,16 +1614,21 @@ NextAjax.prototype.send = function(options){
 			}
 		}
 	}
-	request.open(options.method, options.url, options.async);
-	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset="+options.charset);
 	if(options.noCache){
 		var nocacheparam = 'noCache'+next.dom.generateUniqueId()+'='+next.dom.generateUniqueId()+Math.random();
-		if(options.params != ''){
-			options.params += '&';
+		if(!options.url.includes("?")){
+			nocacheparam = "?" + nocacheparam;
+		}else{
+			nocacheparam = "&" + nocacheparam;
 		}
-		options.params += nocacheparam;
+		options.url += nocacheparam;
+	}
+	request.open(options.method, options.url, options.async);
+	if(!(options.params instanceof FormData )){
+		request.setRequestHeader("Content-Type",options.contentType);
 	}
 	request.send(options.params);
+
 }
 
 NextAjax.prototype.getXMLHTTPRequest = function(){
@@ -1630,6 +1639,17 @@ NextAjax.prototype.getXMLHTTPRequest = function(){
 	} else {
 		throw "Nao foi possível criar um objeto XMLHTTPRequest";
 	}
+}
+
+NextAjax.prototype.getFormData = function(formName){
+	var form = next.dom.getForm(formName);
+	var formData = new FormData(form.formElement);
+	formData.delete("ACAO");
+	formData.delete("ACTION");
+	formData.delete("suppressValidation");
+	formData.delete("suppressErrors");
+	formData.delete("form-token");
+	return formData;
 }
 
 NextAjax.prototype.newFormRequest = function(name, elements){

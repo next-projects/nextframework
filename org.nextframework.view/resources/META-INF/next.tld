@@ -1717,6 +1717,12 @@
 	</function>
 
 	<function>
+		<name>valueToString2</name>
+		<function-class>org.nextframework.view.NextFunctions</function-class>
+		<function-signature>java.lang.String valueToString(java.lang.Object, java.lang.Boolean)</function-signature>
+	</function>
+
+	<function>
 		<name>reevaluate</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
 		<function-signature>java.lang.Object reevaluate(java.lang.String, javax.servlet.jsp.PageContext)</function-signature>

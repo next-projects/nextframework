@@ -1,1 +1,1 @@
-<input type="submit" onclick="${tag.action}${tag.onclick}" title="${description}" ${tag.dynamicAttributesToString} value="<dobody/>"></input>
+<input type="submit" onclick="${tag.actionJs}${tag.onclick}" title="${description}" ${tag.dynamicAttributesToString} value="<dobody/>"></input>

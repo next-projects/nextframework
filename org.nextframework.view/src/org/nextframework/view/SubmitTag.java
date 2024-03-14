@@ -42,6 +42,8 @@ public class SubmitTag extends BaseTag {
 
 	protected String action;
 
+	protected String actionJs;
+
 	protected String img;
 
 	protected String description;
@@ -55,7 +57,6 @@ public class SubmitTag extends BaseTag {
 	protected String confirmationScript;
 
 	enum Type {
-		/* Adicionado SUBMIT em 22/05/2009 para dar suporte ao ENTER e fazer submit do form */
 		BUTTON, IMAGE, LINK, SUBMIT
 	}
 
@@ -117,9 +118,9 @@ public class SubmitTag extends BaseTag {
 		}
 
 		if (action != null) {
-			action = formName + "." + MultiActionController.ACTION_PARAMETER + ".value ='" + action + "';";
+			actionJs = formName + "." + MultiActionController.ACTION_PARAMETER + ".value ='" + action + "';";
 		} else {
-			action = formName + "." + MultiActionController.ACTION_PARAMETER + ".value = '';";//se o submit foi criado com action null... devemos enviar para action null
+			actionJs = formName + "." + MultiActionController.ACTION_PARAMETER + ".value = '';";//se o submit foi criado com action null... devemos enviar para action null
 		}
 
 		Type tipo = getResolvedType();
@@ -177,23 +178,6 @@ public class SubmitTag extends BaseTag {
 		return fullUrl;
 	}
 
-	private Type getResolvedType() {
-		Type tipo = Type.BUTTON;
-		if ("link".equalsIgnoreCase(type)) {
-			tipo = Type.LINK;
-		}
-		if ("submit".equalsIgnoreCase(type)) {
-			tipo = Type.SUBMIT;
-		}
-		if ("image".equalsIgnoreCase(type)) {
-			tipo = Type.IMAGE;
-		}
-		if (img != null && Util.strings.isEmpty(type)) {
-			tipo = Type.IMAGE;
-		}
-		return tipo;
-	}
-
 	private String montarUrlCompleta() {
 
 		if (url != null && url.startsWith("javascript:")) {
@@ -219,8 +203,29 @@ public class SubmitTag extends BaseTag {
 		return fullUrl;
 	}
 
+	private Type getResolvedType() {
+		Type tipo = Type.BUTTON;
+		if ("link".equalsIgnoreCase(type)) {
+			tipo = Type.LINK;
+		}
+		if ("submit".equalsIgnoreCase(type)) {
+			tipo = Type.SUBMIT;
+		}
+		if ("image".equalsIgnoreCase(type)) {
+			tipo = Type.IMAGE;
+		}
+		if (img != null && Util.strings.isEmpty(type)) {
+			tipo = Type.IMAGE;
+		}
+		return tipo;
+	}
+
 	public String getAction() {
 		return action;
+	}
+
+	public String getActionJs() {
+		return actionJs;
 	}
 
 	public String getDescription() {

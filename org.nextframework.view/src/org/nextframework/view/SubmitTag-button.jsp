@@ -1,1 +1,1 @@
-<button type="button" onclick="${tag.action}${tag.onclick}" title="${description}" ${tag.dynamicAttributesToString}><dobody/></button>
+<button type="button" onclick="${tag.actionJs}${tag.onclick}" title="${description}" ${tag.dynamicAttributesToString}><dobody/></button>

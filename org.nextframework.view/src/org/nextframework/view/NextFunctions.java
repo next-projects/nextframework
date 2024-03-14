@@ -121,12 +121,7 @@ public class NextFunctions {
 	}
 
 	public static String valueToString(Object value) {
-		if (value == null)
-			return "";
-		if (hasId(value.getClass())) {
-			return Util.strings.toStringIdStyled(value, true);
-		}
-		return value.toString();
+		return valueToString(value, true);
 	}
 
 	public static String valueToString(Object value, Boolean includeDescription) {
