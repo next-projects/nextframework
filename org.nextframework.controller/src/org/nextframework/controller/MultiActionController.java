@@ -375,7 +375,7 @@ public class MultiActionController extends AbstractController {
 			return;
 		}
 		this.delegate = delegate;
-		methodNameResolver = new MethodNameResolverImpl(this);
+		this.methodNameResolver = new MethodNameResolverImpl(this);
 		this.exceptionHandlerMap = new HashMap<Class<Throwable>, Method>();
 	}
 
@@ -706,7 +706,6 @@ public class MultiActionController extends AbstractController {
 	}
 
 	protected Class<?> getCommandClass(Method method, int commandIndex) {
-		//TODO TENTAR DESCOBRIR O COMMAND MESMO QUANDO UTILIZAR GENERICS
 		Class<?> commandClass = null;
 		Method metodoOriginal = method;
 		do {
@@ -715,12 +714,17 @@ public class MultiActionController extends AbstractController {
 			if (type instanceof TypeVariable<?>) {
 				TypeVariable<?> typeVariable = (TypeVariable<?>) type;
 				String typeVariableName = typeVariable.getName();
-
 				TypeVariable<?>[] typeParameters = this.getClass().getTypeParameters();
 				if (typeParameters.length != 0) {
 					throw new NextException("Implementar achar tipo de command por genericTypeParameters");
 				}
-				Type genericSuperclass = this.getClass().getGenericSuperclass();
+				//Sobe a hierarquia até achar a superclasse que herdou e definiu o tipo genérico
+				Type genericSuperclass = null;
+				Class<?> superClass = this.getClass();
+				while (!method.getDeclaringClass().equals(superClass)) {
+					genericSuperclass = superClass.getGenericSuperclass();
+					superClass = superClass.getSuperclass();
+				}
 				if (genericSuperclass instanceof ParameterizedType) {
 					TypeVariable<?>[] typeParametersMethodClass = method.getDeclaringClass().getTypeParameters();
 					int i = 0;
@@ -740,9 +744,6 @@ public class MultiActionController extends AbstractController {
 		if (commandClass == null) {
 			commandClass = metodoOriginal.getParameterTypes()[metodoOriginal.getParameterTypes().length - 1];
 		}
-//		if(commandClass.equals(Object.class)){
-//			logger.warn("Utilizando classe java.lang.Object como command");
-//		}
 		return commandClass;
 	}
 
@@ -1098,6 +1099,7 @@ public class MultiActionController extends AbstractController {
 	}
 
 	public static class CommandInfo {
+
 		protected String name = "";
 
 		protected boolean validate = false;
@@ -1108,6 +1110,7 @@ public class MultiActionController extends AbstractController {
 		public String toString() {
 			return "name: " + name + ", validate: " + validate + ", session: " + session;
 		}
+
 	}
 
 	public Map<String, Method> getHandlerMethodMap() {
@@ -1172,4 +1175,5 @@ public class MultiActionController extends AbstractController {
 	public String toJson(Object object) {
 		return ServiceFactory.getService(JsonTranslator.class).toJson(object);
 	}
+
 }
