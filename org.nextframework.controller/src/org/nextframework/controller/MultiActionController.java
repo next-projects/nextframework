@@ -713,28 +713,7 @@ public class MultiActionController extends AbstractController {
 			Type type = genericParameterTypes[commandIndex];
 			if (type instanceof TypeVariable<?>) {
 				TypeVariable<?> typeVariable = (TypeVariable<?>) type;
-				String typeVariableName = typeVariable.getName();
-				TypeVariable<?>[] typeParameters = this.getClass().getTypeParameters();
-				if (typeParameters.length != 0) {
-					throw new NextException("Implementar achar tipo de command por genericTypeParameters");
-				}
-				//Sobe a hierarquia até achar a superclasse que herdou e definiu o tipo genérico
-				Type genericSuperclass = null;
-				Class<?> superClass = this.getClass();
-				while (!method.getDeclaringClass().equals(superClass)) {
-					genericSuperclass = superClass.getGenericSuperclass();
-					superClass = superClass.getSuperclass();
-				}
-				if (genericSuperclass instanceof ParameterizedType) {
-					TypeVariable<?>[] typeParametersMethodClass = method.getDeclaringClass().getTypeParameters();
-					int i = 0;
-					for (TypeVariable<?> variable : typeParametersMethodClass) {
-						if (variable.getName().equals(typeVariableName)) {
-							commandClass = (Class<?>) ((ParameterizedType) genericSuperclass).getActualTypeArguments()[i];
-						}
-						i++;
-					}
-				}
+				commandClass = getActualTypeClass(method.getDeclaringClass(), typeVariable.getName());
 				break;
 			}
 			if (type instanceof Object) {
@@ -745,6 +724,44 @@ public class MultiActionController extends AbstractController {
 			commandClass = metodoOriginal.getParameterTypes()[metodoOriginal.getParameterTypes().length - 1];
 		}
 		return commandClass;
+	}
+
+	private Class<?> getActualTypeClass(Class<?> absClass, String absClassTypeName) {
+
+		//Obtém o índice do tipo genérico
+		Integer typeParameterIndex = null;
+		for (int i = 0; i < absClass.getTypeParameters().length; i++) {
+			if (absClass.getTypeParameters()[i].getName().equals(absClassTypeName)) {
+				typeParameterIndex = i;
+				break;
+			}
+		}
+
+		if (typeParameterIndex == null) {
+			throw new RuntimeException("A classe " + absClass + " não contém o parâmetro " + absClassTypeName + "!");
+		}
+
+		//Sobe a hierarquia até achar a superclasse que definiu o tipo genérico
+		Type genericSuperclass = null;
+		Class<?> superClass = this.getClass();
+		while (!absClass.equals(superClass)) {
+			genericSuperclass = superClass.getGenericSuperclass();
+			superClass = superClass.getSuperclass();
+		}
+
+		if (genericSuperclass instanceof ParameterizedType) {
+			ParameterizedType genericParameterizedType = (ParameterizedType) genericSuperclass;
+			Type genericSuperclassType = genericParameterizedType.getActualTypeArguments()[typeParameterIndex];
+			if (genericSuperclassType instanceof TypeVariable<?>) {
+				TypeVariable<?> genericSuperclassTypeVariable = (TypeVariable<?>) genericSuperclassType;
+				return getActualTypeClass((Class<?>) genericSuperclassTypeVariable.getGenericDeclaration(), genericSuperclassTypeVariable.getName());
+			} else {
+				return (Class<?>) genericSuperclassType;
+			}
+		} else {
+			throw new RuntimeException("A classe " + genericSuperclass + " não é parametrizada!");
+		}
+
 	}
 
 	/**
