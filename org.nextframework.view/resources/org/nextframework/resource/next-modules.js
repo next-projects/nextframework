@@ -1548,7 +1548,7 @@ NextAjax.prototype.send = function(options){
 
 	var p = next.util.defaultParam(options);
 	p("url", window.location.pathname);
-	p("appendContext", options.url == window.location.pathname? false:NextAjax.appendContext);
+	p("appendContext", options.url.startsWith(next.http.getApplicationContext()) ? false : NextAjax.appendContext);
 	p("params", "");
 	p("async", true);
 	p("charset", "UTF-8");
