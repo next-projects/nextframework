@@ -1059,18 +1059,18 @@ public class MultiActionController extends AbstractController {
 	 * @return a ModelAndView to render the response
 	 */
 	private ModelAndView handleException(WebRequestContext request, Throwable ex) throws Exception {
-
 		Method handler = getExceptionHandler(ex);
 		if (handler != null) {
 			return invokeExceptionHandler(handler, request, ex);
 		}
 		// If we get here, there was no custom handler
+		String exMsg = Util.exceptions.getExceptionDescription(ex, false, request.getLocale());
 		if (ex instanceof Exception) {
-			request.getServletResponse().addHeader("EX-MESSAGE", ex.getMessage());
+			request.getServletResponse().addHeader("EX-MESSAGE", exMsg);
 			throw (Exception) ex;
 		}
 		if (ex instanceof Error) {
-			request.getServletResponse().addHeader("EX-ERROR-MESSAGE", ex.getClass().getSimpleName() + ": " + ex.getMessage());
+			request.getServletResponse().addHeader("EX-ERROR-MESSAGE", ex.getClass().getSimpleName() + ": " + exMsg);
 			throw (Error) ex;
 		}
 		// Should never happen!

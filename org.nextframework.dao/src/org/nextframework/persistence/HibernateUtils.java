@@ -101,6 +101,7 @@ public class HibernateUtils {
 		return value;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <E> E loadValue(E value, Class<?> superclass, Serializable identifier) {
 		if (identifier != null) {
 			GenericDAO<?> daoForClass = DAOUtils.getDAOForClass(superclass);
