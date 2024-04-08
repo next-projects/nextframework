@@ -33,14 +33,14 @@ public interface PropertyValidator {
 	 * Valida a propriedade (property) de determinado objeto (bean)
 	 * e salva em errors
 	 * @param bean objeto sendo validado
-	 * @param property propriedade do objeto sendo validada
+	 * @param value valor do objeto sendo validado
 	 * @param fieldDisplayName 
 	 * @param errors 
 	 * @param annotationValidator 
 	 * @param validation validation encontrado com a propriedade
 	 * 
 	 */
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator);
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator);
 	
 	
 	/**

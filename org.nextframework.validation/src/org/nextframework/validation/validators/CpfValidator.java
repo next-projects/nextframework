@@ -23,8 +23,6 @@
  */
 package org.nextframework.validation.validators;
 
-
-
 import java.lang.annotation.Annotation;
 
 import org.nextframework.validation.JavascriptValidationItem;
@@ -32,10 +30,9 @@ import org.nextframework.validation.ObjectAnnotationValidator;
 import org.nextframework.validation.PropertyValidator;
 import org.springframework.validation.Errors;
 
-
 public class CpfValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName,
+	public void validate(Object bean, Object value, String fieldName,
 			String fieldDisplayName, Annotation annotation, Errors errors,
 			ObjectAnnotationValidator annotationValidator) {
 	}
@@ -49,7 +46,7 @@ public class CpfValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\""+validationItem.getFieldDisplayName()+"\\\" não é um CPF válido";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" não é um CPF válido";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

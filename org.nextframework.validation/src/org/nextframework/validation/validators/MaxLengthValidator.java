@@ -33,18 +33,16 @@ import org.nextframework.validation.PropertyValidator;
 import org.nextframework.validation.annotation.MaxLength;
 import org.springframework.validation.Errors;
 
+public class MaxLengthValidator implements PropertyValidator {
 
-public class MaxLengthValidator implements PropertyValidator{
-
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if (property!=null && !property.toString().trim().equals("")) {
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
+		if (value != null && !value.toString().trim().equals("")) {
 			MaxLength maxLength = (MaxLength) annotation;
 			int max = maxLength.value();
-			if (!GenericValidator.maxLength(property.toString(), max)) {
-				errors.rejectValue(fieldName, "maxLenght", "O campo "+fieldDisplayName+" deve ter um tamanho menor ou igual à "+max);
+			if (!GenericValidator.maxLength(value.toString(), max)) {
+				errors.rejectValue(fieldName, "maxLenght", "O campo " + fieldDisplayName + " deve ter um tamanho menor ou igual à " + max);
 			}
 		}
-		
 	}
 
 	public String getValidationName() {
@@ -63,24 +61,24 @@ public class MaxLengthValidator implements PropertyValidator{
 		List<Annotation> validations = validationItem.getValidations();
 		int max = 0;
 		for (Annotation annotation : validations) {
-			if(MaxLength.class.isAssignableFrom(annotation.getClass())){
-				max = ((MaxLength)annotation).value();
+			if (MaxLength.class.isAssignableFrom(annotation.getClass())) {
+				max = ((MaxLength) annotation).value();
 				break;
 			}
 		}
-		return "new Function (\"varName\", \"this.maxlength='"+max+"';  return this[varName];\")";
+		return "new Function (\"varName\", \"this.maxlength='" + max + "';  return this[varName];\")";
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
 		List<Annotation> validations = validationItem.getValidations();
 		int max = 0;
 		for (Annotation annotation : validations) {
-			if(MaxLength.class.isAssignableFrom(annotation.getClass())){
-				max = ((MaxLength)annotation).value();
+			if (MaxLength.class.isAssignableFrom(annotation.getClass())) {
+				max = ((MaxLength) annotation).value();
 				break;
 			}
 		}
-		return "O campo "+validationItem.getFieldDisplayName()+" deve ter um tamanho menor que "+max;
+		return "O campo " + validationItem.getFieldDisplayName() + " deve ter um tamanho menor que " + max;
 	}
 
 }

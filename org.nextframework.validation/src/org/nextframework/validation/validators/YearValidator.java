@@ -31,18 +31,17 @@ import org.nextframework.validation.ObjectAnnotationValidator;
 import org.nextframework.validation.PropertyValidator;
 import org.springframework.validation.Errors;
 
-
 /**
  * Validador para campos email
  * 
  */
 public class YearValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName,
+	public void validate(Object bean, Object value, String fieldName,
 			String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if (property!=null && property instanceof Number) {
-			if (!GenericValidator.isInRange(((Number)property).intValue(), 1950, 2050)) {
-				errors.rejectValue(fieldName, "year", "O campo "+fieldDisplayName+" deve ser um ano (1950 até 2050)");
+		if (value != null && value instanceof Number) {
+			if (!GenericValidator.isInRange(((Number) value).intValue(), 1950, 2050)) {
+				errors.rejectValue(fieldName, "year", "O campo " + fieldDisplayName + " deve ser um ano (1950 até 2050)");
 			}
 		}
 	}
@@ -56,7 +55,7 @@ public class YearValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo "+validationItem.getFieldDisplayName()+" deve ser um ano válido (de 1950 até 2050)";
+		return "O campo " + validationItem.getFieldDisplayName() + " deve ser um ano válido (de 1950 até 2050)";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {
@@ -66,5 +65,5 @@ public class YearValidator implements PropertyValidator {
 	public String getValidationFunctionName() {
 		return "Year";
 	}
-	
+
 }

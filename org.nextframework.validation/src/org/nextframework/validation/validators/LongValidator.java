@@ -32,7 +32,7 @@ import org.springframework.validation.Errors;
 
 public class LongValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors,	ObjectAnnotationValidator annotationValidator) {
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
 	}
 
 	public String getValidationName() {

@@ -23,8 +23,6 @@
  */
 package org.nextframework.validation.validators;
 
-
-
 import java.lang.annotation.Annotation;
 
 import org.nextframework.validation.JavascriptValidationItem;
@@ -32,10 +30,9 @@ import org.nextframework.validation.ObjectAnnotationValidator;
 import org.nextframework.validation.PropertyValidator;
 import org.springframework.validation.Errors;
 
-
 public class ShortValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName,
+	public void validate(Object bean, Object value, String fieldName,
 			String fieldDisplayName, Annotation annotation, Errors errors,
 			ObjectAnnotationValidator annotationValidator) {
 	}
@@ -49,7 +46,7 @@ public class ShortValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\""+validationItem.getFieldDisplayName()+"\\\" não é um número inteiro válido! Deve ser inteiro e estar entre -32768 e 32767";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" não é um número inteiro válido! Deve ser inteiro e estar entre -32768 e 32767";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

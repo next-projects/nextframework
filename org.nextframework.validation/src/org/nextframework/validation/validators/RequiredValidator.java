@@ -31,7 +31,6 @@ import org.nextframework.validation.ObjectAnnotationValidator;
 import org.nextframework.validation.PropertyValidator;
 import org.springframework.validation.Errors;
 
-
 /**
  * Validador para campos obrigatórios
  * @author rogelgarcia
@@ -39,14 +38,14 @@ import org.springframework.validation.Errors;
  */
 public class RequiredValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation validation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if(property == null || (property instanceof String && ((String)property).trim().equals(""))){
-			errors.rejectValue(fieldName, "required", "O campo "+fieldDisplayName+" é obrigatório.");
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation validation, Errors errors, ObjectAnnotationValidator annotationValidator) {
+		if (value == null || (value instanceof String && ((String) value).trim().equals(""))) {
+			errors.rejectValue(fieldName, "required", "O campo " + fieldDisplayName + " é obrigatório.");
 		}
-		if(property instanceof List<?>){
-			List<?> list = (List<?>) property;
-			if(list.isEmpty()){
-				errors.rejectValue(fieldName, "required", "O campo "+fieldDisplayName+" é obrigatório.");	
+		if (value instanceof List<?>) {
+			List<?> list = (List<?>) value;
+			if (list.isEmpty()) {
+				errors.rejectValue(fieldName, "required", "O campo " + fieldDisplayName + " é obrigatório.");
 			}
 		}
 	}
@@ -60,7 +59,7 @@ public class RequiredValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo "+validationItem.getFieldDisplayName()+" é obrigatório.";
+		return "O campo " + validationItem.getFieldDisplayName() + " é obrigatório.";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {
@@ -70,5 +69,5 @@ public class RequiredValidator implements PropertyValidator {
 	public String getValidationFunctionName() {
 		return "Required";
 	}
-	
+
 }

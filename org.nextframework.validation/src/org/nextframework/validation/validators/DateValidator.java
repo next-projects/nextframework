@@ -31,16 +31,14 @@ import org.nextframework.validation.ObjectAnnotationValidator;
 import org.nextframework.validation.PropertyValidator;
 import org.springframework.validation.Errors;
 
+public class DateValidator implements PropertyValidator {
 
-public class DateValidator implements PropertyValidator{
-
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if (property!=null && !property.toString().trim().equals("")) {
-			if (!GenericValidator.isDate(property.toString(),"dd/MM/yyyy",true)) {
-				errors.rejectValue(fieldName, "data", "O campo \\\""+fieldDisplayName+"\\\" não é uma data válida");
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
+		if (value != null && !value.toString().trim().equals("")) {
+			if (!GenericValidator.isDate(value.toString(), "dd/MM/yyyy", true)) {
+				errors.rejectValue(fieldName, "data", "O campo \\\"" + fieldDisplayName + "\\\" não é uma data válida");
 			}
 		}
-		
 	}
 
 	public String getValidationName() {
@@ -56,7 +54,7 @@ public class DateValidator implements PropertyValidator{
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\""+validationItem.getFieldDisplayName()+"\\\" não é uma data válida";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" não é uma data válida";
 	}
 
 	public String getValidationFunctionName() {

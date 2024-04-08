@@ -23,8 +23,6 @@
  */
 package org.nextframework.validation.validators;
 
-
-
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -35,18 +33,16 @@ import org.nextframework.validation.PropertyValidator;
 import org.nextframework.validation.annotation.MinLength;
 import org.springframework.validation.Errors;
 
-
 public class MinLengthValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if (property!=null && !property.toString().trim().equals("")) {
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
+		if (value != null && !value.toString().trim().equals("")) {
 			MinLength minLength = (MinLength) annotation;
 			int min = minLength.value();
-			if (!GenericValidator.minLength(property.toString(), min)) {
-				errors.rejectValue(fieldName, "minLenght", "O campo "+fieldDisplayName+" deve ter um tamanho menor ou igual à "+min);
+			if (!GenericValidator.minLength(value.toString(), min)) {
+				errors.rejectValue(fieldName, "minLenght", "O campo " + fieldDisplayName + " deve ter um tamanho menor ou igual à " + min);
 			}
 		}
-		
 	}
 
 	public String getValidationName() {
@@ -65,24 +61,24 @@ public class MinLengthValidator implements PropertyValidator {
 		List<Annotation> validations = validationItem.getValidations();
 		int min = 0;
 		for (Annotation annotation : validations) {
-			if(MinLength.class.isAssignableFrom(annotation.getClass())){
-				min = ((MinLength)annotation).value();
+			if (MinLength.class.isAssignableFrom(annotation.getClass())) {
+				min = ((MinLength) annotation).value();
 				break;
 			}
 		}
-		return "new Function (\"varName\", \"this.minlength='"+min+"';  return this[varName];\")";
+		return "new Function (\"varName\", \"this.minlength='" + min + "';  return this[varName];\")";
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
 		List<Annotation> validations = validationItem.getValidations();
 		int min = 0;
 		for (Annotation annotation : validations) {
-			if(MinLength.class.isAssignableFrom(annotation.getClass())){
-				min = ((MinLength)annotation).value();
+			if (MinLength.class.isAssignableFrom(annotation.getClass())) {
+				min = ((MinLength) annotation).value();
 				break;
 			}
 		}
-		return "O campo "+validationItem.getFieldDisplayName()+" deve ter um tamanho maior que "+min;
+		return "O campo " + validationItem.getFieldDisplayName() + " deve ter um tamanho maior que " + min;
 	}
 
 }

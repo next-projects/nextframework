@@ -64,7 +64,7 @@ public class ObjectAnnotationValidator extends WebApplicationObjectSupport imple
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public void validate(Object obj, Errors errors) {
 		if (servletRequest instanceof MultipartHttpServletRequest) {
 			MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) servletRequest;

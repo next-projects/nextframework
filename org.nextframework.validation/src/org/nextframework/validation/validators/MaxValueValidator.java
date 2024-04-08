@@ -35,16 +35,15 @@ import org.springframework.validation.Errors;
 
 public class MaxValueValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if (property!=null && !property.toString().trim().equals("")) {
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
+		if (value != null && !value.toString().trim().equals("")) {
 			MaxValue maxValue = (MaxValue) annotation;
 			double max = maxValue.value();
-			double atual = Double.parseDouble(property.toString());
+			double atual = Double.parseDouble(value.toString());
 			if (atual > max) {
-				errors.rejectValue(fieldName, "maxValue", "O campo "+fieldDisplayName+" deve ter um valor menor ou igual a "+max);
+				errors.rejectValue(fieldName, "maxValue", "O campo " + fieldDisplayName + " deve ter um valor menor ou igual a " + max);
 			}
 		}
-
 	}
 
 	public String getValidationName() {
@@ -63,29 +62,28 @@ public class MaxValueValidator implements PropertyValidator {
 		List<Annotation> validations = validationItem.getValidations();
 		double max = 0;
 		for (Annotation annotation : validations) {
-			if(MaxValue.class.isAssignableFrom(annotation.getClass())){
-				max = ((MaxValue)annotation).value();
+			if (MaxValue.class.isAssignableFrom(annotation.getClass())) {
+				max = ((MaxValue) annotation).value();
 				break;
 			}
 		}
-		
-		return "new Function (\"varName\", \"this.max='"+max+"';  return this[varName];\")";
+		return "new Function (\"varName\", \"this.max='" + max + "';  return this[varName];\")";
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
 		List<Annotation> validations = validationItem.getValidations();
 		double max = 0;
 		for (Annotation annotation : validations) {
-			if(MaxValue.class.isAssignableFrom(annotation.getClass())){
-				max = ((MaxValue)annotation).value();
+			if (MaxValue.class.isAssignableFrom(annotation.getClass())) {
+				max = ((MaxValue) annotation).value();
 				break;
 			}
 		}
 		String maxValue = String.valueOf(max);
-		if(new Integer((int)max).doubleValue() == max){
+		if (new Integer((int) max).doubleValue() == max) {
 			maxValue = NumberFormat.getIntegerInstance().format(max);
 		}
-		return "O campo "+validationItem.getFieldDisplayName()+" deve ter valor menor ou igual a "+maxValue;
+		return "O campo " + validationItem.getFieldDisplayName() + " deve ter valor menor ou igual a " + maxValue;
 	}
 
 }

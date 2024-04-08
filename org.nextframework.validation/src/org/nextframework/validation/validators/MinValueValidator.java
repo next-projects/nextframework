@@ -23,8 +23,6 @@
  */
 package org.nextframework.validation.validators;
 
-
-
 import java.lang.annotation.Annotation;
 import java.text.NumberFormat;
 import java.util.List;
@@ -35,19 +33,17 @@ import org.nextframework.validation.PropertyValidator;
 import org.nextframework.validation.annotation.MinValue;
 import org.springframework.validation.Errors;
 
-
 public class MinValueValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if (property!=null && !property.toString().trim().equals("")) {
+	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
+		if (value != null && !value.toString().trim().equals("")) {
 			MinValue minValue = (MinValue) annotation;
 			double min = minValue.value();
-			double atual = Double.parseDouble(property.toString());
+			double atual = Double.parseDouble(value.toString());
 			if (atual < min) {
-				errors.rejectValue(fieldName, "minValue", "O campo "+fieldDisplayName+" deve ter um valor maior ou igual a "+min);
+				errors.rejectValue(fieldName, "minValue", "O campo " + fieldDisplayName + " deve ter um valor maior ou igual a " + min);
 			}
 		}
-
 	}
 
 	public String getValidationName() {
@@ -66,28 +62,28 @@ public class MinValueValidator implements PropertyValidator {
 		List<Annotation> validations = validationItem.getValidations();
 		double min = 0;
 		for (Annotation annotation : validations) {
-			if(MinValue.class.isAssignableFrom(annotation.getClass())){
-				min = ((MinValue)annotation).value();
+			if (MinValue.class.isAssignableFrom(annotation.getClass())) {
+				min = ((MinValue) annotation).value();
 				break;
 			}
 		}
-		return "new Function (\"varName\", \"this.min='"+min+"';  return this[varName];\")";
+		return "new Function (\"varName\", \"this.min='" + min + "';  return this[varName];\")";
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
 		List<Annotation> validations = validationItem.getValidations();
 		double min = 0;
 		for (Annotation annotation : validations) {
-			if(MinValue.class.isAssignableFrom(annotation.getClass())){
-				min = ((MinValue)annotation).value();
+			if (MinValue.class.isAssignableFrom(annotation.getClass())) {
+				min = ((MinValue) annotation).value();
 				break;
 			}
 		}
 		String minValue = String.valueOf(min);
-		if(new Integer((int)min).doubleValue() == min){
+		if (new Integer((int) min).doubleValue() == min) {
 			minValue = NumberFormat.getIntegerInstance().format(min);
 		}
-		return "O campo "+validationItem.getFieldDisplayName()+" deve ter valor maior ou igual a "+minValue;
+		return "O campo " + validationItem.getFieldDisplayName() + " deve ter valor maior ou igual a " + minValue;
 	}
 
 }

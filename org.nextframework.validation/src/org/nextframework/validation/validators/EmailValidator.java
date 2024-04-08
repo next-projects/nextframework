@@ -31,18 +31,17 @@ import org.nextframework.validation.ObjectAnnotationValidator;
 import org.nextframework.validation.PropertyValidator;
 import org.springframework.validation.Errors;
 
-
 /**
  * Validador para campos email
  * 
  */
 public class EmailValidator implements PropertyValidator {
 
-	public void validate(Object bean, Object property, String fieldName,
+	public void validate(Object bean, Object value, String fieldName,
 			String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
-		if (property!=null && !property.toString().trim().equals("")) {
-			if (!GenericValidator.isEmail(property.toString())) {
-				errors.rejectValue(fieldName, "email", "O campo "+fieldDisplayName+" deve ser um email");
+		if (value != null && !value.toString().trim().equals("")) {
+			if (!GenericValidator.isEmail(value.toString())) {
+				errors.rejectValue(fieldName, "email", "O campo " + fieldDisplayName + " deve ser um email");
 			}
 		}
 	}
@@ -56,7 +55,7 @@ public class EmailValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo "+validationItem.getFieldDisplayName()+" deve ser um email";
+		return "O campo " + validationItem.getFieldDisplayName() + " deve ser um email";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {
@@ -66,6 +65,5 @@ public class EmailValidator implements PropertyValidator {
 	public String getValidationFunctionName() {
 		return "Email";
 	}
-	
-	
+
 }
