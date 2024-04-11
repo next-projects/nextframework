@@ -3,7 +3,6 @@ package org.nextframework.web;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.Normalizer;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -162,10 +161,7 @@ public class WebUtils {
 	}
 
 	public static void verificaMapComHTML(Map<String, ?> parameters, String propertiesToIgnore) {
-
-		String[] propertiesToIgnoreArray = Util.strings.splitFields(propertiesToIgnore);
-		List<String> propertiesToIgnoreList = propertiesToIgnoreArray != null && propertiesToIgnoreArray.length > 0 ? Arrays.asList(propertiesToIgnoreArray) : null;
-
+		List<String> propertiesToIgnoreList = Util.strings.splitFieldsAsList(propertiesToIgnore, false);
 		for (String parametro : parameters.keySet()) {
 			if (propertiesToIgnoreList != null && propertiesToIgnoreList.contains(parametro)) {
 				continue;
@@ -173,14 +169,10 @@ public class WebUtils {
 			Object valor = parameters.get(parametro);
 			verificaValorComHTML(valor, parametro);
 		}
-
 	}
 
 	public static void verificaAtributosComHTML(Object bean, String propertiesToIgnore) {
-
-		String[] propertiesToIgnoreArray = Util.strings.splitFields(propertiesToIgnore);
-		List<String> propertiesToIgnoreList = propertiesToIgnoreArray != null && propertiesToIgnoreArray.length > 0 ? Arrays.asList(propertiesToIgnoreArray) : null;
-
+		List<String> propertiesToIgnoreList = Util.strings.splitFieldsAsList(propertiesToIgnore, false);
 		Field[] fields = bean.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
@@ -195,7 +187,6 @@ public class WebUtils {
 				verificaValorComHTML(valor, field.getName());
 			}
 		}
-
 	}
 
 	private static void verificaValorComHTML(Object valor, String parametro) {

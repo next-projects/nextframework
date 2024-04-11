@@ -30,6 +30,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -37,6 +38,8 @@ import java.util.Date;
 import java.util.Formattable;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -112,11 +115,27 @@ public class StringUtils {
 		return builder.toString();
 	}
 
+	public List<String> splitFieldsAsList(String fields, boolean removeEmptyStrings) {
+		if (fields == null) {
+			return null;
+		}
+		String[] fieldsArray = splitFields(fields);
+		List<String> fieldsList = new ArrayList<String>(Arrays.asList(fieldsArray));
+		if (removeEmptyStrings) {
+			for (Iterator<String> it = fieldsList.iterator(); it.hasNext();) {
+				if (isEmpty(it.next())) {
+					it.remove();
+				}
+			}
+		}
+		return fieldsList;
+	}
+
 	public String[] splitFields(String fields) {
 		if (fields == null) {
 			return null;
 		}
-		return fields.split("(\\s*)?[,;](\\s*)?");
+		return fields.split("\\s*[,|;|\\s]\\s*");
 	}
 
 	/**

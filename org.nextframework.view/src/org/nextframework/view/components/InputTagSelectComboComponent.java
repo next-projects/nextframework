@@ -355,7 +355,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 					}
 					if (HibernateUtils.isLazy(selectedValue)) {
 						selectedValue = dao.load(selectedValue, extraFields);
-					}else {
+					} else {
 						dao.loadDescriptionProperty(selectedValue, extraFields);
 					}
 				}
