@@ -16,10 +16,19 @@ Execute `build-install.xml` as an ANT script.
 Your project is configured with next! No tools, no command lines, no plugins are necessary.
 Refresh your project to see the new files.
 
+This tutorial works better with Eclipse IDE with web plugins. For IntelliJ, some extra steps are required.
+
+Also:
+Be sure to configure the JDK in your IDE.
+Configure the compile output path of your project to be the folder `WebContent/WEB-INF/classes` within your project, if needed.
+Install Ant plugin in IntelliJ to work with Ant files.
+
 ## Next Build
 
-Next comes with ANT scripts ready to use. A `build.xml` is placed at the root of the project. It contains common tasks. 
-If you want to use this script file to deploy your application, configure in `build.properties` file. The property `server.deploy` sets where the files must be deployed. 
+Next comes with ANT scripts ready to use. A `build.xml` is placed at the root of the project. 
+Configure the `build.properties` file. The property `server.deploy` sets where the files must be deployed. 
+
+If using tomcat, `server.deploy` must be configured with the webapps folder of tomcat. Like : `[TOMCAT_HOME]/webapps`. Replace TOMCAT_HOME with the folder where tomcat was installed.
 
 ## Hello World - MVC
 
