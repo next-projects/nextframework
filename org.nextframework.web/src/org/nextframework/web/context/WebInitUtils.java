@@ -35,9 +35,11 @@ class WebInitUtils {
 				} else {
 					Set<String> packageResources = servletContext.getResourcePaths(path);
 					boolean hasFiles = false;
-					for (String pckResource : packageResources) {
-						if (!pckResource.endsWith("/")) {
-							hasFiles = true;
+					if (packageResources != null) {
+						for (String pckResource : packageResources) {
+							if (!pckResource.endsWith("/")) {
+								hasFiles = true;
+							}
 						}
 					}
 					if (hasFiles) {
