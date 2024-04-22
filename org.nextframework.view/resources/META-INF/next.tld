@@ -1305,6 +1305,11 @@
 		<tag-class>org.nextframework.view.menu.MenuTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Path onde se encontra o menu</description>
 			<name>menupath</name>
 			<required>false</required>

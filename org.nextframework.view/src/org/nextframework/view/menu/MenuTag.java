@@ -52,10 +52,10 @@ public class MenuTag extends BaseTag {
 		}
 
 		String code = null;
-		if (menu != null) {
-			code = getMenuCodeFromMenu(menu);
-		} else if (menupath != null) {
+		if (menupath != null) {
 			code = getMenuCodeFromPath(menupath);
+		} else if (menu != null) {
+			code = getMenuCodeFromMenu(menu);
 		}
 
 		getOut().println(code);
@@ -66,8 +66,9 @@ public class MenuTag extends BaseTag {
 
 		User user = Authorization.getUserLocator().getUser();
 		Locale locale = NextWeb.getRequestContext().getLocale();
+		String menuRef = id + "_" + menupath;
 
-		String menuCode = getCachedMenuCode(menupath, user, locale);
+		String menuCode = getCachedMenuCode(menuRef, user, locale);
 		if (menuCode != null) {
 			return menuCode;
 		}
@@ -75,7 +76,7 @@ public class MenuTag extends BaseTag {
 		Menu menu = MenuResolver.carregaMenu(menupath, user, locale);
 		menuCode = getMenuCodeFromMenu(menu);
 
-		setCachedMenuCode(menupath, user, locale, menuCode);
+		setCachedMenuCode(menuRef, user, locale, menuCode);
 
 		return menuCode;
 	}
@@ -90,8 +91,8 @@ public class MenuTag extends BaseTag {
 		return menuBuilder.build(menu);
 	}
 
-	public String getCachedMenuCode(String menupath, User user, Locale locale) {
-		MenuCache menuCache = getCacheMap().get(menupath);
+	public String getCachedMenuCode(String menuRef, User user, Locale locale) {
+		MenuCache menuCache = getCacheMap().get(menuRef);
 		if (menuCache != null && !resetMenu(menuCache, user, locale)) {
 			return menuCache.menuCode;
 		}
@@ -123,9 +124,9 @@ public class MenuTag extends BaseTag {
 		return false;
 	}
 
-	public void setCachedMenuCode(String menupath, User user, Locale locale, String menuCode) {
+	public void setCachedMenuCode(String menuRef, User user, Locale locale, String menuCode) {
 		MenuCache menuCache = new MenuCache(user, locale, menuCode, System.currentTimeMillis());
-		getCacheMap().put(menupath, menuCache);
+		getCacheMap().put(menuRef, menuCache);
 	}
 
 	public String getMenupath() {
