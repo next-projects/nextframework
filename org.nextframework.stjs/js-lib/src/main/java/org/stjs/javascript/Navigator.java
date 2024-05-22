@@ -16,6 +16,7 @@
 package org.stjs.javascript;
 
 abstract public class Navigator {
+
 	public String appCodeName;
 	public String appName;
 	public String appVersion;
@@ -26,4 +27,5 @@ abstract public class Navigator {
 	abstract public boolean javaEnabled();
 
 	abstract public boolean taintEnabled();
+
 }

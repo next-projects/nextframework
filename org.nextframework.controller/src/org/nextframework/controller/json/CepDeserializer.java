@@ -19,4 +19,5 @@ class CepDeserializer extends JsonDeserializer<Cep> {
 		}
 		return new Cep(value);
 	}
+
 }

@@ -27,7 +27,6 @@ import java.util.Arrays;
 
 import org.springframework.core.GenericTypeResolver;
 
-
 /**
  * @author rogelgarcia
  * @since 01/02/2006
@@ -36,28 +35,28 @@ import org.springframework.core.GenericTypeResolver;
  * @deprecated use GenericTypeResolver
  */
 public class GenericsUtils {
-	
+
 	@SuppressWarnings("all")
 	public static Class<?> resolveTypeArgument(Class clazz, Class genericIfc) {
 		Class<?> result = GenericTypeResolver.resolveTypeArgument(clazz, genericIfc);
-		if(result == null){
-			throw new IllegalArgumentException("Cannot resolve type argument for "+clazz+" with "+genericIfc);
+		if (result == null) {
+			throw new IllegalArgumentException("Cannot resolve type argument for " + clazz + " with " + genericIfc);
 		}
 		return result;
 	}
-	
+
 	@SuppressWarnings("all")
 	public static Class<?> resolveTypeArgument(Class clazz, Class genericIfc, int index) {
 		Class[] typeArguments = resolveTypeArguments(clazz, genericIfc);
-		if(typeArguments == null || typeArguments.length <= index){
-			throw new IllegalArgumentException("Cannot resolve type argument for "+clazz+" with "+genericIfc+" using index "+index+". Found "+Arrays.deepToString(typeArguments));
+		if (typeArguments == null || typeArguments.length <= index) {
+			throw new IllegalArgumentException("Cannot resolve type argument for " + clazz + " with " + genericIfc + " using index " + index + ". Found " + Arrays.deepToString(typeArguments));
 		}
 		return typeArguments[index];
 	}
-	
+
 	@SuppressWarnings("all")
 	public static Class[] resolveTypeArguments(Class clazz, Class genericIfc) {
 		return GenericTypeResolver.resolveTypeArguments(clazz, genericIfc);
 	}
-	
+
 }

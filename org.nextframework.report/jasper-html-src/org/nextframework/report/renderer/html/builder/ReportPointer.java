@@ -10,14 +10,14 @@ import org.nextframework.report.definition.elements.Subreport;
 public class ReportPointer {
 
 	ReportPointer parent;
-	
+
 	List<ReportPointer> children = new ArrayList<ReportPointer>();
-	
+
 	ReportDefinition definition;
 
 	Subreport subreport;
-	
-	public ReportPointer(ReportDefinition definition){
+
+	public ReportPointer(ReportDefinition definition) {
 		this.definition = definition;
 		config();
 	}
@@ -30,8 +30,8 @@ public class ReportPointer {
 	private void config() {
 		List<ReportItem> reportChildren = definition.getChildren();
 		for (ReportItem reportItem : reportChildren) {
-			if(reportItem instanceof Subreport){
-				if(!reportItem.getRow().getSection().isRender()){
+			if (reportItem instanceof Subreport) {
+				if (!reportItem.getRow().getSection().isRender()) {
 					//2015-07-03 solves bug of hidden section
 					//if the section of the subreport is not rendered, 
 					//this subreport will not appear
@@ -43,7 +43,7 @@ public class ReportPointer {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return toString("");
@@ -51,28 +51,30 @@ public class ReportPointer {
 
 	private String toString(String padding) {
 		String reportName = definition.getReportName();
-		StringBuilder sb = new StringBuilder(padding+reportName+"\n");
+		StringBuilder sb = new StringBuilder(padding + reportName + "\n");
 		for (ReportPointer c : children) {
-			sb.append(padding+"   |" +c.toString(padding+"  "));
+			sb.append(padding + "   |" + c.toString(padding + "  "));
 		}
 		return sb.toString();
 	}
 
 	int childIndex = 0;
+
 	public ReportPointer next() {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 		}
-		if(children.size() > 0 && children.size() > childIndex){
+		if (children.size() > 0 && children.size() > childIndex) {
 			return children.get(childIndex++);
 		} else {
 			childIndex = 0;
 		}
-		if(parent == null){
+		if (parent == null) {
 			//has returned to the begining
 			return children.get(childIndex++);
 		}
 		return parent;
 	}
+
 }

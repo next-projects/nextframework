@@ -25,11 +25,12 @@ package org.nextframework.util;
 
 public class BooleanUtils {
 
-	public boolean isTrue(Boolean b){
+	public boolean isTrue(Boolean b) {
 		return b != null && b;
 	}
-	
-	public boolean isFalse(Boolean b){
+
+	public boolean isFalse(Boolean b) {
 		return b != null && !b;
 	}
+
 }

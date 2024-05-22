@@ -67,9 +67,12 @@ public class LoginController extends MultiActionController implements Authentica
 	 * Efetua o login do usuário
 	 */
 	public String doLogin(UserForm user) {
+
 		String login = user.getUsername();
+
 		//se foi passado o login na requisição, iremos verificar se o usuário existe e a senha está correta
 		if (login != null) {
+
 			//buscamos o usuário do banco pelo login
 			User userByLogin = authorizationDAO.findUserByUsername(login);
 
@@ -78,6 +81,7 @@ public class LoginController extends MultiActionController implements Authentica
 			String passwordProvided = user.getPassword();
 
 			if (userByLogin != null && validPassword(passwordPersisted, passwordProvided)) {
+
 				//Setando o atributo de seção USER fazemos o login do usuário no sistema.
 				getRequest().setUserAttribute("USER", userByLogin);
 
@@ -95,6 +99,7 @@ public class LoginController extends MultiActionController implements Authentica
 
 		//limpar o campo senha, e enviar para a tela de login já que o processo falhou
 		user.setPassword(null);
+
 		return doPage(user);
 	}
 

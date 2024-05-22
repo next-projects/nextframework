@@ -11,10 +11,11 @@ public abstract class Form {
 	 * @return
 	 */
 	public abstract Form subForm(String prefix);
-	
+
 	public abstract Form setProperty(String name, Object value);
-	
+
 	public abstract void removeSystemFields();
-	
+
 	public abstract String toQueryString();
+
 }

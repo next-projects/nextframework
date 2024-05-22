@@ -84,7 +84,7 @@ public class DownloadFileProvider {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Resource getResource(HttpServletRequest request, Long cdfile) {
 
 		DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext()).getAutowireCapableBeanFactory();

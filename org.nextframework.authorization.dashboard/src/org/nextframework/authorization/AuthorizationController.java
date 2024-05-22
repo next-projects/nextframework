@@ -48,38 +48,43 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 public class AuthorizationController extends MultiActionController {
-	
+
 	private TransactionTemplate transactionTemplate;
-	
+
 	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
 		this.transactionTemplate = transactionTemplate;
 	}
-	
+
 	@Action("salvar")
 	@Input("list")
 	public ModelAndView salvar(final WebRequestContext request, final AuthorizationProcessFilter authorizationFilter) {
+
 		final Role role = authorizationFilter.getRole();
+
 		if (role != null) {
+
 			//@SuppressWarnings("unchecked")
 			//Enumeration parameterNames = request.getServletRequest().getParameterNames();
 			//while(parameterNames.hasMoreElements()){
 			//	System.out.println(parameterNames.nextElement());
 			//}
+
 			synchronized (request.getSession().getServletContext()) { //TODO FIXME FIX THIS SYNC
-				
+
 				//TODO FIXME CHECK HOW TO FIX THIS
 				if (Authorization.getAuthorizationManager() instanceof AuthorizationManagerImpl) {
 					if (((AuthorizationManagerImpl) Authorization.getAuthorizationManager()).getPermissionLocator() instanceof WebPermissionLocator) {
 						((WebPermissionLocator) ((AuthorizationManagerImpl) Authorization.getAuthorizationManager()).getPermissionLocator()).clearCache();
 					}
 				}
-				
+
 				Collection<List<AuthorizationProcessItemFilter>> values = authorizationFilter.getGroupAuthorizationMap().values();
 				final List<AuthorizationProcessItemFilter> authorizationItemFilters = new ArrayList<AuthorizationProcessItemFilter>();
 				for (List<AuthorizationProcessItemFilter> value : values) {
 					authorizationItemFilters.addAll(value);
 				}
-				transactionTemplate.execute(new TransactionCallback<Object>(){
+
+				transactionTemplate.execute(new TransactionCallback<Object>() {
 
 					public Object doInTransaction(TransactionStatus status) {
 						//TODO FIXME USE DI
@@ -91,60 +96,71 @@ public class AuthorizationController extends MultiActionController {
 							Map<String, String> permissionMap = filter.getPermissionMap();
 							Set<String> defaultKeySet = defaultPermissionMap.keySet();
 							for (String string : defaultKeySet) {
-								if(permissionMap.get(string) == null){
+								if (permissionMap.get(string) == null) {
 									permissionMap.put(string, defaultPermissionMap.get(string));
 								}
 							}
-							 Authorization.getAuthorizationDAO().savePermission(filter.getPath(), role, permissionMap);
+							Authorization.getAuthorizationDAO().savePermission(filter.getPath(), role, permissionMap);
 						}
 						return null;
-					}});
+					}
+
+				});
 
 			}
 		}
+
 		//reseta os menus
 //		request.getSession().setAttribute(MenuTag.MENU_CACHE_MAP, null);
-		((DefaultWebRequestContext)request).setLastAction("");
+		((DefaultWebRequestContext) request).setLastAction("");
+
 		return list(request, authorizationFilter);
 	}
 
 	@DefaultAction
 	@Input("")
 	public ModelAndView list(WebRequestContext request, AuthorizationProcessFilter authorizationFilter) {
+
 		authorizationFilter.setGroupAuthorizationMap(new HashMap<String, List<AuthorizationProcessItemFilter>>());
 		request.setAttribute("roles", Authorization.getAuthorizationDAO().findAllRoles());
 		request.setAttribute("filter", authorizationFilter);
-		
-		if(authorizationFilter.getRole() != null){
+
+		if (authorizationFilter.getRole() != null) {
+
 			Map<String, AuthorizationModule> mapaGroupModule = new HashMap<String, AuthorizationModule>();
 			Map<String, List<AuthorizationProcessItemFilter>> groupAuthorizationMap = authorizationFilter.getGroupAuthorizationMap();
-			
+
 			@SuppressWarnings("all")
 			Class[] controllerClasses = findControllerClasses(request.getWebApplicationContext());
+
 			for (Class<?> controllerClass : controllerClasses) {
+
 				Controller controller = controllerClass.getAnnotation(Controller.class);
 				String[] paths = controller.path();
 //				ControlMappingLocator controlMappingLocator = request.getWebApplicationContext().getConfig().getControlMappingLocator();
-				
-				
+
 				//TODO FIXME USE DI
 				//usar o authorizationModule já configurado, apenas o primeiro path é necessário para reconhecer o controller
 				AuthorizationModule authorizationModule = ServiceFactory.getService(ResourceAuthorizationMapper.class).getAuthorizationModule(paths[0]);//controller.authorizationModule().newInstance();
-				
+
 				mapaGroupModule.put(authorizationModule.getAuthorizationGroupName(), authorizationModule);
-				if(!(authorizationModule instanceof HasAccessAuthorizationModule)){
+				if (!(authorizationModule instanceof HasAccessAuthorizationModule)) {
 					AuthorizationProcessItemFilter[] authorizationProcessItemFilters = getAuthorizationProcessItemFilter(authorizationFilter.getRole(), controller, authorizationModule);
 					for (AuthorizationProcessItemFilter authorizationProcessItemFilter : authorizationProcessItemFilters) {
 						AuthorizationProcessItemFilter authorizationItemFilter = authorizationProcessItemFilter;
 						List<AuthorizationProcessItemFilter> list = getAuthorizationListForModule(groupAuthorizationMap, authorizationModule);
-						list.add(authorizationItemFilter);													
+						list.add(authorizationItemFilter);
 					}
 
 				}
 			}
+
 			request.setAttribute("mapaGroupModule", mapaGroupModule);
+
 		}
+
 		request.setAttribute("authorizationProcessItemFilterClass", AuthorizationProcessItemFilter.class);
+
 		return getModelAndView();
 	}
 
@@ -159,7 +175,7 @@ public class AuthorizationController extends MultiActionController {
 	protected List<AuthorizationProcessItemFilter> getAuthorizationListForModule(Map<String, List<AuthorizationProcessItemFilter>> groupAuthorizationMap, AuthorizationModule authorizationModule) {
 		String authorizationGroupName = authorizationModule.getAuthorizationGroupName();
 		List<AuthorizationProcessItemFilter> list = groupAuthorizationMap.get(authorizationGroupName);
-		if(list == null){
+		if (list == null) {
 			list = new ArrayList<AuthorizationProcessItemFilter>();
 			groupAuthorizationMap.put(authorizationGroupName, list);
 		}
@@ -170,20 +186,20 @@ public class AuthorizationController extends MultiActionController {
 		String[] paths = controller.path();
 		List<AuthorizationProcessItemFilter> authorizationItemFilters = new ArrayList<AuthorizationProcessItemFilter>();
 		for (String path : paths) {
-			Permission permission =  Authorization.getAuthorizationDAO().findPermission(role, path);
+			Permission permission = Authorization.getAuthorizationDAO().findPermission(role, path);
 			AuthorizationProcessItemFilter authorizationItemFilter = new AuthorizationProcessItemFilter();
 			authorizationItemFilter.setAuthorizationModule(authorizationModule);
 			authorizationItemFilter.setDescription(translatePath(path));
 			authorizationItemFilter.setPath(path);
-			if(permission == null){			
-				permission =  Authorization.getAuthorizationDAO().savePermission(path, role, getDefaultPermissionMap(authorizationModule));
+			if (permission == null) {
+				permission = Authorization.getAuthorizationDAO().savePermission(path, role, getDefaultPermissionMap(authorizationModule));
 			}
 			authorizationItemFilter.setPermissionMap(permission.getPermissionMap());
 			authorizationItemFilters.add(authorizationItemFilter);
 		}
 		return authorizationItemFilters.toArray(new AuthorizationProcessItemFilter[authorizationItemFilters.size()]);
 	}
-	
+
 	protected String translatePath(String string) {
 		return string;
 	}
@@ -191,11 +207,11 @@ public class AuthorizationController extends MultiActionController {
 	private Map<String, String> getDefaultPermissionMap(AuthorizationModule authorizationModule) {
 		AuthorizationItem[] authorizationItens = authorizationModule.getAuthorizationItens();
 		Map<String, String> defaultPermissionMap = new HashMap<String, String>();
-		
 		for (AuthorizationItem item : authorizationItens) {
 			String id = item.getId();
-			if(item.getValues()== null || item.getValues().length == 0) throw new IllegalArgumentException("Os valores possíveis de um item de autorização não pode ser um array vazio ou null");
-			String valorMaisRestritivo = item.getValues()[item.getValues().length-1];
+			if (item.getValues() == null || item.getValues().length == 0)
+				throw new IllegalArgumentException("Os valores possíveis de um item de autorização não pode ser um array vazio ou null");
+			String valorMaisRestritivo = item.getValues()[item.getValues().length - 1];
 			defaultPermissionMap.put(id, valorMaisRestritivo);
 		}
 		return defaultPermissionMap;

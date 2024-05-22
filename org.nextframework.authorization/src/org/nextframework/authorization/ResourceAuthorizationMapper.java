@@ -7,7 +7,6 @@ package org.nextframework.authorization;
  */
 public interface ResourceAuthorizationMapper {
 
-//	void setResourceAuthorizationModule(String resource, AuthorizationModule authorizationModule);
-	
 	AuthorizationModule getAuthorizationModule(String resource);
+
 }

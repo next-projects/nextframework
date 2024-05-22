@@ -24,5 +24,7 @@ package org.stjs.generator;
  * 
  */
 public interface DependencyResolver {
+
 	ClassWithJavascript resolve(String className);
+
 }

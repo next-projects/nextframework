@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Anchor extends Element {
+
 	public String accessKey;
 	public String charset;
 	public String coords;
@@ -36,4 +37,5 @@ abstract public class Anchor extends Element {
 	public void focus() {
 		throw new UnsupportedOperationException();
 	}
+
 }

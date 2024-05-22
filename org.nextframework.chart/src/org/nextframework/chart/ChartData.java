@@ -60,6 +60,7 @@ public class ChartData implements Serializable {
 		new ChartDataRegrouper(maximumNumberOfSeries).regroup(this);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void limit(int maximumNumberOfSeries) {
 		new ChartDataRegrouper(maximumNumberOfSeries).regroup(this);
 		for (ChartRow row : data) {
@@ -82,6 +83,7 @@ public class ChartData implements Serializable {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void removeEmptySeries() {
 		int emptySerieIndex = -1;
 		int index = 0;

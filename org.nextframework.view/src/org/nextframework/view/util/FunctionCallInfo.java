@@ -26,5 +26,7 @@ package org.nextframework.view.util;
 public interface FunctionCallInfo {
 
 	Class<?> getType(FunctionParameter functionParameter);
+
 	Object getValue(FunctionParameter functionParameter);
+
 }

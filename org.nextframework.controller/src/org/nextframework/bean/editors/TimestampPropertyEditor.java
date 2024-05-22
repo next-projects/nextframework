@@ -27,7 +27,7 @@ import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class TimestampPropertyEditor extends PropertyEditorSupport{
+public class TimestampPropertyEditor extends PropertyEditorSupport {
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
@@ -50,11 +50,11 @@ public class TimestampPropertyEditor extends PropertyEditorSupport{
 		}
 		*/
 	}
-	
+
 	public Object getValue() {
 		Object object = super.getValue();
-		if(object instanceof Date){
-			Timestamp timestamp = new Timestamp(((Date)object).getTime());
+		if (object instanceof Date) {
+			Timestamp timestamp = new Timestamp(((Date) object).getTime());
 			return timestamp;
 		}
 		return object;

@@ -51,6 +51,7 @@ import com.google.common.collect.Multimap;
  * 
  */
 public class AnonymousClassesHelper {
+
 	private final static String STATIC_INIT_METHOD = "<clinit>";
 	private final static String CONSTRUCTOR_METHOD = "<init>";
 	private final static Pattern ANONYMOUS_CLASS_PATTERN = Pattern.compile("\\$\\d+$");
@@ -70,7 +71,6 @@ public class AnonymousClassesHelper {
 		for (Method m : clazz.getMethods()) {
 			MethodGen mg = new MethodGen(m, g.getClassName(), g.getConstantPool());
 			String methodName = mg.getName();
-
 			if (mg.getInstructionList() == null) {
 				continue;
 			}
@@ -109,7 +109,6 @@ public class AnonymousClassesHelper {
 				InitializerDeclaration init = (InitializerDeclaration) parent;
 				return init.isStatic() ? STATIC_INIT_METHOD : CONSTRUCTOR_METHOD;
 			}
-
 		}
 		return STATIC_INIT_METHOD;
 	}

@@ -33,11 +33,13 @@ import org.nextframework.exception.NextException;
  * @version 1.1
  */
 public class DefaultApplicationContext extends AbstractApplicationContext {
+
 //	
 //	Map<String, Object> attributes = new HashMap<String, Object>();
 //	private ClassManager classManager;
 //	
 	private static String applicationName;
+
 //
 //	public DefaultApplicationContext() {
 //	}
@@ -59,7 +61,7 @@ public class DefaultApplicationContext extends AbstractApplicationContext {
 //	}
 //
 	public String getApplicationName() {
-		if(applicationName == null){
+		if (applicationName == null) {
 			throw new NextException("Application name is null. Use DefaultApplicationContext.setApplicationName(...)");
 		}
 		return applicationName;
@@ -67,12 +69,12 @@ public class DefaultApplicationContext extends AbstractApplicationContext {
 
 	@Override
 	public String getApplicationDir() {
-		return System.getProperty("user.home") 
-				+ File.separator + ".appData" 
+		return System.getProperty("user.home")
+				+ File.separator + ".appData"
 				+ File.separator + getApplicationName();
 	}
 
-	public static void setApplicationName(String appName){
+	public static void setApplicationName(String appName) {
 		applicationName = appName;
 	}
 

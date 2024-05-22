@@ -8,9 +8,11 @@ import org.nextframework.view.js.builder.JavascriptBuilderMap;
 import org.nextframework.view.js.builder.JavascriptBuilderObjectReference;
 
 public interface Core {
-	
+
 	interface Var {
+
 		String call(String function, Object... parameters);
+
 	}
 
 	class Obj extends JavascriptBuilderObjectReference implements Var {
@@ -38,16 +40,18 @@ public interface Core {
 		public Obj(String variable) {
 			super(variable);
 		}
-		
+
 	}
-	
+
 	class Ref extends JavascriptBuilderObjectReference implements Var {
+
 		public Ref(String refName) {
 			super();
 			variable = refName;
 		}
+
 	}
-	
+
 	class Array extends JavascriptBuilderArray {
 
 		public Array(Object... objects) {
@@ -55,11 +59,11 @@ public interface Core {
 		}
 
 		public String call(String function, Object... parameters) {
-	 		throw new RuntimeException("Should not call this method in array");
+			throw new RuntimeException("Should not call this method in array");
 		}
-		
+
 	}
-	
+
 	class Map extends JavascriptBuilderMap {
 
 		public Map() {
@@ -77,18 +81,19 @@ public interface Core {
 		public String call(String function, Object... parameters) {
 			throw new RuntimeException("Should not call this method in map");
 		}
-		
+
 	}
-	
+
 	class Function extends JavascriptBuilderFunction {
 
 		public Function(JavascriptBuilder code) {
 			super(code);
 		}
+
 		public Function(String name, JavascriptBuilder code) {
 			super(name, code);
 		}
-		
+
 	}
-	
+
 }

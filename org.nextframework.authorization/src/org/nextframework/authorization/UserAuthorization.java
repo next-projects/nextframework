@@ -31,7 +31,8 @@ package org.nextframework.authorization;
  * @author rogelgarcia
  */
 public interface UserAuthorization {
-    
+
 	@Deprecated
-    public static final String AUTHORIZATION_ATTRIBUTE = "authorization";
+	public static final String AUTHORIZATION_ATTRIBUTE = "authorization";
+
 }

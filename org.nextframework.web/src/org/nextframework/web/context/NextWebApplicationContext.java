@@ -70,6 +70,7 @@ public class NextWebApplicationContext extends AnnotationConfigWebApplicationCon
 			beanDefinitionLoader.setApplicationScanPaths(applicationScanPaths);
 			beanDefinitionLoader.loadBeanDefinitions(this, beanFactory);
 		}
+
 	}
 
 	private boolean isApplicationComponent(BeanDefinition beanDefinition, String[] applicationScanPaths) {

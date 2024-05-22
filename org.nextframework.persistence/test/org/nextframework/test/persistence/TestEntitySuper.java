@@ -11,10 +11,10 @@ import javax.persistence.OneToMany;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class TestEntitySuper {
-	
+
 	Long id;
 	String name;
-	
+
 	List<TestEntityChild> children;
 
 	@Id
@@ -33,14 +33,14 @@ public class TestEntitySuper {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@OneToMany(mappedBy="parentSuper")
+
+	@OneToMany(mappedBy = "parentSuper")
 	public List<TestEntityChild> getChildren() {
 		return children;
 	}
-	
+
 	public void setChildren(List<TestEntityChild> children) {
 		this.children = children;
 	}
-	
+
 }

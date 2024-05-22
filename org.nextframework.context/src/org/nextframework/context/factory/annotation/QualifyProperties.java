@@ -34,11 +34,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author rogelgarcia
  *
  */
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
 public @interface QualifyProperties {
 
 	Class<? extends Annotation> value() default Qualifier.class;
+
 }

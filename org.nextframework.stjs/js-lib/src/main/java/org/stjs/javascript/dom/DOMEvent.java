@@ -1,6 +1,7 @@
 package org.stjs.javascript.dom;
 
 public class DOMEvent {
+
 	public boolean bubbles;
 	public Object button;
 	public Object eventPhase;
@@ -29,4 +30,5 @@ public class DOMEvent {
 
 	public long timeStamp;
 	public String type;
+
 }

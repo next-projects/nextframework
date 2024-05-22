@@ -27,6 +27,7 @@ import org.stjs.javascript.functions.Callback1;
  * @author acraciun
  */
 public interface Array<V> extends Iterable<String> {
+
 	public V $get(int index);
 
 	public V $get(String index);
@@ -52,7 +53,7 @@ public interface Array<V> extends Iterable<String> {
 	public V pop();
 
 	public int push(V... values);
-	
+
 	public void reverse();
 
 	public V shift();
@@ -72,4 +73,5 @@ public interface Array<V> extends Iterable<String> {
 	public int unshift(V... values);
 
 	public void forEach(Callback1<V> callback);
+
 }

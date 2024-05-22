@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import org.stjs.javascript.Date;
 
 public class JSDateUtils {
+
 	private final static String DEFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
 	public static String toNormalizedString(Date d) {

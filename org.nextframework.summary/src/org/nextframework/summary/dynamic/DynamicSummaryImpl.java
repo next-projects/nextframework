@@ -190,6 +190,7 @@ class CodeGenerator {
 	}
 
 	private void createVariable(StringBuilder builder, DynamicVariable variable, int i) {
+
 		BeanDescriptor beanDescriptor = getBeanDescriptor();
 
 		String variableName = variable.getName();

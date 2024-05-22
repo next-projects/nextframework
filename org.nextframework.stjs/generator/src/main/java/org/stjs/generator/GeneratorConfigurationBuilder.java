@@ -26,6 +26,7 @@ import java.util.Set;
  * 
  */
 public class GeneratorConfigurationBuilder {
+
 	private Collection<String> allowedPackages = new HashSet<String>();
 	private Set<String> allowedJavaLangClasses = new HashSet<String>();
 	private boolean generateArrayHasOwnProperty = true;
@@ -56,6 +57,7 @@ public class GeneratorConfigurationBuilder {
 	}
 
 	public GeneratorConfiguration build() {
+
 		allowedJavaLangClasses.add("Object");
 		allowedJavaLangClasses.add("String");
 		allowedJavaLangClasses.add("Number");

@@ -19,12 +19,17 @@ public @interface Variable {
 	 * @return
 	 */
 	CalculationType calculation() default CalculationType.NONE;
+
 	/**
 	 * Custom aggregator when calculation property is not used.
 	 * @return
 	 */
 	Class<? extends Aggregator> customAggregator() default Aggregator.class;
+
 	Scope scope() default Scope.ROW;
+
 	String scopeGroup() default "";
+
 	String incrementOnGroupChange() default "";
+
 }

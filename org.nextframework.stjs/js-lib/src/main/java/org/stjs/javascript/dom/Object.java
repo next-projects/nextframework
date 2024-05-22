@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Object extends Element {
+
 	public String align;
 	public String archive;
 	public String border;
@@ -35,4 +36,5 @@ abstract public class Object extends Element {
 	public String useMap;
 	public String vspace;
 	public String width;
+
 }

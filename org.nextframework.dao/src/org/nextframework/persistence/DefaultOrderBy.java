@@ -36,6 +36,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface DefaultOrderBy {
+
 	//TODO TROCAR ESSA TAG POR UMA @DAO
 	String value();
+
 }

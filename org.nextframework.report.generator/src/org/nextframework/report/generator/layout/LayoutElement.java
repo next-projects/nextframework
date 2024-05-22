@@ -6,7 +6,7 @@ import java.util.List;
 public class LayoutElement {
 
 	List<LayoutItem> items = new ArrayList<LayoutItem>();
-	
+
 	public List<LayoutItem> getItems() {
 		return items;
 	}
@@ -16,19 +16,18 @@ public class LayoutElement {
 		return String.format("%s", items);
 	}
 
-
 	public LayoutItem getItemWithName(String name) {
 		for (LayoutItem item : items) {
-			if(item instanceof FieldDetailElement){
+			if (item instanceof FieldDetailElement) {
 				String name2 = ((FieldDetailElement) item).getName();
-				if(name2.equals(name)){
+				if (name2.equals(name)) {
 					return item;
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -54,5 +53,4 @@ public class LayoutElement {
 		return true;
 	}
 
-	
 }

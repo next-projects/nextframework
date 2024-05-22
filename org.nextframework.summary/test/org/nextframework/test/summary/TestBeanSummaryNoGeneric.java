@@ -2,7 +2,7 @@ package org.nextframework.test.summary;
 
 import org.nextframework.summary.Summary;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class TestBeanSummaryNoGeneric extends Summary {
 
 }

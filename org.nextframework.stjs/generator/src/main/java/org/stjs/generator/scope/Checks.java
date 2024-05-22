@@ -74,12 +74,10 @@ public class Checks {
 					if (!p.getId().getName().equals(GeneratorConstants.ARGUMENTS_PARAMETER)) {
 						throw new JavascriptGenerationException(arg.getInputFile(), new SourcePosition(n),
 								"You can only have a vararg parameter that has to be called 'arguments'");
-
 					}
 					if (n.getParameters().size() != 1) {
 						throw new JavascriptGenerationException(arg.getInputFile(), new SourcePosition(n),
 								"You can only have a vararg parameter that has to be called 'arguments'");
-
 					}
 				}
 			}
@@ -194,7 +192,6 @@ public class Checks {
 				return;
 			}
 			ClassWrapper superClass = (ClassWrapper) superType;
-
 			for (BodyDeclaration member : n.getMembers()) {
 				if (member instanceof MethodDeclaration) {
 					String name = ((MethodDeclaration) member).getName();
@@ -212,7 +209,6 @@ public class Checks {
 						}
 						continue;
 					}
-
 					if (superClass.findField(name).isDefined() || !superClass.findMethods(name).isEmpty()) {
 						throw new JavascriptGenerationException(
 								context.getInputFile(),

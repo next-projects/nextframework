@@ -15,9 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.nextframework.bean.editors.CalendarEditor;
-import org.nextframework.bean.editors.SimpleTimePropertyEditor;
 import org.nextframework.bean.editors.MoneyPropertyEditor;
-import org.nextframework.bean.editors.TimestampPropertyEditor;
+import org.nextframework.bean.editors.SimpleTimePropertyEditor;
 import org.nextframework.types.Money;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -50,12 +49,14 @@ public class BaseTagPropertyEditorsManager {
 		InputListener<A> inputListener = (InputListener<A>) getInputListeners().get(annotation.annotationType());
 		if (inputListener == null) {
 			return new InputListener() {
+
 				public void onRender(InputTag input, Annotation annotation) {
 				}
 
 				public Class getAnnotationType() {
 					return null;
 				}
+
 			};
 		}
 		return inputListener;
@@ -94,5 +95,5 @@ public class BaseTagPropertyEditorsManager {
 		registerInputListener(new MaxLengthInputListener());
 		registerInputListener(new YearInputListener());
 	}
-	
+
 }

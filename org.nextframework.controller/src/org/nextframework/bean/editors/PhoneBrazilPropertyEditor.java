@@ -28,11 +28,11 @@ import java.beans.PropertyEditorSupport;
 import org.nextframework.types.PhoneBrazil;
 import org.springframework.util.StringUtils;
 
-public class PhoneBrazilPropertyEditor extends PropertyEditorSupport{
+public class PhoneBrazilPropertyEditor extends PropertyEditorSupport {
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if(StringUtils.hasText(text)){
+		if (StringUtils.hasText(text)) {
 			setValue(new PhoneBrazil(text));
 		} else {
 			setValue(null);
@@ -41,7 +41,7 @@ public class PhoneBrazilPropertyEditor extends PropertyEditorSupport{
 
 	@Override
 	public String getAsText() {
-		if(getValue() == null){
+		if (getValue() == null) {
 			return "";
 		}
 		return getValue().toString();

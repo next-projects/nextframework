@@ -52,10 +52,12 @@ public class Lists {
 			public int size() {
 				return list1.size() + list2.size();
 			}
+
 		};
 	}
 
 	public static <T> List<T> append(List<T> coll, T appendee) {
 		return union(coll, Collections.singletonList(appendee));
 	}
+
 }

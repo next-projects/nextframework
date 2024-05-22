@@ -7,27 +7,27 @@ import java.util.List;
 public class ReportRendererFactory {
 
 	static List<ReportRenderer> renderers = new ArrayList<ReportRenderer>();
-	
-	public static void registerRenderer(ReportRenderer renderer){
+
+	public static void registerRenderer(ReportRenderer renderer) {
 		for (Iterator<ReportRenderer> iterator = renderers.iterator(); iterator.hasNext();) {
 			ReportRenderer reportRenderer = iterator.next();
-			if(reportRenderer.getOutputType().equals(renderer.getOutputType())){
+			if (reportRenderer.getOutputType().equals(renderer.getOutputType())) {
 				iterator.remove();
 				break;
 			}
 		}
 		renderers.add(renderer);
 	}
-	
-	public static ReportRenderer getRendererForOutput(String outputType){
+
+	public static ReportRenderer getRendererForOutput(String outputType) {
 		for (ReportRenderer renderer : renderers) {
-			if(renderer.getOutputType().equals(outputType)){
+			if (renderer.getOutputType().equals(outputType)) {
 				return renderer;
 			}
 		}
-		throw new RuntimeException("Nenhum ReportRenderer foi encontrado para o tipo de saída "+outputType);
+		throw new RuntimeException("Nenhum ReportRenderer foi encontrado para o tipo de saída " + outputType);
 	}
-	
+
 	static {
 		try {
 			Class.forName("org.nextframework.report.renderer.jasper.JasperReportsRenderer");
@@ -36,4 +36,5 @@ public class ReportRendererFactory {
 			throw new RuntimeException(e);
 		}
 	}
+
 }

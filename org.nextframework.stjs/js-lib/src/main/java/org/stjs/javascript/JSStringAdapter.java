@@ -26,6 +26,7 @@ import org.stjs.javascript.functions.Function1;
  */
 @Adapter
 public class JSStringAdapter {
+
 	public static String anchor(String applyTo, String anchor) {
 		throw new UnsupportedOperationException();
 	}
@@ -105,4 +106,5 @@ public class JSStringAdapter {
 	public static String fromCharCode(Class<? extends String> applyTo, int... codes) {
 		throw new UnsupportedOperationException();
 	}
+
 }

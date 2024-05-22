@@ -5,7 +5,7 @@ import org.nextframework.bean.annotation.DescriptionProperty;
 public class TestExample4PhaseBean {
 
 	Integer id;
-	
+
 	String name;
 
 	public TestExample4PhaseBean(Integer id, String name) {
@@ -29,5 +29,5 @@ public class TestExample4PhaseBean {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }

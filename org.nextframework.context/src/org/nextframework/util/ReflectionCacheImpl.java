@@ -34,7 +34,7 @@ public class ReflectionCacheImpl implements ReflectionCache {
 	// Classes devem ser indexadas pelo nome: clazz.getName().
 	// Métodos devem ser indexados por eles mesmos: method.
 	// Vetores de classes devem ser indexados por sua representação em String: classArrayToString(vetor).
-	
+
 	protected Map<String, Annotation[]> hashGetAnnotationsClass = Collections.synchronizedMap(new HashMap<String, Annotation[]>());
 	protected Map<Method, Annotation[]> hashGetAnnotationsMethod = Collections.synchronizedMap(new HashMap<Method, Annotation[]>());
 	protected Map<String, HashMap<String, Annotation>> hashGetAnnotation = Collections.synchronizedMap(new HashMap<String, HashMap<String, Annotation>>());
@@ -42,14 +42,13 @@ public class ReflectionCacheImpl implements ReflectionCache {
 	protected Map<Method, HashMap<String, Boolean>> hashIsAnnotationPresentMethod = Collections.synchronizedMap(new HashMap<Method, HashMap<String, Boolean>>());
 	protected Map<String, Method[]> hashGetMethods = Collections.synchronizedMap(new HashMap<String, Method[]>());
 	protected Map<String, HashMap<String, HashMap<String, Method>>> hashGetMethod = Collections.synchronizedMap(new HashMap<String, HashMap<String, HashMap<String, Method>>>());
-	
+
 	public Annotation[] getAnnotations(Class<?> clazz) {
 		Annotation[] resultado = hashGetAnnotationsClass.get(clazz.getName());
 		if (resultado == null) {
 			resultado = clazz.getAnnotations();
 			hashGetAnnotationsClass.put(clazz.getName(), resultado);
 		}
-		
 		return resultado;
 	}
 
@@ -59,90 +58,92 @@ public class ReflectionCacheImpl implements ReflectionCache {
 			resultado = method.getAnnotations();
 			hashGetAnnotationsMethod.put(method, resultado);
 		}
-		
 		return resultado;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Annotation getAnnotation(Class clazz, Class annotationClazz) {
+
 		HashMap<String, Annotation> hashInterno = hashGetAnnotation.get(clazz.getName());
-		if (hashInterno==null) {
+		if (hashInterno == null) {
 			hashInterno = new HashMap<String, Annotation>();
 			hashGetAnnotation.put(clazz.getName(), hashInterno);
 		}
-		
+
 		Annotation resultado = hashInterno.get(annotationClazz.getName());
 		if (resultado == null) {
 			resultado = clazz.getAnnotation(annotationClazz);
 			hashInterno.put(annotationClazz.getName(), resultado);
 		}
-		
+
 		return resultado;
 	}
 
 	public boolean isAnnotationPresent(Class<?> clazz, Class<? extends Annotation> annotationClazz) {
+
 		HashMap<String, Boolean> hashInterno = hashIsAnnotationPresentClass.get(clazz.getName());
-		if (hashInterno==null) {
+		if (hashInterno == null) {
 			hashInterno = new HashMap<String, Boolean>();
 			hashIsAnnotationPresentClass.put(clazz.getName(), hashInterno);
 		}
-		
+
 		Boolean resultado = hashInterno.get(annotationClazz.getName());
 		if (resultado == null) {
 			resultado = clazz.isAnnotationPresent(annotationClazz);
 			hashInterno.put(annotationClazz.getName(), resultado);
 		}
-		
+
 		return resultado;
 	}
 
 	public boolean isAnnotationPresent(Method method, Class<? extends Annotation> annotationClazz) {
+
 		HashMap<String, Boolean> hashInterno = hashIsAnnotationPresentMethod.get(method);
-		if (hashInterno==null) {
+		if (hashInterno == null) {
 			hashInterno = new HashMap<String, Boolean>();
 			hashIsAnnotationPresentMethod.put(method, hashInterno);
 		}
-		
+
 		Boolean resultado = hashInterno.get(annotationClazz.getName());
 		if (resultado == null) {
 			resultado = method.isAnnotationPresent(annotationClazz);
 			hashInterno.put(annotationClazz.getName(), resultado);
 		}
-		
+
 		return resultado;
 	}
-	
+
 	public Method[] getMethods(Class<?> clazz) throws SecurityException {
 		Method[] resultado = hashGetMethods.get(clazz.getName());
 		if (resultado == null) {
 			resultado = clazz.getMethods();
 			hashGetMethods.put(clazz.getName(), resultado);
 		}
-		
 		return resultado;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Method getMethod(Class clazz, String name, Class... parameterTypes) throws NoSuchMethodException, SecurityException {
+
 		HashMap<String, HashMap<String, Method>> hashInterno1 = hashGetMethod.get(clazz.getName());
-		if (hashInterno1==null) {
+		if (hashInterno1 == null) {
 			hashInterno1 = new HashMap<String, HashMap<String, Method>>();
 			hashGetMethod.put(clazz.getName(), hashInterno1);
 		}
-		
+
 		HashMap<String, Method> hashInterno2 = hashInterno1.get(name);
-		if (hashInterno2==null) {
+		if (hashInterno2 == null) {
 			hashInterno2 = new HashMap<String, Method>();
 			hashInterno1.put(name, hashInterno2);
 		}
-		
+
 		String parameterTypesString = classArrayToString(parameterTypes);
 		Method resultado = hashInterno2.get(parameterTypesString);
 		if (resultado == null) {
 			resultado = clazz.getMethod(name, parameterTypes);
 			hashInterno2.put(parameterTypesString, resultado);
 		}
-		
+
 		return resultado;
 	}
 
@@ -150,7 +151,7 @@ public class ReflectionCacheImpl implements ReflectionCache {
 		String parameterTypesString = "[ ";
 		for (int i = 0; i < parameterTypes.length; i++) {
 			parameterTypesString += parameterTypes[i].getName();
-			if (i != parameterTypes.length-1) {
+			if (i != parameterTypes.length - 1) {
 				parameterTypesString += ", ";
 			}
 		}
@@ -163,7 +164,7 @@ public class ReflectionCacheImpl implements ReflectionCache {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		Annotation[] annotations = reflectionCache.getAnnotations(method);
 		for (Annotation a : annotations) {
-			if( a.annotationType().equals(annotation) ){
+			if (a.annotationType().equals(annotation)) {
 				return (E) a;
 			}
 		}

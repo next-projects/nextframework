@@ -27,8 +27,10 @@ import java.lang.annotation.Target;
  * 
  * @author acraciun
  */
-@Target({ ElementType.TYPE , ElementType.PACKAGE})
+@Target({ ElementType.TYPE, ElementType.PACKAGE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface STJSBridge {//
+
 	String[] sources() default "";
+
 }

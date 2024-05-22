@@ -16,6 +16,8 @@
 package org.stjs.javascript.dom;
 
 abstract public class Map extends Element {
+
 	public HTMLCollection<Area> areas;
 	public String name;
+
 }

@@ -30,27 +30,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TimePropertyEditor extends PropertyEditorSupport{
+public class TimePropertyEditor extends PropertyEditorSupport {
 
 	private String pattern = "HH:mm";
-	
+
 	private DateFormat dateFormat = new SimpleDateFormat(pattern);
-	
+
 	private boolean lenient = false;
 
-	public TimePropertyEditor(){
-		
+	public TimePropertyEditor() {
+
 	}
 
-	public TimePropertyEditor(String pattern){
+	public TimePropertyEditor(String pattern) {
 		this.pattern = pattern;
 		dateFormat = new SimpleDateFormat(this.pattern);
 	}
-	
-	public TimePropertyEditor(DateFormat dateFormat){
+
+	public TimePropertyEditor(DateFormat dateFormat) {
 		this.dateFormat = dateFormat;
 	}
-	
+
 	public boolean isLenient() {
 		return lenient;
 	}
@@ -61,7 +61,7 @@ public class TimePropertyEditor extends PropertyEditorSupport{
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if(text != null && !text.trim().equals("")){
+		if (text != null && !text.trim().equals("")) {
 			try {
 				dateFormat.setLenient(lenient);
 				Time time = new Time(dateFormat.parse(text).getTime());
@@ -76,14 +76,15 @@ public class TimePropertyEditor extends PropertyEditorSupport{
 
 	@Override
 	public String getAsText() {
-		if(getValue() == null) return "";
-		return dateFormat.format((Time)getValue());
+		if (getValue() == null)
+			return "";
+		return dateFormat.format((Time) getValue());
 	}
 
 	public Object getValue() {
 		Object object = super.getValue();
-		if(object instanceof Date){
-			Time timestamp = new Time(((Date)object).getTime());
+		if (object instanceof Date) {
+			Time timestamp = new Time(((Date) object).getTime());
 			return timestamp;
 		}
 		return object;

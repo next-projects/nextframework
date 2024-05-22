@@ -23,8 +23,8 @@
  */
 package org.nextframework.view;
 
-
 public interface PropertySetter {
 
 	public void set(Object value);
+
 }

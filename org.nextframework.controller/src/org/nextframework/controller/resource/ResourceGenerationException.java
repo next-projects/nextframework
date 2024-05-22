@@ -30,13 +30,10 @@ package org.nextframework.controller.resource;
  */
 public class ResourceGenerationException extends Exception {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	private String action;
-	
+
 	public String getAction() {
 		return action;
 	}
@@ -45,8 +42,9 @@ public class ResourceGenerationException extends Exception {
 		this.action = action;
 	}
 
-	public ResourceGenerationException(String action, Exception exception){
+	public ResourceGenerationException(String action, Exception exception) {
 		super(exception);
 		this.action = action;
 	}
+
 }

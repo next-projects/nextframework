@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import org.stjs.generator.utils.Option;
 
 public interface TypeWrapper {
+
 	public Type getType();
 
 	public Option<FieldWrapper> findField(String name);

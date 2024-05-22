@@ -11,7 +11,7 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 
 public class ServiceBeanDefinitionLoader extends CustomScannerBeanDefinitionLoader {
-	
+
 	@Override
 	public void applyFilters(ClassPathBeanDefinitionScanner scanner) {
 		setAutowireBeans(scanner, AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
@@ -34,4 +34,5 @@ public class ServiceBeanDefinitionLoader extends CustomScannerBeanDefinitionLoad
 	public String toString() {
 		return "Service Loader";
 	}
+
 }

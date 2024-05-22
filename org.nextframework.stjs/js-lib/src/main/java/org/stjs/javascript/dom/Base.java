@@ -16,6 +16,8 @@
 package org.stjs.javascript.dom;
 
 abstract public class Base extends Element {
+
 	public String href;
 	public String target;
+
 }

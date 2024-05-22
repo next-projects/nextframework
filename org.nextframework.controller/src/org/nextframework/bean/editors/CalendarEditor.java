@@ -32,7 +32,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 public class CalendarEditor extends CustomDateEditor {
 
 	DateFormat dateFormat;
-	
+
 	public CalendarEditor(DateFormat dateFormat, boolean allowEmpty, int exactDateLength) {
 		super(dateFormat, allowEmpty, exactDateLength);
 		this.dateFormat = dateFormat;
@@ -46,14 +46,14 @@ public class CalendarEditor extends CustomDateEditor {
 	@Override
 	public Object getValue() {
 		Object object = super.getValue();
-		if(object instanceof Date){
+		if (object instanceof Date) {
 			Calendar calendar = Calendar.getInstance();
-			calendar.setTime((Date)object);
+			calendar.setTime((Date) object);
 			return calendar;
 		}
 		return object;
 	}
-	
+
 	@Override
 	public String getAsText() {
 		Calendar value = (Calendar) getValue();

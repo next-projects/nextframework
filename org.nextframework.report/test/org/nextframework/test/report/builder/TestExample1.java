@@ -27,9 +27,10 @@ public class TestExample1 {
 	}
 
 	public static void write(ReportDefinition definition, byte[] bytes, String type) throws FileNotFoundException, IOException {
-		FileOutputStream out = new FileOutputStream(definition.getReportName()+"." + type);
+		FileOutputStream out = new FileOutputStream(definition.getReportName() + "." + type);
 		out.write(bytes);
 		out.flush();
 		out.close();
 	}
+
 }

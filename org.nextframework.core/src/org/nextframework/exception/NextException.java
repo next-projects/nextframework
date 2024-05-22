@@ -23,7 +23,6 @@
  */
 package org.nextframework.exception;
 
-
 /**
  * @author rogelgarcia
  * @since 21/01/2006

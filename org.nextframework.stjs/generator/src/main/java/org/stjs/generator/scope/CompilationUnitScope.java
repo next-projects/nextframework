@@ -48,7 +48,6 @@ public class CompilationUnitScope extends AbstractScope {
 		addType(wrap(Double.class));
 		addType(wrap(Exception.class));
 		addType(wrap(RuntimeException.class));
-
 	}
 
 	public String getPackageName() {
@@ -75,10 +74,12 @@ public class CompilationUnitScope extends AbstractScope {
 
 	@Override
 	public TypeWithScope resolveType(String name) {
+
 		TypeWithScope type = super.resolveType(name);
 		if (type != null) {
 			return type;
 		}
+
 		// try in package
 		for (ClassWrapper packageClass : classLoaderWrapper.loadClassOrInnerClass(packageName + "." + name)) {
 			super.addType(packageClass);

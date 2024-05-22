@@ -54,9 +54,9 @@ public class NextStandard extends Next {
 
 		ApplicationContext applicationContext = createApplicationContext(fileLocations);
 		DefaultRequestContext defaultRequestContext = new DefaultRequestContext(applicationContext);
-		
+
 		Next.requestContext.set(defaultRequestContext);
-		
+
 		return defaultRequestContext;
 	}
 

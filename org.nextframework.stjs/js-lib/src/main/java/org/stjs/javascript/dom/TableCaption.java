@@ -16,5 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class TableCaption extends Element {
+
 	public String align;
+
 }

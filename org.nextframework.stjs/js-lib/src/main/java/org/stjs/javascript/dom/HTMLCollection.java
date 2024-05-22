@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class HTMLCollection<T extends Node> {
+
 	public int length;
 
 	public T namedItem(String name) {
@@ -45,4 +46,5 @@ abstract public class HTMLCollection<T extends Node> {
 	public void remove(int i) {
 		throw new UnsupportedOperationException();
 	}
+
 }

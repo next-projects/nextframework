@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 public class Option extends Element {
+
 	public boolean defaultSelected;
 	public boolean disabled;
 	public Form form;

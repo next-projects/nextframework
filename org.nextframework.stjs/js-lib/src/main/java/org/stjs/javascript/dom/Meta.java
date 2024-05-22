@@ -16,8 +16,10 @@
 package org.stjs.javascript.dom;
 
 abstract public class Meta extends Element {
+
 	public String content;
 	public String httpEquiv;
 	public String name;
 	public String scheme;
+
 }

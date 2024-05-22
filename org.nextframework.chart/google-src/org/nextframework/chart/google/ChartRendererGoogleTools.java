@@ -4,7 +4,7 @@ import org.nextframework.chart.Chart;
 import org.nextframework.chart.ChartRenderer;
 
 public class ChartRendererGoogleTools implements ChartRenderer {
-	
+
 	public static String TYPE = "GOOGLE-TOOLS";
 
 	public String getOutputType() {

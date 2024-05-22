@@ -18,6 +18,7 @@ package org.stjs.javascript.dom;
 import org.stjs.javascript.functions.Function1;
 
 abstract public class Element extends Node {
+
 	public String className;
 	public String dir;
 	public String id;
@@ -39,7 +40,7 @@ abstract public class Element extends Node {
 	public int scrollTop;
 	public int scrollWidth;
 	public int width;
-	
+
 	public Style style;
 
 	// events
@@ -119,7 +120,8 @@ abstract public class Element extends Node {
 	 * @param f1
 	 * @param useCapture
 	 */
-	public void addEventListener(String event, Function1<DOMEvent, Boolean> f1, Boolean useCapture){
-		
+	public void addEventListener(String event, Function1<DOMEvent, Boolean> f1, Boolean useCapture) {
+
 	}
+
 }

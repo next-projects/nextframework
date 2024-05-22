@@ -38,32 +38,31 @@ import javax.tools.SimpleJavaFileObject;
  * @author rogelgarcia
  */
 public class MemoryJavaOutputFileObject extends SimpleJavaFileObject {
-	
+
 	ByteArrayOutputStream array = new ByteArrayOutputStream();
 	PrintWriter printWriter;
-    String className;
+	String className;
 
 	public MemoryJavaOutputFileObject(URI uri, Kind kind, String className) {
 		super(uri, kind);
 		this.className = className;
 	}
-	
+
 	public String getClassName() {
 		return className;
 	}
-	
 
 	@Override
 	public Writer openWriter() throws IOException {
 		printWriter = new PrintWriter(array);
 		return printWriter;
 	}
-	
+
 	@Override
 	public InputStream openInputStream() throws IOException {
 		return new ByteArrayInputStream(toByteArray());
 	}
-	
+
 	@Override
 	public OutputStream openOutputStream() throws IOException {
 		return array;
@@ -78,7 +77,7 @@ public class MemoryJavaOutputFileObject extends SimpleJavaFileObject {
 			array.flush();
 		} catch (IOException e) {
 		}
-		if(printWriter != null){
+		if (printWriter != null) {
 			printWriter.flush();
 		}
 	}

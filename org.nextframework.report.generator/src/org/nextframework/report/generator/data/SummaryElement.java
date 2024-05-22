@@ -7,4 +7,5 @@ public class SummaryElement {
 
 	List<GroupElement> groups = new ArrayList<GroupElement>();
 	List<VariableElement> variables = new ArrayList<VariableElement>();
+
 }

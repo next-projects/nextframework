@@ -32,5 +32,7 @@ package org.nextframework.authorization;
  * @author rogelgarcia
  */
 public interface Authorizer {
-    public boolean isAuthorized(String action, UserAuthorization authorization);
+
+	public boolean isAuthorized(String action, UserAuthorization authorization);
+
 }

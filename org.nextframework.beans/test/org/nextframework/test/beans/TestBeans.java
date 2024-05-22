@@ -9,80 +9,82 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class TestBeans {
 }
 
 interface InterfaceA {
+
 	String getId();
+
 }
 
 interface InterfaceB extends InterfaceA {
 }
 
-
 class InterfaceAImpl implements InterfaceA {
-	
+
 	Map<String, Integer> map = new HashMap<String, Integer>();
 
 	@Override
 	public String getId() {
 		return "value";
 	}
-	
+
 	public Map<String, Integer> getMap() {
 		return map;
 	}
-	
+
 }
 
 class InterfaceAImplSub extends InterfaceAImpl {
-	
+
 }
 
 class BaseTestNoDefConstructor {
-	
+
 	String value;
-	
-	public BaseTestNoDefConstructor(String value){
+
+	public BaseTestNoDefConstructor(String value) {
 		this.value = value;
 	}
-	
+
 	public String getValue() {
 		return value;
 	}
+
 }
 
 class SuperTestBeanA {
-	
+
 	String parentField;
-	
+
 	String parentProperty;
-	
+
 	String parentReadOnlyProperty;
-	
+
 	public String getParentProperty() {
 		return parentProperty;
 	}
-	
+
 	public void setParentProperty(String parentProperty) {
 		this.parentProperty = parentProperty;
 	}
-	
+
 	public String getParentReadOnlyProperty() {
 		return parentReadOnlyProperty;
 	}
+
 }
 
 class BaseTestBeanA extends SuperTestBeanA {
-	
+
 	Integer id;
-	
+
 	@Id
 	public Integer getId() {
 		return id;
 	}
-	
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -113,22 +115,25 @@ class BaseTestBeanA extends SuperTestBeanA {
 	public BaseTestBeanB getB() {
 		return b;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "BaseTestBeanA[b="+b+"]";
+		return "BaseTestBeanA[b=" + b + "]";
 	}
+
 }
 
 class BaseTestBeanA_$$_ extends BaseTestBeanA {
-	
+
 	@Override
 	public Integer getId() {
 		return super.getId();
 	}
+
 }
 
 class BaseTestBeanB {
+
 	BaseTestBeanC c;
 	List<BaseTestBeanC> listC;
 	List<BaseTestBeanC> instantiatedListC = new ArrayList<BaseTestBeanC>();
@@ -163,6 +168,7 @@ class BaseTestBeanB {
 	public void setInstantiatedListC(List<BaseTestBeanC> instantiatedListC) {
 		this.instantiatedListC = instantiatedListC;
 	}
+
 }
 
 class BaseTestBeanC {
@@ -194,11 +200,10 @@ class BaseTestBeanC {
 	public void setCalendarValue(Calendar calendarValue) {
 		this.calendarValue = calendarValue;
 	}
+
 }
 
 @Retention(RetentionPolicy.RUNTIME)
-@interface Id{
-	
+@interface Id {
+
 }
-
-

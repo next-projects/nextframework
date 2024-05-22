@@ -52,9 +52,7 @@ public class NextWeb extends Next {
 			throw new NullPointerException();
 		}
 		ServletContext servletContext = request.getSession().getServletContext();
-
 		getWebApplicationContext(servletContext);
-
 		getRequestContext(request, response);
 	}
 
@@ -62,14 +60,12 @@ public class NextWeb extends Next {
 		WebRequestContext context = (WebRequestContext) requestContext.get();
 		if (context == null) {
 			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
 			String msg = "The code is not running in a NEXT context!";
 			if (stackTrace.length >= 4) {
 				msg += "\nClass: " + stackTrace[3].getClassName() + " " +
 						"\nMethod: " + stackTrace[3].getMethodName() + " " +
 						"\nLine: " + stackTrace[3].getLineNumber();
 			}
-
 			throw new NotInNextContextException(msg);
 		}
 		return context;
@@ -88,12 +84,9 @@ public class NextWeb extends Next {
 	}
 
 	public static WebApplicationContext createApplicationContext(ServletContext servletContext) {
-
 		WebApplicationContext applicationContext = new DefaultWebApplicationContext(servletContext);
 		servletContext.setAttribute(WebApplicationContext.APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
-
 		Next.applicationContext.set(applicationContext);
-
 		return applicationContext;
 	}
 

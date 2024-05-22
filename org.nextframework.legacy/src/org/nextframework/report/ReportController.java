@@ -37,23 +37,22 @@ import org.springframework.web.servlet.ModelAndView;
  * @version 1.1
  */
 public abstract class ReportController<FILTER> extends ResourceSenderController<FILTER> {
-	
+
 	protected String name;
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	protected Class<FILTER> filterClass;
 
 	@SuppressWarnings("unchecked")
-	public ReportController(){
+	public ReportController() {
 		Class<?>[] genericTypes = GenericTypeResolver.resolveTypeArguments(this.getClass(), ReportController.class);
 		Class<?> clazz = genericTypes[0];
 		filterClass = (Class<FILTER>) clazz;
 	}
-	
-	
+
 	@Override
 	public ModelAndView doFilter(WebRequestContext request, FILTER filter) throws ResourceGenerationException {
 		try {
@@ -63,17 +62,17 @@ public abstract class ReportController<FILTER> extends ResourceSenderController<
 		}
 		return getFilterModelAndView(request, filter);
 	}
-	
+
 	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTER filter) {
 		if (name == null) {
-			if(!this.getClass().getSimpleName().endsWith("Report")){
+			if (!this.getClass().getSimpleName().endsWith("Report")) {
 				throw new NextException("Um controller de relatórios deve ter o sufixo Report ou então setar a variável name");
 			}
 			String className = org.springframework.util.StringUtils.uncapitalize(this.getClass()
 					.getSimpleName());
-			name = className.substring(0, className.length()- "Report".length());
+			name = className.substring(0, className.length() - "Report".length());
 		}
-		return new ModelAndView("relatorio/"+name, "filter", filter);
+		return new ModelAndView("relatorio/" + name, "filter", filter);
 	}
 
 	protected void filter(WebRequestContext request, FILTER filter) throws Exception {
@@ -83,17 +82,17 @@ public abstract class ReportController<FILTER> extends ResourceSenderController<
 	@Override
 	public Resource generateResource(WebRequestContext request, FILTER filter) throws Exception {
 		IReport report = createReport(request, filter);
-		
-        String name = getReportName(report);
-        byte[] bytes = getReportBytes(report);
-        return getPdfResource(name, bytes);
+
+		String name = getReportName(report);
+		byte[] bytes = getReportBytes(report);
+		return getPdfResource(name, bytes);
 	}
 
 	protected Resource getPdfResource(String name, byte[] bytes) {
 		Resource resource = new Resource();
-        resource.setContentType("application/pdf");
-        resource.setFileName(name);
-        resource.setContents(bytes);
+		resource.setContentType("application/pdf");
+		resource.setFileName(name);
+		resource.setContents(bytes);
 		return resource;
 	}
 
@@ -103,19 +102,18 @@ public abstract class ReportController<FILTER> extends ResourceSenderController<
 
 	protected String getReportName(IReport report) {
 		String name = report.getFileName();
-        if(name == null){
-        	name = report.getName();
-        	if (name.indexOf('/') != -1) {
-        		name = name.substring(report.getName().lastIndexOf('/') + 1);
+		if (name == null) {
+			name = report.getName();
+			if (name.indexOf('/') != -1) {
+				name = name.substring(report.getName().lastIndexOf('/') + 1);
 			}
-        }
-        if(!name.endsWith(".pdf")){
-        	name+=".pdf";
-        }
+		}
+		if (!name.endsWith(".pdf")) {
+			name += ".pdf";
+		}
 		return name;
 	}
 
-	
 	protected ReportGenerator getReportGenerator() {
 		return LegacyReportUtils.getReportGenerator();
 	}
@@ -123,6 +121,5 @@ public abstract class ReportController<FILTER> extends ResourceSenderController<
 	public IReport createReport(WebRequestContext request, FILTER filter) throws Exception {
 		throw new RuntimeException("Implement the method createReport or overwrite the method generateResource");
 	}
-
 
 }

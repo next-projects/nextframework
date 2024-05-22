@@ -36,44 +36,48 @@ package org.nextframework.authorization;
  * @author rogelgarcia
  */
 public class AuthorizationItem {
-	
-    protected String id;
-    protected String name;
-    protected String[] values;
-    protected String description;
-    
-    /**
-     * @param id 
-     */
-    public AuthorizationItem(String id, String name, String[] values) {
-        this.id = id;
-        this.name = name;
-        this.values = values;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    public String getId() {
-        return id;
-    }
-    public String getName() {
-        return name;
-    }
-    public String[] getValues() {
-        return values;
-    }
-    public void setDescription(String descricao) {
-        this.description = descricao;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public void setName(String nome) {
-        this.name = nome;
-    }
-    public void setValues(String[] valores) {
-        this.values = valores;
-    }
+
+	protected String id;
+	protected String name;
+	protected String[] values;
+	protected String description;
+
+	public AuthorizationItem(String id, String name, String[] values) {
+		this.id = id;
+		this.name = name;
+		this.values = values;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String[] getValues() {
+		return values;
+	}
+
+	public void setDescription(String descricao) {
+		this.description = descricao;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setName(String nome) {
+		this.name = nome;
+	}
+
+	public void setValues(String[] valores) {
+		this.values = valores;
+	}
 
 }

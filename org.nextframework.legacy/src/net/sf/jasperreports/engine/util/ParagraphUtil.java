@@ -35,102 +35,72 @@ import net.sf.jasperreports.engine.type.TabStopAlignEnum;
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
  */
-public final class ParagraphUtil
-{
+public final class ParagraphUtil {
 
-	
-	/**
-	 * 
-	 */
-	public static TabStop[] getTabStops(JRParagraph paragraph, float endX)
-	{
+	public static TabStop[] getTabStops(JRParagraph paragraph, float endX) {
 		List<TabStop> tabStopList = new ArrayList<TabStop>();
 
 		TabStop lastTabStop = new TabStop();
-		
+
 		TabStop[] tabStops = paragraph.getTabStops();
-		if (tabStops != null && tabStops.length > 0)
-		{
-			for (int i = 0; i < tabStops.length; i++)
-			{
+		if (tabStops != null && tabStops.length > 0) {
+			for (int i = 0; i < tabStops.length; i++) {
 				lastTabStop = tabStops[i];
 				if (
-					//startX <= lastTabStop.getPosition() &&
-					lastTabStop.getPosition() <= endX
-					)
-				{
+				//startX <= lastTabStop.getPosition() &&
+				lastTabStop.getPosition() <= endX) {
 					tabStopList.add(lastTabStop);
 				}
 			}
 		}
-		
+
 		while (
-			//startX <= lastTabStop.getPosition() + paragraph.getTabStopWidth() &&
-			lastTabStop.getPosition() + paragraph.getTabStopWidth() <= endX
-			)
-		{
+		//startX <= lastTabStop.getPosition() + paragraph.getTabStopWidth() &&
+		lastTabStop.getPosition() + paragraph.getTabStopWidth() <= endX) {
 			lastTabStop = new TabStop((lastTabStop.getPosition() / paragraph.getTabStopWidth() + 1) * paragraph.getTabStopWidth(), TabStopAlignEnum.LEFT);
 			tabStopList.add(lastTabStop);
 		}
-		
+
 		return tabStopList.toArray(new TabStop[tabStopList.size()]);
 	}
-	
-	
-	/**
-	 * 
-	 */
-	public static float getRightX(TabStop tabStop, float advance)
-	{
+
+	public static float getRightX(TabStop tabStop, float advance) {
 		float rightX = advance;
-		if (tabStop != null)
-		{
-			switch (tabStop.getAlignment())
-			{
-				case RIGHT ://FIXMETAB RTL writings
+		if (tabStop != null) {
+			switch (tabStop.getAlignment()) {
+				case RIGHT://FIXMETAB RTL writings
 				{
 					rightX = tabStop.getPosition();
 					break;
 				}
-				case CENTER :
-				{
+				case CENTER: {
 					rightX = tabStop.getPosition() + advance / 2;
 					break;
 				}
-				case LEFT :
-				default :
-				{
+				case LEFT:
+				default: {
 					rightX = tabStop.getPosition() + advance;
 				}
 			}
 		}
 		return rightX;
 	}
-	
 
-	/**
-	 * 
-	 */
-	public static float getLeftX(TabStop tabStop, float advance)
-	{
+	public static float getLeftX(TabStop tabStop, float advance) {
 		float leftX = 0;
-		if (tabStop != null)
-		{
-			switch (tabStop.getAlignment())
-			{
-				case RIGHT ://FIXMETAB RTL writings
+		if (tabStop != null) {
+			switch (tabStop.getAlignment()) {
+				case RIGHT://FIXMETAB RTL writings
 				{
 					leftX = tabStop.getPosition() - advance;
 					break;
 				}
-				case CENTER :
-				{
+				case CENTER: {
 					leftX = tabStop.getPosition() - advance / 2;
 					break;
 				}
-				case LEFT :
-				default :
-				{
+				case LEFT:
+				default: {
 					leftX = tabStop.getPosition();
 				}
 			}
@@ -138,30 +108,21 @@ public final class ParagraphUtil
 		return leftX;
 	}
 
-	
-	/**
-	 * 
-	 */
-	public static float getSegmentOffset(TabStop tabStop, float rightX)
-	{
+	public static float getSegmentOffset(TabStop tabStop, float rightX) {
 		float segmentOffset = rightX;
-		if (tabStop != null)
-		{
-			switch (tabStop.getAlignment())
-			{
-				case RIGHT ://FIXMETAB RTL writings
+		if (tabStop != null) {
+			switch (tabStop.getAlignment()) {
+				case RIGHT://FIXMETAB RTL writings
 				{
 					segmentOffset = rightX;
 					break;
 				}
-				case CENTER :
-				{
+				case CENTER: {
 					segmentOffset = rightX;
 					break;
 				}
-				case LEFT :
-				default :
-				{
+				case LEFT:
+				default: {
 					segmentOffset = tabStop.getPosition();
 				}
 			}
@@ -169,17 +130,11 @@ public final class ParagraphUtil
 		return segmentOffset;
 	}
 
-
-	/**
-	 * 
-	 */
-	public static TabStop getNextTabStop(JRParagraph paragraph, float endX, float rightX)
-	{
+	public static TabStop getNextTabStop(JRParagraph paragraph, float endX, float rightX) {
 		TabStop nextTabStop = null;
 		TabStop[] tabStops = getTabStops(paragraph, endX);
 		int i = 0;
-		for (; i < tabStops.length; i++)
-		{
+		for (; i < tabStops.length; i++) {
 			TabStop tabStop = tabStops[i];
 			if (tabStop.getPosition() > rightX)//FIXMETAB assumes tab stops are sorted by position
 			{
@@ -187,21 +142,15 @@ public final class ParagraphUtil
 				break;
 			}
 		}
-		if (i == tabStops.length)
-		{
+		if (i == tabStops.length) {
 			//FIXMETAB what to do here?
 			nextTabStop = new TabStop();
-			nextTabStop.setPosition((int)((rightX / paragraph.getTabStopWidth() + 1) * paragraph.getTabStopWidth()));
+			nextTabStop.setPosition((int) ((rightX / paragraph.getTabStopWidth() + 1) * paragraph.getTabStopWidth()));
 		}
 		return nextTabStop;
 	}
 
-
-	/**
-	 * 
-	 */
-	public static TabStop getFirstTabStop(JRParagraph paragraph, float endX)
-	{
+	public static TabStop getFirstTabStop(JRParagraph paragraph, float endX) {
 		TabStop firstTabStop = new TabStop();
 		TabStop[] tabStops = getTabStops(paragraph, endX);
 		//CORREÇÃO DA CLASSE DA API COM BUG
@@ -211,22 +160,16 @@ public final class ParagraphUtil
 		if (tabStops.length > 0) {
 			firstTabStop = tabStops[0];
 		} else {
-			firstTabStop.setPosition((int)endX);
+			firstTabStop.setPosition((int) endX);
 		}
 		return firstTabStop;
 	}
 
-
-	/**
-	 * 
-	 */
-	public static TabStop getLastTabStop(JRParagraph paragraph, float endX)
-	{
+	public static TabStop getLastTabStop(JRParagraph paragraph, float endX) {
 		TabStop lastTabStop = new TabStop();
 		TabStop[] tabStops = getTabStops(paragraph, endX);
 		int i = tabStops.length - 1;
-		for (; i >= 0; i--)
-		{
+		for (; i >= 0; i--) {
 			TabStop tabStop = tabStops[i];
 			if (tabStop.getPosition() < endX)//FIXMETAB assumes tab stops are sorted by position
 			{
@@ -234,16 +177,14 @@ public final class ParagraphUtil
 				break;
 			}
 		}
-		if (i < 0)
-		{
+		if (i < 0) {
 			//FIXMETAB what to do here?
-			lastTabStop.setPosition((int)endX);
+			lastTabStop.setPosition((int) endX);
 		}
 		return lastTabStop;
 	}
-	
 
-	private ParagraphUtil()
-	{
+	private ParagraphUtil() {
 	}
+
 }

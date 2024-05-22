@@ -13,6 +13,7 @@ public class StringBuilderModelAndViewTranslator implements ModelAndViewTranslat
 
 	@Override
 	public ModelAndView translateActionResultToModelAndView(final StringBuilder result, Method actionMethod) {
+
 		View view = new View() {
 
 			@Override
@@ -25,6 +26,7 @@ public class StringBuilderModelAndViewTranslator implements ModelAndViewTranslat
 			public String getContentType() {
 				return "text/plain";
 			}
+
 		};
 
 		return new ModelAndView(view);

@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class CharacterData extends Node {
+
 	public void appendData(String arg) {
 		throw new UnsupportedOperationException();
 	}
@@ -38,4 +39,5 @@ abstract public class CharacterData extends Node {
 	public void substringData(int offset, int count) {
 		throw new UnsupportedOperationException();
 	}
+
 }

@@ -10,4 +10,5 @@ package org.nextframework.authorization;
 public interface AuthenticationController {
 
 	String getPath();
+
 }

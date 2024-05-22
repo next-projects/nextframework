@@ -43,53 +43,52 @@ import org.nextframework.validation.ValidatorRegistry;
  * @version 1.1
  */
 public class JavascriptValidationFunctionBuilder {
-	
+
 	protected List<JavascriptValidationItem> validations;
 	protected String formName;
 	protected ValidatorRegistry validatorRegistry;
 	protected ServletContext context;
 	private String functionName;
-	
-	public JavascriptValidationFunctionBuilder(List<JavascriptValidationItem> validations, String formName, String functionName, ValidatorRegistry validatorRegistry, ServletContext context){
+
+	public JavascriptValidationFunctionBuilder(List<JavascriptValidationItem> validations, String formName, String functionName, ValidatorRegistry validatorRegistry, ServletContext context) {
 		this.validations = validations;
 		this.formName = formName;
 		this.context = context;
 		this.validatorRegistry = validatorRegistry;
 		this.functionName = functionName;
 	}
-	
 
-	public String buildValidation(){
-		if(validations.size()==0){
-			return "    function "+functionName+"() {return true}";
+	public String buildValidation() {
+		if (validations.size() == 0) {
+			return "    function " + functionName + "() {return true}";
 		}
 		ValidationHolder holder = new ValidationHolder(validations, validatorRegistry);
 		StringBuilder builder = new StringBuilder();
 		builder.append(" ")
-		.append("\n");
+				.append("\n");
 		builder.append("    var bCancel = false; ")
-		.append("\n");
-		builder.append("    function "+functionName+"() {")
-		.append("\n");
-		builder.append("       var formObject = document.getElementsByName('"+formName+"')[0];")
-		.append("\n");
+				.append("\n");
+		builder.append("    function " + functionName + "() {")
+				.append("\n");
+		builder.append("       var formObject = document.getElementsByName('" + formName + "')[0];")
+				.append("\n");
 		builder.append("       if (bCancel) ")
-		.append("\n");
+				.append("\n");
 		builder.append("            return true; ")
-		.append("\n");
+				.append("\n");
 		builder.append("        try{organizeProperties(formObject);}catch(e){} ")
-		.append("\n");
+				.append("\n");
 		builder.append("        var formValidationResult;")
-		.append("\n");
+				.append("\n");
 		builder.append("        try {")
-		.append("\n");
+				.append("\n");
 		builder.append("        formValidationResult =");
 		Set<PropertyValidator> propertyValidators = holder.getValidationMap().keySet();
-		if(propertyValidators != null && propertyValidators.size() > 0){
+		if (propertyValidators != null && propertyValidators.size() > 0) {
 			for (Iterator<PropertyValidator> iter = propertyValidators.iterator(); iter.hasNext();) {
 				PropertyValidator propertyValidator = iter.next();
-				builder.append(" validate"+capitalize(propertyValidator.getValidationFunctionName())+"(formObject)");
-				if(iter.hasNext()){
+				builder.append(" validate" + capitalize(propertyValidator.getValidationFunctionName()) + "(formObject)");
+				if (iter.hasNext()) {
 					builder.append(" &&");
 				}
 			}
@@ -97,13 +96,13 @@ public class JavascriptValidationFunctionBuilder {
 			builder.append("1");
 		}
 		builder.append(";")
-		.append("\n");
+				.append("\n");
 		builder.append("        return (formValidationResult == 1);")
-		.append("\n");
+				.append("\n");
 		builder.append("        } catch(e){ return true;}")
-		.append("\n");
+				.append("\n");
 		builder.append("    }")
-		.append("\n");
+				.append("\n");
 		for (PropertyValidator validator : propertyValidators) {
 			builder.append(createValidationFunction(validator, holder.getValidationMap().get(validator)));
 		}
@@ -122,33 +121,32 @@ public class JavascriptValidationFunctionBuilder {
 		}
 		*/
 		builder.append("  ")
-		.append("\n");
+				.append("\n");
 		return builder.toString();
 	}
 
 	private String capitalize(String validationFunctionName) {
-		return Character.toUpperCase(validationFunctionName.charAt(0)) + validationFunctionName.substring(1) ;
+		return Character.toUpperCase(validationFunctionName.charAt(0)) + validationFunctionName.substring(1);
 	}
-
 
 	protected StringBuilder createValidationFunction(PropertyValidator validator, List<JavascriptValidationItem> javascriptValidationItens) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("function "+formName+"_"+validator.getValidationName()+"() {\n");
+		builder.append("function " + formName + "_" + validator.getValidationName() + "() {\n");
 		int index = 0;
 		List<String> names = new ArrayList<String>();
 		for (JavascriptValidationItem item : javascriptValidationItens) {
-			if(isIndexed(item.getFieldName())){
+			if (isIndexed(item.getFieldName())) {
 				String[] property = separateIndexedProperty(item.getFieldName());
 				String function = validator.getJavascriptFunction(item);
-				if(names.contains(property[0]+"[]"+property[1])){
+				if (names.contains(property[0] + "[]" + property[1])) {
 					continue;
 				} else {
-					names.add(property[0]+"[]"+property[1]);
+					names.add(property[0] + "[]" + property[1]);
 				}
-				builder.append("  formIndexedProperties(this, \"a"+index+"\", \""+property[1]+"\", \""+validator.getMessage(item)+"\", "+function+", \""+property[0]+"\", "+formName+");\n");
+				builder.append("  formIndexedProperties(this, \"a" + index + "\", \"" + property[1] + "\", \"" + validator.getMessage(item) + "\", " + function + ", \"" + property[0] + "\", " + formName + ");\n");
 			} else {
 				String function = validator.getJavascriptFunction(item);
-				builder.append("  this.a"+index+" = new Array(\""+item.getFieldName()+"\", \""+validator.getMessage(item)+"\", "+function+");\n");	
+				builder.append("  this.a" + index + " = new Array(\"" + item.getFieldName() + "\", \"" + validator.getMessage(item) + "\", " + function + ");\n");
 			}
 			index++;
 		}
@@ -175,36 +173,37 @@ public class JavascriptValidationFunctionBuilder {
 		int oi = fieldName.lastIndexOf('[');
 		int ci = fieldName.lastIndexOf(']');
 		String indexedProperty = fieldName.substring(0, oi);
-		String property = fieldName.substring(ci+2);
-		return new String[]{indexedProperty, property};
+		String property = fieldName.substring(ci + 2);
+		return new String[] { indexedProperty, property };
 	}
 
 	private boolean isIndexed(String fieldName) {
-		if(fieldName != null){
-			return fieldName.indexOf('[')>0;
+		if (fieldName != null) {
+			return fieldName.indexOf('[') > 0;
 		} else {
 			return false;
 		}
 	}
+
 }
 
 class ValidationHolder {
 
 	protected List<JavascriptValidationItem> validationItens;
 	protected ValidatorRegistry validatorRegistry;
-	
-	public ValidationHolder(List<JavascriptValidationItem> validationItens, ValidatorRegistry validatorRegistry){
+
+	public ValidationHolder(List<JavascriptValidationItem> validationItens, ValidatorRegistry validatorRegistry) {
 		this.validationItens = validationItens;
 		this.validatorRegistry = validatorRegistry;
-		
+
 	}
-	
-	public Map<PropertyValidator, List<JavascriptValidationItem>> getValidationMap(){
+
+	public Map<PropertyValidator, List<JavascriptValidationItem>> getValidationMap() {
 		Map<PropertyValidator, List<JavascriptValidationItem>> map = new HashMap<PropertyValidator, List<JavascriptValidationItem>>();
 		for (JavascriptValidationItem validationItem : validationItens) {
 			List<Annotation> list = validationItem.getValidations();
 			PropertyValidator typeValidator = validationItem.getTypeValidator();
-			if (typeValidator!= null) {
+			if (typeValidator != null) {
 				if (typeValidator.getJavascriptFunctionPath() != null) {
 					// só adicionar funcoes para validação se tiver arquivo javascript
 					List<JavascriptValidationItem> validationItensForValidator = map
@@ -218,7 +217,7 @@ class ValidationHolder {
 			}
 			for (Annotation annotation : list) {
 				PropertyValidator validator = validatorRegistry.getPropertyValidator(annotation.annotationType());
-				if (validator.getJavascriptFunctionPath()!=null) {
+				if (validator.getJavascriptFunctionPath() != null) {
 					// só adicionar funcoes para validação se tiver arquivo javascript
 					List<JavascriptValidationItem> validationItensForValidator = map.get(validator);
 					if (validationItensForValidator == null) {
@@ -232,4 +231,5 @@ class ValidationHolder {
 		}
 		return map;
 	}
+
 }

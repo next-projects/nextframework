@@ -1,15 +1,15 @@
 package org.nextframework.report.definition.elements.style;
 
-public class ReportDefinitionStyle implements Cloneable{
+public class ReportDefinitionStyle implements Cloneable {
 
 	String design = "default";
-	
+
 	Boolean noMargin = false;
 	Boolean noTitle = false;
-	
+
 	Integer pageWidth;
 	Integer pageHeight;
-	
+
 	public Integer getPageWidth() {
 		return pageWidth;
 	}
@@ -33,7 +33,7 @@ public class ReportDefinitionStyle implements Cloneable{
 	public void setDesign(String design) {
 		this.design = design;
 	}
-	
+
 	@Override
 	public ReportDefinitionStyle clone() {
 		try {
@@ -58,5 +58,5 @@ public class ReportDefinitionStyle implements Cloneable{
 	public void setNoTitle(Boolean noTitle) {
 		this.noTitle = noTitle;
 	}
-	
+
 }

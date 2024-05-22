@@ -42,6 +42,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Deprecated
 public @interface Bean {
+
 	String name() default "";
+
 	Property[] properties() default {};
+
 }

@@ -18,13 +18,13 @@ public class OgnlExpressionParser {
 
 	public static Map<String, Object> expressionCache = new HashMap<String, Object>();
 
-	public static Object parse(String expression, Map<String, Object> contextMap) throws ExpressionParseException{
+	public static Object parse(String expression, Map<String, Object> contextMap) throws ExpressionParseException {
 		Object value;
 		try {
 			Object tree = getExpressionTree(expression);
-			value = Ognl.getValue(tree, (Object)contextMap, null);
+			value = Ognl.getValue(tree, (Object) contextMap, null);
 		} catch (OgnlException e) {
-			throw new ExpressionParseException("Erro ao fazer parsing de "+expression, e);
+			throw new ExpressionParseException("Erro ao fazer parsing de " + expression, e);
 		}
 		return value;
 	}
@@ -33,39 +33,37 @@ public class OgnlExpressionParser {
 		Object value;
 		try {
 			Object tree = getExpressionTree(expression);
-			value = Ognl.getValue(tree, (Object)contextMap, null);
+			value = Ognl.getValue(tree, (Object) contextMap, null);
 		} catch (OgnlException e) {
-			if(!e.getMessage().startsWith("source is null")){
-				throw new ExpressionParseException("Erro ao fazer parsing de "+expression, e);	
+			if (!e.getMessage().startsWith("source is null")) {
+				throw new ExpressionParseException("Erro ao fazer parsing de " + expression, e);
 			} else {
 				value = null;
 			}
-			
+
 		}
-		if(value != null && !expectedClass.isAssignableFrom(value.getClass())){
+		if (value != null && !expectedClass.isAssignableFrom(value.getClass())) {
 			BeanWrapperImpl beanWrapperImpl = new BeanWrapperImpl();
 			value = beanWrapperImpl.convertIfNecessary(value, expectedClass);
 		}
-		
-		if(value != null && !expectedClass.isAssignableFrom(value.getClass())){			
-			if(value != null && String.class.isAssignableFrom(expectedClass)){
+
+		if (value != null && !expectedClass.isAssignableFrom(value.getClass())) {
+			if (value != null && String.class.isAssignableFrom(expectedClass)) {
 				@SuppressWarnings("unchecked")
 				X toString = (X) value.toString();
 				return toString;
 			}
-			throw new ExpressionParseException("A expressão #{"+expression+"} retornou um objeto do tipo "+value.getClass().getName()+" era esperado "+expectedClass.getName()+"! Não foi possível fazer a conversão");
+			throw new ExpressionParseException("A expressão #{" + expression + "} retornou um objeto do tipo " + value.getClass().getName() + " era esperado " + expectedClass.getName() + "! Não foi possível fazer a conversão");
 		}
-		@SuppressWarnings("unchecked") 
-		X x = (X)value;
+		@SuppressWarnings("unchecked")
+		X x = (X) value;
 
 		return x;
 	}
 
-	
-
 	private static Object getExpressionTree(String expression) throws OgnlException {
 		Object tree = expressionCache.get(expression);
-		if(tree == null){
+		if (tree == null) {
 			synchronized (expressionCache) {
 				tree = expressionCache.get(expression);
 				if (tree == null) {
@@ -76,5 +74,5 @@ public class OgnlExpressionParser {
 		}
 		return tree;
 	}
-	
+
 }

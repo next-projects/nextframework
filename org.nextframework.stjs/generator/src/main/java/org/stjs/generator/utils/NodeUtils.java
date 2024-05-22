@@ -30,6 +30,7 @@ import java.util.List;
  * 
  */
 public class NodeUtils {
+
 	public static boolean isMainMethod(MethodDeclaration methodDeclaration) {
 		boolean isMainMethod = false;
 		if (isStatic(methodDeclaration.getModifiers()) && "main".equals(methodDeclaration.getName())) {
@@ -49,4 +50,5 @@ public class NodeUtils {
 		}
 		return isMainMethod;
 	}
+
 }

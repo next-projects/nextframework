@@ -27,6 +27,7 @@ import java.util.Arrays;
  * JDK, in particular the {@link #equals(Object)} and {@link #hashCode()} methods.
  */
 public final class WildcardTypeImpl implements WildcardType {
+
 	private final Type[] lowerBounds;
 	private final Type[] upperBounds;
 
@@ -58,9 +59,11 @@ public final class WildcardTypeImpl implements WildcardType {
 
 	@Override
 	public boolean equals(final Object o) {
+
 		if (o == this) {
 			return true;
 		}
+
 		if (!(o instanceof WildcardType)) {
 			return false;
 		}
@@ -98,11 +101,11 @@ public final class WildcardTypeImpl implements WildcardType {
 		final StringBuilder sb = new StringBuilder();
 		sb.append(prefix);
 		sb.append(bounds[0]);
-
 		for (int i = 1; i < bounds.length; i++) {
 			sb.append(" & ");
 			sb.append(bounds[i]);
 		}
 		return sb.toString();
 	}
+
 }

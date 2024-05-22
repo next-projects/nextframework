@@ -26,25 +26,25 @@ package org.nextframework.types;
 import java.io.Serializable;
 
 public interface File extends Serializable {
-	
+
 	public Long getCdfile();
-	
+
 	public String getName();
-	
+
 	public String getContenttype();
-	
+
 	public byte[] getContent();
-	
+
 	public Long getSize();
-	
+
 	public void setCdfile(Long cdfile);
-	
+
 	public void setName(String name);
-	
+
 	public void setContenttype(String contenttype);
-	
+
 	public void setContent(byte[] content);
-	
+
 	public void setSize(Long size);
-	
+
 }

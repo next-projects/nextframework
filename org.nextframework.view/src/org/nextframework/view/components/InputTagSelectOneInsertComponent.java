@@ -29,4 +29,5 @@ public class InputTagSelectOneInsertComponent extends InputTagSelectComboCompone
 				+ "}); var win = open('" + fullPath + "','filha" + ((int) (Math.random() * 100000)) + "','width=' + 780 + ', height=' + 580 + ', top=50, left=115, resizable, scrollbars, status=yes'); win.selecionarCallback = c;";
 		return onclick;
 	}
+
 }

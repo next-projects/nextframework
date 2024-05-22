@@ -12,38 +12,40 @@ public class ReportGroup {
 		this.definition = definition;
 		this.expression = expression;
 	}
-	
-	public ReportSection getSectionHeader(){
+
+	public ReportSection getSectionHeader() {
 		Map<ReportGroup, ReportGroupSection> sectionsForGroups = definition.getSectionsForGroups();
 		Set<ReportGroup> groups = sectionsForGroups.keySet();
 		for (ReportGroup reportGroup : groups) {
-			if(reportGroup.equals(this)){
-				return ((ReportGroupSection)sectionsForGroups.get(reportGroup)).getHeader();
+			if (reportGroup.equals(this)) {
+				return ((ReportGroupSection) sectionsForGroups.get(reportGroup)).getHeader();
 			}
 		}
 		return null;
 	}
-	
-	public ReportSection getSectionFooter(){
+
+	public ReportSection getSectionFooter() {
 		Map<ReportGroup, ReportGroupSection> sectionsForGroups = definition.getSectionsForGroups();
 		Set<ReportGroup> groups = sectionsForGroups.keySet();
 		for (ReportGroup reportGroup : groups) {
-			if(reportGroup.equals(this)){
-				return ((ReportGroupSection)sectionsForGroups.get(reportGroup)).getFooter();
+			if (reportGroup.equals(this)) {
+				return ((ReportGroupSection) sectionsForGroups.get(reportGroup)).getFooter();
 			}
 		}
 		return null;
 	}
-	public ReportSection getSectionDetail(){
+
+	public ReportSection getSectionDetail() {
 		Map<ReportGroup, ReportGroupSection> sectionsForGroups = definition.getSectionsForGroups();
 		Set<ReportGroup> groups = sectionsForGroups.keySet();
 		for (ReportGroup reportGroup : groups) {
-			if(reportGroup.equals(this)){
-				return ((ReportGroupSection)sectionsForGroups.get(reportGroup)).getDetail();
+			if (reportGroup.equals(this)) {
+				return ((ReportGroupSection) sectionsForGroups.get(reportGroup)).getDetail();
 			}
 		}
 		return null;
 	}
+
 	public String getExpression() {
 		return expression;
 	}
@@ -54,4 +56,5 @@ public class ReportGroup {
 		builder.append("ReportGroup [expression=").append(expression).append("]");
 		return builder.toString();
 	}
+
 }

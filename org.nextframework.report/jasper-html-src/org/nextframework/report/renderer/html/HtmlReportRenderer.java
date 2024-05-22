@@ -11,21 +11,21 @@ import org.nextframework.report.renderer.html.design.HtmlDesign;
 public class HtmlReportRenderer implements ReportRenderer {
 
 	public static final String HTML = "HTML";
-	
+
 	static HtmlReportRenderer instance = new HtmlReportRenderer();
-	
+
 	static {
 		ReportRendererFactory.registerRenderer(instance);
 	}
-	
+
 	public static HtmlReportRenderer getInstance() {
 		return instance;
 	}
-	
+
 	private HtmlReportBuilder createHtmlReportBuilder() {
 		return new HtmlReportBuilderImpl();
 	}
-	
+
 	@Override
 	public String getOutputType() {
 		return HTML;
@@ -36,8 +36,8 @@ public class HtmlReportRenderer implements ReportRenderer {
 		HtmlDesign htmlDesign = getHtmlDesign(report);
 		return htmlDesign.toString();
 	}
-	
-	public String renderItem(ReportItem item){
+
+	public String renderItem(ReportItem item) {
 		return createHtmlReportBuilder().getHtmlDesign(item).toString();
 	}
 

@@ -16,5 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Pre extends Element {
+
 	public int width;
+
 }

@@ -38,7 +38,7 @@ public class GZIPResponseStream extends ServletOutputStream {
 		super();
 		this.gzipOutputStream = new GZIPOutputStream(output);
 	}
-	
+
 	@Override
 	public boolean isReady() {
 		return true;
@@ -71,7 +71,7 @@ public class GZIPResponseStream extends ServletOutputStream {
 
 	@Override
 	public void setWriteListener(WriteListener writeListener) {
-		
+
 	}
 
 }

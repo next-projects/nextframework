@@ -34,9 +34,13 @@ import java.lang.annotation.Target;
  * @version 1.1
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target({ ElementType.METHOD })
 public @interface Command {
+
 	String name() default "";
+
 	boolean session() default false;
+
 	boolean validate() default false;
+
 }

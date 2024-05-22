@@ -16,12 +16,12 @@ public class ContextLoaderListener extends org.springframework.web.context.Conte
 	public ContextLoaderListener(WebApplicationContext context) {
 		super(context);
 	}
-	
+
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		super.contextInitialized(event);
 	}
-	
+
 	@Override
 	protected Class<?> determineContextClass(ServletContext servletContext) {
 		//copied from Spring source code
@@ -29,15 +29,14 @@ public class ContextLoaderListener extends org.springframework.web.context.Conte
 		if (contextClassName != null) {
 			try {
 				return ClassUtils.forName(contextClassName, ClassUtils.getDefaultClassLoader());
-			}
-			catch (ClassNotFoundException ex) {
+			} catch (ClassNotFoundException ex) {
 				throw new ApplicationContextException(
 						"Failed to load custom context class [" + contextClassName + "]", ex);
 			}
-		}
-		else {
+		} else {
 			//next specific implementation
 			return NextWebApplicationContext.class;
 		}
 	}
+
 }

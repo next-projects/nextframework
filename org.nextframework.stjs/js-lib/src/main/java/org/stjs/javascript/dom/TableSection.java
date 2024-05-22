@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class TableSection extends Element {
+
 	public String VAlign;
 	public String align;
 	public String ch;
@@ -29,4 +30,5 @@ abstract public class TableSection extends Element {
 	public TableRow insertRow(int arg0) {
 		throw new UnsupportedOperationException();
 	}
+
 }

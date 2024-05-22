@@ -42,7 +42,7 @@ public class CrudAuthorizer implements Authorizer {
 	public static final String ACTION_SAVE = "save";
 	public static final String ACTION_DELETE = "delete";
 	public static final String ACTION_FORM = "form";
-	
+
 	public static final String METHOD_LIST = "doList";
 	public static final String METHOD_VIEW = "doView";
 	public static final String METHOD_CREATE = "doCreate";
@@ -50,38 +50,39 @@ public class CrudAuthorizer implements Authorizer {
 	public static final String METHOD_SAVE = "doSave";
 	public static final String METHOD_DELETE = "doDelete";
 	public static final String METHOD_FORM = "doForm";
-	
-	private CrudAuthorizer(){}
-	
+
+	private CrudAuthorizer() {
+	}
+
 	private static CrudAuthorizer instance;
-	
-	public static CrudAuthorizer getInstance(){
-		if(instance == null){
+
+	public static CrudAuthorizer getInstance() {
+		if (instance == null) {
 			instance = new CrudAuthorizer();
 		}
 		return instance;
 	}
-	
+
 	public boolean isAuthorized(String action, UserAuthorization authorization) {
-		if(!(authorization instanceof CrudAuthorization)){
+		if (!(authorization instanceof CrudAuthorization)) {
 			throw new IllegalArgumentException(
-					"The authorization used by "+CrudAuthorizer.class+" must be of type " + CrudAuthorization.class);
+					"The authorization used by " + CrudAuthorizer.class + " must be of type " + CrudAuthorization.class);
 		}
-		CrudAuthorization autorizacaoCrud = (CrudAuthorization)authorization;
-		if(action==null || action.equals("")  || action.equals(ACTION_LIST) || action.equals(METHOD_LIST) || action.equals(ACTION_VIEW) || action.equals(METHOD_VIEW)){
+		CrudAuthorization autorizacaoCrud = (CrudAuthorization) authorization;
+		if (action == null || action.equals("") || action.equals(ACTION_LIST) || action.equals(METHOD_LIST) || action.equals(ACTION_VIEW) || action.equals(METHOD_VIEW)) {
 			return autorizacaoCrud.canRead();
 		} else {
-			if(action.equals(ACTION_CREATE) || action.equals(METHOD_CREATE)){
+			if (action.equals(ACTION_CREATE) || action.equals(METHOD_CREATE)) {
 				return autorizacaoCrud.canCreate();
-			} else if(action.equals(ACTION_UPDATE) || action.equals(METHOD_UPDATE)){
+			} else if (action.equals(ACTION_UPDATE) || action.equals(METHOD_UPDATE)) {
 				return autorizacaoCrud.canUpdate();
-			} else if(action.equals(ACTION_SAVE) || action.equals(ACTION_FORM) || action.equals(METHOD_SAVE) || action.equals(METHOD_FORM)){
+			} else if (action.equals(ACTION_SAVE) || action.equals(ACTION_FORM) || action.equals(METHOD_SAVE) || action.equals(METHOD_FORM)) {
 				return autorizacaoCrud.canCreate() || autorizacaoCrud.canUpdate();
-			} else if(action.equals(ACTION_DELETE) || action.equals(METHOD_DELETE)){
+			} else if (action.equals(ACTION_DELETE) || action.equals(METHOD_DELETE)) {
 				return autorizacaoCrud.canDelete();
 			}
 		}
-		
+
 		return true;
 	}
 

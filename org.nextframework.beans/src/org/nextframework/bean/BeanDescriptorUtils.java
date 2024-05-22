@@ -30,31 +30,31 @@ import org.springframework.util.StringUtils;
 public class BeanDescriptorUtils {
 
 	public static String getPropertyFromGetter(String getterMethodName) {
-		if(getterMethodName.startsWith("i")){
+		if (getterMethodName.startsWith("i")) {
 			return StringUtils.uncapitalize(getterMethodName.substring(2));
 		} else {
 			return StringUtils.uncapitalize(getterMethodName.substring(3));
 		}
 	}
-	
+
 	public static Method getGetterMethod(Class<?> clazz, String property) {
 		Method[] methods = clazz.getMethods();
 		Method method = null;
-		String getterName = "get"+StringUtils.capitalize(property);
-		String getterName1 = "is"+StringUtils.capitalize(property);
+		String getterName = "get" + StringUtils.capitalize(property);
+		String getterName1 = "is" + StringUtils.capitalize(property);
 		for (int j = 0; j < methods.length; j++) {
-			if(isGetter(methods[j]) && (methods[j].getName().equals(getterName) || methods[j].getName().equals(getterName1))){
+			if (isGetter(methods[j]) && (methods[j].getName().equals(getterName) || methods[j].getName().equals(getterName1))) {
 				method = methods[j];
 				return method;
 			}
 		}
 		return null;
 	}
-	
+
 	public static String getGetterFromProperty(String propertyName) {
-		return "get"+StringUtils.capitalize(propertyName);
+		return "get" + StringUtils.capitalize(propertyName);
 	}
-	
+
 	public static boolean isGetter(Method method) {
 		return (method.getName().startsWith("is") || method.getName().startsWith("get")) && method.getParameterTypes().length == 0;
 	}

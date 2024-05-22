@@ -16,6 +16,8 @@
 package org.stjs.javascript.dom;
 
 abstract public class IsIndex extends Element {
+
 	public Form form;
 	public String prompt;
+
 }

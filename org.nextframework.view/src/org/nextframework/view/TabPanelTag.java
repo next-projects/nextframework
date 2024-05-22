@@ -91,12 +91,15 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 	}
 
 	private void renderScript(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
+
 		if (tabBlocks.size() <= 1 && !renderUniqueTab) {
 			return;//se o número de tabs nao for maior que 1, nao é necessário criar um script
 		}
+
 		if (this.id != null) {
 			getOut().println("<input type=\"hidden\" name=\"TABPANEL_" + this.id + "\" value=\"" + selectedIndex + "\"/>");
 		}
+
 		FormTag form = findParent(FormTag.class);
 		getOut().println("<script language=\"javascript\">");
 		getOut().println("    function show" + this.id + "(panel, index, linkid) {");
@@ -125,6 +128,7 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 		getOut().println("        next.style.removeClass(document.getElementById(linkid).parentNode, 'active');");
 		getOut().println("    }");
 		getOut().println("</script>");
+
 	}
 
 	private String createLinkId(String idTabPanel, int i) {

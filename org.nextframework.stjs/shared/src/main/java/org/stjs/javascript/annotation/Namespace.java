@@ -30,5 +30,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.PACKAGE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Namespace {
+
 	String value();
+
 }

@@ -71,7 +71,7 @@ public class GZIPFilter implements Filter {
 		//Mozilla/5.0 (Windows NT 7; WOW64; Trident/7.0; LCTE; rv:11.0) like Gecko
 		String useragent = request.getHeader("user-agent");
 		String requestURI = request.getRequestURI();
-		if (useragent != null && 
+		if (useragent != null &&
 				(useragent.indexOf("MSIE") != -1 || useragent.indexOf("WOW64") != -1 && useragent.indexOf("Trident/7.0") != -1) &&
 				(requestURI.endsWith(".js") || requestURI.endsWith(".css"))) {
 			return false;

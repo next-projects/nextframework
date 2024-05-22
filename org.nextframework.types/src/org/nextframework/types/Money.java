@@ -47,7 +47,7 @@ import org.nextframework.summary.aggregator.Incrementable;
 public class Money extends Number implements Serializable, Comparable<Object>, UserType, Incrementable<Money>, Formattable {
 
 	// private static final Log log = LogFactory.getLog(Money.class);
-	
+
 	private static final long serialVersionUID = 1L;
 
 	protected BigDecimal value = null;
@@ -82,7 +82,6 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 
 	public Money(Number value, boolean multipliedBy100) {
 		this.value = new BigDecimal(value.toString());
-
 		if (multipliedBy100 == true) {
 			this.value = this.value.movePointLeft(2);
 		}
@@ -198,13 +197,11 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 		if (obj == null) {
 			return null;
 		}
-
 		if (!(obj instanceof Number)) {
 			String msg = "O campo de uma propriedade do tipo Money não está com o tipo long no banco.";
 			// log.error(msg);
 			throw new RuntimeException(msg);
 		}
-
 		Long value = ((Number) obj).longValue();
 		return new Money(value, true);
 	}
@@ -297,4 +294,5 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 			e.printStackTrace();
 		}
 	}
+
 }

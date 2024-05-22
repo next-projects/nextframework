@@ -445,7 +445,6 @@ public class MultiActionController extends AbstractController {
 	protected ModelAndView continueOnAction(String action, Object command) {
 		WebRequestContext request = NextWeb.getRequestContext();
 		((DefaultWebRequestContext) request).setLastAction(action);
-
 		HttpServletResponse servletResponse = request.getServletResponse();
 		try {
 			Method method = this.methodNameResolver.getHandlerMethod(action);
@@ -514,20 +513,27 @@ public class MultiActionController extends AbstractController {
 		//TODO TRATAMENTO DE LOOP ETERNO (REFERENCIA CIRCULAR)
 
 		do {
+
 			Input input = null;
 			boolean fromErrors = false;
+
 			try {
+
 				List<Object> params = new ArrayList<Object>(2);
 				boolean hasRequestParameter = method.getParameterTypes().length > 0 &&
 						method.getParameterTypes()[0].isAssignableFrom(WebRequestContext.class) &&
 						!method.getParameterTypes()[0].equals(Object.class);
+
 				if (hasRequestParameter) {
 					params.add(request);
 				}
 
 				if (useCommand == null) {
+
 					input = getAnnotation(method, Input.class);//modificado em 22/10/2010, esse código ficava dentro do if.. e só funcionava caso existissem commands
+
 					if ((hasRequestParameter && method.getParameterTypes().length == 2) || (!hasRequestParameter && method.getParameterTypes().length == 1)) {
+
 						Class<?> commandClass = getCommandClass(method, hasRequestParameter ? 1 : 0);
 						CommandInfo commandInfo = getCommandInfo(method);
 
@@ -547,7 +553,6 @@ public class MultiActionController extends AbstractController {
 
 						if (binder.getBindingResult().hasErrors()) {
 							String inputAction = null;
-
 							if (input != null) {
 								inputAction = input.value();
 							} else {
@@ -572,19 +577,24 @@ public class MultiActionController extends AbstractController {
 								binder.close();
 							}
 						}
+
 					}
 				} else {
 					params.add(useCommand);
 				}
+
 				Object result = method.invoke(this.delegate, params.toArray(new Object[params.size()]));
+
 				return convertActionResultToModelAndView(method, result);
 			} catch (NoSuchRequestHandlingMethodException e) {
 				throw e;
 			} catch (NextException e) {
 				throw e;
 			} catch (InvocationTargetException ex) {
+
 				// the invoked method threw exception
 				if (input == null) {
+
 					OnErrors onErrors = getAnnotation(method, OnErrors.class);
 					if (onErrors != null) {
 						fromErrors = true;
@@ -597,7 +607,9 @@ public class MultiActionController extends AbstractController {
 					} else {
 						// nao tem input e não tem onerrors.. deixar a exceção vazar para algum handler se for o caso
 					}
+
 				} else {
+
 					//se tem input.. redirecionar para input
 					boolean sameMethod = false;
 					String inputName = input.value();
@@ -616,7 +628,9 @@ public class MultiActionController extends AbstractController {
 						logger.error("Erro ao invocar método " + method.getName() + " da classe " + this.getClass().getName() + ". Redirecionando para input: " + inputName, ex.getTargetException());
 						continue;
 					}
+
 				}
+
 				return handleException(request, ex.getTargetException());
 			} catch (IllegalArgumentException ex) {
 				throw new NextException("Não foi possível invocar o método. Se estiver utilizando o método continueToAction verifique se o método que pede o redirecionamento e o método de destino possuem a mesma classe de command", ex);
@@ -624,6 +638,7 @@ public class MultiActionController extends AbstractController {
 				// The binding process threw an exception.
 				return handleException(request, ex);
 			}
+
 		} while (true);
 	}
 
@@ -776,6 +791,7 @@ public class MultiActionController extends AbstractController {
 	 * @see org.springframework.beans.BeanUtils#instantiateClass(Class)
 	 */
 	protected <E> E getCommandObject(WebRequestContext request, Class<E> clazz, CommandInfo commandInfo) throws Exception {
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Must create new command of class [" + clazz.getName() + "]");
 		}
@@ -879,6 +895,7 @@ public class MultiActionController extends AbstractController {
 	 *             in case of invalid state or arguments
 	 */
 	protected ServletRequestDataBinder bind(WebRequestContext request, Object command, boolean validate) throws Exception {
+
 		logger.debug("Binding request parameters onto MultiActionController command");
 
 		ServletRequestDataBinder binder = createBinder(request.getServletRequest(), command, getCommandName(command));
@@ -1093,6 +1110,7 @@ public class MultiActionController extends AbstractController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Invoking exception handler [" + handler + "] for exception [" + ex + "]");
 		}
+
 		try {
 			Object result = handler.invoke(this.delegate, new Object[] { request, ex });
 			ModelAndView mv = convertActionResultToModelAndView(handler, result);
@@ -1113,6 +1131,7 @@ public class MultiActionController extends AbstractController {
 			// shouldn't happen
 			throw new ServletException("Unknown Throwable type encountered", targetEx);
 		}
+
 	}
 
 	public static class CommandInfo {

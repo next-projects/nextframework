@@ -26,7 +26,6 @@ package org.nextframework.report;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperReport;
 
-
 /**
  * Traduz de um IReport para um JasperReport
  * 
@@ -38,4 +37,5 @@ public interface ReportTranslator {
 
 	//TODO Criar interface do framework para relatórios
 	JasperReport translate(IReport report) throws JRException;
+
 }

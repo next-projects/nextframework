@@ -19,5 +19,7 @@ import org.stjs.javascript.annotation.JavascriptFunction;
 
 @JavascriptFunction
 public interface SortFunction<V> {
+
 	public int $invoke(V a, V b);
+
 }

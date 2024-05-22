@@ -28,7 +28,7 @@ import java.lang.annotation.Annotation;
 import org.springframework.validation.Errors;
 
 public interface PropertyValidator {
-	
+
 	/**
 	 * Valida a propriedade (property) de determinado objeto (bean)
 	 * e salva em errors
@@ -41,13 +41,13 @@ public interface PropertyValidator {
 	 * 
 	 */
 	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator);
-	
-	
+
 	/**
 	 * Nome da funcao que agrupa os fields de validacao
 	 * @return
 	 */
 	public String getValidationName();
+
 	/**
 	 * Nome da função que valida. Ex.: para validateRequired() deve retornar Required
 	 * @return
@@ -55,12 +55,14 @@ public interface PropertyValidator {
 	public String getValidationFunctionName();
 
 	public String getJavascriptFunctionPath();
+
 	/**
 	 * Monta a função de validação do javascript
 	 * @param validationItem
 	 * @return
 	 */
 	public String getJavascriptFunction(JavascriptValidationItem validationItem);
-	
+
 	public String getMessage(JavascriptValidationItem validationItem);
+
 }

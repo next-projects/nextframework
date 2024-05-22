@@ -9,15 +9,15 @@ import net.sf.jasperreports.engine.JRPrintText;
 import org.nextframework.report.definition.ReportDefinition;
 
 public class GroupPrintElements extends PrintElement {
-	
+
 	ReportDefinition groupDefinition;
-	
+
 	boolean subreportChecked = true;
-	
+
 	public boolean isSubreportChecked() {
 		return subreportChecked;
 	}
-	
+
 	public void setSubreportChecked(boolean subreportChecked) {
 		this.subreportChecked = subreportChecked;
 	}
@@ -31,29 +31,31 @@ public class GroupPrintElements extends PrintElement {
 	}
 
 	List<PrintElement> printElements = new ArrayList<PrintElement>();
-	
+
 	public List<PrintElement> getPrintElements() {
 		return printElements;
 	}
-	
+
 	@Override
 	public String toString() {
-		if(printElements == null){
+		if (printElements == null) {
 			return "printElements=null";
 		}
-		if(printElements.size() == 0){
+		if (printElements.size() == 0) {
 			return "empty";
 		}
 		String result = "\n\t[";
 		for (PrintElement printElement : printElements) {
-			if(printElement.getJrPrintElement() instanceof JRPrintRectangle){
-				result += "rect "+((JRPrintRectangle) printElement.getJrPrintElement()).getUUID()+", ";
-			} if(printElement.getJrPrintElement() instanceof JRPrintText){
-				result += ((JRPrintText) printElement.getJrPrintElement()).getText()+", ";
+			if (printElement.getJrPrintElement() instanceof JRPrintRectangle) {
+				result += "rect " + ((JRPrintRectangle) printElement.getJrPrintElement()).getUUID() + ", ";
+			}
+			if (printElement.getJrPrintElement() instanceof JRPrintText) {
+				result += ((JRPrintText) printElement.getJrPrintElement()).getText() + ", ";
 			} else {
-				result += printElement+", ";
+				result += printElement + ", ";
 			}
 		}
-		return result.substring(0, result.length() - 2)+"]";
+		return result.substring(0, result.length() - 2) + "]";
 	}
+
 }

@@ -82,7 +82,7 @@ public class ReportGenerator {
 		return reportBuilderSourceGenerator.createSourceCodeBuilder();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ReportSpec generateReportSpec(Map<String, Object> filterMap, Locale locale, int limitResults) {
 
 		ReportSpec spec = new ReportSpec();
@@ -249,6 +249,7 @@ public class ReportGenerator {
 		return filterObject;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void configureExpressions(ReportElement reportElement, List<CalculatedFieldElement> calculatedFields, DynamicSummary summary) {
 		for (CalculatedFieldElement calculatedField : calculatedFields) {
 			String name = calculatedField.getName();
@@ -270,6 +271,7 @@ public class ReportGenerator {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static void configureExpression(ReportElement reportElement, DynamicSummary summary, String name, String expression, String displayName, boolean formatAsNumber, String formatTimeDetail, CalculationType calculation, String processors) {
 		String b = ReportGeneratorUtils.reorganizeExpression(reportElement, summary.getReferenceClass(), expression, processors);
 		//TODO TYPE IS FORCED... TRY TO DETECT TYPE
@@ -333,7 +335,7 @@ public class ReportGenerator {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private void configureGroups(List<GroupElement> groups, DynamicSummary summary) {
 		for (GroupElement groupElement : groups) {
 			Type type = getTypeForProperty(groupElement.getName());

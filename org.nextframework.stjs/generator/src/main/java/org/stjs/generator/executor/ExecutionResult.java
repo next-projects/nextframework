@@ -16,6 +16,7 @@
 package org.stjs.generator.executor;
 
 public class ExecutionResult {
+
 	private final String stdOut;
 	private final String stdErr;
 	private final int exitValue;
@@ -52,4 +53,5 @@ public class ExecutionResult {
 		return String.format("result: %s, exitValue : %s\nstdout : %s\nstderr :%s", result != null ? result.toString()
 				: "null", exitValue, stdOut, stdErr);
 	}
+
 }

@@ -54,6 +54,7 @@ import com.google.common.collect.Multimap;
  * 
  */
 public class ClassWrapper implements TypeWrapper {
+
 	private final Class<?> clazz;
 
 	private Map<String, FieldWrapper> fields = null;
@@ -198,7 +199,6 @@ public class ClassWrapper implements TypeWrapper {
 	}
 
 	private void addMethods(Class<?> rawClass, TypeWrapper[] actualTypeArgs) {
-
 		for (Method m : rawClass.getDeclaredMethods()) {
 			if (m.isBridge() || m.isSynthetic()) {
 				// skip the bridges as they don't correspond to actual code
@@ -212,7 +212,6 @@ public class ClassWrapper implements TypeWrapper {
 					buildMethodWrapper(m.getName(), TypeWrappers.wrap(m.getGenericReturnType()), paramTypes,
 							m.getModifiers(), typeParams, rawClass, actualTypeArgs));
 		}
-
 	}
 
 	public Type getType() {
@@ -244,7 +243,7 @@ public class ClassWrapper implements TypeWrapper {
 		return declaringClass != null ? Option.some(new ClassWrapper(declaringClass)) : Option.<ClassWrapper> none();
 	}
 
-	@SuppressWarnings({"unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TypeVariableWrapper<Class<?>>[] getTypeParameters() {
 		TypeVariableWrapper[] types = new TypeVariableWrapper[clazz.getTypeParameters().length];
 		for (int i = 0; i < clazz.getTypeParameters().length; ++i) {
@@ -269,10 +268,12 @@ public class ClassWrapper implements TypeWrapper {
 
 	public List<MethodWrapper> findMethods(final String name) {
 		return ImmutableList.copyOf(Iterables.filter(getDeclaredMethods(), new Predicate<MethodWrapper>() {
+
 			@Override
 			public boolean apply(MethodWrapper method) {
 				return method.getName().equals(name);
 			}
+
 		}));
 	}
 
@@ -295,12 +296,10 @@ public class ClassWrapper implements TypeWrapper {
 		if (wrappers == null) {
 			return Option.none();
 		}
-
 		MethodWrapper w = MethodSelector.resolveMethod(wrappers, paramTypes);
 		if (w != null) {
 			return Option.some(w);
 		}
-
 		return Option.none();
 	}
 
@@ -328,10 +327,12 @@ public class ClassWrapper implements TypeWrapper {
 
 	public List<FieldWrapper> getDeclaredNonPrivateStaticFields() {
 		return ImmutableList.copyOf(filter(getDeclaredFields(), new Predicate<FieldWrapper>() {
+
 			@Override
 			public boolean apply(FieldWrapper field) {
 				return isStaticButNotPrivate(field.getModifiers());
 			}
+
 		}));
 	}
 
@@ -346,23 +347,28 @@ public class ClassWrapper implements TypeWrapper {
 			public boolean apply(MethodWrapper method) {
 				return isStaticButNotPrivate(method.getModifiers());
 			}
+
 		}));
 	}
 
 	private static final Function<Class<?>, ClassWrapper> WrapClass = new Function<Class<?>, ClassWrapper>() {
+
 		@Override
 		public ClassWrapper apply(Class<?> clazz) {
 			return new ClassWrapper(clazz);
 		}
+
 	};
 
 	public List<ClassWrapper> getDeclaredNonPrivateStaticClasses() {
 
 		return ImmutableList.copyOf(transform(filter(asList(clazz.getDeclaredClasses()), new Predicate<Class<?>>() {
+
 			@Override
 			public boolean apply(Class<?> clazz) {
 				return isStaticButNotPrivate(clazz.getModifiers());
 			}
+
 		}), WrapClass));
 	}
 
@@ -434,4 +440,5 @@ public class ClassWrapper implements TypeWrapper {
 	public TypeWrapper getSuperClass() {
 		return TypeWrappers.wrap(clazz.getGenericSuperclass());
 	}
+
 }

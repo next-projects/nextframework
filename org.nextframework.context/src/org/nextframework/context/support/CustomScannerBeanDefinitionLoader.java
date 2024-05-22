@@ -16,13 +16,13 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.util.StringUtils;
 
 public abstract class CustomScannerBeanDefinitionLoader implements BeanDefinitionLoader {
-	
+
 	protected final Log logger = LogFactory.getLog(LOG_NAME);
-	
+
 	protected abstract void applyFilters(ClassPathBeanDefinitionScanner scanner);
 
 	protected abstract void postProcessBeanDefinition(DefaultListableBeanFactory beanFactory, AbstractBeanDefinition beanDefinition, String beanName);
-	
+
 	protected String[] applicationScanPaths;
 
 	@Override
@@ -32,20 +32,19 @@ public abstract class CustomScannerBeanDefinitionLoader implements BeanDefinitio
 
 	@Override
 	public void loadBeanDefinitions(AbstractApplicationContext applicationContext, DefaultListableBeanFactory beanFactory) {
-			List<BeanDefinitionHolder> beansList = new ArrayList<BeanDefinitionHolder>();
-			ClassPathBeanDefinitionScanner scanner = createScannerForCustomReader(applicationContext, beanFactory, beansList);
-			applyFilters(scanner);
-			scanner.scan(applicationScanPaths);
-			if(logger.isInfoEnabled()){
-				StringBuilder sb = new StringBuilder();
-				sb.append(this);
-				sb.append(": adding beans [");
-				sb.append(StringUtils.arrayToCommaDelimitedString(getBeanDefinitionNames(beansList)));
-				sb.append("] ");
-				logger.info(sb);
-			}
+		List<BeanDefinitionHolder> beansList = new ArrayList<BeanDefinitionHolder>();
+		ClassPathBeanDefinitionScanner scanner = createScannerForCustomReader(applicationContext, beanFactory, beansList);
+		applyFilters(scanner);
+		scanner.scan(applicationScanPaths);
+		if (logger.isInfoEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(this);
+			sb.append(": adding beans [");
+			sb.append(StringUtils.arrayToCommaDelimitedString(getBeanDefinitionNames(beansList)));
+			sb.append("] ");
+			logger.info(sb);
+		}
 	}
-	
 
 	private Object[] getBeanDefinitionNames(List<BeanDefinitionHolder> beansList) {
 		int i = 0;
@@ -57,35 +56,39 @@ public abstract class CustomScannerBeanDefinitionLoader implements BeanDefinitio
 	}
 
 	protected ClassPathBeanDefinitionScanner createScannerForCustomReader(AbstractApplicationContext applicationContext, final DefaultListableBeanFactory beanFactory, final List<BeanDefinitionHolder> beansDefined) {
-		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(beanFactory, false, applicationContext.getEnvironment()){
+
+		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(beanFactory, false, applicationContext.getEnvironment()) {
+
 			@Override
 			protected void postProcessBeanDefinition(AbstractBeanDefinition beanDefinition, String beanName) {
 				super.postProcessBeanDefinition(beanDefinition, beanName);
 				CustomScannerBeanDefinitionLoader.this.postProcessBeanDefinition(beanFactory, beanDefinition, beanName);
 			}
-			
+
 			@Override
 			protected void registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry) {
 				super.registerBeanDefinition(definitionHolder, registry);
 				beansDefined.add(definitionHolder);
 			}
+
 		};
-		
+
 		//TODO REBUILD THIS (ONLY FOR WEB PROJECTS)
 //		ScopeMetadataResolver scopeMetadataResolver = applicationContext.getScopeMetadataResolver();
 //		if (scopeMetadataResolver != null) {
 //			scanner.setScopeMetadataResolver(scopeMetadataResolver);
 //		}
+
 		return scanner;
 	}
-	
+
 	//util
-	
+
 	protected void setAutowireBeans(ClassPathBeanDefinitionScanner scanner, int autowireType) {
 		BeanDefinitionDefaults beanDefinitionDefaults = new BeanDefinitionDefaults();
 		beanDefinitionDefaults.setAutowireMode(autowireType);
 		scanner.setBeanDefinitionDefaults(beanDefinitionDefaults);
-		scanner.setAutowireCandidatePatterns(new String[]{"*"});
+		scanner.setAutowireCandidatePatterns(new String[] { "*" });
 	}
 
 }

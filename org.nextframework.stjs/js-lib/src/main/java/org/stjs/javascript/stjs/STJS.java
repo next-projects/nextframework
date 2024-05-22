@@ -9,6 +9,7 @@ import org.stjs.javascript.Array;
  * @author acraciun
  */
 public final class STJS {
+
 	/**
 	 * 
 	 * @param obj
@@ -64,4 +65,5 @@ public final class STJS {
 	 * @return
 	 */
 	public native <T> T stringify(T obj, Class<T> cls);
+
 }

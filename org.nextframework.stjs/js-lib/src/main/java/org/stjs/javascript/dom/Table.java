@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Table extends Element {
+
 	public HTMLCollection<TableSection> tBodies;
 	public TableSection tFoot;
 	public TableSection tHead;
@@ -62,4 +63,5 @@ abstract public class Table extends Element {
 	public TableRow insertRow(int arg0) {
 		throw new UnsupportedOperationException();
 	}
+
 }

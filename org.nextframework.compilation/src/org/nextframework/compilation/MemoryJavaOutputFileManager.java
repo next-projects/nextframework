@@ -41,20 +41,20 @@ import javax.tools.JavaFileObject.Kind;
 public class MemoryJavaOutputFileManager implements JavaFileManager {
 
 	JavaFileManager delegate;
-	
+
 	List<MemoryJavaOutputFileObject> outputs = new ArrayList<MemoryJavaOutputFileObject>();
 
 	private List<JavaFileObject> compiledFiles;
-	
+
 	public List<MemoryJavaOutputFileObject> getOutputs() {
 		return outputs;
 	}
-	
+
 	public MemoryJavaOutputFileManager(JavaFileManager delegate, List<JavaFileObject> compiledFiles) {
 		this.delegate = delegate;
 		this.compiledFiles = compiledFiles;
 	}
-	
+
 	public void close() throws IOException {
 		delegate.close();
 	}
@@ -84,7 +84,7 @@ public class MemoryJavaOutputFileManager implements JavaFileManager {
 
 	public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind, FileObject sibling) throws IOException {
 		//System.out.println("MemoryJavaOutputFileManager.getJavaFileForOutput("+location+", "+className+", "+kind+", "+sibling+")");
-		MemoryJavaOutputFileObject memoryJavaOutputFileObject = new MemoryJavaOutputFileObject(URI.create("string:///" + className.replace('.','/') + Kind.SOURCE.extension),kind, className);
+		MemoryJavaOutputFileObject memoryJavaOutputFileObject = new MemoryJavaOutputFileObject(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension), kind, className);
 		outputs.add(memoryJavaOutputFileObject);
 		return memoryJavaOutputFileObject;
 	}
@@ -98,7 +98,7 @@ public class MemoryJavaOutputFileManager implements JavaFileManager {
 	}
 
 	public String inferBinaryName(Location location, JavaFileObject file) {
-		if(file instanceof MemoryJavaOutputFileObject){
+		if (file instanceof MemoryJavaOutputFileObject) {
 			return ((MemoryJavaOutputFileObject) file).getClassName();
 		}
 		return delegate.inferBinaryName(location, file);
@@ -119,11 +119,11 @@ public class MemoryJavaOutputFileManager implements JavaFileManager {
 			list.add(javaFileObject);
 		}
 		for (JavaFileObject javaFileObject : compiledFiles) {
-			if(((MemoryJavaOutputFileObject)javaFileObject).getClassName().startsWith(packageName)){
+			if (((MemoryJavaOutputFileObject) javaFileObject).getClassName().startsWith(packageName)) {
 				list.add(javaFileObject);
 			}
 		}
 		return list;
 	}
-	
+
 }

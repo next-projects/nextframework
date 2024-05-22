@@ -8,13 +8,13 @@ import java.util.Set;
 public class UserPersistentMap implements Map<String, String> {
 
 	protected UserPropertiesDAO userPropertiesDAO;
-	
+
 	protected Map<String, UserKeyValueMapEntity> userPropertiesMap = new HashMap<String, UserKeyValueMapEntity>();
 
-	public UserPersistentMap(UserPropertiesDAO userPropertiesDAO){
+	public UserPersistentMap(UserPropertiesDAO userPropertiesDAO) {
 		this.userPropertiesDAO = userPropertiesDAO;
 	}
-	
+
 	@Override
 	public int size() {
 		throw new UnsupportedOperationException();
@@ -38,20 +38,20 @@ public class UserPersistentMap implements Map<String, String> {
 	@Override
 	public String get(Object key) {
 		UserKeyValueMapEntity r = loadUserProperty(key);
-		if(r == null){
+		if (r == null) {
 			return null;
 		}
 		return r.getValue();
 	}
 
 	public UserKeyValueMapEntity loadUserProperty(Object key) {
-		if(key == null){
+		if (key == null) {
 			throw new NullPointerException("invalid null key");
 		}
 		UserKeyValueMapEntity r = userPropertiesMap.get(key);
-		if(r == null){
+		if (r == null) {
 			r = userPropertiesDAO.getUserKey(key.toString());
-			if(r != null){
+			if (r != null) {
 				userPropertiesMap.put(key.toString(), r);
 			}
 		}
@@ -60,12 +60,12 @@ public class UserPersistentMap implements Map<String, String> {
 
 	@Override
 	public String put(String key, String value) {
-		if(key == null){
+		if (key == null) {
 			throw new NullPointerException("invalid null key");
 		}
 		UserKeyValueMapEntity r = loadUserProperty(key);
 		String oldValue = null;
-		if(r == null){
+		if (r == null) {
 			r = userPropertiesDAO.createUnsavedUserKey();
 			r.setKey(key);
 		} else {
@@ -76,18 +76,16 @@ public class UserPersistentMap implements Map<String, String> {
 		return oldValue;
 	}
 
-
 	@Override
 	public String remove(Object key) {
 		UserKeyValueMapEntity r = loadUserProperty(key);
-		if(r == null){
+		if (r == null) {
 			return null;
 		}
 		userPropertiesMap.remove(key);
 		delete(r);
 		return r.getValue();
 	}
-
 
 	@Override
 	public void putAll(Map<? extends String, ? extends String> m) {
@@ -113,7 +111,6 @@ public class UserPersistentMap implements Map<String, String> {
 	public Set<java.util.Map.Entry<String, String>> entrySet() {
 		throw new UnsupportedOperationException();
 	}
-	
 
 	private void delete(UserKeyValueMapEntity userProperty) {
 		userPropertiesDAO.delete(userProperty);
@@ -122,4 +119,5 @@ public class UserPersistentMap implements Map<String, String> {
 	private void persist(UserKeyValueMapEntity userProperty) {
 		userPropertiesDAO.saveKey(userProperty);
 	}
+
 }

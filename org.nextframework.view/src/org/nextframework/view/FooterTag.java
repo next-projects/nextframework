@@ -35,7 +35,7 @@ import org.nextframework.view.DataGridTag.Status;
  * @version 1.1
  */
 public class FooterTag extends ColumnChildTag {
-	
+
 	@Override
 	protected boolean doTd() {
 		return false;
@@ -57,6 +57,5 @@ public class FooterTag extends ColumnChildTag {
 	protected void register() {
 		dataGrid.setRenderFooter(true);
 	}
-
 
 }

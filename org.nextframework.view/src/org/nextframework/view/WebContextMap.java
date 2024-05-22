@@ -40,9 +40,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  */
 public class WebContextMap extends HashMap<String, Object> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest httpRequest;
 
@@ -120,4 +117,5 @@ public class WebContextMap extends HashMap<String, Object> {
 	public Set<Entry<String, Object>> entrySet() {
 		throw new UnsupportedOperationException("Método não implementado");
 	}
+
 }

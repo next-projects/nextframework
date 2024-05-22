@@ -34,11 +34,13 @@ import org.stjs.javascript.functions.Callback1;
  * @param <V>
  */
 public class ArrayImpl<V> implements Array<V> {
+
 	private final List<V> array = new ArrayList<V>();
 
 	@Override
 	public Iterator<String> iterator() {
 		return new Iterator<String>() {
+
 			private int current = 0;
 
 			@Override
@@ -58,6 +60,7 @@ public class ArrayImpl<V> implements Array<V> {
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
+
 		};
 	}
 
@@ -225,10 +228,12 @@ public class ArrayImpl<V> implements Array<V> {
 	@Override
 	public void sort(final SortFunction<V> function) {
 		Collections.sort(array, new Comparator<V>() {
+
 			@Override
 			public int compare(V a, V b) {
 				return function.$invoke(a, b);
 			}
+
 		});
 	}
 
@@ -249,4 +254,5 @@ public class ArrayImpl<V> implements Array<V> {
 	public String toString() {
 		return array.toString();
 	}
+
 }

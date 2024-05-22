@@ -20,6 +20,7 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;
 
 public class GenericArrayTypeWrapper extends ClassWrapper {
+
 	private final GenericArrayType type;
 	private final TypeWrapper componentType;
 

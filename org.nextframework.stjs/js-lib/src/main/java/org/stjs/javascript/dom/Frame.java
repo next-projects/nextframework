@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Frame extends Element {
+
 	public Document contentDocument;
 	public String frameBorder;
 	public String longDesc;
@@ -25,4 +26,5 @@ abstract public class Frame extends Element {
 	public boolean noResize;
 	public String scrolling;
 	public String src;
+
 }

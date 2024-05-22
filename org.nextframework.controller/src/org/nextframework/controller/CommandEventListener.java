@@ -45,4 +45,5 @@ public interface CommandEventListener {
 	 * @param binder
 	 */
 	void onCommandValidation(MultiActionController controller, Object command, ServletRequestDataBinder binder);
+
 }

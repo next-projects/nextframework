@@ -127,9 +127,11 @@ public class PrintElement {
 			StringBuilder sb = new StringBuilder("\n\t[");
 			for (final JRPrintElement jrpe : elements) {
 				sb.append(new PrintElement() {
+
 					{
 						setJrPrintElement(jrpe);
 					}
+
 				});
 				sb.append(", ");
 			}

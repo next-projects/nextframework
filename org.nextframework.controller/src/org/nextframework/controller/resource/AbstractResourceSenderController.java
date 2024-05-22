@@ -40,17 +40,16 @@ public abstract class AbstractResourceSenderController<FILTRO> extends MultiActi
 
 	public static final String FILTER = "filter";
 	public static final String GENERATE = "generate";
-	
+
 	@DefaultAction
 	@Action(FILTER)
 	@Command(session = true, validate = false)
 	@Input(FILTER)
 	public abstract ModelAndView doFilter(WebRequestContext request, FILTRO filter) throws Exception;
-	
+
 	@Action(GENERATE)
 	@Command(session = true, validate = true)
 	@Input(FILTER)
 	public abstract ModelAndView doGenerate(WebRequestContext request, FILTRO filter) throws Exception;
 
 }
-

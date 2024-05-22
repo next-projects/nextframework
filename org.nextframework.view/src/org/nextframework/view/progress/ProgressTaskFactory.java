@@ -31,6 +31,7 @@ public class ProgressTaskFactory {
 	 */
 	public static void startTask(final IProgressMonitor monitor, final ProgressTask task, String threadName, final Log logger) {
 		Thread t = new Thread(Next.getApplicationName().toUpperCase() + " - " + ProgressTask.class.getSimpleName() + " - " + threadName) {
+
 			public void run() {
 				monitor.subTask(Util.objects.newMessage("org.nextframework.view.progress.ProgressTaskFactory.startTask", null, "Inicializando tarefa..."));
 				try {
@@ -45,6 +46,7 @@ public class ProgressTaskFactory {
 					}
 				}
 			};
+
 		};
 		t.start();
 	}

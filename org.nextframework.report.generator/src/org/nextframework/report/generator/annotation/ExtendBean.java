@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
  * @author rogelgarcia
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface ExtendBean {
 
 	boolean cacheResult() default true;
-	
+
 }

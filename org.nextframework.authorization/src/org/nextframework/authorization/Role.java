@@ -33,9 +33,9 @@ import java.io.Serializable;
 public interface Role extends Serializable {
 
 	String getName();
-	
+
 	boolean equals(Object obj);
-	
+
 	int hashCode();
-	
+
 }

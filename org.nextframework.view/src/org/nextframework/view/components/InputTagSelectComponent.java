@@ -23,7 +23,7 @@ public class InputTagSelectComponent extends InputTagComponent {
 
 	@Override
 	public void prepare() {
-		
+
 		super.prepare();
 		prepareBlankOption();
 
@@ -34,7 +34,7 @@ public class InputTagSelectComponent extends InputTagComponent {
 		}
 
 		prepareItems(lastInput);
-		
+
 	}
 
 	protected void prepareItems(InputTag lastInput) {

@@ -94,6 +94,7 @@ public class Generator {
 		Writer writer = null;
 
 		try {
+
 			// generate the javascript code
 			JavascriptWriterVisitor generatorVisitor = new JavascriptWriterVisitor();
 			generatorVisitor.visit(cu, context);
@@ -121,6 +122,7 @@ public class Generator {
 		stjsClass.setDependencies(classLoaderWrapper.getResolvedClasses());
 		stjsClass.setGeneratedJavascriptFile(relative(generationFolder, className));
 		stjsClass.store();
+
 		return stjsClass;
 	}
 
@@ -140,11 +142,12 @@ public class Generator {
 		}
 	}
 
-	private CompilationUnit parseAndResolve(ClassLoaderWrapper builtProjectClassLoader, File inputFile,
-			GenerationContext context) {
+	private CompilationUnit parseAndResolve(ClassLoaderWrapper builtProjectClassLoader, File inputFile, GenerationContext context) {
+
 		CompilationUnitScope unitScope = new CompilationUnitScope(builtProjectClassLoader, context);
 		CompilationUnit cu = null;
 		InputStream in = null;
+
 		try {
 
 			try {
@@ -178,6 +181,7 @@ public class Generator {
 			}
 
 		}
+
 		return cu;
 	}
 
@@ -195,10 +199,12 @@ public class Generator {
 		File outputFile = new File(folder, STJS_FILE);
 		try {
 			Files.copy(new InputSupplier<InputStream>() {
+
 				@Override
 				public InputStream getInput() throws IOException {
 					return stjs;
 				}
+
 			}, outputFile);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not copy the " + STJS_FILE + " file to the folder " + folder, e);
@@ -217,6 +223,7 @@ public class Generator {
 	 * 
 	 */
 	private class GeneratorDependencyResolver implements DependencyResolver {
+
 		private final ClassLoader builtProjectClassLoader;
 		private final File sourceFolder;
 		private final File generationFolder;
@@ -234,11 +241,13 @@ public class Generator {
 
 		@Override
 		public ClassWithJavascript resolve(String className) {
+
 			String parentClassName = className;
 			int pos = parentClassName.indexOf('$');
 			if (pos > 0) {
 				parentClassName = parentClassName.substring(0, pos);
 			}
+
 			// try first if to see if it's a bridge class
 			Class<?> clazz;
 			try {
@@ -260,6 +269,7 @@ public class Generator {
 				stjsClass = (STJSClass) generateJavascript(builtProjectClassLoader, parentClassName, sourceFolder,
 						generationFolder, targetFolder, configuration);
 			}
+
 			return stjsClass;
 		}
 
@@ -288,4 +298,5 @@ public class Generator {
 		new Generator().generateJavascript(Thread.currentThread().getContextClassLoader(), args[0], new File(
 				"js-lib"), new File("target", "generate-js"), new File("target"), builder.build());
 	}
+
 }

@@ -13,11 +13,11 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.type.filter.AssignableTypeFilter;
 
 public class CrudControllerBeanDefinitionLoader extends CustomScannerBeanDefinitionLoader {
-	
+
 	static {
 		ControllerBeanDefinitionLoader.IGNORE_CONTROLLER_CLASSES.add(CrudController.class);
 	}
-	
+
 	@Override
 	public void applyFilters(ClassPathBeanDefinitionScanner scanner) {
 		setAutowireBeans(scanner, AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
@@ -30,15 +30,15 @@ public class CrudControllerBeanDefinitionLoader extends CustomScannerBeanDefinit
 		try {
 			Class<?> crudControllerClass = Class.forName(beanDefinition.getBeanClassName());
 			Class<?>[] typeArguments = GenericTypeResolver.resolveTypeArguments(crudControllerClass, CrudController.class);
-			if(typeArguments == null || typeArguments.length < 3){
-				throw new IllegalArgumentException("Cannot resolve type argument for "+crudControllerClass+" with "+CrudController.class+" using index "+2+". Found "+Arrays.deepToString(typeArguments));
+			if (typeArguments == null || typeArguments.length < 3) {
+				throw new IllegalArgumentException("Cannot resolve type argument for " + crudControllerClass + " with " + CrudController.class + " using index " + 2 + ". Found " + Arrays.deepToString(typeArguments));
 			}
 			qualifier.setAttribute(AutowireCandidateQualifier.VALUE_KEY, typeArguments[2]);
 			beanDefinition.addQualifier(qualifier);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		ControllerBeanDefinitionLoader.checkControllerDefinition(beanDefinition);
 	}
 
@@ -46,4 +46,5 @@ public class CrudControllerBeanDefinitionLoader extends CustomScannerBeanDefinit
 	public String toString() {
 		return "CrudController Loader";
 	}
+
 }

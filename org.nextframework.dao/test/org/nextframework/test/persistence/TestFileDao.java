@@ -18,21 +18,26 @@ import org.nextframework.persistence.PersistenceConfiguration;
 import org.nextframework.types.File;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 
-public class TestFileDao  extends TestHibernate {
+public class TestFileDao extends TestHibernate {
 
 	@Override
 	@Before
 	public void setUp() throws ClassNotFoundException, SQLException {
+		
 		super.setUp();
+		
 		PersistenceConfiguration config = new PersistenceConfiguration();
+		
 		HibernateTransactionSessionProvider sessionProvider = new HibernateTransactionSessionProvider() {
+
 			public Session newSession() {
 				return TestFileDao.super.session;
 			}
+
 			public SessionFactory getSessionFactory() {
 				return TestFileDao.super.sessionFactory;
 			}
-			
+
 			public Object execute(HibernateCommand command) {
 				try {
 					return command.doInHibernate(newSession());
@@ -40,7 +45,7 @@ public class TestFileDao  extends TestHibernate {
 					throw new RuntimeException(e);
 				}
 			}
-			
+
 			@Override
 			public Object executeInTransaction(final HibernateTransactionCommand command) {
 				Session newSession = newSession();
@@ -48,11 +53,13 @@ public class TestFileDao  extends TestHibernate {
 				Transaction t = newSession.beginTransaction();
 				try {
 					Object value = execute(new HibernateCommand() {
+
 						@SuppressWarnings("unchecked")
 						@Override
 						public Object doInHibernate(Session session) throws HibernateException {
 							return command.doInHibernate(session, new Object());
 						}
+
 					});
 					System.out.println("commit");
 					t.commit();
@@ -63,11 +70,14 @@ public class TestFileDao  extends TestHibernate {
 					throw new RuntimeException(e);
 				}
 			}
+
 		};
+		
 		config.setSessionProvider(sessionProvider);
 		PersistenceConfiguration.configure(config);
+		
 	}
-	
+
 	@Override
 	protected void addAnnotatedClasses(Configuration annotationConfiguration) {
 		super.addAnnotatedClasses(annotationConfiguration);
@@ -75,18 +85,20 @@ public class TestFileDao  extends TestHibernate {
 		annotationConfiguration.addAnnotatedClass(TestEntityExtDao.class);
 		annotationConfiguration.addAnnotatedClass(TestEntityFile.class);
 	}
-	
+
 	@Test
-	public void testSaveChildFile(){
-		final FileDAO<?> fd = new FileDAO(TestEntityFile.class, true){
+	public void testSaveChildFile() {
+		final FileDAO<?> fd = new FileDAO(TestEntityFile.class, true) {
 		};
 		GenericDAO<TestEntityExtDao> dao;
 		try {
-			dao = new GenericDAO<TestEntityExtDao>(TestEntityExtDao.class){
+			dao = new GenericDAO<TestEntityExtDao>(TestEntityExtDao.class) {
+
 				{
 					fileDAO = (FileDAO<File>) fd;
 					initDao();
 				}
+
 			};
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -107,6 +119,6 @@ public class TestFileDao  extends TestHibernate {
 		child1.setId(1L);
 		child1.setEntityFile(entityFile);
 		dao.saveOrUpdate(child1);
-		
 	}
+
 }

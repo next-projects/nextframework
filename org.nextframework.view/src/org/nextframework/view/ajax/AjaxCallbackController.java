@@ -26,8 +26,8 @@ package org.nextframework.view.ajax;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public interface AjaxCallbackController {
-	
+
 	public void doAjax(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
 }

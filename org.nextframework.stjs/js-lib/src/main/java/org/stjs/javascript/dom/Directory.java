@@ -16,5 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Directory extends Element {
+
 	public boolean compact;
+
 }

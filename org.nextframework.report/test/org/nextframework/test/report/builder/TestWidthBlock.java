@@ -23,7 +23,7 @@ public class TestWidthBlock {
 		definition.addItem(new ReportLabel("LAST PAGE FOOTER"), definition.getSectionLastPageFooter(), 0);
 
 		ReportGroup g1 = definition.createGroup("mod");
-		
+
 		ReportGrid grid = new ReportGrid(3);
 		grid.addItem(new ReportTextField("mod"));
 		grid.addItem(new ReportLabel("Aaaaa"));
@@ -33,8 +33,7 @@ public class TestWidthBlock {
 		grid.addItem(new ReportLabel("Eeeeeee"));
 		grid.setColspan(5);
 		definition.addItem(grid, g1.getSectionDetail(), 0);
-		
-		
+
 		writePDF(definition);
 	}
 
@@ -45,9 +44,10 @@ public class TestWidthBlock {
 	}
 
 	public static void write(ReportDefinition definition, byte[] bytes, String type) throws FileNotFoundException, IOException {
-		FileOutputStream out = new FileOutputStream(definition.getReportName()+"." + type);
+		FileOutputStream out = new FileOutputStream(definition.getReportName() + "." + type);
 		out.write(bytes);
 		out.flush();
 		out.close();
 	}
+
 }

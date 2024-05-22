@@ -23,7 +23,6 @@
  */
 package org.nextframework.authorization.impl;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,9 +39,9 @@ import org.nextframework.authorization.User;
  * @version 1.1
  */
 public abstract class AbstractAuthorizationDAO implements AuthorizationDAO {
-	
+
 	protected static Log logger = LogFactory.getLog(AbstractAuthorizationDAO.class);
-	
+
 	private Map<Role, Long> updateTimes = new HashMap<Role, Long>();
 	private long lastUpdateTime = System.currentTimeMillis();
 
@@ -57,11 +56,7 @@ public abstract class AbstractAuthorizationDAO implements AuthorizationDAO {
 	public Permission savePermission(final String controlName, final Role role, final Map<String, String> permissionMap) {
 		lastUpdateTime = System.currentTimeMillis();
 		updateTimes.put(role, System.currentTimeMillis());
-		return new Permission(){
-
-			public Role getRole() {
-				return role;
-			}
+		return new Permission() {
 
 			public Map<String, String> getPermissionMap() {
 				return permissionMap;
@@ -69,7 +64,9 @@ public abstract class AbstractAuthorizationDAO implements AuthorizationDAO {
 
 			public String getPermissionValue(String id) {
 				return getPermissionMap().get(id);
-			}};
+			}
+
+		};
 	}
 
 	public Role[] findAllRoles() {
@@ -79,7 +76,7 @@ public abstract class AbstractAuthorizationDAO implements AuthorizationDAO {
 	@Override
 	public long getLastUpdateTime(Role role) {
 		Long time;
-		if((time = updateTimes.get(role)) != null){
+		if ((time = updateTimes.get(role)) != null) {
 			return time;
 		}
 		return System.currentTimeMillis();

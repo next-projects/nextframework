@@ -18,7 +18,7 @@ import org.springframework.web.WebApplicationInitializer;
  */
 @Order(LOWEST_PRECEDENCE - 1000)
 public class NextWebApplicationInitializer implements WebApplicationInitializer {
-	
+
 	private ServletContext servletContext;
 
 	@Override
@@ -26,19 +26,19 @@ public class NextWebApplicationInitializer implements WebApplicationInitializer 
 		this.servletContext = servletContext;
 		registerContextLoaderListener();
 	}
-	
+
 	protected void registerContextLoaderListener() {
 //		List<ApplicationListener> applicationListeners = Arrays.asList(ServiceFactory.loadServices(ApplicationListener.class));
 		WebContext.setServletContext(servletContext);
 		try {
 			org.springframework.web.context.ContextLoaderListener springLoader = ServiceFactory.getService(org.springframework.web.context.ContextLoaderListener.class);
-			servletContext.log("Using custom ContextLoaderListener: "+springLoader);
+			servletContext.log("Using custom ContextLoaderListener: " + springLoader);
 			servletContext.addListener(springLoader);
 		} catch (ServiceException e) {
 			servletContext.addListener(new ContextLoaderListener());
 		}
 	}
-	
+
 	public ServletContext getServletContext() {
 		return servletContext;
 	}

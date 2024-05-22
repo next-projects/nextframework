@@ -26,24 +26,25 @@ package org.nextframework.authorization.report;
 import org.nextframework.authorization.UserAuthorization;
 
 public class ReportAuthorizer {
-	
-	private ReportAuthorizer(){
-		
+
+	private ReportAuthorizer() {
+
 	}
 
 	private static ReportAuthorizer instance;
-	public static ReportAuthorizer getInstance(){
-		if(instance == null){
+
+	public static ReportAuthorizer getInstance() {
+		if (instance == null) {
 			instance = new ReportAuthorizer();
 		}
 		return instance;
 	}
-	
 
-	public boolean isAuthorized(String acao, UserAuthorization authorization){
-        if(!(authorization instanceof ReportAuthorization)){
-            throw new IllegalArgumentException("The type of Authorization used by "+this.getClass().getName()+" must be "+ReportAuthorization.class.getName());
-        }
-		return ((ReportAuthorization)authorization).canGenerate();
+	public boolean isAuthorized(String acao, UserAuthorization authorization) {
+		if (!(authorization instanceof ReportAuthorization)) {
+			throw new IllegalArgumentException("The type of Authorization used by " + this.getClass().getName() + " must be " + ReportAuthorization.class.getName());
+		}
+		return ((ReportAuthorization) authorization).canGenerate();
 	}
+
 }

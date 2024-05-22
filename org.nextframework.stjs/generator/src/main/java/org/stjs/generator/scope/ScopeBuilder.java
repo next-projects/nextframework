@@ -117,6 +117,7 @@ import org.stjs.generator.visitor.ForEachNodeVisitor;
  * 
  */
 public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
+
 	private final ClassLoaderWrapper classLoader;
 	private final GenerationContext context;
 
@@ -147,12 +148,14 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 
 	@Override
 	public void visit(final CompilationUnit n, Scope inputScope) {
+
 		PreConditions.checkStateNode(n, inputScope instanceof CompilationUnitScope,
 				"A compilationUnitScope was expected. Got %s", inputScope);
 
 		CompilationUnitScope scope = (CompilationUnitScope) inputScope;
 		// asterisk declaration have lower priority => process them first (JLS §7.5.2)
 		if (n.getImports() != null) {
+
 			for (ImportDeclaration importDecl : n.getImports()) {
 				NameExpr name = importDecl.getName();
 				if (importDecl.isAsterisk()) {
@@ -174,6 +177,7 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 					}
 				}
 			}
+
 			for (ImportDeclaration importDecl : n.getImports()) {
 				NameExpr name = importDecl.getName();
 				if (!importDecl.isAsterisk()) {
@@ -199,6 +203,7 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 					}
 				}
 			}
+
 		}
 
 		super.visit(n, scope);
@@ -206,9 +211,7 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 
 	private ClassScope addClassToScope(AbstractScope parentScope, ClassWrapper clazz) {
 		parentScope.addType(clazz);
-
 		ClassScope scope = new ClassScope(clazz, parentScope, context);
-
 		return scope;
 	}
 
@@ -226,6 +229,7 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 
 	@Override
 	public void visit(final MethodDeclaration n, Scope currentScope) {
+
 		Checks.checkMethodDeclaration(n, context);
 
 		// the scope is where the method is defined, i.e. the classScope
@@ -241,6 +245,7 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 
 		BasicScope scope = handleMethodDeclaration(n, n.getParameters(), method.getParameterTypes(),
 				method.getTypeParameters(), currentScope);
+
 		super.visit(n, new BasicScope(scope, context));
 	}
 
@@ -371,6 +376,7 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 
 	@Override
 	public void visit(VariableDeclarationExpr n, Scope scope) {
+
 		PreConditions.checkStateNode(n, scope instanceof BasicScope,
 				"The variable [%s] is not defined inside a BasicScope", n);
 
@@ -411,7 +417,6 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 			// enums receive label and ordinal as first arguments
 			// for non-static inner classes the constructor contains as first parameter the type of the outer type
 			int skipParams = parameterTypes.length - (n.getParameters() != null ? n.getParameters().size() : 0);
-
 			if (skipParams > 0) {
 				parameterTypes = Arrays.copyOfRange(parameterTypes, skipParams, parameterTypes.length);
 			}
@@ -442,7 +447,6 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 		TypeWithScope type = currentScope.resolveType(n.getName());
 		PreConditions.checkStateNode(n, type != null, "%s class cannot be resolved in the scope", n.getName());
 		Scope enumClassScope = addClassToScope(parentScope, (ClassWrapper) type.getType());
-
 		super.visit(n, enumClassScope);
 	}
 
@@ -463,23 +467,17 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 			}
 		}
 		Checks.checkObjectCreationExpr(n, context);
-
 		if (n.getAnonymousClassBody() != null) {
 			ClassScope classScope = scope.closest(ClassScope.class);
-
 			ClassWrapper anonymousClass = searchAnonymousClass(classScope.getClazz().getClazz(), n, scope);
 			PreConditions.checkStateNode(n, anonymousClass != null,
 					"Could not find anoynmous class for node at line %d", n.getBeginLine());
-
 			ClassScope anonymousClassScope = addClassToScope((AbstractScope) scope, anonymousClass);
-
 			resolvedType(n, anonymousClass);
 			scope(n, anonymousClassScope);
-
 			for (BodyDeclaration member : n.getAnonymousClassBody()) {
 				member.accept(this, anonymousClassScope);
 			}
-
 		} else {
 			resolvedType(n, resolveType(scope, n.getType()));
 			scope(n, scope);
@@ -585,7 +583,6 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 			resolvedType(n, TypeWrappers.wrap(PrimitiveTypes.expressionResultType(resolvedType(n.getLeft()).getType(),
 					resolvedType(n.getRight()).getType())));
 		}
-
 	}
 
 	@Override
@@ -708,7 +705,6 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 			method = scopeType.findMethod(n.getName(), argumentTypes).getOrThrow(
 					location(n) + "-> type:" + scopeType.getName() + " m:" + n.getName());
 		}
-
 		resolvedType(n, method.getReturnType());
 		resolvedMethod(n, method);
 		Checks.checkScope(n, context);
@@ -762,7 +758,6 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 			// this is an enum label -> the type is the enum from the selector
 			resolvedType(n, resolvedType(((SwitchStmt) parent(parent)).getSelector()));
 		} else {
-
 			// here n can be:
 			// 1) start of a fully qualified class x.y.z
 			// 2) the name of a class
@@ -800,7 +795,6 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 	@Override
 	public void visit(ThisExpr n, Scope arg) {
 		Checks.checkThisExpr(n, context);
-
 		super.visit(n, arg);
 		if (n.getClassExpr() != null) {
 			resolvedType(n, resolvedType(n.getClassExpr()));

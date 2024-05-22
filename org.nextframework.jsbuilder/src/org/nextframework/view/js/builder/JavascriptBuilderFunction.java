@@ -15,7 +15,6 @@ public class JavascriptBuilderFunction extends JavascriptFunctionReference {
 		getScript().append(this);
 	}
 
-	
 	private static JavascriptCode getCode(JavascriptBuilder builder) {
 		JavascriptBuilderContext.pushNewContext();
 		String result = builder.toString();
@@ -25,8 +24,9 @@ public class JavascriptBuilderFunction extends JavascriptFunctionReference {
 		JavascriptBuilderContext.popContext();
 		return code;
 	}
-	
+
 	private static JavascriptBuilderContext getScript() {
 		return JavascriptBuilderContext.getContext();
 	}
+
 }

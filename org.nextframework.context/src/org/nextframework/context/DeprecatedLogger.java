@@ -6,8 +6,9 @@ import org.apache.commons.logging.LogFactory;
 public class DeprecatedLogger {
 
 	private static Log logger = LogFactory.getLog("org.nextframework.deprecated");
-	
-	public static void warn(String message){
+
+	public static void warn(String message) {
 		logger.warn(message);
 	}
+
 }

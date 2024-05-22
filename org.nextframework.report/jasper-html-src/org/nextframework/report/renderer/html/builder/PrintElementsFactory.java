@@ -15,21 +15,21 @@ import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
 
 public class PrintElementsFactory {
-	
+
 	private MappedJasperPrint mappedJasperPrint;
 
 	private Map<String, MappedJasperReport> mappings;
-	
-	public PrintElementsFactory(MappedJasperPrint mappedJasperPrint){
+
+	public PrintElementsFactory(MappedJasperPrint mappedJasperPrint) {
 		this.mappedJasperPrint = mappedJasperPrint;
 		this.mappings = getReportMappgins();
 	}
-	
+
 	private int idCounter = 0;
-	
-	public PrintElement createPrintElement(JRPrintElement jrPrintElement, int pageIndex){
+
+	public PrintElement createPrintElement(JRPrintElement jrPrintElement, int pageIndex) {
 		int pageHeight = mappedJasperPrint.getJasperPrint().getPageHeight();
-		if(!renderElement(jrPrintElement)){
+		if (!renderElement(jrPrintElement)) {
 			return null;
 		}
 		PrintElement printElement = newPrintElementInstance(jrPrintElement, pageIndex);
@@ -37,7 +37,7 @@ public class PrintElementsFactory {
 		printElement.setUniqueId(nextId());
 		printElement.setY(jrPrintElement.getY() + (pageIndex * pageHeight));
 		String reportName = jrPrintElement.getOrigin().getReportName();
-		if(reportName == null) {
+		if (reportName == null) {
 			printElement.setMappedJasperReport(mappedJasperPrint.getMappedJasperReport());
 		} else {
 			printElement.setMappedJasperReport(mappings.get(reportName));
@@ -46,12 +46,12 @@ public class PrintElementsFactory {
 	}
 
 	public PrintElement newPrintElementInstance(JRPrintElement jrPrintElement, int pageIndex) {
-		if(jrPrintElement instanceof JRPrintFrame){
+		if (jrPrintElement instanceof JRPrintFrame) {
 			GroupPrintElements groupPrintElements = new GroupPrintElements();
 			List<JRPrintElement> elements = ((JRPrintFrame) jrPrintElement).getElements();
 			for (JRPrintElement subElement : elements) {
 				PrintElement pe = createPrintElement(subElement, pageIndex);
-				if(pe != null){
+				if (pe != null) {
 					groupPrintElements.getPrintElements().add(pe);
 				}
 			}
@@ -61,28 +61,28 @@ public class PrintElementsFactory {
 	}
 
 	public String nextId() {
-		return "i"+(idCounter++);
+		return "i" + (idCounter++);
 	}
 
 	private boolean renderElement(JRPrintElement element) {
-		if(element.getKey() == null){
+		if (element.getKey() == null) {
 			return false;
 		}
-		if(element.getOrigin().getBandTypeValue() == BandTypeEnum.TITLE){
+		if (element.getOrigin().getBandTypeValue() == BandTypeEnum.TITLE) {
 			return false;
 		}
-		if(element instanceof JRPrintLine){
-			Color color = ((JRPrintLine)element).getForecolor();
-			if(JasperDesignBuilder.LINE_BREAK.equals(color)){
+		if (element instanceof JRPrintLine) {
+			Color color = ((JRPrintLine) element).getForecolor();
+			if (JasperDesignBuilder.LINE_BREAK.equals(color)) {
 				return false;
 			}
 		}
-		if(element.getKey().startsWith(JasperDesignBuilder.BACKGROUND_FRAME_KEY)){
+		if (element.getKey().startsWith(JasperDesignBuilder.BACKGROUND_FRAME_KEY)) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	public Map<String, MappedJasperReport> getReportMappgins() {
 		Map<String, MappedJasperReport> mappings = new HashMap<String, MappedJasperReport>();
 		for (MappedJasperReport mappedJasperReport : mappedJasperPrint.getSubreports()) {
@@ -92,5 +92,5 @@ public class PrintElementsFactory {
 		mappings.put(mappedJasperPrint.getMappedJasperReport().getReportDefinition().getReportName(), mappedJasperPrint.getMappedJasperReport());
 		return mappings;
 	}
-}
 
+}

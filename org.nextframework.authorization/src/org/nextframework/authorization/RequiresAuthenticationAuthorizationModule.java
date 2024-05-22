@@ -25,11 +25,10 @@ package org.nextframework.authorization;
 
 import java.io.Serializable;
 
-
 /**
  * @author rogelgarcia
  */
-public class RequiresAuthenticationAuthorizationModule extends AuthorizationModuleSupport implements Serializable{
+public class RequiresAuthenticationAuthorizationModule extends AuthorizationModuleSupport implements Serializable {
 
 	private static final long serialVersionUID = -984560353774296037L;
 

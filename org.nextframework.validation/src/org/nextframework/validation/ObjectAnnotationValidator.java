@@ -77,7 +77,6 @@ public class ObjectAnnotationValidator extends WebApplicationObjectSupport imple
 						errors.reject("", "O arquivo '" + filename + "' não pode ter tamanho 0 (zero)");
 					}
 				}
-
 			}
 		}
 		Map<String, ?> parameterMap = servletRequest.getParameterMap();

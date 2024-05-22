@@ -36,5 +36,5 @@ public class JsonJSDateSerializer extends StdSerializer<Date> {
 			jgen.writeRawValue(customDateFormat.format(calendar.getTime()));
 		}
 	}
-	
+
 }

@@ -24,6 +24,7 @@ import org.stjs.generator.variable.Variable;
  * 
  */
 public class FieldWrapper implements Variable {
+
 	private final String name;
 	private final TypeWrapper type;
 	private final TypeWrapper ownerType;

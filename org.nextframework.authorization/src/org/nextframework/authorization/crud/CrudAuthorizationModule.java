@@ -34,7 +34,6 @@ import org.nextframework.authorization.AuthorizationItem;
 import org.nextframework.authorization.AuthorizationModuleSupport;
 import org.nextframework.authorization.Permission;
 
-
 /**
  * @author rogelgarcia
  */
@@ -44,58 +43,58 @@ public class CrudAuthorizationModule extends AuthorizationModuleSupport implemen
 
 	//public static final String ID_MODULO = "Crud";
 	public static final String LIST_FORM = "Listagens / Entrada de dados";
-	
-	public static final String READ   = "read";
+
+	public static final String READ = "read";
 	public static final String CREATE = "create";
 	public static final String UPDATE = "update";
 	public static final String DELETE = "delete";
-	
+
 	public CrudAuthorization createAuthorization(Permission[] permissoes) {
-		
+
 		boolean canCreate = false;
-		boolean canRead   = false;
+		boolean canRead = false;
 		boolean canUpdate = false;
 		boolean canDelete = false;
-		
+
 		for (int i = 0; i < permissoes.length; i++) {
 			Permission permissao = permissoes[i];
 			try {
-				if(permissao == null){
+				if (permissao == null) {
 					throw new NullPointerException("permissao nula encontrada");
 				}
 				if (!canCreate) {
 					String permissionvalue = permissao.getPermissionValue(CREATE);
-					if(permissionvalue == null){
-						throw new IllegalArgumentException("Sem parâmetro: "+CREATE);
+					if (permissionvalue == null) {
+						throw new IllegalArgumentException("Sem parâmetro: " + CREATE);
 					}
 					canCreate = permissionvalue.equals("true");
 				}
 				if (!canRead) {
 					String permissionvalue = permissao.getPermissionValue(READ);
-					if(permissionvalue == null){
-						throw new IllegalArgumentException("Sem parâmetro: "+READ);
+					if (permissionvalue == null) {
+						throw new IllegalArgumentException("Sem parâmetro: " + READ);
 					}
 					canRead = permissionvalue.equals("true");
 				}
 				if (!canUpdate) {
 					String permissionvalue = permissao.getPermissionValue(UPDATE);
-					if(permissionvalue == null){
-						throw new IllegalArgumentException("Sem parâmetro: "+UPDATE);
+					if (permissionvalue == null) {
+						throw new IllegalArgumentException("Sem parâmetro: " + UPDATE);
 					}
 					canUpdate = permissionvalue.equals("true");
 				}
 				if (!canDelete) {
 					String permissionvalue = permissao.getPermissionValue(DELETE);
-					if(permissionvalue == null){
-						throw new IllegalArgumentException("Sem parâmetro: "+DELETE);
+					if (permissionvalue == null) {
+						throw new IllegalArgumentException("Sem parâmetro: " + DELETE);
 					}
 					canDelete = permissionvalue.equals("true");
 				}
 			} catch (IllegalArgumentException e) {
 				throw new IllegalArgumentException("Inconsistencia no objeto Permission! " +
-						"Faltando algum dos parametros (create, read, update ou delete): "+permissao+"..."+e.getMessage());
+						"Faltando algum dos parametros (create, read, update ou delete): " + permissao + "..." + e.getMessage());
 			} catch (NullPointerException e) {
-				throw new IllegalArgumentException("NullPointerException inespereado no CRUDAuthorizationModule "+e.getMessage());
+				throw new IllegalArgumentException("NullPointerException inespereado no CRUDAuthorizationModule " + e.getMessage());
 			}
 		}
 
@@ -112,11 +111,11 @@ public class CrudAuthorizationModule extends AuthorizationModuleSupport implemen
 	}
 
 	public AuthorizationItem[] getAuthorizationItens() {
-		return new AuthorizationItem[]{
-			new AuthorizationItem(READ, "ler", new String[]{"true","false"}),
-			new AuthorizationItem(CREATE, "criar", new String[]{"true","false"}),
-			new AuthorizationItem(UPDATE, "editar", new String[]{"true","false"}),
-			new AuthorizationItem(DELETE, "excluir", new String[]{"true","false"})
+		return new AuthorizationItem[] {
+				new AuthorizationItem(READ, "ler", new String[] { "true", "false" }),
+				new AuthorizationItem(CREATE, "criar", new String[] { "true", "false" }),
+				new AuthorizationItem(UPDATE, "editar", new String[] { "true", "false" }),
+				new AuthorizationItem(DELETE, "excluir", new String[] { "true", "false" })
 		};
 	}
 

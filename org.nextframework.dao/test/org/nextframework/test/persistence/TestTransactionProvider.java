@@ -9,21 +9,18 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 public class TestTransactionProvider extends TestSaveOrUpdateStrategy {
 
-
 	@Before
-	public void before() throws Exception{
+	public void before() throws Exception {
 		super.setUp();
 		HibernateTemplate ht = new HibernateTemplate(sessionFactory);
 		HibernateTransactionManager htm = new HibernateTransactionManager(sessionFactory);
 		TransactionTemplate tt = new TransactionTemplate(htm);
 		HibernateTransactionTemplateSessionProvider sp = new HibernateTransactionTemplateSessionProvider(ht, tt);
 		sp.setConfigureQueryBuilder(true);
-		
 		ht.afterPropertiesSet();
 		htm.afterPropertiesSet();
 		tt.afterPropertiesSet();
 		sp.afterPropertiesSet();
-		
 		sessionProvider = sp;
 	}
 
@@ -50,5 +47,5 @@ public class TestTransactionProvider extends TestSaveOrUpdateStrategy {
 	public void testSave2EntityRollback() {
 		super.testSave2EntityRollback();
 	}
-	
+
 }

@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class TextArea extends Element {
+
 	public String accessKey;
 	public int cols;
 	public String defaultValue;
@@ -39,4 +40,5 @@ abstract public class TextArea extends Element {
 	public void select() {
 		throw new UnsupportedOperationException();
 	}
+
 }

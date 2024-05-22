@@ -27,6 +27,7 @@ import java.util.List;
  * 
  */
 public interface ClassWithJavascript {
+
 	public String getClassName();
 
 	public List<URI> getJavascriptFiles();

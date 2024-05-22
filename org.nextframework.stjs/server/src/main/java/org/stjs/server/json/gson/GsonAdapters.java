@@ -24,6 +24,7 @@ import org.stjs.server.MapImpl;
 import com.google.gson.GsonBuilder;
 
 public class GsonAdapters {
+
 	public static void addAll(GsonBuilder builder) {
 		builder.registerTypeAdapter(MapImpl.class, new JSMapAdapter());
 		builder.registerTypeAdapter(Map.class, new JSMapAdapter());
@@ -31,4 +32,5 @@ public class GsonAdapters {
 		builder.registerTypeAdapter(Array.class, new JSArrayAdapter());
 		builder.registerTypeAdapter(Date.class, new JSDateAdapter());
 	}
+
 }

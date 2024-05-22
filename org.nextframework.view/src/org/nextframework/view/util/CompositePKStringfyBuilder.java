@@ -17,22 +17,22 @@ public class CompositePKStringfyBuilder {
 	private static final char PROPERTY_SEPARATOR = ServletRequestDataBinderNext.VALUE_OBJECT_ATTR_SEPARATOR;
 
 	private Object target;
-	
+
 	Map<String, Object> properties = new HashMap<String, Object>();
-	
-	public CompositePKStringfyBuilder target(Object target){
+
+	public CompositePKStringfyBuilder target(Object target) {
 		this.target = target;
 		return this;
 	}
-	
-	public CompositePKStringfyBuilder property(String name, Object value){
+
+	public CompositePKStringfyBuilder property(String name, Object value) {
 		properties.put(name, value);
 		return this;
 	}
-	
+
 	@Override
 	public String toString() {
-		return target.getClass().getName()+OPEN_ATTRS+stringfyProperties()+CLOSE_ATTRS;
+		return target.getClass().getName() + OPEN_ATTRS + stringfyProperties() + CLOSE_ATTRS;
 	}
 
 	private String stringfyProperties() {
@@ -43,7 +43,7 @@ public class CompositePKStringfyBuilder {
 			builder.append(property).append("=");
 			ConversionService conversionService = getConversionService();
 			builder.append(conversionService.convert(properties.get(property), String.class));
-			if(iterator.hasNext()){
+			if (iterator.hasNext()) {
 				builder.append(PROPERTY_SEPARATOR);
 			}
 		}
@@ -52,24 +52,28 @@ public class CompositePKStringfyBuilder {
 
 	protected ConversionService getConversionService() {
 		return new ConversionService() {
+
 			@Override
 			public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 				return TagUtils.getObjectValueToString(source);
 			}
+
 			@Override
 			@SuppressWarnings("unchecked")
 			public <T> T convert(Object source, Class<T> targetType) {
 				return (T) TagUtils.getObjectValueToString(source);
 			}
+
 			@Override
 			public boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
 				return targetType.getType().equals(String.class);
 			}
-			
+
 			@Override
 			public boolean canConvert(Class<?> sourceType, Class<?> targetType) {
 				return targetType.equals(String.class);
 			}
+
 		};
 	}
 

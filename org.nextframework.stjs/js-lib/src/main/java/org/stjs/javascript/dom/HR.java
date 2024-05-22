@@ -16,8 +16,10 @@
 package org.stjs.javascript.dom;
 
 abstract public class HR extends Element {
+
 	public String align;
 	public boolean noShade;
 	public String size;
 	public String width;
+
 }

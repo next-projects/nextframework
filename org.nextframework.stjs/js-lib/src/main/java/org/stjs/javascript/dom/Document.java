@@ -18,6 +18,7 @@ package org.stjs.javascript.dom;
 import org.stjs.javascript.Location;
 
 abstract public class Document {
+
 	public String URL;
 	public String documentURI;
 	public HTMLCollection<Anchor> anchors;
@@ -72,4 +73,5 @@ abstract public class Document {
 	public Attr createAttribute(String name) {
 		throw new UnsupportedOperationException();
 	}
+
 }

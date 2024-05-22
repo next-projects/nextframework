@@ -22,7 +22,6 @@ public class SummaryUtils {
 			}
 			for (int i = beginFrom; i < parts.length; i++) {
 				String part = parts[i];
-
 				builder.append("_");
 				builder.append(StringUtils.capitalize(part));
 			}

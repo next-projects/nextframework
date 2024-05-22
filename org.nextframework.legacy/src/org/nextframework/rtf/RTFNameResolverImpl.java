@@ -32,7 +32,7 @@ public class RTFNameResolverImpl implements RTFNameResolver {
 	protected String prefix;
 	protected String suffix;
 	protected ServletContext servletContext;
-	
+
 	public RTFNameResolverImpl(String prefix, String suffix, ServletContext servletContext) {
 		super();
 		this.prefix = prefix;
@@ -65,9 +65,9 @@ public class RTFNameResolverImpl implements RTFNameResolver {
 	}
 
 	public InputStream resolveName(String name) {
-		InputStream resourceAsStream = servletContext.getResourceAsStream(getPrefix()+name+getSuffix());
-		if(resourceAsStream == null){
-			throw new NullPointerException("RTF não encontrado! "+name);
+		InputStream resourceAsStream = servletContext.getResourceAsStream(getPrefix() + name + getSuffix());
+		if (resourceAsStream == null) {
+			throw new NullPointerException("RTF não encontrado! " + name);
 		}
 		return resourceAsStream;
 	}

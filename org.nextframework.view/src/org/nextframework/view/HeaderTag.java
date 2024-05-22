@@ -40,7 +40,7 @@ public class HeaderTag extends ColumnChildTag {
 	protected void doColumnChild(Status status) throws JspException, IOException {
 		doBody();
 	}
-	
+
 	@Override
 	protected final void doComponent() throws Exception {
 		Object title = getDynamicAttributesMap().get("title");
@@ -51,32 +51,30 @@ public class HeaderTag extends ColumnChildTag {
 		if (status == DataGridTag.Status.REGISTER) {
 			register();
 		} else if (acceptStatus(status)) {
-			if(title != null){
+			if (title != null) {
 				dataGrid.onRenderColumnHeader(title.toString());
 			}
-			if(dataGrid.isRenderResizeColumns()){
+			if (dataGrid.isRenderResizeColumns()) {
 				//reconfigurar os widths pois eles não podem ter largura em percentual quando existe o datagrid resize
 				getDynamicAttributesMap().put("style", ColumnTag.checkStyleForHeaderNoPercent((String) getDynamicAttributesMap().get("style")));
 			}
 			if (doTd()) {
 				getOut().print("<!--HEADER--><th" + getDynamicAttributesToString() + ">");
-				if(dataGrid.isRenderResizeColumns()){
+				if (dataGrid.isRenderResizeColumns()) {
 					getOut().println(ColumnTag.COLUMN_RESIZE_CODE_BEGIN);
 				}
 			}
-			if(title != null){
+			if (title != null) {
 				dataGrid.onRenderColumnHeaderBody();
 			}
 			doColumnChild(status);
 			if (doTd()) {
-				if(dataGrid.isRenderResizeColumns()){
+				if (dataGrid.isRenderResizeColumns()) {
 					getOut().println(ColumnTag.COLUMN_RESIZE_CODE_END.replace("{id}", dataGrid.getId()));
 				}
 				getOut().print("</th>");
 			}
-
 		}
-
 	}
 
 	@Override
@@ -87,8 +85,7 @@ public class HeaderTag extends ColumnChildTag {
 	@Override
 	protected void register() {
 		dataGrid.setRenderHeader(true);
-		
-	}
 
+	}
 
 }

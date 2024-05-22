@@ -25,14 +25,13 @@ package org.nextframework.authorization;
 
 import java.io.Serializable;
 
-
 /**
  * Special AuthorizationModule that provides access to a resource without any authorization required.
  * 
  * @author rogelgarcia
  *
  */
-public class HasAccessAuthorizationModule extends AuthorizationModuleSupport implements Serializable{
+public class HasAccessAuthorizationModule extends AuthorizationModuleSupport implements Serializable {
 
 	private static final long serialVersionUID = -984560353774296037L;
 

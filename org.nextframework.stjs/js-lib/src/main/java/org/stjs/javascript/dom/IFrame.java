@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class IFrame extends Element {
+
 	public String align;
 	public Document contentDocument;
 	public String frameBorder;
@@ -27,4 +28,5 @@ abstract public class IFrame extends Element {
 	public String scrolling;
 	public String src;
 	public String width;
+
 }

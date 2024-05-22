@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class NodeJSExecutor {
+
 	private static final String nodeJS = "node";
 
 	public ExecutionResult run(File srcFile) {
@@ -50,4 +51,5 @@ public class NodeJSExecutor {
 		}
 		return builder.toString();
 	}
+
 }

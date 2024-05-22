@@ -16,6 +16,8 @@
 package org.stjs.javascript.dom;
 
 abstract public class OptGroup extends Element {
+
 	public boolean disabled;
 	public String label;
+
 }

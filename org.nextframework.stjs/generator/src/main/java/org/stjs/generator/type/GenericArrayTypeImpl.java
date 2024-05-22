@@ -43,12 +43,14 @@ public final class GenericArrayTypeImpl implements GenericArrayType {
 		}
 		GenericArrayType that = (GenericArrayType) o;
 		Type thatComponentType = that.getGenericComponentType();
-		return genericComponentType == null ? thatComponentType == null : genericComponentType
-				.equals(thatComponentType);
+		return genericComponentType == null ? thatComponentType == null
+				: genericComponentType
+						.equals(thatComponentType);
 	}
 
 	@Override
 	public int hashCode() {
 		return (genericComponentType == null) ? 0 : genericComponentType.hashCode();
 	}
+
 }

@@ -43,7 +43,7 @@ public abstract class ResourceSenderController<FILTER> extends AbstractResourceS
 			return goToAction(FILTER);
 		}
 		response.setContentType(resource.getContentType());
-		
+
 		response.addHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
 		response.getOutputStream().write(resource.getContents());
 		return null;

@@ -5,7 +5,7 @@ public class ChartSerieElement {
 	String property;
 	String aggregateFunction;
 	String label;
-	
+
 	public String getLabel() {
 		return label;
 	}
@@ -21,14 +21,14 @@ public class ChartSerieElement {
 	public void setProperty(String property) {
 		this.property = property;
 	}
-	
+
 	public String getAggregateFunction() {
-		if(aggregateFunction == null){
+		if (aggregateFunction == null) {
 			return "SUM";
 		}
 		return aggregateFunction;
 	}
-	
+
 	public void setAggregateFunction(String aggregateFunction) {
 		this.aggregateFunction = aggregateFunction;
 	}
@@ -62,6 +62,5 @@ public class ChartSerieElement {
 			return false;
 		return true;
 	}
-	
-	
+
 }

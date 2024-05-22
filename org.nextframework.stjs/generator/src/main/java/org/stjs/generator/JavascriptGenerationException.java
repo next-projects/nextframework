@@ -26,6 +26,7 @@ import org.stjs.generator.ast.SourcePosition;
  * 
  */
 public class JavascriptGenerationException extends RuntimeException {
+
 	private static final long serialVersionUID = 1L;
 
 	private final File inputFile;
@@ -67,7 +68,7 @@ public class JavascriptGenerationException extends RuntimeException {
 			sb.append(":").append(sourcePosition.getLine());
 		}
 		sb.append(")");
-
 		return sb.toString();
 	}
+
 }

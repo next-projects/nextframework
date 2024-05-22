@@ -15,9 +15,9 @@ import org.nextframework.report.definition.elements.style.ReportItemStyle;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
 
 public class TestExample3 {
-	
-	public static List<TestExample3Bean> getData(){
-		return Arrays.asList(new TestExample3Bean[]{
+
+	public static List<TestExample3Bean> getData() {
+		return Arrays.asList(new TestExample3Bean[] {
 				createAcceleration(),
 				createBreak(),
 				createTurnLeft(),
@@ -29,7 +29,7 @@ public class TestExample3 {
 		ReportDefinition definition = new ReportDefinition("examples/example3");
 		definition.setTitle("Test 3");
 		definition.setData(getData());
-		
+
 		definition.addItem(new ReportTextField("type").setColspan(2).setStyle(new ReportItemStyle(true)), definition.getSectionDetail(), 0);
 		definition.getSectionDetail().breakLine();
 		definition.addItem(new ReportChart("driversChart"), definition.getSectionDetail(), 0);
@@ -58,12 +58,11 @@ public class TestExample3 {
 	}
 
 	public static void write(ReportDefinition definition, byte[] bytes, String type) throws FileNotFoundException, IOException {
-		FileOutputStream out = new FileOutputStream(definition.getReportName()+"." + type);
+		FileOutputStream out = new FileOutputStream(definition.getReportName() + "." + type);
 		out.write(bytes);
 		out.flush();
 		out.close();
 	}
-	
 
 	public static TestExample3Bean createTurnRight() {
 		TestExample3Bean r = new TestExample3Bean("Turn Right");
@@ -99,5 +98,6 @@ public class TestExample3 {
 		r.getEvaluations().add(new TestExample3BeanEvaluation("Mario", 1));
 		r.getEvaluations().add(new TestExample3BeanEvaluation("Alberto", 2));
 		return r;
-	}	
+	}
+
 }

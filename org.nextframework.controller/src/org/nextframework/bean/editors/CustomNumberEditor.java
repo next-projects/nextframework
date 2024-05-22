@@ -37,19 +37,19 @@ public class CustomNumberEditor extends org.springframework.beans.propertyeditor
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if(text != null){
-			text = text.replace(".","").replace(",", ".");
+		if (text != null) {
+			text = text.replace(".", "").replace(",", ".");
 		} else {
 			text = "";
 		}
 		boolean negative = text.startsWith("-");
-		if(negative){
+		if (negative) {
 			text = text.substring(1);
 		}
-		while(text.startsWith("0") && text.length() > 1){
+		while (text.startsWith("0") && text.length() > 1) {
 			text = text.substring(1);
 		}
-		if(negative){
+		if (negative) {
 			text = "-" + text;
 		}
 		super.setAsText(text);

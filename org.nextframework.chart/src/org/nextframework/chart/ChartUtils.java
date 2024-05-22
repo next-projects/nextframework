@@ -1,6 +1,5 @@
 package org.nextframework.chart;
 
-
 public class ChartUtils {
 
 	public static boolean hasText(String var) {
@@ -16,4 +15,5 @@ public class ChartUtils {
 		}
 		return false;
 	}
+
 }

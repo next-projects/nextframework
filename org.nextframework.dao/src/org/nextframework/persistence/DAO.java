@@ -12,7 +12,7 @@ import org.nextframework.controller.crud.ListViewFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 public interface DAO<BEAN> {
-	
+
 	public abstract void setPersistenceContext(String persistenceContext);
 
 	/**
@@ -36,18 +36,18 @@ public interface DAO<BEAN> {
 	public abstract BEAN load(BEAN bean);
 
 	public abstract BEAN loadById(Serializable id);
-	
+
 	@SuppressWarnings("all")
 	public Collection loadCollection(Object owner, String attribute);
-	
+
 	public BEAN loadWithIdAndDescription(BEAN bean);
-	
+
 	public BEAN loadWithIdAndDescriptionById(Serializable id);
-	
+
 	public BEAN load(BEAN bean, String[] attributesToLoad);
-	
+
 	public void loadAttributes(BEAN bean, String[] attributesToLoad);
-	
+
 	public void loadDescriptionProperty(BEAN bean, String... extraFields);
 
 	/**
@@ -57,7 +57,6 @@ public interface DAO<BEAN> {
 	 * @return
 	 */
 	public abstract BEAN loadFormModel(BEAN bean);
-
 
 	public boolean isEmpty();
 
@@ -74,11 +73,11 @@ public interface DAO<BEAN> {
 	 * @return
 	 */
 	public abstract List<BEAN> findAll(String orderBy);
-	
+
 	public List<BEAN> findByProperty(String propertyName, Object o);
-	
+
 	public BEAN findByPropertyUnique(String propertyName, Object o);
-	
+
 	/**
 	 * Executa um find utilizando como filtro o objeto passado. <BR>
 	 * Por exemplo, supondo que estamos em um DAO de municipio, e passamos como parâmetro um objeto do tipo estado.
@@ -89,7 +88,7 @@ public interface DAO<BEAN> {
 	 * @return
 	 */
 	public abstract List<BEAN> findBy(Object o, String... extraFields);
-	
+
 	/**
 	 * Retorna todos os objetos encontrados no banco de dados.
 	 * Pode ser informado quais campos devem ser carregados.
@@ -98,8 +97,6 @@ public interface DAO<BEAN> {
 	 * @return
 	 */
 	public abstract List<BEAN> findForCombo(String... extraFields);
-
-
 
 	/**
 	 * Executa um find para a tela de listagem de dados, utilizando determinado filtro.

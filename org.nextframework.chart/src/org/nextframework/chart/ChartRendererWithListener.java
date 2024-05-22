@@ -1,8 +1,7 @@
 package org.nextframework.chart;
 
-
 class ChartRendererWithListener implements ChartRenderer {
-	
+
 	ChartRendererListener chartRendererListener;
 	ChartRenderer original;
 

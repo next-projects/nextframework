@@ -29,6 +29,7 @@ import org.stjs.generator.utils.Option;
  * 
  */
 public class TypeVariableWrapper<D extends GenericDeclaration> implements TypeWrapper {
+
 	private final TypeVariable<D> typeVariable;
 	private final TypeWrapper[] boundsWrappers;
 
@@ -106,9 +107,11 @@ public class TypeVariableWrapper<D extends GenericDeclaration> implements TypeWr
 
 	@Override
 	public boolean isAssignableFrom(TypeWrapper typeWrapper) {
+
 		if (typeWrapper == null) {
 			return true;
 		}
+
 		// it's different from what happens when the given typeWrapper corresponds to a variable assignment inside the
 		// method/class or is the parameter of the method i.e
 		// public static <T> void method(T t){}

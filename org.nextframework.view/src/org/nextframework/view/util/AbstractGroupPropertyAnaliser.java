@@ -179,4 +179,5 @@ public abstract class AbstractGroupPropertyAnaliser {
 	protected abstract void renderGroup(int uid, int level, Object property);
 
 	protected abstract void changeStatus();
+
 }

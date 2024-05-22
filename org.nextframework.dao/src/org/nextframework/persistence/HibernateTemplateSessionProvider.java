@@ -8,19 +8,19 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 
 public class HibernateTemplateSessionProvider implements HibernateSessionProvider, InitializingBean {
-	
+
 	private HibernateTemplate hibernateTemplate;
-	
+
 	private boolean configureQueryBuilder = false;
 
 	public boolean isConfigureQueryBuilder() {
 		return configureQueryBuilder;
 	}
-	
+
 	public void setConfigureQueryBuilder(boolean configureQueryBuilder) {
 		this.configureQueryBuilder = configureQueryBuilder;
 	}
-	
+
 	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
 		this.hibernateTemplate = hibernateTemplate;
 	}
@@ -28,10 +28,10 @@ public class HibernateTemplateSessionProvider implements HibernateSessionProvide
 	public HibernateTemplate getHibernateTemplate() {
 		return hibernateTemplate;
 	}
-	
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if(isConfigureQueryBuilder()){
+		if (isConfigureQueryBuilder()) {
 			PersistenceConfiguration.getConfig().setSessionProvider(this);
 		}
 	}
@@ -39,9 +39,11 @@ public class HibernateTemplateSessionProvider implements HibernateSessionProvide
 	@Override
 	public Object execute(final HibernateCommand command) {
 		return getHibernateTemplate().execute(new HibernateCallback<Object>() {
+
 			public Object doInHibernate(Session session) throws HibernateException {
 				return command.doInHibernate(session);
 			}
+
 		});
 	}
 

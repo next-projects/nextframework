@@ -55,18 +55,22 @@ public class JasperDesignBuilderImplComponentMapper {
 	}
 
 	JRDesignElement getElementFor(ReportItem item, int suggestedWidth, ReportSection section, JRStyle jrStyle) throws JRException {
+
 		JRDesignElement result;
 		int computeWidth = suggestedWidth;
+
 		if (item instanceof ReportLabel) {
+
 			ReportLabel reportLabel = (ReportLabel) item;
 			JRDesignElement returnElement = section.getType() != ReportSectionType.TITLE ? (JRDesignElement) jasperDesignBuilderImpl.findStaticTextInList(reportLabel, jasperDesignBuilderImpl.compileItemsFromOriginalTemplate(section)).clone() : new JRDesignStaticText();
 			JRDesignStaticText jrDesignStaticText = jasperDesignBuilderImpl.getInnerStaticText(returnElement);
 			jrDesignStaticText.setText(reportLabel.getText());
-
 			configureFrameWidthForTextElement(returnElement, computeWidth);
 			configureTextElement(computeWidth, reportLabel, jrDesignStaticText, section, jrStyle);
 			result = returnElement;
+
 		} else if (item instanceof ReportTextField) {
+
 			ReportTextField reportTextField = (ReportTextField) item;
 			String expression = reportTextField.getExpression();
 			if (expression == null) {
@@ -88,13 +92,17 @@ public class JasperDesignBuilderImplComponentMapper {
 			configureFrameWidthForTextElement(returnElement, computeWidth);
 			configureTextElement(computeWidth, reportTextField, jrDesignTextField, section, jrStyle);
 			result = returnElement;
+
 		} else if (item instanceof ReportParent) {
+
 			List<ReportItem> items = ((ReportParent) item).getChildren();
 			result = jasperDesignBuilderImpl.getFrameForItens(item, items, computeWidth, item.getColspan(), section, jrStyle);
 //		} else if(item instanceof ReportBlock) {
 //			List<ReportItem> items = ((ReportBlock) item).getItems();
 //			result = jasperDesignBuilderImpl.getFrameForItens(item, items, computeWidth, item.getColspan(), section, jrStyle);
+
 		} else if (item instanceof ReportImage) {
+
 			ReportImage reportImage = (ReportImage) item;
 			JRDesignImage image = new JRDesignImage(null);
 			image.setWidth(computeWidth);
@@ -109,7 +117,9 @@ public class JasperDesignBuilderImplComponentMapper {
 				image.setUsingCache(false);
 			}
 			result = image;
+
 		} else if (item instanceof ReportChart) {
+
 			ReportChart reportChart = (ReportChart) item;
 			JRDesignImage image = new JRDesignImage(null);
 			image.setWidth(computeWidth);
@@ -139,7 +149,9 @@ public class JasperDesignBuilderImplComponentMapper {
 				image.setUsingCache(false);
 			}
 			result = image;
+
 		} else if (item instanceof Subreport) {
+
 			Subreport subreport = (Subreport) item;
 			JRDesignSubreport jrSubreport = new JRDesignSubreport(jasperDesignBuilderImpl.template);
 			jrSubreport.setWidth(computeWidth);
@@ -157,14 +169,18 @@ public class JasperDesignBuilderImplComponentMapper {
 				jrSubreport.setDataSourceExpression(jasperDesignBuilderImpl.createExpression("$P{subreport" + subreportIndex + "_ds_map}.get($F{" + subreport.getExpression() + "})", JRDataSource.class, false));
 			}
 			result = jrSubreport;
+
 		} else {
+
 			JRDesignStaticText jrDesignStaticText = new JRDesignStaticText();
 			jrDesignStaticText.setWidth(computeWidth);//TODO PEGAR DO TEMPLATE
 			jrDesignStaticText.setHeight(14);
 			jrDesignStaticText.setText("[" + item.getDescriptionName() + "]");
 			jrDesignStaticText.setForecolor(Color.ORANGE);
 			result = jrDesignStaticText;
+
 		}
+
 		Map<String, Object> renderParameters = item.getRenderParameters();
 		jasperDesignBuilderImpl.configureRenderParameters(result, renderParameters);
 
@@ -181,15 +197,12 @@ public class JasperDesignBuilderImplComponentMapper {
 
 		if (result instanceof JRBoxContainer) {
 			ReportBasicStyle style = item.getStyle();
-
 			JRBoxContainer container = (JRBoxContainer) result;
 			JRLineBox lineBox = container.getLineBox();
-
 			lineBox.setBottomPadding(style.getPaddingBottom());
 			lineBox.setTopPadding(style.getPaddingTop());
 			lineBox.setLeftPadding(style.getPaddingLeft());
 			lineBox.setRightPadding(style.getPaddingRight());
-
 			if (lineBox instanceof JRBaseLineBox) {
 				JRBaseLineBox baseLineBox = (JRBaseLineBox) lineBox;
 				if (style.getBorderBottom() != null) {
@@ -209,10 +222,12 @@ public class JasperDesignBuilderImplComponentMapper {
 		result.setPositionType(PositionTypeEnum.FLOAT);
 
 		jasperDesignBuilderImpl.setKeys(item, result);
+
 		return result;
 	}
 
 	void configureTextElement(int width, ReportTextElement reportTextField, JRDesignTextElement jrDesignTextElement, ReportSection section, JRStyle jrStyle) {
+
 		jrDesignTextElement.setHeight(14);
 		Integer fontSize = reportTextField.getStyle().getFontSize();
 		if (fontSize != null) {
@@ -223,6 +238,7 @@ public class JasperDesignBuilderImplComponentMapper {
 		if (fontSize != null) {
 			jrDesignTextElement.setHeight((int) (Math.round(fontSize * 1.3 + 0.1)));
 		}
+
 		//TODO PEGAR DO TEMPLATE
 		jrDesignTextElement.setWidth(width);
 		jrDesignTextElement.setBold(reportTextField.getStyle().getBold());
@@ -238,6 +254,7 @@ public class JasperDesignBuilderImplComponentMapper {
 		if (alignment == null) {
 			alignment = ReportAlignment.LEFT;
 		}
+
 		switch (alignment) {
 			case LEFT:
 				horizontalAlign = HorizontalAlignEnum.LEFT;
@@ -261,6 +278,7 @@ public class JasperDesignBuilderImplComponentMapper {
 			jrDesignTextElement.setBackcolor(reportTextField.getStyle().getBackgroundColor());
 			jrDesignTextElement.setMode(ModeEnum.OPAQUE);
 		}
+
 	}
 
 	private void configureFrameWidthForTextElement(JRDesignElement returnElement, int computeWidth) {

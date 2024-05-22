@@ -10,21 +10,20 @@ public class JSBuilderUtils {
 		String result = "";
 		for (int i = 0; i < list.size(); i++) {
 			result += list.get(i);
-			if(i+1 < list.size()){
+			if (i + 1 < list.size()) {
 				result += separator;
 			}
 		}
 		return result;
 	}
-	
 
 	public static Object convertToJavascriptValue(Object value) {
 		boolean aspas = false;
-		if(value instanceof Calendar){
-			value = ((Calendar)value).getTime();
+		if (value instanceof Calendar) {
+			value = ((Calendar) value).getTime();
 		}
-		if(value instanceof Date){
-			value = "new Date("+((Date)value).getTime()+")";
+		if (value instanceof Date) {
+			value = "new Date(" + ((Date) value).getTime() + ")";
 		} else {
 			aspas = value instanceof String;
 		}
@@ -32,21 +31,21 @@ public class JSBuilderUtils {
 			JavascriptReferenciable referenciable = (JavascriptReferenciable) value;
 			value = referenciable.getReference();
 		}
-		if(value == null){
+		if (value == null) {
 			value = "null";
 		}
-		if(aspas){
+		if (aspas) {
 			value = escapeQuotes(value.toString());
-			value = "\"" + value +"\"";
+			value = "\"" + value + "\"";
 		}
 		return value;
 	}
-	
+
 	private static String escapeQuotes(String string) {
-		if(string == null){
+		if (string == null) {
 			return "";
 		}
 		return string.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n");
 	}
-	
+
 }

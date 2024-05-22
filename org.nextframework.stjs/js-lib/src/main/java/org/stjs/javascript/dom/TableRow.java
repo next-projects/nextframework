@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class TableRow extends Element {
+
 	public String VAlign;
 	public String align;
 	public String bgColor;
@@ -32,4 +33,5 @@ abstract public class TableRow extends Element {
 	public TableCell insertCell(int arg0) {
 		throw new UnsupportedOperationException();
 	}
+
 }

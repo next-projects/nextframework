@@ -3,7 +3,7 @@ package org.nextframework.types;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class TypedCollectionImpl<E> implements TypedValue<E>{
+public class TypedCollectionImpl<E> implements TypedValue<E> {
 
 	protected Collection<E> original;
 	protected Class<E> type;
@@ -82,6 +82,5 @@ public class TypedCollectionImpl<E> implements TypedValue<E>{
 	public Collection<E> getOriginalCollection() {
 		return original;
 	}
-	
-	
+
 }

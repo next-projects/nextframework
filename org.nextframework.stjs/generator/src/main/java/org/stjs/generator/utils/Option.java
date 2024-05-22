@@ -94,6 +94,7 @@ public abstract class Option<T> implements Iterable<T> {
 				public void remove() {
 					throw new UnsupportedOperationException();
 				}
+
 			};
 		}
 
@@ -170,6 +171,7 @@ public abstract class Option<T> implements Iterable<T> {
 		@Override
 		public Iterator<U> iterator() {
 			return new Iterator<U>() {
+
 				private boolean produce = true;
 
 				@Override
@@ -190,6 +192,7 @@ public abstract class Option<T> implements Iterable<T> {
 				public void remove() {
 					throw new UnsupportedOperationException();
 				}
+
 			};
 		}
 
@@ -265,4 +268,5 @@ public abstract class Option<T> implements Iterable<T> {
 	public static <T> Option<T> of(T t) {
 		return t == null ? Option.<T> none() : some(t);
 	}
+
 }

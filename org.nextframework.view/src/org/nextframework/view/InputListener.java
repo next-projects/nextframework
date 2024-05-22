@@ -33,7 +33,7 @@ import java.lang.annotation.Annotation;
 public interface InputListener<A extends Annotation> {
 
 	public void onRender(InputTag input, A annotation);
-	
+
 	Class<A> getAnnotationType();
-	
+
 }

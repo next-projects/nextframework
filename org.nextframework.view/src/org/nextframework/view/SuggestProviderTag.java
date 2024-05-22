@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.nextframework.bean.BeanDescriptor;
-import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.controller.json.JsonTranslator;
 import org.nextframework.core.standard.Next;
 import org.nextframework.service.ServiceFactory;
@@ -22,6 +20,7 @@ public class SuggestProviderTag extends BaseTag {
 	protected Object dataSource;
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	protected void doComponent() throws Exception {
 		getOut().println("<script type=\"text/javascript\">");
 		getOut().println("next.suggest.providers['" + name + "'] = ");
@@ -49,7 +48,6 @@ public class SuggestProviderTag extends BaseTag {
 	public static List<Map<String, String>> prepareDatasourceListForJson(Collection<?> collection) {
 		List<Map<String, String>> dataSourceMap = new ArrayList<Map<String, String>>();
 		for (Object o : collection) {
-			BeanDescriptor bd = BeanDescriptorFactory.forBean(o);
 			String text = Util.strings.toStringDescription(o);
 			String value = Util.strings.toStringIdStyled(o);
 			Map<String, String> map = new LinkedHashMap<String, String>();

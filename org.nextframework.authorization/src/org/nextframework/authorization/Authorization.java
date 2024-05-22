@@ -12,7 +12,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
  * @author rogelgarcia
  */
 public abstract class Authorization {
-	
+
 	private static Log logger = LogFactory.getLog(Authorization.class);
 
 	public static UserLocator getUserLocator() {
@@ -30,7 +30,7 @@ public abstract class Authorization {
 	public static AuthorizationManager getAuthorizationManager() {
 		return ServiceFactory.getService(AuthorizationManager.class);
 	}
-	
+
 	public static AuthorizationDAO getAuthorizationDAO() {
 		try {
 			return Next.getObject(AuthorizationDAO.class);
@@ -38,22 +38,33 @@ public abstract class Authorization {
 			try {
 				return ServiceFactory.getService(AuthorizationDAO.class);
 			} catch (Exception e1) {
-				logger.warn("No "+AuthorizationDAO.class+" is registered in application. Using default. " +
-						"Please implement a "+AuthorizationDAO.class);
-				return new AbstractAuthorizationDAO(){
+				logger.warn("No " + AuthorizationDAO.class + " is registered in application. Using default. " +
+						"Please implement a " + AuthorizationDAO.class);
+				return new AbstractAuthorizationDAO() {
 
 					public User findUserByUsername(final String login) {
-						return new User(){
+						return new User() {
+
 							private static final long serialVersionUID = 1L;
-							public String getUsername() {return login;}
-							public String getPassword() {return login;}};
+
+							public String getUsername() {
+								return login;
+							}
+
+							public String getPassword() {
+								return login;
+							}
+
+						};
 					}
+
 				};//fallback if no AuthorizationDAO have been found
 			}
 		}
 	}
-	
-	public static User getUser(){
+
+	public static User getUser() {
 		return getUserLocator().getUser();
 	}
+
 }

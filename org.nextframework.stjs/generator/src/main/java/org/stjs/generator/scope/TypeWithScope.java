@@ -18,6 +18,7 @@ package org.stjs.generator.scope;
 import org.stjs.generator.type.TypeWrapper;
 
 public class TypeWithScope {
+
 	private final Scope scope;
 	private final TypeWrapper type;
 

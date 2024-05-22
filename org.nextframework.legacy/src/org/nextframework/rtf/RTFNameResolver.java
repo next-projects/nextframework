@@ -28,4 +28,5 @@ import java.io.InputStream;
 public interface RTFNameResolver {
 
 	InputStream resolveName(String name);
+
 }

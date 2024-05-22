@@ -57,4 +57,5 @@ public class JSObjectAdapter {
 	public static <T> T $js(String code) {
 		throw new UnsupportedOperationException();
 	}
+
 }

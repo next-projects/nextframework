@@ -55,24 +55,22 @@ public class CachedIntrospectionResults {
 	 * Needs to be a WeakHashMap with WeakReferences as values to allow
 	 * for proper garbage collection in case of multiple class loaders.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static final Map classCache = Collections.synchronizedMap(new WeakHashMap());
-
 
 	/**
 	 * We might use this from the EJB tier, so we don't want to use synchronization.
 	 * Object references are atomic, so we can live with doing the occasional
 	 * unnecessary lookup at startup only.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	static CachedIntrospectionResults forClass(Class clazz) throws BeansException {
 		CachedIntrospectionResults results = null;
 		Object value = classCache.get(clazz);
 		if (value instanceof Reference) {
 			Reference ref = (Reference) value;
 			results = (CachedIntrospectionResults) ref.get();
-		}
-		else {
+		} else {
 			results = (CachedIntrospectionResults) value;
 		}
 		if (results == null) {
@@ -84,12 +82,10 @@ public class CachedIntrospectionResults {
 			}
 			if (cacheSafe) {
 				classCache.put(clazz, results);
-			}
-			else {
+			} else {
 				classCache.put(clazz, new WeakReference(results));
 			}
-		}
-		else {
+		} else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Using cached introspection results for class [" + clazz.getName() + "]");
 			}
@@ -121,24 +117,21 @@ public class CachedIntrospectionResults {
 		return false;
 	}
 
-
 	private final BeanInfo beanInfo;
 
 	/** Property descriptors keyed by property name */
 	private final Map<String, PropertyDescriptor> propertyDescriptorCache;
 
-
 	/**
 	 * Create new CachedIntrospectionResults instance fot the given class.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private CachedIntrospectionResults(Class clazz) throws BeansException {
 		try {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Getting BeanInfo for class [" + clazz.getName() + "]");
 			}
 			this.beanInfo = Introspector.getBeanInfo(clazz);
-
 			// Immediately remove class from Introspector cache, to allow for proper
 			// garbage collection on class loader shutdown - we cache it here anyway,
 			// in a GC-friendly manner. In contrast to CachedIntrospectionResults,
@@ -147,25 +140,19 @@ public class CachedIntrospectionResults {
 			do {
 				Introspector.flushFromCaches(classToFlush);
 				classToFlush = classToFlush.getSuperclass();
-			}
-			while (classToFlush != null);
-
+			} while (classToFlush != null);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Caching PropertyDescriptors for class [" + clazz.getName() + "]");
 			}
 			this.propertyDescriptorCache = new HashMap();
-
 			// This call is slow so we do it once.
 			PropertyDescriptor[] pds = this.beanInfo.getPropertyDescriptors();
 			for (int i = 0; i < pds.length; i++) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Found property '" + pds[i].getName() + "'" +
-							(pds[i].getPropertyType() != null ?
-							" of type [" + pds[i].getPropertyType().getName() + "]" : "") +
-							(pds[i].getPropertyEditorClass() != null ?
-							"; editor [" + pds[i].getPropertyEditorClass().getName() + "]" : ""));
+							(pds[i].getPropertyType() != null ? " of type [" + pds[i].getPropertyType().getName() + "]" : "") +
+							(pds[i].getPropertyEditorClass() != null ? "; editor [" + pds[i].getPropertyEditorClass().getName() + "]" : ""));
 				}
-
 				// Set methods accessible if declaring class is not public, for example
 				// in case of package-protected base classes that define bean properties.
 				Method readMethod = pds[i].getReadMethod();
@@ -176,11 +163,9 @@ public class CachedIntrospectionResults {
 				if (writeMethod != null && !Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
 					writeMethod.setAccessible(true);
 				}
-
 				this.propertyDescriptorCache.put(pds[i].getName(), pds[i]);
 			}
-		}
-		catch (IntrospectionException ex) {
+		} catch (IntrospectionException ex) {
 			throw new FatalBeanException("Cannot get BeanInfo for object of class [" + clazz.getName() + "]", ex);
 		}
 	}

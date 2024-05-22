@@ -28,6 +28,7 @@ import org.stjs.javascript.Map;
  */
 @SuppressWarnings("all")
 public class MapImpl<K extends String, V> implements Map<K, V> {
+
 	private final java.util.Map<K, V> map = new HashMap<K, V>();
 
 	@Override
@@ -54,4 +55,5 @@ public class MapImpl<K extends String, V> implements Map<K, V> {
 	public String toString() {
 		return map.toString();
 	}
+
 }

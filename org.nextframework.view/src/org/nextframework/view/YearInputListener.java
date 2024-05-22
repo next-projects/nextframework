@@ -33,16 +33,15 @@ import org.nextframework.validation.annotation.Year;
  * @version 1.1
  */
 public class YearInputListener implements InputListener<Year> {
-	
-	
+
 	public void onRender(InputTag input, Year year) {
 		Map<String, Object> attributes = input.getDynamicAttributesMap();
 		Object maxlengthinput = attributes.get("maxlength");
 		Object sizeinput = attributes.get("size");
-		if(maxlengthinput == null) {
+		if (maxlengthinput == null) {
 			attributes.put("maxlength", 4);
 		}
-		if(sizeinput == null) {
+		if (sizeinput == null) {
 			attributes.put("size", 4);
 		}
 	}

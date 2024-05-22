@@ -32,7 +32,7 @@ import org.nextframework.bean.annotation.DisplayName;
 public class AuthorizationProcessFilter {
 
 	Role role;
-	
+
 	Map<String, List<AuthorizationProcessItemFilter>> groupAuthorizationMap = new HashMap<String, List<AuthorizationProcessItemFilter>>();
 
 	public Map<String, List<AuthorizationProcessItemFilter>> getGroupAuthorizationMap() {
@@ -51,4 +51,5 @@ public class AuthorizationProcessFilter {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
 }

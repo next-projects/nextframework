@@ -25,6 +25,7 @@ import org.stjs.javascript.Map;
  */
 @SuppressWarnings("all")
 public class JSCollectionsServerImplementor implements JSCollectionsImplementor {
+
 	@Override
 	public <V> Array<V> $array(V... values) {
 		Array<V> a = new ArrayImpl<V>();

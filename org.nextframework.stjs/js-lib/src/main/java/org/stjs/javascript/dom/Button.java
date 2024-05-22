@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Button extends Element {
+
 	public String accessKey;
 	public boolean disabled;
 	public Form form;
@@ -23,4 +24,5 @@ abstract public class Button extends Element {
 	public int tabIndex;
 	public String type;
 	public String value;
+
 }

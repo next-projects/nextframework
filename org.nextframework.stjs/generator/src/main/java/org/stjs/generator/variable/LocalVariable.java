@@ -34,4 +34,5 @@ public class LocalVariable implements Variable {
 	public String getName() {
 		return name;
 	}
+
 }

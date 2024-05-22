@@ -10,12 +10,12 @@ import org.springframework.beans.factory.BeanFactory;
 
 public class NextPersistenceUtils {
 
-	public static DataSource getNextSpecificDataSource(){
+	public static DataSource getNextSpecificDataSource() {
 		return getNextSpecificDataSource(Next.getBeanFactory());
 	}
-	
-	public static DataSource getNextSpecificDataSource(BeanFactory beanFactory){
+
+	public static DataSource getNextSpecificDataSource(BeanFactory beanFactory) {
 		return beanFactory.getBean(DATA_SOURCE_BEAN_NAME + NEXT_DATASOURCE_DISCRIMINATOR, DataSource.class);
 	}
-	
+
 }

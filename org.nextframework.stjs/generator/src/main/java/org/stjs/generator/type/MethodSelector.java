@@ -22,7 +22,9 @@ import java.util.Map;
  * 
  */
 public class MethodSelector {
+
 	private static Comparator<MethodWrapper> methodSpecificityComparator = new Comparator<MethodWrapper>() {
+
 		@Override
 		public int compare(MethodWrapper m1, MethodWrapper m2) {
 			if (m1.isCompatibleParameterTypes(m2.getParameterTypes())) {
@@ -31,6 +33,7 @@ public class MethodSelector {
 			}
 			return 1;
 		}
+
 	};
 
 	/**
@@ -45,9 +48,11 @@ public class MethodSelector {
 	 * @return
 	 */
 	public static MethodWrapper resolveMethod(Collection<MethodWrapper> candidates, TypeWrapper... argumentTypes) {
+
 		if (candidates == null || candidates.isEmpty()) {
 			return null;
 		}
+
 		List<MethodWrapper> matching = new ArrayList<MethodWrapper>(candidates.size());
 		// keep only the list of methods with the same number of parameters or the one with a vararg argument that may
 		// match
@@ -80,8 +85,9 @@ public class MethodSelector {
 
 		for (int i = 0; i < argumentTypes.length; ++i) {
 			TypeWrapper argumentType = argumentTypes[i];
-			TypeWrapper paramType = i < found.getParameterTypes().length ? found.getParameterTypes()[i] : found
-					.getVarargParamType();
+			TypeWrapper paramType = i < found.getParameterTypes().length ? found.getParameterTypes()[i]
+					: found
+							.getVarargParamType();
 			Map<String, TypeWrapper> inferredTypesForParam = resolveTypeVariables(paramType, argumentType);
 			for (Map.Entry<String, TypeWrapper> e : inferredTypesForParam.entrySet()) {
 				TypeWrapper existing = inferredTypes.get(e.getKey());
@@ -97,6 +103,7 @@ public class MethodSelector {
 		if (inferredType == null) {
 			return found;
 		}
+
 		return found.withReturnType(inferredType);
 	}
 
@@ -123,4 +130,5 @@ public class MethodSelector {
 
 		return inferredTypes;
 	}
+
 }

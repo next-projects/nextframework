@@ -36,6 +36,7 @@ import org.stjs.javascript.functions.Function4;
  */
 @Adapter
 public class JSFunctionAdapter {
+
 	public static void call(Callback0 function, Object receiver) {
 		throw new UnsupportedOperationException();
 	}
@@ -85,4 +86,5 @@ public class JSFunctionAdapter {
 	public static <T> T apply(Object function, Object receiver, Array<?> args) {
 		throw new UnsupportedOperationException();
 	}
+
 }

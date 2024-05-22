@@ -31,11 +31,15 @@ import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 public class JasperDataConverter {
 
 	public JasperDataParametersResult getParametersMap(ReportDefinition report) {
+
 		JasperDataParametersResult result = new JasperDataParametersResult();
 		Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 		ReportItemIterator iterator = new ReportItemIterator(report);
+
 		while (iterator.hasNext()) {
+
 			ReportItem reportItem = iterator.next();
+
 			if (reportItem instanceof ReportChart) {
 				if (((ReportChart) reportItem).isRendered()) {
 					parameters.put("chart" + report.getChartIndex((ReportChart) reportItem), ((ReportChart) reportItem).getChart());
@@ -45,6 +49,7 @@ public class JasperDataConverter {
 					parameters.put("image" + report.getImageIndex((ReportImage) reportItem), ((ReportImage) reportItem).getInputStream());
 				}
 			} else if (reportItem instanceof Subreport) {
+
 				Subreport subreport = (Subreport) reportItem;
 				ReportDefinition subreportDefinition = subreport.getReport();
 				ReportDefinitionStyle styleClone = subreportDefinition.getStyle().clone();
@@ -79,7 +84,9 @@ public class JasperDataConverter {
 					parameters.put("subreport" + report.getSubreportIndex(subreport) + "_ds_map", new SubreportExpressionMap(subreportDefinition));
 				}
 			}
+
 		}
+
 		Set<String> reportParameters = report.getParameters().keySet();
 		for (String param : reportParameters) {
 			Object object = report.getParameters().get(param);
@@ -90,6 +97,7 @@ public class JasperDataConverter {
 			}
 		}
 		result.setParameters(parameters);
+
 		return result;
 	}
 
@@ -101,7 +109,7 @@ public class JasperDataConverter {
 		return toMap(data, definition);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static JRMapCollectionDataSource toMap(List<?> rows, ReportDefinition report) {
 		List<Map<String, ?>> lista = new ArrayList<Map<String, ?>>();
 		for (Object registro : rows) {
@@ -137,7 +145,7 @@ public class JasperDataConverter {
 		return ds;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static void addItemToMap(Map mapa, ReportItem reportItem, BeanDescriptor bd) {
 		if (reportItem instanceof ReportTextField) {
 			ReportTextField reportTextField = (ReportTextField) reportItem;

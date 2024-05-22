@@ -176,7 +176,9 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 	}
 
 	protected SubreportTable getChartTable(final Chart chart0) {
+
 		final ReportDefinition definitionSuper = getDefinition();
+
 		return new SubreportTable(new TableInformationAdaptor() {
 
 			DecimalFormat df = new DecimalFormat("#,##0.00");
@@ -240,6 +242,7 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 			}
 
 		});
+
 	}
 
 	public void onNewChart(Chart chart) {

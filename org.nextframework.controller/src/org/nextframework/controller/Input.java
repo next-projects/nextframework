@@ -34,7 +34,9 @@ import java.lang.annotation.Target;
  * @version 1.1
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
+@Target({ ElementType.METHOD })
 public @interface Input {
+
 	String value();
+
 }

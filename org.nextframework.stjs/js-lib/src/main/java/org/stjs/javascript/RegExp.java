@@ -16,6 +16,7 @@
 package org.stjs.javascript;
 
 public class RegExp {
+
 	public boolean global;
 	public boolean ignoreCase;
 	public int lastIndex;
@@ -45,4 +46,5 @@ public class RegExp {
 	public boolean test(String source) {
 		throw new UnsupportedOperationException();
 	}
+
 }

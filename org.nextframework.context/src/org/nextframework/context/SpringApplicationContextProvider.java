@@ -5,4 +5,5 @@ import org.springframework.context.ConfigurableApplicationContext;
 public interface SpringApplicationContextProvider {
 
 	ConfigurableApplicationContext getApplicationContext();
+
 }

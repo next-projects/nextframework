@@ -16,8 +16,8 @@ public class MemoryLeakDestroyerListener implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-	    LogFactory.release(contextClassLoader);
-	    Introspector.flushCaches();
+		LogFactory.release(contextClassLoader);
+		Introspector.flushCaches();
 	}
 
 	@Override

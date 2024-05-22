@@ -16,6 +16,7 @@
 package org.stjs.generator.writer;
 
 public class JavascriptWriter {
+
 	private static final String NUMERIC_LITERAL_ENDING = "[a-zA-Z]$";
 
 	private int level = 0;

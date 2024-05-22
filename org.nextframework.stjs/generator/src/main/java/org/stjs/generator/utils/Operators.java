@@ -27,6 +27,7 @@ import java.util.EnumSet;
  * 
  */
 public class Operators {
+
 	private static final EnumSet<Operator> logicalOperators = EnumSet.of(Operator.and, Operator.notEquals,
 			Operator.equals, Operator.greater, Operator.greaterEquals, Operator.less, Operator.lessEquals, Operator.or,
 			Operator.xor);
@@ -34,4 +35,5 @@ public class Operators {
 	public static boolean isLogical(Operator op) {
 		return logicalOperators.contains(op);
 	}
+
 }

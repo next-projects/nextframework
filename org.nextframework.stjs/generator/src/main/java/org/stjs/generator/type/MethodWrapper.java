@@ -26,6 +26,7 @@ import java.util.Arrays;
  * 
  */
 public class MethodWrapper {
+
 	private final String name;
 	private final TypeWrapper returnType;
 	private final TypeWrapper[] parameterTypes;

@@ -47,7 +47,7 @@ public class JSMapAdapter implements JsonSerializer<Map<?, ?>>, JsonDeserializer
 		return map;
 	}
 
-	@SuppressWarnings({ "unchecked", "deprecation" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public JsonElement serialize(Map<?, ?> map, Type typeOfSrc, JsonSerializationContext ctx) {
 		if (map == null) {

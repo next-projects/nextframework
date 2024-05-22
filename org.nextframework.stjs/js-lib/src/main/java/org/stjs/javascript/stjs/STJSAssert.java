@@ -11,6 +11,7 @@ import org.stjs.javascript.functions.Callback3;
  */
 @GlobalScope
 public class STJSAssert {
+
 	public static void assertArgEquals(Object expectedValue, Object testValue) {
 		throw new UnsupportedOperationException();
 	}

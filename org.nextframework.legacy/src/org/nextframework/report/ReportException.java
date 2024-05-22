@@ -30,9 +30,6 @@ package org.nextframework.report;
  */
 public class ReportException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public ReportException() {

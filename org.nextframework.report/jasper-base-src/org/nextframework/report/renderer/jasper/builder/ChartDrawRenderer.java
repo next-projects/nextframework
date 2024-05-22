@@ -25,43 +25,36 @@ import org.nextframework.chart.ChartRendererFactory;
 import org.nextframework.view.chart.jfree.ChartRendererJFreeChart;
 
 public class ChartDrawRenderer extends JRAbstractSvgRenderer {
-	
-	static Log logger = LogFactory.getLog(ChartDrawRenderer.class);
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	
-	Chart chart;
 
+	static Log logger = LogFactory.getLog(ChartDrawRenderer.class);
+
+	private static final long serialVersionUID = 1L;
+
+	Chart chart;
 
 	private int width;
 	private int height;
-	
+
 	public ChartDrawRenderer(Chart chart, int width, int height) {
 		super();
 		this.chart = chart;
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	public Chart getChart() {
 		return chart;
 	}
 
 	@Override
 	public void render(Graphics2D grx, Rectangle2D rectangle) throws JRException {
-		if(chart != null){
+		if (chart != null) {
 			JFreeChart jFreeChart = (JFreeChart) ChartRendererFactory.getRendererForOutput(ChartRendererJFreeChart.TYPE).renderChart(chart);
 			reduceChartFonts(jFreeChart);
-				
 			rectangle.setRect(0, 0, width, height);
-			if(width == 0 || height == 0){
+			if (width == 0 || height == 0) {
 				logger.warn("Chart has no height or width ");
 			}
-			
 			//grx.clearRect((int)rectangle.getX(), (int)rectangle.getY(), chart.getStyle().getWidth(), chart.getStyle().getHeight());
 			//rectangle.setRect(0, 0, chart.getStyle().getWidth(), chart.getStyle().getHeight());
 			jFreeChart.draw(grx, rectangle);
@@ -72,20 +65,18 @@ public class ChartDrawRenderer extends JRAbstractSvgRenderer {
 		//configure font size (half-size)
 		Plot plot = jFreeChart.getPlot();
 		reduceLegends(plot);
-		if(plot instanceof CategoryPlot){
+		if (plot instanceof CategoryPlot) {
 			CategoryPlot categoryPlot = (CategoryPlot) plot;
 			reduceRangeAxis(categoryPlot.getRangeAxis());
 			reduceDomainAxis(categoryPlot.getDomainAxis());
 		}
-		if(plot instanceof PiePlot){
+		if (plot instanceof PiePlot) {
 			PiePlot piePlot = (PiePlot) plot;
 			piePlot.setLabelFont(reduceFont(piePlot.getLabelFont()));
 		}
-		
 		reduceSubtitles(jFreeChart);
-		
 		TextTitle title = jFreeChart.getTitle();
-		if(title != null){
+		if (title != null) {
 			title.setFont(reduceFont(title.getFont()));
 		}
 	}
@@ -118,10 +109,10 @@ public class ChartDrawRenderer extends JRAbstractSvgRenderer {
 	}
 
 	private Font reduceFont(Font labelFont) {
-		if(labelFont == null){
+		if (labelFont == null) {
 			return null;
 		}
-		Font newFont = labelFont.deriveFont((float)(labelFont.getSize2D() * 0.6));
+		Font newFont = labelFont.deriveFont((float) (labelFont.getSize2D() * 0.6));
 		return newFont;
 	}
 

@@ -27,14 +27,11 @@
  */
 package org.nextframework.authorization;
 
-
-
-
 /**
  * @author rogelgarcia
  */
 public interface PermissionLocator {
-    
-    Permission[] getPermissions(User user, String resource);
-    
+
+	Permission[] getPermissions(User user, String resource);
+
 }

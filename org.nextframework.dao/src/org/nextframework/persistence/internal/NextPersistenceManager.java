@@ -24,19 +24,19 @@ import org.springframework.beans.factory.InitializingBean;
  *
  */
 public class NextPersistenceManager implements InitializingBean, DisposableBean {
-	
+
 	private SessionFactory sessionFactory;
-	
+
 	private DataSource dataSource;
-	
+
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}
-	
+
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
@@ -45,7 +45,7 @@ public class NextPersistenceManager implements InitializingBean, DisposableBean 
 	public void afterPropertiesSet() throws Exception {
 		initializeHibernate();
 	}
-	
+
 	private void initializeHibernate() {
 		Configuration config = new Configuration()
 				.setProperty("hibernate.hbm2ddl.auto", "update")
@@ -57,19 +57,20 @@ public class NextPersistenceManager implements InitializingBean, DisposableBean 
 				.build();
 		this.sessionFactory = config
 				.buildSessionFactory(serviceRegistry);
-		
+
 	}
 
 	@Override
 	public void destroy() throws Exception {
 		sessionFactory.close();
 	}
-	
+
 	protected UserPropertiesDAO getPropertiesDAOForUser(String username) {
 		return new UserPropertiesDAO(this.sessionFactory, username);
 	}
 
-	public Map<String, String> getPropertiesMapForUser(String username){
+	public Map<String, String> getPropertiesMapForUser(String username) {
 		return new UserPersistentMap(getPropertiesDAOForUser(username));
 	}
+
 }

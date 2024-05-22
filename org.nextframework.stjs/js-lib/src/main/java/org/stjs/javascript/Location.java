@@ -16,6 +16,7 @@
 package org.stjs.javascript;
 
 abstract public class Location {
+
 	public String hash;
 	public String host;
 	public String hostname;
@@ -28,8 +29,9 @@ abstract public class Location {
 	abstract public void assign(String url);
 
 	abstract public void reload();
-	
+
 	abstract public void reload(boolean fromServer);
 
 	abstract public void replace(String url);
+
 }

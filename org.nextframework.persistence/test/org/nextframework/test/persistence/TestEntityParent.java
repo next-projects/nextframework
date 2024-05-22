@@ -6,25 +6,24 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
 @Entity
 public class TestEntityParent {
 
 	Integer id;
-	
+
 	String name;
-	
+
 	List<TestEntityChild> children;
-	
+
 	Set<TestEntityChild> childrenSet;
 
-	public TestEntityParent(){
-		
+	public TestEntityParent() {
+
 	}
-	public TestEntityParent(String name){
+
+	public TestEntityParent(String name) {
 		this.name = name;
 	}
 
@@ -38,16 +37,16 @@ public class TestEntityParent {
 		return name;
 	}
 
-	@OneToMany(mappedBy="parent")
+	@OneToMany(mappedBy = "parent")
 	public List<TestEntityChild> getChildren() {
 		return children;
 	}
-	
-	@OneToMany(mappedBy="parent2")
+
+	@OneToMany(mappedBy = "parent2")
 	public Set<TestEntityChild> getChildrenSet() {
 		return childrenSet;
 	}
-	
+
 	public void setChildrenSet(Set<TestEntityChild> childrenSet) {
 		this.childrenSet = childrenSet;
 	}
@@ -63,6 +62,5 @@ public class TestEntityParent {
 	public void setChildren(List<TestEntityChild> children) {
 		this.children = children;
 	}
-	
-	
+
 }

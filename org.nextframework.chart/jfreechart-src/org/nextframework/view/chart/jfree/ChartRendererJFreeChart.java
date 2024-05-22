@@ -41,16 +41,15 @@ import org.w3c.dom.Element;
 import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
 
 public class ChartRendererJFreeChart implements ChartRenderer {
-	
+
 	public static String TYPE = "JFREECHART";
-	
+
 	static java.util.Map<ChartType, JFreeTypeRenderer> chartMapping;
-	
+
 	static {
 		StandardBarPainter painter = new StandardBarPainter();
 		BarRenderer.setDefaultBarPainter(painter);
 		BarRenderer.setDefaultShadowsVisible(false);
-		
 		chartMapping = new HashMap<ChartType, JFreeTypeRenderer>();
 		chartMapping.put(ChartType.PIE, new JFreePieRenderer());
 		chartMapping.put(ChartType.BAR, new JFreeBarRenderer());
@@ -61,12 +60,12 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 		chartMapping.put(ChartType.CURVED_LINE, new JFreeCurvedLineRenderer());
 		chartMapping.put(ChartType.COMBO, new JFreeComboRenderer());
 	}
-	
-	public static JFreeChart renderAsJFreeChart(Chart chart){
+
+	public static JFreeChart renderAsJFreeChart(Chart chart) {
 		return (JFreeChart) ChartRendererFactory.getRendererForOutput(TYPE).renderChart(chart);
 	}
-	
-	public static byte[] renderAsSVG(Chart chart){
+
+	public static byte[] renderAsSVG(Chart chart) {
 		try {
 			int width = Integer.parseInt(chart.getStyle().getWidth());
 			int height = Integer.parseInt(chart.getStyle().getHeight());
@@ -81,7 +80,7 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 	 * @param chart
 	 * @return
 	 */
-	public static byte[] renderAsImage(Chart chart){
+	public static byte[] renderAsImage(Chart chart) {
 		try {
 			int width = Integer.parseInt(chart.getStyle().getWidth());
 			int height = Integer.parseInt(chart.getStyle().getHeight());
@@ -90,7 +89,7 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 //	public static Resource renderAsResource(Chart chart){
 //		return convertChartToResourse(chart, renderAsJFreeChart(chart), chart.getStyle().getWidth(), chart.getStyle().getHeight(), "chart");
 //	}
@@ -98,7 +97,7 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 //	public static Resource convertChartToResourse(JFreeChart chart, int width, int height, String fileName) {
 //		return convertChartToResourse(null, chart, width, height, fileName);
 //	}
-	
+
 	/**
 	 * Exports a JFreeChart to a SVG file.
 	 * 
@@ -108,30 +107,31 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 	 * @throws IOException if writing the svgFile fails.
 	 */
 	public static byte[] convertChartToSVG(JFreeChart chart, int width, int height) {
-        // Get a DOMImplementation and create an XML document
+
+		// Get a DOMImplementation and create an XML document
 		DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
-        Document document = domImpl.createDocument(null, "svg", null);
+		Document document = domImpl.createDocument(null, "svg", null);
 
-        // Create an instance of the SVG Generator
-        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+		// Create an instance of the SVG Generator
+		SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
-        // draw the chart in the SVG generator
-        chart.draw(svgGenerator, new Rectangle(width, height));
+		// draw the chart in the SVG generator
+		chart.draw(svgGenerator, new Rectangle(width, height));
 
-        // Write svg file
+		// Write svg file
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			Writer out = new OutputStreamWriter(baos, StandardCharsets.UTF_8);
-			svgGenerator.stream(out, true /* use css */);						
+			svgGenerator.stream(out, true /* use css */);
 			out.flush();
 			out.close();
 			return baos.toByteArray();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-        
+
 	}
-	
+
 //	public static Resource convertChartToResourse(Chart chartDetails, JFreeChart chart, int width, int height, String fileName) {
 //		Resource resource = null;
 //		
@@ -144,18 +144,19 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 //		}
 //		return resource;
 //	}
-	
+
 	private static byte[] convertChartToByteArray(Chart chartDetails, JFreeChart chart, int width, int height) throws IOException, IIOInvalidTreeException {
+
 		BufferedImage buffImg = chart.createBufferedImage(width, height, BufferedImage.BITMASK | BufferedImage.SCALE_SMOOTH, null);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ImageWriter writer = ImageIO.getImageWritersByFormatName("png").next();
-		
+
 		ImageWriteParam writeParam = writer.getDefaultWriteParam();
 		ImageTypeSpecifier typeSpecifier = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_RGB);
 		IIOMetadata metadata = writer.getDefaultImageMetadata(typeSpecifier, writeParam);
-		
-		if(chartDetails != null){
-			if(chartDetails.getId() == null){
+
+		if (chartDetails != null) {
+			if (chartDetails.getId() == null) {
 				chartDetails.setId("%ID%");
 			}
 			IIOMetadataNode textEntry = new IIOMetadataNode("tEXtEntry");
@@ -164,8 +165,8 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(bout);
 			objectOutputStream.writeObject(chartDetails);
 			objectOutputStream.flush();
-			textEntry.setAttribute("value", (String)ChartRendererFactory.getRendererForOutput(ChartRendererGoogleTools.TYPE).renderChart(chartDetails));
-			
+			textEntry.setAttribute("value", (String) ChartRendererFactory.getRendererForOutput(ChartRendererGoogleTools.TYPE).renderChart(chartDetails));
+
 			IIOMetadataNode text = new IIOMetadataNode("tEXt");
 			text.appendChild(textEntry);
 
@@ -173,24 +174,22 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 			root.appendChild(text);
 
 			metadata.mergeTree("javax_imageio_png_1.0", root);
-			
-			
+
 		}
 		//setDPI(metadata);
 
 		final ImageOutputStream stream = ImageIO.createImageOutputStream(baos);
 		try {
-		   writer.setOutput(stream);
-		   writer.write(metadata, new IIOImage(buffImg, null, metadata), writeParam);
+			writer.setOutput(stream);
+			writer.write(metadata, new IIOImage(buffImg, null, metadata), writeParam);
 		} finally {
-		   stream.close();
+			stream.close();
 		}
-		
-		
+
 		byte[] bytes = baos.toByteArray();//ChartUtilities.encodeAsPNG(buffImg, true, 9);
 		return bytes;
 	}
-	
+
 	@SuppressWarnings("unused")
 	private static void setDPI(IIOMetadata metadata) throws IIOInvalidTreeException {
 
@@ -212,69 +211,61 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 
 		metadata.mergeTree("javax_imageio_1.0", root);
 	}
-	
+
 	@SuppressWarnings("unused")
-	private boolean saveJpeg(int[] byteArray, int width, int height, int dpi, String file)
-	{
-	        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	private boolean saveJpeg(int[] byteArray, int width, int height, int dpi, String file) {
 
-	        WritableRaster wr = bufferedImage.getRaster();
-	        wr.setPixels(0, 0, width, height, byteArray);
+		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
-	        try
-	        {                       
-	                // Image writer 
-	                JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpeg").next();
-	                ImageOutputStream ios = ImageIO.createImageOutputStream(new File(file));
-	                imageWriter.setOutput(ios);
+		WritableRaster wr = bufferedImage.getRaster();
+		wr.setPixels(0, 0, width, height, byteArray);
 
-	                // Compression
-	                JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) imageWriter.getDefaultWriteParam();
-	                jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
-	                jpegParams.setCompressionQuality(0.85f);
+		try {
+			// Image writer 
+			JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpeg").next();
+			ImageOutputStream ios = ImageIO.createImageOutputStream(new File(file));
+			imageWriter.setOutput(ios);
 
-	                // Metadata (dpi)
-	                IIOMetadata data = imageWriter.getDefaultImageMetadata(new ImageTypeSpecifier(bufferedImage), jpegParams);
-	                Element tree = (Element)data.getAsTree("javax_imageio_jpeg_image_1.0");
-	                Element jfif = (Element)tree.getElementsByTagName("app0JFIF").item(0);
-	                jfif.setAttribute("Xdensity", Integer.toString(dpi));
-	                jfif.setAttribute("Ydensity", Integer.toString(dpi));
-	                jfif.setAttribute("resUnits", "1"); // density is dots per inch                 
+			// Compression
+			JPEGImageWriteParam jpegParams = (JPEGImageWriteParam) imageWriter.getDefaultWriteParam();
+			jpegParams.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
+			jpegParams.setCompressionQuality(0.85f);
 
-	        // Write and clean up
-	                imageWriter.write(data, new IIOImage(bufferedImage, null, null), jpegParams);
-	                ios.close();
-	                imageWriter.dispose();
-	        }
-	        catch (Exception e)
-	        {
-	           return false;
-	        }
+			// Metadata (dpi)
+			IIOMetadata data = imageWriter.getDefaultImageMetadata(new ImageTypeSpecifier(bufferedImage), jpegParams);
+			Element tree = (Element) data.getAsTree("javax_imageio_jpeg_image_1.0");
+			Element jfif = (Element) tree.getElementsByTagName("app0JFIF").item(0);
+			jfif.setAttribute("Xdensity", Integer.toString(dpi));
+			jfif.setAttribute("Ydensity", Integer.toString(dpi));
+			jfif.setAttribute("resUnits", "1"); // density is dots per inch                 
 
-	        return true;
+			// Write and clean up
+			imageWriter.write(data, new IIOImage(bufferedImage, null, null), jpegParams);
+			ios.close();
+			imageWriter.dispose();
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
 	}
 
-	 
 	public String getOutputType() {
 		return TYPE;
 	}
 
 	public JFreeChart renderChart(Chart chart) {
-		
+
 		JFreeTypeRenderer jFreeTypeRenderer = chartMapping.get(chart.getStyle().getChartType());
-		
-		if(jFreeTypeRenderer == null){
-			throw new NextException("Não é possível renderizar o gráfico do tipo especificado "+chart.getChartType());
+
+		if (jFreeTypeRenderer == null) {
+			throw new NextException("Não é possível renderizar o gráfico do tipo especificado " + chart.getChartType());
 		}
-        
+
 		JFreeChart chartRendered = jFreeTypeRenderer.render(chart);
-		
-        //return convertChartToResourse(chartRendered, chart.getStyle().getWidth(), chart.getStyle().getHeight(), "chart.png");
+
+		//return convertChartToResourse(chartRendered, chart.getStyle().getWidth(), chart.getStyle().getHeight(), "chart.png");
 		return chartRendered;
 	}
 
-
-	
 }
-
-

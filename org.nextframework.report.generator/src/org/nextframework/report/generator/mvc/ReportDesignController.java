@@ -185,6 +185,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 	@Input("editXMLOnError")
 	public ModelAndView editDesignForId() throws SAXException, IOException {
+
 		ReportDesignModel model = loadDesignModel();
 
 		ReportReader reader = new ReportReader(model.getReportXml());

@@ -25,7 +25,6 @@ package org.nextframework.classmanager;
 
 import java.lang.annotation.Annotation;
 
-
 /**
  * O ClassManager funciona como um repositório de classes.<BR>
  * É como um filtro para classes, voce determina que tipo de classe deseja e o ClassManger
@@ -43,14 +42,13 @@ import java.lang.annotation.Annotation;
  * @author rogelgarcia
  */
 public interface ClassManager {
-	
 
 	/**
 	 * Procura todas as classes
 	 * @return todas as classes encontradas
 	 */
 	Class<?>[] getAllClasses();
-	
+
 //	/**
 //	 * Procura todas as classes em determinado pacote
 //	 * @param pacote pacote onde devem ser procuradas as classes (utilizar . (ponto) como separador)
@@ -65,7 +63,7 @@ public interface ClassManager {
 	 * @return Classes do mesmo tipo da classe fornecida
 	 */
 	<E> Class<E>[] getAllClassesOfType(Class<E> type);
-	
+
 	/**
 	 * Retorna todas as classes que possuem determinada anotação
 	 * @param annotationType Anotação a ser procurada
@@ -78,5 +76,5 @@ public interface ClassManager {
 //	 * @param clazz
 //	 */
 //	void registerClass(Class<?> clazz);
-	
+
 }

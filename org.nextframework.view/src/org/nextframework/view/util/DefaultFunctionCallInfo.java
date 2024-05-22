@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DefaultFunctionCallInfo implements FunctionCallInfo {
-	
+
 	Map<String, Class<?>> mapaClass = new HashMap<String, Class<?>>();
 	Map<String, Object> mapaValue = new HashMap<String, Object>();
 
@@ -39,8 +39,9 @@ public class DefaultFunctionCallInfo implements FunctionCallInfo {
 		return mapaValue.get(functionParameter.getParameterValue());
 	}
 
-	public void addParam(String param, Object value, Class<?> clazz){
+	public void addParam(String param, Object value, Class<?> clazz) {
 		mapaClass.put(param, clazz);
 		mapaValue.put(param, value);
 	}
+
 }

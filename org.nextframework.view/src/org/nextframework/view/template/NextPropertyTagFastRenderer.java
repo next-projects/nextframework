@@ -123,10 +123,12 @@ public class NextPropertyTagFastRenderer implements PropertyTagFastRenderer {
 	}
 
 	class LabelAndValue {
+
 		String label;
 		Object value;
 		boolean id;
 		Type type;
+
 	}
 
 }

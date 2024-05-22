@@ -36,10 +36,10 @@ package org.nextframework.authorization;
  * @author rogelgarcia
  */
 public interface UserLocator {
-    
-    /**
-     * Returns the current user logged in the system, or null of not logged  
-     */
-    public User getUser();
+
+	/**
+	 * Returns the current user logged in the system, or null of not logged  
+	 */
+	public User getUser();
 
 }

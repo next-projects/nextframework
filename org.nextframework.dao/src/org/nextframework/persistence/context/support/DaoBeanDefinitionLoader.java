@@ -20,12 +20,11 @@ public class DaoBeanDefinitionLoader extends CustomScannerBeanDefinitionLoader {
 	@Override
 	public void loadBeanDefinitions(AbstractApplicationContext applicationContext, DefaultListableBeanFactory beanFactory) {
 		super.loadBeanDefinitions(applicationContext, beanFactory);
-
 		GenericBeanDefinition persistenceConfigBD = new GenericBeanDefinition();
 		persistenceConfigBD.setBeanClassName(DAOBeanContextPostProcessor.class.getName());
 		beanFactory.registerBeanDefinition(DAOBeanContextPostProcessor.class.getSimpleName(), persistenceConfigBD);
 	}
-	
+
 	@Override
 	public void applyFilters(ClassPathBeanDefinitionScanner scanner) {
 		setAutowireBeans(scanner, AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
@@ -37,7 +36,7 @@ public class DaoBeanDefinitionLoader extends CustomScannerBeanDefinitionLoader {
 		AutowireCandidateQualifier qualifier = new AutowireCandidateQualifier(DAO.EntityType.class);
 		try {
 			Class<?> daoClass = Class.forName(beanDefinition.getBeanClassName());
-			if(!daoClass.isAnnotationPresent(DAO.NoGenericServiceInjection.class)){
+			if (!daoClass.isAnnotationPresent(DAO.NoGenericServiceInjection.class)) {
 				qualifier.setAttribute(AutowireCandidateQualifier.VALUE_KEY, GenericTypeResolver.resolveTypeArgument(daoClass, DAO.class));
 				beanDefinition.addQualifier(qualifier);
 			}
@@ -49,14 +48,15 @@ public class DaoBeanDefinitionLoader extends CustomScannerBeanDefinitionLoader {
 	}
 
 	private String[] persistenceConfigBeansCache;
+
 	public String[] getPersistenceConfigBeans(DefaultListableBeanFactory beanFactory) {
-		if(persistenceConfigBeansCache != null){
+		if (persistenceConfigBeansCache != null) {
 			return persistenceConfigBeansCache;
 		}
 		String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
 		List<String> persistenceConfigs = new ArrayList<String>();
 		for (String bdn : beanDefinitionNames) {
-			if(bdn.startsWith("persistenceConfig")){
+			if (bdn.startsWith("persistenceConfig")) {
 				persistenceConfigs.add(bdn);
 			}
 		}
@@ -68,4 +68,5 @@ public class DaoBeanDefinitionLoader extends CustomScannerBeanDefinitionLoader {
 	public String toString() {
 		return "DAO Loader";
 	}
+
 }

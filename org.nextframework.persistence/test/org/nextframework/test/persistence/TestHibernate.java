@@ -16,11 +16,12 @@ public class TestHibernate {
 	Session session;
 
 	@Before
-	public void setUp() throws ClassNotFoundException, SQLException{
+	public void setUp() throws ClassNotFoundException, SQLException {
+
 		Configuration annotationConfiguration = new Configuration();
-		
+
 		addAnnotatedClasses(annotationConfiguration);
-		
+
 		annotationConfiguration.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 		annotationConfiguration.setProperty("hibernate.show_sql", "true");
 		annotationConfiguration.setProperty("hibernate.hbm2ddl.auto", "update");
@@ -28,11 +29,11 @@ public class TestHibernate {
 		annotationConfiguration.setProperty("hibernate.connection.url", "jdbc:hsqldb:mem:memdb");
 		annotationConfiguration.setProperty("hibernate.connection.username", "sa");
 		annotationConfiguration.setProperty("hibernate.connection.password", "update");
-		
+
 		sessionFactory = annotationConfiguration.buildSessionFactory();
-		
+
 		session = sessionFactory.openSession();
-		
+
 		//validateHibernateSession();
 	}
 
@@ -42,18 +43,21 @@ public class TestHibernate {
 		annotationConfiguration.addAnnotatedClass(TestEntityExt.class);
 		annotationConfiguration.addAnnotatedClass(TestEntitySuper.class);
 	}
-	
-	public void validateHibernateSession(){
+
+	public void validateHibernateSession() {
 		session.doWork(new Work() {
+
 			public void execute(Connection connection) throws SQLException {
 				connection.prepareStatement("select testentity0_.id as id1_, testentity0_.name as name1_ from TestEntityParent testentity0_").executeQuery();
 			}
+
 		});
 	}
 
 	@After
-	public void tearDown() throws SQLException{
+	public void tearDown() throws SQLException {
 		session.close();
 		sessionFactory.close();
-	}	
+	}
+
 }

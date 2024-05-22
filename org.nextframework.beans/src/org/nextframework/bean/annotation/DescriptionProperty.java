@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@Target({ElementType.METHOD})
+@Target({ ElementType.METHOD })
 public @interface DescriptionProperty {
 
 	/**
@@ -47,4 +47,5 @@ public @interface DescriptionProperty {
 	 * @return
 	 */
 	String[] usingFields() default {};
+
 }

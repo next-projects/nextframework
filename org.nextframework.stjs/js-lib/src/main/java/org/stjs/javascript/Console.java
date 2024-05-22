@@ -22,8 +22,9 @@ package org.stjs.javascript;
  * 
  */
 abstract public class Console {
+
 	public abstract void log(Object msg);
-	
+
 	public abstract void log(Object msg, Object... otherParams);
 
 	public abstract void warn(Object msg, Object... otherParams);
@@ -35,7 +36,7 @@ abstract public class Console {
 	public abstract void trace(Object msg, Object... otherParams);
 
 	public abstract void info(Object msg, Object... otherParams);
-	
+
 	public abstract void info(Object msg);
 
 	public abstract void dir(Object msg);

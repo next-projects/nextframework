@@ -6,7 +6,7 @@ import java.util.List;
 public class ChartsElement {
 
 	List<ChartElement> items = new ArrayList<ChartElement>();
-	
+
 	public List<ChartElement> getItems() {
 		return items;
 	}
@@ -40,5 +40,5 @@ public class ChartsElement {
 			return false;
 		return true;
 	}
-	
+
 }

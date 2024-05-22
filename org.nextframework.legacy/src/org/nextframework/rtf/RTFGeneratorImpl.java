@@ -31,15 +31,15 @@ public class RTFGeneratorImpl implements RTFGenerator {
 
 	private RTFNameResolver nameResolver;
 
-	public RTFGeneratorImpl(RTFNameResolver nameResolver){
+	public RTFGeneratorImpl(RTFNameResolver nameResolver) {
 		this.nameResolver = nameResolver;
 	}
-	
+
 	public byte[] generate(RTF rtf) {
 		ByteArrayOutputStream out;
 		try {
 			Map<String, String> parameterMap = rtf.getParameterMap();
-			if(parameterMap == null){
+			if (parameterMap == null) {
 				throw new NullPointerException("RTF não possui parameterMap");
 			}
 			InputStream in = nameResolver.resolveName(rtf.getName());
@@ -48,34 +48,32 @@ public class RTFGeneratorImpl implements RTFGenerator {
 			boolean inTag = false;
 			StringBuilder currentTag = new StringBuilder();
 			while ((i = in.read()) != -1) {
-				if(i == '<'){
+				if (i == '<') {
 					inTag = true;
 					continue;
 				}
-				if(i == '>'){
+				if (i == '>') {
 					inTag = false;
 					String param = currentTag.toString();
 					//System.out.println(param);
 					String value = parameterMap.get(param);
-					if(value != null){
+					if (value != null) {
 						byte[] bytes = value.getBytes();
-						out.write(bytes);	
+						out.write(bytes);
 					}
-					
 					currentTag = new StringBuilder();
 					continue;
 				}
-				if(inTag){
+				if (inTag) {
 					//System.out.println((char)i);
-					currentTag.append((char)i);
+					currentTag.append((char) i);
 				} else {
-					out.write(i);	
+					out.write(i);
 				}
-				
 			}
 		} catch (Exception e) {
 			throw new RTFException(e);
-		}		
+		}
 		return out.toByteArray();
 	}
 

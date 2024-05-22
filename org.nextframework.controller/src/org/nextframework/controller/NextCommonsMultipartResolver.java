@@ -34,9 +34,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 public class NextCommonsMultipartResolver extends CommonsMultipartResolver {
 
 	public static final String MAXUPLOADEXCEEDED = "MAXUPLOADEXCEEDED";
-	
+
 	public static final String RESOLVED_MULTIPART_REQUEST = "RESOLVED_MULTIPART_REQUEST";
-	
+
 	@Override
 	public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException {
 		try {
@@ -45,6 +45,7 @@ public class NextCommonsMultipartResolver extends CommonsMultipartResolver {
 			return resolvedMultipartRequest;
 		} catch (MaxUploadSizeExceededException e) {
 			throw new NextException("O tamanho máximo de upload de arquivos (" + e.getMaxUploadSize() + ") foi excedido ");
-		}		
+		}
 	}
+
 }

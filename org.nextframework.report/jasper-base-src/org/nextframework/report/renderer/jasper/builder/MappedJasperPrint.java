@@ -7,11 +7,11 @@ import net.sf.jasperreports.engine.JasperPrint;
 public class MappedJasperPrint {
 
 	JasperPrint jasperPrint;
-	
+
 	MappedJasperReport mappedJasperReport;
-	
+
 	List<MappedJasperReport> subreports;
-	
+
 	public List<MappedJasperReport> getSubreports() {
 		return subreports;
 	}
@@ -35,7 +35,5 @@ public class MappedJasperPrint {
 	public void setMappedJasperReport(MappedJasperReport mappedJasperReport) {
 		this.mappedJasperReport = mappedJasperReport;
 	}
-	
-	
-	
+
 }

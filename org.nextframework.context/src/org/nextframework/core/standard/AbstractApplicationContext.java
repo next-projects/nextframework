@@ -23,13 +23,12 @@
  */
 package org.nextframework.core.standard;
 
-
 /**
  * @author rogelgarcia
  * @since 21/01/2006
  * @version 1.1
  */
-public abstract class AbstractApplicationContext implements ApplicationContext{
+public abstract class AbstractApplicationContext implements ApplicationContext {
 
 //	public BeanDescriptor getBeanDescriptor(Object bean, Class<?> clazz) {
 //		if(bean != null){
@@ -51,5 +50,5 @@ public abstract class AbstractApplicationContext implements ApplicationContext{
 //	public <E> E getBean(Class<E> clazz) {
 //		return getConfig().getDefaultListableBeanFactory().getBean(clazz);
 //	}
-	
+
 }

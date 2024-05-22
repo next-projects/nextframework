@@ -18,6 +18,7 @@ package org.stjs.generator.scope;
 import org.stjs.generator.type.MethodWrapper;
 
 public class MethodsWithScope {
+
 	private final Scope scope;
 	private final MethodWrapper method;
 

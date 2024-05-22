@@ -1,16 +1,17 @@
 package org.nextframework.report.generator.data;
 
 public class GroupElement {
-	
+
 	String name;
 	String pattern;
 
 	public GroupElement() {
 	}
-	
+
 	public GroupElement(String name) {
 		this.name = name;
 	}
+
 	public GroupElement(String name, String pattern) {
 		this.name = name;
 		this.pattern = pattern;
@@ -59,6 +60,5 @@ public class GroupElement {
 			return false;
 		return true;
 	}
-
 
 }

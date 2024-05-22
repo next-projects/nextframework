@@ -36,5 +36,5 @@ public class ProcessAuthorization implements UserAuthorization {
 	public void setCanExecute(boolean canGenerate) {
 		this.canExecute = canGenerate;
 	}
-	
+
 }

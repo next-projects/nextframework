@@ -9,16 +9,14 @@ import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
 
-
 public class TestJdbc {
 
 	@Before
-	public void setUp() throws ClassNotFoundException, SQLException{
-        createConnection();
-        createDb();
+	public void setUp() throws ClassNotFoundException, SQLException {
+		createConnection();
+		createDb();
 	}
-	
-	
+
 	protected void createDb() throws SQLException {
 	}
 
@@ -28,7 +26,8 @@ public class TestJdbc {
 	}
 
 	@After
-	public void tearDown() throws SQLException{
+	public void tearDown() throws SQLException {
 		stopConnection();
 	}
+
 }

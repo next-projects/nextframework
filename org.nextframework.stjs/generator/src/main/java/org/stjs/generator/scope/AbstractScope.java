@@ -129,7 +129,6 @@ public abstract class AbstractScope implements Scope {
 		if (variable != null) {
 			return new VariableWithScope(this, variable);
 		}
-
 		if (parent != null) {
 			return parent.resolveVariable(name);
 		}

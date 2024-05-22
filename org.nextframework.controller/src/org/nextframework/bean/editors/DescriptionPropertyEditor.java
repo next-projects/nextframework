@@ -31,12 +31,10 @@ import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
 import org.springframework.util.StringUtils;
 
-public class DescriptionPropertyEditor extends PropertyEditorSupport{
-	
+public class DescriptionPropertyEditor extends PropertyEditorSupport {
+
 	private String name;
 	private Class<?> clazz;
-
-
 
 	public DescriptionPropertyEditor(String name, Class<?> clazz) {
 		super();
@@ -44,16 +42,14 @@ public class DescriptionPropertyEditor extends PropertyEditorSupport{
 		this.clazz = clazz;
 	}
 
-
-
 	@Override
 	public String getAsText() {
-		if(getValue()!=null){
+		if (getValue() != null) {
 			try {
 				ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-				Method method = reflectionCache.getMethod(clazz, "get"+StringUtils.capitalize(name));
+				Method method = reflectionCache.getMethod(clazz, "get" + StringUtils.capitalize(name));
 				Object valor = method.invoke(getValue());
-				if(valor!=null){
+				if (valor != null) {
 					return valor.toString();
 				}
 			} catch (SecurityException e) {
@@ -70,4 +66,5 @@ public class DescriptionPropertyEditor extends PropertyEditorSupport{
 		}
 		return null;
 	}
+
 }

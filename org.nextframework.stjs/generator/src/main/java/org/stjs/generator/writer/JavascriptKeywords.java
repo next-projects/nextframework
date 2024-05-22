@@ -30,6 +30,7 @@ import org.stjs.generator.ast.SourcePosition;
  * 
  */
 public class JavascriptKeywords {
+
 	private static final Set<String> keywords = new HashSet<String>();
 	static {
 		keywords.add("var");
@@ -50,4 +51,5 @@ public class JavascriptKeywords {
 					+ name);
 		}
 	}
+
 }

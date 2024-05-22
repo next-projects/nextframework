@@ -8,7 +8,7 @@ public class ChartElement {
 	public static final String SHOW_ALL = "showall";
 	public static final String LIMIT = "limit";
 	public static final String GROUP = "group";
-	
+
 	String type;
 	String groupProperty;
 	String groupLevel;
@@ -21,13 +21,13 @@ public class ChartElement {
 	String propertiesAsSeries;
 	String seriesLimitType;
 	boolean ignoreEmptySeriesAndGroups;
-	
+
 	List<ChartSerieElement> series = new ArrayList<ChartSerieElement>();
-	
+
 	public List<ChartSerieElement> getSeries() {
 		return series;
 	}
-	
+
 	public boolean isIgnoreEmptySeriesAndGroups() {
 		return ignoreEmptySeriesAndGroups;
 	}
@@ -47,53 +47,67 @@ public class ChartElement {
 	public String getSeriesProperty() {
 		return seriesProperty;
 	}
+
 	public String getPropertiesAsSeries() {
 		return propertiesAsSeries;
 	}
+
 	public void setSeriesProperty(String seriesProperty) {
 		this.seriesProperty = seriesProperty;
 	}
+
 	public void setPropertiesAsSeries(String propertiesAsSeries) {
 		this.propertiesAsSeries = propertiesAsSeries;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public String getGroupProperty() {
 		return groupProperty;
 	}
+
 	public String getValueProperty() {
 		return valueProperty;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	public void setGroupProperty(String groupProperty) {
 		this.groupProperty = groupProperty;
 	}
+
 	public void setValueProperty(String valueProperty) {
 		this.valueProperty = valueProperty;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getGroupLevel() {
 		return groupLevel;
 	}
+
 	public void setGroupLevel(String groupLevel) {
 		this.groupLevel = groupLevel;
 	}
+
 	public String getValueAggregate() {
 		return valueAggregate;
 	}
+
 	public void setValueAggregate(String valueAggregate) {
 		this.valueAggregate = valueAggregate;
 	}
-	
-	
+
 	public String getGroupTitle() {
 		return groupTitle;
 	}
@@ -113,10 +127,10 @@ public class ChartElement {
 	@Override
 	public String toString() {
 		String format = String
-		.format(
-				"%n\t\t%s [groupProperty=%s, seriesProperty=%s, valueProperty=%s, valueAggregate=%s, title=%s]",
-				type.toUpperCase(), groupProperty + (groupLevel != null? "("+groupLevel+")": ""), seriesProperty, valueProperty, valueAggregate, title);
-		if(series == null || series.size() == 0){
+				.format(
+						"%n\t\t%s [groupProperty=%s, seriesProperty=%s, valueProperty=%s, valueAggregate=%s, title=%s]",
+						type.toUpperCase(), groupProperty + (groupLevel != null ? "(" + groupLevel + ")" : ""), seriesProperty, valueProperty, valueAggregate, title);
+		if (series == null || series.size() == 0) {
 			return format;
 		} else {
 			return format + "\n\t\t\tSeries=" + series;
@@ -216,5 +230,5 @@ public class ChartElement {
 			return false;
 		return true;
 	}
-	
+
 }

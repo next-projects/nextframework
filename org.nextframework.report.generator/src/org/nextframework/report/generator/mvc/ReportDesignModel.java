@@ -6,22 +6,21 @@ import java.util.Set;
 import org.nextframework.report.generator.ReportElement;
 
 public class ReportDesignModel {
-	
+
 	Integer id;
 
 	Class<?> selectedType;//this can be different of usertype if generated in runtime
 	Class<?> selectedGeneratedType;//usertype is the type that exists in the project
-	
+
 	String reportTitle;
-	
+
 	Boolean reportPublic = false;
-	
+
 	ReportElement reportElement;
 	Set<String> properties = new LinkedHashSet<String>();
-	
+
 	String reportXml;
-	
-	
+
 	public ReportElement getReportElement() {
 		return reportElement;
 	}
@@ -85,4 +84,5 @@ public class ReportDesignModel {
 	public void setSelectedGeneratedType(Class<?> selectedUserType) {
 		this.selectedGeneratedType = selectedUserType;
 	}
+
 }

@@ -290,7 +290,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 		n.getIterable().accept(this, context);
 		printer.print(") ");
 		boolean hasBlockBody = n.getBody() instanceof BlockStmt;
-
 		// add braces when we have one line statement
 		if (!hasBlockBody) {
 			printer.printLn("{");
@@ -298,7 +297,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			generateArrayHasOwnProperty(n, context);
 		}
 		n.getBody().accept(this, context);
-
 		if (!hasBlockBody) {
 			printer.printLn();
 			printer.unindent();
@@ -404,7 +402,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 	public void visit(VariableDeclarationExpr n, GenerationContext context) {
 		// skip type
 		printer.print("var ");
-
 		for (Iterator<VariableDeclarator> i = n.getVars().iterator(); i.hasNext();) {
 			VariableDeclarator v = i.next();
 			printVariableDeclarator(v, context, false);
@@ -587,6 +584,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 
 	@Override
 	public void visit(ObjectCreationExpr n, GenerationContext context) {
+
 		InitializerDeclaration block = getInitializerDeclaration(n);
 		if (block != null) {
 			// special construction for object initialization new Object(){{x = 1; y = 2; }};
@@ -634,6 +632,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 		printer.print("new ");
 		n.getType().accept(this, context);
 		printArguments(n.getArgs(), context);
+
 	}
 
 	@Override
@@ -650,6 +649,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 	}
 
 	private void addCallToSuper(ClassScope classScope, GenerationContext context, Collection<Expression> args) {
+
 		PreConditions.checkNotNull(classScope);
 
 		Option<ClassWrapper> superClass = classScope.getClazz().getSuperclass();
@@ -669,6 +669,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			printer.print(";");
 
 		}
+
 	}
 
 	@Override
@@ -719,6 +720,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 	}
 
 	private List<TypeWrapper> getImplementsOrExtends(ClassOrInterfaceDeclaration n) {
+
 		List<TypeWrapper> types = new ArrayList<TypeWrapper>();
 
 		if (n.getExtends() != null) {
@@ -738,11 +740,13 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 				}
 			}
 		}
+
 		return types;
 	}
 
 	@Override
 	public void visit(ClassOrInterfaceDeclaration n, GenerationContext context) {
+
 		printComments(n, context);
 
 		ClassScope scope = (ClassScope) scope(n);
@@ -783,7 +787,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 				addCallToSuper(scope, context, Collections.<Expression> emptyList());
 				printer.printLn("};");
 			}
-
 			// XXX it's not really working for multiple extends
 			List<TypeWrapper> implementsOrExtends = getImplementsOrExtends(n);
 			if (implementsOrExtends.size() > 0) {
@@ -800,8 +803,10 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			}
 			printMembers(n.getMembers(), context);
 		}
+
 		printTypeDescription(n, context);
 		printMainMethodCall(n);
+
 	}
 
 	/**
@@ -811,6 +816,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 	 *         arguments:[args..]}
 	 */
 	private String stjsNameInfo(TypeWrapper typeWrapper) {
+
 		// We may want to use a more complex naming scheme, to avoid conflicts across packages
 		if (typeWrapper instanceof ParameterizedTypeWrapper) {
 			ParameterizedTypeWrapper pt = (ParameterizedTypeWrapper) typeWrapper;
@@ -840,9 +846,11 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			s.append("}");
 			return s.toString();
 		}
+
 		if (ClassUtils.isBasicType(typeWrapper)) {
 			return "null";
 		}
+
 		return "\"" + names.getTypeName(typeWrapper) + "\"";
 	}
 
@@ -853,6 +861,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 	 * @param context
 	 */
 	private void printTypeDescription(ClassOrInterfaceDeclaration n, GenerationContext context) {
+
 		TypeWrapper type = resolvedType(n);
 		if (isGlobal(type)) {
 			return;
@@ -896,11 +905,14 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 				}
 			}
 		}
+
 		printer.print("}");
 		if (generateSuperClass) {
 			printer.print(")");
 		}
+
 		printer.printLn(";");
+
 	}
 
 	private void printMembers(List<BodyDeclaration> members, GenerationContext context) {
@@ -961,19 +973,16 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 	public void visit(EnumConstantDeclaration n, GenerationContext context) {
 		// the enum constants are processed within the EnumDeclaration node. So this node should not be visited
 		throw new IllegalStateException("Unexpected visit in a EnumConstantDeclaration node:" + n);
-
 	}
 
 	@Override
 	public void visit(AnnotationDeclaration n, GenerationContext context) {
 		// skip
-
 	}
 
 	@Override
 	public void visit(AnnotationMemberDeclaration n, GenerationContext context) {
 		// skip
-
 	}
 
 	@Override
@@ -1036,14 +1045,11 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 					printer.print(", ");
 				}
 			}
-
 		}
 		printer.print("]");
 	}
 
 	/**
-	 * 
-	 * 
 	 * @param n
 	 * @return true if the node is a direct child following the path:
 	 *         //ObjectCreationExpr/InitializerDeclaration/BlockStmt/Child
@@ -1073,6 +1079,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 
 	@Override
 	public void visit(AssignExpr n, GenerationContext context) {
+
 		if (isInlineObjectCreationChild(n, 2)) {
 			if (n.getTarget() instanceof FieldAccessExpr) {
 				// in inline object creation "this." should be removed
@@ -1082,12 +1089,12 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			}
 			printer.print(" ");
 			switch (n.getOperator()) {
-			case assign:
-				printer.print(":");
-				break;
-			default:
-				throw new JavascriptGenerationException(context.getInputFile(), new SourcePosition(n),
-						"Cannot have this assign operator inside an inline object creation block");
+				case assign:
+					printer.print(":");
+					break;
+				default:
+					throw new JavascriptGenerationException(context.getInputFile(), new SourcePosition(n),
+							"Cannot have this assign operator inside an inline object creation block");
 			}
 			printer.print(" ");
 			n.getValue().accept(this, context);
@@ -1097,46 +1104,45 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 		n.getTarget().accept(this, context);
 		printer.print(" ");
 		switch (n.getOperator()) {
-		case assign:
-			printer.print("=");
-			break;
-		case and:
-			printer.print("&=");
-			break;
-		case or:
-			printer.print("|=");
-			break;
-		case xor:
-			printer.print("^=");
-			break;
-		case plus:
-			printer.print("+=");
-			break;
-		case minus:
-			printer.print("-=");
-			break;
-		case rem:
-			printer.print("%=");
-			break;
-		case slash:
-			printer.print("/=");
-			break;
-		case star:
-			printer.print("*=");
-			break;
-		case lShift:
-			printer.print("<<=");
-			break;
-		case rSignedShift:
-			printer.print(">>=");
-			break;
-		case rUnsignedShift:
-			printer.print(">>>=");
-			break;
+			case assign:
+				printer.print("=");
+				break;
+			case and:
+				printer.print("&=");
+				break;
+			case or:
+				printer.print("|=");
+				break;
+			case xor:
+				printer.print("^=");
+				break;
+			case plus:
+				printer.print("+=");
+				break;
+			case minus:
+				printer.print("-=");
+				break;
+			case rem:
+				printer.print("%=");
+				break;
+			case slash:
+				printer.print("/=");
+				break;
+			case star:
+				printer.print("*=");
+				break;
+			case lShift:
+				printer.print("<<=");
+				break;
+			case rSignedShift:
+				printer.print(">>=");
+				break;
+			case rUnsignedShift:
+				printer.print(">>>=");
+				break;
 		}
 		printer.print(" ");
 		n.getValue().accept(this, context);
-
 	}
 
 	@Override
@@ -1144,63 +1150,63 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 		n.getLeft().accept(this, context);
 		printer.print(" ");
 		switch (n.getOperator()) {
-		case or:
-			printer.print("||");
-			break;
-		case and:
-			printer.print("&&");
-			break;
-		case binOr:
-			printer.print("|");
-			break;
-		case binAnd:
-			printer.print("&");
-			break;
-		case xor:
-			printer.print("^");
-			break;
-		case equals:
-			printer.print("==");
-			break;
-		case notEquals:
-			printer.print("!=");
-			break;
-		case less:
-			printer.print("<");
-			break;
-		case greater:
-			printer.print(">");
-			break;
-		case lessEquals:
-			printer.print("<=");
-			break;
-		case greaterEquals:
-			printer.print(">=");
-			break;
-		case lShift:
-			printer.print("<<");
-			break;
-		case rSignedShift:
-			printer.print(">>");
-			break;
-		case rUnsignedShift:
-			printer.print(">>>");
-			break;
-		case plus:
-			printer.print("+");
-			break;
-		case minus:
-			printer.print("-");
-			break;
-		case times:
-			printer.print("*");
-			break;
-		case divide:
-			printer.print("/");
-			break;
-		case remainder:
-			printer.print("%");
-			break;
+			case or:
+				printer.print("||");
+				break;
+			case and:
+				printer.print("&&");
+				break;
+			case binOr:
+				printer.print("|");
+				break;
+			case binAnd:
+				printer.print("&");
+				break;
+			case xor:
+				printer.print("^");
+				break;
+			case equals:
+				printer.print("==");
+				break;
+			case notEquals:
+				printer.print("!=");
+				break;
+			case less:
+				printer.print("<");
+				break;
+			case greater:
+				printer.print(">");
+				break;
+			case lessEquals:
+				printer.print("<=");
+				break;
+			case greaterEquals:
+				printer.print(">=");
+				break;
+			case lShift:
+				printer.print("<<");
+				break;
+			case rSignedShift:
+				printer.print(">>");
+				break;
+			case rUnsignedShift:
+				printer.print(">>>");
+				break;
+			case plus:
+				printer.print("+");
+				break;
+			case minus:
+				printer.print("-");
+				break;
+			case times:
+				printer.print("*");
+				break;
+			case divide:
+				printer.print("/");
+				break;
+			case remainder:
+				printer.print("%");
+				break;
 		}
 		printer.print(" ");
 		n.getRight().accept(this, context);
@@ -1306,7 +1312,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			}
 			printer.print(names.getMethodName(method));
 			printArguments(n.getArgs(), context);
-
 		}
 	}
 
@@ -1346,7 +1351,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 				return;
 			}
 		}
-
 		printer.print(n.getName());
 	}
 
@@ -1374,48 +1378,44 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 	@Override
 	public void visit(UnaryExpr n, GenerationContext context) {
 		switch (n.getOperator()) {
-		case positive:
-			printer.print("+");
-			break;
-		case negative:
-			printer.print("-");
-			break;
-		case inverse:
-			printer.print("~");
-			break;
-		case not:
-			printer.print("!");
-			break;
-		case preIncrement:
-			printer.print("++");
-			break;
-		case preDecrement:
-			printer.print("--");
-			break;
+			case positive:
+				printer.print("+");
+				break;
+			case negative:
+				printer.print("-");
+				break;
+			case inverse:
+				printer.print("~");
+				break;
+			case not:
+				printer.print("!");
+				break;
+			case preIncrement:
+				printer.print("++");
+				break;
+			case preDecrement:
+				printer.print("--");
+				break;
 		}
-
 		n.getExpr().accept(this, context);
-
 		switch (n.getOperator()) {
-		case posIncrement:
-			printer.print("++");
-			break;
-		case posDecrement:
-			printer.print("--");
-			break;
+			case posIncrement:
+				printer.print("++");
+				break;
+			case posDecrement:
+				printer.print("--");
+				break;
 		}
 	}
 
 	@Override
 	public void visit(SingleMemberAnnotationExpr n, GenerationContext context) {
 		// skip
-
 	}
 
 	@Override
 	public void visit(NormalAnnotationExpr n, GenerationContext context) {
 		// skip
-
 	}
 
 	@Override
@@ -1430,7 +1430,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			throw new JavascriptGenerationException(context.getInputFile(), new SourcePosition(n),
 					"Only one constructor is allowed");
 		}
-
 		ClassScope classScope = scope(n).closest(ClassScope.class);
 		addCallToSuper(classScope, context, n.getArgs());
 	}
@@ -1460,9 +1459,7 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 		if (!context.getConfiguration().isGenerateArrayHasOwnProperty()) {
 			return;
 		}
-
 		TypeWrapper iterated = resolvedType(n.getIterable());
-
 		if (!iterated.isAssignableFrom(TypeWrappers.wrap(Array.class))) {
 			return;
 		}
@@ -1496,7 +1493,6 @@ public class JavascriptWriterVisitor implements VoidVisitor<GenerationContext> {
 			printer.unindent();
 		}
 		printer.print("}");
-
 	}
 
 	@Override

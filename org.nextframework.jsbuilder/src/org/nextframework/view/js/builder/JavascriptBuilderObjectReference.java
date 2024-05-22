@@ -8,16 +8,16 @@ public class JavascriptBuilderObjectReference extends JavascriptObjectReference 
 	public JavascriptBuilderObjectReference(JavascriptInstance instance) {
 		super(getScript().generateUniqueId("reference"), instance);
 	}
-	
+
 	public JavascriptBuilderObjectReference(String className, Object... parameters) {
 		super(getScript().generateUniqueId("reference"), className, parameters);
 		getScript().append(this);
 	}
-	
+
 	public JavascriptBuilderObjectReference() {
 		super(getScript().generateUniqueId("reference"));
 	}
-	
+
 	public JavascriptBuilderObjectReference(String variable, JavascriptInstance instance) {
 		super(variable, instance);
 		getScript().append(this);
@@ -32,7 +32,7 @@ public class JavascriptBuilderObjectReference extends JavascriptObjectReference 
 		super(variable);
 		getScript().append(this);
 	}
-	
+
 	public String call(String function, Object... parameters) {
 		String call = super.call(function, parameters);
 		getScript().append(call);
@@ -42,11 +42,12 @@ public class JavascriptBuilderObjectReference extends JavascriptObjectReference 
 	protected static JavascriptBuilderContext getScript() {
 		return JavascriptBuilderContext.getContext();
 	}
-	
+
 	public static void main(String[] args) {
 		JavascriptBuilderObjectReference ref = new JavascriptBuilderObjectReference("teste", "classe", "objetos");
 		ref.call("funcao", "param1", "param2", new JavascriptBuilderMap("mapa", "valor"));
-		
+
 		System.out.println(JavascriptBuilderContext.getContext());
 	}
+
 }

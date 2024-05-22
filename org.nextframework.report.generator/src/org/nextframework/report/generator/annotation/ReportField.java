@@ -12,8 +12,9 @@ public @interface ReportField {
 	String[] usingFields() default {};
 
 	boolean filter() default false;
-	
+
 	boolean requiredFilter() default false;
-	
+
 	int suggestedWidth() default 0;
+
 }

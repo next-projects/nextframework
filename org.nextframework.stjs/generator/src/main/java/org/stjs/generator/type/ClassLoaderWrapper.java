@@ -95,12 +95,10 @@ public class ClassLoaderWrapper {
 					break;
 				}
 			}
-
 			if (!found) {
 				throw typeNotAllowedException(clazz);
 			}
 		}
-
 		resolvedClasses.add(clazz.getName());
 	}
 

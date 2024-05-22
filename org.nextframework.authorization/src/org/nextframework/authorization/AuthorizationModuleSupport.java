@@ -34,28 +34,29 @@ package org.nextframework.authorization;
  */
 public abstract class AuthorizationModuleSupport implements AuthorizationModule {
 
-    private Class<?> controllerClass;
+	private Class<?> controllerClass;
 	private String path;
 
 	public boolean isAuthorized(String action, Permission[] permissions) {
-        return isAuthorized(action, createAuthorization(permissions));
-    }
-    
-    @Override
-    public void setControllerClass(Class<?> controllerClass) {
-    	this.controllerClass = controllerClass;
-    }
-    
-    @Override
-    public void setPath(String path) {
-    	this.path = path;
-    }
-    
-    public Class<?> getControllerClass() {
+		return isAuthorized(action, createAuthorization(permissions));
+	}
+
+	@Override
+	public void setControllerClass(Class<?> controllerClass) {
+		this.controllerClass = controllerClass;
+	}
+
+	@Override
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public Class<?> getControllerClass() {
 		return controllerClass;
 	}
-    
-    public String getPath() {
+
+	public String getPath() {
 		return path;
 	}
+
 }

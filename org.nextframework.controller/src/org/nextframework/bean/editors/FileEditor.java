@@ -45,11 +45,11 @@ public class FileEditor extends ByteArrayPropertyEditor {
 			try {
 				File file = createFile(value);
 				String name = multipartFile.getOriginalFilename();
-				name = name.replace('\\','/');
+				name = name.replace('\\', '/');
 				if (name.contains("/")) {
 					name = name.substring(name.indexOf('/'));
 				}
-				
+
 				file.setName(name);
 				file.setContenttype(multipartFile.getContentType());
 				file.setContent(multipartFile.getBytes());
@@ -59,7 +59,7 @@ public class FileEditor extends ByteArrayPropertyEditor {
 				logger.error("Cannot read contents of multipart file", ex);
 				throw new IllegalArgumentException("Cannot read contents of multipart file: " + ex.getMessage());
 			}
-		} else if(value instanceof File){
+		} else if (value instanceof File) {
 			super.setValue(value);
 		}
 	}

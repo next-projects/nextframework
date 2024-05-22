@@ -29,53 +29,55 @@ public class FunctionParameter {
 	private String parameterValue;
 	@Deprecated
 	private String absoluteParameterValue;
-	
-	public FunctionParameter(String parameterValue){
+
+	public FunctionParameter(String parameterValue) {
 		this.parameterValue = parameterValue;
 		calculateType();
 	}
-	
-	public FunctionParameter(String parameterValue, ParameterType parameterType){
+
+	public FunctionParameter(String parameterValue, ParameterType parameterType) {
 		this.parameterValue = parameterValue;
 		this.parameterType = parameterType;
 	}
 
 	private void calculateType() {
-		if(parameterValue.startsWith("\"") || parameterValue.startsWith("\'")){
+		if (parameterValue.startsWith("\"") || parameterValue.startsWith("\'")) {
 			this.parameterType = ParameterType.STRING;
 		} else {
-			this.parameterType = ParameterType.REFERENCE;	
+			this.parameterType = ParameterType.REFERENCE;
 		}
-		
+
 	}
-	
+
 	public ParameterType getParameterType() {
 		return parameterType;
 	}
-	
+
 	public String getParameterValue() {
 		return parameterValue;
 	}
-	
+
 	@Deprecated
 	public String getAbsoluteParameterValue() {
 		return absoluteParameterValue;
 	}
+
 	@Deprecated
 	public void setAbsoluteParameterValue(String absoluteParameterValue) {
 		this.absoluteParameterValue = absoluteParameterValue;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof FunctionParameter)){
+		if (!(obj instanceof FunctionParameter)) {
 			return false;
 		}
-		return parameterType.equals(((FunctionParameter)obj).getParameterType());
+		return parameterType.equals(((FunctionParameter) obj).getParameterType());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return parameterValue.hashCode();
 	}
+
 }

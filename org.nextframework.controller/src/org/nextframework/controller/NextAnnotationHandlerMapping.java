@@ -9,14 +9,15 @@ public class NextAnnotationHandlerMapping extends DefaultAnnotationHandlerMappin
 
 	@Override
 	protected String[] determineUrlsForHandler(String beanName) {
+
 		String[] result;
 		String[] urlsForHandler = super.determineUrlsForHandler(beanName);
-		
-		ApplicationContext context = getApplicationContext(); 
-		
+
+		ApplicationContext context = getApplicationContext();
+
 		Controller mapping = context.findAnnotationOnBean(beanName, Controller.class);
 		if (mapping != null) {
-			if(urlsForHandler != null){
+			if (urlsForHandler != null) {
 				String[] path = mapping.path();
 				result = new String[path.length + urlsForHandler.length];
 				System.arraycopy(path, 0, result, 0, path.length);
@@ -28,26 +29,28 @@ public class NextAnnotationHandlerMapping extends DefaultAnnotationHandlerMappin
 			result = urlsForHandler;
 		}
 //		System.out.println(beanName+" <> "+result);
-		if(result != null && result.length > 0 && module != null){
+		if (result != null && result.length > 0 && module != null) {
 			for (String path : result) {
-				if(path.startsWith("/"+module)){
+				if (path.startsWith("/" + module)) {
 					for (int i = 0; i < result.length; i++) {
 						//TODO this will cause conflict with the super.determineUrlsForHandler
-						result[i] = result[i].substring(module.length()+1);
+						result[i] = result[i].substring(module.length() + 1);
 					}
 					return result;
 				}
 			}
 			return null;//there's no path for this module
 		}
+
 		return result;
 	}
 
 	public void setModule(String module) {
 		this.module = module;
 	}
-	
+
 	public String getModule() {
 		return module;
 	}
+
 }

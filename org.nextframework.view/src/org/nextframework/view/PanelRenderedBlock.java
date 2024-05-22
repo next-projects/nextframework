@@ -51,4 +51,5 @@ public class PanelRenderedBlock {
 	public void setProperties(Map<String, Object> properties) {
 		this.properties = properties;
 	}
+
 }

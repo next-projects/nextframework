@@ -27,11 +27,11 @@ import java.beans.PropertyEditorSupport;
 
 import org.nextframework.types.InscricaoEstadual;
 
-public class InscricaoEstadualPropertyEditor extends PropertyEditorSupport{
+public class InscricaoEstadualPropertyEditor extends PropertyEditorSupport {
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if(org.springframework.util.StringUtils.hasText(text)){
+		if (org.springframework.util.StringUtils.hasText(text)) {
 			setValue(new InscricaoEstadual(text));
 		} else {
 			setValue(null);
@@ -40,7 +40,7 @@ public class InscricaoEstadualPropertyEditor extends PropertyEditorSupport{
 
 	@Override
 	public String getAsText() {
-		if(getValue() == null){
+		if (getValue() == null) {
 			return "";
 		}
 		return getValue().toString();

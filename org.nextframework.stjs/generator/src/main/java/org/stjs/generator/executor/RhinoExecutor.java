@@ -27,6 +27,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 public class RhinoExecutor {
+
 	private Object addScript(ScriptEngine engine, File scriptFile) throws ScriptException {
 		FileReader input = null;
 		try {
@@ -59,4 +60,5 @@ public class RhinoExecutor {
 		}
 		return new ExecutionResult(result, null, null, 0);
 	}
+
 }

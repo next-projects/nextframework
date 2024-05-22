@@ -31,14 +31,14 @@ import java.text.NumberFormat;
 import org.nextframework.types.Money;
 import org.springframework.util.StringUtils;
 
-public class MoneyPropertyEditor extends PropertyEditorSupport{
+public class MoneyPropertyEditor extends PropertyEditorSupport {
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if(StringUtils.hasText(text)){
+		if (StringUtils.hasText(text)) {
 			try {
 				text = text.replace(".", "");
-				text = text.replace(',', '.');			
+				text = text.replace(',', '.');
 				setValue(new Money(text));
 			} catch (NumberFormatException e) {
 				throw new IllegalArgumentException(e);
@@ -50,7 +50,8 @@ public class MoneyPropertyEditor extends PropertyEditorSupport{
 
 	@Override
 	public String getAsText() {
-		if(getValue() == null) return null;
+		if (getValue() == null)
+			return null;
 		Money money = (Money) getValue();
 		BigDecimal value = money.getValue();
 		NumberFormat numberFormat = new DecimalFormat("#,##0.00");

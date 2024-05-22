@@ -4,26 +4,26 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class TimeZoneUtils {
-	
-	public Date fromZoneTimeToGMT(Date date){
+
+	public Date fromZoneTimeToGMT(Date date) {
 		Calendar c = Calendar.getInstance();
 		return fromZoneTimeToGMT(c, date);
 	}
-	
+
 	public Date fromGMTToZoneTime(Date date) {
 		Calendar c = Calendar.getInstance();
 		return fromGMTToZoneTime(c, date);
 	}
-	
-	public Date fromZoneTimeToGMT(Calendar c, Date date){
-		if(date == null){
+
+	public Date fromZoneTimeToGMT(Calendar c, Date date) {
+		if (date == null) {
 			return null;
 		}
 		return new Date(date.getTime() - c.getTimeZone().getOffset(date.getTime()));
 	}
-	
+
 	public Date fromGMTToZoneTime(Calendar c, Date date) {
-		if(date == null){
+		if (date == null) {
 			return null;
 		}
 		return new Date(date.getTime() + c.getTimeZone().getOffset(date.getTime()));
@@ -37,4 +37,5 @@ public class TimeZoneUtils {
 		System.out.println(new TimeZoneUtils().fromGMTToZoneTime(instance.getTime()));
 		System.out.println(new TimeZoneUtils().fromZoneTimeToGMT(instance.getTime()));
 	}
+
 }

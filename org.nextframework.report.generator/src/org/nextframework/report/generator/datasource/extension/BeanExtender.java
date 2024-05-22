@@ -34,11 +34,13 @@ public class BeanExtender {
 	}
 
 	private void checkServices(List<?> services) {
+
 		for (Object service : services) {
 			servicesMap.put(service.getClass(), service);
 			Method[] methods = service.getClass().getMethods();
 			for (Method method : methods) {
 				if (isExtensionElegible(method)) {
+
 					Class<?> classToExtend = method.getParameterTypes()[0];
 
 					ExtensionInfo extensionInfo = new ExtensionInfo();
@@ -53,9 +55,11 @@ public class BeanExtender {
 						extensions.put(classToExtend, list);
 					}
 					list.add(extensionInfo);
+
 				}
 			}
 		}
+
 	}
 
 	private boolean isExtensionElegible(Method method) {
@@ -69,6 +73,7 @@ public class BeanExtender {
 
 	@SuppressWarnings("rawtypes")
 	public Class createExtendedClassForBeanClass(Class x) {
+
 		List<ExtensionInfo> extensionInfoList = getExtensionsFor(x);
 
 		if (extensionInfoList == null || extensionInfoList.size() == 0) {
@@ -109,7 +114,6 @@ public class BeanExtender {
 			} else {
 				overritenMethod.call("delegate$$bean." + method.getName(), parameterArgs);
 			}
-
 			Annotation[] annotations = method.getAnnotations();
 			for (Annotation annotation : annotations) {
 //				if(!annotation.annotationType().equals(ExtendBean.class)){
@@ -161,6 +165,7 @@ public class BeanExtender {
 		} catch (Exception e) {
 			throw new RuntimeException("cannot extend bean class", e);
 		}
+
 	}
 
 	@SuppressWarnings("rawtypes")

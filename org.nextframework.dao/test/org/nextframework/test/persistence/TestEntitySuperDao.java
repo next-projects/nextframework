@@ -15,12 +15,12 @@ import javax.persistence.OneToMany;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class TestEntitySuperDao {
-	
+
 	Long id;
 	String name;
-	
+
 	List<TestEntityChild> children;
-	
+
 	TestEntityFile entityFile;
 
 	@Id
@@ -32,7 +32,8 @@ public class TestEntitySuperDao {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@Column(length=200)
+
+	@Column(length = 200)
 	public String getName() {
 		return name;
 	}
@@ -40,23 +41,23 @@ public class TestEntitySuperDao {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@OneToMany(mappedBy="parentSuper")
+
+	@OneToMany(mappedBy = "parentSuper")
 	public List<TestEntityChild> getChildren() {
 		return children;
 	}
-	
+
 	public void setChildren(List<TestEntityChild> children) {
 		this.children = children;
 	}
-	
-	@ManyToOne(fetch=FetchType.LAZY)
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	public TestEntityFile getEntityFile() {
 		return entityFile;
 	}
-	
+
 	public void setEntityFile(TestEntityFile entityFile) {
 		this.entityFile = entityFile;
 	}
-	
+
 }

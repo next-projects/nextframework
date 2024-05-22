@@ -18,6 +18,7 @@ package org.stjs.generator.scope;
 import org.stjs.generator.variable.Variable;
 
 public class VariableWithScope {
+
 	private final Scope scope;
 	private final Variable variable;
 

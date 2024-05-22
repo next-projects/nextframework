@@ -25,22 +25,18 @@ package org.nextframework.validation;
 
 import java.lang.annotation.Annotation;
 
-
 public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtractor {
-	
+
 	public static final String VALIDATOR_ANNOTATION_EXTRACTOR_BEAN_NAME = "validatorAnnotationExtractor";
-	
+
 	// private static final Log log = LogFactory.getLog(ObjectAnnotationValidator.class);
 
-	
 	// registro com as validações possíveis
 	protected ValidatorRegistry validatorRegistry;
 
 	public ValidatorAnnotationExtractorImpl(ValidatorRegistry registry) {
 		validatorRegistry = registry;
 	}
-
-
 
 //	public List<ValidationItem> getValidationItens(Class clazz) {
 //		
@@ -57,7 +53,6 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 //		return validationItens;
 //	}
 
-
 	/* (non-Javadoc)
 	 * @see org.nextframework.validation.ValidatorAnnotationExtractor#getValidationItem(java.lang.String, java.lang.Class, java.lang.annotation.Annotation[])
 	 */
@@ -69,8 +64,7 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 		//validationItem.setMethod(method);
 		Annotation[] methodAnnotations = annotations;
 		for (Annotation annotation : methodAnnotations) {
-			
-			if(validatorRegistry.getPropertyValidator(annotation.annotationType())!=null){ 
+			if (validatorRegistry.getPropertyValidator(annotation.annotationType()) != null) {
 				// se entrar aqui quer dizer que essa anotação foi registrada para validação
 //				if (validMethod) {
 //					//methodsRequiringValidation.add(method);
@@ -85,14 +79,11 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 		}
 		Class<?> returnType = type;
 		PropertyValidator typeValidator = validatorRegistry.getTypeValidator(returnType);
-		if (typeValidator!=null) {
+		if (typeValidator != null) {
 			validationItem.setTypeValidator(typeValidator);
 		}
-		
 		return validationItem;
 	}
-
-
 
 	public ValidationItem getValidationItem(String fieldName, String type, Annotation[] annotations) {
 		//boolean validMethod = isGetterMethod(method);
@@ -102,8 +93,7 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 		//validationItem.setMethod(method);
 		Annotation[] methodAnnotations = annotations;
 		for (Annotation annotation : methodAnnotations) {
-			
-			if(validatorRegistry.getPropertyValidator(annotation.annotationType())!=null){ 
+			if (validatorRegistry.getPropertyValidator(annotation.annotationType()) != null) {
 				// se entrar aqui quer dizer que essa anotação foi registrada para validação
 //				if (validMethod) {
 //					//methodsRequiringValidation.add(method);
@@ -118,14 +108,12 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 		}
 		String returnType = type;
 		PropertyValidator typeValidator = validatorRegistry.getTypeValidator(returnType);
-		if (typeValidator!=null) {
+		if (typeValidator != null) {
 			validationItem.setTypeValidator(typeValidator);
 		}
-		
 		return validationItem;
 	}
-	
-	
+
 //	private boolean isGetterMethod(Method method) {
 //		if(method.getName().startsWith("get")||method.getName().startsWith("is")){
 //			if (method.getParameterTypes().length==0) {
@@ -136,12 +124,10 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 //		}
 //		return false;
 //	}
-	
+
 //	public static ValidatorAnnotationExtractor getValidatorAnnotationExtractor(ServletContext servletContext){
 //		ValidatorAnnotationExtractor extractor = (ValidatorAnnotationExtractor) WebApplicationContextUtils.getWebApplicationContext(servletContext).getBean(VALIDATOR_ANNOTATION_EXTRACTOR_BEAN_NAME);
 //		return extractor;
 //	}
 
-	
-	
 }

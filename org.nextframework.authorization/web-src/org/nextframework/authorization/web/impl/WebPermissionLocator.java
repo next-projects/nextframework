@@ -80,7 +80,7 @@ public class WebPermissionLocator implements PermissionLocator {
 				throw new IllegalStateException("The AuthorizationDAO has returned null for method savePermission. user=" + user.getUsername() + ", resource=" + resource + ". Check your AuthorizationDAO implementation. (" + authorizationDAO + ")");
 			}
 		}
-		
+
 		return permissions;
 	}
 
@@ -127,7 +127,8 @@ public class WebPermissionLocator implements PermissionLocator {
 		Map<String, String> defaultPermissionMap = new HashMap<String, String>();
 		for (AuthorizationItem item : authorizationItens) {
 			String id = item.getId();
-			if(item.getValues()== null || item.getValues().length == 0) throw new IllegalArgumentException("Os valores possíveis de um item de autorização não pode ser um array vazio ou null");
+			if (item.getValues() == null || item.getValues().length == 0)
+				throw new IllegalArgumentException("Os valores possíveis de um item de autorização não pode ser um array vazio ou null");
 			String valorMaisRestritivo = item.getValues()[item.getValues().length - 1];
 			defaultPermissionMap.put(id, valorMaisRestritivo);
 		}

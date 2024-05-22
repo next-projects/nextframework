@@ -7,8 +7,10 @@ import java.util.Collection;
  * @author rogelgarcia
  *
  */
-public interface TypedValue<E> extends Collection<E>{
+public interface TypedValue<E> extends Collection<E> {
 
 	Class<E> getCollectionItemType();
+
 	Collection<E> getOriginalCollection();
+
 }

@@ -44,11 +44,11 @@ package org.nextframework.compilation;
 public class SourceCodeUtils {
 
 	public static String packageDeclaration(Class<?> type, String suffix) {
-		return "package " + type.getName().substring(0, type.getName().lastIndexOf(type.getSimpleName())) + suffix+";\n";
+		return "package " + type.getName().substring(0, type.getName().lastIndexOf(type.getSimpleName())) + suffix + ";\n";
 	}
-	
+
 	public static String importDeclaration(Class<?> class1) {
-		return "import "+class1.getName()+";\n";
+		return "import " + class1.getName() + ";\n";
 	}
 
 	/**
@@ -91,11 +91,11 @@ public class SourceCodeUtils {
 		StringBuilder sb = new StringBuilder(str.length());
 		if (capitalize) {
 			sb.append(Character.toUpperCase(str.charAt(0)));
-		}
-		else {
+		} else {
 			sb.append(Character.toLowerCase(str.charAt(0)));
 		}
 		sb.append(str.substring(1));
 		return sb.toString();
 	}
+
 }

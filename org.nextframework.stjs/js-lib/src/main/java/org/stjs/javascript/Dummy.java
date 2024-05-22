@@ -15,8 +15,8 @@
  */
 package org.stjs.javascript;
 
-
 public class Dummy {
+
 	@SuppressWarnings("unused")
 	private static String[] clazz = { "HTMLAnchorElement", "HTMLAppletElement", "HTMLAreaElement", "HTMLBaseElement",
 			"HTMLBaseFontElement", "HTMLBodyElement", "HTMLBRElement", "HTMLButtonElement", "HTMLCollection",
@@ -30,6 +30,7 @@ public class Dummy {
 			"HTMLScriptElement", "HTMLSelectElement", "HTMLStyleElement", "HTMLTableCaptionElement",
 			"HTMLTableCellElement", "HTMLTableColElement", "HTMLTableElement", "HTMLTableRowElement",
 			"HTMLTableSectionElement", "HTMLTextAreaElement", "HTMLTitleElement", "HTMLUListElement" };
+
 /*
 	public static void main2(String[] args) throws ClassNotFoundException, IOException {
 		if (true) {

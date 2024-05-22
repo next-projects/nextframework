@@ -16,5 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class FieldSet extends Element {
+
 	public Form form;
+
 }

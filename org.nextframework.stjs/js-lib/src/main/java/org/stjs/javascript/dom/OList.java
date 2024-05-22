@@ -16,7 +16,9 @@
 package org.stjs.javascript.dom;
 
 abstract public class OList extends Element {
+
 	public boolean compact;
 	public int start;
 	public String type;
+
 }

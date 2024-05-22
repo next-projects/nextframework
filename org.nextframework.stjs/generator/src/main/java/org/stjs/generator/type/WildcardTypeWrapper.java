@@ -27,6 +27,7 @@ import org.stjs.generator.utils.Option;
  * 
  */
 public class WildcardTypeWrapper implements TypeWrapper {
+
 	private final WildcardType type;
 	private final TypeWrapper[] boundsWrappers;
 
@@ -119,4 +120,5 @@ public class WildcardTypeWrapper implements TypeWrapper {
 		// TODO should this be something else !?
 		return null;
 	}
+
 }

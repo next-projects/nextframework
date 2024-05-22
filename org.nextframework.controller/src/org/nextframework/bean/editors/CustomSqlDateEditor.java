@@ -37,8 +37,7 @@ import org.springframework.util.StringUtils;
 /**
  * @author rogelgarcia
  */
-public class CustomSqlDateEditor extends PropertyEditorSupport{
-
+public class CustomSqlDateEditor extends PropertyEditorSupport {
 
 	private final DateFormat dateFormat;
 
@@ -65,12 +64,10 @@ public class CustomSqlDateEditor extends PropertyEditorSupport{
 		if (this.allowEmpty && !StringUtils.hasText(text)) {
 			// treat empty String as null value
 			setValue(null);
-		}
-		else {
+		} else {
 			try {
 				setValue(new java.sql.Date(this.dateFormat.parse(text).getTime()));
-			}
-			catch (ParseException ex) {
+			} catch (ParseException ex) {
 				throw new IllegalArgumentException("Could not parse date: " + ex.getMessage());
 			}
 		}
@@ -82,14 +79,14 @@ public class CustomSqlDateEditor extends PropertyEditorSupport{
 	public String getAsText() {
 		return (getValue() == null ? "" : this.dateFormat.format((Date) getValue()));
 	}
-    
+
 	@Override
 	public Object getValue() {
 		Object object = super.getValue();
-		if(!(object instanceof java.sql.Date) && object instanceof java.util.Date){
-			return new java.sql.Date(((java.util.Date)object).getTime());
+		if (!(object instanceof java.sql.Date) && object instanceof java.util.Date) {
+			return new java.sql.Date(((java.util.Date) object).getTime());
 		}
 		return object;
 	}
-}
 
+}

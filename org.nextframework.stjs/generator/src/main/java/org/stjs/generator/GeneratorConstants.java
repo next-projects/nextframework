@@ -18,6 +18,7 @@ package org.stjs.generator;
 import java.util.regex.Pattern;
 
 public class GeneratorConstants {
+
 	public static final String SPECIAL_THIS = "THIS";
 
 	/**
@@ -35,4 +36,5 @@ public class GeneratorConstants {
 
 	public static final Pattern NAMESPACE_PATTERN = Pattern
 			.compile("([A-Za-z_][A-Za-z_0-9]*)(?:\\.([A-Za-z_][A-Za-z_0-9]*))*");
+
 }

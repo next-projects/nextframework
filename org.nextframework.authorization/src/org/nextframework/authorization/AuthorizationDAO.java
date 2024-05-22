@@ -37,34 +37,34 @@ import java.util.Map;
  */
 public interface AuthorizationDAO {
 
-    public User findUserByUsername(String username);
-    
-    public Role[] findUserRoles(User user);
-    
-    public Permission findPermission(Role role, String controlName);
-    
-    public Permission savePermission(String controlName, Role role, Map<String, String> permissionMap);
-    
-    /**
-     * Returns all the available roles on the system
-     * @return
-     */
-    public Role[] findAllRoles();
+	public User findUserByUsername(String username);
 
-    /**
-     * Returns the last time the role authorization has been updated.<BR>
-     * This information can be used to clear cache of data based on the role authorization.<BR>
-     * The implementation of role must implement equals and hashcode.
-     * @param role
-     * @return
-     */
+	public Role[] findUserRoles(User user);
+
+	public Permission findPermission(Role role, String controlName);
+
+	public Permission savePermission(String controlName, Role role, Map<String, String> permissionMap);
+
+	/**
+	 * Returns all the available roles on the system
+	 * @return
+	 */
+	public Role[] findAllRoles();
+
+	/**
+	 * Returns the last time the role authorization has been updated.<BR>
+	 * This information can be used to clear cache of data based on the role authorization.<BR>
+	 * The implementation of role must implement equals and hashcode.
+	 * @param role
+	 * @return
+	 */
 	long getLastUpdateTime(Role role);
-	
+
 	/**
 	 * Returns the last time the some authorization has been modified.<BR>
 	 * This information can be used to clear cache of data based on authorization.
 	 * @return
 	 */
 	long getLastUpdateTime();
-    
+
 }

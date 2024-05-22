@@ -28,12 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ValidationItem {
-	
+
 	protected List<Annotation> validations = new ArrayList<Annotation>();
 	protected String fieldName;
 
 	protected PropertyValidator typeValidator;
-	
+
 	//registro com o qual esse validation item foi gerado
 //	protected ValidatorRegistry validatorRegistry;
 //	
@@ -69,13 +69,14 @@ public class ValidationItem {
 		this.fieldName = fieldName;
 		this.validations = validations;
 	}
-	
+
 	public ValidationItem() {
 	}
 
 	public List<Annotation> getValidations() {
 		return validations;
 	}
+
 	public void setValidations(List<Annotation> validations) {
 		this.validations = validations;
 	}
@@ -95,4 +96,5 @@ public class ValidationItem {
 	public void setTypeValidator(PropertyValidator typeValidator) {
 		this.typeValidator = typeValidator;
 	}
+
 }

@@ -22,11 +22,13 @@ import org.stjs.generator.type.TypeWrapper;
 public interface Scope {
 
 	public interface ScopeVisitor<T> {
+
 		T apply(CompilationUnitScope scope);
 
 		T apply(ClassScope classScope);
 
 		T apply(BasicScope basicScope);
+
 	}
 
 	<T> T apply(ScopeVisitor<T> visitor);
@@ -51,4 +53,5 @@ public interface Scope {
 	 * @return
 	 */
 	<T extends Scope> T closest(Class<T> scopeType);
+
 }

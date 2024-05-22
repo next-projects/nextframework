@@ -23,7 +23,6 @@
  */
 package org.nextframework.authorization;
 
-
 /**
  * @author rogelgarcia
  * @since 22/01/2006
@@ -32,7 +31,7 @@ package org.nextframework.authorization;
 public interface AuthorizationManager {
 
 	boolean isAuthorized(String resource, String action);
-	
+
 	boolean isAuthorized(String resource, String action, User user);
-	
+
 }

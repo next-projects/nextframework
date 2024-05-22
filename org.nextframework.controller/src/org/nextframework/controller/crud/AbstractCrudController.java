@@ -46,7 +46,7 @@ public abstract class AbstractCrudController<FILTER extends ListViewFilter, FORM
 	public static final String CREATE = "create";
 
 	public static final String UPDATE = "update";
-	
+
 	public static final String VIEW = "view";
 
 	public static final String SAVE = "save";
@@ -72,7 +72,7 @@ public abstract class AbstractCrudController<FILTER extends ListViewFilter, FORM
 		request.setAttribute(VIEW, true);
 		return doUpdate(request, form);
 	}
-	
+
 	@Action(UPDATE)
 	@OnErrors(LIST)
 	public abstract ModelAndView doUpdate(WebRequestContext request, FORMBEAN form) throws CrudException;

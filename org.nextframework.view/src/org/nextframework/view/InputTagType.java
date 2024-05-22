@@ -6,21 +6,20 @@ package org.nextframework.view;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class InputTagType {
-	
+
 	private String type;
 
-	private InputTagType(String type){
+	private InputTagType(String type) {
 		this.type = type;
 		enums.put(type, this);
 	}
-	
+
 	@Override
 	public String toString() {
 		return type;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -45,26 +44,26 @@ public class InputTagType {
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Creates a new type or return existing one if already created
 	 * @param type
 	 * @return
 	 */
-	public static InputTagType getType(String type){
+	public static InputTagType getType(String type) {
 		try {
 			return valueOf(type);
 		} catch (IllegalArgumentException e) {
 			return new InputTagType(type);
 		}
 	}
-	
+
 	private static Map<String, InputTagType> enums = new HashMap<String, InputTagType>();
 
 	public static InputTagType valueOf(String typeString) {
 		InputTagType type = enums.get(typeString);
-		if(type == null){
-			throw new IllegalArgumentException("no type found for " +typeString);
+		if (type == null) {
+			throw new IllegalArgumentException("no type found for " + typeString);
 		} else {
 			return type;
 		}

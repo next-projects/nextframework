@@ -119,7 +119,7 @@ public class TagUtils {
 	 * @param pattern TODO
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static String getObjectValueToString(Object value, boolean includeDescription, String pattern) {
 
 		if (value == null)
@@ -183,6 +183,7 @@ public class TagUtils {
 		return getObjectDescriptionToString(value, null, null);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String getObjectDescriptionToString(Object value, String formatDate, String formatNumber) {
 
 		if (value == null)

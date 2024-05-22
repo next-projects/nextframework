@@ -4,15 +4,16 @@ public class DynamicGroup {
 
 	String name;
 	String pattern;
-	
+
 	public DynamicGroup(String name) {
 		this(name, null);
 	}
+
 	public DynamicGroup(String name, String pattern) {
 		this.name = name;
 		this.pattern = pattern;
 	}
-	
+
 	public String getPattern() {
 		return pattern;
 	}

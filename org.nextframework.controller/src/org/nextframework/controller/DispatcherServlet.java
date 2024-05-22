@@ -102,6 +102,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 			return handlerMap.keySet();
 		}
 
+		@SuppressWarnings("unchecked")
 		public void init() {
 			if (handlerMap.isEmpty()) {
 				for (DispatcherServlet servlet : servlets) {
@@ -137,6 +138,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 			}
 			return authenticationModuleCache.get(module);
 		}
+
 	}
 
 	@SuppressWarnings("all")

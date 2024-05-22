@@ -30,9 +30,6 @@ package org.nextframework.exception;
  */
 public class ConfigurationException extends NextException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public ConfigurationException() {

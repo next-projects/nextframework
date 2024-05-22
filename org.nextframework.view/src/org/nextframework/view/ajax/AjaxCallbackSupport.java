@@ -12,27 +12,27 @@ import org.nextframework.core.standard.Next;
 import org.nextframework.core.standard.RequestContext;
 
 public class AjaxCallbackSupport implements AjaxCallbackController {
-	
+
 	private static final String CALLBACKS = AjaxCallbackSupport.class.getName();
-	
+
 	static ThreadLocal<Integer> tokens = new ThreadLocal<Integer>();
 
 	public void doAjax(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String parameter = request.getParameter("serverId");
-		if(parameter == null){
+		if (parameter == null) {
 			throw new RuntimeException("parameter serverId was not sent");
 		}
 		int serverId = Integer.parseInt(parameter);
 		RequestContext requestContext = Next.getRequestContext();
 		Object syncobj = Authorization.getUserLocator().getUser();
-		if(syncobj == null){
+		if (syncobj == null) {
 			syncobj = Next.getApplicationContext();
 		}
 		Callback ajaxCallback;
 		synchronized (syncobj) {
 			ajaxCallback = getCallbacks(requestContext).get(serverId);
 		}
-		if(ajaxCallback != null){
+		if (ajaxCallback != null) {
 			tokens.set(serverId);
 			try {
 				response.getWriter().print(ajaxCallback.doAjax());
@@ -42,15 +42,15 @@ public class AjaxCallbackSupport implements AjaxCallbackController {
 			}
 		}
 	}
-	
-	static void unregister(){
+
+	static void unregister() {
 		unregisterAjax(tokens.get());
 	}
-	
-	static void unregisterAjax(int index){
+
+	static void unregisterAjax(int index) {
 		RequestContext requestContext = Next.getRequestContext();
 		Object syncobj = Authorization.getUserLocator().getUser();
-		if(syncobj == null){
+		if (syncobj == null) {
 			syncobj = Next.getApplicationContext();
 		}
 		synchronized (syncobj) {
@@ -58,59 +58,60 @@ public class AjaxCallbackSupport implements AjaxCallbackController {
 		}
 	}
 
-	static int registerSingletonAjax(Callback ajax){
+	static int registerSingletonAjax(Callback ajax) {
 		RequestContext requestContext = Next.getRequestContext();
 		Object syncobj = Authorization.getUserLocator().getUser();
-		if(syncobj == null){
+		if (syncobj == null) {
 			syncobj = Next.getApplicationContext();
 		}
 		synchronized (syncobj) {
 			List<Callback> callbacks = getCallbacks(requestContext);
 			for (int i = 0; i < callbacks.size(); i++) {
-				if(callbacks.get(i) != null && callbacks.get(i).equals(ajax)){
+				if (callbacks.get(i) != null && callbacks.get(i).equals(ajax)) {
 					//the objects must equals each other
 					return i;
 				}
 			}
 			for (int i = 0; i < callbacks.size(); i++) {
-				if(callbacks.get(i) == null){
+				if (callbacks.get(i) == null) {
 					//achou uma posição vazia
 					callbacks.set(i, ajax);
 					return i;
 				}
 			}
 			callbacks.add(ajax);
-			return callbacks.size()-1;
+			return callbacks.size() - 1;
 		}
 	}
-	
-	static int registerAjax(Callback ajax){
+
+	static int registerAjax(Callback ajax) {
 		RequestContext requestContext = Next.getRequestContext();
 		Object syncobj = Authorization.getUserLocator().getUser();
-		if(syncobj == null){
+		if (syncobj == null) {
 			syncobj = Next.getApplicationContext();
 		}
 		synchronized (syncobj) {
 			List<Callback> callbacks = getCallbacks(requestContext);
 			for (int i = 0; i < callbacks.size(); i++) {
-				if(callbacks.get(i) == null){
+				if (callbacks.get(i) == null) {
 					//achou uma posição vazia
 					callbacks.set(i, ajax);
 					return i;
 				}
 			}
 			callbacks.add(ajax);
-			return callbacks.size()-1;
+			return callbacks.size() - 1;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	static List<Callback> getCallbacks(RequestContext requestContext) {
 		List<Callback> callbacks = (List<Callback>) requestContext.getUserAttribute(CALLBACKS);
-		if(callbacks == null){
+		if (callbacks == null) {
 			callbacks = new ArrayList<Callback>();
 			requestContext.setUserAttribute(CALLBACKS, callbacks);
 		}
 		return callbacks;
 	}
+
 }

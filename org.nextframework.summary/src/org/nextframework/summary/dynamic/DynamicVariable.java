@@ -8,12 +8,12 @@ public class DynamicVariable {
 
 	String name;
 	String displayName;
-	
+
 	CalculationType calculationType;
-	
+
 	String javaExpression;
 	Type returnType;
-	
+
 	public DynamicVariable(String name, CalculationType calculationType, String javaExpression, Type type) {
 		super();
 		this.name = name;
@@ -21,7 +21,7 @@ public class DynamicVariable {
 		this.javaExpression = javaExpression;
 		this.returnType = type;
 	}
-	
+
 	public DynamicVariable(String name, String displayName, CalculationType calculationType, String javaExpression, Type type) {
 		super();
 		this.name = name;
@@ -36,7 +36,7 @@ public class DynamicVariable {
 		this.name = name;
 		this.calculationType = calculationType;
 	}
-	
+
 	public DynamicVariable(String name, String displayName, CalculationType calculationType) {
 		super();
 		this.name = name;
@@ -47,10 +47,11 @@ public class DynamicVariable {
 	public String getJavaExpression() {
 		return javaExpression;
 	}
+
 	public Type getReturnType() {
 		return returnType;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -112,5 +113,4 @@ public class DynamicVariable {
 		return true;
 	}
 
-	
 }

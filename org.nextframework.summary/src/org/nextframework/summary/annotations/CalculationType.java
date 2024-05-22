@@ -17,15 +17,15 @@ public enum CalculationType {
 	AVERAGE(Average.class),
 	AVERAGENN(AverageNN.class),
 	INCREMENT(Increment.class);
-	
 
 	private Class<? extends Aggregator<?>> aggregatorClass;
-	
+
 	public Class<? extends Aggregator<?>> getAggregatorClass() {
 		return aggregatorClass;
 	}
 
-	private <Z extends Aggregator<?>> CalculationType(Class<Z> aggregator){
+	private <Z extends Aggregator<?>> CalculationType(Class<Z> aggregator) {
 		this.aggregatorClass = aggregator;
 	}
+
 }

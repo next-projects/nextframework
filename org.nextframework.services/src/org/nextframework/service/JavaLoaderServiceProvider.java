@@ -85,12 +85,14 @@ public class JavaLoaderServiceProvider implements ServiceProvider {
 					}
 				}
 				Collections.sort(services, new Comparator<Object>() {
+
 					@Override
 					public int compare(Object o1, Object o2) {
 						int p1 = getPriority(o1);
 						int p2 = getPriority(o2);
 						return p1 - p2;
 					}
+
 				});
 				javaServices.put(serviceInterface, services);
 			}

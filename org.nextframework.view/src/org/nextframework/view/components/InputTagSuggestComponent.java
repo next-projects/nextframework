@@ -14,8 +14,8 @@ public class InputTagSuggestComponent extends InputTagComponent {
 
 	public String getValueToStringDescription() {
 		Object value = inputTag.getValue();
-		if(!HibernateUtils.isLazy(value)){
-			if(!StringUtils.hasText(Util.strings.toStringDescription(value))){
+		if (!HibernateUtils.isLazy(value)) {
+			if (!StringUtils.hasText(Util.strings.toStringDescription(value))) {
 				//probably not loaded
 				try {
 					Class<?> userClass = ClassUtils.getUserClass(value.getClass());
@@ -28,4 +28,5 @@ public class InputTagSuggestComponent extends InputTagComponent {
 		}
 		return TagUtils.getObjectDescriptionToString(value);
 	}
+
 }

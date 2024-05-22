@@ -11,16 +11,14 @@ import org.nextframework.compilation.JavaSourceCompiler;
 import org.nextframework.exception.NextException;
 import org.nextframework.report.definition.builder.IReportBuilder;
 
-
 class ReportGeneratorContext {
 
-	static Map<ReportElement, WeakReference<Class<IReportBuilder>>> cache = Collections.synchronizedMap(new HashMap<ReportElement, WeakReference<Class<IReportBuilder>>>()); 
-
+	static Map<ReportElement, WeakReference<Class<IReportBuilder>>> cache = Collections.synchronizedMap(new HashMap<ReportElement, WeakReference<Class<IReportBuilder>>>());
 
 	public static Class<IReportBuilder> getClassFor(ReportGenerator generator) {
 		WeakReference<Class<IReportBuilder>> ref = cache.get(generator.getReportElement());
 		Class<IReportBuilder> class1;
-		if(ref == null || ((class1 = ref.get()) == null)){
+		if (ref == null || ((class1 = ref.get()) == null)) {
 			class1 = createReportClass(generator);
 			cache.put(generator.getReportElement(), new WeakReference<Class<IReportBuilder>>(class1));
 		}
@@ -43,6 +41,5 @@ class ReportGeneratorContext {
 			throw new NextException("cannot create ReportBuilder generated class", e);
 		}
 	}
-	
-	
+
 }

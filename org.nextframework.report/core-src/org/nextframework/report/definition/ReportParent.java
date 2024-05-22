@@ -7,5 +7,5 @@ import org.nextframework.report.definition.elements.ReportItem;
 public interface ReportParent {
 
 	List<ReportItem> getChildren();
-	
+
 }

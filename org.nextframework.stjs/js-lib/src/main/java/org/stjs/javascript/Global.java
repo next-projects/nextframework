@@ -22,6 +22,7 @@ import org.stjs.javascript.stjs.STJS;
 
 @GlobalScope
 public class Global {
+
 	public static Number Infinity;
 	public static Number NaN;
 
@@ -32,7 +33,7 @@ public class Global {
 	public static Console console;
 
 	public static STJS stjs;
-	
+
 	public static JSON JSON;
 
 	// do not add this one too

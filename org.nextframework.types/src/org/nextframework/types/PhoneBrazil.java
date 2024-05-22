@@ -8,7 +8,6 @@ public class PhoneBrazil implements Serializable {
 	private String value;
 
 	/**
-	 * 
 	 * @deprecated Use String constructor (this one is to attend Hibernate)
 	 */
 	public PhoneBrazil() {

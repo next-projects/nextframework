@@ -68,7 +68,6 @@ public class SimpleTime extends java.sql.Time implements UserType {
 		int minute = calendar.get(Calendar.MINUTE);
 		String hourString;
 		String minuteString;
-
 		if (hour < 10) {
 			hourString = "0" + hour;
 		} else {
@@ -79,7 +78,6 @@ public class SimpleTime extends java.sql.Time implements UserType {
 		} else {
 			minuteString = Integer.toString(minute);
 		}
-
 		return (hourString + ":" + minuteString);
 	}
 
@@ -132,7 +130,6 @@ public class SimpleTime extends java.sql.Time implements UserType {
 	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
 		try {
 			Timestamp timestamp = rs.getTimestamp(names[0]);
-
 			if (timestamp == null) {
 				return null;
 			} else {

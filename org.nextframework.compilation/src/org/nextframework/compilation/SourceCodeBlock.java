@@ -39,9 +39,9 @@ public class SourceCodeBlock {
 
 	String prefix;
 	String suffix;
-	
+
 	String identation = "";
-	
+
 	List<Object> blocks = new ArrayList<Object>();
 	Set<String> annotations = new HashSet<String>();
 	SourceCodeBuilder builder;
@@ -50,51 +50,51 @@ public class SourceCodeBlock {
 		this.builder = builder;
 		this.identation = identation;
 	}
-	
+
 	public SourceCodeBlock(SourceCodeBuilder builder, String prefix, String suffix, String identation) {
 		this.builder = builder;
 		this.prefix = prefix;
 		this.suffix = suffix;
 		this.identation = identation;
 	}
-	
-	public SourceCodeBlock addAnnotation(String ann){
+
+	public SourceCodeBlock addAnnotation(String ann) {
 		annotations.add(ann);
 		return this;
 	}
-	
-	public void statement(String code){
-		append(code+";");
+
+	public void statement(String code) {
+		append(code + ";");
 	}
-	public void call(String code, Object... parameters){
-		append(code+"("+toStringParamters(parameters)+")"+";");
+
+	public void call(String code, Object... parameters) {
+		append(code + "(" + toStringParamters(parameters) + ")" + ";");
 	}
-	
+
 	private String toStringParamters(Object... parameters) {
 		String params = "";
 		for (int i = 0; i < parameters.length; i++) {
 			Object param = parameters[i];
-			if(param == null){
+			if (param == null) {
 				params += "null";
-			} else if(param instanceof String){
+			} else if (param instanceof String) {
 				params += "\"" + param + "\"";
-			} else if(param.getClass().isEnum()){
+			} else if (param.getClass().isEnum()) {
 				builder.addImport(param.getClass());
-				params += param.getClass().getSimpleName()+"."+param;
+				params += param.getClass().getSimpleName() + "." + param;
 			} else {
 				params += param.toString();
 			}
-			if(i + 1 < parameters.length){
+			if (i + 1 < parameters.length) {
 				params += ", ";
 			}
 		}
 		return params;
 	}
 
-	public void append(String code){
+	public void append(String code) {
 		blocks.add(identation + code);
 	}
-
 
 	public String getPrefix() {
 		return prefix;
@@ -120,31 +120,30 @@ public class SourceCodeBlock {
 		this.identation = identation;
 	}
 
-	public SourceCodeBlock declareMethod(String declaration){
+	public SourceCodeBlock declareMethod(String declaration) {
 		return declareMethod(declaration, false);
 	}
-	
 
 	public void declareAttribute(Class<?> class1, String field) {
 		SourceCodeBlock block = new SourceCodeBlock(this.builder, identation);
-		block.append(class1.getSimpleName() + " " + field+";");
+		block.append(class1.getSimpleName() + " " + field + ";");
 		blocks.add(0, block);
 	}
-	
+
 	public void declareProperty(Class<?> class1, String field) {
 		SourceCodeBlock block = new SourceCodeBlock(this.builder, identation);
-		block.append(class1.getSimpleName() + " " + field+";");
+		block.append(class1.getSimpleName() + " " + field + ";");
 		blocks.add(block);
-		
-		SourceCodeBlock setter = declareMethod("public void set"+SourceCodeUtils.capitalize(field)+"("+class1.getSimpleName()+" "+field+")");
-		setter.append("this."+field+" = "+field+";");
-		
-		SourceCodeBlock getter = declareMethod("public "+class1.getSimpleName()+" get"+SourceCodeUtils.capitalize(field)+"()");
-		getter.append("return this."+field+";");
+
+		SourceCodeBlock setter = declareMethod("public void set" + SourceCodeUtils.capitalize(field) + "(" + class1.getSimpleName() + " " + field + ")");
+		setter.append("this." + field + " = " + field + ";");
+
+		SourceCodeBlock getter = declareMethod("public " + class1.getSimpleName() + " get" + SourceCodeUtils.capitalize(field) + "()");
+		getter.append("return this." + field + ";");
 	}
-	
-	public SourceCodeBlock declareMethod(String declaration, boolean override){
-		SourceCodeBlock block = new SourceCodeBlock(this.builder, (override? "\n"+ identation+"@Override\n": "\n")+identation+declaration + " {\n", identation+"}", identation + "    " );
+
+	public SourceCodeBlock declareMethod(String declaration, boolean override) {
+		SourceCodeBlock block = new SourceCodeBlock(this.builder, (override ? "\n" + identation + "@Override\n" : "\n") + identation + declaration + " {\n", identation + "}", identation + "    ");
 		blocks.add(block);
 		return block;
 	}
@@ -152,26 +151,26 @@ public class SourceCodeBlock {
 	public void declareAnnotation(Annotation annotation) {
 		declareAnnotation(annotation, false);
 	}
-	
+
 	public void declareAnnotation(Annotation annotation, boolean alreadyImported) {
 		Class<? extends Annotation> annotationType = annotation.annotationType();
 		Method[] allMethods = annotationType.getMethods();
 		List<Method> methods = new ArrayList<Method>();
 		for (Method method : allMethods) {
-			if(method.getDeclaringClass().equals(annotationType)){
+			if (method.getDeclaringClass().equals(annotationType)) {
 				methods.add(method);
 			}
 		}
 		List<String> params = new ArrayList<String>();
 		for (Method method : methods) {
-			if(method.getDeclaringClass().equals(annotationType)){
-				String param = method.getName()+"=";
-				if(method.getName().equals("value") && methods.size() == 1){
+			if (method.getDeclaringClass().equals(annotationType)) {
+				String param = method.getName() + "=";
+				if (method.getName().equals("value") && methods.size() == 1) {
 					param = "";
 				}
 				try {
 					Object annotationParamValue = method.invoke(annotation);
-					if(!defaultAnnotationParamValue(method, annotation, annotationParamValue)){
+					if (!defaultAnnotationParamValue(method, annotation, annotationParamValue)) {
 						param += convertAnnotationValueToString(annotationParamValue);
 						params.add(param);
 					}
@@ -188,56 +187,55 @@ public class SourceCodeBlock {
 		for (Iterator<String> iterator = params.iterator(); iterator.hasNext();) {
 			String param = iterator.next();
 			paramsString.append(param);
-			if(iterator.hasNext()){
+			if (iterator.hasNext()) {
 				paramsString.append(", ");
 			}
 		}
-		String prefixString = "@" + (alreadyImported? annotationType.getSimpleName(): annotationType.getName())+"("+paramsString+")";
+		String prefixString = "@" + (alreadyImported ? annotationType.getSimpleName() : annotationType.getName()) + "(" + paramsString + ")";
 		prefix = prependToPreffix(prefixString);
 	}
-
 
 	private boolean defaultAnnotationParamValue(Method method, Annotation annotation, Object annotationParamValue) throws IllegalArgumentException, InvocationTargetException {
 		return annotationParamValue.equals(method.getDefaultValue());
 	}
 
 	private String convertAnnotationValueToString(Object annotationParamValue) {
-		if(annotationParamValue instanceof Class){
-			return ((Class<?>) annotationParamValue).getName()+".class";
-		} else if(annotationParamValue instanceof String){
-			return "\""+annotationParamValue+"\"";
-		} else if(annotationParamValue.getClass().isArray()){
+		if (annotationParamValue instanceof Class) {
+			return ((Class<?>) annotationParamValue).getName() + ".class";
+		} else if (annotationParamValue instanceof String) {
+			return "\"" + annotationParamValue + "\"";
+		} else if (annotationParamValue.getClass().isArray()) {
 			Object[] array = (Object[]) annotationParamValue;
-			if(array.length == 1){
+			if (array.length == 1) {
 				return convertAnnotationValueToString(array[0]);
 			} else {
 				StringBuilder sb = new StringBuilder();
 				sb.append("{");
 				for (int i = 0; i < array.length; i++) {
 					sb.append(convertAnnotationValueToString(array[i]));
-					if(i+1 < array.length){
+					if (i + 1 < array.length) {
 						sb.append(", ");
 					}
 				}
 				sb.append("}");
 				return sb.toString();
 			}
-		} else if(annotationParamValue.getClass().isEnum()){
-			return annotationParamValue.getClass().getName()+"."+annotationParamValue.toString();
+		} else if (annotationParamValue.getClass().isEnum()) {
+			return annotationParamValue.getClass().getName() + "." + annotationParamValue.toString();
 		} else {
 			return annotationParamValue.toString();
 		}
 	}
 
 	public String prependToPreffix(String prefixString) {
-		return "\n" + identation.substring(0, identation.length()-4) + prefixString + prefix;
+		return "\n" + identation.substring(0, identation.length() - 4) + prefixString + prefix;
 	}
-	
-	SourceCodeBlock createMethod(String declaration, boolean override){
-		SourceCodeBlock block = new SourceCodeBlock(this.builder, (override? "\n"+ identation+"@Override\n": "\n")+identation+declaration + " {\n", identation+"}", identation + "    " );
+
+	SourceCodeBlock createMethod(String declaration, boolean override) {
+		SourceCodeBlock block = new SourceCodeBlock(this.builder, (override ? "\n" + identation + "@Override\n" : "\n") + identation + declaration + " {\n", identation + "}", identation + "    ");
 		return block;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -291,9 +289,9 @@ public class SourceCodeBlock {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		for (String annotation : annotations) {
-			builder.append("\n    "+annotation);
+			builder.append("\n    " + annotation);
 		}
-		if(prefix != null){
+		if (prefix != null) {
 			builder.append(prefix);
 		}
 		for (Object o : blocks) {
@@ -304,6 +302,5 @@ public class SourceCodeBlock {
 		}
 		return builder.toString();
 	}
-
 
 }

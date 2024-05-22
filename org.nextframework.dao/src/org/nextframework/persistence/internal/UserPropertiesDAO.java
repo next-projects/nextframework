@@ -22,7 +22,6 @@ public class UserPropertiesDAO {
 			session.close();
 		}
 	}
-	
 
 	public void delete(UserKeyValueMapEntity userProperty) {
 		Session session = sessionFactory.openSession();
@@ -33,12 +32,12 @@ public class UserPropertiesDAO {
 			session.close();
 		}
 	}
-	
+
 	private void delete(UserKeyValueMapEntity userProperty, Session session) {
 		session.delete(userProperty);
 	}
 
-	public void saveKey(UserKeyValueMapEntity keyValueMapEntity){
+	public void saveKey(UserKeyValueMapEntity keyValueMapEntity) {
 		Session session = sessionFactory.openSession();
 		try {
 			session.saveOrUpdate(keyValueMapEntity);
@@ -47,14 +46,14 @@ public class UserPropertiesDAO {
 			session.close();
 		}
 	}
-	
+
 	private UserKeyValueMapEntity getUserKey(String propertyName, Session session) {
 		Query createQuery = session.createQuery(
-				"from "+UserKeyValueMapEntity.class.getSimpleName()+" map " +
-				"where map.username = ? and map.key = ?");
+				"from " + UserKeyValueMapEntity.class.getSimpleName() + " map " +
+						"where map.username = ? and map.key = ?");
 		createQuery.setString(0, username);
 		createQuery.setString(1, propertyName);
-		UserKeyValueMapEntity userKeyValueMapEntity = (UserKeyValueMapEntity)createQuery.uniqueResult();
+		UserKeyValueMapEntity userKeyValueMapEntity = (UserKeyValueMapEntity) createQuery.uniqueResult();
 		return userKeyValueMapEntity;
 	}
 
@@ -63,6 +62,5 @@ public class UserPropertiesDAO {
 		k.setUsername(username);
 		return k;
 	}
-
 
 }

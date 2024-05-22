@@ -29,6 +29,7 @@ import org.stjs.generator.utils.PreConditions;
  * 
  */
 public class BridgeClass implements ClassWithJavascript {
+
 	private final Class<?> clazz;
 	@SuppressWarnings("unused")
 	private final DependencyResolver dependencyResolver;

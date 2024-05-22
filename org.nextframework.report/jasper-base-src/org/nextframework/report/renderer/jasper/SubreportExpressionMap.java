@@ -12,18 +12,18 @@ public class SubreportExpressionMap extends AbstractMap<List<?>, JRDataSource> {
 
 	private ReportDefinition definition;
 
-	public SubreportExpressionMap(ReportDefinition definition){
+	public SubreportExpressionMap(ReportDefinition definition) {
 		this.definition = definition;
 	}
 
 	@Override
 	public JRDataSource get(Object key) {
-		return JasperDataConverter.toMap((List<?>)key, definition);
+		return JasperDataConverter.toMap((List<?>) key, definition);
 	}
-	
+
 	@Override
 	public Set<java.util.Map.Entry<List<?>, JRDataSource>> entrySet() {
 		throw new RuntimeException("not implemented");
 	}
-	
+
 }

@@ -150,9 +150,11 @@ public class StringUtils {
 
 	@SuppressWarnings("all")
 	public String toStringIdStyled(Object o, boolean includeDescription) {
+
 		if (o == null) {
 			return "<null>";
 		}
+
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(o);
 		String idProperty = beanDescriptor.getIdPropertyName();
 		if (idProperty == null) {
@@ -189,6 +191,7 @@ public class StringUtils {
 			}
 		}
 		stringBuilder.append("]");
+
 		return stringBuilder.toString();
 	}
 
@@ -351,7 +354,6 @@ public class StringUtils {
 			return buf.toString();
 		}
 		return str;
-//        return org.apache.commons.lang.StringUtils.replaceChars(string, "ÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÄËÏÖÜÃÕÇáéíóúàèìòùâêîôûäëïöüãõç", "AEIOUAEIOUAEIOUAEIOUAOCaeiouaeiouaeiouaeiouaoc");
 	}
 
 	/**

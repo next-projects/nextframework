@@ -37,10 +37,10 @@ import org.nextframework.core.standard.AbstractApplicationContext;
 public class DefaultWebApplicationContext extends AbstractApplicationContext implements WebApplicationContext {
 
 	private static final String APPLICATION_DIR = "application.data.dir";
-	
+
 	private ServletContext servletContext;
 //	private ClassManager classManager;
-	
+
 	public DefaultWebApplicationContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
@@ -70,27 +70,27 @@ public class DefaultWebApplicationContext extends AbstractApplicationContext imp
 			throw new RuntimeException(e);
 		}
 		*/
-		return getServletContext().getContextPath().substring(1); 
+		return getServletContext().getContextPath().substring(1);
 	}
-	
+
 	private String cachedApplicationDir = null;
 
 	@Override
 	public String getApplicationDir() {
-		if(cachedApplicationDir != null){
+		if (cachedApplicationDir != null) {
 			return cachedApplicationDir;
 		}
 		String appDirInitParameter = getServletContext().getInitParameter(APPLICATION_DIR);
-		if(appDirInitParameter != null && !appDirInitParameter.isEmpty()){
+		if (appDirInitParameter != null && !appDirInitParameter.isEmpty()) {
 			cachedApplicationDir = appDirInitParameter;
 			return appDirInitParameter;
 		}
-		cachedApplicationDir = System.getProperty("user.home") 
-				+ File.separator + ".appData" 
+		cachedApplicationDir = System.getProperty("user.home")
+				+ File.separator + ".appData"
 				+ File.separator + getApplicationName();
 		return cachedApplicationDir;
 	}
-	
+
 //	public void setAttribute(String s, Object value) {
 //		servletContext.setAttribute(s, value);
 //	}

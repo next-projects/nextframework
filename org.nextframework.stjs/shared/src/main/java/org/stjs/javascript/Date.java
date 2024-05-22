@@ -31,6 +31,7 @@ import java.util.TimeZone;
  * 
  */
 public class Date {
+
 	private Calendar calendar;
 	private Calendar utc;
 	private final static String DEFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
@@ -322,4 +323,5 @@ public class Date {
 	public double valueOf() {
 		return getTime();
 	}
+
 }

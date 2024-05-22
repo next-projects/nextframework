@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Select extends Element {
+
 	public boolean disabled;
 	public Form form;
 	public int length;
@@ -41,7 +42,7 @@ abstract public class Select extends Element {
 	public void add(Element option, Element before) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	public void add(Element option) {
 		throw new UnsupportedOperationException();
 	}
@@ -53,4 +54,5 @@ abstract public class Select extends Element {
 	public void focus() {
 		throw new UnsupportedOperationException();
 	}
+
 }

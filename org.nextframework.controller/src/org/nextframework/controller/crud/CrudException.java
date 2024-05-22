@@ -23,7 +23,6 @@
  */
 package org.nextframework.controller.crud;
 
-
 /**
  * @author rogelgarcia
  * @since 01/02/2006
@@ -31,12 +30,9 @@ package org.nextframework.controller.crud;
  */
 public class CrudException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String action;
-	
+
 	public String getAction() {
 		return action;
 	}
@@ -45,17 +41,17 @@ public class CrudException extends Exception {
 		this.action = action;
 	}
 
-	public CrudException(String action, Exception exception){
+	public CrudException(String action, Exception exception) {
 		super(exception);
 		this.action = action;
 	}
 
 	@Override
 	public String getMessage() {
-		if(getCause() != null){
+		if (getCause() != null) {
 			return getCause().getMessage();
 		}
 		return super.getMessage();
 	}
-	
+
 }

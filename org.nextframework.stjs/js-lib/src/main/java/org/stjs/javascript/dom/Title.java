@@ -16,5 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Title extends Element {
+
 	public String text;
+
 }

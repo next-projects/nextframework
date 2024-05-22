@@ -8,27 +8,30 @@ public class FieldDetailElement implements LayoutItem {
 	String name;
 	String label;
 	String pattern;
-	
+
 	String aggregate;
-	
+
 	String aggregateType;
-	
-	public boolean isAggregateField(){
+
+	public boolean isAggregateField() {
 		return "true".equals(aggregate);
 	}
 
-	public FieldDetailElement(String name){
+	public FieldDetailElement(String name) {
 		this.name = name;
 	}
-	public FieldDetailElement(){
+
+	public FieldDetailElement() {
 	}
-	
+
 	public String getLabel() {
 		return label;
 	}
+
 	public void setLabel(String label) {
 		this.label = label;
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -44,69 +47,74 @@ public class FieldDetailElement implements LayoutItem {
 	public String getAggregate() {
 		return aggregate;
 	}
+
 	public void setAggregate(String aggregate) {
 		this.aggregate = aggregate;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getPattern() {
 		return pattern;
 	}
+
 	public void setPattern(String pattern) {
 		this.pattern = pattern;
 	}
-	
-	public boolean isCustomPattern(){
-		if(pattern == null || pattern.equals("")){
+
+	public boolean isCustomPattern() {
+		if (pattern == null || pattern.equals("")) {
 			return false;
 		}
 		return pattern.startsWith("c");
 	}
-	public boolean isDatePattern(){
-		if(pattern == null || pattern.equals("")){
+
+	public boolean isDatePattern() {
+		if (pattern == null || pattern.equals("")) {
 			return false;
 		}
 		return !isDecimalPattern() && !isCustomPattern();
 	}
-	public boolean isDecimalPattern(){
-		if(pattern == null || pattern.equals("")){
+
+	public boolean isDecimalPattern() {
+		if (pattern == null || pattern.equals("")) {
 			return false;
 		}
 		char[] charArray = pattern.toCharArray();
 		for (char c : charArray) {
-			if(!(c == '0' || c == '#' || c == ',' || c == '.')){
+			if (!(c == '0' || c == '#' || c == ',' || c == '.')) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
 
 	public Class<?> getCustomPatternClass() {
-		if(!isCustomPattern()){
+		if (!isCustomPattern()) {
 			return null;
 		}
 		String cName = pattern.substring(1);
 		Class<FieldFormatter>[] fieldFormatters = ClassManagerFactory.getClassManager().getAllClassesOfType(FieldFormatter.class);
 		for (Class<FieldFormatter> class1 : fieldFormatters) {
-			if(class1.getSimpleName().equals(cName)){
+			if (class1.getSimpleName().equals(cName)) {
 				return class1;
 			}
 		}
 		return null;
 	}
+
 	public String getCustomPatternExpression() {
-		if(!isCustomPattern()){
+		if (!isCustomPattern()) {
 			return null;
 		}
-		return "new "+getCustomPatternClass().getName()+"().format"; 
+		return "new " + getCustomPatternClass().getName() + "().format";
 	}
-	
+
 	@Override
 	public String toString() {
-		return String.format("\n\t\tFieldDetail[%s%s%s]", name, isAggregateField()? "*":"", pattern!= null?", "+pattern:"");
+		return String.format("\n\t\tFieldDetail[%s%s%s]", name, isAggregateField() ? "*" : "", pattern != null ? ", " + pattern : "");
 	}
 
 	@Override
@@ -152,5 +160,4 @@ public class FieldDetailElement implements LayoutItem {
 		return true;
 	}
 
-	
 }

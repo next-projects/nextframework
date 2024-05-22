@@ -25,15 +25,15 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 public class NextStandardApplicationContext extends GenericApplicationContext implements ApplicationScanPathsProvider {
-	
+
 	private static final String JAVA_CLASS_PATH = "java.class.path";
 	private String[] basePackages;
-	
+
 	{
 		basePackages = findScanPaths();
 		registerServices();
 	}
-	
+
 	public NextStandardApplicationContext() {
 		this(new org.nextframework.context.factory.support.DefaultListableBeanFactory(null));
 	}
@@ -52,15 +52,13 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 		super(beanFactory);
 		beanFactory.setAutowireCandidateResolver(new QualifierAnnotationAutowireCandidateResolver());
 	}
-	
+
 	private void registerServices() {
 		// configure the spring application context as a service
 		StaticServiceProvider.registerService(ApplicationContext.class, this);
 		StaticServiceProvider.registerService(ConfigurableApplicationContext.class, this);
 		StaticServiceProvider.registerService(ResourceLoader.class, this);
-		
 		StaticServiceProvider.registerService(ApplicationScanPathsProvider.class, this);
-		
 		StaticServiceProvider.registerService(ListableBeanFactory.class, getDefaultListableBeanFactory());
 		StaticServiceProvider.registerService(DefaultListableBeanFactory.class, getDefaultListableBeanFactory());
 	}
@@ -71,12 +69,13 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 
 	@Override
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+
 		AnnotatedBeanDefinitionReader reader = new AnnotatedBeanDefinitionReader(getDefaultListableBeanFactory());
 		reader.setEnvironment(this.getEnvironment());
-		
+
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(getDefaultListableBeanFactory());
 		scanner.setEnvironment(this.getEnvironment());
-		
+
 		if (!ObjectUtils.isEmpty(this.basePackages)) {
 			if (logger.isInfoEnabled()) {
 				logger.info("Scanning base packages: [" +
@@ -84,33 +83,33 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 			}
 			scanner.scan(this.basePackages);
 		}
-		
+
 		ConfigurableListableBeanFactory beanFactory = super.obtainFreshBeanFactory();
-		
+
 		//apply AUTOWIRE_BY_TYPE for all application beans
 		String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
 		for (String beanDefinitionName : beanDefinitionNames) {
 			BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanDefinitionName);
-			if(isApplicationComponent(beanDefinition, basePackages)){
-				((AbstractBeanDefinition)beanDefinition).setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
+			if (isApplicationComponent(beanDefinition, basePackages)) {
+				((AbstractBeanDefinition) beanDefinition).setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 			}
 		}
-		
+
 		for (BeanDefinitionLoader beanDefinitionLoader : ServiceFactory.loadServices(BeanDefinitionLoader.class)) {
 			beanDefinitionLoader.setApplicationScanPaths(getApplicationScanPaths());
 			beanDefinitionLoader.loadBeanDefinitions(this, getDefaultListableBeanFactory());
 		}
-		
+
 		return beanFactory;
 	}
-	
+
 	private boolean isApplicationComponent(BeanDefinition beanDefinition, String[] applicationScanPaths) {
 		String beanClassName = beanDefinition.getBeanClassName();
-		if(beanClassName.startsWith("org.springframework")){
+		if (beanClassName.startsWith("org.springframework")) {
 			return false;
 		}
 		for (String appPath : applicationScanPaths) {
-			if(beanClassName.startsWith(appPath)){
+			if (beanClassName.startsWith(appPath)) {
 				return true;
 			}
 		}
@@ -123,7 +122,7 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 		Set<String> packages = new HashSet<String>();
 		for (String pathname : paths) {
 			File file = new File(pathname);
-			if(file.isDirectory()){
+			if (file.isDirectory()) {
 				packages.addAll(searchPackages(null, file));
 			}
 		}
@@ -134,28 +133,28 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 		List<String> packages = new ArrayList<String>();
 		File[] files = file.listFiles();
 		for (File subdir : files) {
-			if(subdir.isDirectory()){
+			if (subdir.isDirectory()) {
 				String packageName = subdir.getName();
-				if(basePackage != null){
-					packageName = basePackage + "." +packageName; 
+				if (basePackage != null) {
+					packageName = basePackage + "." + packageName;
 				}
-				if(packageName.startsWith(".")){
+				if (packageName.startsWith(".")) {
 					continue;
 				}
-				if(packageName.startsWith("META-INF")){
+				if (packageName.startsWith("META-INF")) {
 					continue;
 				}
-				if(packageName.equals("org") || packageName.equals("com") || packageName.equals("net")){
+				if (packageName.equals("org") || packageName.equals("com") || packageName.equals("net")) {
 					packages.addAll(searchPackages(packageName, subdir));
 					continue;
 				}
-				if(packageName.equals("org.nextframework")){ // ignore org.nextframework
+				if (packageName.equals("org.nextframework")) { // ignore org.nextframework
 					continue;
 				}
-				if(packageName.equals("org.stjs")){ // ignore 
+				if (packageName.equals("org.stjs")) { // ignore 
 					continue;
 				}
-				if(packageName.equals("org.eclipse")){ // ignore 
+				if (packageName.equals("org.eclipse")) { // ignore 
 					continue;
 				}
 				packages.add(packageName);
@@ -168,6 +167,5 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 	public String[] getApplicationScanPaths() {
 		return basePackages;
 	}
-
 
 }

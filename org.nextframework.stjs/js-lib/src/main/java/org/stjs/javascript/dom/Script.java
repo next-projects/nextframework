@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Script extends Element {
+
 	public String charset;
 	public boolean defer;
 	public String event;
@@ -23,4 +24,5 @@ abstract public class Script extends Element {
 	public String src;
 	public String text;
 	public String type;
+
 }

@@ -10,15 +10,17 @@ import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.elements.ReportItem;
 
 public abstract class AbstractJasperDesignBuilder implements JasperDesignBuilder {
-	
+
 	protected static interface ElementFinder<E extends JRDesignElement> {
+
 		boolean collect(E e);
+
 	}
 
 	protected ReportDefinition definition;
 	protected JasperDesign template;
-	
-	public AbstractJasperDesignBuilder(){
+
+	public AbstractJasperDesignBuilder() {
 	}
 
 	public ReportDefinition getDefinition() {
@@ -36,7 +38,6 @@ public abstract class AbstractJasperDesignBuilder implements JasperDesignBuilder
 	public void setTemplate(JasperDesign template) {
 		this.template = template;
 	}
-	
 
 	@Override
 	public MappedJasperDesign getMappedJasperDesign() {
@@ -47,13 +48,16 @@ public abstract class AbstractJasperDesignBuilder implements JasperDesignBuilder
 		mappedJasperDesign.setMappedKeysJRElements(getMappedKeysJRElements());
 		return mappedJasperDesign;
 	}
-	
+
 	protected abstract Map<String, JRDesignElement> getMappedKeysJRElements();
+
 	protected abstract Map<String, ReportItem> getMappedKeys();
+
 	protected abstract JasperDesign getJasperDesign();
 
 	protected String getDesign(JRChild jrChild) {
-		String designProperty = ((JRDesignElement)jrChild).getPropertiesMap().getProperty("design");
-		return designProperty != null? designProperty: "default";
+		String designProperty = ((JRDesignElement) jrChild).getPropertiesMap().getProperty("design");
+		return designProperty != null ? designProperty : "default";
 	}
+
 }

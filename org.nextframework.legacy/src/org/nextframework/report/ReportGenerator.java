@@ -39,5 +39,6 @@ public interface ReportGenerator {
 	 * @return
 	 * @throws JRException
 	 */
-	byte[] toPdf(IReport iReport) throws ReportException ;
+	byte[] toPdf(IReport iReport) throws ReportException;
+
 }

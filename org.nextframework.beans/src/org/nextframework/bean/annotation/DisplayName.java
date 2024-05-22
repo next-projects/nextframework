@@ -35,7 +35,9 @@ import java.lang.annotation.Target;
  * @since 03/10/2005
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface DisplayName {
+
 	String value();
+
 }

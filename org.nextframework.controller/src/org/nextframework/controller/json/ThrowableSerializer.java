@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 class ThrowableSerializer extends JsonSerializer<Throwable> {
-	
+
 	@Override
 	public void serialize(Throwable value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
 		if (value == null) {
@@ -26,13 +26,13 @@ class ThrowableSerializer extends JsonSerializer<Throwable> {
 			jgen.writeEndObject(); // }
 		}
 	}
-	
-	private String getFullExceptionMessages(Throwable t){
+
+	private String getFullExceptionMessages(Throwable t) {
 		String txt = "";
 		Set<Throwable> allCauses = new HashSet<Throwable>(); //para evitar recursividade
 		Throwable cause = t;
 		String lastMsg = null;
-		do{
+		do {
 			String msg = cause.getMessage() != null ? cause.getMessage() : cause.toString();
 			if (lastMsg == null || !msg.equals(lastMsg)) {
 				txt += (txt.length() > 0 ? " --> " : "") + msg;
@@ -41,11 +41,11 @@ class ThrowableSerializer extends JsonSerializer<Throwable> {
 			cause = cause.getCause();
 			if (allCauses.contains(cause)) {
 				cause = null;
-			}else{
+			} else {
 				allCauses.add(cause);
 			}
-		}while(cause != null);
+		} while (cause != null);
 		return txt;
 	}
-	
+
 }

@@ -36,5 +36,5 @@ public class ReportAuthorization implements UserAuthorization {
 	public void setCanGenerate(boolean canGenerate) {
 		this.canGenerate = canGenerate;
 	}
-	
+
 }

@@ -18,21 +18,21 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 public class AuthenticationHandlerInterceptor implements HandlerInterceptor {
-	
+
 	private Log logger = LogFactory.getLog(AuthenticationHandlerInterceptor.class);
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		if(Authorization.getUser() == null){
+		if (Authorization.getUser() == null) {
 			//check if there is a login page
 			Collection<AuthenticationController> authenticationControllers = ServiceFactory.getService(ListableBeanFactory.class).getBeansOfType(AuthenticationController.class).values();
-			if(authenticationControllers.size() > 1){
+			if (authenticationControllers.size() > 1) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN, "The user must be logged in to access this resource.");
-				logger.error("More than one controller "+authenticationControllers+" of type LogingController found in application! Cannot redirect to login page.");
+				logger.error("More than one controller " + authenticationControllers + " of type LogingController found in application! Cannot redirect to login page.");
 				return false;
-			} else if(authenticationControllers.size() == 0){
+			} else if (authenticationControllers.size() == 0) {
 				response.sendError(HttpServletResponse.SC_FORBIDDEN, "The user must be logged in to access this resource.");
-				logger.error("No controller of type "+AuthenticationController.class.getSimpleName()+" found! Cannot redirect to login page. Create a controller that extends LoginController or "+AuthenticationController.class.getSimpleName()+" and configure this controller in a module (@Controller(path=\"...\")) that can be accessed publicly");
+				logger.error("No controller of type " + AuthenticationController.class.getSimpleName() + " found! Cannot redirect to login page. Create a controller that extends LoginController or " + AuthenticationController.class.getSimpleName() + " and configure this controller in a module (@Controller(path=\"...\")) that can be accessed publicly");
 				return false;
 			} else {
 				//TODO VERIFY INFINITE LOOP
@@ -49,12 +49,12 @@ public class AuthenticationHandlerInterceptor implements HandlerInterceptor {
 
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		
+
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		
+
 	}
 
 }

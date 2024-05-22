@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableList;
  * 
  */
 public class DependencyCollection {
+
 	private final List<ClassWithJavascript> roots;
 
 	public DependencyCollection(List<ClassWithJavascript> roots) {
@@ -47,15 +48,13 @@ public class DependencyCollection {
 		for (ClassWithJavascript root : roots) {
 			visit(visited, new HashSet<ClassWithJavascript>(), deps, root);
 		}
-
 		return deps;
 	}
 
 	/**
 	 * use topological sort to find the order of processing cells
 	 */
-	private void visit(Set<ClassWithJavascript> visited, Set<ClassWithJavascript> path, List<ClassWithJavascript> deps,
-			ClassWithJavascript cj) {
+	private void visit(Set<ClassWithJavascript> visited, Set<ClassWithJavascript> path, List<ClassWithJavascript> deps, ClassWithJavascript cj) {
 		if (path.contains(cj)) {
 			// cyclic dependency here - XXX how to solve it
 			return;
@@ -63,14 +62,12 @@ public class DependencyCollection {
 		if (!visited.contains(cj)) {
 			visited.add(cj);
 			path.add(cj);
-
 			for (ClassWithJavascript dep : cj.getDirectDependencies()) {
 				visit(visited, path, deps, dep);
 				path.remove(dep);
 			}
-
 			deps.add(cj);
-
 		}
 	}
+
 }

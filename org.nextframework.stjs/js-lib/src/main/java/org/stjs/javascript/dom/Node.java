@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Node {
+
 	public HTMLCollection<Attr> attributes;
 
 	public void appendChild(Node node) {
@@ -97,5 +98,6 @@ abstract public class Node {
 	public void replaceChild(Node newNode, Node oldNode) {
 		throw new UnsupportedOperationException();
 	}
+
 	// setUserData(String, Object, UserDataHandler)
 }

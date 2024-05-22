@@ -22,6 +22,7 @@
  * 
  */
 package org.nextframework.types;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -32,33 +33,29 @@ import java.util.Set;
 @Deprecated
 public class ListSet<E> extends ArrayList<E> implements Set<E> {
 
-	
-	
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 3258413915376202040L;
 	private Class<E> clazz;
 
-    public ListSet(Class<E> clazz){
-        this.clazz = clazz;
-    }
-    
-    public ListSet(Class<E> clazz, Collection<? extends E> c) {
+	public ListSet(Class<E> clazz) {
+		this.clazz = clazz;
+	}
+
+	public ListSet(Class<E> clazz, Collection<? extends E> c) {
 		super(c);
 		this.clazz = clazz;
 	}
 
 	public E get(int index) {
-        if(this.size() < index+1){
-            while(this.size() < index+1){
-                try {
-                    add(clazz.newInstance());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return (E)super.get(index);
-    }
+		if (this.size() < index + 1) {
+			while (this.size() < index + 1) {
+				try {
+					add(clazz.newInstance());
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+		return (E) super.get(index);
+	}
+
 }

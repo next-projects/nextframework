@@ -11,14 +11,14 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.web.servlet.mvc.Controller;
 
 public class ControllerBeanDefinitionLoader extends CustomScannerBeanDefinitionLoader {
-	
+
 	/**
 	 * List of controller classes that must be ignored by this loader.<BR>
 	 * If another loader will register a special type of controller it must register in this list, the classes that must be ignored by this loader.<BR>
 	 * Otherwise the controller can be registered twice
 	 */
 	public static List<Class<?>> IGNORE_CONTROLLER_CLASSES = new ArrayList<Class<?>>();
-	
+
 	@Override
 	public void applyFilters(ClassPathBeanDefinitionScanner scanner) {
 		setAutowireBeans(scanner, AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
@@ -36,11 +36,11 @@ public class ControllerBeanDefinitionLoader extends CustomScannerBeanDefinitionL
 	protected static void checkControllerDefinition(AbstractBeanDefinition beanDefinition) {
 		try {
 			Class<?> controllerClass = Class.forName(beanDefinition.getBeanClassName());
-			if(!Controller.class.isAssignableFrom(controllerClass)){
-				throw new RuntimeException("The "+controllerClass+" is not a Controller class");
+			if (!Controller.class.isAssignableFrom(controllerClass)) {
+				throw new RuntimeException("The " + controllerClass + " is not a Controller class");
 			}
-			if(controllerClass.getAnnotation(org.nextframework.controller.Controller.class) == null){
-				throw new RuntimeException("The "+controllerClass+" is a controller but is not annotated with @Controller");
+			if (controllerClass.getAnnotation(org.nextframework.controller.Controller.class) == null) {
+				throw new RuntimeException("The " + controllerClass + " is a controller but is not annotated with @Controller");
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
@@ -51,4 +51,5 @@ public class ControllerBeanDefinitionLoader extends CustomScannerBeanDefinitionL
 	public String toString() {
 		return "Controller Loader";
 	}
+
 }

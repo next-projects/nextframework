@@ -9,7 +9,6 @@ import org.nextframework.summary.aggregator.Aggregator;
 import org.nextframework.summary.annotations.CalculationType;
 import org.nextframework.summary.annotations.Scope;
 import org.nextframework.summary.annotations.Variable;
-import org.springframework.util.StringUtils;
 
 public class SummaryVariableDefinition implements SummaryItemDefinition {
 
@@ -19,24 +18,24 @@ public class SummaryVariableDefinition implements SummaryItemDefinition {
 	Method method;
 
 	public SummaryVariableDefinition(final Variable variable, String name, Class<?> type, Method method) {
-		if(!variable.scopeGroup().equals("") && variable.scope() != Scope.GROUP){
+		if (!variable.scopeGroup().equals("") && variable.scope() != Scope.GROUP) {
 			this.variable = new Variable() {
-				
+
 				@Override
 				public Class<? extends Annotation> annotationType() {
 					return Variable.class;
 				}
-				
+
 				@Override
 				public String scopeGroup() {
-					return variable.scopeGroup().equals("report")? "": variable.scopeGroup();
+					return variable.scopeGroup().equals("report") ? "" : variable.scopeGroup();
 				}
-				
+
 				@Override
 				public Scope scope() {
-					return variable.scopeGroup().equals("report")? Scope.REPORT: Scope.GROUP;
+					return variable.scopeGroup().equals("report") ? Scope.REPORT : Scope.GROUP;
 				}
-				
+
 				@Override
 				public CalculationType calculation() {
 					return variable.calculation();
@@ -52,6 +51,7 @@ public class SummaryVariableDefinition implements SummaryItemDefinition {
 				public Class<? extends Aggregator> customAggregator() {
 					return variable.customAggregator();
 				}
+
 			};
 		} else {
 			this.variable = variable;
@@ -60,7 +60,7 @@ public class SummaryVariableDefinition implements SummaryItemDefinition {
 		this.type = type;
 		this.method = method;
 	}
-	
+
 	public Method getMethod() {
 		return method;
 	}
@@ -69,7 +69,7 @@ public class SummaryVariableDefinition implements SummaryItemDefinition {
 	public Class<?> getType() {
 		return type;
 	}
-	
+
 	public Variable getVariable() {
 		return variable;
 	}
@@ -90,20 +90,20 @@ public class SummaryVariableDefinition implements SummaryItemDefinition {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("\n@").append(name).append(" -> ");
-		if(variable.calculation() != CalculationType.NONE){
+		if (variable.calculation() != CalculationType.NONE) {
 			builder.append(variable.calculation()).append(", ");
 		}
 		builder.append(variable.scope());
 		return builder.toString();
 	}
-	
+
 	@Override
 	public Object getValue(Summary<?> summary) {
-		if(summary == null){
+		if (summary == null) {
 			throw new NullPointerException("summary is null");
 		}
-		if(!method.getDeclaringClass().isAssignableFrom(summary.getClass())){
-			throw new IllegalArgumentException("This summary item is not of the summary class "+summary.getClass());
+		if (!method.getDeclaringClass().isAssignableFrom(summary.getClass())) {
+			throw new IllegalArgumentException("This summary item is not of the summary class " + summary.getClass());
 		}
 		try {
 			return method.invoke(summary);
@@ -117,15 +117,16 @@ public class SummaryVariableDefinition implements SummaryItemDefinition {
 		return variable.scope();
 	}
 
-	
 	String scopeGroup = null;
+
 	@Override
 	public String getScopeGroup() {
 		// the scope group can be configured in the format foo.bar
 		// however composite groups are compared with foo_Bar
-		if(scopeGroup == null){
+		if (scopeGroup == null) {
 			scopeGroup = SummaryUtils.convertCompositeGroupToMethodFormat(variable.scopeGroup());
 		}
 		return scopeGroup;
 	}
+
 }

@@ -26,6 +26,7 @@ import org.stjs.javascript.annotation.GlobalScope;
 @GlobalScope
 @SuppressWarnings("all")
 public class JSCollections {
+
 	private static JSCollectionsImplementor implementor = null;
 
 	private static synchronized JSCollectionsImplementor getImplementor() {
@@ -34,11 +35,9 @@ public class JSCollections {
 		}
 		try {
 			// TODO it could be a cleaner way to inject the implementation, but for the moment this should be enough
-			Class<? extends JSCollectionsImplementor> clazz =
-					(Class<? extends JSCollectionsImplementor>) Class.forName("org.stjs.server.JSCollectionsServerImplementor");
+			Class<? extends JSCollectionsImplementor> clazz = (Class<? extends JSCollectionsImplementor>) Class.forName("org.stjs.server.JSCollectionsServerImplementor");
 			implementor = clazz.newInstance();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new UnsupportedOperationException();
 		}
 		return implementor;

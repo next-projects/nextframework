@@ -12,7 +12,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.util.Assert;
 
 public class TestContextUnit {
-	
+
 	@Test
 	public void testSimpleContextInit() {
 		StaticBeanDefinitionLoader loader = StaticBeanDefinitionLoader.getInstance();
@@ -21,7 +21,7 @@ public class TestContextUnit {
 		NextStandard.start();
 		Assert.notNull(Next.getObject(TestService1.class));
 	}
-	
+
 	@Test
 	public void testSimpleContextInitQualified() {
 		StaticBeanDefinitionLoader loader = StaticBeanDefinitionLoader.getInstance();
@@ -30,8 +30,8 @@ public class TestContextUnit {
 		loader.addBeanForClass(TestService2.class);
 		NextStandard.start();
 		Assert.notNull(Next.getObject(TestService1.class));
-		BeanDefinition beanDefinition = ((DefaultListableBeanFactory)ServiceFactory.getService(ListableBeanFactory.class)).getBeanDefinition("testService1");
-		System.out.println(((AbstractBeanDefinition)beanDefinition).getQualifiers());
+		BeanDefinition beanDefinition = ((DefaultListableBeanFactory) ServiceFactory.getService(ListableBeanFactory.class)).getBeanDefinition("testService1");
+		System.out.println(((AbstractBeanDefinition) beanDefinition).getQualifiers());
 	}
 
 }

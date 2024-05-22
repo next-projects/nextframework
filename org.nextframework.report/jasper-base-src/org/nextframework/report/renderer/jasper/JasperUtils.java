@@ -20,6 +20,7 @@ import org.nextframework.report.definition.elements.ReportTextField;
 
 public class JasperUtils {
 
+	@SuppressWarnings("rawtypes")
 	public static String generateDataCSV(ReportDefinition definition) {
 
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -101,7 +102,6 @@ public class JasperUtils {
 				return numberFormat.format(value);
 			}
 			beanDescriptor = BeanDescriptorFactory.forBean(value);
-
 			Object description = beanDescriptor.getDescription();
 			if (description == null) {
 				//CÓDIGO ALTERADO EM 16 DE NOVEMBRO DE 2006

@@ -206,6 +206,7 @@ public class ReportDesignControllerUtil {
 			map.put("requiredFilter", reportField != null && reportField.requiredFilter() && !isExtendedProperty(beanDescriptor, property));
 		}
 		map.put("propertyDepth", countSubProperties(property));
+
 		return map;
 	}
 
@@ -269,6 +270,7 @@ public class ReportDesignControllerUtil {
 	}
 
 	Map<String, Object> getFilterMap(ReportElement reportElement) {
+
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
 
 		ServletRequestDataBinderNext dataBinder = new ServletRequestDataBinderNext(new Object(), "");
@@ -373,6 +375,7 @@ public class ReportDesignControllerUtil {
 	}
 
 	Map<String, List<String>> getDependencies(Class<?> mainType, List<String> properties) {
+
 		final BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(mainType);
 
 		Map<String, List<String>> dependencies = new HashMap<String, List<String>>();
@@ -389,6 +392,7 @@ public class ReportDesignControllerUtil {
 				}
 			}
 		}
+
 		return dependencies;
 	}
 

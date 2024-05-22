@@ -26,24 +26,25 @@ package org.nextframework.authorization.process;
 import org.nextframework.authorization.UserAuthorization;
 
 public class ProcessAuthorizer {
-	
-	private ProcessAuthorizer(){
-		
+
+	private ProcessAuthorizer() {
+
 	}
 
 	private static ProcessAuthorizer instance;
-	public static ProcessAuthorizer getInstance(){
-		if(instance == null){
+
+	public static ProcessAuthorizer getInstance() {
+		if (instance == null) {
 			instance = new ProcessAuthorizer();
 		}
 		return instance;
 	}
-	
 
-	public boolean isAuthorized(String acao, UserAuthorization authorization){
-        if(!(authorization instanceof ProcessAuthorization)){
-            throw new IllegalArgumentException("O tipo da autorizacao usada pela classe "+this.getClass().getName()+" deve ser do tipo "+ProcessAuthorization.class.getName());
-        }
-		return ((ProcessAuthorization)authorization).canExecute();
+	public boolean isAuthorized(String acao, UserAuthorization authorization) {
+		if (!(authorization instanceof ProcessAuthorization)) {
+			throw new IllegalArgumentException("O tipo da autorizacao usada pela classe " + this.getClass().getName() + " deve ser do tipo " + ProcessAuthorization.class.getName());
+		}
+		return ((ProcessAuthorization) authorization).canExecute();
 	}
+
 }

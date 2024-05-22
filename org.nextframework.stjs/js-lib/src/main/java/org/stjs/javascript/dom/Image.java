@@ -18,6 +18,7 @@ package org.stjs.javascript.dom;
 import org.stjs.javascript.functions.Callback1;
 
 public class Image extends Element {
+
 	public String align;
 	public String alt;
 	public String border;

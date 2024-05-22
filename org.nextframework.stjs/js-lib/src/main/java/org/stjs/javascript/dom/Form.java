@@ -18,6 +18,7 @@ package org.stjs.javascript.dom;
 import org.stjs.javascript.functions.Function1;
 
 abstract public class Form extends Element {
+
 	public String acceptCharset;
 	public String action;
 	public HTMLCollection<Input> elements;
@@ -29,7 +30,7 @@ abstract public class Form extends Element {
 
 	//events
 	public Function1<DOMEvent, Boolean> onsubmit;
-	
+
 	public void reset() {
 		throw new UnsupportedOperationException();
 	}
@@ -37,4 +38,5 @@ abstract public class Form extends Element {
 	public void submit() {
 		throw new UnsupportedOperationException();
 	}
+
 }

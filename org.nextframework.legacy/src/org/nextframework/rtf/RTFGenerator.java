@@ -26,4 +26,5 @@ package org.nextframework.rtf;
 public interface RTFGenerator {
 
 	byte[] generate(RTF rtf);
+
 }

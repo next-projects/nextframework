@@ -5,7 +5,7 @@ import java.util.List;
 public class ReportGroupSection extends ReportSection {
 
 	private ReportGroup group;
-	
+
 	private ReportSection detail;
 	private ReportSection header;
 	private ReportSection footer;
@@ -14,9 +14,9 @@ public class ReportGroupSection extends ReportSection {
 		super(definition, sectionType);
 		this.group = group;
 	}
+
 	public ReportGroupSection(ReportDefinition definition, ReportGroup group) {
 		this(definition, group, ReportSectionType.GROUP);
-		
 		header = new ReportGroupSection(definition, group, ReportSectionType.GROUP_HEADER);
 		footer = new ReportGroupSection(definition, group, ReportSectionType.GROUP_FOOTER);
 		detail = new ReportGroupSection(definition, group, ReportSectionType.GROUP_DETAIL);
@@ -37,13 +37,14 @@ public class ReportGroupSection extends ReportSection {
 	public ReportSection getDetail() {
 		return detail;
 	}
-	
+
 	@Override
 	public List<ReportSectionRow> getRows() {
-		if(getType() == ReportSectionType.GROUP){
+		if (getType() == ReportSectionType.GROUP) {
 			return header.getRows();
 		} else {
 			return super.getRows();
 		}
 	}
+
 }

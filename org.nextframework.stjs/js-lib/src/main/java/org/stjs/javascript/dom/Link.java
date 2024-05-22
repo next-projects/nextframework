@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Link extends Element {
+
 	public String charset;
 	public boolean disabled;
 	public String href;
@@ -25,4 +26,5 @@ abstract public class Link extends Element {
 	public String rev;
 	public String target;
 	public String type;
+
 }

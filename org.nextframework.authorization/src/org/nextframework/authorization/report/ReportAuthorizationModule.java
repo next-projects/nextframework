@@ -30,15 +30,14 @@ import org.nextframework.authorization.AuthorizationItem;
 import org.nextframework.authorization.AuthorizationModuleSupport;
 import org.nextframework.authorization.Permission;
 
-
-public class ReportAuthorizationModule extends AuthorizationModuleSupport implements Serializable{
+public class ReportAuthorizationModule extends AuthorizationModuleSupport implements Serializable {
 
 	private static final long serialVersionUID = 2485969955102950222L;
 
 	public static final String RELATORIOS = "Relatórios";
-	
+
 	protected static final String GENERATE = "generate";
-	
+
 	public ReportAuthorization createAuthorization(Permission[] permissoes) {
 		boolean canGenerate = false;
 		for (Permission permission : permissoes) {
@@ -50,7 +49,7 @@ public class ReportAuthorizationModule extends AuthorizationModuleSupport implem
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Inconsistencia no objeto Permission! " +
-                		"Faltando parametro ("+GENERATE+"): "+permission);
+						"Faltando parametro (" + GENERATE + "): " + permission);
 			}
 		}
 		ReportAuthorization authorization = new ReportAuthorization();
@@ -63,8 +62,8 @@ public class ReportAuthorizationModule extends AuthorizationModuleSupport implem
 	}
 
 	public AuthorizationItem[] getAuthorizationItens() {
-		return new AuthorizationItem[]{
-				new AuthorizationItem(GENERATE,"gerar", new String[]{"true","false"})
+		return new AuthorizationItem[] {
+				new AuthorizationItem(GENERATE, "gerar", new String[] { "true", "false" })
 		};
 	}
 

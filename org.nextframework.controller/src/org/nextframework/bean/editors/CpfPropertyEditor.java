@@ -27,11 +27,11 @@ import java.beans.PropertyEditorSupport;
 
 import org.nextframework.types.Cpf;
 
-public class CpfPropertyEditor extends PropertyEditorSupport{
+public class CpfPropertyEditor extends PropertyEditorSupport {
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if(org.springframework.util.StringUtils.hasText(text)){
+		if (org.springframework.util.StringUtils.hasText(text)) {
 			setValue(new Cpf(text));
 		} else {
 			setValue(null);
@@ -40,10 +40,10 @@ public class CpfPropertyEditor extends PropertyEditorSupport{
 
 	@Override
 	public String getAsText() {
-		if(getValue() == null){
+		if (getValue() == null) {
 			return "";
 		}
 		return getValue().toString();
 	}
-	
+
 }

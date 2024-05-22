@@ -10,16 +10,16 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.ClassUtils;
 
 public class ControllerResourceAuthorizationMapper implements ResourceAuthorizationMapper {
-	
+
 	@Override
 	public AuthorizationModule getAuthorizationModule(String resource) {
 		ResourceHandlerMap resourceHandlerMap = ServiceFactory.getService(ResourceHandlerMap.class);
 		Object handler = resourceHandlerMap.getHandler(resource);
-		if(handler != null){
+		if (handler != null) {
 			Controller ctrlAnnotation = ClassUtils.getUserClass(handler.getClass()).getAnnotation(Controller.class);
-			if(ctrlAnnotation != null){
+			if (ctrlAnnotation != null) {
 				AuthorizationModule authorizationModule = BeanUtils.instantiate(ctrlAnnotation.authorizationModule());
-				if(authorizationModule instanceof HasAccessAuthorizationModule && resourceHandlerMap.isAuthenticationRequired(resource)){
+				if (authorizationModule instanceof HasAccessAuthorizationModule && resourceHandlerMap.isAuthenticationRequired(resource)) {
 					authorizationModule = new RequiresAuthenticationAuthorizationModule(); //if the module is secured, change the authorization module
 				}
 				authorizationModule.setControllerClass(handler.getClass());
@@ -29,7 +29,6 @@ public class ControllerResourceAuthorizationMapper implements ResourceAuthorizat
 		}
 		return null;
 	}
-
 
 //	@Override
 //	public void setResourceAuthorizationModule(String resource, AuthorizationModule authorizationModule) {

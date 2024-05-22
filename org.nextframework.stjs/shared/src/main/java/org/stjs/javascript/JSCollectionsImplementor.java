@@ -21,6 +21,7 @@ package org.stjs.javascript;
  */
 @SuppressWarnings("all")
 public interface JSCollectionsImplementor {
+
 	public <V> Array<V> $array(V... values);
 
 	public <T> Array<T> $castArray(T[] a);
@@ -38,4 +39,5 @@ public interface JSCollectionsImplementor {
 	public <K extends String, V> Map<K, V> $map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5);
 
 	public <K extends String, V> Map<K, V> $map(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, Object... morePairs);
+
 }

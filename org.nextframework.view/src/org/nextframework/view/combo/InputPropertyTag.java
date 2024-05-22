@@ -68,4 +68,5 @@ public class InputPropertyTag extends ComboTag {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

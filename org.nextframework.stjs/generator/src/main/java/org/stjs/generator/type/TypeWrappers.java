@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TypeWrappers {
+
 	private static final Map<Type, TypeWrapper> cache = new HashMap<Type, TypeWrapper>();
 
 	public static void clearCache() {
@@ -39,7 +40,7 @@ public class TypeWrappers {
 		return wrapped;
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static TypeVariableWrapper[] wrap(TypeVariable[] types) {
 		TypeVariableWrapper[] wrapped = new TypeVariableWrapper[types.length];
 		for (int i = 0; i < types.length; ++i) {
@@ -48,7 +49,7 @@ public class TypeWrappers {
 		return wrapped;
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static TypeWrapper wrap(Type type) {
 		if (type == null) {
 			return null;
@@ -86,4 +87,5 @@ public class TypeWrappers {
 	public static ClassWrapper wrap(Class<?> type) {
 		return (ClassWrapper) wrap((Type) type);
 	}
+
 }

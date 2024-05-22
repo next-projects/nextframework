@@ -121,7 +121,6 @@ public class ObjectUtils {
 						return method;
 					}
 				}
-
 			}
 			for (Method method : methods) {
 				if (method.getName().equals(methodName)) {

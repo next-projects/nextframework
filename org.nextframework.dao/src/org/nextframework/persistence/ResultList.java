@@ -9,7 +9,7 @@ import java.util.List;
  * @param <E>
  */
 public interface ResultList<E> {
-	
+
 	public List<E> list();
 
 }

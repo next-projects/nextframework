@@ -9,4 +9,5 @@ public class TestServiceConsumer {
 
 	@Autowired
 	TestIService iService;
+
 }

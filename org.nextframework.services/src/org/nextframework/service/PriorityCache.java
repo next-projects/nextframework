@@ -17,14 +17,15 @@ import java.util.ServiceConfigurationError;
 class PriorityCache {
 
 	private static final String PRIORITY_FILE = "META-INF/services/org.nextframework.service.priority";
-	
+
 	private static PriorityCache instance = new PriorityCache();
 
-	private PriorityCache() {}
+	private PriorityCache() {
+	}
 
 	Map<String, Integer> priorityCache;
-	
-	public static int getPriority(Object o){
+
+	public static int getPriority(Object o) {
 		try {
 			return instance.readPriority(o);
 		} catch (IOException e) {
@@ -48,7 +49,7 @@ class PriorityCache {
 			priorityCache = names;
 		}
 		Integer result = priorityCache.get(o.getClass().getName());
-		if(result == null){
+		if (result == null) {
 			return 1;
 		}
 		return result;
@@ -61,8 +62,7 @@ class PriorityCache {
 			in = u.openStream();
 			r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 			int lc = 1;
-			while ((lc = parseLine(u, r, lc, names)) >= 0)
-				;
+			while ((lc = parseLine(u, r, lc, names)) >= 0);
 		} catch (IOException x) {
 			fail("Error reading configuration file", x);
 		} finally {
@@ -97,7 +97,7 @@ class PriorityCache {
 			int i;
 			for (i = Character.charCount(cp); i < n; i += Character.charCount(cp)) {
 				cp = ln.codePointAt(i);
-				if(cp == '='){
+				if (cp == '=') {
 					break;
 				}
 				if (!Character.isJavaIdentifierPart(cp) && (cp != '.'))
@@ -111,7 +111,7 @@ class PriorityCache {
 					fail(u, lc, "Illegal priority number: " + ln);
 			}
 			String className = ln.substring(0, sep);
-			int priority = Integer.parseInt(ln.substring(sep+1));
+			int priority = Integer.parseInt(ln.substring(sep + 1));
 			names.put(className, priority);
 		}
 		return lc + 1;
@@ -124,4 +124,5 @@ class PriorityCache {
 	private static void fail(URL u, int line, String msg) throws ServiceConfigurationError {
 		throw new ServiceConfigurationError(u + ":" + line + ": " + msg);
 	}
+
 }

@@ -26,23 +26,22 @@ package org.nextframework.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-
 public interface ReflectionCache {
 
 	public Annotation[] getAnnotations(Class<?> clazz);
-	
+
 	public Annotation[] getAnnotations(Method method);
 
 	public <A extends Annotation> A getAnnotation(Class<?> clazz, Class<A> annotationClazz);
-	
+
 	public boolean isAnnotationPresent(Class<?> clazz, Class<? extends Annotation> annotationClazz);
-	
+
 	public boolean isAnnotationPresent(Method method, Class<? extends Annotation> annotationClazz);
-	
+
 	public Method[] getMethods(Class<?> clazz) throws SecurityException;
-	
-	public Method getMethod(Class<?> clazz, String name, Class<?> ... parameterTypes) throws NoSuchMethodException, SecurityException;
+
+	public Method getMethod(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException;
 
 	public <A extends Annotation> A getAnnotation(Method getterMethod, Class<A> class1);
-	
+
 }

@@ -22,14 +22,14 @@ public class DAOBeanContextPostProcessor implements BeanPostProcessor, BeanFacto
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		if(bean instanceof DAO<?>){
+		if (bean instanceof DAO<?>) {
 			//it's a DAO, let's configure the context with the qualifiers
 			String persistenceContext = PersistenceConfiguration.DEFAULT_CONFIG;
 			Qualifier qualifier = getQualifierAnnotation(Qualifier.class, bean);
-			if(qualifier != null){
+			if (qualifier != null) {
 				persistenceContext = qualifier.value();
 			}
-			((DAO<?>)bean).setPersistenceContext(persistenceContext);
+			((DAO<?>) bean).setPersistenceContext(persistenceContext);
 		}
 		return bean;
 	}
@@ -43,12 +43,12 @@ public class DAOBeanContextPostProcessor implements BeanPostProcessor, BeanFacto
 	public static <X> X getQualifierAnnotation(Class<X> qualififerAnnotation, Class<? extends Object> beanClass) {
 		Annotation[] annotations = beanClass.getAnnotations();
 		for (Annotation annotation : annotations) {
-			if(qualififerAnnotation.isAssignableFrom(annotation.annotationType())){
+			if (qualififerAnnotation.isAssignableFrom(annotation.annotationType())) {
 				return (X) annotation;
 			}
 			Annotation[] annotations2 = annotation.annotationType().getAnnotations();
 			for (Annotation annotation2 : annotations2) {
-				if(qualififerAnnotation.isAssignableFrom(annotation2.annotationType())){
+				if (qualififerAnnotation.isAssignableFrom(annotation2.annotationType())) {
 					return (X) annotation2;
 				}
 			}

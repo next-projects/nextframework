@@ -17,20 +17,20 @@ import org.springframework.util.StringUtils;
  *
  */
 public class StaticBeanDefinitionLoader implements BeanDefinitionLoader {
-	
-	private static StaticBeanDefinitionLoader beanDefinitionLoader; 
-	
-	public static StaticBeanDefinitionLoader getInstance(){
-		if(beanDefinitionLoader == null){
+
+	private static StaticBeanDefinitionLoader beanDefinitionLoader;
+
+	public static StaticBeanDefinitionLoader getInstance() {
+		if (beanDefinitionLoader == null) {
 			beanDefinitionLoader = new StaticBeanDefinitionLoader();
 			StaticServiceProvider.registerService(BeanDefinitionLoader.class, beanDefinitionLoader);
 		}
 		return beanDefinitionLoader;
 	}
-	
+
 	Map<String, BeanDefinition> beans = new HashMap<String, BeanDefinition>();
-	
-	public void addBeanForClass(Class<?> clazz){
+
+	public void addBeanForClass(Class<?> clazz) {
 		AnnotatedGenericBeanDefinition annotatedGenericBeanDefinition = new AnnotatedGenericBeanDefinition(clazz);
 		String beanName = StringUtils.uncapitalize(clazz.getSimpleName());
 		beans.put(beanName, annotatedGenericBeanDefinition);

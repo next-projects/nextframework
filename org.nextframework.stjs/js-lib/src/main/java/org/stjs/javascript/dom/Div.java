@@ -16,10 +16,12 @@
 package org.stjs.javascript.dom;
 
 abstract public class Div extends Element {
+
 	public String align;
-	
+
 	@Override
 	public Div cloneNode(boolean deep) {
 		return (Div) super.cloneNode(deep);
 	}
+
 }

@@ -35,9 +35,9 @@ public class NextFormater {
 	protected SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd/MM/yyyy");
 
 	private static NextFormater instance;
-	
+
 	public static NextFormater getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new NextFormater();
 		}
 		return instance;
@@ -57,23 +57,17 @@ public class NextFormater {
 		}
 		if (o == null) {
 			return nullValue;
-		}
-		else if (o instanceof String) {
+		} else if (o instanceof String) {
 			return (String) o;
-		}
-		else if (horaClass != null && horaClass.isAssignableFrom(o.getClass())) {
+		} else if (horaClass != null && horaClass.isAssignableFrom(o.getClass())) {
 			return o.toString();
-		}
-		else if (o instanceof Time) {
+		} else if (o instanceof Time) {
 			return simpleDateFormatTime.format((Time) o);
-		}
-		else if (o instanceof Timestamp) {
+		} else if (o instanceof Timestamp) {
 			return simpleDateFormatTimestamp.format((Timestamp) o);
-		}
-		else if (o instanceof Date) {
+		} else if (o instanceof Date) {
 			return simpleDateFormatDate.format((Date) o);
-		}
-		else {
+		} else {
 			return o.toString();
 		}
 	}

@@ -35,8 +35,9 @@ import java.io.Serializable;
  * @version 1.1
  */
 public interface User extends Serializable {
-	
+
 	String getUsername();
+
 	String getPassword();
-	
+
 }

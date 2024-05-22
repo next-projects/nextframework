@@ -13,21 +13,28 @@ public enum ReportFilterDateAutoFilter {
 	ULTIMOS_7_DIAS,
 	DIA_ANTERIOR,
 	DIA_ATUAL;
-	
+
 	@DescriptionProperty
 	public String getDescription() {
 		switch (this) {
-			case MES_ANTERIOR:		return "Mês Anterior";
-			case ULTIMOS_30_DIAS:	return "Últimos 30 Dias";
-			case SEMANA_ANTERIOR:	return "Semana Anterior";
-			case ULTIMOS_7_DIAS:	return "Últimos 7 dias";
-			case DIA_ANTERIOR:		return "Dia Anterior";
-			case DIA_ATUAL:			return "Dia Atual";
-			default: return "desconhecido";
+			case MES_ANTERIOR:
+				return "Mês Anterior";
+			case ULTIMOS_30_DIAS:
+				return "Últimos 30 Dias";
+			case SEMANA_ANTERIOR:
+				return "Semana Anterior";
+			case ULTIMOS_7_DIAS:
+				return "Últimos 7 dias";
+			case DIA_ANTERIOR:
+				return "Dia Anterior";
+			case DIA_ATUAL:
+				return "Dia Atual";
+			default:
+				return "desconhecido";
 		}
 	}
 
-	public Date[] getDateInterval(){
+	public Date[] getDateInterval() {
 		Calendar c1 = zeroTime();
 		Calendar c2 = zeroTime();
 		switch (this) {
@@ -41,8 +48,8 @@ public enum ReportFilterDateAutoFilter {
 				break;
 			case SEMANA_ANTERIOR:
 				int dow = c1.get(Calendar.DAY_OF_WEEK);
-				c1.add(Calendar.DATE, -(dow-1));
-				c2.add(Calendar.DATE, -(dow-1+7));
+				c1.add(Calendar.DATE, -(dow - 1));
+				c2.add(Calendar.DATE, -(dow - 1 + 7));
 				break;
 			case ULTIMOS_7_DIAS:
 				c1.add(Calendar.DATE, -7);
@@ -53,13 +60,13 @@ public enum ReportFilterDateAutoFilter {
 			case DIA_ATUAL:
 				c2.add(Calendar.MONTH, 1);
 				break;
-	
+
 			default:
 				throw new RuntimeException("ReportFilterDateAutoFilter: not implemented");
 		}
-		return new Date[]{c1.getTime(), c2.getTime()};
+		return new Date[] { c1.getTime(), c2.getTime() };
 	}
-	
+
 	private Calendar zeroTime() {
 		Calendar instance = Calendar.getInstance();
 		instance.set(Calendar.HOUR_OF_DAY, 0);
@@ -76,4 +83,5 @@ public enum ReportFilterDateAutoFilter {
 	public Date getEnd() {
 		return getDateInterval()[1];
 	};
+
 }

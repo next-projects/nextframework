@@ -26,8 +26,7 @@ package org.nextframework.bean.editors;
 import java.beans.PropertyEditor;
 import java.util.Collection;
 
-public class CustomCollectionEditor extends
-		org.springframework.beans.propertyeditors.CustomCollectionEditor {
+public class CustomCollectionEditor extends org.springframework.beans.propertyeditors.CustomCollectionEditor {
 
 	@SuppressWarnings("rawtypes")
 	public CustomCollectionEditor(Class<? extends Collection> collectionType) {
@@ -41,17 +40,17 @@ public class CustomCollectionEditor extends
 
 	@Override
 	protected Object convertElement(Object element) {
-		if(element == null) return null;
-        String stringValue = element.toString();
+		if (element == null)
+			return null;
+		String stringValue = element.toString();
 		// TODO verificar se já existe um property editor para o required type e path
-        if(stringValue.equals("<null>")||stringValue.matches("\\w*((\\.\\w*)*)\\[((.)*)\\]")){
-            PropertyEditor editor = new ValueBasedPropertyEditor();
-            editor.setAsText(stringValue);
-            return editor.getValue();
-        } else {
-        	return super.convertElement(element);	
-        }
-		
+		if (stringValue.equals("<null>") || stringValue.matches("\\w*((\\.\\w*)*)\\[((.)*)\\]")) {
+			PropertyEditor editor = new ValueBasedPropertyEditor();
+			editor.setAsText(stringValue);
+			return editor.getValue();
+		} else {
+			return super.convertElement(element);
+		}
 	}
 
 }

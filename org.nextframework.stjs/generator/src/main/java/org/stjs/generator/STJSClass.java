@@ -39,6 +39,7 @@ import org.stjs.generator.utils.PreConditions;
  * 
  */
 public class STJSClass implements ClassWithJavascript {
+
 	private static final String DEPENDENCIES_PROP = "dependencies";
 
 	private static final String GENERATED_JS_FILE_PROP = "js";
@@ -74,6 +75,7 @@ public class STJSClass implements ClassWithJavascript {
 	 * @param className
 	 */
 	public STJSClass(DependencyResolver dependencyResolver, ClassLoader classLoader, String className) {
+
 		PreConditions.checkNotNull(dependencyResolver);
 		PreConditions.checkNotNull(classLoader);
 		PreConditions.checkNotNull(className);
@@ -90,6 +92,7 @@ public class STJSClass implements ClassWithJavascript {
 		} catch (IOException e) {
 			// maybe it does not exist
 		}
+
 		// deps
 		String depProp = properties.getProperty(DEPENDENCIES_PROP);
 		if (depProp != null) {
@@ -100,6 +103,7 @@ public class STJSClass implements ClassWithJavascript {
 				dependencies = Arrays.asList(deps);
 			}
 		}
+
 		// js file
 		String jsFile = properties.getProperty(GENERATED_JS_FILE_PROP);
 		if (jsFile != null) {
@@ -109,6 +113,7 @@ public class STJSClass implements ClassWithJavascript {
 				System.err.println("Could not load URI from " + jsFile);
 			}
 		}
+
 	}
 
 	private String getPropertiesFileName() {

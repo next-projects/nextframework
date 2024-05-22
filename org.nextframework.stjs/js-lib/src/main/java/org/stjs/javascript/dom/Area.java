@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Area extends Element {
+
 	public String accessKey;
 	public String alt;
 	public String coords;
@@ -24,4 +25,5 @@ abstract public class Area extends Element {
 	public String shape;
 	public int tabIndex;
 	public String target;
+
 }

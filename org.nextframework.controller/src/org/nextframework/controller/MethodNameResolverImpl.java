@@ -119,7 +119,6 @@ public class MethodNameResolverImpl {
 						//SE NAO ENCONTRAR UM MAIS ESPECÍFICO, CERTAMENTE ENCONTRARÁ O PRÓPRIO MÉTODO ENCONTRADO AQUI
 						return findMethodName(hierarquia, method.getName());
 					}
-
 				}
 			}
 		}

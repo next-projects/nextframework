@@ -9,7 +9,7 @@ import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
 public class JasperDataParametersResult {
 
 	Map<String, Object> parameters;
-	
+
 	List<MappedJasperReport> subreports = new ArrayList<MappedJasperReport>();
 
 	public Map<String, Object> getParameters() {
@@ -27,7 +27,5 @@ public class JasperDataParametersResult {
 	public void setSubreports(List<MappedJasperReport> subreports) {
 		this.subreports = subreports;
 	}
-	
-	
-	
+
 }

@@ -15,4 +15,5 @@ public class JavascriptBuilderMap extends JavascriptMap {
 	public JavascriptBuilderMap(Object... props) {
 		super(props);
 	}
+
 }

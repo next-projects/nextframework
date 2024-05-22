@@ -6,9 +6,9 @@ public class ExtensionInfo {
 
 	Class<?> classToExtend;
 	Class<?> classExtended;
-	
+
 	Object service;
-	
+
 	Method method;
 
 	public Class<?> getClassToExtend() {
@@ -42,4 +42,5 @@ public class ExtensionInfo {
 	public void setMethod(Method method) {
 		this.method = method;
 	}
+
 }

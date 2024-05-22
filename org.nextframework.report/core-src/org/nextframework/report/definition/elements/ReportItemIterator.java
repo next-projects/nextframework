@@ -9,14 +9,14 @@ import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.ReportParent;
 
 public class ReportItemIterator implements Iterator<ReportItem> {
-	
+
 	Iterator<ReportItem> iterator;
-	
-	public ReportItemIterator(ReportDefinition definition){
+
+	public ReportItemIterator(ReportDefinition definition) {
 		readItens(definition);
 	}
-	
-	public ReportItemIterator(ReportItem item){
+
+	public ReportItemIterator(ReportItem item) {
 		iterator = readItens(Arrays.asList(item)).iterator();
 	}
 
@@ -30,7 +30,7 @@ public class ReportItemIterator implements Iterator<ReportItem> {
 			result.add(reportItem);
 		}
 		for (ReportItem reportItem : children) {
-			if(reportItem instanceof ReportParent){
+			if (reportItem instanceof ReportParent) {
 				result.addAll(readItens(((ReportParent) reportItem).getChildren()));
 			}
 		}
@@ -48,6 +48,5 @@ public class ReportItemIterator implements Iterator<ReportItem> {
 	public void remove() {
 		iterator.remove();
 	}
-
 
 }

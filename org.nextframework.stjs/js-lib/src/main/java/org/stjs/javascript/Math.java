@@ -16,6 +16,7 @@
 package org.stjs.javascript;
 
 public class Math {
+
 	public static final double E = java.lang.Math.E;
 	public static final double LN2 = java.lang.Math.log(2);
 	public static final double LN10 = java.lang.Math.log(10);

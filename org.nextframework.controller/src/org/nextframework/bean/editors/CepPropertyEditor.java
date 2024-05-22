@@ -31,27 +31,30 @@ public class CepPropertyEditor extends PropertyEditorSupport {
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		if(text != null){	
+		if (text != null) {
 			text = text.replace("-", "");
-			switch(text.length()){
-				case 0: setValue(null);
-						break;
-				case 8: setValue(new Cep(text));
-						break;
-				default: throw new IllegalArgumentException("O CEP deve ter 8 dígitos");
+			switch (text.length()) {
+				case 0:
+					setValue(null);
+					break;
+				case 8:
+					setValue(new Cep(text));
+					break;
+				default:
+					throw new IllegalArgumentException("O CEP deve ter 8 dígitos");
 			}
-			
+
 		} else {
 			setValue(null);
 		}
 	}
-	
+
 	@Override
 	public String getAsText() {
-		if(getValue() == null){
+		if (getValue() == null) {
 			return "";
 		}
 		return getValue().toString();
 	}
-	
+
 }

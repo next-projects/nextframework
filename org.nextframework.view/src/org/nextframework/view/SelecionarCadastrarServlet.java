@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public class SelecionarCadastrarServlet extends HttpServlet {
 
 	public static final String INSELECTONE = "INSELECTONE";
@@ -42,30 +41,32 @@ public class SelecionarCadastrarServlet extends HttpServlet {
 
 		String requestURI = request.getRequestURI();
 		String encodedURI = requestURI
-			.replaceAll(SELECIONAR_CADASTRAR_PATH, "")
-			.replaceAll(SELECIONAR_CADASTRAR_PATH.toLowerCase(), "");
+				.replaceAll(SELECIONAR_CADASTRAR_PATH, "")
+				.replaceAll(SELECIONAR_CADASTRAR_PATH.toLowerCase(), "");
 		request.setAttribute("IMPRIMIRSELECIONAR", true);
-		if(encodedURI.contains("?")){
-			encodedURI+="&IMPRIMIRSELECIONAR=true&INSELECTONE=true";
+		if (encodedURI.contains("?")) {
+			encodedURI += "&IMPRIMIRSELECIONAR=true&INSELECTONE=true";
 		} else {
-			encodedURI+="?IMPRIMIRSELECIONAR=true&INSELECTONE=true";
+			encodedURI += "?IMPRIMIRSELECIONAR=true&INSELECTONE=true";
 		}
 		String queryString = request.getQueryString();
-		if(queryString != null && !queryString.trim().equals("")){
-			queryString = "&"+queryString;
+		if (queryString != null && !queryString.trim().equals("")) {
+			queryString = "&" + queryString;
 		} else {
 			queryString = "";
 		}
+
 		StringBuilder builder = new StringBuilder();
 		builder.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">");
 		builder.append("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
 		builder.append("<frameset border='0' rows='0px, *'>");
 		builder.append("<frame SRC='about:blank'>");
 		builder.append("</frame>");
-		builder.append("<frame SRC='"+encodedURI+queryString+"'>");
+		builder.append("<frame SRC='" + encodedURI + queryString + "'>");
 		builder.append("</frame>");
 		builder.append("</frameset>");
 		builder.append("</html>");
+
 //		Html html = new Html();
 //		Frameset frameset = new Frameset();
 //		frameset.addAttribute("border", "0");
@@ -83,6 +84,7 @@ public class SelecionarCadastrarServlet extends HttpServlet {
 //		HtmlRenderer renderer = new HtmlRenderer();
 		response.setContentType("text/html");
 		response.getWriter().println(builder.toString());
+
 	}
 
 }

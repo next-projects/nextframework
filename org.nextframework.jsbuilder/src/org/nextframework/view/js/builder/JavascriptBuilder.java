@@ -5,11 +5,10 @@ import org.nextframework.view.js.api.Google;
 import org.nextframework.view.js.api.GoogleVisualization;
 import org.nextframework.view.js.api.Html;
 
-
 public abstract class JavascriptBuilder implements Core {
-	
+
 	public abstract void build();
-	
+
 	@Override
 	public String toString() {
 		JavascriptBuilderContext.pushNewContext();
@@ -18,75 +17,90 @@ public abstract class JavascriptBuilder implements Core {
 		JavascriptBuilderContext.popContext();
 		return result;
 	}
-	
-	protected Array array(Object... objs){
+
+	protected Array array(Object... objs) {
 		return new Array(objs);
 	}
+
 	protected Map map(Object... props) {
 		return new Map(props);
 	}
-	
+
 	public static void main(String[] args) {
-		abstract class MyBuilder extends JavascriptBuilder implements Google, Html, GoogleVisualization {}
+
+		abstract class MyBuilder extends JavascriptBuilder implements Google, Html, GoogleVisualization {
+		}
+
 		JavascriptBuilder b = new MyBuilder() {
+
 			public void build() {
+
 				google.load("visualization", "1", map("packages", array("corechart")));
 				//google.setOnLoadCallback(function);
-				Function function = new Function(new JavascriptBuilder() {	public void build() {
-					//Reference data = create("data", "google.visualization.DataTable");
-					//final Obj data = new Obj("data", "google.visualization.DataTable");
-					final DataTable data = new DataTable();
-					data.addColumn("string", "Year");
-					data.addColumn("number", "Sales");
-					data.addColumn("number", "Expenses");
-					data.addRows(new Object[][]{
-							{"2004", 1000, 400},
-							{"2005", 1170, 460},
-							{"2006", 660, 1120},
-							{"2007", 1030, 540},
-					});
-					
-					// new Ref("document.getElementById('chart_div')")
-					
-					//Obj chart = new Obj("chart", "google.visualization.AreaChart", document.getElementById("chart_div"));
-					Chart chart = new AreaChart(document.getElementById("chart_div"));
-					chart.draw(data, map(
-							"width", 400, 
-							"height", 200, 
-							"title", "Company Performance", 
-							"hAxis", map(	"title", "Year", 
-									"titleTextStyle", map("color", "#FF0000"))));
-					/*chart.call("draw", map(
-							"width", 400, 
-							"height", 200, 
-							"title", "Company Performance", 
-							"hAxis", map(	"title", "Year", 
-									"titleTextStyle", map("color", "#FF0000"))));*/
-				}});
+
+				Function function = new Function(new JavascriptBuilder() {
+
+					public void build() {
+
+						//Reference data = create("data", "google.visualization.DataTable");
+						//final Obj data = new Obj("data", "google.visualization.DataTable");
+						final DataTable data = new DataTable();
+						data.addColumn("string", "Year");
+						data.addColumn("number", "Sales");
+						data.addColumn("number", "Expenses");
+						data.addRows(new Object[][] {
+								{ "2004", 1000, 400 },
+								{ "2005", 1170, 460 },
+								{ "2006", 660, 1120 },
+								{ "2007", 1030, 540 },
+						});
+
+						// new Ref("document.getElementById('chart_div')")
+
+						//Obj chart = new Obj("chart", "google.visualization.AreaChart", document.getElementById("chart_div"));
+						Chart chart = new AreaChart(document.getElementById("chart_div"));
+						chart.draw(data, map(
+								"width", 400,
+								"height", 200,
+								"title", "Company Performance",
+								"hAxis", map("title", "Year",
+										"titleTextStyle", map("color", "#FF0000"))));
+						/*chart.call("draw", map(
+								"width", 400, 
+								"height", 200, 
+								"title", "Company Performance", 
+								"hAxis", map(	"title", "Year", 
+										"titleTextStyle", map("color", "#FF0000"))));*/
+					}
+
+				});
+
 				google.setOnLoadCallback(function);
+
 			}
+
 		};
 		System.out.println(b);
 	}
-	
+
 	/*
 	private List<Object> script = new ArrayList<Object>();
-
+	
 	public List<Object> getScript() {
 		return script;
 	}
 	
 	
 	public class Reference extends JavascriptObjectReference {
-
+	
 		public Reference(String variable, JavascriptInstance instance) {
 			super(variable, instance);
 		}
-
+	
 		public Reference(String variable, String className, Object... parameters) {
 			super(variable, className, parameters);
 		}
-
+	
 		public Reference(String variable) {
 			super(variable);
 		}
@@ -98,28 +112,28 @@ public abstract class JavascriptBuilder implements Core {
 		}
 		
 	}
-
+	
 	protected class Map extends JavascriptMap {
-
+	
 		public Map() {
 			super();
 		}
-
+	
 		public Map(java.util.Map<String, Object> map) {
 			super(map);
 		}
-
+	
 		public Map(Object... props) {
 			super(props);
 		}
 		
 	}
 	protected class Array extends JavascriptArray {
-
+	
 		public Array(boolean inline, Object... objects) {
 			super(inline, objects);
 		}
-
+	
 		public Array(Object... objects) {
 			super(objects);
 		}
@@ -134,11 +148,11 @@ public abstract class JavascriptBuilder implements Core {
 	
 	
 	protected class DocumentReference extends Reference {
-
+	
 		public DocumentReference() {
 			super("document");
 		}
-
+	
 		public JavascriptObjectReference getElementById(String id){
 			JavascriptObjectReference code = new JavascriptObjectReference("document.getElementById(\""+id+"\")");
 			return code;
@@ -146,7 +160,7 @@ public abstract class JavascriptBuilder implements Core {
 	}
 	
 	protected DocumentReference document = new DocumentReference();
-
+	
 	protected Map map(Object... props) {
 		return new Map(props);
 	}
@@ -186,7 +200,7 @@ public abstract class JavascriptBuilder implements Core {
 		build();
 		return Util.collections.join(script, "\n");
 	}
-
+	
 	public static void main(String[] args) {
 		JavascriptBuilder script = new JavascriptBuilder() {
 			public void build() {
@@ -218,6 +232,6 @@ public abstract class JavascriptBuilder implements Core {
 		};
 		System.out.println(script);
 	}
-
-*/
+	
+	*/
 }

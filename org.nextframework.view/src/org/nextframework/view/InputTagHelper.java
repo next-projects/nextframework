@@ -37,9 +37,11 @@ public class InputTagHelper {
 				inputTag.setPropertySetter((PropertySetter) inputTag.getPageContext().findAttribute("propertySetter"));
 				if (inputTag.getPropertySetter() == null) {
 					inputTag.setPropertySetter(new PropertySetter() {
+
 						public void set(Object value) {
 							BaseTag.log.warn(inputTag.name + " tentou setar o valor da propriedade, mas não existe propertySetter para essa propriedade");
 						}
+
 					});
 				}
 			}
@@ -132,7 +134,7 @@ public class InputTagHelper {
 		return selectedType;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	InputTagType chooseTypeByClass(InputTag inputTag, Class c) {
 		if (Map.class.isAssignableFrom(c)) {
 			throw new IllegalArgumentException("O input não suporta valores do tipo Map");
@@ -149,15 +151,14 @@ public class InputTagHelper {
 		if (Collection.class.isAssignableFrom(c)) {
 			return InputTagType.SELECT_MANY;
 		}
-	
 		if (inputTag.itens != null) {
 			return InputTagType.SELECT_ONE;
 		}
 		InputTagType type2 = InputTagTypeManager.getInstance().getTypeForClass(c);
-		if (type2 == null){
+		if (type2 == null) {
 			//verificar tipos personalizados
 			type2 = (InputTagType) ServiceFactory.getService(ViewConfig.class).getCustomInputTypes().get(c);
-			if(type2 == null){
+			if (type2 == null) {
 				type2 = InputTagType.TEXT;
 			}
 		}
@@ -165,15 +166,16 @@ public class InputTagHelper {
 	}
 
 	protected <A extends Annotation> InputListener<A> getInputListener(InputTag inputTag, A annotation) {
-		if(inputTag.baseTagPropertyEditorsManagerCache == null){
+		if (inputTag.baseTagPropertyEditorsManagerCache == null) {
 			inputTag.baseTagPropertyEditorsManagerCache = TagUtils.getPropertyEditorsManager();
 		}
 		return inputTag.baseTagPropertyEditorsManagerCache.getInputListener(annotation);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public boolean isDateOrTime(Object value) {
-		return 	value instanceof Calendar || 
-				value instanceof Date || 
+		return value instanceof Calendar ||
+				value instanceof Date ||
 				value instanceof Class && (Date.class.isAssignableFrom((Class) value) || Calendar.class.isAssignableFrom((Class) value));
 	}
 

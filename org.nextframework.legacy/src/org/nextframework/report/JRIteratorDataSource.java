@@ -30,67 +30,60 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 
 public class JRIteratorDataSource implements JRDataSource {
-	
+
 	private Iterator<?> iterator;
 	private Object currentBean;
-	
+
 	protected PropertyNameProvider propertyNameProvider = null;
 	protected boolean isUseFieldDescription = true;
-	
-	public JRIteratorDataSource(Iterator<?> iterator){
+
+	public JRIteratorDataSource(Iterator<?> iterator) {
+
 		this.iterator = iterator;
-		if (isUseFieldDescription)
-		{
-			propertyNameProvider = 
-				new PropertyNameProvider()
-				{
-					public String getPropertyName(JRField field) 
-					{
-						if (field.getDescription() == null)
-						{
-							return field.getName();
-						}
-						else
-						{
-							return field.getDescription();
-						}
-					}
-				};
-		}
-		else
-		{
-			propertyNameProvider = 
-				new PropertyNameProvider()
-				{
-					public String getPropertyName(JRField field) 
-					{
+
+		if (isUseFieldDescription) {
+			propertyNameProvider = new PropertyNameProvider() {
+
+				public String getPropertyName(JRField field) {
+					if (field.getDescription() == null) {
 						return field.getName();
+					} else {
+						return field.getDescription();
 					}
-				};
+				}
+
+			};
+		} else {
+			propertyNameProvider = new PropertyNameProvider() {
+
+				public String getPropertyName(JRField field) {
+					return field.getName();
+				}
+
+			};
 		}
 	}
 
 	public boolean next() throws JRException {
+
 		boolean hasNext = false;
-		
-		if (this.iterator != null)
-		{
+
+		if (this.iterator != null) {
 			hasNext = this.iterator.hasNext();
-			
-			if (hasNext)
-			{
+
+			if (hasNext) {
 				this.currentBean = this.iterator.next();
 			}
 		}
-		
+
 		return hasNext;
 	}
 
 	public Object getFieldValue(JRField jrField) throws JRException {
+
 		Object value = null;
-		
-		if (currentBean != null)
-		{
+
+		if (currentBean != null) {
 			@SuppressWarnings("unused")
 			String propertyName = propertyNameProvider.getPropertyName(jrField);
 			/*
@@ -115,13 +108,14 @@ public class JRIteratorDataSource implements JRDataSource {
 
 		return value;
 	}
-	
+
 	/**
 	 *
 	 */
-	interface PropertyNameProvider
-	{
+	interface PropertyNameProvider {
+
 		public String getPropertyName(JRField field);
+
 	}
 
 }

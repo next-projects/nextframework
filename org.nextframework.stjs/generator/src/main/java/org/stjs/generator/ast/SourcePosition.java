@@ -24,6 +24,7 @@ import japa.parser.ast.Node;
  * 
  */
 public class SourcePosition {
+
 	private final int line;
 	private final int column;
 

@@ -27,6 +27,7 @@ import org.stjs.generator.utils.ClassUtils;
  * 
  */
 public class ParameterizedTypeWrapper extends ClassWrapper {
+
 	private final ParameterizedType type;
 
 	public ParameterizedTypeWrapper(ParameterizedType type) {

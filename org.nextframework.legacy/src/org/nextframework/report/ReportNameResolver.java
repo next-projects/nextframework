@@ -34,4 +34,5 @@ import java.io.InputStream;
 public interface ReportNameResolver {
 
 	InputStream resolveName(String name);
+
 }

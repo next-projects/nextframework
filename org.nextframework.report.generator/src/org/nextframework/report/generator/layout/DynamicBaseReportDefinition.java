@@ -11,8 +11,9 @@ public class DynamicBaseReportDefinition extends ReportDefinition {
 	public void setSummarizedData(SummaryResult<?, ? extends Summary<?>> summaryResult) {
 		this.summarizedData = summaryResult;
 	}
-	
+
 	public SummaryResult<?, ? extends Summary<?>> getSummarizedData() {
 		return summarizedData;
 	}
+
 }

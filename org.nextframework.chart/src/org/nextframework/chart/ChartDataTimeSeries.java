@@ -98,6 +98,7 @@ public class ChartDataTimeSeries extends ChartData {
 	 * @param period
 	 * @param aggregate
 	 */
+	@SuppressWarnings("unchecked")
 	public void groupBy(int period, ChartAggregateFunction[] aggregate) {
 
 		if (!getData().isEmpty()) {
@@ -148,7 +149,6 @@ public class ChartDataTimeSeries extends ChartData {
 					rows.remove(ri);
 				}
 				j = i;
-
 				for (int k = 0; k < chartRow1.getValues().length; k++) {
 					ChartAggregateFunction aggregateSeries = aggregate[k];
 					chartRow1.getValues()[k] = aggregateSeries.aggregate(seriesValues[k]);

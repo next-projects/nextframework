@@ -35,20 +35,20 @@ import org.springframework.web.servlet.ModelAndView;
 public abstract class RTFController<FILTRO> extends ResourceSenderController<FILTRO> {
 
 	protected String name;
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-		
+
 	protected Class<FILTRO> filterClass;
-	
-	@SuppressWarnings("unchecked")
-	public RTFController(){
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public RTFController() {
 		Class[] genericTypes = GenericTypeResolver.resolveTypeArguments(this.getClass(), RTFController.class);
 		Class<?> clazz = genericTypes[0];
 		filterClass = (Class<FILTRO>) clazz;
 	}
-	
+
 	@Override
 	public Resource generateResource(WebRequestContext request, FILTRO filter) throws Exception {
 		RTF rtf = createRTF(request, filter);
@@ -60,15 +60,15 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 
 	private String getRTFName(RTF rtf) {
 		String name = rtf.getFileName();
-        if(name == null){
-        	name = rtf.getName();
-        	if (name.indexOf('/') != -1) {
-        		name = name.substring(rtf.getName().lastIndexOf('/') + 1);
+		if (name == null) {
+			name = rtf.getName();
+			if (name.indexOf('/') != -1) {
+				name = name.substring(rtf.getName().lastIndexOf('/') + 1);
 			}
-        }
-        if(!name.endsWith(".rtf")){
-        	name+=".rtf";
-        }
+		}
+		if (!name.endsWith(".rtf")) {
+			name += ".rtf";
+		}
 		return name;
 	}
 
@@ -84,21 +84,21 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 	}
 
 	protected void filter(WebRequestContext request, FILTRO filter) {
-		
+
 	}
-	
+
 	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTRO filter) {
 		if (name == null) {
-			if(!this.getClass().getSimpleName().endsWith("RTF")){
+			if (!this.getClass().getSimpleName().endsWith("RTF")) {
 				throw new NextException("Um controller de rtf deve ter o sufixo RTF ou então setar a variável name");
 			}
 			String className = org.springframework.util.StringUtils.uncapitalize(this.getClass()
 					.getSimpleName());
-			name = className.substring(0, className.length()- "RTF".length());
+			name = className.substring(0, className.length() - "RTF".length());
 		}
-		return new ModelAndView("rtf/"+name,"filtro", filter);
+		return new ModelAndView("rtf/" + name, "filtro", filter);
 	}
-	
+
 	public abstract RTF createRTF(WebRequestContext request, FILTRO filtro) throws Exception;
 
 }

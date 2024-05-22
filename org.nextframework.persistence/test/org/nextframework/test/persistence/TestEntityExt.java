@@ -5,5 +5,4 @@ import javax.persistence.Entity;
 @Entity
 public class TestEntityExt extends TestEntitySuper {
 
-
 }

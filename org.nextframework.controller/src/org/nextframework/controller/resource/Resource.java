@@ -31,9 +31,9 @@ public class Resource {
 	protected int size;
 
 	public Resource() {
-		
+
 	}
-	
+
 	public Resource(String contentType, String fileName, byte[] contents) {
 		this.contentType = contentType;
 		this.fileName = fileName;

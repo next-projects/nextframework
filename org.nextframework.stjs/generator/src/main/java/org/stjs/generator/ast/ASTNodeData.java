@@ -29,6 +29,7 @@ import org.stjs.generator.variable.Variable;
  * 
  */
 public class ASTNodeData {
+
 	private Scope scope;
 	private Node parent;
 	/**

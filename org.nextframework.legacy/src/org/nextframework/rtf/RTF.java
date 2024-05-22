@@ -31,16 +31,17 @@ public class RTF {
 	String name;
 	String fileName;
 	Map<String, String> parameterMap = new HashMap<String, String>();
-	
+
 	public RTF(String name) {
 		super();
 		this.name = name;
 		fileName = name;
 	}
-	
-	public void addParameter(String key, String value){
+
+	public void addParameter(String key, String value) {
 		parameterMap.put(key, value);
 	}
+
 	public String getFileName() {
 		return fileName;
 	}
@@ -48,13 +49,13 @@ public class RTF {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
-		if(fileName == null){
+		if (fileName == null) {
 			fileName = name;
 		}
 		this.name = name;
@@ -63,4 +64,5 @@ public class RTF {
 	public Map<String, String> getParameterMap() {
 		return parameterMap;
 	}
+
 }

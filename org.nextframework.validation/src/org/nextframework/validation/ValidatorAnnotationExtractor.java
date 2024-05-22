@@ -35,4 +35,5 @@ public interface ValidatorAnnotationExtractor {
 	ValidationItem getValidationItem(String fieldName, Class<?> type, Annotation[] annotations);
 
 	ValidationItem getValidationItem(String fieldName, String type, Annotation[] annotations);
+
 }

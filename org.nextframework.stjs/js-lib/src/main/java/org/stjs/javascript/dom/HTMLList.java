@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class HTMLList<T extends Node> {
+
 	public int length;
 
 	public T item(int index) {
@@ -25,4 +26,5 @@ abstract public class HTMLList<T extends Node> {
 	public T $get(int index) {
 		throw new UnsupportedOperationException();
 	}
+
 }

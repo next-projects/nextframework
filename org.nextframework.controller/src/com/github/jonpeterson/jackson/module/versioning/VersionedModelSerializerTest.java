@@ -59,10 +59,10 @@ public class VersionedModelSerializerTest {
 		public void setNome(String nome) {
 			this.nome = nome;
 		}
-		
+
 		@Override
 		public boolean equals(Object outro) {
-			return this.id.equals(((Emp)outro).getId());
+			return this.id.equals(((Emp) outro).getId());
 		}
 
 		@Override

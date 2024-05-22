@@ -26,5 +26,7 @@ import org.stjs.javascript.annotation.SyntheticType;
  */
 @SyntheticType
 public class Reference<T> {
+
 	public T value;
+
 }

@@ -6,4 +6,5 @@ public class VariableElement {
 
 	String name;
 	CalculationType calculationType;
+
 }

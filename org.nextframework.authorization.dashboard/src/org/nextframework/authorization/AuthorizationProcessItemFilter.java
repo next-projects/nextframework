@@ -32,29 +32,37 @@ public class AuthorizationProcessItemFilter {
 	String description;
 	AuthorizationModule authorizationModule;
 	Map<String, String> permissionMap = new HashMap<String, String>();
-	
+
 	public Map<String, String> getPermissionMap() {
 		return permissionMap;
 	}
+
 	public void setPermissionMap(Map<String, String> authorizationItemMap) {
 		this.permissionMap = authorizationItemMap;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public String getPath() {
 		return path;
 	}
+
 	public void setPath(String path) {
 		this.path = path;
 	}
+
 	public AuthorizationModule getAuthorizationModule() {
 		return authorizationModule;
 	}
+
 	public void setAuthorizationModule(AuthorizationModule authorizationModule) {
 		this.authorizationModule = authorizationModule;
 	}
+
 }

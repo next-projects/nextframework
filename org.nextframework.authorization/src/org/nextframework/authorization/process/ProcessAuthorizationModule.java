@@ -30,15 +30,14 @@ import org.nextframework.authorization.AuthorizationItem;
 import org.nextframework.authorization.AuthorizationModuleSupport;
 import org.nextframework.authorization.Permission;
 
-
 public class ProcessAuthorizationModule extends AuthorizationModuleSupport implements Serializable {
 
 	private static final long serialVersionUID = -35426087101099506L;
 
 	public static final String PROCESSOS = "Processos";
-	
+
 	protected static final String EXECUTE = "execute";
-	
+
 	public ProcessAuthorization createAuthorization(Permission[] permissoes) {
 		boolean canGenerate = false;
 		for (Permission permission : permissoes) {
@@ -50,7 +49,7 @@ public class ProcessAuthorizationModule extends AuthorizationModuleSupport imple
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Inconsistencia no objeto Permission! " +
-                		"Faltando parametro ("+EXECUTE+"): "+permission);
+						"Faltando parametro (" + EXECUTE + "): " + permission);
 			}
 		}
 		ProcessAuthorization authorization = new ProcessAuthorization();
@@ -63,8 +62,8 @@ public class ProcessAuthorizationModule extends AuthorizationModuleSupport imple
 	}
 
 	public AuthorizationItem[] getAuthorizationItens() {
-		return new AuthorizationItem[]{
-				new AuthorizationItem(EXECUTE,"executar", new String[]{"true","false"})
+		return new AuthorizationItem[] {
+				new AuthorizationItem(EXECUTE, "executar", new String[] { "true", "false" })
 		};
 	}
 

@@ -12,4 +12,5 @@ public class TempTest {
 		System.out.println(wrapper.getPropertyValue("b.c"));
 		System.out.println(a.getB());
 	}
+
 }

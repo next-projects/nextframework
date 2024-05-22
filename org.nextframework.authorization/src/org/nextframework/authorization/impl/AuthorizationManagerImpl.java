@@ -48,8 +48,6 @@ import org.nextframework.authorization.UserLocator;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.AntPathMatcher;
 
-/**
- */
 public class AuthorizationManagerImpl implements AuthorizationManager {
 
 	protected Properties authorizationProperties = new Properties();

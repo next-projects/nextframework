@@ -23,10 +23,8 @@
  */
 package org.nextframework.types;
 
-/**
- *
- */
 public interface Document {
 
 	String getValue();
+
 }

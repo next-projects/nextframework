@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 class CepSerializer extends JsonSerializer<Cep> {
-	
+
 	@Override
 	public void serialize(Cep value, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
 		if (value == null) {
@@ -19,5 +19,5 @@ class CepSerializer extends JsonSerializer<Cep> {
 			jgen.writeString(value.toString());
 		}
 	}
-	
+
 }

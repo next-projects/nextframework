@@ -87,7 +87,6 @@ public class ColumnTag extends BaseTag {
 		if (!(dataGrid.getCurrentStatus() == Status.HEADER && header != null)) {// SE ESTIVER NA ETAPA DE HEADER.. MAS JÁ TIVER HEADER.. NAO INVOCAR O CORPO
 			tagBody = getBody();
 		}
-
 		if (dataGrid.getCurrentStatus() == Status.REGISTER) {
 			popAttribute(REGISTERING_DATAGRID);
 		}

@@ -16,6 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Input extends Element {
+
 	public String accept;
 	public String accessKey;
 	public String align;
@@ -51,4 +52,5 @@ abstract public class Input extends Element {
 	public void click() {
 		throw new UnsupportedOperationException();
 	}
+
 }

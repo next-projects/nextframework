@@ -42,7 +42,7 @@ public class BindExceptionNext extends BindException {
 	public BindExceptionNext(Object target, String objectName) {
 		super(target, objectName);
 	}
-	
+
 	/**
 	 * Return the BeanWrapper that this instance uses.
 	 * Creates a new one if none existed before.

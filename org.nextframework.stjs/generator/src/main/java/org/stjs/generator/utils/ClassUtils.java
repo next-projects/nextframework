@@ -46,6 +46,7 @@ import com.google.common.base.Strings;
 import com.google.common.primitives.Primitives;
 
 public class ClassUtils {
+
 	/**
 	 * these are packages that don't have the annotation but are considered as bridges
 	 */
@@ -80,7 +81,6 @@ public class ClassUtils {
 			return true;
 		}
 		String typeName = type.getName();
-
 		return basicTypeNames.contains(typeName);
 	}
 
@@ -105,7 +105,6 @@ public class ClassUtils {
 			return true;
 		}
 		TypeWrapper superClass = type.getSuperClass();
-
 		return superClass == null || superClass.equals(TypeWrappers.wrap(Object.class));
 	}
 
@@ -170,11 +169,9 @@ public class ClassUtils {
 		if (ann != null) {
 			return ann;
 		}
-
 		if (clazz.getPackage() == null) {
 			return null;
 		}
-
 		return clazz.getPackage().getAnnotation(annotationClass);
 	}
 
@@ -243,7 +240,6 @@ public class ClassUtils {
 			if (Primitives.wrap(cls).isAssignableFrom(Primitives.wrap(otherClass))) {
 				return true;
 			}
-
 			// go on with primitive rules double/float -> accept long/int -> accept byte/char (but this only if there is
 			// none more specific!)
 			if (PrimitiveTypes.isAssignableFrom(cls, otherClass)) {
@@ -271,7 +267,6 @@ public class ClassUtils {
 		if (!cls.isArray()) {
 			return false;
 		}
-
 		final java.lang.reflect.Type componentType = genericArrayType.getGenericComponentType();
 		return isAssignableFromType(cls.getComponentType(), componentType);
 	}

@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Entity;
-
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
@@ -162,6 +160,7 @@ public class ReportBuilderSourceGenerator {
 				fixedColumnCount++;
 			}
 		}
+
 		if (sum > MAXIMUM_COLUMN_WIDTH) {
 			int diff = sum - MAXIMUM_COLUMN_WIDTH;
 			int reduce = diff / fixedColumnCount + 1;
@@ -171,6 +170,7 @@ public class ReportBuilderSourceGenerator {
 				}
 			}
 		}
+
 		for (int i = 0; i < numberOfColumns; i++) {
 			int width = widths[i];
 			String widthString = width == -1 ? "ReportConstants.AUTO_WIDTH" : "" + width;
@@ -247,6 +247,7 @@ public class ReportBuilderSourceGenerator {
 		}
 
 		source.declareMethod("protected Class<?> getRowClass()", true).statement("return " + getMainType().getSimpleName() + ".class");
+
 		return source;
 	}
 
@@ -438,6 +439,7 @@ public class ReportBuilderSourceGenerator {
 		return aggregateFunction;
 	}
 
+	/*
 	private String checkDescriptor(String propertyToCheck) {
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(getMainType());
 		PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(propertyToCheck);
@@ -455,6 +457,7 @@ public class ReportBuilderSourceGenerator {
 		}
 		return propertyToCheck;
 	}
+	*/
 
 	private String getPatternForGroupLevel(String groupLevel) {
 		switch (Integer.parseInt(groupLevel)) {

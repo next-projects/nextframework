@@ -3,9 +3,9 @@ package org.nextframework.test.report.builder;
 public class TestExample4ItemBean {
 
 	TestExample4PhaseBean phase;
-	
+
 	String info;
-	
+
 	public TestExample4ItemBean(TestExample4PhaseBean phase, String info) {
 		this.phase = phase;
 		this.info = info;
@@ -26,4 +26,5 @@ public class TestExample4ItemBean {
 	public void setInfo(String info) {
 		this.info = info;
 	}
+
 }

@@ -16,5 +16,7 @@
 package org.stjs.javascript.dom;
 
 abstract public class Quote extends Element {
+
 	public String cite;
+
 }

@@ -12,4 +12,5 @@ import java.util.Map;
 public interface TransientsFilter {
 
 	void filterQueryForTransients(QueryBuilder<?> query, Map<String, Object> filters);
+
 }

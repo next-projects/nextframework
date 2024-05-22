@@ -21,6 +21,7 @@ import org.stjs.javascript.functions.Callback1;
 import org.stjs.javascript.functions.Function1;
 
 abstract public class Window {
+
 	public boolean closed;
 	public String defaultStatus;
 	public Document document;
@@ -79,4 +80,5 @@ abstract public class Window {
 	abstract public void scrollBy(int x, int y);
 
 	abstract public void scrollTo(int x, int y);
+
 }

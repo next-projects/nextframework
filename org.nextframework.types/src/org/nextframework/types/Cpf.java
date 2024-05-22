@@ -27,51 +27,53 @@ import java.io.Serializable;
 
 import org.nextframework.types.hibernate.CpfUserType;
 
-public class Cpf extends CpfUserType implements Document, Serializable  {
+public class Cpf extends CpfUserType implements Document, Serializable {
 
 	private static final long serialVersionUID = 2090169993922126029L;
-	
+
 	public static boolean AUTO_VALIDATION = true;
-	
+
 	private String value;
 
 	/**
 	 * @deprecated Utilize o método que recebe uma String, esse método só existe por causa do hibernate
 	 */
 	@Deprecated
-	public Cpf(){
+	public Cpf() {
 	}
-	
-	public Cpf(String cpf, boolean check){
-		if(cpf == null) throw new NullPointerException();
+
+	public Cpf(String cpf, boolean check) {
+		if (cpf == null)
+			throw new NullPointerException();
 		checkPattern(cpf);
 		cpf = removeSymbols(cpf);
-		if(check && !cpfValido(cpf)){
+		if (check && !cpfValido(cpf)) {
 			throw new IllegalArgumentException("O CPF '" + cpf + "' não é válido");
 		}
-		value = cpf.trim().equals("")?null:cpf;
+		value = cpf.trim().equals("") ? null : cpf;
 	}
-	
-	public Cpf(String cpf){
+
+	public Cpf(String cpf) {
 		this(cpf, true);
 	}
-	
 
-
-	   /**
-		 * Realiza a validação do CPF.
-		 * 
-		 * @param strCPF
-		 *            número de CPF a ser validado
-		 * @return true se o CPF é válido e false se não é válido
-		 */
+	/**
+	 * Realiza a validação do CPF.
+	 * 
+	 * @param strCPF
+	 *            número de CPF a ser validado
+	 * @return true se o CPF é válido e false se não é válido
+	 */
 	public static boolean cpfValido(String strCpf) {
-		if(strCpf.length() > 11){
+		
+		if (strCpf.length() > 11) {
 			strCpf = removeSymbols(strCpf);
 		}
-		if(strCpf.length()!=11){
+		
+		if (strCpf.length() != 11) {
 			return false;
 		}
+		
 		int d1, d2;
 		int digito1, digito2, resto;
 		int digitoCPF;
@@ -91,8 +93,7 @@ public class Cpf extends CpfUserType implements Document, Serializable  {
 			// para o segundo digito repita o procedimento incluindo o primeiro
 			// digito calculado no passo anterior.
 			d2 = d2 + (12 - nCount) * digitoCPF;
-		}
-		;
+		} ;
 
 		// Primeiro resto da divisão por 11.
 		resto = (d1 % 11);
@@ -127,13 +128,13 @@ public class Cpf extends CpfUserType implements Document, Serializable  {
 		// resto.
 		return nDigVerific.equals(nDigResult);
 	}
-	
+
 	private void checkPattern(String value) throws IllegalArgumentException {
-		if(!value.trim().equals("") && !value.matches("\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}")){
+		if (!value.trim().equals("") && !value.matches("\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}")) {
 			throw new IllegalArgumentException("O CPF '" + value + "' não está no formato correto");
 		}
 	}
-	
+
 	public String getValue() {
 		return value;
 	}
@@ -141,43 +142,42 @@ public class Cpf extends CpfUserType implements Document, Serializable  {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	protected Cpf clone() throws CloneNotSupportedException {
 		return new Cpf(value, AUTO_VALIDATION);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof Cpf)){
+		if (!(obj instanceof Cpf)) {
 			return false;
 		}
-		if(this.value == null && ((Cpf)obj).value == null){
+		if (this.value == null && ((Cpf) obj).value == null) {
 			return true;
-		} else if(this.value == null || ((Cpf)obj).value == null){
+		} else if (this.value == null || ((Cpf) obj).value == null) {
 			return false;
 		}
-		return this.value.equals(((Cpf)obj).value);
+		return this.value.equals(((Cpf) obj).value);
 	}
 
 	@Override
 	public int hashCode() {
-		if(value == null) return super.hashCode();
+		if (value == null)
+			return super.hashCode();
 		return value.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		if(TypeUtils.isEmpty(value)){
+		if (TypeUtils.isEmpty(value)) {
 			return "";
 		} else {
 			try {
 				StringBuilder builder = new StringBuilder(value);
-
 				builder.insert(9, '-');
 				builder.insert(6, '.');
 				builder.insert(3, '.');
-				
 				return builder.toString();
 			} catch (IndexOutOfBoundsException e) {
 				//System.out.println("\n************************\nCPF inválido: "+value);
@@ -190,7 +190,7 @@ public class Cpf extends CpfUserType implements Document, Serializable  {
 		return value2.replace(".", "").replace("-", "");
 	}
 
-	public boolean isNotEmpty(){
+	public boolean isNotEmpty() {
 		return !TypeUtils.isEmpty(value);
 	}
 
@@ -199,4 +199,5 @@ public class Cpf extends CpfUserType implements Document, Serializable  {
 		new Cpf(c);
 		System.out.println(Cpf.cpfValido(c));
 	}
+
 }

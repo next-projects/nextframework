@@ -26,51 +26,56 @@ import org.apache.commons.logging.LogFactory;
  * @since 2012-08-15
  */
 public class ServiceFactory {
-	
+
 	private static Log log = LogFactory.getLog(ServiceFactory.class.getSimpleName());
-	
+
 	static Set<ServiceProvider> providers = null;
-	
+
 	static boolean initialized = false;
-	
-	private static void init(){
-		if(initialized){
-			if(providers == null){
+
+	private static void init() {
+
+		if (initialized) {
+			if (providers == null) {
 				throw new IllegalStateException("The ServiceFactory is not available. The release() method must have been called. ");
 			}
 			return;
 		}
+
 		providers = Collections.synchronizedSet(new TreeSet<ServiceProvider>(new Comparator<ServiceProvider>() {
+
 			public int compare(ServiceProvider o1, ServiceProvider o2) {
 				return o1.priority() - o2.priority();
 			}
+
 		}));
-		
+
 		Iterator<ServiceProvider> iterator = ServiceLoader.load(ServiceProvider.class).iterator();
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			try {
 				providers.add(iterator.next());
 			} catch (ServiceConfigurationError e) {
 				//if the provider depends on classes not available does nothing.. (allow for optional dependency, aka ServletContext)
-				if(e.getMessage().contains("not found")){
+				if (e.getMessage().contains("not found")) {
 					throw e;
 				}
-				log.debug("Ignoring provider: "+e);
+				log.debug("Ignoring provider: " + e);
 			}
 		}
+
 		initialized = true;
+
 	}
-	
-	public static void registerProvider(ServiceProvider provider){
+
+	public static void registerProvider(ServiceProvider provider) {
 		init();
 		providers.add(provider);
 	}
-	
+
 	public static Set<ServiceProvider> getProviders() {
 		init();
 		return Collections.unmodifiableSet(providers);
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public static <E> E[] loadServices(Class<E> serviceInterface) {
@@ -103,11 +108,11 @@ public class ServiceFactory {
 		}
 		for (ServiceProvider provider : providers) {
 			E serviceObject = provider.getService(service);
-			if(serviceObject != null){
+			if (serviceObject != null) {
 				return serviceObject;
 			}
 		}
-		throw ServiceException.noServiceFound(service.toString(), "Using providers "+providers);
+		throw ServiceException.noServiceFound(service.toString(), "Using providers " + providers);
 	}
 
 	/**
@@ -115,22 +120,23 @@ public class ServiceFactory {
 	 * After this call the ServiceFactory release all resources, so it cannot be used anymore.<BR>
 	 * Any attempt to use the ServiceFactory will result in {@link IllegalStateException}
 	 */
-	public static void release(){
+	public static void release() {
 		Set<ServiceProvider> providers = getProviders();
 		for (ServiceProvider serviceProvider : providers) {
 			try {
 				serviceProvider.release();
 			} catch (Throwable e) {
-				log.info("Provider "+serviceProvider+" threw excpetion when releasing. "+e);
+				log.info("Provider " + serviceProvider + " threw excpetion when releasing. " + e);
 			}
 		}
 		ServiceFactory.providers = null;
 	}
-	
-	public static void refresh(){
+
+	public static void refresh() {
 		try {
 			release();
-		} catch (IllegalStateException e) {}
+		} catch (IllegalStateException e) {
+		}
 		initialized = false;
 		init();
 	}

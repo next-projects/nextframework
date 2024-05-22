@@ -36,13 +36,13 @@ public abstract class AbstractPermission implements Permission {
 	@Transient
 	public Map<String, String> getPermissionMap() {
 		String permissionString = getPermissionString();
-		if(permissionString == null){
-			throw new NullPointerException("getPermissionString returned null. Verify implementation: "+this.getClass().getName());
+		if (permissionString == null) {
+			throw new NullPointerException("getPermissionString returned null. Verify implementation: " + this.getClass().getName());
 		}
 		Map<String, String> permissionMap = new HashMap<String, String>();
 		String[] permissoes = permissionString.split(";");
 		for (int i = 0; i < permissoes.length; i++) {
-			if(permissoes[i] != null && permissoes[i].length() > 0){
+			if (permissoes[i] != null && permissoes[i].length() > 0) {
 				String[] map = permissoes[i].split("=");
 				String key = map[0];
 				String value = map[1];
@@ -66,19 +66,19 @@ public abstract class AbstractPermission implements Permission {
 		}
 		setPermissionString(builder.toString());
 	}
-	
+
 	@Transient
 	public String getPermissionValue(String id) {
 		return (String) getPermissionMap().get(id);
 	}
-		
+
 	@Override
 	public String toString() {
-		return "Abstract Permission: "+getPermissionString();
+		return "Abstract Permission: " + getPermissionString();
 	}
-	
+
 	public abstract void setPermissionString(String string);
+
 	public abstract String getPermissionString();
 
-	
 }

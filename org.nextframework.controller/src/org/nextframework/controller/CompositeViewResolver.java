@@ -71,6 +71,7 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 					out.write(data);
 				}
 				out.flush();
+				out.close();
 			}
 			classpathView = "/WEB-INF/classes/" + viewName.replace('.', '/') + ".jsp";
 		}

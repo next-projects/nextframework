@@ -15,7 +15,7 @@ public class InputTagNumberComponent extends InputTagComponent {
 	@Override
 	public void prepare() {
 		super.prepare();
-		if(inputTag.getId() == null){
+		if (inputTag.getId() == null) {
 			inputTag.setId(inputTag.generateUniqueId());
 		}
 		alignToRight();

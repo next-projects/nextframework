@@ -9,6 +9,7 @@ import org.nextframework.report.generator.mvc.ReportDesignModel;
 
 public interface GeneratedReportListener {
 
+	@SuppressWarnings("rawtypes")
 	Class getFromClass();
 
 	void checkFilters(ReportDesignModel model, ReportElement reportElement, String filter, Map<String, Map<String, Object>> filtersMetadataMap);

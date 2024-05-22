@@ -33,42 +33,42 @@ import org.nextframework.authorization.UserAuthorization;
  * @author rogelgarcia
  */
 public class CrudAuthorization implements UserAuthorization {
-	
+
 	protected boolean canCreate;
 	protected boolean canRead;
 	protected boolean canUpdate;
 	protected boolean canDelete;
-	
+
 	public boolean canCreate() {
 		return canCreate;
 	}
-	
+
 	public boolean canDelete() {
 		return canDelete;
 	}
-	
+
 	public boolean canRead() {
 		return canRead;
 	}
-	
+
 	public boolean canUpdate() {
 		return canUpdate;
 	}
-	
+
 	public void setCreate(boolean canCreate) {
 		this.canCreate = canCreate;
 	}
-	
+
 	public void setDelete(boolean canDelete) {
 		this.canDelete = canDelete;
 	}
-	
+
 	public void setRead(boolean canRead) {
 		this.canRead = canRead;
 	}
-	
+
 	public void setUpdate(boolean canUpdate) {
 		this.canUpdate = canUpdate;
 	}
-	
+
 }

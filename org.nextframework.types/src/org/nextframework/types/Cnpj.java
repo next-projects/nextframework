@@ -27,51 +27,51 @@ import java.io.Serializable;
 
 import org.nextframework.types.hibernate.CnpjUserType;
 
-public class Cnpj extends CnpjUserType implements Document, Serializable{
+public class Cnpj extends CnpjUserType implements Document, Serializable {
 
 	private static final long serialVersionUID = 7515600575750828297L;
-	
+
 	public static boolean AUTO_VALIDATION = true;
-	
+
 	private String value;
-	
+
 	/**
 	 * @deprecated Utilize o método que recebe uma String, esse método só existe por causa do hibernate
 	 */
 	@Deprecated
-	public Cnpj(){
+	public Cnpj() {
 	}
-	
-	public Cnpj(String cnpj, boolean check){
-		if(cnpj == null) throw new NullPointerException();
+
+	public Cnpj(String cnpj, boolean check) {
+		if (cnpj == null)
+			throw new NullPointerException();
 		checkPattern(cnpj);
 		String original = cnpj;
 		cnpj = removeSymbols(cnpj);
-		if(check && !cnpjValido(cnpj)){
+		if (check && !cnpjValido(cnpj)) {
 			throw new IllegalArgumentException("O CNPJ '" + original + "' não é válido");
 		}
-		value = cnpj.trim().equals("")?null:cnpj;
+		value = cnpj.trim().equals("") ? null : cnpj;
 	}
-	
-	public Cnpj(String cnpj){
+
+	public Cnpj(String cnpj) {
 		this(cnpj, true);
 	}
-	
-   /** Realiza a validação do CNPJ.
-    *
-    * @param   str_cnpj número de CNPJ a ser validado
-    * @return  true se o CNPJ é válido e false se não é válido
-    */
-   public static boolean cnpjValido(String str_cnpj) {
-	   
-	   
+
+	/** Realiza a validação do CNPJ.
+	*
+	* @param   str_cnpj número de CNPJ a ser validado
+	* @return  true se o CNPJ é válido e false se não é válido
+	*/
+	public static boolean cnpjValido(String str_cnpj) {
+
 		if (str_cnpj.length() != 15 && str_cnpj.length() != 14) {
 			return false;
 		}
-		if(str_cnpj.length() == 15){
-			str_cnpj = str_cnpj.substring(1,15);
+		if (str_cnpj.length() == 15) {
+			str_cnpj = str_cnpj.substring(1, 15);
 		}
-		
+
 		int soma = 0, dig;
 		String cnpj_calc = str_cnpj.substring(0, 12);
 
@@ -104,9 +104,9 @@ public class Cnpj extends CnpjUserType implements Document, Serializable{
 
 		return str_cnpj.equals(cnpj_calc);
 	}
-	
+
 	private void checkPattern(String value) throws IllegalArgumentException {
-		if(!value.trim().equals("") && !value.matches("\\d{2,3}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}")){
+		if (!value.trim().equals("") && !value.matches("\\d{2,3}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}")) {
 			throw new IllegalArgumentException("O CNPJ '" + value + "' não está no formato correto");
 		}
 	}
@@ -122,36 +122,35 @@ public class Cnpj extends CnpjUserType implements Document, Serializable{
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof Cnpj)){
+		if (!(obj instanceof Cnpj)) {
 			return false;
 		}
-		if(this.value == null && ((Cnpj)obj).value == null){
+		if (this.value == null && ((Cnpj) obj).value == null) {
 			return true;
-		} else if(this.value == null || ((Cnpj)obj).value == null){
+		} else if (this.value == null || ((Cnpj) obj).value == null) {
 			return false;
 		}
-		return this.value.equals(((Cnpj)obj).value);
+		return this.value.equals(((Cnpj) obj).value);
 	}
 
 	@Override
 	public int hashCode() {
-		if(value == null) return super.hashCode();
+		if (value == null)
+			return super.hashCode();
 		return value.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		if(TypeUtils.isEmpty(value)){
+		if (TypeUtils.isEmpty(value)) {
 			return "";
 		} else {
 			try {
 				StringBuilder builder = new StringBuilder(value);
-
 				builder.insert(12, '-');
 				builder.insert(8, '/');
 				builder.insert(5, '.');
 				builder.insert(2, '.');
-				
 				return builder.toString();
 			} catch (IndexOutOfBoundsException e) {
 				//System.out.println("\n************************\nCnpj inválido: "+value);
@@ -159,18 +158,19 @@ public class Cnpj extends CnpjUserType implements Document, Serializable{
 			}
 		}
 	}
-	
+
 	private String removeSymbols(String value2) {
 		return value2.replace(".", "").replace("-", "").replace("/", "");
 	}
-	
-	public boolean isNotEmpty(){
+
+	public boolean isNotEmpty() {
 		return !TypeUtils.isEmpty(value);
 	}
-	
+
 	public static void main(String[] args) {
 		String c = "006.213.117/0001-30";
 		new Cnpj(c);
 		System.out.println(Cnpj.cnpjValido(c));
 	}
+
 }

@@ -31,11 +31,13 @@ import java.lang.annotation.Target;
 import org.nextframework.authorization.AuthorizationModule;
 import org.nextframework.authorization.HasAccessAuthorizationModule;
 
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 //@org.springframework.stereotype.Controller
 public @interface Controller {
+
 	String[] path();
+
 	Class<? extends AuthorizationModule> authorizationModule() default HasAccessAuthorizationModule.class;
+
 }
