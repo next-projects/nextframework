@@ -221,7 +221,7 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 			}
 
 			@Override
-			public String formatRowGroup(Object _row) {
+			public Object formatRowGroup(Object _row) {
 				ChartRow row = (ChartRow) _row;
 				PropertyEditor formatter = chart0.getGroupFormatter();
 				if (formatter != null) {

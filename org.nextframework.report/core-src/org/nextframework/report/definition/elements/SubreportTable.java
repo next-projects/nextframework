@@ -40,7 +40,7 @@ public class SubreportTable extends Subreport {
 		tableInformation.configureGroupField(groupField);
 		definition.addItem(groupField, definition.getSectionDetail(), 0);
 
-		String firstColumnHeaderText = tableInformation.getFirstColumnHeader();
+		Object firstColumnHeaderText = tableInformation.getFirstColumnHeader();
 		firstColumnHeaderText = firstColumnHeaderText != null ? firstColumnHeaderText : "";
 		ReportLabel firstColumnHeaderField = new ReportLabel(firstColumnHeaderText);
 		tableInformation.configureHeaderField(firstColumnHeaderField, 0);

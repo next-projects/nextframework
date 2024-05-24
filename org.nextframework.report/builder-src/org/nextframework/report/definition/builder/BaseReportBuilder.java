@@ -225,16 +225,16 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return groupSetups.get(group);
 	}
 
-	protected void setTitle(String title, String subtitle) {
+	protected void setTitle(Object title, Object subtitle) {
 		setTitle(title);
 		setSubtitle(subtitle);
 	}
 
-	protected void setTitle(String title) {
+	protected void setTitle(Object title) {
 		getDefinition().setTitle(title);
 	}
 
-	protected void setSubtitle(String subtitle) {
+	protected void setSubtitle(Object subtitle) {
 		getDefinition().setSubtitle(subtitle);
 	}
 
@@ -242,8 +242,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return new ReportItemStyle();
 	}
 
-	@SuppressWarnings("deprecation")
-	protected ReportLabel separator(String text, int colspan) {
+	protected ReportLabel separator(Object text, int colspan) {
 		ReportLabel reportLabel = new ReportLabel(text);
 		reportLabel.setColspan(colspan);
 		reportLabel.setHeight(2);
@@ -253,36 +252,36 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return reportLabel;
 	}
 
-	protected ReportLabel label(String text) {
+	protected ReportLabel label(Object text) {
 		return label(text, style());
 	}
 
-	protected ReportLabel label(String text, ReportItemStyle style) {
+	protected ReportLabel label(Object text, ReportItemStyle style) {
 		ReportLabel reportLabel = new ReportLabel(text);
 		reportLabel.setStyle(style);
 		return reportLabel;
 	}
 
-	protected ReportLabel label(String text, boolean bold) {
+	protected ReportLabel label(Object text, boolean bold) {
 		return label(text, style().setBold(bold));
 	}
 
-	protected ReportLabel label(String text, ReportAlignment alignment) {
+	protected ReportLabel label(Object text, ReportAlignment alignment) {
 		return new ReportLabel(text, alignment);
 	}
 
-	protected ReportLabel label(String text, ReportAlignment alignment, ReportItemStyle style) {
+	protected ReportLabel label(Object text, ReportAlignment alignment, ReportItemStyle style) {
 		ReportLabel reportLabel = new ReportLabel(text);
 		style.setAlignment(alignment);
 		reportLabel.setStyle(style);
 		return reportLabel;
 	}
 
-	protected ReportLabel label(String text, int colspan) {
+	protected ReportLabel label(Object text, int colspan) {
 		return new ReportLabel(text).setColspan(colspan);
 	}
 
-	protected ReportLabel label(String text, int colspan, ReportAlignment alignment) {
+	protected ReportLabel label(Object text, int colspan, ReportAlignment alignment) {
 		return new ReportLabel(text, alignment).setColspan(colspan);
 	}
 
@@ -336,14 +335,14 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	public static class FieldConfig {
 
-		public String label;
+		public Object label;
 		public String originalExpression;
 		public String reportExpression;
 		public String preffix;
 		public String pattern;
 		public ReportAlignment alignment;
 
-		public FieldConfig(String label, String originalExpression, String preffix, String reportExpression, String pattern, ReportAlignment alignment) {
+		public FieldConfig(Object label, String originalExpression, String preffix, String reportExpression, String pattern, ReportAlignment alignment) {
 			this.label = label;
 			this.originalExpression = originalExpression;
 			this.preffix = preffix;
@@ -373,7 +372,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 	protected FieldConfig getConfigForBeanDescriptor(String fieldName, String fieldPreffix, BeanDescriptor beanDescriptor) {
 
 		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(fieldName);
-		String label = propertyDescriptor.getDisplayName();
+		Object label = getPropertyDisplayName(propertyDescriptor);
 		String pattern = null;
 		ReportAlignment alignment = null;
 
@@ -414,8 +413,12 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				pattern, alignment);
 	}
 
+	protected Object getPropertyDisplayName(PropertyDescriptor propertyDescriptor) {
+		return propertyDescriptor.getDisplayName();
+	}
+
 	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor,
-			String label, String fieldName, String fieldPreffix, String reportExpression,
+			Object label, String fieldName, String fieldPreffix, String reportExpression,
 			String pattern, ReportAlignment alignment) {
 		return new FieldConfig(label, fieldName, fieldPreffix, reportExpression, pattern, alignment);
 	}

@@ -301,6 +301,11 @@ public class BeanUtils {
 
 		Class<?> ownerClass = Util.objects.getRealClass(propertyDescriptor.getOwnerClass());
 		String prop = propertyDescriptor.getName();
+		String displayName = propertyDescriptor.getDisplayName();
+		if (prop.contains("[")) {
+			prop = prop.split("\\[")[0];
+			displayName = displayName.split("\\[")[0];
+		}
 
 		boolean usePrefix = optionalPrefix != null && optionalPrefix.length() > 0;
 		String[] codes = new String[usePrefix ? 4 : 2];
@@ -318,7 +323,7 @@ public class BeanUtils {
 		//Simple class name and property (Ex: ClassName.name)
 		codes[index++] = ownerClass.getSimpleName() + "." + prop;
 
-		return Util.objects.newMessage(codes, null, propertyDescriptor.getDisplayName());
+		return Util.objects.newMessage(codes, null, displayName);
 	}
 
 	public MessageSourceResolvable getCustomFieldResolvable(Class<?> beanClass, String field) {

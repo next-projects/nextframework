@@ -1,9 +1,11 @@
 package org.nextframework.report.renderer.html;
 
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.renderer.ReportRenderer;
 import org.nextframework.report.renderer.ReportRendererFactory;
+import org.nextframework.report.renderer.ValueConverter;
 import org.nextframework.report.renderer.html.builder.HtmlReportBuilder;
 import org.nextframework.report.renderer.html.builder.HtmlReportBuilderImpl;
 import org.nextframework.report.renderer.html.design.HtmlDesign;
@@ -33,16 +35,17 @@ public class HtmlReportRenderer implements ReportRenderer {
 
 	@Override
 	public Object renderReport(ReportDefinition report) {
-		HtmlDesign htmlDesign = getHtmlDesign(report);
+		ValueConverter valueConverter = (ValueConverter) report.getParameters().get(BaseReportBuilder.CONVERTER);
+		HtmlDesign htmlDesign = getHtmlDesign(report, valueConverter);
 		return htmlDesign.toString();
 	}
 
-	public String renderItem(ReportItem item) {
-		return createHtmlReportBuilder().getHtmlDesign(item).toString();
+	public HtmlDesign getHtmlDesign(ReportDefinition report, ValueConverter valueConverter) {
+		return createHtmlReportBuilder().getHtmlDesign(report, valueConverter);
 	}
 
-	public HtmlDesign getHtmlDesign(ReportDefinition report) {
-		return createHtmlReportBuilder().getHtmlDesign(report);
+	public String renderItem(ReportItem item, ValueConverter valueConverter) {
+		return createHtmlReportBuilder().getHtmlDesign(item, valueConverter).toString();
 	}
 
 	public static String renderAsHtml(ReportDefinition report) {

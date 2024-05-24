@@ -11,6 +11,7 @@ import org.nextframework.chart.Chart;
 import org.nextframework.report.definition.ReportParent;
 import org.nextframework.report.definition.ReportSection;
 import org.nextframework.report.definition.ReportSectionType;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportChart;
 import org.nextframework.report.definition.elements.ReportConstants;
 import org.nextframework.report.definition.elements.ReportImage;
@@ -21,6 +22,8 @@ import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.definition.elements.style.ReportAlignment;
 import org.nextframework.report.definition.elements.style.ReportBasicStyle;
+import org.nextframework.report.renderer.ValueConverter;
+import org.nextframework.report.renderer.jasper.JasperUtils;
 
 import net.sf.jasperreports.engine.JRBoxContainer;
 import net.sf.jasperreports.engine.JRChild;
@@ -64,7 +67,11 @@ public class JasperDesignBuilderImplComponentMapper {
 			ReportLabel reportLabel = (ReportLabel) item;
 			JRDesignElement returnElement = section.getType() != ReportSectionType.TITLE ? (JRDesignElement) jasperDesignBuilderImpl.findStaticTextInList(reportLabel, jasperDesignBuilderImpl.compileItemsFromOriginalTemplate(section)).clone() : new JRDesignStaticText();
 			JRDesignStaticText jrDesignStaticText = jasperDesignBuilderImpl.getInnerStaticText(returnElement);
-			jrDesignStaticText.setText(reportLabel.getText());
+
+			ValueConverter valueConverter = (ValueConverter) jasperDesignBuilderImpl.getDefinition().getParameters().get(BaseReportBuilder.CONVERTER);
+			String text = JasperUtils.applyConverter(valueConverter, reportLabel.getContent());
+			jrDesignStaticText.setText(text);
+
 			configureFrameWidthForTextElement(returnElement, computeWidth);
 			configureTextElement(computeWidth, reportLabel, jrDesignStaticText, section, jrStyle);
 			result = returnElement;

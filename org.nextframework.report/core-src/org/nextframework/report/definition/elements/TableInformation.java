@@ -13,7 +13,7 @@ public interface TableInformation {
 
 	void configureGroupField(ReportTextField groupField);
 
-	String getFirstColumnHeader();
+	Object getFirstColumnHeader();
 
 	void configureHeaderField(ReportLabel headerField, int columnIndex);
 
@@ -23,11 +23,11 @@ public interface TableInformation {
 
 	ReportItem getComponentFor(Object header, int columnIndex);
 
-	String formatHeader(Object header);
+	Object formatHeader(Object header);
 
 	Collection<?> getRowGroupDataSet();
 
-	String formatRowGroup(Object object);
+	Object formatRowGroup(Object object);
 
 	Object getValueForRowAndColumn(Object row, Object header, int columnIndex);
 

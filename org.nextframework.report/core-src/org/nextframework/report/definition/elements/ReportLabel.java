@@ -4,40 +4,40 @@ import org.nextframework.report.definition.elements.style.ReportAlignment;
 
 public class ReportLabel extends ReportTextElement {
 
-	private String text;
+	private Object content;
 	private String type = "label";
 
-	public ReportLabel(String text, ReportAlignment alignment) {
+	public ReportLabel(Object text, ReportAlignment alignment) {
 		this(text);
 		getStyle().setAlignment(alignment);
 	}
 
-	public ReportLabel(String text) {
-		this.text = text;
+	public ReportLabel(Object content) {
+		this.content = content;
 	}
 
-	public ReportLabel(String text, int width) {
-		this.text = text;
+	public ReportLabel(Object content, int width) {
+		this.content = content;
 		this.width = width;
 	}
 
-	public ReportLabel(String type, String text) {
+	public ReportLabel(String type, Object content) {
 		this.type = type;
-		this.text = text;
+		this.content = content;
 	}
 
-	public ReportLabel(String type, String text, int width) {
-		this.text = text;
+	public ReportLabel(String type, Object content, int width) {
+		this.content = content;
 		this.type = type;
 		this.width = width;
 	}
 
-	public void setText(String text) {
-		this.text = text;
+	public void setContent(Object content) {
+		this.content = content;
 	}
 
-	public String getText() {
-		return text;
+	public Object getContent() {
+		return content;
 	}
 
 	public String getType() {
@@ -61,7 +61,7 @@ public class ReportLabel extends ReportTextElement {
 
 	@Override
 	public String toString() {
-		return "Label: " + text;
+		return "Label: " + content;
 	}
 
 	@Override
