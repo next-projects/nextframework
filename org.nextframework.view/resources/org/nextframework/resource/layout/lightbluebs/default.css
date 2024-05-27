@@ -27,8 +27,11 @@ A:HOVER {
 	--sl-primary-disabled: #005588;
 	--bs-warning: #d7a100;
 	--bs-link-color: #006699;
+	--bs-link-color-rgb: 0, 102, 153;
 	--bs-link-hover-color: #005588;
-	--bs-border-color: #eeeff0;
+	--bs-link-hover-color-rgb: 0, 85, 136;
+	--bs-border-color: #ced4da;
+	--bs-border-color-translucent: rgba(238, 239, 240, 1);
 	--sl-card-cap-color: #eaf2ff;
 	--bs-light-rgb: 238,239,240; /* #eeeff0 */
 	--sl-disabled-bg: var(--bs-gray-200);
@@ -152,11 +155,10 @@ LI.event, .event {
 /* Panels */
 
 .list-group {
-	--bs-list-group-border-color: var(--bs-border-color);
+	--bs-list-group-border-color: var(--bs-border-color-translucent);
 }
 
 .card {
-	--bs-card-border-color: var(--bs-border-color);
 	--bs-card-cap-bg: var(--sl-card-cap-color);
 	--bs-card-cap-color: var(--bs-primary);
 }
@@ -245,6 +247,7 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 
 .table {
 	--bs-table-bg: #FFFFFF;
+	--bs-table-border-color: var(--bs-border-color-translucent);
 	--bs-table-striped-bg: #F9F9F9;
 	--bs-table-hover-bg: #F3F3F3;
 	margin-bottom: 0px;
