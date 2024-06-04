@@ -136,46 +136,46 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 	}
 
 	private void createAndDrawChart(final String id, DataTable data) {
+
 		Chart chart = instanciateChart(this.chart.getStyle().getChartType(), id);
 		ChartStyle style = this.chart.getStyle();
-		Map chartParameters = map();
+
+		Map chartParams = map();
 		if (style.getWidth() != null && style.getHeight() != null) {
-			chartParameters.putProperty("width", style.getWidth());
-			chartParameters.putProperty("height", style.getHeight());
+			chartParams.putProperty("width", style.getWidth());
+			chartParams.putProperty("height", style.getHeight());
 		}
-		Map hAxis = map();
-		if (this.chart.getData().getGroupTitle() != null) {
-			hAxis.putProperty("title", getLabelString(this.chart.getData().getGroupTitle()));
-			hAxis.putProperty("titleTextStyle", map("fontName", "arial"));
+
+		if (this.chart.getTitle() != null) {
+			chartParams.putProperty("title", getLabelString(GoogleToolsChartBuilder.this.chart.getTitle()));
+			if (style.getTitleTextStyle() != null) {
+				Map titleParams = map();
+				putTextStyleInMap(style.getTitleTextStyle(), titleParams);
+				chartParams.putProperty("titleTextStyle", titleParams);
+			}
 		}
-		if (this.chart.getStyle().isContinuous() && this.chart.getGroupPattern() != null) {
-			//format:'dd/MM/yy'
-			hAxis.putProperty("format", this.chart.getGroupPattern());
-		}
-		if (this.chart.getStyle().getGroupMinValue() != null
-				&& this.chart.getStyle().getGroupMaxValue() != null) {
-			hAxis.putProperty("viewWindowMode", "explicit");
-			hAxis.putProperty("viewWindow", map(
-					"max", this.chart.getStyle().getGroupMaxValue(),
-					"min", this.chart.getStyle().getGroupMinValue()));
-		}
-		Map vAxis = map();
-		if (this.chart.getData().getSeriesTitle() != null) {
-			vAxis.putProperty("title", getLabelString(this.chart.getData().getSeriesTitle()));
-			vAxis.putProperty("titleTextStyle", map("fontName", "Arial"));
-		}
-		vAxis.putProperty("viewWindow", map("min", 0));
 
 		TextStyle pieSliceTextStyle = style.getPieSliceTextStyle();
 		if (pieSliceTextStyle != null) {
-			Map textStyle = getMapForStyle(pieSliceTextStyle);
-			chartParameters.putProperty("pieSliceTextStyle", textStyle);
-		}
-		if (style.getLegendPosition() != LegendPosition.DEFAULT) {
-			chartParameters.putProperty("legend", style.getLegendPosition().toString().toLowerCase());
+			Map pieSliceTextStyleParams = map();
+			putTextStyleInMap(pieSliceTextStyle, pieSliceTextStyleParams);
+			chartParams.putProperty("pieSliceTextStyle", pieSliceTextStyleParams);
 		}
 		if (style.is3d()) {
-			chartParameters.putProperty("is3D", true);
+			chartParams.putProperty("is3D", true);
+		}
+
+		if (style.getLegendPosition() != LegendPosition.DEFAULT || style.getLegendTextStyle() != null) {
+			Map legendParams = map();
+			if (style.getLegendPosition() != LegendPosition.DEFAULT) {
+				legendParams.putProperty("position", style.getLegendPosition().toString().toLowerCase());
+			}
+			if (style.getLegendTextStyle() != null) {
+				Map textStyleParams = map();
+				putTextStyleInMap(style.getLegendTextStyle(), textStyleParams);
+				legendParams.putProperty("textStyle", textStyleParams);
+			}
+			chartParams.putProperty("legend", legendParams);
 		}
 
 		Color[] customColors = this.chart.getStyle().getColors();
@@ -185,40 +185,68 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 				Color color = customColors[i];
 				array.add(getHexColor(color));
 			}
-			chartParameters.putProperty("colors", array);
+			chartParams.putProperty("colors", array);
 		}
+
 		List<PieSlice> slices = this.chart.getStyle().getSlices();
 		if (slices != null && slices.size() > 0) {
 			Array array = array();
 			for (int i = 0; i < slices.size(); i++) {
 				PieSlice pieSlice = slices.get(i);
-				Map sliceObj = map();
+				Map sliceObjParams = map();
 				if (pieSlice != null) {
 					if (pieSlice.getColor() != null) {
-						sliceObj.putProperty("color", getHexColor(pieSlice.getColor()));
+						sliceObjParams.putProperty("color", getHexColor(pieSlice.getColor()));
 					}
 					if (pieSlice.getTextStyle() != null) {
 						Map textStyleObj = map();
 						putTextStyleInMap(pieSlice.getTextStyle(), textStyleObj);
-						sliceObj.putProperty("textStyle", textStyleObj);
-
+						sliceObjParams.putProperty("textStyle", textStyleObj);
 					}
 				}
-				array.add(sliceObj);
+				array.add(sliceObjParams);
 			}
-			chartParameters.putProperty("slices", array);
+			chartParams.putProperty("slices", array);
 		}
 
-		if (this.chart.getTitle() != null) {
-			chartParameters.putProperty("title", getLabelString(GoogleToolsChartBuilder.this.chart.getTitle()));
+		Map hAxisParams = map();
+		if (this.chart.getData().getGroupTitle() != null) {
+			hAxisParams.putProperty("title", getLabelString(this.chart.getData().getGroupTitle()));
 		}
-		chartParameters.putProperty("hAxis", hAxis);
-		chartParameters.putProperty("vAxis", vAxis);
+		if (style.getTitleTextStyle() != null) {
+			Map titleParams = map();
+			putTextStyleInMap(style.getTitleTextStyle(), titleParams);
+			hAxisParams.putProperty("titleTextStyle", titleParams);
+		}
+		if (this.chart.getStyle().isContinuous() && this.chart.getGroupPattern() != null) {
+			//format:'dd/MM/yy'
+			hAxisParams.putProperty("format", this.chart.getGroupPattern());
+		}
+		if (this.chart.getStyle().getGroupMinValue() != null
+				&& this.chart.getStyle().getGroupMaxValue() != null) {
+			hAxisParams.putProperty("viewWindowMode", "explicit");
+			hAxisParams.putProperty("viewWindow", map(
+					"max", this.chart.getStyle().getGroupMaxValue(),
+					"min", this.chart.getStyle().getGroupMinValue()));
+		}
+		chartParams.putProperty("hAxis", hAxisParams);
+
+		Map vAxisParams = map();
+		if (this.chart.getData().getSeriesTitle() != null) {
+			vAxisParams.putProperty("title", getLabelString(this.chart.getData().getSeriesTitle()));
+		}
+		if (style.getTitleTextStyle() != null) {
+			Map titleParams = map();
+			putTextStyleInMap(style.getTitleTextStyle(), titleParams);
+			vAxisParams.putProperty("titleTextStyle", titleParams);
+		}
+		vAxisParams.putProperty("viewWindow", map("min", 0));
+		chartParams.putProperty("vAxis", vAxisParams);
 
 		if (style.getBar().getGroupWidth() != null) {
-			Map bar = map();
-			bar.putProperty("groupWidth", style.getBar().getGroupWidth());
-			chartParameters.putProperty("bar", bar);
+			Map barParams = map();
+			barParams.putProperty("groupWidth", style.getBar().getGroupWidth());
+			chartParams.putProperty("bar", barParams);
 		}
 
 		if (style.getTopPadding() != null || style.getBottomPadding() != null || style.getLeftPadding() != null || style.getRightPadding() != null || style.getChartAreaHeight() != null || style.getChartAreaWidth() != null) {
@@ -241,43 +269,40 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 			if (this.chart.getStyle().getChartAreaWidth() != null) {
 				chartArea.putProperty("width", this.chart.getStyle().getChartAreaWidth());
 			}
-			chartParameters.putProperty("chartArea", chartArea);
+			chartParams.putProperty("chartArea", chartArea);
 		}
 
 		if (this.chart.getStyle().getChartType() == ChartType.COMBO) {
 			String styleType = getComboDescription(this.chart.getComboDefaultChartType());
-			chartParameters.putProperty("seriesType", styleType);
+			chartParams.putProperty("seriesType", styleType);
 			Comparable<?>[] series = this.chart.getData().getSeries();
-			Map seriesTypeMap = map();
+			Map seriesTypeParams = map();
 			for (int i = 0; i < series.length; i++) {
 				ChartType comboSerieType = this.chart.getComboSerieType(i);
 				if (comboSerieType != null) {
-					seriesTypeMap.putProperty(String.valueOf(i), map("type", getComboDescription(comboSerieType)));
+					seriesTypeParams.putProperty(String.valueOf(i), map("type", getComboDescription(comboSerieType)));
 				}
 			}
-			chartParameters.putProperty("series", seriesTypeMap);
+			chartParams.putProperty("series", seriesTypeParams);
 		}
 
-		chartParameters.putProperty("backgroundColor", "none");
+		chartParams.putProperty("backgroundColor", "none");
 
 		if (this.chart.getStyle().getPointSize() != null) {
-			chartParameters.putProperty("pointSize", this.chart.getStyle().getPointSize());
+			chartParams.putProperty("pointSize", this.chart.getStyle().getPointSize());
 		}
 		if (this.chart.getStyle().getLineWidth() != null) {
-			chartParameters.putProperty("lineWidth", this.chart.getStyle().getLineWidth());
+			chartParams.putProperty("lineWidth", this.chart.getStyle().getLineWidth());
 		}
-		putTextStyleInMap(style.getTextStyle(), chartParameters);
-		chart.draw(data, chartParameters);
+
+		putTextStyleInMap(style.getTextStyle(), chartParams);
+
+		chart.draw(data, chartParams);
 	}
 
-	private Map getMapForStyle(TextStyle textStyleObject) {
-		Map textStyle = map();
-		return putTextStyleInMap(textStyleObject, textStyle);
-	}
-
-	private Map putTextStyleInMap(TextStyle textStyleObject, Map map) {
+	private void putTextStyleInMap(TextStyle textStyleObject, Map map) {
 		if (textStyleObject == null || map == null) {
-			return map;
+			return;
 		}
 		if (textStyleObject.getColor() != null) {
 			map.putProperty("color", getHexColor(textStyleObject.getColor()));
@@ -288,11 +313,9 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 		if (textStyleObject.getFontSize() != null) {
 			Matcher matcher = Pattern.compile("(\\d+)").matcher(textStyleObject.getFontSize());
 			if (matcher.find()) {
-				int size = Integer.parseInt(matcher.group(1));
-				map.putProperty("fontSize", size);
+				map.putProperty("fontSize", Integer.parseInt(matcher.group(1)));
 			}
 		}
-		return map;
 	}
 
 	private String getComboDescription(ChartType comboDefaultChartType) {
@@ -308,10 +331,7 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 	}
 
 	private String getHexColor(Color color) {
-		return "#"
-				+ toHexString(color.getRed())
-				+ toHexString(color.getGreen())
-				+ toHexString(color.getBlue());
+		return "#" + toHexString(color.getRed()) + toHexString(color.getGreen()) + toHexString(color.getBlue());
 	}
 
 	private String toHexString(int color) {

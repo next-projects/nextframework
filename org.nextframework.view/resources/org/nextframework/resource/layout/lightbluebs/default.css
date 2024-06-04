@@ -21,21 +21,29 @@ A:HOVER {
 	text-decoration: none;
 }
 
-:root {
+:root, [data-bs-theme=light] {
+	color-scheme: light;
 	--bs-primary: #006699;
-	--sl-primary-hover: #005588;
-	--sl-primary-disabled: #005588;
+	--nx-primary-hover: #005588;
+	--nx-primary-disabled: #005588;
 	--bs-warning: #d7a100;
 	--bs-link-color: #006699;
 	--bs-link-color-rgb: 0, 102, 153;
 	--bs-link-hover-color: #005588;
 	--bs-link-hover-color-rgb: 0, 85, 136;
 	--bs-input-border-color: #ced4da;
-	--sl-card-cap-color: #eaf2ff;
 	--bs-light-rgb: 238,239,240; /* #eeeff0 */
-	--sl-disabled-bg: var(--bs-gray-200);
-	--sl-alert-bg: #fffaeb;
-	--sl-alert-border: #e5dbba;
+	--nx-alert-bg: #fffaeb;
+	--nx-alert-border: #e5dbba;
+	--nx-backdrop-bg: #FFFFFF;
+	--nx-table-group-bg: #ced4da;
+}
+
+[data-bs-theme=dark] {
+	--nx-alert-bg: #201904;
+	--nx-alert-border: #5a4500;
+	--nx-backdrop-bg: #000000;
+	--nx-table-group-bg: #495057;
 }
 
 
@@ -43,8 +51,8 @@ A:HOVER {
 
 .alert-primary {
 	--bs-alert-color: var(--bs-primary);
-	--bs-alert-bg: var(--sl-alert-bg);
-	--bs-alert-border-color: var(--sl-alert-border);
+	--bs-alert-bg: var(--nx-alert-bg);
+	--bs-alert-border-color: var(--nx-alert-border);
 }
 
 .messageBlock UL {
@@ -55,7 +63,6 @@ A:HOVER {
 .messageBlock UL LI {
 	position: relative;
 	list-style-type: none;
-	padding-left: 30px;
 }
 
 .messageCloseIcon {
@@ -68,51 +75,60 @@ A:HOVER {
 	color: var(--bs-dark);
 }
 
+LI.debug:before, .debug:before, LI.trace:before, .trace:before,
+LI.info:before, .info:before, LI.warn:before, .warn:before, LI.error:before, .error:before,
+LI.event:before, .event:before, LI.validation:before, .validation:before {
+	font-family: bootstrap-icons;
+	padding-right: 0.5em;
+}
+
 LI.debug, .debug {
-	background-image: url("debug.png");
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
-	color: var(--bs-green);
+	color: var(--bs-gray);
+}
+LI.debug:before, .debug:before {
+	content: "\F1DB"; /* bi-bug-fill */
 }
 
 LI.trace, .trace {
-	background-image: url("trace.png");
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
+	color: var(--bs-gray);
+}
+LI.trace:before, .trace:before {
+	content: "\F232"; /* bi-caret-right-square-fill */
 }
 
 LI.info, .info {
-	background-image: url("ok.png");
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
 	color: var(--bs-success);
+}
+LI.info:before, .info:before {
+	content: "\F26A"; /* bi-check-circle-fill */
 }
 
 LI.warn, .warn {
-	background-image: url("warn.png");
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
 	color: var(--bs-warning);
+}
+LI.warn:before, .warn:before {
+	content: "\F33A"; /* bi-exclamation-triangle-fill */
 }
 
 LI.error, .error {
-	background-image: url("error.png");
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
 	color: var(--bs-danger);
 }
-
-LI.validation, .validation {
-	background-image: url("validation.png");
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
-	color: var(--bs-danger);
+LI.error:before, .error:before {
+	content: "\F622"; /* bi-x-circle-fill */
 }
 
 LI.event, .event {
-	background-image: url("event.png");
-	background-repeat: no-repeat;
-	background-position: 5px 2px;
+	color: var(--bs-gray);
+}
+LI.event:before, .event:before {
+	content: "\F3CB"; /* bi-flag-fill */
+}
+
+LI.validation, .validation {
+	color: var(--bs-danger);
+}
+LI.validation:before, .validation:before {
+	content: "\F334"; /* bi-exclamation-diamond-fill */
 }
 
 .alert-toast {
@@ -139,8 +155,8 @@ LI.event, .event {
 
 /* BlockScreen */
 
-.modal-backdrop {
-	--bs-backdrop-bg: #FFFFFF;
+.modal-backdrop{
+	--bs-backdrop-bg: var(--nx-backdrop-bg);
 	--bs-backdrop-opacity: 0.75;
 }
 
@@ -155,7 +171,6 @@ LI.event, .event {
 
 .card {
 	--bs-card-border-color: var(--bs-border-color);
-	--bs-card-cap-bg: var(--sl-card-cap-color);
 	--bs-card-cap-color: var(--bs-primary);
 }
 
@@ -169,21 +184,10 @@ LI.event, .event {
 }
 
 
-/* Tabs */
-
-.nav-tabs {
-	background-color: var(--sl-card-cap-color);
-}
-
-
 /* PropertyTag e InputTag */
 
 .form-control, .form-select, .form-check-input, .input-group-text {
 	border: var(--bs-border-width) solid var(--bs-input-border-color);
-}
-
-SPAN.form-control {
-	background-color: var(--sl-disabled-bg);
 }
 
 .form-control:focus {
@@ -191,8 +195,8 @@ SPAN.form-control {
 	box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
 }
 
-.form-control:disabled, .readOnly {
-	background-color: var(--sl-disabled-bg);
+.form-control:disabled, SPAN.form-control, .readOnly, .form-control.readOnly:focus {
+	background-color: var(--bs-secondary-bg);
 }
 
 .input-group-text {
@@ -214,20 +218,20 @@ SPAN.form-control {
 	--bs-btn-color: #FFFFFF;
 	--bs-btn-bg: var(--bs-primary);
 	--bs-btn-border-color: var(--bs-primary);
-	--bs-btn-hover-bg: var(--sl-primary-hover);
-	--bs-btn-hover-border-color: var(--sl-primary-hover);
-	--bs-btn-active-bg: var(--sl-primary-hover);
-	--bs-btn-active-border-color: var(--sl-primary-hover);
-	--bs-btn-disabled-bg: var(--sl-primary-disabled);
-	--bs-btn-disabled-border-color: var(--sl-primary-disabled);
+	--bs-btn-hover-bg: var(--nx-primary-hover);
+	--bs-btn-hover-border-color: var(--nx-primary-hover);
+	--bs-btn-active-bg: var(--nx-primary-hover);
+	--bs-btn-active-border-color: var(--nx-primary-hover);
+	--bs-btn-disabled-bg: var(--nx-primary-disabled);
+	--bs-btn-disabled-border-color: var(--nx-primary-disabled);
 	--bs-btn-disabled-opacity: 0.5;
 }
 
 .btn-outline-primary {
 	--bs-btn-color: var(--bs-primary);
 	--bs-btn-border-color: var(--bs-primary);
-	--bs-btn-hover-bg: var(--sl-primary-hover);
-	--bs-btn-hover-border-color: var(--sl-primary-hover);
+	--bs-btn-hover-bg: var(--nx-primary-hover);
+	--bs-btn-hover-border-color: var(--nx-primary-hover);
 }
 
 .btn-micro {
@@ -246,10 +250,8 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 }
 
 .table {
-	--bs-table-bg: #FFFFFF;
-	--bs-table-striped-bg: #F9F9F9;
-	--bs-table-hover-bg: #F3F3F3;
 	margin-bottom: 0px;
+	--bs-table-striped-bg: rgba(var(--bs-emphasis-color-rgb), 0.03);
 }
 
 .table > THEAD > TR > TH, .table-center > TD {
@@ -263,12 +265,11 @@ TABLE THEAD A, TABLE THEAD A:HOVER {
 
 .table-light {
 	--bs-table-color: var(--bs-primary);
-	--bs-table-bg: var(--sl-card-cap-color);
 	--bs-table-border-color: var(--bs-border-color);
 }
 
 TABLE .group1 TD, TABLE .group2 TD, TABLE .group3 TD{
-	background-color: var(--bs-gray-300);
+	background-color: var(--nx-table-group-bg);
 	box-shadow: none;
 }
 

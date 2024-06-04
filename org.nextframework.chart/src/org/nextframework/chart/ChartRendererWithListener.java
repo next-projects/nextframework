@@ -12,7 +12,7 @@ class ChartRendererWithListener implements ChartRenderer {
 
 	@Override
 	public Object renderChart(Chart chart) {
-		chartRendererListener.onChartRender(chart);
+		chartRendererListener.onChartRender(chart, original.getOutputType());
 		return original.renderChart(chart);
 	}
 

@@ -20,9 +20,12 @@ public class ChartStyle implements Serializable {
 	private String width;
 	private String height;
 
+	private TextStyle titleTextStyle;
+
 	private Color[] colors = null;
 
 	private LegendPosition legendPosition = LegendPosition.DEFAULT;
+	private TextStyle legendTextStyle;
 
 	private boolean is3d;
 
@@ -91,6 +94,14 @@ public class ChartStyle implements Serializable {
 		this.height = height;
 	}
 
+	public TextStyle getTitleTextStyle() {
+		return titleTextStyle;
+	}
+
+	public void setTitleTextStyle(TextStyle titleTextStyle) {
+		this.titleTextStyle = titleTextStyle;
+	}
+
 	public Color[] getColors() {
 		return colors;
 	}
@@ -124,6 +135,14 @@ public class ChartStyle implements Serializable {
 			}
 		}
 		this.includeLegend = includeLegend;
+	}
+
+	public TextStyle getLegendTextStyle() {
+		return legendTextStyle;
+	}
+
+	public void setLegendTextStyle(TextStyle legendTextStyle) {
+		this.legendTextStyle = legendTextStyle;
 	}
 
 	public boolean is3d() {
@@ -393,8 +412,8 @@ public class ChartStyle implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		Color color;
-		TextStyle textStyle;
+		private Color color;
+		private TextStyle textStyle;
 
 		public PieSlice() {
 		}
@@ -434,9 +453,9 @@ public class ChartStyle implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		Color color;
-		String fontName;
-		String fontSize;
+		private Color color;
+		private String fontName;
+		private String fontSize;
 
 		public TextStyle(Color color) {
 			this.color = color;
