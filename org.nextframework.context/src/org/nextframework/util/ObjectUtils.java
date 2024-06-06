@@ -269,7 +269,7 @@ public class ObjectUtils {
 	public boolean checkResolvableCode(MessageSourceResolvable msg, String code) {
 		if (msg != null && msg.getCodes() != null) {
 			for (String code2 : msg.getCodes()) {
-				if (code2.equals(code)) {
+				if (code2 != null && code2.equals(code)) {
 					return true;
 				}
 			}
