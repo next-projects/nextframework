@@ -15,6 +15,8 @@ public abstract class NextEffects {
 
 	public abstract void showHideProperty(Element el, boolean show);
 
+	public abstract void showHideElement(Element el, boolean show);
+
 	public abstract void blinkColors(Element el, String colorA, String colorB);
 
 	public abstract void blink(Element el);

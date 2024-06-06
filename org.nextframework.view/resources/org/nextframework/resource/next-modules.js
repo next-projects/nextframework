@@ -1829,34 +1829,45 @@ NextEffects.prototype.hideProperty = function(el){
 }
 
 NextEffects.prototype.showHideProperty = function(el, show){
-	
+
 	var el2 = el;
 	if (typeof(el) == 'string') {
 		el2 = next.dom.toElement(el);
 	}
-	
+
 	if (el2 == null) {
 		alert("Elemento '" + el + "' não encontrado!");
 	}
-	
+
 	var panel = next.dom.id('p_' + el2.id);
 	if (panel != null) {
-		if (show) {
-			panel.style.setProperty("display", "");
-		}else{
-			panel.style.setProperty("display", "none", "important");
-		}
+		next.effects.showHideElement(panel, show);
 	}
-	
+
 	var label = next.dom.id('l_' + el2.id);
 	if (label != null) {
-		if (show) {
-			label.style.setProperty("display", "");
-		}else{
-			label.style.setProperty("display", "none", "important");
-		}
+		next.effects.showHideElement(label, show);
 	}
-	
+
+}
+
+NextEffects.prototype.showHideElement = function(el, show){
+
+	var el2 = el;
+	if (typeof(el) == 'string') {
+		el2 = next.dom.toElement(el);
+	}
+
+	if (el2 == null) {
+		alert("Elemento '" + el + "' não encontrado!");
+	}
+
+	if (show) {
+		el2.style.setProperty("display", "");
+	}else{
+		el2.style.setProperty("display", "none", "important");
+	}
+
 }
 
 NextEffects.prototype.highlightOnOver = function(el, overColor, outColor){
