@@ -72,7 +72,7 @@ public class ChartDefaultPropertyEditor extends PropertyEditorSupport implements
 				}
 			}
 		}
-		return getAsText();
+		return "" + getValue();
 	}
 
 }

@@ -119,6 +119,7 @@ public class ChartDataBuilder {
 	}
 
 	public ChartData buildFromList(List<?> objects, String groupProperty, String seriesProperty, String valueProperty) {
+
 		ChartData data = new ChartData();
 		Set<Comparable<?>> series;
 		if (seriesProperty != null) {
