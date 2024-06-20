@@ -271,7 +271,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(SimplePanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(SimplePanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(SimplePanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(SimplePanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
+			regDefaultStyleClasses(SimplePanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-3");
+			regDefaultStyleClasses(SimplePanelTag.class, "actionBarItemStyleClass", "d-flex align-items-center gap-2");
 
 			regDefaultStyleClasses(ListViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4");
 			regDefaultStyleClasses(ListViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
@@ -279,7 +280,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FilterPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(FilterPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(FilterPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
+			regDefaultStyleClasses(FilterPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-3");
+			regDefaultStyleClasses(FilterPanelTag.class, "actionBarItemStyleClass", "d-flex align-items-center gap-2");
 			regDefaultStyleClasses(FilterPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			regDefaultStyleClasses(FilterTableTag.class, "NORMAL-styleClass", "m-2");
@@ -291,9 +293,10 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ListPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(ListPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(ListPanelTag.class, "bodyStyleClass", null);
-			regDefaultStyleClasses(ListPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
+			regDefaultStyleClasses(ListPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-3");
+			regDefaultStyleClasses(ListPanelTag.class, "actionBarItemStyleClass", "d-flex align-items-center gap-2");
 
-			regDefaultStyleClasses(ListTableTag.class, "pagePanelStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
+			regDefaultStyleClasses(ListTableTag.class, "pagePanelStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-3");
 
 			regDefaultStyleClasses(FormViewTag.class, "linkBarStyleClass", "btn-toolbar d-flex gap-2 justify-content-end mb-4"); //Melhor tirar mb-4 e tentar gap
 			regDefaultStyleClasses(FormViewTag.class, "linkStyleClass", "btn btn-sm btn-outline-secondary");
@@ -301,7 +304,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(FormPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(FormPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(FormPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
+			regDefaultStyleClasses(FormPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-3");
+			regDefaultStyleClasses(FormPanelTag.class, "actionBarItemStyleClass", "d-flex align-items-center gap-2");
 			regDefaultStyleClasses(FormPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			regDefaultStyleClasses(FormTableTag.class, "NORMAL-styleClass", "m-2");
@@ -313,7 +317,8 @@ public class DefaultViewConfig implements ViewConfig {
 			regDefaultStyleClasses(ReportPanelTag.class, "panelStyleClass", "card mb-4");
 			regDefaultStyleClasses(ReportPanelTag.class, "sectionTitleStyleClass", "card-header h5");
 			regDefaultStyleClasses(ReportPanelTag.class, "bodyStyleClass", "card-body p-2");
-			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-2");
+			regDefaultStyleClasses(ReportPanelTag.class, "actionBarStyleClass", "card-footer d-flex flex-wrap justify-content-end align-items-center gap-3");
+			regDefaultStyleClasses(ReportPanelTag.class, "actionBarItemStyleClass", "d-flex align-items-center gap-2");
 			regDefaultStyleClasses(ReportPanelTag.class, "buttonStyleClass", "btn btn-primary");
 
 			regDefaultStyleClasses(ReportTableTag.class, "NORMAL-styleClass", "m-2");

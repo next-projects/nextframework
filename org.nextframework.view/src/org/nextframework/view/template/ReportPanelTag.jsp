@@ -11,14 +11,16 @@
 
 	<n:bean name="filter">
 
-		<n:getContent tagName="actionPanelTag" vars="acoes">
+		<n:getContent tagName="actionPanelTag" vars="actionPanels">
 
 			<div class="${reportPanelTag.bodyStyleClass}" style="${reportPanelTag.bodyStyle}">
 				<n:doBody />
 			</div>
 
 			<div class="${reportPanelTag.actionBarStyleClass}" style="${reportPanelTag.actionBarStyle}">
-				${acoes}
+				<c:forEach items="${actionPanels}" var="actionPanel">
+					<div class="${filterPanelTag.actionBarItemStyleClass}">${actionPanel}</div>
+				</c:forEach>
 				<n:submit class="${reportPanelTag.buttonStyleClass}" action="${reportPanelTag.submitAction}" validate="true" confirmationScript="${reportPanelTag.submitConfirmationScript}">${reportPanelTag.submitLabel}</n:submit>
 			</div>
 

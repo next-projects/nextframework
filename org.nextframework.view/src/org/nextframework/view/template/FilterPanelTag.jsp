@@ -10,15 +10,17 @@
 
 	<n:bean name="${filterPanelTag.name}" bypass="${empty filterPanelTag.name}">
 
-		<n:getContent tagName="actionPanelTag" vars="acoes">
+		<n:getContent tagName="actionPanelTag" vars="actionPanels">
 
 			<div class="${filterPanelTag.bodyStyleClass}" style="${filterPanelTag.bodyStyle}">
 				<n:doBody />
 			</div>
 
-			<c:if test="${filterPanelTag.showSubmit || !empty acoes}">
+			<c:if test="${filterPanelTag.showSubmit || !empty actionPanels}">
 				<div class="${filterPanelTag.actionBarStyleClass}" style="${filterPanelTag.actionBarStyle}">
-					${acoes}
+					<c:forEach items="${actionPanels}" var="actionPanel">
+						<div class="${filterPanelTag.actionBarItemStyleClass}">${actionPanel}</div>
+					</c:forEach>
 					<c:if test="${filterPanelTag.showSubmit}">
 						<n:submit class="${filterPanelTag.buttonStyleClass}" url="${filterPanelTag.submitUrl}" action="${filterPanelTag.submitAction}" parameters="${filterPanelTag.submitParameters}" validate="${filterPanelTag.validateForm}">${filterPanelTag.submitLabel}</n:submit>
 					</c:if>

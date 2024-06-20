@@ -286,6 +286,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description></description>
+			<name>actionBarItemStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>rendered</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -390,6 +396,12 @@
 		<attribute>
 			<description></description>
 			<name>actionBarStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>actionBarItemStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -503,6 +515,12 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>actionBarItemStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>buttonStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -594,6 +612,12 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>actionBarItemStyleClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>buttonStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -662,6 +686,12 @@
 		<attribute>
 			<description></description>
 			<name>actionBarStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>actionBarItemStyleClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

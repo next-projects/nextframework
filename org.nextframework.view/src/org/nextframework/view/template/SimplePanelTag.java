@@ -35,6 +35,7 @@ public class SimplePanelTag extends TemplateTag {
 	protected String bodyStyle;
 	protected String actionBarStyleClass;
 	protected String actionBarStyle;
+	protected String actionBarItemStyleClass;
 
 	@Override
 	protected void doComponent() throws Exception {
@@ -111,6 +112,14 @@ public class SimplePanelTag extends TemplateTag {
 
 	public void setActionBarStyle(String actionBarStyle) {
 		this.actionBarStyle = actionBarStyle;
+	}
+
+	public String getActionBarItemStyleClass() {
+		return actionBarItemStyleClass;
+	}
+
+	public void setActionBarItemStyleClass(String actionBarItemStyleClass) {
+		this.actionBarItemStyleClass = actionBarItemStyleClass;
 	}
 
 }

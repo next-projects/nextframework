@@ -8,15 +8,17 @@
 		<div class="${formPanelTag.sectionTitleStyleClass}" style="${formPanelTag.sectionTitleStyle}">${formPanelTag.sectionTitle}</div>
 	</c:if>
 
-	<n:getContent tagName="actionPanelTag" vars="acoes">
+	<n:getContent tagName="actionPanelTag" vars="actionPanels">
 
 		<div class="${formPanelTag.bodyStyleClass}" style="${formPanelTag.bodyStyle}">
 			<n:doBody />
 		</div>
 
-		<c:if test="${formPanelTag.showSubmit || !empty acoes}">
+		<c:if test="${formPanelTag.showSubmit || !empty actionPanels}">
 			<div class="${formPanelTag.actionBarStyleClass}" style="${formPanelTag.actionBarStyle}">
-				${acoes}
+				<c:forEach items="${actionPanels}" var="actionPanel">
+					<div class="${filterPanelTag.actionBarItemStyleClass}">${actionPanel}</div>
+				</c:forEach>
 				<c:if test="${formPanelTag.showSubmit}">
 					<c:if test="${param.ACTION == 'view'}">
 						<n:submit class="${formPanelTag.buttonStyleClass}" id="do_editar_submit" action="update" validate="false">${formPanelTag.updateLinkLabel}</n:submit>
