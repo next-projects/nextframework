@@ -115,6 +115,10 @@ public class StringUtils {
 		return builder.toString();
 	}
 
+	public List<String> splitFieldsAsList(String fields) {
+		return splitFieldsAsList(fields, true);
+	}
+
 	public List<String> splitFieldsAsList(String fields, boolean removeEmptyStrings) {
 		if (fields == null) {
 			return null;
@@ -135,7 +139,7 @@ public class StringUtils {
 		if (fields == null) {
 			return null;
 		}
-		return fields.split("\\s*[,|;|\\s]\\s*");
+		return fields.split("\\s*[,|;]\\s*");
 	}
 
 	/**
