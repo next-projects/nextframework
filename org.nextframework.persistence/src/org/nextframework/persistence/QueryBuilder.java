@@ -805,7 +805,9 @@ public class QueryBuilder<E> {
 	protected List<Object> organizeListWithResultTranslator(QueryBuilderResultTranslator qbt, List<Object> resultadoOriginal) {
 		List<Object> resultadoNovo = new ArrayList<Object>(resultadoOriginal.size());
 		for (int j = 0; j < resultadoOriginal.size(); j++) {
-			Object translate = qbt.translate((Object[]) resultadoOriginal.get(j));
+			Object item = resultadoOriginal.get(j);
+			Object[] itemAsArray = item.getClass().isArray() ? (Object[]) item : new Object[] {item};
+			Object translate = qbt.translate(itemAsArray);
 			if (translate != null) {
 				resultadoNovo.add(translate);
 			}
