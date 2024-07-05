@@ -9,22 +9,22 @@
 	<c:set var="_form_enctype" scope="page" value="${Tproperty.dynamicAttributesMap['enctype']}" />
 </c:if>
 
-<n:form name="${viewTag.formName}" enctype="${_form_enctype}" method="${viewTag.formMethod}" action="${viewTag.formAction}" validate="${viewTag.validateForm}" validateFunction="validarFormulario" bypass="${!viewTag.includeForm}">
+<n:form name="${viewTag.formName}" enctype="${_form_enctype}" method="${viewTag.formMethod}" action="${viewTag.formAction}" validate="${viewTag.validateForm}" validateFunction="validate" bypass="${!viewTag.includeForm}">
 
 	<n:validation functionName="validateForm" bypass="${!viewTag.includeForm || !viewTag.validateForm}">
 
 		<c:if test="${viewTag.includeForm && viewTag.validateForm}">
 			<script language="javascript">
-				// caso seja alterada a função validation ela será chamada após a validacao do formulario
-				var validation;
-				function validarFormulario(){
+				// caso seja alterada a função validateExtra ela será chamada após a validacao do formulario
+				var validateExtra;
+				function validate(){
 					<c:if test="${!viewTag.validateForm}">
 						return true;
 					</c:if>
 					<c:if test="${viewTag.validateForm}">
 						var valido = validateForm();
-						if(validation){
-							valido = validation(valido);
+						if(validateExtra){
+							valido = validateExtra(valido);
 						}
 						return valido;
 					</c:if>

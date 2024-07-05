@@ -7,10 +7,10 @@
 		formProperties = new Array();
 		for (var j = 0; j < form.elements.length; j+=1){
 			element = form.elements[j];
-			if(element.name == null || element.name == '' || element.disabled == false) {continue;}
+			if(element.name == null || element.name == '') {continue;}
 			if(formProperties[element.name]){
 				if(formProperties[element.name].isArray){
-					//já é lista			
+					//já é lista
 					var obj = formProperties[element.name];
 					obj[obj.length] = element;
 				} else {
