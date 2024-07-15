@@ -466,31 +466,31 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return chart(ChartType.PIE, null, data, groupProperty, null);
 	}
 
-	protected ReportChart chart(String chartTitle, String groupProperty) {
+	protected ReportChart chart(Object chartTitle, String groupProperty) {
 		return chart(ChartType.PIE, chartTitle, data, groupProperty, null);
 	}
 
-	protected ReportChart chart(ChartType chartType, String chartTitle, String groupProperty) {
+	protected ReportChart chart(ChartType chartType, Object chartTitle, String groupProperty) {
 		return chart(chartType, chartTitle, data, groupProperty, null);
 	}
 
-	protected ReportChart chart(ChartType chartType, String chartTitle, String groupProperty, String seriesProperty) {
+	protected ReportChart chart(ChartType chartType, Object chartTitle, String groupProperty, String seriesProperty) {
 		return chart(chartType, chartTitle, data, groupProperty, seriesProperty);
 	}
 
-	protected ReportChart chart(ChartType chartType, String chartTitle, String groupProperty, String seriesProperty, String valuesProperty) {
+	protected ReportChart chart(ChartType chartType, Object chartTitle, String groupProperty, String seriesProperty, String valuesProperty) {
 		return chart(chartType, chartTitle, data, groupProperty, seriesProperty, valuesProperty);
 	}
 
-	protected ReportChart chart(ChartType chartType, String chartTitle, List<?> chartData, String groupProperty) {
+	protected ReportChart chart(ChartType chartType, Object chartTitle, List<?> chartData, String groupProperty) {
 		return chart(chartType, chartTitle, chartData, groupProperty, null);
 	}
 
-	protected ReportChart chart(ChartType chartType, String chartTitle, List<?> chartData, String groupProperty, String seriesProperty) {
+	protected ReportChart chart(ChartType chartType, Object chartTitle, List<?> chartData, String groupProperty, String seriesProperty) {
 		return chart(chartType, chartTitle, chartData, groupProperty, seriesProperty, null);
 	}
 
-	protected ReportChart chart(ChartType chartType, String chartTitle, List<?> chartData, String groupProperty, String seriesProperty, String valueProperty) {
+	protected ReportChart chart(ChartType chartType, Object chartTitle, List<?> chartData, String groupProperty, String seriesProperty, String valueProperty) {
 
 		Chart chart = createChart(chartType, chartTitle);
 
@@ -529,7 +529,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return reportChart;
 	}
 
-	public Chart createChart(ChartType chartType, String chartTitle) {
+	public Chart createChart(ChartType chartType, Object chartTitle) {
 		Chart chart = new Chart(chartType, chartTitle, "500", "300");
 		if (valueConverter instanceof PropertyEditor) {
 			PropertyEditor valueConverterPe = (PropertyEditor) valueConverter;
@@ -550,7 +550,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		return chartPropertiesAsSeries(chartType, null, null, chartTitle, chartData, groupProperty, seriesProperties);
 	}
 
-	protected ReportChart chartPropertiesAsSeries(ChartType chartType, String w, String h, String chartTitle, List<?> chartData, String groupProperty, String... seriesProperties) {
+	protected ReportChart chartPropertiesAsSeries(ChartType chartType, String w, String h, Object chartTitle, List<?> chartData, String groupProperty, String... seriesProperties) {
 
 		Chart chart = createChart(chartType, chartTitle);
 
@@ -590,7 +590,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		}
 	}
 
-	protected boolean isAutoAggregateGroups(String chartTitle) {
+	protected boolean isAutoAggregateGroups(Object chartTitle) {
 		return true;
 	}
 
