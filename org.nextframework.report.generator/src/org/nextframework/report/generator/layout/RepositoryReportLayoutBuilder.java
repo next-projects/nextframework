@@ -1,6 +1,7 @@
 package org.nextframework.report.generator.layout;
 
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.persistence.Entity;
@@ -37,6 +38,10 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 		if (propertyValue != null) {
 			if (propertyValue.getClass().isArray()) {
 				for (Object pv : (Object[]) propertyValue) {
+					verifyEntityDescription(pv);
+				}
+			} else if (propertyValue instanceof Collection<?>) {
+				for (Object pv : (Collection<?>) propertyValue) {
 					verifyEntityDescription(pv);
 				}
 			} else {

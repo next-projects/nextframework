@@ -239,7 +239,7 @@ public class ObjectUtils {
 	}
 
 	public MessageSourceResolvable newSimpleMessage(String value) {
-		return new NextMessageSourceResolvable((String) null, null, value);
+		return new NextMessageSourceResolvable((String) null, null, value != null ? value : "");
 	}
 
 	public MessageSourceResolvable newMessage(String code) {
