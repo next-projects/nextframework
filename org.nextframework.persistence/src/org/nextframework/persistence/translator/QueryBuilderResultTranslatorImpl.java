@@ -50,10 +50,9 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 
 	private SessionFactory sessionFactory;
 	private String resultAlias;
-
 	private ObjectTreeBuilder treeBuilder = new ObjectTreeBuilder(this);
 	private ObjectMapper mapper = new ObjectMapper();
-	private List<String> extraFields = new ArrayList<String>();
+	private String[] finalSelectedProperties;
 
 	@Override
 	public void init(SessionFactory sessionFactory, QueryBuilder<?> queryBuilder) {
@@ -89,7 +88,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		String selectString = queryBuilder.getSelect().getValue();
 		int indexOfDistinct = selectString.indexOf("distinct ");
 		if (indexOfDistinct >= 0) {
-			if (selectString.substring(0, indexOfDistinct).trim().equals("")) {//verificando se distinct é a primeira palavra
+			if (selectString.substring(0, indexOfDistinct).trim().equals("")) {
 				selectString = selectString.substring(indexOfDistinct + 9);
 			}
 		}
@@ -103,6 +102,14 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 			}
 			selectedProperties[j] = selectedProperties[j].trim();
 		}
+
+		validateProperties(selectedProperties, aliases);
+
+		init(sessionFactory, selectedProperties, aliasMaps.toArray(new AliasMap[aliasMaps.size()]));
+
+	}
+
+	protected void validateProperties(String[] selectedProperties, Set<String> aliases) {
 
 		Set<String> fullProperties = new HashSet<String>();
 		for (String property : selectedProperties) {
@@ -129,42 +136,46 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 			}
 		}
 
-		init(sessionFactory, selectedProperties, aliasMaps.toArray(new AliasMap[aliasMaps.size()]));
-
 	}
 
 	public void init(SessionFactory sessionFactory, String[] selectedProperties, AliasMap[] aliasMaps) {
 
 		this.sessionFactory = sessionFactory;
 
-		organizeAliasMaps(aliasMaps, selectedProperties);
-		treeBuilder.init(aliasMaps);
+		List<String> extraFields = organizeAliasMaps(aliasMaps, selectedProperties);
+		this.treeBuilder.init(aliasMaps);
 
-		String[] newSelectedProperties = new String[selectedProperties.length + extraFields.size()];
-		System.arraycopy(selectedProperties, 0, newSelectedProperties, 0, selectedProperties.length);
-		String[] extraFields2 = getExtraFields();
-		System.arraycopy(extraFields2, 0, newSelectedProperties, selectedProperties.length, extraFields2.length);
-		selectedProperties = newSelectedProperties;
+		this.finalSelectedProperties = createFinalSelectedProperties(selectedProperties, extraFields);
 
-		mapper.init(aliasMaps, selectedProperties);
+		this.mapper.init(aliasMaps, this.finalSelectedProperties);
 
 	}
 
-	protected void organizeAliasMaps(AliasMap[] aliasMaps, String[] selectedProperties) {
+	protected List<String> organizeAliasMaps(AliasMap[] aliasMaps, String[] selectedProperties) {
+
+		List<String> extraFields = new ArrayList<String>();
+
 		for (AliasMap aliasMap : aliasMaps) {
 
 			checkAliasMap(aliasMaps, aliasMap);
 
-			Integer propertyIndex = lookForFullProperty(aliasMap, selectedProperties);
+			Integer propertyIndex = lookForProperty(aliasMap.getAlias(), selectedProperties);
 			if (propertyIndex != null) {
 				aliasMap.setPkPropertyIndex(propertyIndex);
 				aliasMap.setFullProperty(true);
 			} else {
-				propertyIndex = lookForPkProperty(aliasMap, selectedProperties);
+				String pkProperty = getPkProperty(aliasMap);
+				propertyIndex = lookForProperty(pkProperty, selectedProperties);
+				if (propertyIndex == null) {
+					extraFields.add(pkProperty);
+					propertyIndex = extraFields.size() + selectedProperties.length - 1;
+				}
 				aliasMap.setPkPropertyIndex(propertyIndex);
 			}
 
 		}
+
+		return extraFields;
 	}
 
 	private void checkAliasMap(AliasMap[] aliasMaps, AliasMap aliasMap) {
@@ -237,29 +248,34 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		return dependencias;
 	}
 
-	private Integer lookForFullProperty(AliasMap aliasMap, String[] selectedProperties) {
+	private Integer lookForProperty(String property, String[] selectedProperties) {
 		for (int i = 0; i < selectedProperties.length; i++) {
-			if (selectedProperties[i].equals(aliasMap.getAlias())) {
+			if (selectedProperties[i].equals(property)) {
 				return i;
 			}
 		}
 		return null;
 	}
 
-	private int lookForPkProperty(AliasMap aliasMap, String[] selectedProperties) {
-
-		//Verifica se existe propriedade id
+	private String getPkProperty(AliasMap aliasMap) {
 		String pkname = PersistenceUtils.getIdPropertyName(aliasMap.getType(), sessionFactory);
-		String fullProperty = aliasMap.getAlias() + "." + pkname;
-		for (int i = 0; i < selectedProperties.length; i++) {
-			if (selectedProperties[i].equals(fullProperty)) {
-				return i;
-			}
-		}
+		return aliasMap.getAlias() + "." + pkname;
+	}
 
-		//Se nao existirem as situações acima, adiciona forçadp
-		extraFields.add(fullProperty);
-		return extraFields.size() + selectedProperties.length - 1;
+	private String[] createFinalSelectedProperties(String[] selectedProperties, List<String> extraFields) {
+		String[] finalSelectedProperties = new String[selectedProperties.length + extraFields.size()];
+		System.arraycopy(selectedProperties, 0, finalSelectedProperties, 0, selectedProperties.length);
+		String[] extraFields2 = extraFields.toArray(new String[extraFields.size()]);
+		System.arraycopy(extraFields2, 0, finalSelectedProperties, selectedProperties.length, extraFields2.length);
+		return finalSelectedProperties;
+	}
+
+	public String getFinalSelect() {
+		String finalSelect = "";
+		for (String property : finalSelectedProperties) {
+			finalSelect += (finalSelect.isEmpty() ? "" : ", ") + property;
+		}
+		return finalSelect;
 	}
 
 	/**
@@ -319,10 +335,6 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		} else {
 			return null;
 		}
-	}
-
-	public String[] getExtraFields() {
-		return extraFields.toArray(new String[extraFields.size()]);
 	}
 
 	protected Object newInstance(Class<?> clazz) throws InstantiationException, IllegalAccessException {

@@ -32,7 +32,7 @@ public interface QueryBuilderResultTranslator {
 
 	public void init(SessionFactory sessionFactory, QueryBuilder<?> queryBuilder);
 
-	public void init(SessionFactory sessionFactory, String[] selectedProperties, AliasMap[] aliasMaps);
+	public String getFinalSelect();
 
 	/**
 	 * Não Thread-Safe a chamada deve ser synchronizada
@@ -42,13 +42,6 @@ public interface QueryBuilderResultTranslator {
 	 */
 	public Object translate(Object[] values);
 
-	/**
-	 * Thread-Safe
-	 * @param values
-	 * @return
-	 */
 	public List<?> translate(List<?> values);
-
-	public String[] getExtraFields();
 
 }

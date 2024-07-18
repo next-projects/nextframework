@@ -806,7 +806,7 @@ public class QueryBuilder<E> {
 		List<Object> resultadoNovo = new ArrayList<Object>(resultadoOriginal.size());
 		for (int j = 0; j < resultadoOriginal.size(); j++) {
 			Object item = resultadoOriginal.get(j);
-			Object[] itemAsArray = item.getClass().isArray() ? (Object[]) item : new Object[] {item};
+			Object[] itemAsArray = item.getClass().isArray() ? (Object[]) item : new Object[] { item };
 			Object translate = qbt.translate(itemAsArray);
 			if (translate != null) {
 				resultadoNovo.add(translate);
@@ -828,13 +828,7 @@ public class QueryBuilder<E> {
 				throw new QueryBuilderException("Não foi possível inicializar o " + resultTranslatorClass.getSimpleName(), e);
 			}
 
-			//os extra fields são campos que o QueryBuilderResultTranslator necessita
-			String extraFieldsSelect = "";
-			for (String extra : qbt.getExtraFields()) {
-				extraFieldsSelect += ", " + extra;
-			}
-
-			select.select += extraFieldsSelect;
+			select.select = qbt.getFinalSelect();
 
 		}
 
