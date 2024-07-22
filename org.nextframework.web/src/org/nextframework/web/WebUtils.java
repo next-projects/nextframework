@@ -161,7 +161,7 @@ public class WebUtils {
 	}
 
 	public static void verificaMapComHTML(Map<String, ?> parameters, String propertiesToIgnore) {
-		List<String> propertiesToIgnoreList = Util.strings.splitFieldsAsList(propertiesToIgnore, false);
+		List<String> propertiesToIgnoreList = Util.strings.splitFieldsAsList(propertiesToIgnore);
 		for (String parametro : parameters.keySet()) {
 			if (propertiesToIgnoreList != null && propertiesToIgnoreList.contains(parametro)) {
 				continue;
@@ -172,7 +172,7 @@ public class WebUtils {
 	}
 
 	public static void verificaAtributosComHTML(Object bean, String propertiesToIgnore) {
-		List<String> propertiesToIgnoreList = Util.strings.splitFieldsAsList(propertiesToIgnore, false);
+		List<String> propertiesToIgnoreList = Util.strings.splitFieldsAsList(propertiesToIgnore);
 		Field[] fields = bean.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {

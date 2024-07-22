@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.Formattable;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -116,23 +115,11 @@ public class StringUtils {
 	}
 
 	public List<String> splitFieldsAsList(String fields) {
-		return splitFieldsAsList(fields, true);
-	}
-
-	public List<String> splitFieldsAsList(String fields, boolean removeEmptyStrings) {
 		if (fields == null) {
 			return null;
 		}
 		String[] fieldsArray = splitFields(fields);
-		List<String> fieldsList = new ArrayList<String>(Arrays.asList(fieldsArray));
-		if (removeEmptyStrings) {
-			for (Iterator<String> it = fieldsList.iterator(); it.hasNext();) {
-				if (isEmpty(it.next())) {
-					it.remove();
-				}
-			}
-		}
-		return fieldsList;
+		return new ArrayList<String>(Arrays.asList(fieldsArray));
 	}
 
 	public String[] splitFields(String fields) {
