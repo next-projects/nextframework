@@ -367,7 +367,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		Class mainType = Util.objects.getRealClass(reportElement.getData().getMainType());
 		for (String filter : filters) {
 			for (GeneratedReportListener filterListener : grListeners) {
-				if (filterListener.getFromClass() == mainType) {
+				if (filterListener.getFromClass() == null || filterListener.getFromClass() == mainType) {
 					filterListener.checkFilters(model, reportElement, filter, filtersMetadataMap);
 				}
 			}
