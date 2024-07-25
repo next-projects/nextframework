@@ -342,7 +342,7 @@ public class InputTag extends BaseTag {
 		}
 		String opValue;
 		if (selectedType == InputTagType.TEXT && TagUtils.hasId(value.getClass())) {
-			opValue = TagUtils.getObjectDescriptionToString(value, pattern, pattern);
+			opValue = TagUtils.getObjectDescriptionToString(value, pattern, pattern, pattern);
 		} else {
 			opValue = TagUtils.getObjectValueToString(value, false, null);
 		}
@@ -371,7 +371,7 @@ public class InputTag extends BaseTag {
 	}
 
 	public String getDescriptionToString() {
-		return TagUtils.getObjectDescriptionToString(value, pattern, pattern);
+		return TagUtils.getObjectDescriptionToString(value, pattern, pattern, pattern);
 	}
 
 	public String getChecked() {

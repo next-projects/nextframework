@@ -5,7 +5,8 @@
 	<script type="text/javascript">
 		IMask(document.getElementById("${tag.id}"),
 				{
-					mask: '${tag.pattern}'
+					mask: '${tag.pattern}',
+					definitions: getMaskFormatter2IMaskDefinitions()
 				}
 		);
 	</script>

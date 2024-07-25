@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.swing.text.MaskFormatter;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
@@ -190,23 +193,23 @@ public class StringUtils {
 		if (o == null) {
 			return null;
 		}
-		return toStringDescription(o, null, null, null);
+		return toStringDescription(o, null, null, null, null);
 	}
 
 	public String toStringDescription(Object value) {
-		return toStringDescription(value, null, null, null);
+		return toStringDescription(value, null, null, null, null);
 	}
 
-	public String toStringDescription(Object value, String formatDate, String formatNumber) {
-		return toStringDescription(value, formatDate, formatNumber, null);
+	public String toStringDescription(Object value, String formatDate, String formatNumber, String formatString) {
+		return toStringDescription(value, formatDate, formatNumber, formatString, null);
 	}
 
 	public String toStringDescription(Object value, Locale locale) {
-		return toStringDescription(value, null, null, locale);
+		return toStringDescription(value, null, null, null, locale);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public String toStringDescription(Object value, String formatDate, String formatNumber, Locale locale) {
+	public String toStringDescription(Object value, String formatDate, String formatNumber, String formatString, Locale locale) {
 
 		if (value == null) {
 			return "";
@@ -219,6 +222,15 @@ public class StringUtils {
 		}
 
 		if (value instanceof String) {
+			if (Util.strings.isNotEmpty(formatString)) {
+				try {
+					MaskFormatter mf = new MaskFormatter(formatString);
+					mf.setValueContainsLiteralCharacters(false);
+					return mf.valueToString((String) value);
+				} catch (ParseException e) {
+					throw new NextException("Erro ao aplicar máscara " + formatString + "!");
+				}
+			}
 			return (String) value;
 		} else if (value instanceof Date || value instanceof java.sql.Date || value instanceof Timestamp) {
 			if (Util.strings.isEmpty(formatDate)) {
@@ -277,7 +289,7 @@ public class StringUtils {
 			Object[] array = (Object[]) value;
 			String description = "";
 			for (Object o : array) {
-				description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber, locale);
+				description += (description.length() == 0 ? "" : ", ") + toStringDescription(o, formatDate, formatNumber, formatString, locale);
 			}
 			return description;
 		}
@@ -298,7 +310,7 @@ public class StringUtils {
 			value = value.toString();
 		}
 
-		return toStringDescription(value, formatDate, formatNumber, locale);
+		return toStringDescription(value, formatDate, formatNumber, formatString, locale);
 	}
 
 	public String getMessage(String code, Locale locale) {

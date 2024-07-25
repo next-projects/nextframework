@@ -126,7 +126,7 @@ public class NextReloadableResourceBundleMessageSource extends ReloadableResourc
 		}
 		Object[] stringArgs = new Object[args.length];
 		for (int i = 0; i < args.length; i++) {
-			stringArgs[i] = Util.strings.toStringDescription(args[i], "dd/MM/yyyy HH:mm:ss", null, locale);
+			stringArgs[i] = Util.strings.toStringDescription(args[i], "dd/MM/yyyy HH:mm:ss", null, null, locale);
 		}
 		return stringArgs;
 	}

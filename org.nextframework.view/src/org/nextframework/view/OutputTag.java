@@ -123,7 +123,7 @@ public class OutputTag extends BaseTag {
 		}
 
 		//Others
-		return TagUtils.getObjectDescriptionToString(value, pattern, pattern);
+		return TagUtils.getObjectDescriptionToString(value, pattern, pattern, pattern);
 	}
 
 	private String[] getResolvedTrueFalseNullLabels() {

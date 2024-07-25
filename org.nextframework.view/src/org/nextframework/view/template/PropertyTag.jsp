@@ -52,7 +52,7 @@
 		<%-- double --%>
 		<c:when test="${propertyTag.renderAs == 'double'}">
 			<n:panel id="l_${compId}" class="${propertyTag.labelPanelStyleClass}" style="${propertyTag.labelPanelStyle}">
-				<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+				<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 			</n:panel>
 			<n:panel id="p_${compId}" class="${propertyTag.panelStyleClass}" style="${propertyTag.panelStyle}" colspan="${propertyTag.colspan}">
 				<c:if test="${propertyTag.mode == 'input'}">
@@ -80,13 +80,13 @@
 				</c:if>
 			</n:panel>
 			<n:panel id="l_${compId}" class="${propertyTag.labelPanelStyleClass}" style="${propertyTag.labelPanelStyle}">
-				<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+				<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 			</n:panel>
 		</c:when>
 		<%-- stacked --%>
 		<c:when test="${propertyTag.renderAs == 'stacked'}">
 			<n:panel id="p_${compId}" class="${propertyTag.panelStyleClass}" style="${propertyTag.panelStyle}" colspan="${propertyTag.colspan}">
-				<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+				<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 				<div class="${propertyTag.stackedPanelStyleClass}">
 					<c:if test="${propertyTag.mode == 'input'}">
 						<n:input pattern="${propertyTag.pattern}" selectOneWindowSize="${propertyTag.selectOneWindowSize}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showRemoverButton="${propertyTag.showRemoverButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="${propertyTag.showLabel}" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
@@ -113,7 +113,7 @@
 					<c:if test="${propertyTag.mode == 'output'}">
 						<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="${propertyTag.type=='html'? false: true}"/>
 					</c:if>
-					<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output pattern="${propertyTag.pattern}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
+					<label for="${compId}" class="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}"><n:output trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" value="${n:default(label, propertyTag.label)}" /></label>
 				</div>
 			</n:panel>
 		</c:when>
@@ -128,7 +128,7 @@
 				</c:if>
 				<c:if test="${propertyTag.mode == 'output' && (empty propertyTag.write || propertyTag.write)}">
 					<c:if test="${propertyTag.showLabel}">
-						<n:output pattern="${propertyTag.pattern}" value="${n:default(label, propertyTag.label)} ${labelseparator}" styleClass="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" escapeHTML="false"/>
+						<n:output value="${n:default(label, propertyTag.label)} ${labelseparator}" styleClass="${propertyTag.labelStyleClass}" style="${propertyTag.labelStyle}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" escapeHTML="false"/>
 						<n:output pattern="${propertyTag.pattern}" styleClass="${propertyTag.dynamicAttributesMap['styleclass']}" style="${propertyTag.dynamicAttributesMap['style']}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" replaceMessagesCodes="${propertyTag.replaceMessagesCodes}" escapeHTML="true"/>
 					</c:if>
 					<c:if test="${!propertyTag.showLabel}">

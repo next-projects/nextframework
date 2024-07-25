@@ -541,3 +541,16 @@ function selectManyBoxUpdateData(to){
 		value.appendChild(input);
 	}
 }
+
+//------------------------------------------------------------
+
+function getMaskFormatter2IMaskDefinitions(){
+	return {
+		'#': /\d/,
+		'U': /[A-Z]/,
+		'L': /[a-z]/,
+		'?': /[a-zA-Z]/,
+		'A': /[\dA-Za-z]/,
+		'H': /[\dA-Fa-f]/
+	};
+}

@@ -129,7 +129,7 @@ public class TagUtils {
 
 			boolean usePattern = Util.strings.isNotEmpty(pattern) && (value instanceof Number || value instanceof Date || value instanceof Calendar);
 			if (usePattern || value instanceof MessageSourceResolvable) {
-				return Util.strings.toStringDescription(value, pattern, pattern, NextWeb.getRequestContext().getLocale());
+				return Util.strings.toStringDescription(value, pattern, pattern, pattern, NextWeb.getRequestContext().getLocale());
 			}
 
 			PropertyEditor propertyEditor = TagUtils.getPropertyEditorsFromRequest().get(value.getClass());
@@ -180,11 +180,11 @@ public class TagUtils {
 	}
 
 	public static String getObjectDescriptionToString(Object value) {
-		return getObjectDescriptionToString(value, null, null);
+		return getObjectDescriptionToString(value, null, null, null);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static String getObjectDescriptionToString(Object value, String formatDate, String formatNumber) {
+	public static String getObjectDescriptionToString(Object value, String formatDate, String formatNumber, String formatString) {
 
 		if (value == null)
 			return "";
@@ -198,7 +198,7 @@ public class TagUtils {
 			boolean usePattern = (value instanceof Number && Util.strings.isNotEmpty(formatNumber)) ||
 					((value instanceof Date || value instanceof Calendar) && Util.strings.isNotEmpty(formatDate));
 			if (usePattern || value instanceof MessageSourceResolvable) {
-				return Util.strings.toStringDescription(value, formatDate, formatNumber, NextWeb.getRequestContext().getLocale());
+				return Util.strings.toStringDescription(value, formatDate, formatNumber, formatString, NextWeb.getRequestContext().getLocale());
 			}
 
 			PropertyEditor propertyEditor = getPropertyEditorsFromRequest().get(value.getClass());
@@ -207,7 +207,7 @@ public class TagUtils {
 				return propertyEditor.getAsText();
 			}
 
-			return Util.strings.toStringDescription(value, formatDate, formatNumber, NextWeb.getRequestContext().getLocale());
+			return Util.strings.toStringDescription(value, formatDate, formatNumber, formatString, NextWeb.getRequestContext().getLocale());
 
 		} catch (LazyInitializationException e) {
 
@@ -223,7 +223,7 @@ public class TagUtils {
 						GenericDAO daoForClass = DAOUtils.getDAOForClass(value.getClass().getSuperclass());
 						value = daoForClass.load(value);
 						//value = new QueryBuilder(Next.getObject(HibernateTemplate.class)).from(value.getClass().getSuperclass()).entity(value).unique();
-						return getObjectDescriptionToString(value, formatDate, formatNumber);
+						return getObjectDescriptionToString(value, formatDate, formatNumber, formatString);
 					} else {
 						throw e1;
 					}
