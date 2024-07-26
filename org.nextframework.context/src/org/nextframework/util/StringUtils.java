@@ -228,7 +228,7 @@ public class StringUtils {
 					mf.setValueContainsLiteralCharacters(false);
 					return mf.valueToString((String) value);
 				} catch (ParseException e) {
-					throw new NextException("Erro ao aplicar máscara " + formatString + "!");
+					throw new NextException("Erro ao aplicar máscara '" + formatString + "' em '" + value + "'!");
 				}
 			}
 			return (String) value;
