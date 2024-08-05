@@ -55,20 +55,32 @@ SelectManyPopup.prototype.configure = function(){
 			dialog.appendToBody(optionsDiv);
 
 			for(var i = 0; i < options.length; i++){
+
 				var op = options[i];
+
 				var optionDiv = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.option', 'popup_box_option')});
-				var checkDiv = next.dom.newInput('checkbox', '', op.text,
+				var checkCtrl = next.dom.newInput('checkbox', '', op.text,
 					{
 						id: next.dom.generateUniqueId(),
 						className: next.globalMap.get('SelectManyPopup.optionInput'),
 						labelOptions: {className: next.globalMap.get('SelectManyPopup.optionLabel')},
 						containerOptions: {className: next.globalMap.get('SelectManyPopup.optionContainer')}
 					});
-				checkDiv.childNodes[0].value = op.value;
-				checkDiv.childNodes[0].checked = op.selected;
-				checkList.push(checkDiv.childNodes[0]);
-				optionDiv.appendChild(checkDiv);
+				checkCtrl.childNodes[0].value = op.value;
+				checkCtrl.childNodes[0].checked = op.selected;
+
+				checkList.push(checkCtrl.childNodes[0]);
+				optionDiv.appendChild(checkCtrl);
 				optionsDiv.appendChild(optionDiv);
+
+				if(next.util.isDefined(bigThis.input.getAttribute('onrenderitem'))){
+					try{
+						eval(bigThis.input.getAttribute('onrenderitem'));
+					}catch(e){
+						alert('Erro ao executar onrenderitem!\\n'+e.name+': '+e.message);
+					}
+				}
+
 			}
 
 			dialog.setCallback({

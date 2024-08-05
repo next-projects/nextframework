@@ -6,7 +6,7 @@
 		<button id="${tag.id}_trigger" class="${n:defaultStyleClass('org.nextframework.view.InputTag','SELECT_MANY_POPUP-button')}"></button>
 	</c:if>
 </div>
-<select id="${tag.id}" name="${tag.name}" multiple="multiple" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} style="display:none">${tag.inputComponent.selectItensString}</select>
+<select id="${tag.id}" name="${tag.name}" multiple="multiple" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} ${n:attributeNotEmpty('onrenderitem', tag.inputComponent.onRenderItemString)} style="display:none">${tag.inputComponent.selectItensString}</select>
 <input type="hidden" name="_${tag.name}" value=" "/>
 <script type="text/javascript">
 	SelectManyPopup.install('${tag.name}');
