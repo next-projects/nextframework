@@ -50,6 +50,9 @@
 	<%-- single --%>
 	<c:otherwise>
 		<n:panel id="p_${propertyLayoutTag.bodyId}" class="${propertyLayoutTag.panelStyleClass}" style="${propertyLayoutTag.panelStyle}" colspan="${propertyLayoutTag.colspan}">
+			<c:if test="${! empty propertyLayoutTag.label}">
+				<label for="${propertyLayoutTag.bodyId}" class="${propertyLayoutTag.labelStyleClass}" style="${propertyLayoutTag.labelStyle}"><n:output value="${propertyLayoutTag.label}" /></label>
+			</c:if>
 			<n:doBody />
 		</n:panel>
 	</c:otherwise>
