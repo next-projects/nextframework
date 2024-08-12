@@ -4,16 +4,16 @@ import org.nextframework.util.Util;
 
 public class InputTagSelectManyPopupComponent extends InputTagSelectComboComponent {
 
-	private String onRenderItemString;
+	private String onRenderItemsString;
 
 	@Override
 	public void prepare() {
 
 		super.prepare();
 
-		String onRenderItem = (String) inputTag.getDAAtribute("onrenderitem", true);
-		if (Util.strings.isNotEmpty(onRenderItem)) {
-			this.onRenderItemString = onRenderItem;
+		String onRenderItems = (String) inputTag.getDAAtribute("onrenderitems", true);
+		if (Util.strings.isNotEmpty(onRenderItems)) {
+			this.onRenderItemsString = onRenderItems;
 		}
 
 	}
@@ -23,8 +23,8 @@ public class InputTagSelectManyPopupComponent extends InputTagSelectComboCompone
 		return false; //select-many-popup never has include blank
 	}
 
-	public String getOnRenderItemString() {
-		return onRenderItemString;
+	public String getOnRenderItemsString() {
+		return onRenderItemsString;
 	}
 
 }

@@ -73,14 +73,6 @@ SelectManyPopup.prototype.configure = function(){
 				optionDiv.appendChild(checkCtrl);
 				optionsDiv.appendChild(optionDiv);
 
-				if(next.util.isDefined(bigThis.input.getAttribute('onrenderitem'))){
-					try{
-						eval(bigThis.input.getAttribute('onrenderitem'));
-					}catch(e){
-						alert('Erro ao executar onrenderitem!\\n'+e.name+': '+e.message);
-					}
-				}
-
 			}
 
 			dialog.setCallback({
@@ -92,6 +84,10 @@ SelectManyPopup.prototype.configure = function(){
 				}
 			});
 
+			if(next.util.isDefined(bigThis.input.getAttribute('onrenderitems'))){
+				bigThis.onRenderItems(optionsDiv, bigThis.input.getAttribute('onrenderitems'));
+			}
+
 			dialog.show();
 
 			filterSpan.childNodes[1].focus();
@@ -99,6 +95,14 @@ SelectManyPopup.prototype.configure = function(){
 		});
 	}
 	
+}
+
+SelectManyPopup.prototype.onRenderItems = function(optionsDiv, onrenderitems){
+	try{
+		eval(onrenderitems);
+	}catch(e){
+		alert('Erro ao executar onrenderitems!\\n'+e.name+': '+e.message);
+	}
 }
 
 SelectManyPopup.prototype.filter = function(filter, checkList, options){
