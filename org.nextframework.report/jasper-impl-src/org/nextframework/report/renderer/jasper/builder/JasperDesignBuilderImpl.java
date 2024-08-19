@@ -33,6 +33,7 @@ import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.definition.elements.style.Border;
 import org.nextframework.report.renderer.ValueConverter;
+import org.nextframework.report.renderer.jasper.JasperUtils;
 
 import net.sf.jasperreports.engine.JRChild;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -919,12 +920,14 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 	protected JRDesignElement getFrameForItens(ReportItem item, List<ReportItem> items, int frameWidth, int colspan, ReportSection section, JRStyle jrStyle) throws JRException {
 		JRDesignFrame frame;
 		if (item instanceof ReportBlock) {
+			ValueConverter valueConverter = (ValueConverter) getDefinition().getParameters().get(BaseReportBuilder.CONVERTER);
 			frame = (JRDesignFrame) createFrameForBlock((ReportBlock) item, section, colspan > 1, frameWidth);
 			List<JRChild> list = getAllChildrenFlat(frame.getChildren());
 			for (ReportItem child : items) {
 				if (child instanceof ReportLabel) {
 					JRDesignStaticText staticText = getInnerStaticText(findStaticTextInList((ReportLabel) child, list));
-					staticText.setText(((ReportLabel) child).getText());
+					String text = JasperUtils.applyConverter(valueConverter, ((ReportLabel) child).getContent());
+					staticText.setText(text);
 				} else if (child instanceof ReportTextField) {
 					ReportTextField tf = (ReportTextField) child;
 					JRDesignTextField textField = getInnerTextField(findTextFieldInList(tf, list));
@@ -1225,13 +1228,15 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		}
 
 		JRDesignBand titleBand = (JRDesignBand) template.getTitle();
-		if (org.springframework.util.StringUtils.hasText(definition.getTitle()) || org.springframework.util.StringUtils.hasText(definition.getSubtitle()) || definition.getReportTitleItems().size() > 0) {
+		if (definition.getTitle() != null || definition.getSubtitle() != null || definition.getReportTitleItems().size() > 0) {
+
 			String design = getDefinition().getStyle().getDesign();
 			List<JRChild> titleElements = originalTemplate.getTitle().getChildren();
 			List<JRChild> removed = removeNotInDesign(titleElements, design);
 			for (JRChild jrChild : titleElements) {
 				titleBand.addElement((JRDesignElement) jrChild.clone());
 			}
+
 			titleBand.setHeight(originalTemplate.getTitle().getHeight());
 			for (JRChild jrChild : removed) {
 				titleBand.setHeight(titleBand.getHeight() - ((JRDesignElement) jrChild).getHeight());
@@ -1241,9 +1246,16 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				firstChild.setY(0);
 				titleBand.setHeight(firstChild.getHeight() + firstChild.getY());
 			}
+
 			List<JRChild> allChildren = getAllChildrenFlat(titleBand.getChildren());
-			replaceTextElement(allChildren, "TITLE", getDefinition().getTitle());
-			replaceTextElement(allChildren, "SUBTITLE", getDefinition().getSubtitle());
+
+			ValueConverter valueConverter = (ValueConverter) getDefinition().getParameters().get(BaseReportBuilder.CONVERTER);
+			String title = JasperUtils.applyConverter(valueConverter, getDefinition().getTitle());
+			String subTitle = JasperUtils.applyConverter(valueConverter, getDefinition().getSubtitle());
+
+			replaceTextElement(allChildren, "TITLE", title != null ? title.toString() : "");
+			replaceTextElement(allChildren, "SUBTITLE", subTitle != null ? subTitle.toString() : "");
+
 		}
 
 		if (definition.getReportTitleItems().size() > 0) {

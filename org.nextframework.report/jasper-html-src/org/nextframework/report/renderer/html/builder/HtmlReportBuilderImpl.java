@@ -28,10 +28,12 @@ import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.definition.elements.style.Border;
 import org.nextframework.report.definition.elements.style.ReportBasicStyle;
 import org.nextframework.report.definition.elements.style.ReportItemStyle;
+import org.nextframework.report.renderer.ValueConverter;
 import org.nextframework.report.renderer.html.builder.config.HtmlReportViewConfigurator;
 import org.nextframework.report.renderer.html.design.HtmlDesign;
 import org.nextframework.report.renderer.html.design.HtmlTag;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
+import org.nextframework.report.renderer.jasper.JasperUtils;
 import org.nextframework.report.renderer.jasper.builder.ChartDrawRenderer;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
@@ -63,14 +65,14 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 	}
 
 	@Override
-	public HtmlDesign getHtmlDesign(ReportDefinition definition) {
+	public HtmlDesign getHtmlDesign(ReportDefinition definition, ValueConverter valueConverter) {
 		definition.setParameter(JRParameter.IS_IGNORE_PAGINATION, Boolean.TRUE);
 		MappedJasperPrint mappedJasperPrint = JasperReportsRenderer.renderAsMappedJasperPrint(definition);
-		return createHtmlDesign(mappedJasperPrint);
+		return createHtmlDesign(mappedJasperPrint, valueConverter);
 	}
 
 	@Override
-	public HtmlDesign getHtmlDesign(ReportItem item) {
+	public HtmlDesign getHtmlDesign(ReportItem item, ValueConverter valueConverter) {
 
 		ReportDefinition definition = new ReportDefinition();
 		definition.addItem(item, definition.getSectionDetail(), 0);
@@ -84,13 +86,13 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		List<PrintElement> elements = unpagedJasperPrint.getPrintElements();
 		HtmlTag tag = htmlDesign.getTag();
 		for (PrintElement element : elements) {
-			tag.getChildren().add(getHtmlTagForElement(element));
+			tag.getChildren().add(getHtmlTagForElement(element, valueConverter));
 		}
 
 		return htmlDesign;
 	}
 
-	private HtmlDesign createHtmlDesign(MappedJasperPrint mappedJasperPrint) {
+	private HtmlDesign createHtmlDesign(MappedJasperPrint mappedJasperPrint, ValueConverter valueConverter) {
 
 		ReportDefinition reportDefinition = mappedJasperPrint.getMappedJasperReport().getReportDefinition();
 
@@ -102,7 +104,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		UnpagedJasperPrint2 unpagedJasperPrint2 = new UnpagedJasperPrint2(mappedJasperPrint);
 		List<PrintElement> elements = unpagedJasperPrint2.getPrintElements();
 
-		printElements(htmlTag, reportDefinition, elements);
+		printElements(htmlTag, reportDefinition, elements, valueConverter);
 
 		HtmlTag javascript = new HtmlTag("script");
 		javascript.getAttributes().put("type", "text/javascript");
@@ -117,7 +119,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		return htmlDesign;
 	}
 
-	private void printElements(HtmlTag containerTag, ReportDefinition definition, List<PrintElement> elements) {
+	private void printElements(HtmlTag containerTag, ReportDefinition definition, List<PrintElement> elements, ValueConverter valueConverter) {
 
 		containerTag.getAttributes().put("id", definition.getReportName());
 		containerTag.getAttributes().put("data-report-name", definition.getReportName());
@@ -151,7 +153,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 				if (element != null) {
 
 					ReportItem reportItem = element.getReportItem();
-					HtmlTag elementTag = getHtmlTagForElement(element);
+					HtmlTag elementTag = getHtmlTagForElement(element, valueConverter);
 
 					trSection = reportItem.getRow().getSection();
 					boolean isFirstRowOfSection = lastSection == null || !lastSection.equals(trSection);
@@ -269,28 +271,28 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		return map;
 	}
 
-	private HtmlTag getHtmlTagForElement(PrintElement printElement) {
+	private HtmlTag getHtmlTagForElement(PrintElement printElement, ValueConverter valueConverter) {
 		HtmlTag htmlTag;
 		if (printElement instanceof GroupPrintElements && printElement.getReportItem() instanceof Subreport) {
 			htmlTag = new HtmlTag("div");
 			GroupPrintElements group = (GroupPrintElements) printElement;
-			printElements(htmlTag, group.getGroupDefinition(), group.getPrintElements());
+			printElements(htmlTag, group.getGroupDefinition(), group.getPrintElements(), valueConverter);
 		} else {
-			htmlTag = createHtmlTag(printElement, printElement.getMappedJasperReport());
+			htmlTag = createHtmlTag(printElement, printElement.getMappedJasperReport(), valueConverter);
 		}
 		return htmlTag;
 	}
 
-	private HtmlTag createHtmlTag(PrintElement printElement, MappedJasperReport mappedJasperReport) {
+	private HtmlTag createHtmlTag(PrintElement printElement, MappedJasperReport mappedJasperReport, ValueConverter valueConverter) {
 
 		JRPrintElement jrPrintElement = printElement.getJrPrintElement();
 		if (jrPrintElement instanceof JRTemplatePrintText) {
 
-			return createHtmlTextTag((JRTemplatePrintText) jrPrintElement, mappedJasperReport);
+			return createHtmlTextTag((JRTemplatePrintText) jrPrintElement, mappedJasperReport, valueConverter);
 
 		} else if (jrPrintElement instanceof JRTemplatePrintFrame) {
 
-			return createHtmlFrameTag((GroupPrintElements) printElement, (JRTemplatePrintFrame) jrPrintElement);
+			return createHtmlFrameTag((GroupPrintElements) printElement, (JRTemplatePrintFrame) jrPrintElement, valueConverter);
 
 		} else if (jrPrintElement instanceof JRTemplatePrintLine) {
 
@@ -305,7 +307,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		return createUnknownTag(jrPrintElement);
 	}
 
-	private HtmlTag createHtmlTextTag(JRTemplatePrintText jrPrintElement, MappedJasperReport mappedJasperReport) {
+	private HtmlTag createHtmlTextTag(JRTemplatePrintText jrPrintElement, MappedJasperReport mappedJasperReport, ValueConverter valueConverter) {
 
 		HtmlTag tag = new HtmlTag("div");
 
@@ -316,7 +318,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		if (reportItem != null && fullText != null && !fullText.isEmpty()) {
 
 			if (reportItem instanceof ReportLabel) {
-				String text = ((ReportLabel) reportItem).getText();
+				String text = JasperUtils.applyConverter(valueConverter, ((ReportLabel) reportItem).getContent());
 				text = removeWhiteSpaces(text);
 				tag.setInnerHTML(text);
 			}
@@ -356,7 +358,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		return fullText;
 	}
 
-	private HtmlTag createHtmlFrameTag(GroupPrintElements group, JRTemplatePrintFrame jrPrintElement) {
+	private HtmlTag createHtmlFrameTag(GroupPrintElements group, JRTemplatePrintFrame jrPrintElement, ValueConverter valueConverter) {
 
 		HtmlTag tag = new HtmlTag("div");
 
@@ -367,7 +369,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 		for (Iterator<PrintElement> iterator = elements.iterator(); iterator.hasNext();) {
 			PrintElement subElement = iterator.next();
 
-			HtmlTag subTag = getHtmlTagForElement(subElement);
+			HtmlTag subTag = getHtmlTagForElement(subElement, valueConverter);
 
 			tag.getChildren().add(subTag);
 

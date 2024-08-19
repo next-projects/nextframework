@@ -81,40 +81,39 @@ public class ColumnBuilder {
 	public ColumnBuilder fieldSummary(String fieldName) {
 		FieldConfig configForRowField = baseReportBuilder.getConfigForSummaryField(fieldName);
 		fieldSummaryForGroups(fieldName, configForRowField.label, colspan, null);
-		fieldDetailWithSummary(fieldName, configForRowField.label, colspan);
+		fieldDetailWithSummary(fieldName, configForRowField.label, colspan, null);
 		return this;
 	}
 
-	public ColumnBuilder fieldSummary(String fieldName, String label) {
+	public ColumnBuilder fieldSummary(String fieldName, Object label) {
 		fieldSummaryForGroups(fieldName, label, colspan, null);
-		fieldDetailWithSummary(fieldName, label, colspan);
+		fieldDetailWithSummary(fieldName, label, colspan, null);
 		return this;
 	}
 
-	public ColumnBuilder fieldSummary(String fieldName, String label, String pattern) {
+	public ColumnBuilder fieldSummary(String fieldName, Object label, String pattern) {
 		fieldSummaryForGroups(fieldName, label, colspan, pattern);
 		fieldDetailWithSummary(fieldName, label, colspan, pattern);
 		return this;
 	}
 
 	public ColumnBuilder fieldSummaryForGroups(String fieldName) {
-		fieldSummaryForGroups(fieldName, null, colspan, null);
-		return this;
+		return fieldSummaryForGroups(fieldName, null, colspan, null);
 	}
 
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label) {
-		return fieldSummaryForGroups(fieldName, label, null);
-	}
-
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label, String pattern) {
-		return fieldSummaryForGroups(fieldName, label, colspan, pattern);
-	}
-
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label, int colspan) {
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, Object label) {
 		return fieldSummaryForGroups(fieldName, label, colspan, null);
 	}
 
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label, int colspan, String pattern) {
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, Object label, String pattern) {
+		return fieldSummaryForGroups(fieldName, label, colspan, pattern);
+	}
+
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, Object label, int colspan) {
+		return fieldSummaryForGroups(fieldName, label, colspan, null);
+	}
+
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, Object label, int colspan, String pattern) {
 
 		FieldConfig configForSummaryField = baseReportBuilder.getConfigForSummaryField(fieldName);
 
@@ -144,31 +143,30 @@ public class ColumnBuilder {
 	}
 
 	public ColumnBuilder fieldDetail(String fieldName) {
-		return fieldDetail(fieldName, colspan);
+		return fieldDetail(fieldName, null, colspan, null, null);
 	}
 
 	public ColumnBuilder fieldDetail(String fieldName, int colspan) {
-		fieldDetail(fieldName, null, colspan, null);
-		return this;
+		return fieldDetail(fieldName, null, colspan, null, null);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label) {
-		return fieldDetail(fieldName, label, null);
+	public ColumnBuilder fieldDetail(String fieldName, Object label) {
+		return fieldDetail(fieldName, label, colspan, null, null);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, String pattern) {
-		return fieldDetail(fieldName, label, colspan, pattern);
-	}
-
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan) {
-		return fieldDetail(fieldName, label, colspan, null);
-	}
-
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, String pattern) {
 		return fieldDetail(fieldName, label, colspan, pattern, null);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern, ReportAlignment alignment) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, int colspan) {
+		return fieldDetail(fieldName, label, colspan, null, null);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, Object label, int colspan, String pattern) {
+		return fieldDetail(fieldName, label, colspan, pattern, null);
+	}
+
+	public ColumnBuilder fieldDetail(String fieldName, Object label, int colspan, String pattern, ReportAlignment alignment) {
 		FieldConfig configForRowField;
 		if (fieldName.startsWith("summary.")) {
 			configForRowField = baseReportBuilder.getConfigForSummaryField(fieldName.substring("summary.".length()));
@@ -182,21 +180,21 @@ public class ColumnBuilder {
 		return this;
 	}
 
-	public ColumnBuilder fieldDetailWithSummary(String fieldName, String label) {
-		return fieldDetailWithSummary(fieldName, label, colspan);
-	}
-
-	public ColumnBuilder fieldDetailWithSummary(String fieldName, String label, int colspan) {
+	public ColumnBuilder fieldDetailWithSummary(String fieldName, Object label) {
 		return fieldDetailWithSummary(fieldName, label, colspan, null);
 	}
 
-	public ColumnBuilder fieldDetailWithSummary(String fieldName, String label, int colspan, String pattern) {
+	public ColumnBuilder fieldDetailWithSummary(String fieldName, Object label, int colspan) {
+		return fieldDetailWithSummary(fieldName, label, colspan, null);
+	}
+
+	public ColumnBuilder fieldDetailWithSummary(String fieldName, Object label, int colspan, String pattern) {
 		FieldConfig configForRowField = baseReportBuilder.getConfigForSummaryField(fieldName);
 		fieldDetailWithConfig(label, configForRowField, colspan, pattern);
 		return this;
 	}
 
-	private void fieldDetailWithConfig(String label, FieldConfig configForRowField, int colspan, String pattern) {
+	private void fieldDetailWithConfig(Object label, FieldConfig configForRowField, int colspan, String pattern) {
 
 		ReportLabel labelElement = baseReportBuilder.label(label == null ? configForRowField.label : label);
 		labelElement.setColspan(colspan);

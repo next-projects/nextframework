@@ -18,7 +18,7 @@ public abstract class TableInformationAdaptor implements TableInformation {
 	}
 
 	@Override
-	public String getFirstColumnHeader() {
+	public Object getFirstColumnHeader() {
 		return null;
 	}
 
@@ -38,34 +38,26 @@ public abstract class TableInformationAdaptor implements TableInformation {
 	}
 
 	@Override
-	public String formatHeader(Object header) {
+	public Object formatHeader(Object header) {
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(header);
 		if (beanDescriptor.getDescriptionPropertyName() != null) {
 			Object description = beanDescriptor.getDescription();
-			if (description == null) {
-				return "";
-			}
+			return description != null ? description : "";
 		}
-		return header != null ? header.toString() : "";
+		return header != null ? header.toString() : null;
 	}
 
 	@Override
-	public String formatRowGroup(Object row) {
+	public Object formatRowGroup(Object row) {
 		if (row instanceof ChartRow) {
 			row = ((ChartRow) row).getGroup();
 		}
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(row);
 		if (beanDescriptor.getDescriptionPropertyName() != null) {
 			Object description = beanDescriptor.getDescription();
-			if (description == null) {
-				return "";
-			}
+			return description != null ? description : "";
 		}
-		String string = row != null ? row.toString() : "";
-		if (string.length() > 90) {
-			string = string.substring(0, 90);
-		}
-		return string;
+		return row != null ? row.toString() : null;
 	}
 
 	@Override

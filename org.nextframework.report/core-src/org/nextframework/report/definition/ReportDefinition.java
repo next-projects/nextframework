@@ -20,8 +20,8 @@ import org.nextframework.report.definition.elements.style.ReportDefinitionStyle;
 public class ReportDefinition implements ReportParent {
 
 	private String reportName;
-	private String title = "";
-	private String subtitle = "";
+	private Object title;
+	private Object subtitle;
 
 	private List<ReportColumn> columns = new ArrayList<ReportColumn>();
 	private List<ReportGroup> groups = new ArrayList<ReportGroup>();
@@ -78,11 +78,11 @@ public class ReportDefinition implements ReportParent {
 		return reportName;
 	}
 
-	public String getTitle() {
+	public Object getTitle() {
 		return title;
 	}
 
-	public String getSubtitle() {
+	public Object getSubtitle() {
 		return subtitle;
 	}
 
@@ -94,11 +94,11 @@ public class ReportDefinition implements ReportParent {
 		this.reportName = reportName;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(Object title) {
 		this.title = title;
 	}
 
-	public void setSubtitle(String subtitle) {
+	public void setSubtitle(Object subtitle) {
 		this.subtitle = subtitle;
 	}
 

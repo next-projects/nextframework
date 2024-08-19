@@ -17,6 +17,7 @@ import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.definition.elements.ReportItemIterator;
 import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.renderer.ValueConverter;
 
 public class JasperUtils {
 
@@ -125,6 +126,11 @@ public class JasperUtils {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static String applyConverter(ValueConverter valueConverter, Object content) {
+		Object converted = valueConverter != null ? valueConverter.apply(content) : content;
+		return converted != null ? converted.toString() : null;
 	}
 
 }

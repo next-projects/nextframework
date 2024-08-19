@@ -78,16 +78,19 @@ public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder 
 	}
 
 	@Override
+	protected Object getPropertyDisplayName(PropertyDescriptor propertyDescriptor) {
+		return Util.beans.getDisplayNameResolvable(propertyDescriptor);
+	}
+
+	@Override
 	@SuppressWarnings("rawtypes")
 	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor,
-			String label, String fieldName, String fieldPreffix, String reportExpression,
+			Object label, String fieldName, String fieldPreffix, String reportExpression,
 			String pattern, ReportAlignment alignment) {
 
 		FieldConfig fieldConfig = super.createFieldConfig(builder, beanDescriptor, propertyDescriptor,
 				label, fieldName, fieldPreffix, reportExpression,
 				pattern, alignment);
-
-		fieldConfig.label = Util.beans.getDisplayName(propertyDescriptor, locale);
 
 		Type type = propertyDescriptor.getType();
 		if (type instanceof Class) {

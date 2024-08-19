@@ -158,8 +158,8 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 	}
 
 	@Override
-	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor, String label,
-			String fieldName, String fieldPreffix, String reportExpression,
+	protected FieldConfig createFieldConfig(BaseReportBuilder builder, BeanDescriptor beanDescriptor, PropertyDescriptor propertyDescriptor,
+			Object label, String fieldName, String fieldPreffix, String reportExpression,
 			String pattern, ReportAlignment alignment) {
 
 		FieldConfig fieldConfig = super.createFieldConfig(builder, beanDescriptor, propertyDescriptor, label,
@@ -175,7 +175,7 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		filter(fieldName, null);
 	}
 
-	protected void filter(String fieldName, String label) {
+	protected void filter(String fieldName, Object label) {
 
 		FieldConfig configForFilterField = getConfigForFilterField(fieldName);
 
@@ -300,7 +300,7 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		}
 	}
 
-	protected void separator(String text, int colspan, ReportSection section) {
+	protected void separator(Object text, int colspan, ReportSection section) {
 
 		section.breakLine();
 		ReportLabel line = separator(text, colspan);
@@ -333,11 +333,11 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		return column().fieldSummaryForGroups(fieldName);
 	}
 
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label) {
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, Object label) {
 		return fieldSummaryForGroups(fieldName, label, 1);
 	}
 
-	public ColumnBuilder fieldSummaryForGroups(String fieldName, String label, int colspan) {
+	public ColumnBuilder fieldSummaryForGroups(String fieldName, Object label, int colspan) {
 		return column(currentColumn, colspan, null).fieldSummaryForGroups(fieldName, label, colspan, null);
 	}
 
@@ -345,7 +345,7 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		return column().fieldSummary(fieldName);
 	}
 
-	public ColumnBuilder fieldSummary(String fieldName, String label) {
+	public ColumnBuilder fieldSummary(String fieldName, Object label) {
 		return column().fieldSummary(fieldName, label);
 	}
 
@@ -353,11 +353,11 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		return column(alignment).fieldSummary(fieldName);
 	}
 
-	public ColumnBuilder fieldSummary(String fieldName, String label, ReportAlignment alignment) {
+	public ColumnBuilder fieldSummary(String fieldName, Object label, ReportAlignment alignment) {
 		return column(alignment).fieldSummary(fieldName, label);
 	}
 
-	public ColumnBuilder fieldSummary(String fieldName, String label, String pattern) {
+	public ColumnBuilder fieldSummary(String fieldName, Object label, String pattern) {
 		return column().fieldSummary(fieldName, label, pattern);
 	}
 
@@ -365,7 +365,7 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		return column(alignment).fieldDetail(fieldName, 1);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, ReportAlignment alignment) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, ReportAlignment alignment) {
 		return column(alignment).fieldDetail(fieldName, label, 1);
 	}
 
@@ -377,27 +377,27 @@ public abstract class LayoutReportBuilder extends BaseReportBuilder {
 		return column(currentColumn, colspan, null).fieldDetail(fieldName, colspan);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label) {
 		return fieldDetail(fieldName, label, (String) null);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, String pattern) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, String pattern) {
 		return fieldDetail(fieldName, label, 1, pattern);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, String pattern, ReportAlignment alignment) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, String pattern, ReportAlignment alignment) {
 		return fieldDetail(fieldName, label, 1, pattern, alignment);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, int colspan) {
 		return fieldDetail(fieldName, label, colspan, null);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, int colspan, String pattern) {
 		return column(currentColumn, colspan, null).fieldDetail(fieldName, label, colspan, pattern);
 	}
 
-	public ColumnBuilder fieldDetail(String fieldName, String label, int colspan, String pattern, ReportAlignment alignment) {
+	public ColumnBuilder fieldDetail(String fieldName, Object label, int colspan, String pattern, ReportAlignment alignment) {
 		return column(currentColumn, colspan, alignment).fieldDetail(fieldName, label, colspan, pattern, alignment);
 	}
 
