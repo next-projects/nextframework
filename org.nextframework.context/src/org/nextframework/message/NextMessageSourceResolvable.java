@@ -47,11 +47,22 @@ public class NextMessageSourceResolvable extends DefaultMessageSourceResolvable 
 
 		String code1 = this.getCodes() != null && this.getCodes().length > 0 ? this.getCodes()[0] : null;
 		String code2 = msr.getCodes() != null && msr.getCodes().length > 0 ? msr.getCodes()[0] : null;
-		if (code1 == null || code2 == null) {
-			return code1 == null && code2 == null ? 0 : code1 != null && code2 == null ? 1 : -1;
+		if (code1 == null ^ code2 == null) {
+			return code1 != null ? 1 : -1;
 		}
 
-		int result = code1.compareTo(code2);
+		int result = code1 != null && code2 != null ? code1.compareTo(code2) : 0;
+		if (result != 0) {
+			return result;
+		}
+
+		String d1 = this.getDefaultMessage();
+		String d2 = msr.getDefaultMessage();
+		if (d1 == null ^ d2 == null) {
+			return d1 != null ? 1 : -1;
+		}
+
+		result = d1 != null && d2 != null ? d1.compareTo(d2) : 0;
 		if (result != 0) {
 			return result;
 		}

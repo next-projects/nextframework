@@ -50,6 +50,7 @@ import org.nextframework.view.chart.aggregate.ChartSumAggregateFunction;
 import net.sf.jasperreports.engine.type.PositionTypeEnum;
 import net.sf.jasperreports.engine.type.VerticalAlignEnum;
 
+@SuppressWarnings("deprecation")
 public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	public static final String LOCALE = "LOCALE";
