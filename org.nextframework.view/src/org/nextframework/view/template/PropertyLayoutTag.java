@@ -56,6 +56,7 @@ public class PropertyLayoutTag extends TemplateTag {
 	protected Integer colspan;
 	protected Integer labelColspan;
 	protected String label;
+	protected Boolean showLabel;
 
 	private String panelStyleClass;
 	private String panelStyle;
@@ -85,7 +86,9 @@ public class PropertyLayoutTag extends TemplateTag {
 
 		PropertyConfigTag configTag = findParent(PropertyConfigTag.class);
 		BaseTag findFirst = findFirst(PropertyConfigTag.class, PanelTag.class, ColumnTag.class, GroupTag.class, PanelGridTag.class);
+
 		verifyRenderAs(configTag, findFirst);
+		verifyShowLabel(configTag);
 
 		//Aplica estilos padrão apenas após resolver o 'renderAs'
 		super.applyDefaultStyleClasses();
@@ -127,6 +130,23 @@ public class PropertyLayoutTag extends TemplateTag {
 		}
 		if (!RENDERAS_OPTIONS.contains(renderAs)) {
 			throw new NextException("Property 'renderAs' must be one of: " + RENDERAS_OPTIONS + ". Value found: " + renderAs);
+		}
+	}
+
+	private void verifyShowLabel(PropertyConfigTag configTag) {
+		if (showLabel == null && configTag != null && configTag.getShowLabel() != null) {
+			showLabel = configTag.getShowLabel();
+		}
+		if (showLabel == null) {
+			if (org.nextframework.view.template.PropertyTag.SINGLE.equals(renderAs)) {
+				showLabel = false; // nao faz muito sentido escreve sozinho o label, é melhor mandar escrever quando quiser
+			}
+		}
+		if (org.nextframework.view.template.PropertyTag.DOUBLE.equals(renderAs) || org.nextframework.view.template.PropertyTag.INVERT.equals(renderAs)) {
+			showLabel = false;//se for modo double não imprimir o label porque já vai estar sendo escrito um
+		}
+		if (org.nextframework.view.template.PropertyTag.DOUBLELINE.equals(renderAs)) {
+			showLabel = true;
 		}
 	}
 
@@ -191,6 +211,14 @@ public class PropertyLayoutTag extends TemplateTag {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public Boolean getShowLabel() {
+		return showLabel;
+	}
+
+	public void setShowLabel(Boolean showLabel) {
+		this.showLabel = showLabel;
 	}
 
 	public String getPanelStyleClass() {
