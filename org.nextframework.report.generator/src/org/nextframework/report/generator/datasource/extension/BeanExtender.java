@@ -17,13 +17,12 @@ import org.nextframework.report.generator.annotation.ExtendBean;
 
 public class BeanExtender {
 
-	String id = "0";
+	private static final String SUBCLASS_SUFIX = "$$ExtendedByBeanExtender";
 
-	Map<Class<?>, List<ExtensionInfo>> extensions = new HashMap<Class<?>, List<ExtensionInfo>>();
-
-	Map<Class<?>, Object> servicesMap = new HashMap<Class<?>, Object>();
-
-	Map<Class<?>, Class<?>> extendedClasses = new HashMap<Class<?>, Class<?>>();
+	private String id = "0";
+	private Map<Class<?>, List<ExtensionInfo>> extensions = new HashMap<Class<?>, List<ExtensionInfo>>();
+	private Map<Class<?>, Object> servicesMap = new HashMap<Class<?>, Object>();
+	private Map<Class<?>, Class<?>> extendedClasses = new HashMap<Class<?>, Class<?>>();
 
 	public BeanExtender(List<?> services) {
 		checkServices(services);
@@ -82,7 +81,7 @@ public class BeanExtender {
 
 		SourceCodeBuilder code = new SourceCodeBuilder();
 		code.setSuperclass(x);
-		code.setClassName(x.getSimpleName() + "$$ExtendedByBeanExtender_" + id);
+		code.setClassName(x.getSimpleName() + SUBCLASS_SUFIX + "_" + id);
 
 		code.declareAttribute(x, "delegate$$bean");
 
@@ -228,6 +227,10 @@ public class BeanExtender {
 			extendedClasses.put(clazz, result);
 		}
 		return result;
+	}
+
+	public boolean isSubClass(Class<?> clazz) {
+		return clazz.getName().contains(SUBCLASS_SUFIX);
 	}
 
 }
