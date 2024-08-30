@@ -146,7 +146,7 @@ public class JavaSourceCompiler {
 		errorMessage += "\n\nCould not compile " + className + "\n";
 		for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
 			errorMessage += diagnostic.getMessage(null) + "\n\n";
-			if (diagnostic.getSource() != null) {
+			if (diagnostic.getSource() != null && diagnostic.getStartPosition() > -1) {
 				String charContent = (String) ((JavaSourceFromString) diagnostic.getSource()).getCharContent(false);
 				int begin = charContent.substring(0, (int) diagnostic.getStartPosition()).lastIndexOf('\n') + 1;
 				int end = charContent.indexOf('\n', (int) diagnostic.getEndPosition());
