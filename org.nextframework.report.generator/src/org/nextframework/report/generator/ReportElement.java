@@ -155,7 +155,7 @@ public class ReportElement {
 		for (CalculatedFieldElement calculatedField : calculatedFields) {
 			String[] parts = calculatedField.getExpression().split(" ");
 			for (String part : parts) {
-				if (Character.isLetter(part.charAt(0)) && !getData().isCalculated(part)) {
+				if (Character.isLetter(part.charAt(0)) && !getData().isCalculated(part) && !ReportGeneratorUtils.isSpecialField(part)) {
 					properties.add(part);
 				}
 			}

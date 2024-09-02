@@ -174,12 +174,9 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
         if (!(this.avaiableProperties).hasOwnProperty(key)) continue;
         var property = this.avaiableProperties[key];
         var options = this.fields[property];
-        console.info(property + " " + options);
+        //Global.console.info(property + " " + options);
         if (options != null && (ReportPropertyConfigUtils.isNumber(options) || ReportPropertyConfigUtils.isDate(options))) {
-            var b = next.dom.newElement("button");
-            b.className = next.globalMap.get("NextDialogs.button", "button");
-            b.innerHTML = options["displayName"];
-            this.configureButtonAppendCalculatedVar(b, property, options);
+            var b = this.createPropertyButton(property, options["displayName"]);
             varDiv.appendChild(b);
         }
     }
@@ -212,12 +209,16 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
     })());
     dialog.show();
 };
-ReportDesigner.prototype.configureButtonAppendCalculatedVar = function(b, property, options) {
+ReportDesigner.prototype.createPropertyButton = function(property, displayName) {
     var bigThis = this;
+    var b = next.dom.newElement("button");
+    b.className = next.globalMap.get("NextDialogs.button", "button");
+    b.innerHTML = displayName;
     b.onclick = function(p1) {
         bigThis.appendToExpression(property);
         return true;
     };
+    return b;
 };
 ReportDesigner.prototype.appendNumberToExpression = function() {
     var bigThis = this;
@@ -242,24 +243,23 @@ ReportDesigner.prototype.appendToExpression = function(varText) {
     var calculationExpression = next.dom.toElement("calculationExpression");
     if (varText.charAt(0) == '$') {
         var c = varText.charAt(1);
-        switch(c) {
-            case 'B':
-                var result = calculationExpression.value;
-                result = result.substring(0, result.length - 1);
-                var space = result.lastIndexOf(' ');
-                if (space <= 0) {
-                    result = "";
-                } else {
-                    result = result.substring(0, space) + " ";
-                }
-                calculationExpression.value = result;
-                break;
-            case 'C':
-                calculationExpression.value = "";
-                break;
+        if (c == 'B') {
+            var result = calculationExpression.value;
+            result = result.substring(0, result.length - 1);
+            var space = result.lastIndexOf(' ');
+            if (space <= 0) {
+                result = "";
+            } else {
+                result = result.substring(0, space) + " ";
+            }
+            calculationExpression.value = result;
+        } else if (c == 'C') {
+            calculationExpression.value = "";
+        } else if (c == 'N') {
+            calculationExpression.value += "$now" + " ";
         }
     } else {
-        calculationExpression.value = calculationExpression.value + varText + " ";
+        calculationExpression.value += varText + " ";
     }
     var errorMessage = ReportPropertyConfigUtils.validateExpression(calculationExpression.value);
     if (errorMessage != null) {

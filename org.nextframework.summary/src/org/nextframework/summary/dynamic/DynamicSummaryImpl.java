@@ -198,10 +198,9 @@ class CodeGenerator {
 		builder.append("	  variable " + variableName + "\n");
 		builder.append("	 ************************************************************************/\n\n");
 
-		PropertyDescriptor propertyDescriptor;
 		String type;
 		if (variable.getJavaExpression() == null) {
-			propertyDescriptor = beanDescriptor.getPropertyDescriptor(variableName);
+			PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(variableName);
 			type = getTypeAsString(propertyDescriptor.getType());
 		} else {
 			type = getTypeAsString(variable.getReturnType());

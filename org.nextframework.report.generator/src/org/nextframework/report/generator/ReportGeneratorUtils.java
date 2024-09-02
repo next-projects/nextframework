@@ -93,17 +93,18 @@ public class ReportGeneratorUtils {
 		for (int i = 0; i < expressionParts.length; i++) {
 			String part = expressionParts[i];
 			if (Character.isLetter(part.charAt(0))) {
+
 				if (reportElement.getData().isCalculated(part)) {
 					expressionParts[i] = convertExpressionPartToGetter(part).substring("getCurrent().".length());
 					continue;
 				}
-				PropertyDescriptor pd = bd.getPropertyDescriptor(part);
-				Class<?> rawType = pd.getRawType();
+
+				Class<?> rawType = bd.getPropertyDescriptor(part).getRawType();
 				//TODO CHECK TYPE AND APPLY SUFFIX IF NECESSARY
 				//TODO CHECK THE RESULTING TYPE
 
 				expressionParts[i] = convertExpressionPartToGetter(part);
-				boolean castToDouble = pd.getRawType().isPrimitive();
+				boolean castToDouble = rawType.isPrimitive();
 
 				//TODO MOVE THIS CHECK
 				if (Calendar.class.isAssignableFrom(rawType)) {
@@ -124,6 +125,8 @@ public class ReportGeneratorUtils {
 				if (castToDouble) {
 					expressionParts[i] = "(double) " + expressionParts[i];
 				}
+			} else if (isSpecialField(part)) {
+				expressionParts[i] = convertSpecialField(part);
 			}
 		}
 
@@ -177,7 +180,7 @@ public class ReportGeneratorUtils {
 			char c = expression.charAt(i);
 			switch (status) {
 				case ANY:
-					if (Character.isLetter(c) || Character.isDigit(c)) {
+					if (Character.isLetter(c) || Character.isDigit(c) || c == '$') {
 						token += c;
 						status = IN_VAR;
 					} else {
@@ -223,7 +226,7 @@ public class ReportGeneratorUtils {
 		return parts.toArray(new String[parts.size()]);
 	}
 
-	public static String convertExpressionPartToGetter(String part) {
+	private static String convertExpressionPartToGetter(String part) {
 		StringBuilder b = new StringBuilder();
 		b.append("getCurrent()");
 		String[] properties = part.split("\\.");
@@ -235,6 +238,17 @@ public class ReportGeneratorUtils {
 			b.append(p);
 		}
 		return b.toString();
+	}
+
+	public static boolean isSpecialField(String part) {
+		return "$now".equals(part);
+	}
+
+	private static String convertSpecialField(String part) {
+		if ("$now".equals(part)) {
+			return "java.util.Calendar.getInstance().getTimeInMillis()";
+		}
+		throw new IllegalArgumentException("O campo especial " + part + " é inválido!");
 	}
 
 }

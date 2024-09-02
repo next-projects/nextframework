@@ -164,7 +164,7 @@ ReportPropertyConfigUtils.parseExpression = function(expression) {
         var c = expression.charAt(i);
         switch(status) {
             case ReportPropertyConfigUtils.ANY:
-                if (ReportPropertyConfigUtils.isLetter(c) || ReportPropertyConfigUtils.isDigit(c)) {
+                if (ReportPropertyConfigUtils.isLetter(c) || ReportPropertyConfigUtils.isDigit(c) || c == '$') {
                     token += c;
                     status = ReportPropertyConfigUtils.IN_VAR;
                 } else {

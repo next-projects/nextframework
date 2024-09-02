@@ -259,28 +259,19 @@ public class ReportGenerator {
 			boolean formatAsNumber = CalculatedFieldElement.FORMAT_AS_NUMBER.equals(calculatedField.getFormatAs());
 			String formatTimeDetail = calculatedField.getFormatTimeDetail();
 			LayoutItem itemWithName = this.reportElement.getLayout().getItemWithName(name);
-			CalculationType calculation = CalculationType.SUM;
+			CalculationType calculation = CalculationType.NONE;
 			if (itemWithName instanceof FieldDetailElement) {
 				FieldDetailElement fieldElement = (FieldDetailElement) itemWithName;
-				String aggregateType = fieldElement.getAggregateType();
-				if (aggregateType != null) {
-					calculation = CalculationType.valueOf(aggregateType);
-				}
+				calculation = fieldElement.getAggregateType() != null ? CalculationType.valueOf(fieldElement.getAggregateType()) : fieldElement.isAggregateField() ? CalculationType.SUM : CalculationType.NONE;
 			}
-			configureExpression(reportElement, summary, name, expression, displayName, formatAsNumber, formatTimeDetail, calculation, processors);
+			String expression2 = ReportGeneratorUtils.reorganizeExpression(reportElement, summary.getReferenceClass(), expression, processors);
+			//TODO TYPE IS FORCED... TRY TO DETECT TYPE
+			String timeDiv = "";
+			if (!formatAsNumber) {
+				timeDiv = convertToTimeFormula(formatTimeDetail);
+			}
+			summary.addVariable(new DynamicVariable(name, displayName, calculation, "(double)((" + expression2 + ")" + timeDiv + ")", Double.class));
 		}
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static void configureExpression(ReportElement reportElement, DynamicSummary summary, String name, String expression, String displayName, boolean formatAsNumber, String formatTimeDetail, CalculationType calculation, String processors) {
-		String b = ReportGeneratorUtils.reorganizeExpression(reportElement, summary.getReferenceClass(), expression, processors);
-		//TODO TYPE IS FORCED... TRY TO DETECT TYPE
-		String timeDiv = "";
-		if (!formatAsNumber) {
-			timeDiv = convertToTimeFormula(formatTimeDetail);
-		}
-		summary.addVariable(new DynamicVariable(name, displayName,
-				calculation, "(double)((" + b + ")" + timeDiv + ")", Double.class));
 	}
 
 	@SuppressWarnings("serial")
@@ -311,25 +302,19 @@ public class ReportGenerator {
 				if (!reportElement.getData().isCalculated(fieldDetailElement.getName())) {
 					displayName = getBeanDescriptorForMainType().getPropertyDescriptor(name).getDisplayName();
 					if (fieldDetailElement.isAggregateField() || fieldDetailElement.isCustomPattern()) {
-						if (fieldDetailElement.getAggregateType() == null) {
-							summary.addVariable(name, displayName, CalculationType.SUM);
-						} else {
-							String aggregateType = fieldDetailElement.getAggregateType();
-							CalculationType calculation = CalculationType.valueOf(aggregateType);
-							summary.addVariable(name, displayName, calculation);
-						}
+						CalculationType calculation = fieldDetailElement.getAggregateType() != null ? CalculationType.valueOf(fieldDetailElement.getAggregateType()) : fieldDetailElement.isAggregateField() ? CalculationType.SUM : CalculationType.NONE;
+						summary.addVariable(name, displayName, calculation);
 					}
 				} else {
 					CalculatedFieldElement calc = reportElement.getData().getCalculatedFieldWithName(name);
 					displayName = calc.getDisplayName();
-					if (fieldDetailElement.isCustomPattern() && !fieldDetailElement.isAggregateField()) {
-						summary.addVariable(name, displayName, CalculationType.NONE);
-					}
+					//if (!fieldDetailElement.isAggregateField() && fieldDetailElement.isCustomPattern()) {
+					//summary.addVariable(name, displayName, CalculationType.NONE); //O método configureExpressions já acrescentará a variável do campo calculado
+					//}
 				}
 				if (fieldDetailElement.isCustomPattern()) {
 					String cpe = fieldDetailElement.getCustomPatternExpression();
-					summary.addVariable(new DynamicVariableDecorator(name + "Formatted", displayName, name,
-							cpe, String.class));
+					summary.addVariable(new DynamicVariableDecorator(name + "Formatted", displayName, name, cpe, String.class));
 				}
 			}
 		}

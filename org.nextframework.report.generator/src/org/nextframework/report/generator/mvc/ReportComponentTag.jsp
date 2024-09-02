@@ -438,15 +438,17 @@
 				<button class="${btnStyleClass}">EXAMPLE</button>
 			</n:panel>
 			<n:panel class="botoesHorizontais" colspan="6">
-				<button id="op_n" onclick="ReportDesigner.getInstance().appendNumberToExpression()" class="${btnStyleClass}" title="Insere um número digitado pelo usuário na expressão">Inserir Número</button>
-				<button id="op_a" onclick="ReportDesigner.getInstance().appendToExpression('+')" class="${btnStyleClass}" title="Adição">&nbsp;&nbsp;+&nbsp;&nbsp;</button>
-				<button id="op_s" onclick="ReportDesigner.getInstance().appendToExpression('-')" class="${btnStyleClass}" title="Subtração">&nbsp;&nbsp;-&nbsp;&nbsp;</button>
-				<button id="op_m" onclick="ReportDesigner.getInstance().appendToExpression('*')" class="${btnStyleClass}" title="Multiplicação">&nbsp;&nbsp;*&nbsp;&nbsp;</button>
-				<button id="op_d" onclick="ReportDesigner.getInstance().appendToExpression('/')" class="${btnStyleClass}" title="Divisão">&nbsp;&nbsp;/&nbsp;&nbsp;</button>
-				<button id="op_p" onclick="ReportDesigner.getInstance().appendToExpression('(')" class="${btnStyleClass}" title="Abrir parênteses">&nbsp;&nbsp;(&nbsp;&nbsp;</button>
-				<button id="op_f" onclick="ReportDesigner.getInstance().appendToExpression(')')" class="${btnStyleClass}" title="Fechar parênteses">&nbsp;&nbsp;)&nbsp;&nbsp;</button>
-				<button id="op_b" onclick="ReportDesigner.getInstance().appendToExpression('$B')" class="${btnStyleClass}" title="Apagar último item">&nbsp;&#8592;&nbsp;</button>
-				<button id="op_c" onclick="ReportDesigner.getInstance().appendToExpression('$C')" class="${btnStyleClass}" title="Limpar expressão">&nbsp;&nbsp;C&nbsp;&nbsp;</button>
+				<button id="op_nmb" onclick="ReportDesigner.getInstance().appendNumberToExpression()" class="${btnStyleClass}" title="Insere um número digitado pelo usuário na expressão">Inserir Número</button>
+				<button id="op_now" onclick="ReportDesigner.getInstance().appendToExpression('$N')" class="${btnStyleClass}" title="Insere a data atual na expressão">Inserir data atual</button>
+				<div style="flex-basis: 100%;" />
+				<button id="op_add" onclick="ReportDesigner.getInstance().appendToExpression('+')" class="${btnStyleClass}" title="Adição">&nbsp;&nbsp;+&nbsp;&nbsp;</button>
+				<button id="op_sub" onclick="ReportDesigner.getInstance().appendToExpression('-')" class="${btnStyleClass}" title="Subtração">&nbsp;&nbsp;-&nbsp;&nbsp;</button>
+				<button id="op_mlt" onclick="ReportDesigner.getInstance().appendToExpression('*')" class="${btnStyleClass}" title="Multiplicação">&nbsp;&nbsp;*&nbsp;&nbsp;</button>
+				<button id="op_dvd" onclick="ReportDesigner.getInstance().appendToExpression('/')" class="${btnStyleClass}" title="Divisão">&nbsp;&nbsp;/&nbsp;&nbsp;</button>
+				<button id="op_pop" onclick="ReportDesigner.getInstance().appendToExpression('(')" class="${btnStyleClass}" title="Abrir parênteses">&nbsp;&nbsp;(&nbsp;&nbsp;</button>
+				<button id="op_pcl" onclick="ReportDesigner.getInstance().appendToExpression(')')" class="${btnStyleClass}" title="Fechar parênteses">&nbsp;&nbsp;)&nbsp;&nbsp;</button>
+				<button id="op_bck" onclick="ReportDesigner.getInstance().appendToExpression('$B')" class="${btnStyleClass}" title="Apagar último item">&nbsp;&#8592;&nbsp;</button>
+				<button id="op_cln" onclick="ReportDesigner.getInstance().appendToExpression('$C')" class="${btnStyleClass}" title="Limpar expressão">&nbsp;&nbsp;C&nbsp;&nbsp;</button>
 			</n:panel>
 
 		</t:formTable>

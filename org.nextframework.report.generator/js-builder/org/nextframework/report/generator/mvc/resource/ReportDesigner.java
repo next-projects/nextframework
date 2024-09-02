@@ -269,12 +269,9 @@ public class ReportDesigner {
 		for (String key : avaiableProperties) {
 			String property = avaiableProperties.$get(key);
 			Map<String, Object> options = fields.$get(property);
-			Global.console.info(property + " " + options);
+			//Global.console.info(property + " " + options);
 			if (options != null && (ReportPropertyConfigUtils.isNumber(options) || ReportPropertyConfigUtils.isDate(options))) {
-				Button b = next.dom.newElement("button");
-				b.className = next.globalMap.get("NextDialogs.button", "button");
-				b.innerHTML = (String) options.$get("displayName");
-				configureButtonAppendCalculatedVar(b, property, options);
+				Button b = createPropertyButton(property, (String) options.$get("displayName"));
 				varDiv.appendChild(b);
 			}
 		}
@@ -288,7 +285,7 @@ public class ReportDesigner {
 
 			});
 		}
-		
+
 		final Element panelDiv = Global.window.document.getElementById("calculatedPropertiesWizzard");
 		final Element panelDivParent = panelDiv.parentNode;
 
@@ -312,8 +309,11 @@ public class ReportDesigner {
 
 	}
 
-	private void configureButtonAppendCalculatedVar(final Button b, final String property, Map<String, Object> options) {
+	private Button createPropertyButton(final String property, String displayName) {
 		final ReportDesigner bigThis = this;
+		Button b = next.dom.newElement("button");
+		b.className = next.globalMap.get("NextDialogs.button", "button");
+		b.innerHTML = displayName;
 		b.onclick = new Function1<DOMEvent, Boolean>() {
 
 			@Override
@@ -323,6 +323,7 @@ public class ReportDesigner {
 			}
 
 		};
+		return b;
 	}
 
 	public void appendNumberToExpression() {
@@ -345,24 +346,23 @@ public class ReportDesigner {
 		Input calculationExpression = next.dom.toElement("calculationExpression");
 		if (varText.charAt(0) == '$') {
 			char c = varText.charAt(1);
-			switch (c) {
-				case 'B':
-					String result = calculationExpression.value;
-					result = result.substring(0, result.length() - 1);
-					int space = result.lastIndexOf(' ');
-					if (space <= 0) {
-						result = "";
-					} else {
-						result = result.substring(0, space) + " ";
-					}
-					calculationExpression.value = result;
-					break;
-				case 'C':
-					calculationExpression.value = "";
-					break;
+			if (c == 'B') {
+				String result = calculationExpression.value;
+				result = result.substring(0, result.length() - 1);
+				int space = result.lastIndexOf(' ');
+				if (space <= 0) {
+					result = "";
+				} else {
+					result = result.substring(0, space) + " ";
+				}
+				calculationExpression.value = result;
+			}else if (c == 'C') {
+				calculationExpression.value = "";
+			}else if (c == 'N') {
+				calculationExpression.value += "$now" + " ";
 			}
 		} else {
-			calculationExpression.value = calculationExpression.value + varText + " ";
+			calculationExpression.value += varText + " ";
 		}
 		String errorMessage = ReportPropertyConfigUtils.validateExpression(calculationExpression.value);
 		if (errorMessage != null) {

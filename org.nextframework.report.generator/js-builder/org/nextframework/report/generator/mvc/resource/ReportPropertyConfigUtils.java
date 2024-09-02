@@ -225,7 +225,7 @@ public class ReportPropertyConfigUtils {
 			char c = expression.charAt(i);
 			switch (status) {
 				case ReportPropertyConfigUtils.ANY:
-					if (isLetter(c) || isDigit(c)) {
+					if (isLetter(c) || isDigit(c) || c == '$') {
 						token += c;
 						status = ReportPropertyConfigUtils.IN_VAR;
 					} else {
