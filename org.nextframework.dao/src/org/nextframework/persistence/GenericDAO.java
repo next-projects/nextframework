@@ -257,10 +257,16 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		String[] selectedProperties = getSimpleFields();
 
 		if (extraFields != null && extraFields.length > 0) {
-			String[] selectedProperties2 = new String[selectedProperties.length + extraFields.length];
-			System.arraycopy(selectedProperties, 0, selectedProperties2, 0, selectedProperties.length);
-			System.arraycopy(extraFields, 0, selectedProperties2, selectedProperties.length, extraFields.length);
-			selectedProperties = selectedProperties2;
+			BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
+			List<String> selectedPropertiesList = new ArrayList<String>(Arrays.asList(selectedProperties));
+			for (String extraField : extraFields) {
+				org.nextframework.bean.PropertyDescriptor pd = beanDescriptor.getPropertyDescriptor(extraField);
+				if (pd.getAnnotation(Transient.class) != null) {
+					continue;
+				}
+				selectedPropertiesList.add(extraField);
+			}
+			selectedProperties = selectedPropertiesList.toArray(new String[selectedPropertiesList.size()]);
 		}
 
 		return queryWithFields(selectedProperties);
@@ -268,17 +274,17 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 
 	public String[] getSimpleFields() {
 
-		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
-		String descriptionPropertyName = beanDescriptor.getDescriptionPropertyName();
-		String idPropertyName = beanDescriptor.getIdPropertyName();
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(beanClass);
+		String descriptionPropertyName = bd.getDescriptionPropertyName();
+		String idPropertyName = bd.getIdPropertyName();
 
 		String[] selectedProperties;
 		if (descriptionPropertyName == null) {
 			selectedProperties = new String[] { idPropertyName };
 		} else {
 
-			org.nextframework.bean.PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(descriptionPropertyName);
-			DescriptionProperty descriptionProperty = propertyDescriptor.getAnnotation(DescriptionProperty.class);
+			org.nextframework.bean.PropertyDescriptor pd = bd.getPropertyDescriptor(descriptionPropertyName);
+			DescriptionProperty descriptionProperty = pd.getAnnotation(DescriptionProperty.class);
 			String[] usingFields = descriptionProperty != null ? descriptionProperty.usingFields() : null; //TODO PROCURAR O @DescriptionProperty nas classes superiores
 
 			if (usingFields != null && usingFields.length > 0) {
@@ -289,8 +295,8 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				}
 			} else {
 				selectedProperties = new String[] { idPropertyName, descriptionPropertyName };
-				if (beanDescriptor.getPropertyDescriptor(descriptionPropertyName).getAnnotation(Transient.class) != null) {
-					log.warn("@DescriptionProperty of " + beanDescriptor.getTargetClass() + " is transient and must declare usingFields!");
+				if (bd.getPropertyDescriptor(descriptionPropertyName).getAnnotation(Transient.class) != null) {
+					log.warn("@DescriptionProperty of " + bd.getTargetClass() + " is transient and must declare usingFields!");
 				}
 			}
 

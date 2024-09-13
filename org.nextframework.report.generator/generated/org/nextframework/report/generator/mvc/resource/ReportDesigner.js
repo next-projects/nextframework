@@ -322,7 +322,7 @@ ReportDesigner.prototype.saveConfigureProperties = function() {
         if (!(this.avaiableProperties).hasOwnProperty(key)) continue;
         var field = this.avaiableProperties[key];
         var checkbox = window.document.getElementById("selProp_" + field);
-        if (!checkbox.disabled && checkbox.checked) {
+        if (checkbox != null && !checkbox.disabled && checkbox.checked) {
             this.addField(checkbox.value, (checkbox)["propertyMetadata"]);
             checkbox.disabled = true;
         }

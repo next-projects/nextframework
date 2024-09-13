@@ -428,7 +428,7 @@ public class ReportDesigner {
 		for (String key : avaiableProperties) {
 			String field = avaiableProperties.$get(key);
 			Input checkbox = (Input) Global.window.document.getElementById("selProp_" + field);
-			if (!checkbox.disabled && checkbox.checked) {
+			if (checkbox != null && !checkbox.disabled && checkbox.checked) {
 				addField(checkbox.value, (Map<String, Object>) ((Map) checkbox).$get("propertyMetadata"));
 				checkbox.disabled = true;
 			}

@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -28,12 +27,15 @@ import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.controller.ServletRequestDataBinderNext;
 import org.nextframework.core.web.NextWeb;
+import org.nextframework.persistence.PersistenceUtils;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.annotation.ExtendBean;
 import org.nextframework.report.generator.annotation.ReportEntity;
 import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
 import org.nextframework.report.generator.data.FilterElement;
+import org.nextframework.report.generator.datasource.extension.GeneratedReportListener;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.web.bind.ServletRequestParameterPropertyValues;
@@ -66,7 +68,7 @@ public class ReportDesignControllerUtil {
 	public Set<String> getAvailablePropertiesForClass(Class<?> selectedType, String parentProperty, int deepLevel) {
 
 		if (deepLevel < 0) {
-			return new HashSet<String>();
+			return new LinkedHashSet<String>();
 		}
 
 		Set<String> avaiableProperties = new LinkedHashSet<String>();
@@ -146,7 +148,6 @@ public class ReportDesignControllerUtil {
 		return map;
 	}
 
-	@SuppressWarnings("unchecked")
 	HashMap<String, Object> getMetadataForProperty(ReportElement report, Locale locale, BeanDescriptor beanDescriptor, String property) {
 
 		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
@@ -176,7 +177,7 @@ public class ReportDesignControllerUtil {
 
 		if (propertyDescriptor.getType() instanceof Class) {
 			Class propertyClass = (Class) propertyDescriptor.getType();
-			boolean isEntity = propertyClass.isAnnotationPresent(Entity.class);
+			boolean isEntity = PersistenceUtils.isEntity(propertyClass);
 			if (isEntity) {
 				String descriptionPropertyName = BeanDescriptorFactory.forClass(propertyClass).getDescriptionPropertyName();
 				map.put("descriptionProperty", descriptionPropertyName);
@@ -345,17 +346,17 @@ public class ReportDesignControllerUtil {
 		return value;
 	}
 
-	Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Collection<String> properties) {
-		Map<String, Map<String, Object>> propertyMetadata = new HashMap<String, Map<String, Object>>();
+	public Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Collection<String> properties) {
+		Map<String, Map<String, Object>> propertyMetadata = new LinkedHashMap<String, Map<String, Object>>();
 		for (String property : properties) {
 			propertyMetadata.put(property, new HashMap<String, Object>());
 		}
 		return getPropertiesMetadata(report, locale, selectedType, propertyMetadata);
 	}
 
-	Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Map<String, Map<String, Object>> properties) {
+	public Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Map<String, Map<String, Object>> properties) {
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(selectedType);
-		Map<String, Map<String, Object>> propertyMetadata = new HashMap<String, Map<String, Object>>();
+		Map<String, Map<String, Object>> propertyMetadata = new LinkedHashMap<String, Map<String, Object>>();
 		for (String property : properties.keySet()) {
 			HashMap<String, Object> metadataForProperty = getMetadataForProperty(report, locale, beanDescriptor, property);
 			metadataForProperty.putAll(properties.get(property));
@@ -413,7 +414,7 @@ public class ReportDesignControllerUtil {
 		return false;
 	}
 
-	List<String> reorganizeFilters(Class<?> mainType, Collection<String> propertiesSet) {
+	public List<String> reorganizeFilters(Class<?> mainType, Collection<String> propertiesSet) {
 		List<String> properties = new ArrayList<String>(propertiesSet);
 		Map<String, List<String>> dependencies = getDependencies(mainType, properties);
 		int countLoop = 0;
@@ -432,6 +433,18 @@ public class ReportDesignControllerUtil {
 			}
 		}
 		return properties;
+	}
+
+	public void checkFiltersMap(ReportDesignModel model, ReportElement reportElement, List<String> filters, Map<String, Map<String, Object>> filtersMetadataMap) {
+		GeneratedReportListener[] grListeners = ServiceFactory.loadServices(GeneratedReportListener.class);
+		Class mainType = Util.objects.getRealClass(reportElement.getData().getMainType());
+		for (String filter : filters) {
+			for (GeneratedReportListener filterListener : grListeners) {
+				if (filterListener.getFromClass() == null || filterListener.getFromClass() == mainType) {
+					filterListener.checkFilters(model, reportElement, filter, filtersMetadataMap);
+				}
+			}
+		}
 	}
 
 }

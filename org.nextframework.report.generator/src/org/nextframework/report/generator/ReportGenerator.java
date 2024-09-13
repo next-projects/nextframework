@@ -15,13 +15,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.persistence.Entity;
-
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.compilation.SourceCodeBuilder;
 import org.nextframework.exception.NextException;
+import org.nextframework.persistence.PersistenceUtils;
 import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.builder.IReportBuilder;
 import org.nextframework.report.definition.builder.LayoutReportBuilder;
@@ -324,7 +323,7 @@ public class ReportGenerator {
 	private void configureGroups(List<GroupElement> groups, DynamicSummary summary) {
 		for (GroupElement groupElement : groups) {
 			Type type = getTypeForProperty(groupElement.getName());
-			if (isEntityType(type)) {
+			if (PersistenceUtils.isEntity(type)) {
 				BeanDescriptor bdp = BeanDescriptorFactory.forClass((Class) type);
 				String property = "class";
 				if (bdp.getDescriptionPropertyName() != null) {
@@ -341,14 +340,6 @@ public class ReportGenerator {
 				continue;
 			}
 			summary.addGroup(groupElement.getName(), groupElement.getPattern());
-		}
-	}
-
-	private boolean isEntityType(Type type) {
-		if (type instanceof Class<?>) {
-			return ((Class<?>) type).isAnnotationPresent(Entity.class);
-		} else {
-			return false;
 		}
 	}
 
