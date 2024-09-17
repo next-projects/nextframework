@@ -40,6 +40,10 @@ public class ResourceModelAndView extends ModelAndView {
 		this(res, true);
 	}
 
+	public Resource getResource() {
+		return resource;
+	}
+
 	public ResourceModelAndView(Resource res, final boolean useAttachment) {
 
 		this.resource = res;

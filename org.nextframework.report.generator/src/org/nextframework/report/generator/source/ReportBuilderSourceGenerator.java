@@ -488,7 +488,7 @@ public class ReportBuilderSourceGenerator {
 					charArray[i] = '_';
 				}
 			}
-			className = org.springframework.util.StringUtils.capitalize(new String(charArray)) + "ReportBuilder";
+			className = org.springframework.util.StringUtils.capitalize(new String(charArray)) + "_ReportBuilder";
 		}
 		return className;
 	}

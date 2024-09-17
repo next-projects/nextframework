@@ -1,6 +1,5 @@
 package org.nextframework.report.generator.mvc;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,8 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import javax.persistence.Id;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
@@ -26,15 +23,12 @@ import org.nextframework.controller.resource.Resource;
 import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
-import org.nextframework.exception.BusinessException;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
 import org.nextframework.report.definition.ReportDefinition;
-import org.nextframework.report.definition.ReportSectionRow;
 import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.definition.elements.ReportItemIterator;
-import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.ReportGenerator;
@@ -319,7 +313,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		setAttribute("crudPath", getPathForReportCrud());
 		setAttribute("reportPath", WebUtils.getFirstFullUrl());
 
-		Map<String, Object> filterMap = getFilterMap(model, reportElement, false);
+		Map<String, Object> filterMap = getFilterMap(request, model, reportElement, false);
 		setAttribute("filterValuesMap", filterMap);
 
 		Map<String, String> filterActions = getFilterActions(model);
@@ -361,20 +355,20 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	@SuppressWarnings("all")
-	protected Map<String, Object> getFilterMap(ReportDesignModel model, ReportElement reportElement, boolean bind) {
+	protected Map<String, Object> getFilterMap(WebRequestContext request, ReportDesignModel model, ReportElement reportElement, boolean bind) {
 		Map<String, Object> filterMap = null;
 		if (!bind) {
-			filterMap = (Map<String, Object>) getUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId());
+			filterMap = (Map<String, Object>) request.getUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId());
 		}
 		if (filterMap == null) {
-			filterMap = util.getFilterMap(reportElement);
+			filterMap = util.getFilterMap(request.getServletRequest(), reportElement);
 			if (bind) {
 				String msg = validate(model, filterMap);
 				if (msg != null) {
 					throw new NextException(msg);
 				}
 			}
-			setUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId(), filterMap);
+			request.setUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId(), filterMap);
 		}
 		return filterMap;
 	}
@@ -403,8 +397,9 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 				DynamicBaseReportDefinition definition2 = (DynamicBaseReportDefinition) definition;
 				if (Util.collections.isNotEmpty(definition2.getSummarizedData().getItems())) {
 					definition.getParameters().put("renderPDF", Boolean.TRUE);
+					String reportName = getReportName(definition, ".pdf");
 					byte[] pdfBytes = JasperReportsRenderer.renderAsPDF(definition);
-					return new Resource("application/pdf", definition.getReportName() + ".pdf", pdfBytes);
+					return new Resource("application/pdf", reportName, pdfBytes);
 				}
 				return null;
 			}
@@ -417,6 +412,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		};
 
 		return executeTask(request, model, task);
+	}
+
+	protected String getReportName(ReportDefinition definition, String extension) {
+		return definition.getReportName() + extension;
 	}
 
 	@OnErrors("showFilterView")
@@ -460,10 +459,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 		//Faz a bindagem dos parâmetros
 		final ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
-		final Map<String, Object> filterMap = getFilterMap(model, reportElement, true);
+		final Map<String, Object> filterMap = getFilterMap(request, model, reportElement, true);
 
 		//Valida campos permitidos
-		validadeAllowedProperties(reportElement);
+		util.validadeAllowedProperties(reportElement);
 
 		//Obtem o objeto de controle do monitoramento
 		Map<Integer, ProgressMonitor> monitorMap = getMonitorMap(request);
@@ -499,24 +498,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		return continueOnAction("showFilterView", model);
 	}
 
-	private void validadeAllowedProperties(final ReportElement reportElement) {
-		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
-		for (String property : reportElement.getProperties()) {
-			if (!reportElement.getData().isCalculated(property)) {
-				PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(property);
-				ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
-				Id idField = propertyDescriptor.getAnnotation(Id.class);
-				if (reportField == null && idField == null) {
-					throw new BusinessException("org.nextframework.report.generator.mvc.ReportDesignController.invalidProperty", new Object[] { property, reportElement.getData().getMainType().getSimpleName() }, "Não é possível executar o relatório, pois a propriedade {0} de {1} não é permitida!");
-				}
-			}
-		}
-	}
-
 	@Deprecated
-	protected ReportDefinition getReportDefinition(ReportDesignModel model) throws Exception {
+	protected ReportDefinition getReportDefinition(WebRequestContext request, ReportDesignModel model) throws Exception {
 		ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
-		Map<String, Object> filterMap = getFilterMap(model, reportElement, true);
+		Map<String, Object> filterMap = getFilterMap(request, model, reportElement, true);
 		ReportDefinition definition = getReportDefinition(reportElement, filterMap, getLocale(), getMaxResults(), null);
 		return definition;
 	}
@@ -558,21 +543,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 			debug(reportElement.getName(), definition);
 		}
 
-		int total = definition.getData().size();
-		if (definition instanceof DynamicBaseReportDefinition) {
-			DynamicBaseReportDefinition d2 = (DynamicBaseReportDefinition) definition;
-			total = d2.getSummarizedData().getItems().size();
-		}
-
-		if (total == maxResults) {
-			ReportLabel label = new ReportLabel("Obs: Apenas os " + maxResults + " primeiros registros estão sendo mostrados.");
-			label.getStyle().setForegroundColor(Color.RED);
-			label.getStyle().setFontSize(6);
-			label.getStyle().setItalic(true);
-			label.setColspan(definition.getColumns().size());
-			ReportSectionRow row = definition.getSectionFirstPageHeader().insertRow(0);
-			definition.addItem(label, row, 0);
-		}
+		util.insertMaxResultsWarning(definition, maxResults);
 
 		return definition;
 	}

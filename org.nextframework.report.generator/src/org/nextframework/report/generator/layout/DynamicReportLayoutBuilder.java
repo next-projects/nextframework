@@ -84,7 +84,7 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 
 			case BASE_CONFIG:
 
-				getDefinition().setReportName(getReportName() + "Base");
+				getDefinition().setReportName(getReportName());
 				getDefinition().setData(Arrays.asList(new Object()));
 				((DynamicBaseReportDefinition) getDefinition()).setSummarizedData((SummaryResult<?, ? extends Summary<?>>) summaryResult);
 				getDefinition().setTitle(getTitle());

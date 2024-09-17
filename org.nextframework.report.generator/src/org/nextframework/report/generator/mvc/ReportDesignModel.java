@@ -7,19 +7,19 @@ import org.nextframework.report.generator.ReportElement;
 
 public class ReportDesignModel {
 
-	Integer id;
+	private Integer id;
 
-	Class<?> selectedType;//this can be different of usertype if generated in runtime
-	Class<?> selectedGeneratedType;//usertype is the type that exists in the project
+	private Class<?> selectedType;//this can be different of usertype if generated in runtime
+	private Class<?> selectedGeneratedType;//usertype is the type that exists in the project
 
-	String reportTitle;
+	private String reportTitle;
 
-	Boolean reportPublic = false;
+	private Boolean reportPublic = false;
 
-	ReportElement reportElement;
-	Set<String> properties = new LinkedHashSet<String>();
+	private ReportElement reportElement;
+	private Set<String> properties = new LinkedHashSet<String>();
 
-	String reportXml;
+	private String reportXml;
 
 	public ReportElement getReportElement() {
 		return reportElement;

@@ -1,5 +1,6 @@
 package org.nextframework.report.generator.mvc;
 
+import java.awt.Color;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,14 +21,18 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
+import javax.servlet.http.HttpServletRequest;
 
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.controller.ServletRequestDataBinderNext;
-import org.nextframework.core.web.NextWeb;
+import org.nextframework.exception.BusinessException;
 import org.nextframework.persistence.PersistenceUtils;
+import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.ReportSectionRow;
+import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.annotation.ExtendBean;
 import org.nextframework.report.generator.annotation.ReportEntity;
@@ -35,6 +40,7 @@ import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
 import org.nextframework.report.generator.data.FilterElement;
 import org.nextframework.report.generator.datasource.extension.GeneratedReportListener;
+import org.nextframework.report.generator.layout.DynamicBaseReportDefinition;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.springframework.beans.MutablePropertyValues;
@@ -270,12 +276,12 @@ public class ReportDesignControllerUtil {
 		return Date.class.isAssignableFrom(propertyClass) || Calendar.class.isAssignableFrom(propertyClass);
 	}
 
-	Map<String, Object> getFilterMap(ReportElement reportElement) {
+	public Map<String, Object> getFilterMap(HttpServletRequest request, ReportElement reportElement) {
 
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
 
 		ServletRequestDataBinderNext dataBinder = new ServletRequestDataBinderNext(new Object(), "");
-		MutablePropertyValues mpvs = new ServletRequestParameterPropertyValues(NextWeb.getRequestContext().getServletRequest());
+		MutablePropertyValues mpvs = new ServletRequestParameterPropertyValues(request);
 		dataBinder.bind(mpvs);
 
 		List<FilterElement> filters = reportElement.getData().getFilters();
@@ -285,26 +291,24 @@ public class ReportDesignControllerUtil {
 				continue;
 			}
 			String name = filterElement.getName();
-			Class type = (Class) bd.getPropertyDescriptor(filterElement.getName()).getType();
+			Class type = (Class) bd.getPropertyDescriptor(name).getType();
 			if (isDateType(type)) {
 				String keyBegin = name + "_begin";
 				String keyEnd = name + "_end";
-				Object valueBegin = getValue(filterElement, dataBinder, mpvs, keyBegin, type);
-				Object valueEnd = getValue(filterElement, dataBinder, mpvs, keyEnd, type);
+				Object valueBegin = getValue(request, filterElement, dataBinder, mpvs, keyBegin, type);
+				Object valueEnd = getValue(request, filterElement, dataBinder, mpvs, keyEnd, type);
 				if (filterElement.getPreSelectDate() != null) {
-					Date dateBegin = filterElement.getPreSelectDate().getBegin();
-					Date dateEnd = filterElement.getPreSelectDate().getEnd();
 					if (valueBegin == null) {
-						valueBegin = dateBegin;
+						valueBegin = filterElement.getPreSelectDate().getBegin();
 					}
 					if (valueEnd == null) {
-						valueEnd = dateEnd;
+						valueEnd = filterElement.getPreSelectDate().getEnd();
 					}
 				}
 				parametersMap.put(keyBegin, valueBegin);
 				parametersMap.put(keyEnd, valueEnd);
 			} else {
-				Object value = getValue(filterElement, dataBinder, mpvs, name, type);
+				Object value = getValue(request, filterElement, dataBinder, mpvs, name, type);
 				String entityStr = filterElement.getPreSelectEntity();
 				if (value == null && entityStr != null) {
 					value = ServletRequestDataBinderNext.translateObjectValue(entityStr);
@@ -317,11 +321,11 @@ public class ReportDesignControllerUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	Object getValue(FilterElement filterElement, ServletRequestDataBinderNext dataBinder, MutablePropertyValues mpvs, String name, Class type) {
+	private Object getValue(HttpServletRequest request, FilterElement filterElement, ServletRequestDataBinderNext dataBinder, MutablePropertyValues mpvs, String name, Class type) {
 		Object value;
 		try {
 			if (filterElement.isFilterSelectMultiple()) {
-				String[] parameterValues = NextWeb.getRequestContext().getServletRequest().getParameterValues(name);
+				String[] parameterValues = request.getParameterValues(name);
 				if (ServletRequestDataBinderNext.isObjectValue(parameterValues)) {
 					return ServletRequestDataBinderNext.translateObjectValue(name, parameterValues, mpvs);
 				}
@@ -334,7 +338,7 @@ public class ReportDesignControllerUtil {
 				}
 				value = dataBinder.convertIfNecessary(parameterValues, type);
 			} else {
-				String parameterValue = NextWeb.getRequestContext().getServletRequest().getParameter(name);
+				String parameterValue = request.getParameter(name);
 				if (ServletRequestDataBinderNext.isObjectValue(parameterValue)) {
 					return ServletRequestDataBinderNext.translateObjectValue(name, parameterValue, mpvs);
 				}
@@ -344,6 +348,26 @@ public class ReportDesignControllerUtil {
 			value = mpvs.getPropertyValue(name).getValue();
 		}
 		return value;
+	}
+
+	public void insertMaxResultsWarning(ReportDefinition definition, int maxResults) {
+
+		int total = definition.getData().size();
+		if (definition instanceof DynamicBaseReportDefinition) {
+			DynamicBaseReportDefinition d2 = (DynamicBaseReportDefinition) definition;
+			total = d2.getSummarizedData().getItems().size();
+		}
+
+		if (total == maxResults) {
+			ReportLabel label = new ReportLabel("Obs: Apenas os " + maxResults + " primeiros registros estão sendo mostrados.");
+			label.getStyle().setForegroundColor(Color.RED);
+			label.getStyle().setFontSize(6);
+			label.getStyle().setItalic(true);
+			label.setColspan(definition.getColumns().size());
+			ReportSectionRow row = definition.getSectionFirstPageHeader().insertRow(0);
+			definition.addItem(label, row, 0);
+		}
+
 	}
 
 	public Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Collection<String> properties) {
@@ -442,6 +466,20 @@ public class ReportDesignControllerUtil {
 			for (GeneratedReportListener filterListener : grListeners) {
 				if (filterListener.getFromClass() == null || filterListener.getFromClass() == mainType) {
 					filterListener.checkFilters(model, reportElement, filter, filtersMetadataMap);
+				}
+			}
+		}
+	}
+
+	public void validadeAllowedProperties(final ReportElement reportElement) {
+		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
+		for (String property : reportElement.getProperties()) {
+			if (!reportElement.getData().isCalculated(property)) {
+				PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(property);
+				ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
+				Id idField = propertyDescriptor.getAnnotation(Id.class);
+				if (reportField == null && idField == null) {
+					throw new BusinessException("org.nextframework.report.generator.mvc.ReportDesignController.invalidProperty", new Object[] { property, reportElement.getData().getMainType().getSimpleName() }, "Não é possível executar o relatório, pois a propriedade {0} de {1} não é permitida!");
 				}
 			}
 		}
