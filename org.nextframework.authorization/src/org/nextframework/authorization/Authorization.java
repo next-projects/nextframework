@@ -63,8 +63,4 @@ public abstract class Authorization {
 		}
 	}
 
-	public static User getUser() {
-		return getUserLocator().getUser();
-	}
-
 }

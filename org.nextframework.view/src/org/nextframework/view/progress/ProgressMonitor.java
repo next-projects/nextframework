@@ -16,8 +16,8 @@ public class ProgressMonitor implements IProgressMonitor {
 	private boolean canceled = false;
 
 	private String done = null;
-	Throwable error = null;
-	Object retorno = null;
+	private Throwable error = null;
+	private Object retorno = null;
 
 	@Override
 	public void beginTask(Object taskName, int totalWork) {

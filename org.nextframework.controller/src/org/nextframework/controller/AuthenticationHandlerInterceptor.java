@@ -23,7 +23,7 @@ public class AuthenticationHandlerInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		if (Authorization.getUser() == null) {
+		if (Authorization.getUserLocator().getUser() == null) {
 			//check if there is a login page
 			Collection<AuthenticationController> authenticationControllers = ServiceFactory.getService(ListableBeanFactory.class).getBeansOfType(AuthenticationController.class).values();
 			if (authenticationControllers.size() > 1) {
