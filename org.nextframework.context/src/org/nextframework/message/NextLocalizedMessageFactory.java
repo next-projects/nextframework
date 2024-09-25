@@ -21,7 +21,7 @@ public class NextLocalizedMessageFactory extends AbstractMessageFactory {
 	@Override
 	public Message newMessage(final Object message) {
 		if (message instanceof MessageSourceResolvable) {
-			return new NextLocalizedMessage((MessageSourceResolvable) message);
+			return new NextLocalizedMessage(message);
 		}
 		return super.newMessage(message);
 	}
@@ -87,15 +87,14 @@ public class NextLocalizedMessageFactory extends AbstractMessageFactory {
 
 		private String objectString;
 
-		public NextLocalizedMessage(MessageSourceResolvable msr) {
-			super(msr);
+		public NextLocalizedMessage(Object obj) {
+			super(obj);
 		}
 
 		@Override
 		public String getFormattedMessage() {
 			if (objectString == null) {
-				MessageSourceResolvable msr = (MessageSourceResolvable) getParameter();
-				objectString = Util.strings.toStringDescription(msr);
+				objectString = Util.strings.toStringDescription(getParameter());
 			}
 			return objectString;
 		}
