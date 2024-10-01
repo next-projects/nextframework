@@ -52,11 +52,14 @@ public class DownloadFileServlet extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
+
 		super.init(config);
+
 		//some containers do not use the same Thread for filter and servlet initialization
 		WebContext.setServletContext(config.getServletContext());
 
 		delegate = ServiceFactory.getService(DownloadFileProvider.class);
+
 	}
 
 	private static long tempFileId = -1;

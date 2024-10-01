@@ -39,19 +39,10 @@ public class DefaultWebApplicationContext extends AbstractApplicationContext imp
 	private static final String APPLICATION_DIR = "application.data.dir";
 
 	private ServletContext servletContext;
-//	private ClassManager classManager;
 
 	public DefaultWebApplicationContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
-
-//	public ClassManager getClassManager() {
-//		if(classManager == null){
-////			classManager = ClassManagerFactory.getClassManager(getServletContext());//WebClassRegister.getClassManager(servletContext, "org.nextframework");
-//			classManager = ClassManagerFactory.getClassManager();
-//		}
-//		return classManager;
-//	}
 
 	public ServletContext getServletContext() {
 		return servletContext;
@@ -59,17 +50,6 @@ public class DefaultWebApplicationContext extends AbstractApplicationContext imp
 
 	@Override
 	public String getApplicationName() {
-		/* Sometimes, the app folder is not equals to the context path
-		try {
-			URL resource = getServletContext().getResource("/");
-			String path = resource.getPath();
-			path = path.substring(0, path.lastIndexOf('/'));
-			path = path.substring(path.lastIndexOf('/')+1);
-			return path; 
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
-		}
-		*/
 		return getServletContext().getContextPath().substring(1);
 	}
 
@@ -90,13 +70,5 @@ public class DefaultWebApplicationContext extends AbstractApplicationContext imp
 				+ File.separator + getApplicationName();
 		return cachedApplicationDir;
 	}
-
-//	public void setAttribute(String s, Object value) {
-//		servletContext.setAttribute(s, value);
-//	}
-//
-//	public Object getAttribute(String s) {
-//		return servletContext.getAttribute(s);
-//	}
 
 }

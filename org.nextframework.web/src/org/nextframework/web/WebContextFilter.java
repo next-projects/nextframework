@@ -30,7 +30,6 @@ public class WebContextFilter implements Filter, ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
-
 	}
 
 	@Override

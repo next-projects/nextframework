@@ -14,14 +14,14 @@ import org.apache.commons.logging.LogFactory;
 public class MemoryLeakDestroyerListener implements ServletContextListener {
 
 	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+	}
+
+	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 		LogFactory.release(contextClassLoader);
 		Introspector.flushCaches();
-	}
-
-	@Override
-	public void contextInitialized(ServletContextEvent sce) {
 	}
 
 }

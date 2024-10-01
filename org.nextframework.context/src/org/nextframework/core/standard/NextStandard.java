@@ -100,17 +100,10 @@ public class NextStandard extends Next {
 		properties.setProperty("log4j.appender.console", "org.apache.log4j.ConsoleAppender");
 		properties.setProperty("log4j.appender.console.layout", "org.apache.log4j.PatternLayout");
 		properties.setProperty("log4j.appender.console.layout.ConversionPattern", "%-5p %c %x - %m%n");
-		//TODO CONFIGURE LOG4J 2
-//		PropertyConfigurator.configure(properties);
 	}
 
 	public static RequestContext createNextContext() {
 		return createNextContext(new String[0]);
 	}
-
-//	public static void setUser(User user) {
-//		DefaultRequestContext requestContext2 = (DefaultRequestContext)Next.getRequestContext();
-//		requestContext2.setUser(user);
-//	}
 
 }
