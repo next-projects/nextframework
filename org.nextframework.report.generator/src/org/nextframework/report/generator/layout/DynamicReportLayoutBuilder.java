@@ -144,7 +144,7 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 
 	}
 
-	protected String getTitle() {
+	protected Object getTitle() {
 		return "-";
 	}
 

@@ -95,6 +95,7 @@ public class UnpagedJasperPrint2 {
 					groupPrintElements.setGroupDefinition(next.definition);
 					groupPrintElements.setKeyInfo(new KeyInfo(key));
 					groupPrintElements.setReportItem(next.subreport);
+					groupPrintElements.setY(printElement.getY());
 					createGroupsForSubReports(next, groupPrintElements, printElements);
 					if (!groupPrintElements.getPrintElements().isEmpty()) {
 						group.getPrintElements().add(groupPrintElements);
@@ -142,6 +143,8 @@ public class UnpagedJasperPrint2 {
 	}
 
 	private void reorganizeRows(List<PrintElement> printElements) {
+
+		//Verifica quebra de linha
 		int row = -1;
 		int lastY = -1;
 		KeyInfo lastRowKey = null;
@@ -159,6 +162,8 @@ public class UnpagedJasperPrint2 {
 				reorganizeRows(((GroupPrintElements) printElement).getPrintElements());
 			}
 		}
+
+		//Verifica quebra de página
 		PrintElement lastPrintElement = null;
 		for (Iterator<PrintElement> iterator = printElements.iterator(); iterator.hasNext();) {
 			PrintElement printElement = iterator.next();
@@ -196,6 +201,7 @@ public class UnpagedJasperPrint2 {
 			}
 			lastPrintElement = printElement;
 		}
+
 	}
 
 }

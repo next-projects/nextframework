@@ -14,6 +14,7 @@ import java.util.Map;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.definition.elements.ReportItemIterator;
 import org.nextframework.report.definition.elements.ReportTextField;
@@ -23,6 +24,8 @@ public class JasperUtils {
 
 	@SuppressWarnings("rawtypes")
 	public static String generateDataCSV(ReportDefinition definition) {
+
+		ValueConverter valueConverter = (ValueConverter) definition.getParameters().get(BaseReportBuilder.CONVERTER);
 
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PrintWriter dataout = new PrintWriter(os);
@@ -54,18 +57,20 @@ public class JasperUtils {
 						if (summaryRow instanceof Map<?, ?>) {
 							value = ((Map) summaryRow).get(expression);
 						} else {
-							//REFACTOR REBUILD THIS TO STRING DESCRIPTION!!! Util.strings.toStringDescription(beanDescriptor.getPropertyDescriptor(expression).getValue());
 							if (!expression.startsWith("param")) {
-								Object rawValue = toString(beanDescriptor.getPropertyDescriptor(expression).getValue());
-								value = rawValue != null ? rawValue.toString() : rawValue;
+								value = beanDescriptor.getPropertyDescriptor(expression).getValue();
 							} else {
 								value = null;
 							}
 						}
-						if (value != null)
-							dataout.print(value.toString().replace(';', ' ').replace('\n', ' '));
-						else
+						if (value != null) {
+							Object converted = valueConverter != null ? valueConverter.apply(value) : value;
+							String valueStr = toString(converted);
+							valueStr = valueStr.replace(';', ' ').replace('\n', ' ');
+							dataout.print(valueStr);
+						} else {
 							dataout.print("");
+						}
 						dataout.print(";");
 					}
 				}
@@ -81,42 +86,40 @@ public class JasperUtils {
 
 	//REFACTOR DO IT IN THE RIGHT PLACE
 	@Deprecated
-	private static Object toString(Object value) {
+	private static String toString(Object value) {
 		String formatDate = "dd/MM/yyyy";
 		String formatNumber = "#,##0.##";
 		if (value instanceof Calendar) {
 			value = ((Calendar) value).getTime();
 		}
 		BeanDescriptor beanDescriptor = null;
-		{
-			if (value == null) {
-				return "";
-			}
-			Class<?> horaClass = safeClass("org.nextframework.types.SimpleTime");
-			if (value != null && horaClass != null && horaClass.isAssignableFrom(value.getClass())) {
-				return value.toString();
-			} else if (value instanceof Date) { //FIXME
-				DateFormat dateFormat = new SimpleDateFormat(formatDate);
-				return dateFormat.format(value);
-			} else if (value instanceof Number) {
-				NumberFormat numberFormat = new DecimalFormat(formatNumber);
-				return numberFormat.format(value);
-			}
-			beanDescriptor = BeanDescriptorFactory.forBean(value);
-			Object description = beanDescriptor.getDescription();
-			if (description == null) {
-				//CÓDIGO ALTERADO EM 16 DE NOVEMBRO DE 2006
-				//description = value.toString();
-				// CÓDIGO ALTERADO EM 05 DE DEZEMBRO DE 2006
-				// MOTIVO: O CÓDIGO ANTERIOR IMPRIMIA:   br....Aluno@93CD21
-				if (beanDescriptor.getDescriptionPropertyName() == null) {
-					description = value.toString();
-				} else {
-					description = "";
-				}
-			}
-			return description.toString();
+		if (value == null) {
+			return "";
 		}
+		Class<?> horaClass = safeClass("org.nextframework.types.SimpleTime");
+		if (value != null && horaClass != null && horaClass.isAssignableFrom(value.getClass())) {
+			return value.toString();
+		} else if (value instanceof Date) { //FIXME
+			DateFormat dateFormat = new SimpleDateFormat(formatDate);
+			return dateFormat.format(value);
+		} else if (value instanceof Number) {
+			NumberFormat numberFormat = new DecimalFormat(formatNumber);
+			return numberFormat.format(value);
+		}
+		beanDescriptor = BeanDescriptorFactory.forBean(value);
+		Object description = beanDescriptor.getDescription();
+		if (description == null) {
+			//CÓDIGO ALTERADO EM 16 DE NOVEMBRO DE 2006
+			//description = value.toString();
+			// CÓDIGO ALTERADO EM 05 DE DEZEMBRO DE 2006
+			// MOTIVO: O CÓDIGO ANTERIOR IMPRIMIA:   br....Aluno@93CD21
+			if (beanDescriptor.getDescriptionPropertyName() == null) {
+				description = value.toString();
+			} else {
+				description = "";
+			}
+		}
+		return description.toString();
 	}
 
 	@Deprecated

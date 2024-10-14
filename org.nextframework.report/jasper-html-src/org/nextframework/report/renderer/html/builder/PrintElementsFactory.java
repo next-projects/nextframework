@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.nextframework.report.renderer.jasper.builder.JasperDesignBuilder;
+import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
+import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
+
 import net.sf.jasperreports.engine.JRPrintElement;
 import net.sf.jasperreports.engine.JRPrintFrame;
 import net.sf.jasperreports.engine.JRPrintLine;
 import net.sf.jasperreports.engine.type.BandTypeEnum;
-
-import org.nextframework.report.renderer.jasper.builder.JasperDesignBuilder;
-import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
-import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
 
 public class PrintElementsFactory {
 
@@ -28,10 +28,10 @@ public class PrintElementsFactory {
 	private int idCounter = 0;
 
 	public PrintElement createPrintElement(JRPrintElement jrPrintElement, int pageIndex) {
-		int pageHeight = mappedJasperPrint.getJasperPrint().getPageHeight();
 		if (!renderElement(jrPrintElement)) {
 			return null;
 		}
+		int pageHeight = mappedJasperPrint.getJasperPrint().getPageHeight();
 		PrintElement printElement = newPrintElementInstance(jrPrintElement, pageIndex);
 		printElement.setJrPrintElement(jrPrintElement);
 		printElement.setUniqueId(nextId());

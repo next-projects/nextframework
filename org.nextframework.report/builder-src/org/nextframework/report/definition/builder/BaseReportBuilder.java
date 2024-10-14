@@ -645,7 +645,8 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 				reportChart.getStyle().setPaddingBottom(2);
 				elements[i] = reportChart;
 			} else if (!(object instanceof ReportItem)) {
-				throw new IllegalArgumentException("column elements must be ReportItem or String");
+				elements[i] = label(object);
+				//throw new IllegalArgumentException("column elements must be ReportItem or String");
 			}
 		}
 		for (int i = 0; i < elements.length; i++) {
