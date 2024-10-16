@@ -32,7 +32,6 @@ import java.util.Set;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
-import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
@@ -238,7 +237,7 @@ public class BeanUtils {
 
 	public String getDisplayName(BeanDescriptor beanDescriptor, String optionalPrefix, Locale locale) {
 		MessageSourceResolvable resolvable = getDisplayNameResolvable(beanDescriptor, optionalPrefix);
-		return Next.getMessageSource().getMessage(resolvable, locale);
+		return Util.strings.toStringDescription(resolvable, locale);
 	}
 
 	public MessageSourceResolvable getDisplayNameResolvable(Class<?> beanClass) {
@@ -284,7 +283,7 @@ public class BeanUtils {
 
 	public String getDisplayName(PropertyDescriptor propertyDescriptor, String optionalPrefix, Locale locale) {
 		MessageSourceResolvable resolvable = getDisplayNameResolvable(propertyDescriptor, optionalPrefix);
-		return Next.getMessageSource().getMessage(resolvable, locale);
+		return Util.strings.toStringDescription(resolvable, locale);
 	}
 
 	public MessageSourceResolvable getDisplayNameResolvable(Class<?> beanClass, String property) {

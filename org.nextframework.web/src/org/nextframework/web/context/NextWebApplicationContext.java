@@ -14,6 +14,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -39,6 +40,7 @@ public class NextWebApplicationContext extends AnnotationConfigWebApplicationCon
 		ServletContextServiceProvider.registerService(servletContext, ListableBeanFactory.class, this);
 		ServletContextServiceProvider.registerService(servletContext, BeanFactory.class, this);
 		ServletContextServiceProvider.registerService(servletContext, ApplicationScanPathsProvider.class, this);
+		ServletContextServiceProvider.registerService(servletContext, MessageSource.class, this);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.service.StaticServiceProvider;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.QualifierAnnotationAutowireCandidateResolver;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.context.support.GenericApplicationContext;
@@ -58,9 +60,11 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 		StaticServiceProvider.registerService(ApplicationContext.class, this);
 		StaticServiceProvider.registerService(ConfigurableApplicationContext.class, this);
 		StaticServiceProvider.registerService(ResourceLoader.class, this);
-		StaticServiceProvider.registerService(ApplicationScanPathsProvider.class, this);
 		StaticServiceProvider.registerService(ListableBeanFactory.class, getDefaultListableBeanFactory());
 		StaticServiceProvider.registerService(DefaultListableBeanFactory.class, getDefaultListableBeanFactory());
+		StaticServiceProvider.registerService(BeanFactory.class, this);
+		StaticServiceProvider.registerService(ApplicationScanPathsProvider.class, this);
+		StaticServiceProvider.registerService(MessageSource.class, this);
 	}
 
 	public void setBasePackages(String[] basePackages) {

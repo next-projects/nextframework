@@ -96,7 +96,7 @@ public class Next {
 	}
 
 	public static MessageSource getMessageSource() {
-		return ServiceFactory.getService(org.springframework.context.ApplicationContext.class);
+		return ServiceFactory.getService(MessageSource.class);
 	}
 
 //	public static User getUser(){
