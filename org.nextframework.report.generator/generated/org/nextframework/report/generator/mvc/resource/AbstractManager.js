@@ -296,7 +296,9 @@ ReportFilterManager.prototype.configureFilterRequired = function(properties) {
     };
 };
 ReportFilterManager.prototype.accept = function(name, properties) {
-    return (!ReportPropertyConfigUtils.isTransient(properties) || ReportPropertyConfigUtils.isFilterable(properties)) && !ReportPropertyConfigUtils.isExtended(properties) && !ReportPropertyConfigUtils.isNumber(properties);
+    return (!ReportPropertyConfigUtils.isTransient(properties) || ReportPropertyConfigUtils.isFilterable(properties)) && 
+           //!ReportPropertyConfigUtils.isExtended(properties) &&
+           !ReportPropertyConfigUtils.isNumber(properties);
 };
 ReportFilterManager.prototype.onAdd = function(name, properties) {
 };

@@ -72,6 +72,10 @@
 			td2.innerHTML = "Texto";
 		}
 
+		if (options.extended) {
+			td2.innerHTML += " [E]";
+		}
+
 	}
 
 </script>

@@ -422,9 +422,8 @@ class ReportFilterManager extends AbstractManager {
 
 	@Override
 	protected boolean accept(String name, Map<String, Object> properties) {
-		return (!ReportPropertyConfigUtils.isTransient(properties) ||
-				ReportPropertyConfigUtils.isFilterable(properties)) &&
-				!ReportPropertyConfigUtils.isExtended(properties) &&
+		return (!ReportPropertyConfigUtils.isTransient(properties) || ReportPropertyConfigUtils.isFilterable(properties)) &&
+				//!ReportPropertyConfigUtils.isExtended(properties) &&
 				!ReportPropertyConfigUtils.isNumber(properties);
 	}
 

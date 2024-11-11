@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -21,7 +22,6 @@ import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.bean.annotation.DescriptionProperty;
 import org.nextframework.controller.crud.ListViewFilter;
-import org.nextframework.core.standard.MessageType;
 import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
@@ -31,18 +31,18 @@ import org.nextframework.persistence.QueryBuilder.JoinMode;
 import org.nextframework.persistence.ResultListImpl;
 import org.nextframework.persistence.TransientsFilter;
 import org.nextframework.report.generator.ReportElement;
+import org.nextframework.report.generator.annotation.ExtendBean;
 import org.nextframework.report.generator.annotation.ReportField;
-import org.nextframework.report.generator.chart.ChartElement;
-import org.nextframework.report.generator.data.GroupElement;
+import org.nextframework.report.generator.datasource.extension.BeanExtender;
 import org.nextframework.report.generator.datasource.extension.GeneratedReportListener;
-import org.nextframework.report.generator.layout.FieldDetailElement;
-import org.nextframework.report.generator.layout.LayoutItem;
 import org.nextframework.service.ServiceFactory;
+import org.nextframework.util.Util;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 public class HibernateDataSourceProvider implements DataSourceProvider {
+
+	private BeanExtender beanExtender;
 
 	@Override
 	public String getName() {
@@ -52,30 +52,69 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 	@Override
 	public Class<?> getMainType(String fromClass) {
 		try {
-			return Class.forName(fromClass);
+			Class<?> mainType = Class.forName(fromClass);
+			return getExtendedClass(mainType);
 		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
+			throw new NextException(e);
 		}
+	}
+
+	protected Class<?> getExtendedClass(Class<?> mainType) {
+		mainType = Util.objects.getRealClass(mainType);
+		Class<?> extendedMainType = getBeanExtender().createExtendedClassForBeanClass(mainType);
+		return extendedMainType;
+	}
+
+	protected BeanExtender getBeanExtender() {
+		if (beanExtender == null) {
+			List<Object> allBeans = new ArrayList<Object>();
+			String[] beanDefinitionNames = Next.getBeanFactory().getBeanDefinitionNames();
+			for (String beanName : beanDefinitionNames) {
+				Object bean = Next.getBeanFactory().getBean(beanName);
+				if (bean != null) {
+					allBeans.add(bean);
+				}
+			}
+			beanExtender = new BeanExtender(allBeans);
+		}
+		return beanExtender;
 	}
 
 	@Override
 	public <OBJ> List<OBJ> getResult(Class<OBJ> mainType, ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap, int limitResults) {
 
+		BeanExtender beanExtender = getBeanExtender();
+		boolean extend = beanExtender.isSubClass(mainType);
+		Class<OBJ> mainType2 = Util.objects.getRealClass(mainType);
+
+		QueryBuilder<OBJ> query = createQueryBuilder(mainType, element, filterMap, fixedCriteriaMap);
+
 		ListViewFilter filter = new ListViewFilter();
 		filter.setPageSize(500);
 
-		List<OBJ> fullResult = new ArrayList<OBJ>();
-		QueryBuilder<OBJ> query = createQueryBuilder(mainType, element, filterMap, fixedCriteriaMap);
 		ResultListImpl<OBJ> rs = new ResultListImpl<OBJ>(query, filter);
-
+		List<OBJ> fullResult = new ArrayList<OBJ>();
 		while (true) {
+
 			List<OBJ> subResult = rs.list();
-			fullResult.addAll(subResult);
+			if (extend) {
+				for (OBJ object : subResult) {
+					OBJ extendedBean = (OBJ) beanExtender.extendBean(object, mainType2);
+					boolean filterOk = validateExtendedFilter(filterMap, extendedBean);
+					if (filterOk) {
+						fullResult.add(extendedBean);
+					}
+				}
+			} else {
+				fullResult.addAll(subResult);
+			}
+
 			if (rs.hasNextPage() && fullResult.size() < limitResults) {
 				rs.nextPage();
 			} else {
 				break;
 			}
+
 		}
 
 		return fullResult;
@@ -86,6 +125,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(mainType);
 
 		QueryBuilder<OBJ> query = new QueryBuilder<OBJ>().from(ClassUtils.getUserClass(mainType));
+
 		Set<String> selectProperties = new LinkedHashSet<String>();
 		JoinManager joinManager = new JoinManager(query.getAlias());
 		Set<String> fetchCollections = new LinkedHashSet<String>();
@@ -98,42 +138,65 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 			}
 		}
 
-		String selectStr = "";
-		for (String selectProperty : selectProperties) {
-			selectStr += (selectStr.length() > 0 ? "," : "") + joinManager.applyJoin(selectProperty);
-		}
-		query.select(selectStr);
+		String prefixo = query.getFrom().getAlias() + ".";
 
+		Set<String> aliasRemovidos = new HashSet<String>();
 		Map<String, String> joinMap = joinManager.getJoinMap();
 		for (String join : joinMap.keySet()) {
-			query.join(JoinMode.LEFT_OUTER, false, join + " " + joinMap.get(join));
+			String joinAlias = joinMap.get(join);
+			if (join.startsWith(prefixo)) {
+				String property = join.substring(prefixo.length());
+				PropertyDescriptor pd = bd.getPropertyDescriptor(property);
+				if (pd.getAnnotation(ExtendBean.class) != null) {
+					aliasRemovidos.add(joinAlias);
+					continue;
+				}
+			} else if (join.contains(".")) {
+				String alias = join.substring(0, join.indexOf("."));
+				if (aliasRemovidos.contains(alias)) {
+					aliasRemovidos.add(joinAlias);
+					continue;
+				}
+			}
+			query.join(JoinMode.LEFT_OUTER, false, join + " " + joinAlias);
 		}
+
+		String selectStr = "";
+		for (String selectProperty1 : selectProperties) {
+			String selectProperty2 = joinManager.applyJoin(selectProperty1);
+			String alias = selectProperty2.substring(0, selectProperty2.indexOf("."));
+			if (selectProperty2.startsWith(prefixo)) {
+				String property = selectProperty2.substring(prefixo.length());
+				PropertyDescriptor pd = bd.getPropertyDescriptor(property);
+				if (pd.getAnnotation(ExtendBean.class) != null) {
+					continue;
+				}
+			} else if (aliasRemovidos.contains(alias)) {
+				continue;
+			}
+			selectStr += (selectStr.length() > 0 ? "," : "") + selectProperty2;
+		}
+		query.select(selectStr);
 
 		for (String fetchCollection : fetchCollections) {
 			query.fetchCollection(fetchCollection, true);
 		}
 
-		final Set<String> filteredFields = new HashSet<String>();
-		Map<String, Object> transients = new HashMap<String, Object>() {
-
-			private static final long serialVersionUID = 1L;
-
-			public Object get(Object key) {
-				filteredFields.add((String) key);
-				return super.get(key);
-			}
-
-		};
-
+		Map<String, Object> transients = new HashMap<String, Object>();
 		GeneratedReportListener[] grListeners = ServiceFactory.loadServices(GeneratedReportListener.class);
 
 		for (String filter : filterMap.keySet()) {
 
+			if (isFilterExtended(bd, filter)) {
+				continue;
+			}
+
 			String filterNoSuffix = removeSuffix(filter);
-			PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(filterNoSuffix);
-			Type type = propertyDescriptor.getType();
+			PropertyDescriptor pd = bd.getPropertyDescriptor(filterNoSuffix);
+			Type type = pd.getType();
 			Object parameterValue = filterMap.get(filter);
-			if (propertyDescriptor.getAnnotation(Transient.class) != null) {
+
+			if (pd.getAnnotation(Transient.class) != null) {
 				transients.put(filterNoSuffix, parameterValue);
 				continue;
 			}
@@ -179,11 +242,6 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 
 		if (dao instanceof TransientsFilter) {
 			((TransientsFilter) dao).filterQueryForTransients(query, transients);
-			Set<String> keySet = transients.keySet();
-			keySet.removeAll(filteredFields);
-			if (keySet.size() > 0) {
-				Next.getRequestContext().addMessage("Not all the fields where filtered. Non filtered fields are: " + keySet, MessageType.WARN);
-			}
 		} else if (transients.size() > 0) {
 			throw new NextException("There are transient fields " + transients + " for filtering, but the " + dao.getClass().getSimpleName() + " does not implement " + TransientsFilter.class.getSimpleName() + ".");
 		}
@@ -285,15 +343,11 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		return fields.toArray(new String[fields.size()]);
 	}
 
-	private Object max(Object object) {
-		if (object instanceof Calendar) {
-			Calendar c = (Calendar) object;
-			Calendar instance = Calendar.getInstance();
-			instance.setTime(c.getTime());
-			instance.add(Calendar.DATE, 1);
-			return instance;
-		}
-		return object;
+	protected boolean isFilterExtended(BeanDescriptor bd, String filter) {
+		String filterBase = filter.contains(".") ? filter.split("\\.")[0] : filter;
+		filterBase = removeSuffix(filterBase);
+		PropertyDescriptor pdBase = bd.getPropertyDescriptor(filterBase);
+		return pdBase.getAnnotation(ExtendBean.class) != null;
 	}
 
 	protected String removeSuffix(String filter) {
@@ -306,6 +360,85 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		return filter;
 	}
 
+	protected boolean validateExtendedFilter(Map<String, Object> filterMap, Object extendedBean) {
+
+		BeanDescriptor bd = BeanDescriptorFactory.forBean(extendedBean);
+
+		for (String filter : filterMap.keySet()) {
+
+			if (!isFilterExtended(bd, filter)) {
+				continue;
+			}
+
+			String filterNoSuffix = removeSuffix(filter);
+			PropertyDescriptor pd = bd.getPropertyDescriptor(filterNoSuffix);
+			Type type = pd.getType();
+			Object beanValue = convertType(pd.getValue());
+			Object parameterValue = convertType(filterMap.get(filter));
+
+			if (parameterValue != null) {
+				if (filter.contains("_begin")) {
+					Calendar beanValueCal = (Calendar) beanValue;
+					Calendar parameterValueCal = (Calendar) parameterValue;
+					if (beanValueCal == null || beanValueCal.before(parameterValueCal)) {
+						return false;
+					}
+				} else if (filter.contains("_end")) {
+					Calendar beanValueCal = (Calendar) beanValue;
+					Calendar parameterValueCal = (Calendar) max((Calendar) parameterValue);
+					if (beanValueCal == null || !beanValueCal.before(parameterValueCal)) {
+						return false;
+					}
+				} else if (String.class.equals(type)) {
+					String beanValueStr = (String) beanValue;
+					String parameterValueStr = (String) parameterValue;
+					if (beanValueStr == null || !beanValueStr.contains(parameterValueStr)) {
+						return false;
+					}
+				} else if (parameterValue.getClass().isArray()) {
+					boolean ok = false;
+					for (Object pv : (Object[]) parameterValue) {
+						if (Util.objects.equals(beanValue, pv)) {
+							ok = true;
+							break;
+						}
+					}
+					if (!ok) {
+						return false;
+					}
+				} else {
+					if (!Util.objects.equals(beanValue, parameterValue)) {
+						return false;
+					}
+				}
+			}
+
+		}
+
+		return true;
+	}
+
+	private Object max(Object object) {
+		if (object instanceof Calendar) {
+			Calendar c = (Calendar) object;
+			Calendar instance = Calendar.getInstance();
+			instance.setTime(c.getTime());
+			instance.add(Calendar.DATE, 1);
+			return instance;
+		}
+		return object;
+	}
+
+	private Object convertType(Object value) {
+		if (value instanceof Date) {
+			Calendar c = Calendar.getInstance();
+			c.setTime((Date) value);
+			return c;
+		}
+		return value;
+	}
+
+	/*
 	public List<String> getProperties(ReportElement element) {
 		List<String> properties = new ArrayList<String>();
 		for (LayoutItem layoutItem : element.getLayout().getItems()) {
@@ -334,5 +467,6 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		}
 		return properties;
 	}
+	*/
 
 }

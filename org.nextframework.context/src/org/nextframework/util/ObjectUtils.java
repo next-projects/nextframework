@@ -230,10 +230,11 @@ public class ObjectUtils {
 		}
 	}
 
-	public Class<?> getRealClass(Class<?> clazz) {
-		Class<?> clazz2 = clazz;
+	@SuppressWarnings("unchecked")
+	public <OBJ> Class<OBJ> getRealClass(Class<OBJ> clazz) {
+		Class<OBJ> clazz2 = clazz;
 		while (clazz2.getName().contains("$$")) {
-			clazz2 = clazz2.getSuperclass();
+			clazz2 = (Class<OBJ>) clazz2.getSuperclass();
 		}
 		return clazz2;
 	}
