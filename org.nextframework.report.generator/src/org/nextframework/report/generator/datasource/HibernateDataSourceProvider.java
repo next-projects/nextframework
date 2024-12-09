@@ -390,10 +390,14 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 						return false;
 					}
 				} else if (String.class.equals(type)) {
-					String beanValueStr = (String) beanValue;
 					String parameterValueStr = (String) parameterValue;
-					if (beanValueStr == null || !beanValueStr.contains(parameterValueStr)) {
-						return false;
+					parameterValueStr = Util.strings.isEmpty(parameterValueStr) ? null : parameterValueStr;
+					if (parameterValueStr != null) {
+						String beanValueStr = (String) beanValue;
+						beanValueStr = Util.strings.isEmpty(beanValueStr) ? null : beanValueStr;
+						if (beanValueStr == null ||!beanValueStr.contains(parameterValueStr)) {
+							return false;
+						}
 					}
 				} else if (parameterValue.getClass().isArray()) {
 					boolean ok = false;
