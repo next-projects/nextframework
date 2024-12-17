@@ -9,6 +9,7 @@ import org.nextframework.report.generator.chart.ChartElement;
 import org.nextframework.report.generator.chart.ChartsElement;
 import org.nextframework.report.generator.data.CalculatedFieldElement;
 import org.nextframework.report.generator.data.DataElement;
+import org.nextframework.report.generator.data.FilterElement;
 import org.nextframework.report.generator.data.GroupElement;
 import org.nextframework.report.generator.layout.FieldDetailElement;
 import org.nextframework.report.generator.layout.LayoutElement;
@@ -131,6 +132,10 @@ public class ReportElement {
 			if (layoutItem instanceof FieldDetailElement) {
 				properties.add(((FieldDetailElement) layoutItem).getName());
 			}
+		}
+		List<FilterElement> filters = getData().getFilters();
+		for (FilterElement filter : filters) {
+			properties.add(filter.getName());
 		}
 		List<GroupElement> groups = getData().getGroups();
 		for (GroupElement groupElement : groups) {
