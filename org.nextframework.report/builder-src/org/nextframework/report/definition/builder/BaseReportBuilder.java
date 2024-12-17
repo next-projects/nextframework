@@ -79,7 +79,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 
 	@SuppressWarnings("rawtypes")
 	public void setData(List<?> items) {
-		if (items.size() > 0) {
+		if (items != null && items.size() > 0) {
 			Object item0 = items.get(0);
 			if (item0 instanceof SummaryRow) {
 				sumarizedData = true;
