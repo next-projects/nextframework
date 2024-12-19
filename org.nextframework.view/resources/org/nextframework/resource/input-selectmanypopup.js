@@ -19,7 +19,6 @@ SelectManyPopup.prototype.configure = function(){
 		next.events.attachEvent(this.button, 'click', function(){
 
 			var checkList = new Array();
-			var options = bigThis.input.options;
 
 			var dialog = new NextDialogs.MessageDialog();
 			dialog.setSize(NextDialogs.SIZE_LARGE);
@@ -30,13 +29,13 @@ SelectManyPopup.prototype.configure = function(){
 			var markAllBtn = next.dom.newElement('BUTTON', {innerHTML: 'Marcar Todos', className: next.globalMap.get('SelectManyPopup.button', 'button')});
 			titleButtonsDiv.appendChild(markAllBtn);
 			next.events.attachEvent(markAllBtn, 'click', function(){
-				bigThis.markAll(checkList, options);
+				bigThis.markAll(checkList);
 			});
 
 			var unmarkAllBtn = next.dom.newElement('BUTTON', {innerHTML: 'Desmarcar Todos', className: next.globalMap.get('SelectManyPopup.button', 'button')});
 			titleButtonsDiv.appendChild(unmarkAllBtn);
 			next.events.attachEvent(unmarkAllBtn, 'click', function(){
-				bigThis.unmarkAll(checkList, options);
+				bigThis.unmarkAll(checkList);
 			});
 
 			var filterSpan = next.dom.newInput('text', '', 'Filtrar ',
@@ -48,12 +47,13 @@ SelectManyPopup.prototype.configure = function(){
 			titleButtonsDiv.appendChild(filterSpan);
 			next.events.attachEvent(filterSpan.childNodes[1], 'keyup', function(e){
 				var filter = this.value; 
-				bigThis.filter(filter, checkList, options);
+				bigThis.filter(filter, checkList);
 			});
 
 			var optionsDiv = next.dom.newElement('DIV', {className: next.globalMap.get('SelectManyPopup.panel')});
 			dialog.appendToBody(optionsDiv);
 
+			var options = bigThis.input.options;
 			for(var i = 0; i < options.length; i++){
 
 				var op = options[i];
@@ -68,6 +68,8 @@ SelectManyPopup.prototype.configure = function(){
 					});
 				checkCtrl.childNodes[0].value = op.value;
 				checkCtrl.childNodes[0].checked = op.selected;
+				checkCtrl.childNodes[0].option = op;
+				checkCtrl.childNodes[0].filterText = next.util.removeAccents(op.text.toLowerCase());
 
 				checkList.push(checkCtrl.childNodes[0]);
 				optionDiv.appendChild(checkCtrl);
@@ -78,7 +80,7 @@ SelectManyPopup.prototype.configure = function(){
 			dialog.setCallback({
 				onClick: function(command, value, button) {
 					if ((command == "OK")) {
-						bigThis.checkItems(checkList, options);
+						bigThis.checkItems(checkList);
 					}
 					return true;
 				}
@@ -105,45 +107,37 @@ SelectManyPopup.prototype.onRenderItems = function(optionsDiv, onrenderitems){
 	}
 }
 
-SelectManyPopup.prototype.filter = function(filter, checkList, options){
+SelectManyPopup.prototype.filter = function(filter, checkList){
 	filter = next.util.removeAccents(filter.toLowerCase());
 	for(var i = 0; i < checkList.length; i++){
-		for(var j = 0; j < options.length; j++){
-			if(checkList[i].value == options[j].value){
-				if(next.util.removeAccents(options[j].text.toLowerCase()).indexOf(filter) < 0){
-					checkList[i].parentNode.parentNode.style.display = 'none';
-				} else {
-					checkList[i].parentNode.parentNode.style.display = 'block';
-				}
-			}
+		if(checkList[i].filterText.indexOf(filter) < 0){
+			checkList[i].parentNode.parentNode.style.display = 'none';
+		} else {
+			checkList[i].parentNode.parentNode.style.display = 'block';
 		}
 	}
 }
 
-SelectManyPopup.prototype.markAll = function(checkList, options){
+SelectManyPopup.prototype.markAll = function(checkList){
 	for(var i = 0; i < checkList.length; i++){
 		checkList[i].checked = true;
 	}
 }
 
-SelectManyPopup.prototype.unmarkAll = function(checkList, options){
+SelectManyPopup.prototype.unmarkAll = function(checkList){
 	for(var i = 0; i < checkList.length; i++){
 		checkList[i].checked = false;
 	}
 }
 
-SelectManyPopup.prototype.checkItems = function(checkList, options){
+SelectManyPopup.prototype.checkItems = function(checkList){
 	for(var i = 0; i < checkList.length; i++){
 		if(checkList[i].parentNode.parentNode.style.display == 'none'){
 			checkList[i].checked = false;
 		}
 	}	
 	for(var i = 0; i < checkList.length; i++){
-		for(var j = 0; j < options.length; j++){
-			if(checkList[i].value == options[j].value){
-				options[j].selected = checkList[i].checked;
-			}
-		}
+		checkList[i].option.selected = checkList[i].checked;
 	}
 	this.setLabels();
 	if(this.input.onchange){
