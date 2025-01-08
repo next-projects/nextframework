@@ -351,13 +351,7 @@ public class ReportDesignControllerUtil {
 	}
 
 	public void insertMaxResultsWarning(ReportDefinition definition, int maxResults) {
-
-		int total = definition.getData().size();
-		if (definition instanceof DynamicBaseReportDefinition) {
-			DynamicBaseReportDefinition d2 = (DynamicBaseReportDefinition) definition;
-			total = d2.getSummarizedData().getItems().size();
-		}
-
+		int total = getResultCount(definition);
 		if (total == maxResults) {
 			ReportLabel label = new ReportLabel("Obs: Apenas os " + maxResults + " primeiros registros estão sendo mostrados.");
 			label.getStyle().setForegroundColor(Color.RED);
@@ -367,7 +361,14 @@ public class ReportDesignControllerUtil {
 			ReportSectionRow row = definition.getSectionFirstPageHeader().insertRow(0);
 			definition.addItem(label, row, 0);
 		}
+	}
 
+	public int getResultCount(ReportDefinition definition) {
+		if (definition instanceof DynamicBaseReportDefinition) {
+			DynamicBaseReportDefinition d2 = (DynamicBaseReportDefinition) definition;
+			return d2.getSummarizedData().getItems().size();
+		}
+		return definition.getData().size();
 	}
 
 	public Map<String, Map<String, Object>> getPropertiesMetadata(ReportElement report, Locale locale, Class selectedType, Collection<String> properties) {
