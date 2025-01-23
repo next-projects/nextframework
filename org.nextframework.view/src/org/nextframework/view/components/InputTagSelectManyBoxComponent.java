@@ -55,7 +55,7 @@ public class InputTagSelectManyBoxComponent extends InputTagSelectComboComponent
 		inputValues = "";
 		int i = 0;
 		for (Object object : values) {
-			inputValues += "<input type='hidden' name='" + inputTag.getName() + "[" + i + "]' value=\"" + getSelectVaue(object) + "\"/>";
+			inputValues += "<input type='hidden' name='" + inputTag.getName() + "[" + i + "]' value=\"" + getSelectValue(object) + "\"/>";
 			i++;
 		}
 

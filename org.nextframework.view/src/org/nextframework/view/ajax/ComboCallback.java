@@ -29,19 +29,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.nextframework.authorization.Authorization;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
+import org.nextframework.controller.BinderConfigurer;
 import org.nextframework.controller.ServletRequestDataBinderNext;
+import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.persistence.DAO;
 import org.nextframework.util.Util;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class ComboCallback implements AjaxCallbackController {
@@ -51,10 +57,10 @@ public class ComboCallback implements AjaxCallbackController {
 	public void doAjax(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		ComboFilter comboFilter = new ComboFilter();
-		ServletRequestDataBinderNext dataBinder = new ServletRequestDataBinderNext(comboFilter, "comboFilter");
-		dataBinder.bind(request);
+		ServletRequestDataBinder binder = createBinder(request, comboFilter, "comboFilter");
+		binder.bind(request);
 
-		BindException errors = new BindException(dataBinder.getBindingResult());
+		BindException errors = new BindException(binder.getBindingResult());
 		if (errors.hasErrors()) {
 
 			Locale locale = request.getLocale();
@@ -101,7 +107,7 @@ public class ComboCallback implements AjaxCallbackController {
 					String beanName = loadFunctionSplit[0];
 					String function = loadFunctionSplit[1];
 					Class<?>[] paramClasses = comboFilter.getClasses();
-					Object[] values = comboFilter.getValues(paramClasses);
+					Object[] values = getValues(comboFilter, binder, paramClasses);
 					if (function.contains("(")) {
 						function = function.substring(0, function.indexOf('('));
 					} else {
@@ -138,6 +144,17 @@ public class ComboCallback implements AjaxCallbackController {
 		}
 	}
 
+	private ServletRequestDataBinder createBinder(ServletRequest request, Object command, String commandDisplayName) throws Exception {
+		ServletRequestDataBinder binder = new ServletRequestDataBinderNext(command, commandDisplayName);
+		Map<String, BinderConfigurer> binderConfigurersMap = Next.getBeanFactory().getBeansOfType(BinderConfigurer.class);
+		if (binderConfigurersMap != null) {
+			for (BinderConfigurer binderConfigurer : binderConfigurersMap.values()) {
+				binderConfigurer.configureBinder(binder, request, command);
+			}
+		}
+		return binder;
+	}
+
 	private String convertToJavaScript(List<?> lista, String label) {
 		StringBuilder javascript = new StringBuilder();
 		javascript.append("var lista = [");
@@ -168,6 +185,33 @@ public class ComboCallback implements AjaxCallbackController {
 				.replace((CharSequence) "'", "\\'")
 				.replace((CharSequence) "\n", " ")
 				.replace((CharSequence) "\r", " ");
+	}
+
+	private Object[] getValues(ComboFilter comboFilter, ServletRequestDataBinder binder, Class<?>[] classes) {
+		if (classes.length == 0) {
+			return new Object[0];
+		}
+		Object[] values = new Object[classes.length];
+		String[] split = comboFilter.getParameter();
+		for (int i = 0; i < split.length; i++) {
+			Object value = split[i];
+			if (ServletRequestDataBinderNext.isObjectValue(value)) {
+				//Quando chega uma string "com.app.Bean[id=1],com.app.Bean[id=2]", quebra em um array
+				if (List.class.isAssignableFrom(classes[i]) && value instanceof String && ((String) value).contains(",")) {
+					value = ((String) value).split(",");
+				}
+				value = ServletRequestDataBinderNext.translateObjectValue("[?]", value, null);
+			}
+			if ("user".equals(value)) {
+				value = Authorization.getUserLocator().getUser();
+			}
+			if (!classes[i].equals(Void.class)) {
+				values[i] = binder.convertIfNecessary(value, classes[i]);
+			} else {
+				values[i] = value;
+			}
+		}
+		return values;
 	}
 
 	public static boolean isRegistered(String object, String functionName, Class<?>[] paramClasses) {

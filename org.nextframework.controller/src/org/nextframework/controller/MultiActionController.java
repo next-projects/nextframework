@@ -49,6 +49,7 @@ import org.nextframework.authorization.User;
 import org.nextframework.context.DeprecatedLogger;
 import org.nextframework.controller.json.JsonTranslator;
 import org.nextframework.controller.mvt.ModelAndViewTranslator;
+import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.DefaultWebRequestContext;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
@@ -216,8 +217,6 @@ public class MultiActionController extends AbstractController {
 	/** Methods, keyed by exception class */
 	private Map<Class<Throwable>, Method> exceptionHandlerMap;
 
-	List<BinderConfigurer> binderConfigurers;
-
 	public static String getRequestAction(HttpServletRequest request) {
 		String parameter = request.getParameter(MultiActionController.ACTION_PARAMETER);
 		if (parameter == null) {
@@ -228,14 +227,6 @@ public class MultiActionController extends AbstractController {
 			}
 		}
 		return parameter;
-	}
-
-	/**
-	 * O Spring irá injetar todos os binderConfigurers para essa aplicação
-	 * @param binderConfigurers
-	 */
-	public void setBinderConfigurers(List<BinderConfigurer> binderConfigurers) {
-		this.binderConfigurers = binderConfigurers;
 	}
 
 	/**
@@ -988,8 +979,9 @@ public class MultiActionController extends AbstractController {
 	protected ServletRequestDataBinder createBinder(ServletRequest request, Object command, String commandDisplayName) throws Exception {
 		ServletRequestDataBinder binder = new ServletRequestDataBinderNext(command, commandDisplayName);
 		initBinder(request, binder);
-		if (binderConfigurers != null) {
-			for (BinderConfigurer binderConfigurer : binderConfigurers) {
+		Map<String, BinderConfigurer> binderConfigurersMap = Next.getBeanFactory().getBeansOfType(BinderConfigurer.class);
+		if (binderConfigurersMap != null) {
+			for (BinderConfigurer binderConfigurer : binderConfigurersMap.values()) {
 				binderConfigurer.configureBinder(binder, request, command);
 			}
 		}

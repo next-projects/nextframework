@@ -258,7 +258,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				} else {
 					setSelectedValueIfNeeded(input, value, sugest, first, key);
 					String opDesc = getSelectLabel(mapValue);
-					String opValue = getSelectVaue(key);
+					String opValue = getSelectValue(key);
 					opValue = TagUtils.escapeSingleQuotes(opValue);
 					String selected = getSelectedString(key);
 					valores.add(createOption(index++, opDesc, opValue, selected));
@@ -272,7 +272,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			for (Object object : (Iterable) itens) {
 				setSelectedValueIfNeeded(input, value, sugest, first, object);
 				String opDesc = getSelectLabel(object);
-				String opValue = getSelectVaue(object);
+				String opValue = getSelectValue(object);
 				opValue = TagUtils.escapeSingleQuotes(opValue);
 				String selected = getSelectedString(object);
 				valores.add(createOption(index++, opDesc, opValue, selected));
@@ -299,7 +299,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				selectedType == InputTagType.SELECT_MANY_BOX;
 	}
 
-	protected String getSelectVaue(Object key) {
+	protected String getSelectValue(Object key) {
 		return TagUtils.getObjectValueToString(key, false, null);
 	}
 
@@ -347,7 +347,12 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		if (inputTag.getValue() != null) {
 			Object selectedValue = inputTag.getValue();
 			if (!Enum.class.isAssignableFrom(getRawClassType())) {
-				GenericDAO dao = DAOUtils.getDAOForClass(usingType);
+				GenericDAO dao = null;
+				try {
+					dao = DAOUtils.getDAOForClass(usingType);
+				} catch (Exception e) {
+					//Nada...
+				}
 				if (dao != null) {
 					String[] extraFields = null;
 					if (inputTag.getSelectLabelProperty() != null && inputTag.getSelectLabelProperty().trim().length() > 0) {
@@ -366,7 +371,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 	}
 
 	protected Object doSelectAllFromService(InputTag lastInput, Class<?> usingType) {
-		GenericDAO<?> dao;
+		GenericDAO<?> dao = null;
 		String parentProperty = "";
 		if (lastInput != null) {
 			parentProperty = "by_" + lastInput.getName();
@@ -374,13 +379,13 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		String finAllAttribute = usingType.getSimpleName() + "FINDALL_" + parentProperty;
 		try {
 			Object attribute = inputTag.getRequest().getAttribute(finAllAttribute);
-			if (attribute == null) {
-				dao = DAOUtils.getDAOForClass(usingType);//Next.getApplicationContext().getBean(beanName + "DAO");
-			} else {
+			if (attribute != null) {
 				return attribute;
+			} else {
+				dao = DAOUtils.getDAOForClass(usingType);//Next.getApplicationContext().getBean(beanName + "DAO");
 			}
 		} catch (Exception e) {
-			return null;
+			//Nada...
 		}
 		if (dao != null) {
 			String[] extraFields = null;

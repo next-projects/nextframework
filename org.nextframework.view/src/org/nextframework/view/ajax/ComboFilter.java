@@ -23,11 +23,6 @@
  */
 package org.nextframework.view.ajax;
 
-import java.util.List;
-
-import org.nextframework.authorization.Authorization;
-import org.nextframework.controller.ExtendedBeanWrapper;
-import org.nextframework.controller.ServletRequestDataBinderNext;
 import org.nextframework.view.ComboReloadGroupTag;
 
 public class ComboFilter {
@@ -55,40 +50,16 @@ public class ComboFilter {
 		return classes;
 	}
 
-	public Object[] getValues(Class<?>[] classes) {
-		if (classes.length == 0) {
-			return new Object[0];
-		}
-		Object[] values = new Object[classes.length];
-		String[] split = parameterList.split(ComboReloadGroupTag.PARAMETER_SEPARATOR);
-		ExtendedBeanWrapper beanWrapper = new ExtendedBeanWrapper();
-		for (int i = 0; i < split.length; i++) {
-			Object value = split[i];
-			if (ServletRequestDataBinderNext.isObjectValue(value)) {
-				//Quando chega uma string "com.app.Bean[id=1],com.app.Bean[id=2]", quebra em um array
-				if (List.class.isAssignableFrom(classes[i]) && value instanceof String && ((String) value).contains(",")) {
-					value = ((String) value).split(",");
-				}
-				value = ServletRequestDataBinderNext.translateObjectValue("[?]", value, null);
-			}
-			if ("user".equals(value)) {
-				value = Authorization.getUserLocator().getUser();
-			}
-			if (!classes[i].equals(Void.class)) {
-				values[i] = beanWrapper.convertIfNecessary(value, classes[i]);
-			} else {
-				values[i] = value;
-			}
-		}
-		return values;
-	}
-
 	public String getClassesList() {
 		return classesList;
 	}
 
 	public void setClassesList(String classesList) {
 		this.classesList = classesList;
+	}
+
+	public String[] getParameter() {
+		return parameterList.split(ComboReloadGroupTag.PARAMETER_SEPARATOR);
 	}
 
 	public String getParameterList() {
