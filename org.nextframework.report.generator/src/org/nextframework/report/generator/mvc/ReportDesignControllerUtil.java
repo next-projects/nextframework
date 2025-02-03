@@ -235,7 +235,7 @@ public class ReportDesignControllerUtil {
 			}
 			return buffer.toString();
 		} else {
-			return propertyDescriptor.getDisplayName();
+			return Util.beans.getDisplayName(propertyDescriptor, locale);
 		}
 	}
 
