@@ -230,7 +230,6 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 //		Matcher matcher = pattern.matcher(valueString);
 		String[] objectValueParts = getObjectValueParts(valueString);
 
-		Object resultado = null;
 		if (objectValueParts != null) {
 
 			String nomeClasse = objectValueParts[0];
@@ -258,11 +257,12 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 			//Modificado em 16/02/2014.. Não deve adicionar as subpropriedades ao mpvs
 			//pois o objeto retornado já foi montado de maneira completa
 
-			resultado = createObject(properties, clazz);
+			Object resultado = createObject(properties, clazz);
+			return resultado;
 
 		}
 
-		return resultado;
+		return value;
 	}
 
 	private static String[] getObjectValueParts(String valueString) {
