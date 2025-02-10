@@ -42,11 +42,15 @@ public class JacksonJsonTranslator implements JsonTranslator {
 		return mapper;
 	}
 
-	public String toJson(Object o) {
+	public String toJson(Object obj) {
 		ObjectMapper mapper = createObjectMapper();
+		return toJson(obj, mapper);
+	}
+
+	public String toJson(Object obj, ObjectMapper mapper) {
 		Writer strWriter = new StringWriter();
 		try {
-			mapper.writeValue(strWriter, o);
+			mapper.writeValue(strWriter, obj);
 		} catch (Exception e) {
 			throw new NextException("Error transforming object to json.", e);
 		}
@@ -55,6 +59,10 @@ public class JacksonJsonTranslator implements JsonTranslator {
 
 	public <E> E fromJson(String json, Class<E> type) {
 		ObjectMapper mapper = createObjectMapper();
+		return fromJson(json, type, mapper);
+	}
+
+	public <E> E fromJson(String json, Class<E> type, ObjectMapper mapper) {
 		try {
 			return mapper.readValue(json, type);
 		} catch (Exception e) {
@@ -64,6 +72,10 @@ public class JacksonJsonTranslator implements JsonTranslator {
 
 	public <E> List<E> fromJsonAsList(String json, Class<E> type) {
 		ObjectMapper mapper = createObjectMapper();
+		return fromJsonAsList(json, type, mapper);
+	}
+
+	public <E> List<E> fromJsonAsList(String json, Class<E> type, ObjectMapper mapper) {
 		try {
 			CollectionType ctype = mapper.getTypeFactory().constructCollectionType(List.class, type);
 			return mapper.readValue(json, ctype);
