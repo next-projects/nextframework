@@ -1,7 +1,10 @@
 package org.nextframework.report.generator.mvc;
 
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.nextframework.bean.BeanDescriptorFactory;
@@ -45,9 +48,14 @@ public class ReportComponentTag extends BaseTag {
 		return map;
 	}
 
-	private Object getFormattersMap() {
-		Map<String, String> map = new HashMap<String, String>();
+	private Map<String, String> getFormattersMap() {
+		Map<String, String> map = new LinkedHashMap<String, String>();
 		Class<FieldFormatter>[] fieldProcessors = ClassManagerFactory.getClassManager().getAllClassesOfType(FieldFormatter.class);
+		Arrays.sort(fieldProcessors, new Comparator<Class<FieldFormatter>>() {
+			public int compare(Class<FieldFormatter> o1, Class<FieldFormatter> o2) {
+				return o1.getSimpleName().compareTo(o2.getSimpleName());
+			};
+		});
 		for (Class<FieldFormatter> class1 : fieldProcessors) {
 			if (!Modifier.isAbstract(class1.getModifiers())) {
 				map.put(class1.getSimpleName(), BeanDescriptorFactory.forClass(class1).getDisplayName());
