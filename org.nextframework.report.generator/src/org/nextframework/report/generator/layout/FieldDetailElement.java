@@ -109,7 +109,7 @@ public class FieldDetailElement implements LayoutItem {
 		if (!isCustomPattern()) {
 			return null;
 		}
-		return "new " + getCustomPatternClass().getName() + "().format";
+		return "new " + getCustomPatternClass().getCanonicalName() + "().format";
 	}
 
 	@Override
