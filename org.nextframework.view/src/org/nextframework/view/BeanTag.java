@@ -36,12 +36,13 @@ import org.nextframework.view.DataGridTag.Status;
  * @since 26/01/2006
  * @version 1.1
  */
+@SuppressWarnings("rawtypes")
 public class BeanTag extends BaseTag implements LogicalTag {
 
 	protected String name;
 	protected String propertyPrefix;
 	protected String propertyIndex;
-	protected Class<?> valueType;
+	protected Class valueType;
 	protected String varLabel = "label";
 
 	//extras
