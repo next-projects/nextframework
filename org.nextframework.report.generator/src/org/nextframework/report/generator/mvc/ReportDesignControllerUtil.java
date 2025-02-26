@@ -87,7 +87,7 @@ public class ReportDesignControllerUtil {
 			}
 			ReportField reportField = method.getAnnotation(ReportField.class);
 			if (reportField != null || method.getAnnotation(Id.class) != null) {
-				if (!"class".equals(property) && !Collection.class.isAssignableFrom(method.getReturnType())) {
+				if (!"class".equals(property) && !Collection.class.isAssignableFrom(method.getReturnType()) && !method.getReturnType().isArray()) {
 					avaiableProperties.add(property);
 					ManyToOne manyToOne = method.getAnnotation(ManyToOne.class);
 					OneToOne oneToOne = method.getAnnotation(OneToOne.class);
@@ -157,13 +157,13 @@ public class ReportDesignControllerUtil {
 	HashMap<String, Object> getMetadataForProperty(ReportElement report, Locale locale, BeanDescriptor beanDescriptor, String property) {
 
 		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		HashMap<String, Object> map = new LinkedHashMap<>();
 
 		if (report != null) {
 			FilterElement filter = report.getData().getFilterByName(property);
 			if (filter != null) {
-				if (filter.isFilterSelectMultiple()) {
-					map.put("filterSelectMultiple", filter.isFilterSelectMultiple());
+				if (filter.getFilterDisplayName() != null) {
+					map.put("filterDisplayName", filter.getFilterDisplayName());
 				}
 				if (filter.getPreSelectDate() != null) {
 					map.put("preSelectDate", filter.getPreSelectDate().toString());
@@ -174,22 +174,34 @@ public class ReportDesignControllerUtil {
 				if (filter.getFixedCriteria() != null) {
 					map.put("fixedCriteria", filter.getFixedCriteria());
 				}
-				if (filter.getFilterDisplayName() != null) {
-					map.put("filterDisplayName", filter.getFilterDisplayName());
+				if (filter.isFilterSelectMultiple()) {
+					map.put("filterSelectMultiple", filter.isFilterSelectMultiple());
 				}
 				map.put("requiredFilter", filter.isFilterRequired());
 			}
 		}
 
+		boolean extended = isExtendedProperty(beanDescriptor, property);
+		map.put("extended", extended);
+
+		map.put("type", propertyDescriptor.getType());
+		map.put("displayName", getCompleteDisplayName(beanDescriptor, propertyDescriptor, property, locale));
+		map.put("displayNameSimple", Util.beans.getDisplayName(propertyDescriptor, locale));
+
+		map.put("transient", propertyDescriptor.getAnnotation(Transient.class) != null);
+
 		if (propertyDescriptor.getType() instanceof Class) {
+
 			Class propertyClass = (Class) propertyDescriptor.getType();
 			boolean isEntity = PersistenceUtils.isEntity(propertyClass);
+
+			map.put("entity", isEntity);
 			if (isEntity) {
 				String descriptionPropertyName = BeanDescriptorFactory.forClass(propertyClass).getDescriptionPropertyName();
 				map.put("descriptionProperty", descriptionPropertyName);
 			}
 			map.put("comparable", Comparable.class.isAssignableFrom(propertyClass));
-			map.put("entity", isEntity);
+
 			map.put("dateType", isDateType(propertyClass));
 			map.put("numberType", isNumberType(propertyClass));
 			map.put("money", propertyClass.getName().contains("Money"));
@@ -200,18 +212,18 @@ public class ReportDesignControllerUtil {
 				enumExample = enumExample.length() > 100 ? enumExample.substring(0, 50) + "..." : enumExample;
 				map.put("enumExample", enumExample);
 			}
+
 		}
 
-		map.put("type", propertyDescriptor.getType());
-		map.put("extended", isExtendedProperty(beanDescriptor, property));
-		map.put("displayName", getCompleteDisplayName(beanDescriptor, propertyDescriptor, property, locale));
-		map.put("displayNameSimple", Util.beans.getDisplayName(propertyDescriptor, locale));
-		map.put("transient", propertyDescriptor.getAnnotation(Transient.class) != null);
-		ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
-		map.put("filterable", isFilterable(beanDescriptor, property, reportField));
+		map.put("filterable", isFilterable(beanDescriptor, property));
+
 		if (!map.containsKey("requiredFilter")) {
-			map.put("requiredFilter", reportField != null && reportField.requiredFilter() && !isExtendedProperty(beanDescriptor, property));
+			ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
+			map.put("requiredFilter", reportField != null && reportField.requiredFilter() && !extended);
 		}
+
+		map.put("columnable", isColumnable(beanDescriptor, property));
+
 		map.put("propertyDepth", countSubProperties(property));
 
 		return map;
@@ -239,23 +251,43 @@ public class ReportDesignControllerUtil {
 		}
 	}
 
-	public boolean isFilterable(BeanDescriptor beanDescriptor, String property, ReportField reportField) {
-		if (isExtendedProperty(beanDescriptor, property)) {
-			return false;
-		}
-		return reportField != null && (reportField.filter() || reportField.requiredFilter());
+	private boolean isExtendedProperty(BeanDescriptor beanDescriptor, String property) {
+		String base = property.contains(".") ? property.substring(0, property.indexOf('.')) : property;
+		PropertyDescriptor basePropertyDescriptor = beanDescriptor.getPropertyDescriptor(base);
+		ExtendBean extendBean = basePropertyDescriptor.getAnnotation(ExtendBean.class);
+		return extendBean != null;
 	}
 
-	private boolean isExtendedProperty(BeanDescriptor beanDescriptor, String property) {
-		String base = property;
-		if (countSubProperties(property) > 0) {
-			base = property.substring(0, property.indexOf('.'));
+	public boolean isFilterable(BeanDescriptor beanDescriptor, String property) {
+
+		PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
+		String base = property.contains(".") ? property.substring(0, property.indexOf(".")) : property;
+		PropertyDescriptor basePropertyDescriptor = beanDescriptor.getPropertyDescriptor(base);
+
+		boolean trans = basePropertyDescriptor.getAnnotation(Transient.class) != null;
+
+		ExtendBean extendBean = basePropertyDescriptor.getAnnotation(ExtendBean.class);
+		boolean extended = extendBean != null;
+
+		ReportField reportField = basePropertyDescriptor.getAnnotation(ReportField.class);
+		boolean filter = reportField != null && (reportField.filter() || reportField.requiredFilter());
+
+		boolean numberType = false;
+		if (propertyDescriptor.getType() instanceof Class) {
+			Class propertyClass = (Class) propertyDescriptor.getType();
+			numberType = isNumberType(propertyClass);
 		}
-		PropertyDescriptor basePD = beanDescriptor.getPropertyDescriptor(base);
-		if (basePD.getAnnotation(ExtendBean.class) != null) {
-			return true;
-		}
-		return false;
+
+		//Campos normais da entidade e que não sejam extendidos, ou que sejam filtráveis. Nenhum número.
+		boolean filterable = (!trans && !extended || filter) && !numberType;
+		return filterable;
+	}
+
+	public boolean isColumnable(BeanDescriptor beanDescriptor, String property) {
+		String base = property.contains(".") ? property.substring(0, property.indexOf('.')) : property;
+		PropertyDescriptor basePropertyDescriptor = beanDescriptor.getPropertyDescriptor(base);
+		ReportField reportField = basePropertyDescriptor.getAnnotation(ReportField.class);
+		return reportField != null && reportField.column();
 	}
 
 	private int countSubProperties(String property) {
@@ -268,7 +300,7 @@ public class ReportDesignControllerUtil {
 		return count;
 	}
 
-	protected Object isNumberType(Class<?> propertyClass) {
+	protected boolean isNumberType(Class<?> propertyClass) {
 		return Number.class.isAssignableFrom(propertyClass);
 	}
 
@@ -460,12 +492,12 @@ public class ReportDesignControllerUtil {
 		return properties;
 	}
 
-	public void checkFiltersMap(ReportDesignModel model, ReportElement reportElement, List<String> filters, Map<String, Map<String, Object>> filtersMetadataMap) {
+	public void checkFiltersMap(ReportDesignModel model, ReportElement reportElement, Map<String, Map<String, Object>> filtersMetadataMap) {
 		GeneratedReportListener[] grListeners = ServiceFactory.loadServices(GeneratedReportListener.class);
 		Class mainType = Util.objects.getRealClass(reportElement.getData().getMainType());
-		for (String filter : filters) {
+		for (String filter : filtersMetadataMap.keySet()) {
 			for (GeneratedReportListener filterListener : grListeners) {
-				if (filterListener.getFromClass() == null || filterListener.getFromClass() == mainType) {
+				if (filterListener.acceptMainClass(mainType)) {
 					filterListener.checkFilters(model, reportElement, filter, filtersMetadataMap);
 				}
 			}

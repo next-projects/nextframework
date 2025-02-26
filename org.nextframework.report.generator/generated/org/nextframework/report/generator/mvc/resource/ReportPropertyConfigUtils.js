@@ -15,6 +15,9 @@ ReportPropertyConfigUtils.isExtended = function(properties) {
 ReportPropertyConfigUtils.isFilterable = function(properties) {
     return properties["filterable"];
 };
+ReportPropertyConfigUtils.isColumnable = function(properties) {
+    return properties["columnable"];
+};
 ReportPropertyConfigUtils.isEntity = function(properties) {
     return properties["entity"];
 };

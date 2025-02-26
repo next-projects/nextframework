@@ -1,11 +1,9 @@
 package org.nextframework.report.generator.datasource;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -25,17 +23,15 @@ import org.nextframework.controller.crud.ListViewFilter;
 import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
+import org.nextframework.persistence.GeneratedReportDAOFilter;
 import org.nextframework.persistence.GenericDAO;
 import org.nextframework.persistence.QueryBuilder;
 import org.nextframework.persistence.QueryBuilder.JoinMode;
 import org.nextframework.persistence.ResultListImpl;
-import org.nextframework.persistence.TransientsFilter;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.annotation.ExtendBean;
 import org.nextframework.report.generator.annotation.ReportField;
 import org.nextframework.report.generator.datasource.extension.BeanExtender;
-import org.nextframework.report.generator.datasource.extension.GeneratedReportListener;
-import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.util.ClassUtils;
@@ -87,7 +83,14 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		boolean extend = beanExtender.isSubClass(mainType);
 		Class<OBJ> mainType2 = Util.objects.getRealClass(mainType);
 
-		QueryBuilder<OBJ> query = createQueryBuilder(mainType, element, filterMap, fixedCriteriaMap);
+		GenericDAO<OBJ> dao = null;
+		try {
+			dao = DAOUtils.getDAOForClass(mainType);
+		} catch (NoSuchBeanDefinitionException e) {
+			//if no DAO no problem...
+		}
+
+		QueryBuilder<OBJ> query = createQueryBuilder(mainType, dao, element, filterMap, fixedCriteriaMap);
 
 		ListViewFilter filter = new ListViewFilter();
 		filter.setPageSize(500);
@@ -100,7 +103,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 			if (extend) {
 				for (OBJ object : subResult) {
 					OBJ extendedBean = (OBJ) beanExtender.extendBean(object, mainType2);
-					boolean filterOk = validateExtendedFilter(filterMap, extendedBean);
+					boolean filterOk = validateExtendedFilter(dao, filterMap, extendedBean);
 					if (filterOk) {
 						fullResult.add(extendedBean);
 					}
@@ -120,7 +123,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		return fullResult;
 	}
 
-	protected <OBJ> QueryBuilder<OBJ> createQueryBuilder(Class<OBJ> mainType, ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
+	protected <OBJ> QueryBuilder<OBJ> createQueryBuilder(Class<OBJ> mainType, GenericDAO<OBJ> dao, ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
 
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(mainType);
 
@@ -182,38 +185,34 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 			query.fetchCollection(fetchCollection, true);
 		}
 
-		Map<String, Object> transients = new HashMap<String, Object>();
-		GeneratedReportListener[] grListeners = ServiceFactory.loadServices(GeneratedReportListener.class);
-
 		for (String filter : filterMap.keySet()) {
+
+			String filterNoSuffix = removeSuffix(filter);
+			PropertyDescriptor pd = bd.getPropertyDescriptor(filterNoSuffix);
+			Object parameterValue = filterMap.get(filter);
+
+			if (dao instanceof GeneratedReportDAOFilter) {
+				GeneratedReportDAOFilter dao2 = (GeneratedReportDAOFilter) dao;
+				if (dao2.isFilterableForPropertyForGeneratedReport(filter)) {
+					dao2.filterQueryForGeneratedReport(query, filter, filterNoSuffix, parameterValue);
+					continue;
+				}
+			}
+
+			if (pd.getAnnotation(Transient.class) != null) {
+				throw new NextException("The class " + dao.getClass().getSimpleName() + " must implement " + GeneratedReportDAOFilter.class.getSimpleName() + " and filter the transient field " + filter + "!");
+			}
 
 			if (isFilterExtended(bd, filter)) {
 				continue;
 			}
 
-			String filterNoSuffix = removeSuffix(filter);
-			PropertyDescriptor pd = bd.getPropertyDescriptor(filterNoSuffix);
-			Type type = pd.getType();
-			Object parameterValue = filterMap.get(filter);
-
-			if (pd.getAnnotation(Transient.class) != null) {
-				transients.put(filterNoSuffix, parameterValue);
-				continue;
-			}
-
-			boolean applied = false;
-			for (GeneratedReportListener filterListener : grListeners) {
-				if (filterListener.getFromClass() == query.getFrom().getFromClass()) {
-					applied = applied || filterListener.setWhereClause(query, filter, filterNoSuffix, parameterValue, type);
-				}
-			}
-
-			if (!applied && parameterValue != null) {
+			if (parameterValue != null) {
 				if (filter.contains("_begin")) {
 					query.where(query.getAlias() + "." + filterNoSuffix + " >= ?", parameterValue);
 				} else if (filter.contains("_end")) {
 					query.where(query.getAlias() + "." + filterNoSuffix + " < ?", max(parameterValue));
-				} else if (String.class.equals(type)) {
+				} else if (parameterValue instanceof String) {
 					query.whereLike(query.getAlias() + "." + filter, (String) parameterValue);
 				} else if (parameterValue.getClass().isArray()) {
 					query.whereIn(query.getAlias() + "." + filter, Arrays.asList((Object[]) parameterValue));
@@ -231,19 +230,6 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 			} else if ("NOTNULL".equals(criteriaValue)) {
 				query.where(query.getAlias() + "." + filter + " is not null");
 			}
-		}
-
-		GenericDAO<OBJ> dao = null;
-		try {
-			dao = DAOUtils.getDAOForClass(mainType);
-		} catch (NoSuchBeanDefinitionException e) {
-			//if no DAO no problem...
-		}
-
-		if (dao instanceof TransientsFilter) {
-			((TransientsFilter) dao).filterQueryForTransients(query, transients);
-		} else if (transients.size() > 0) {
-			throw new NextException("There are transient fields " + transients + " for filtering, but the " + dao.getClass().getSimpleName() + " does not implement " + TransientsFilter.class.getSimpleName() + ".");
 		}
 
 		//Melhor reaordenar fora do BD para ordenar pelos atributos calculados também.
@@ -360,7 +346,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		return filter;
 	}
 
-	protected boolean validateExtendedFilter(Map<String, Object> filterMap, Object extendedBean) {
+	protected <OBJ> boolean validateExtendedFilter(GenericDAO<OBJ> dao, Map<String, Object> filterMap, Object extendedBean) {
 
 		BeanDescriptor bd = BeanDescriptorFactory.forBean(extendedBean);
 
@@ -370,9 +356,15 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 				continue;
 			}
 
+			if (dao instanceof GeneratedReportDAOFilter) {
+				GeneratedReportDAOFilter dao2 = (GeneratedReportDAOFilter) dao;
+				if (dao2.isFilterableForPropertyForGeneratedReport(filter)) {
+					continue;
+				}
+			}
+
 			String filterNoSuffix = removeSuffix(filter);
 			PropertyDescriptor pd = bd.getPropertyDescriptor(filterNoSuffix);
-			Type type = pd.getType();
 			Object beanValue = convertType(pd.getValue());
 			Object parameterValue = convertType(filterMap.get(filter));
 
@@ -389,13 +381,13 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 					if (beanValueCal == null || !beanValueCal.before(parameterValueCal)) {
 						return false;
 					}
-				} else if (String.class.equals(type)) {
+				} else if (parameterValue instanceof String) {
 					String parameterValueStr = (String) parameterValue;
 					parameterValueStr = Util.strings.isEmpty(parameterValueStr) ? null : parameterValueStr;
 					if (parameterValueStr != null) {
 						String beanValueStr = (String) beanValue;
 						beanValueStr = Util.strings.isEmpty(beanValueStr) ? null : beanValueStr;
-						if (beanValueStr == null ||!beanValueStr.contains(parameterValueStr)) {
+						if (beanValueStr == null || !beanValueStr.contains(parameterValueStr)) {
 							return false;
 						}
 					}

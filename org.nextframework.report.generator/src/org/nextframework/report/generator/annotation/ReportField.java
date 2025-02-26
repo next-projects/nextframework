@@ -11,6 +11,8 @@ public @interface ReportField {
 
 	String[] usingFields() default {};
 
+	boolean column() default true;
+
 	boolean filter() default false;
 
 	boolean requiredFilter() default false;

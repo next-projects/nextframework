@@ -355,6 +355,7 @@ ReportDesigner.prototype.saveCalculatedProperty = function() {
     var calculationProperties = {"displayName": calculationDisplayName.value, 
         "expression": calculationExpression.value, 
         "filterable": false, 
+        "columnable": true, 
         "numberType": true, 
         "calculated": true, 
         "formatAs": formatAs, 
@@ -433,8 +434,10 @@ ReportDesigner.prototype.updateTitle = function() {
     this.writeXml();
 };
 ReportDesigner.prototype.addField = function(name, properties) {
-    this.fields[name] = properties;
-    this.fieldSelect.add(name, properties);
+    if (ReportPropertyConfigUtils.isColumnable(properties)) {
+        this.fields[name] = properties;
+        this.fieldSelect.add(name, properties);
+    }
     if (this.groupManager.accept(name, properties)) {
         this.groupSelect.add(name, properties);
     }

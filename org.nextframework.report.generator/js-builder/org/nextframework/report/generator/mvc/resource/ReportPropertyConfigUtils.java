@@ -33,6 +33,10 @@ public class ReportPropertyConfigUtils {
 		return (Boolean) properties.$get("filterable");
 	}
 
+	public static boolean isColumnable(Map<String, Object> properties) {
+		return (Boolean) properties.$get("columnable");
+	}
+
 	public static boolean isEntity(Map<String, Object> properties) {
 		return (Boolean) properties.$get("entity");
 	}

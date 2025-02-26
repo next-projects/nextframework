@@ -72,8 +72,11 @@
 			td2.innerHTML = "Texto";
 		}
 
-		if (options.extended) {
-			td2.innerHTML += " [E]";
+		if (options.filterable && !options.columnable) {
+			td2.innerHTML += " [apenas filtragem]";
+		}
+		if (!options.filterable) {
+			td2.innerHTML += " [não filtrável]";
 		}
 
 	}

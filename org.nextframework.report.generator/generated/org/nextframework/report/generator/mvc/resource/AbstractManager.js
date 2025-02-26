@@ -157,7 +157,7 @@ ReportGroupManager.prototype.toString = function() {
     return value;
 };
 ReportGroupManager.prototype.accept = function(name, properties) {
-    return ReportPropertyConfigUtils.isGroupable(properties);
+    return ReportPropertyConfigUtils.isGroupable(properties) && ReportPropertyConfigUtils.isColumnable(properties);
 };
 ReportGroupManager.prototype.getMaximumItems = function() {
     return 4;
@@ -296,9 +296,7 @@ ReportFilterManager.prototype.configureFilterRequired = function(properties) {
     };
 };
 ReportFilterManager.prototype.accept = function(name, properties) {
-    return (!ReportPropertyConfigUtils.isTransient(properties) || ReportPropertyConfigUtils.isFilterable(properties)) && 
-           //!ReportPropertyConfigUtils.isExtended(properties) &&
-           !ReportPropertyConfigUtils.isNumber(properties);
+    return ReportPropertyConfigUtils.isFilterable(properties);
 };
 ReportFilterManager.prototype.onAdd = function(name, properties) {
 };

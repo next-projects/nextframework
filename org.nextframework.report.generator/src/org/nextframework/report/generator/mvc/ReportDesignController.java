@@ -241,10 +241,10 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		String camposRequired = "";
 		boolean possuiFiltro = false;
 		for (String property : avaiableProperties) {
-			PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
-			ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
-			boolean filterable = util.isFilterable(beanDescriptor, property, reportField);
+			boolean filterable = util.isFilterable(beanDescriptor, property);
 			if (filterable) {
+				PropertyDescriptor propertyDescriptor = beanDescriptor.getPropertyDescriptor(property);
+				ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
 				if (reportField != null && reportField.requiredFilter()) {
 					String completeDisplayName = util.getCompleteDisplayName(beanDescriptor, propertyDescriptor, property, locale);
 					camposRequired += (camposRequired.length() == 0 ? "" : ", ") + completeDisplayName;
@@ -303,8 +303,8 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 
 		Map<String, Map<String, Object>> filtersMetadataMap = util.getPropertiesMetadata(reportElement, getLocale(), mainType, filterProperties);
+		util.checkFiltersMap(model, reportElement, filtersMetadataMap);
 		List<String> filters = util.reorganizeFilters(mainType, filterProperties.keySet());
-		util.checkFiltersMap(model, reportElement, filters, filtersMetadataMap);
 
 		setAttribute("filters", filters);
 		setAttribute("filtersMetadataMap", filtersMetadataMap);

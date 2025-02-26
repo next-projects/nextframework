@@ -465,6 +465,7 @@ public class ReportDesigner {
 		Map<String, Object> calculationProperties = JSCollections.$map("displayName", calculationDisplayName.value,
 				"expression", calculationExpression.value,
 				"filterable", (Object) false,
+				"columnable", (Object) true,
 				"numberType", (Object) true,
 				"calculated", (Object) true,
 				"formatAs", formatAs,
@@ -562,8 +563,10 @@ public class ReportDesigner {
 	}
 
 	public void addField(String name, Map<String, Object> properties) {
-		fields.$put(name, properties);
-		fieldSelect.add(name, properties);
+		if (ReportPropertyConfigUtils.isColumnable(properties)) {
+			fields.$put(name, properties);
+			fieldSelect.add(name, properties);
+		}
 		if (this.groupManager.accept(name, properties)) {
 			this.groupSelect.add(name, properties);
 		}

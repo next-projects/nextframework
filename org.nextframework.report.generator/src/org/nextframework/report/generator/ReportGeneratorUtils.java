@@ -36,34 +36,27 @@ public class ReportGeneratorUtils {
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
 		List<FilterElement> filters = new ArrayList<FilterElement>(reportElement.getData().getFilters());
 
-//		List<FilterElement> filtersRange = new ArrayList<FilterElement>();
-//		for (FilterElement filterElement : filters) {
-//			PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(filterElement.getName());
-//			if(isDate(propertyDescriptor)){
-//				filtersRange.add(filterElement);
-//			}
-//		}
-//		
-//		filters.removeAll(filtersRange);
-//		
-//		filters.addAll(0, filtersRange);
-
 		for (FilterElement filterElement : filters) {
+
 			PropertyDescriptor propertyDescriptor = bd.getPropertyDescriptor(filterElement.getName());
 			String qualifiedName = filterElement.getName().replace('.', '_');
 			if (isDate(propertyDescriptor)) {
-				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName + "_begin", propertyDescriptor.getDisplayName());
+				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName + "_begin", filterElement.getFilterDisplayName());
 				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName + "_end", "até");
 			} else if (filterElement.isFilterSelectMultiple()) {
-				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName, propertyDescriptor.getDisplayName(), 1);
+				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName, filterElement.getFilterDisplayName(), 1);
 			} else {
-				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName, propertyDescriptor.getDisplayName());
+				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName, filterElement.getFilterDisplayName());
 			}
+
 		}
 
 		codeBuilder.addImplements(AutoReportFilter.class);
+
 		try {
-			Object object = BeanUtils.instantiate(JavaSourceCompiler.compileClass(classLoader, classQualifiedName, codeBuilder.getSourceCode().getBytes()));
+			String sourceCode = codeBuilder.getSourceCode();
+			Class<?> compiledClass = JavaSourceCompiler.compileClass(classLoader, classQualifiedName, sourceCode.getBytes());
+			Object object = BeanUtils.instantiate(compiledClass);
 			mapValues(filterMap, object);
 			return object;
 		} catch (Exception e) {

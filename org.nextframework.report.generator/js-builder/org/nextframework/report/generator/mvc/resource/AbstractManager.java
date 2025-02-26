@@ -225,7 +225,7 @@ class ReportGroupManager extends AbstractManager {
 	}
 
 	protected boolean accept(String name, Map<String, Object> properties) {
-		return ReportPropertyConfigUtils.isGroupable(properties);
+		return ReportPropertyConfigUtils.isGroupable(properties) && ReportPropertyConfigUtils.isColumnable(properties);
 	}
 
 	@Override
@@ -422,9 +422,7 @@ class ReportFilterManager extends AbstractManager {
 
 	@Override
 	protected boolean accept(String name, Map<String, Object> properties) {
-		return (!ReportPropertyConfigUtils.isTransient(properties) || ReportPropertyConfigUtils.isFilterable(properties)) &&
-				//!ReportPropertyConfigUtils.isExtended(properties) &&
-				!ReportPropertyConfigUtils.isNumber(properties);
+		return ReportPropertyConfigUtils.isFilterable(properties);
 	}
 
 	@Override
