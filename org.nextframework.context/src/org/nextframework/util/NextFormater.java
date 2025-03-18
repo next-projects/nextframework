@@ -36,11 +36,15 @@ public class NextFormater {
 
 	private static NextFormater instance;
 
-	public static NextFormater getInstance() {
+	public synchronized static NextFormater getInstance() {
 		if (instance == null) {
 			instance = new NextFormater();
 		}
 		return instance;
+	}
+
+	private NextFormater() {
+
 	}
 
 	public String format(Object o) {

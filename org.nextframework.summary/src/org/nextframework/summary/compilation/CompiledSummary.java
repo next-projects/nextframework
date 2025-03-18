@@ -40,19 +40,20 @@ public abstract class CompiledSummary<SUMARY extends Summary<ROW>, ROW> {
 					for (int i = 0; i < groupValues1.length; i++) {
 						Comparable comparable1 = groupValues1[i];
 						Comparable comparable2 = groupValues2[i];
-						if ((comparable1 == null && comparable2 == null)
-								|| (comparable1 != null && comparable1.equals(comparable2))) {
+						if ((comparable1 == null && comparable2 == null) || (comparable1 != null && comparable1.equals(comparable2))) {
 							continue;
 						}
-						if (comparable2 == null && comparable1 != null) {
+						if (comparable1 != null && comparable2 != null) {
+							int diference = comparable1.compareTo(comparable2);
+							if (diference != 0) {
+								return diference;
+							}
+						}
+						if (comparable1 != null && comparable2 == null) {
 							return 1;
 						}
 						if (comparable1 == null && comparable2 != null) {
 							return -1;
-						}
-						int diference = comparable1.compareTo(comparable2);
-						if (diference != 0) {
-							return diference;
 						}
 					}
 					return o1.rowIndex - o2.rowIndex; //keep original order

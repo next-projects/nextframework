@@ -33,7 +33,7 @@ public class ProcessAuthorizer {
 
 	private static ProcessAuthorizer instance;
 
-	public static ProcessAuthorizer getInstance() {
+	public synchronized static ProcessAuthorizer getInstance() {
 		if (instance == null) {
 			instance = new ProcessAuthorizer();
 		}

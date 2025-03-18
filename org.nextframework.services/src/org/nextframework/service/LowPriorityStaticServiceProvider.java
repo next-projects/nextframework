@@ -16,11 +16,11 @@ import org.apache.commons.logging.LogFactory;
  * @see StaticServiceProvider
  * @author rogel
  */
-public class LowPriorityStaticServiceProvider extends StaticServiceProvider {
-
-	public static int PRIORITY = 100;
+public class LowPriorityStaticServiceProvider implements ServiceProvider {
 
 	private static Log log = LogFactory.getLog(StaticServiceProvider.class.getSimpleName());
+
+	public static int PRIORITY = 100;
 
 	//does the value need to be weakreference?
 	private static Map<Class<?>, Object> defaultServices = new WeakHashMap<Class<?>, Object>();
@@ -86,8 +86,7 @@ public class LowPriorityStaticServiceProvider extends StaticServiceProvider {
 
 	@Override
 	public void release() {
-		defaultServices = null;
-		log = null;
+		clean();
 	}
 
 }

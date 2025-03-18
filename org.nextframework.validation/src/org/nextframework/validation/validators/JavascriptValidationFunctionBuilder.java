@@ -103,8 +103,10 @@ public class JavascriptValidationFunctionBuilder {
 				.append("\n");
 		builder.append("    }")
 				.append("\n");
-		for (PropertyValidator validator : propertyValidators) {
-			builder.append(createValidationFunction(validator, holder.getValidationMap().get(validator)));
+		if (propertyValidators != null && propertyValidators.size() > 0) {
+			for (PropertyValidator validator : propertyValidators) {
+				builder.append(createValidationFunction(validator, holder.getValidationMap().get(validator)));
+			}
 		}
 		/*
 		InputStream jsinputStream = this.getClass().getClassLoader().getResourceAsStream(ValidatorRegistry.validatorUtilities);

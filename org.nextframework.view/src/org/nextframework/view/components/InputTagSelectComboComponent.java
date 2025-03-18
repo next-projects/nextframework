@@ -416,10 +416,8 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				return findAll;
 			}
 		} else {
-			if (usingType != null) {
-				//TODO TROCAR POR LOG
-				System.out.println("GenericDAO não encontrado para o tipo " + usingType.getName() + ". Ignorando busca de itens de combo.");
-			}
+			//TODO TROCAR POR LOG
+			System.out.println("GenericDAO não encontrado para o tipo " + usingType.getName() + ". Ignorando busca de itens de combo.");
 		}
 		return null;
 	}

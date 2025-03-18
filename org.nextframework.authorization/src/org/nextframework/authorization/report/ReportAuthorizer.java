@@ -33,7 +33,7 @@ public class ReportAuthorizer {
 
 	private static ReportAuthorizer instance;
 
-	public static ReportAuthorizer getInstance() {
+	public synchronized static ReportAuthorizer getInstance() {
 		if (instance == null) {
 			instance = new ReportAuthorizer();
 		}

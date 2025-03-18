@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.nextframework.context.factory.support.QualifiedListableBeanFactory;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.service.StaticServiceProvider;
 import org.springframework.beans.factory.BeanFactory;
@@ -37,7 +38,7 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 	}
 
 	public NextStandardApplicationContext() {
-		this(new org.nextframework.context.factory.support.DefaultListableBeanFactory(null));
+		this(new QualifiedListableBeanFactory(null));
 	}
 
 	public NextStandardApplicationContext(ApplicationContext parent) {
@@ -136,32 +137,34 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 	private Collection<? extends String> searchPackages(String basePackage, File file) {
 		List<String> packages = new ArrayList<String>();
 		File[] files = file.listFiles();
-		for (File subdir : files) {
-			if (subdir.isDirectory()) {
-				String packageName = subdir.getName();
-				if (basePackage != null) {
-					packageName = basePackage + "." + packageName;
+		if (files != null) {
+			for (File subdir : files) {
+				if (subdir.isDirectory()) {
+					String packageName = subdir.getName();
+					if (basePackage != null) {
+						packageName = basePackage + "." + packageName;
+					}
+					if (packageName.startsWith(".")) {
+						continue;
+					}
+					if (packageName.startsWith("META-INF")) {
+						continue;
+					}
+					if (packageName.equals("org") || packageName.equals("com") || packageName.equals("net")) {
+						packages.addAll(searchPackages(packageName, subdir));
+						continue;
+					}
+					if (packageName.equals("org.nextframework")) { // ignore org.nextframework
+						continue;
+					}
+					if (packageName.equals("org.stjs")) { // ignore 
+						continue;
+					}
+					if (packageName.equals("org.eclipse")) { // ignore 
+						continue;
+					}
+					packages.add(packageName);
 				}
-				if (packageName.startsWith(".")) {
-					continue;
-				}
-				if (packageName.startsWith("META-INF")) {
-					continue;
-				}
-				if (packageName.equals("org") || packageName.equals("com") || packageName.equals("net")) {
-					packages.addAll(searchPackages(packageName, subdir));
-					continue;
-				}
-				if (packageName.equals("org.nextframework")) { // ignore org.nextframework
-					continue;
-				}
-				if (packageName.equals("org.stjs")) { // ignore 
-					continue;
-				}
-				if (packageName.equals("org.eclipse")) { // ignore 
-					continue;
-				}
-				packages.add(packageName);
 			}
 		}
 		return packages;

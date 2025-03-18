@@ -9,6 +9,17 @@ public class JavascriptBuilderContext {
 
 	private static long sequence = 0;
 
+	public static synchronized long getNext() {
+		if (sequence == Long.MAX_VALUE) {
+			sequence = 0;
+		}
+		return sequence++;
+	}
+
+	public String generateUniqueId(String string) {
+		return string + "_" + getNext();
+	}
+
 	private static ThreadLocal<List<JavascriptBuilderContext>> tlcode = new ThreadLocal<List<JavascriptBuilderContext>>();
 
 	public static void pushNewContext() {
@@ -46,13 +57,6 @@ public class JavascriptBuilderContext {
 	@Override
 	public String toString() {
 		return code.toString();
-	}
-
-	public synchronized String generateUniqueId(String string) {
-		if (sequence == Long.MAX_VALUE) {
-			sequence = 0;
-		}
-		return string + "_" + (sequence++);
 	}
 
 }

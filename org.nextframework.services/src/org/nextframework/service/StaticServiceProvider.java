@@ -22,9 +22,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class StaticServiceProvider implements ServiceProvider {
 
-	public static int PRIORITY = 40;
-
 	private static Log log = LogFactory.getLog(StaticServiceProvider.class.getSimpleName());
+
+	public static int PRIORITY = 40;
 
 	//does the value need to be weakreference?
 	private static Map<Class<?>, Object> defaultServices = new WeakHashMap<Class<?>, Object>();
@@ -90,8 +90,7 @@ public class StaticServiceProvider implements ServiceProvider {
 
 	@Override
 	public void release() {
-		defaultServices = null;
-		log = null;
+		clean();
 	}
 
 }

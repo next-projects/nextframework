@@ -7,13 +7,13 @@ import org.springframework.context.ApplicationContextException;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
 
-public class ContextLoaderListener extends org.springframework.web.context.ContextLoaderListener {
+public class NextContextLoaderListener extends org.springframework.web.context.ContextLoaderListener {
 
-	public ContextLoaderListener() {
+	public NextContextLoaderListener() {
 		super();
 	}
 
-	public ContextLoaderListener(WebApplicationContext context) {
+	public NextContextLoaderListener(WebApplicationContext context) {
 		super(context);
 	}
 

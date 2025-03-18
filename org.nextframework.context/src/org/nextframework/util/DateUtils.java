@@ -7,10 +7,11 @@ import java.util.Date;
 
 public class DateUtils {
 
-	private static final SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
-	private static final SimpleDateFormat sdfDMYHM = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-	private static final SimpleDateFormat sdfDMYHMS = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	private static final SimpleDateFormat sdfYMD_HMS = new SimpleDateFormat("yy/MM/dd,HH:mm:ss");
+	private final SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
+	private final SimpleDateFormat sdfDMYHM = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	private final SimpleDateFormat sdfDMYHMS = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	private final SimpleDateFormat sdfYMD_HMS = new SimpleDateFormat("yy/MM/dd,HH:mm:ss");
+	private final SimpleDateFormat sdfyyyyMMdd_HHmmss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	/**
 	 * Retornar true se as duas datas são a mesma data. Ignorando as horas minutos segundos e milisegundos
@@ -120,6 +121,19 @@ public class DateUtils {
 	public Date ymd_hms(String date) {
 		try {
 			return sdfYMD_HMS.parse(date);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Retorna o Date correspondente a string no formato yyyy-MM-dd HH:mm:ss
+	 * @param date
+	 * @return
+	 */
+	public Date yyyyMMdd_HHmmss(String date) {
+		try {
+			return sdfyyyyMMdd_HHmmss.parse(date);
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}

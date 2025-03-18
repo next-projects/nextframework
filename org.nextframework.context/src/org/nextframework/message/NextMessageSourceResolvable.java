@@ -82,17 +82,11 @@ public class NextMessageSourceResolvable extends DefaultMessageSourceResolvable 
 
 				if (o1 == null && o2 == null) {
 					continue;
-				}
-
-				if (o1 != null && o2 == null) {
+				} else if (o2 == null) {
 					return 1;
-				}
-
-				if (o1 == null && o2 != null) {
+				} else if (o1 == null) {
 					return -1;
-				}
-
-				if (o1.getClass() != o2.getClass()) {
+				} else if (o1.getClass() != o2.getClass()) {
 					return o1.getClass().getName().compareTo(o2.getClass().getName());
 				}
 

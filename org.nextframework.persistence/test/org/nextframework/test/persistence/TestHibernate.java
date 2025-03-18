@@ -1,6 +1,7 @@
 package org.nextframework.test.persistence;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.hibernate.Session;
@@ -48,7 +49,10 @@ public class TestHibernate {
 		session.doWork(new Work() {
 
 			public void execute(Connection connection) throws SQLException {
-				connection.prepareStatement("select testentity0_.id as id1_, testentity0_.name as name1_ from TestEntityParent testentity0_").executeQuery();
+				ResultSet rs = connection.prepareStatement("select testentity0_.id as id1_, testentity0_.name as name1_ from TestEntityParent testentity0_").executeQuery();
+				if (rs == null) {
+					throw new RuntimeException("Erro!");
+				}
 			}
 
 		});

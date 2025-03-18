@@ -10,17 +10,17 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.util.ClassUtils;
 
-public class DefaultListableBeanFactory extends org.springframework.beans.factory.support.DefaultListableBeanFactory {
+public class QualifiedListableBeanFactory extends org.springframework.beans.factory.support.DefaultListableBeanFactory {
 
 	protected AutowireCandidateFilter[] matchers = ServiceFactory.loadServices(AutowireCandidateFilter.class);
 
 	protected QualifyPropertiesHelper qualifyPropertiesResolver = new QualifyPropertiesHelper();
 
-	public DefaultListableBeanFactory() {
+	public QualifiedListableBeanFactory() {
 		super();
 	}
 
-	public DefaultListableBeanFactory(BeanFactory parentBeanFactory) {
+	public QualifiedListableBeanFactory(BeanFactory parentBeanFactory) {
 		super(parentBeanFactory);
 	}
 

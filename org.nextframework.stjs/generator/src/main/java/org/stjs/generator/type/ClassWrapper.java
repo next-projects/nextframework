@@ -397,6 +397,11 @@ public class ClassWrapper implements TypeWrapper {
 		return clazz == other.clazz;
 	}
 
+	@Override
+	public int hashCode() {
+		return clazz != null ? clazz.hashCode() : super.hashCode();
+	}
+
 	public boolean isInnerType() {
 		return clazz.getDeclaringClass() != null;
 	}

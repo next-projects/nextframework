@@ -34,7 +34,7 @@ public class NextWebApplicationInitializer implements WebApplicationInitializer 
 			servletContext.log("Using custom ContextLoaderListener: " + springLoader);
 			servletContext.addListener(springLoader);
 		} catch (ServiceException e) {
-			servletContext.addListener(new ContextLoaderListener());
+			servletContext.addListener(new NextContextLoaderListener());
 		}
 	}
 

@@ -42,7 +42,7 @@ public class ProgressBarCallback implements AjaxCallbackController {
 			String subtask = toString(progressMonitor.getSubtask(), locale);
 			out.printf("var progressBar = ProgressBar.getById('%s');", progressBarId);
 			if (progressMonitor.getError() == null) {
-				boolean done = progressMonitor.getDone() == ProgressMonitor.DONE_SUCCESS;
+				boolean done = ProgressMonitor.DONE_SUCCESS.equals(progressMonitor.getDone());
 				out.printf("progressBar.setInformation(%d, '%s', %b, %s);", percentDone, subtask, done, convertToJsArray(progressMonitor.getTasks(), locale));
 			} else {
 				List<Object> tasks = new ArrayList<Object>(progressMonitor.getTasks());

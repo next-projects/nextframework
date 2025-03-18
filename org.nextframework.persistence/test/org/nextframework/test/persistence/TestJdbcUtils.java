@@ -8,37 +8,36 @@ import org.hsqldb.Server;
 
 class TestJdbcUtils {
 
-	static Server hsqlServer;
+	private static Server hsqlServer;
+	private static Connection connection;
 
-	static Connection connection;
+	public synchronized static void createConnection() throws ClassNotFoundException, SQLException {
 
-	public static void createConnection() throws ClassNotFoundException, SQLException {
 		if (connection != null) {
 			return;
 		}
+
 		// Getting a connection to the newly started database
 		Class.forName("org.hsqldb.jdbcDriver");
 		// Default user of the HSQLDB is 'sa'
 		// with an empty password
 		connection = DriverManager.getConnection("jdbc:hsqldb:mem:memdb", "sa", "");
+
 	}
 
-	public static void stopConnection() throws SQLException {
+	public synchronized static void stopConnection() throws SQLException {
 		if (connection != null) {
 			connection.close();
 			connection = null;
 		}
 	}
 
-	static void stopServer() {
-		// Closing the server
-		if (hsqlServer != null) {
-			hsqlServer.stop();
-			hsqlServer = null;
-		}
+	public static boolean prepareStatement(String ddl) throws ClassNotFoundException, SQLException {
+		createConnection();
+		return connection.prepareStatement(ddl).execute();
 	}
 
-	static void startServer() {
+	public synchronized static void startServer() {
 
 		if (hsqlServer != null) {
 			return;
@@ -64,6 +63,14 @@ class TestJdbcUtils {
 		// Start the database!
 		hsqlServer.start();
 
+	}
+
+	public synchronized static void stopServer() {
+		// Closing the server
+		if (hsqlServer != null) {
+			hsqlServer.stop();
+			hsqlServer = null;
+		}
 	}
 
 }

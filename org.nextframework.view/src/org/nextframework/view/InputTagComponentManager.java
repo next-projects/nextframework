@@ -38,7 +38,7 @@ public class InputTagComponentManager {
 		return componentClasses.put(key, value);
 	}
 
-	public InputTagComponentManager() {
+	private InputTagComponentManager() {
 		init();
 	}
 

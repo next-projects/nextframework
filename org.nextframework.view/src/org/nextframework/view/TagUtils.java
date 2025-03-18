@@ -219,7 +219,7 @@ public class TagUtils {
 				//TENTANDO CARREGAR O OBJETO LAZY
 				BaseTag.log.warn("Perda de performance! Carregando objeto sob demanda " + value.getClass());
 				try {
-					if (value != null && value.getClass().getName().contains("$$") && e1.getCause().getCause() instanceof LazyInitializationException) {
+					if (value.getClass().getName().contains("$$") && e1.getCause().getCause() instanceof LazyInitializationException) {
 						GenericDAO daoForClass = DAOUtils.getDAOForClass(value.getClass().getSuperclass());
 						value = daoForClass.load(value);
 						//value = new QueryBuilder(Next.getObject(HibernateTemplate.class)).from(value.getClass().getSuperclass()).entity(value).unique();

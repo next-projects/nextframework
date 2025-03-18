@@ -31,7 +31,7 @@ public class ReportDesigner {
 
 	private static ReportDesigner instance;
 
-	public static ReportDesigner getInstance() {
+	public synchronized static ReportDesigner getInstance() {
 		if (instance == null) {
 			instance = new ReportDesigner("designerArea", "xml");
 		}
@@ -84,7 +84,7 @@ public class ReportDesigner {
 
 	Array<Selectable> selectables;
 
-	public ReportDesigner(String divId, String textAreaId) {
+	private ReportDesigner(String divId, String textAreaId) {
 
 		final ReportDesigner bigThis = this;
 		selectables = $array();
@@ -356,9 +356,9 @@ public class ReportDesigner {
 					result = result.substring(0, space) + " ";
 				}
 				calculationExpression.value = result;
-			}else if (c == 'C') {
+			} else if (c == 'C') {
 				calculationExpression.value = "";
-			}else if (c == 'N') {
+			} else if (c == 'N') {
 				calculationExpression.value += "$now" + " ";
 			}
 		} else {

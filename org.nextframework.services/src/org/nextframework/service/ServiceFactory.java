@@ -33,7 +33,7 @@ public class ServiceFactory {
 
 	static boolean initialized = false;
 
-	private static void init() {
+	private synchronized static void init() {
 
 		if (initialized) {
 			if (providers == null) {
@@ -132,7 +132,7 @@ public class ServiceFactory {
 		ServiceFactory.providers = null;
 	}
 
-	public static void refresh() {
+	public synchronized static void refresh() {
 		try {
 			release();
 		} catch (IllegalStateException e) {

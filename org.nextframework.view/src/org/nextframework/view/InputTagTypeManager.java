@@ -46,6 +46,10 @@ public class InputTagTypeManager {
 		InputTagTypeManager.instance = instance;
 	}
 
+	private InputTagTypeManager() {
+
+	}
+
 	static {
 		instance.registerTypeForClass(InscricaoEstadual.class, InputTagType.INSCRICAO_ESTADUAL);
 		instance.registerTypeForClass(java.sql.Date.class, InputTagType.DATE);

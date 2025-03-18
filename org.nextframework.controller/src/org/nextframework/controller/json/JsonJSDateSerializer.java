@@ -14,7 +14,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 public class JsonJSDateSerializer extends StdSerializer<Date> {
 
 	private static final long serialVersionUID = 1L;
-	public static DateFormat customDateFormat = new SimpleDateFormat("'new Date('yyyy','MM','dd','HH','mm','ss','SSS')'");
+
+	private DateFormat customDateFormat = new SimpleDateFormat("'new Date('yyyy','MM','dd','HH','mm','ss','SSS')'");
 
 	public JsonJSDateSerializer() {
 		this(null);

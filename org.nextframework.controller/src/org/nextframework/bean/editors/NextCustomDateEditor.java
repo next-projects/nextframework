@@ -6,18 +6,18 @@ import java.text.SimpleDateFormat;
 
 import org.springframework.util.StringUtils;
 
-public class CustomDateEditor extends org.springframework.beans.propertyeditors.CustomDateEditor {
+public class NextCustomDateEditor extends org.springframework.beans.propertyeditors.CustomDateEditor {
 
 	DateFormat smartDateFormat = new SimpleDateFormat("yyyy,MM,dd,HH,mm,ss,SSS");
 
 	boolean useSmartDetection = true;
 
-	public CustomDateEditor(DateFormat dateFormat, boolean allowEmpty, int exactDateLength) {
+	public NextCustomDateEditor(DateFormat dateFormat, boolean allowEmpty, int exactDateLength) {
 		super(dateFormat, allowEmpty, exactDateLength);
 //		smartDateFormat.setTimeZone(TimeZone.getTimeZone("GMT-3"));
 	}
 
-	public CustomDateEditor(DateFormat dateFormat, boolean allowEmpty) {
+	public NextCustomDateEditor(DateFormat dateFormat, boolean allowEmpty) {
 		super(dateFormat, allowEmpty);
 //		smartDateFormat.setTimeZone(TimeZone.getTimeZone("GMT-3"));
 	}

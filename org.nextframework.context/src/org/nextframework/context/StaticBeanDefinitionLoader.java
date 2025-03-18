@@ -20,12 +20,16 @@ public class StaticBeanDefinitionLoader implements BeanDefinitionLoader {
 
 	private static StaticBeanDefinitionLoader beanDefinitionLoader;
 
-	public static StaticBeanDefinitionLoader getInstance() {
+	public synchronized static StaticBeanDefinitionLoader getInstance() {
 		if (beanDefinitionLoader == null) {
 			beanDefinitionLoader = new StaticBeanDefinitionLoader();
 			StaticServiceProvider.registerService(BeanDefinitionLoader.class, beanDefinitionLoader);
 		}
 		return beanDefinitionLoader;
+	}
+
+	private StaticBeanDefinitionLoader() {
+
 	}
 
 	Map<String, BeanDefinition> beans = new HashMap<String, BeanDefinition>();

@@ -210,14 +210,11 @@ public class ChartDataBuilder {
 			public int compare(Object o1, Object o2) {
 				if (o1 == null && o2 == null) {
 					return 0;
-				}
-				if (o1 == null && o2 != null) {
+				} else if (o1 == null) {
 					return 1;
-				}
-				if (o2 == null && o1 != null) {
+				} else if (o2 == null) {
 					return -1;
-				}
-				if (o1.getClass().equals(o2.getClass())) {
+				} else if (o1.getClass().equals(o2.getClass())) {
 					return ((Comparable) o1).compareTo(o2);
 				}
 				return o1.getClass().getName().compareTo(o2.getClass().getName());

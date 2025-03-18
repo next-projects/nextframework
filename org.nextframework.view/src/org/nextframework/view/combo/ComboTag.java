@@ -76,7 +76,7 @@ public class ComboTag extends BaseTag implements LogicalTag {
 		public TagHolder(BaseTag tag, String... exprs) {
 			this(tag);
 			if (exprs.length % 2 != 0) {
-				throw new IllegalArgumentException("exprs invalidos " + exprs);
+				throw new IllegalArgumentException("exprs invalidos " + Arrays.toString(exprs));
 			}
 			for (int i = 0; i < exprs.length; i += 2) {
 				rtexprs.put(exprs[i], exprs[i + 1]);

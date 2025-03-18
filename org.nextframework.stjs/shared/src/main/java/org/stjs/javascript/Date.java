@@ -299,7 +299,7 @@ public class Date {
 			return DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.US).format(
 					calendar.getTime());
 		}
-		return null;
+		return "";
 	}
 
 	public String toTimeString() {

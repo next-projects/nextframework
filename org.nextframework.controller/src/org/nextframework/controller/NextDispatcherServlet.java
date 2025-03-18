@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.nextframework.classmanager.ClassManager;
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.context.ResourceHandlerMap;
-import org.nextframework.controller.json.MappingJackson2HttpMessageConverter;
+import org.nextframework.controller.json.NextMappingJackson2HttpMessageConverter;
 import org.nextframework.web.service.ServletContextServiceProvider;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -60,11 +60,11 @@ import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAda
  * @since 22/01/2006
  * @version 1.1
  */
-public class DispatcherServlet extends org.springframework.web.servlet.DispatcherServlet {
+public class NextDispatcherServlet extends org.springframework.web.servlet.DispatcherServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	public DispatcherServlet() {
+	public NextDispatcherServlet() {
 	}
 
 //	@Override
@@ -86,7 +86,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 
 	static class DispatcherServletResourceHandlerMap implements ResourceHandlerMap {
 
-		List<DispatcherServlet> servlets = new ArrayList<DispatcherServlet>();
+		List<NextDispatcherServlet> servlets = new ArrayList<NextDispatcherServlet>();
 
 		Map<String, Object> handlerMap = new HashMap<String, Object>();
 
@@ -105,7 +105,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 		@SuppressWarnings("unchecked")
 		public void init() {
 			if (handlerMap.isEmpty()) {
-				for (DispatcherServlet servlet : servlets) {
+				for (NextDispatcherServlet servlet : servlets) {
 					List<HandlerMapping> handlers = (List<HandlerMapping>) PropertyAccessorFactory.forDirectFieldAccess(servlet).getPropertyValue("handlerMappings");
 					for (HandlerMapping handlerMapping : handlers) {
 						if (handlerMapping instanceof AbstractUrlHandlerMapping) {
@@ -128,7 +128,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 			String module = resource.substring(1, resource.indexOf('/', 1));
 			if (!authenticationModuleCache.containsKey(module)) {
 				boolean result = false;
-				for (DispatcherServlet servlet : servlets) {
+				for (NextDispatcherServlet servlet : servlets) {
 					if (servlet.getServletName().equals(module) && servlet.isSecured()) {
 						result = true;
 						break;
@@ -202,7 +202,7 @@ public class DispatcherServlet extends org.springframework.web.servlet.Dispatche
 			//Para converter para json
 			List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 			messageConverters.addAll(Arrays.asList(handlerAdapter.getMessageConverters()));
-			messageConverters.add(new MappingJackson2HttpMessageConverter());
+			messageConverters.add(new NextMappingJackson2HttpMessageConverter());
 			handlerAdapter.setMessageConverters(messageConverters.toArray(new HttpMessageConverter<?>[messageConverters.size()]));
 		}
 		return strategy;

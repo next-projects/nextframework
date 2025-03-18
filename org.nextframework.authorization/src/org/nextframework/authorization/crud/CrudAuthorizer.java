@@ -27,8 +27,8 @@
  */
 package org.nextframework.authorization.crud;
 
-import org.nextframework.authorization.UserAuthorization;
 import org.nextframework.authorization.Authorizer;
+import org.nextframework.authorization.UserAuthorization;
 
 /**
  * @author rogelgarcia
@@ -56,7 +56,7 @@ public class CrudAuthorizer implements Authorizer {
 
 	private static CrudAuthorizer instance;
 
-	public static CrudAuthorizer getInstance() {
+	public synchronized static CrudAuthorizer getInstance() {
 		if (instance == null) {
 			instance = new CrudAuthorizer();
 		}

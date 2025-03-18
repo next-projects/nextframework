@@ -67,6 +67,8 @@ public abstract class DynamicSummary<E> {
 		return variables.toArray(new DynamicVariable[variables.size()]);
 	}
 
+	private Boolean freeze = false;
+
 	public boolean isFrozen() {
 		return freeze;
 	}
@@ -77,16 +79,14 @@ public abstract class DynamicSummary<E> {
 		}
 	}
 
-	private boolean freeze = false;
+	protected void freeze() {
+		freeze = true;
+	}
 
 	private int serialId;
 
 	protected int getSerialId() {
 		return serialId;
-	}
-
-	protected void freeze() {
-		freeze = true;
 	}
 
 	protected DynamicSummary(int serialId) {

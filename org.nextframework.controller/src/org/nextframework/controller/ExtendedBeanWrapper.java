@@ -63,8 +63,8 @@ import org.nextframework.bean.editors.CalendarEditor;
 import org.nextframework.bean.editors.CepPropertyEditor;
 import org.nextframework.bean.editors.CnpjPropertyEditor;
 import org.nextframework.bean.editors.CpfPropertyEditor;
-import org.nextframework.bean.editors.CustomDateEditor;
-import org.nextframework.bean.editors.CustomNumberEditor;
+import org.nextframework.bean.editors.NextCustomDateEditor;
+import org.nextframework.bean.editors.NextCustomNumberEditor;
 import org.nextframework.bean.editors.CustomSqlDateEditor;
 import org.nextframework.bean.editors.InscricaoEstadualPropertyEditor;
 import org.nextframework.bean.editors.MoneyPropertyEditor;
@@ -233,7 +233,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 		setWrappedInstance(object, nestedPath, superBw.getWrappedInstance());
 	}
 
-	static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	{
 		simpleDateFormat.setLenient(false);
 	}
@@ -281,12 +281,12 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 
 		// The JDK does not contain default editors for number wrapper types!
 		// Override JDK primitive number editors with our own CustomNumberEditor.
-		PropertyEditor byteEditor = new CustomNumberEditor(Byte.class, true);
-		PropertyEditor shortEditor = new CustomNumberEditor(Short.class, true);
-		PropertyEditor integerEditor = new CustomNumberEditor(Integer.class, true);
-		PropertyEditor longEditor = new CustomNumberEditor(Long.class, true);
-		PropertyEditor floatEditor = new CustomNumberEditor(Float.class, true);
-		PropertyEditor doubleEditor = new CustomNumberEditor(Double.class, true);
+		PropertyEditor byteEditor = new NextCustomNumberEditor(Byte.class, true);
+		PropertyEditor shortEditor = new NextCustomNumberEditor(Short.class, true);
+		PropertyEditor integerEditor = new NextCustomNumberEditor(Integer.class, true);
+		PropertyEditor longEditor = new NextCustomNumberEditor(Long.class, true);
+		PropertyEditor floatEditor = new NextCustomNumberEditor(Float.class, true);
+		PropertyEditor doubleEditor = new NextCustomNumberEditor(Double.class, true);
 
 		this.defaultEditors.put(byte.class, byteEditor);
 		this.defaultEditors.put(Byte.class, byteEditor);
@@ -306,8 +306,8 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 		this.defaultEditors.put(double.class, doubleEditor);
 		this.defaultEditors.put(Double.class, doubleEditor);
 
-		this.defaultEditors.put(BigDecimal.class, new CustomNumberEditor(BigDecimal.class, false));
-		this.defaultEditors.put(BigInteger.class, new CustomNumberEditor(BigInteger.class, false));
+		this.defaultEditors.put(BigDecimal.class, new NextCustomNumberEditor(BigDecimal.class, false));
+		this.defaultEditors.put(BigInteger.class, new NextCustomNumberEditor(BigInteger.class, false));
 
 		//============================================================================================
 
@@ -316,7 +316,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 		boolean allowEmpty = true;
 
 		registerCustomEditor(Calendar.class, new CalendarEditor(simpleDateFormat, allowEmpty));
-		registerCustomEditor(Date.class, new CustomDateEditor(simpleDateFormat, allowEmpty));
+		registerCustomEditor(Date.class, new NextCustomDateEditor(simpleDateFormat, allowEmpty));
 		registerCustomEditor(java.sql.Date.class, new CustomSqlDateEditor(simpleDateFormat, allowEmpty));
 		registerCustomEditor(Time.class, new TimePropertyEditor());
 		registerCustomEditor(SimpleTime.class, new SimpleTimePropertyEditor());
@@ -866,9 +866,9 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 					if (type instanceof ParameterizedType) {
 						if (((ParameterizedType) type).getRawType() instanceof Class) {
 							rawType = (Class) ((ParameterizedType) type).getRawType();
-						} else if (type instanceof Class) {
-							rawType = (Class) type;
 						}
+					} else if (type instanceof Class) {
+						rawType = (Class) type;
 					}
 					if (rawType != null && List.class.isAssignableFrom(rawType)) {
 						PropertyTokenHolder propertyTokenHolder = new PropertyTokenHolder();

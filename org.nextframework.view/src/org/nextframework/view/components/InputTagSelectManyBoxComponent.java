@@ -40,15 +40,16 @@ public class InputTagSelectManyBoxComponent extends InputTagSelectComboComponent
 			throw new NextException("For the type select-many-box the itens must be a List");
 		}
 
-		List<?> items = (List<?>) itemsValue;
-
 		List<Object> values = new ArrayList<Object>();
 
-		for (Iterator<?> iterator = items.iterator(); iterator.hasNext();) {
-			Object object = (Object) iterator.next();
-			if (isValueSelected(object)) {
-				values.add(object);
-				iterator.remove();
+		List<?> items = (List<?>) itemsValue;
+		if (items != null) {
+			for (Iterator<?> iterator = items.iterator(); iterator.hasNext();) {
+				Object object = (Object) iterator.next();
+				if (isValueSelected(object)) {
+					values.add(object);
+					iterator.remove();
+				}
 			}
 		}
 

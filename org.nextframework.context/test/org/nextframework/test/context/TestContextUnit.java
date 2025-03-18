@@ -2,7 +2,7 @@ package org.nextframework.test.context;
 
 import org.junit.Test;
 import org.nextframework.context.StaticBeanDefinitionLoader;
-import org.nextframework.context.factory.support.DefaultListableBeanFactory;
+import org.nextframework.context.factory.support.QualifiedListableBeanFactory;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.standard.NextStandard;
 import org.nextframework.service.ServiceFactory;
@@ -30,7 +30,7 @@ public class TestContextUnit {
 		loader.addBeanForClass(TestService2.class);
 		NextStandard.start();
 		Assert.notNull(Next.getObject(TestService1.class));
-		BeanDefinition beanDefinition = ((DefaultListableBeanFactory) ServiceFactory.getService(ListableBeanFactory.class)).getBeanDefinition("testService1");
+		BeanDefinition beanDefinition = ((QualifiedListableBeanFactory) ServiceFactory.getService(ListableBeanFactory.class)).getBeanDefinition("testService1");
 		System.out.println(((AbstractBeanDefinition) beanDefinition).getQualifiers());
 	}
 

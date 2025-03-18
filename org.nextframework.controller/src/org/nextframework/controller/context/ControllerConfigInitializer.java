@@ -17,7 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
 import javax.servlet.annotation.HandlesTypes;
 
-import org.nextframework.controller.DispatcherServlet;
+import org.nextframework.controller.NextDispatcherServlet;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -47,15 +47,19 @@ public class ControllerConfigInitializer implements ServletContainerInitializer 
 
 		for (Class<? extends Controller> controllerClass : controllerList) {
 			org.nextframework.controller.Controller annotation = controllerClass.getAnnotation(org.nextframework.controller.Controller.class);
-			if (annotation == null && !Modifier.isAbstract(controllerClass.getModifiers())) {
+			if (annotation == null) {
+				//if (!Modifier.isAbstract(controllerClass.getModifiers())) {
 				//servletContext.log("WARN: Controller "+controllerClass+" is not annotated with @Controller");
+				//}
 			} else {
 				String[] paths = annotation.path();
-				for (String path : paths) {
-					if (!path.startsWith("/")) {
-						servletContext.log("WARN: Controller " + controllerClass + " has a wrong path " + path + ". Paths must be started with '/'.");
-					} else {
-						addController(moduleControllers, getModule(path), controllerClass);
+				if (paths != null) {
+					for (String path : paths) {
+						if (!path.startsWith("/")) {
+							servletContext.log("WARN: Controller " + controllerClass + " has a wrong path " + path + ". Paths must be started with '/'.");
+						} else {
+							addController(moduleControllers, getModule(path), controllerClass);
+						}
 					}
 				}
 			}
@@ -71,7 +75,7 @@ public class ControllerConfigInitializer implements ServletContainerInitializer 
 		int i = 0;
 		Set<String> modules = new TreeSet<String>(moduleControllers.keySet());
 		for (String module : modules) {
-			Dynamic servlet = servletContext.addServlet(module, DispatcherServlet.class);
+			Dynamic servlet = servletContext.addServlet(module, NextDispatcherServlet.class);
 			if (servlet != null) {
 				servlet.addMapping("/" + module + "/*");
 				servlet.setLoadOnStartup(i++);

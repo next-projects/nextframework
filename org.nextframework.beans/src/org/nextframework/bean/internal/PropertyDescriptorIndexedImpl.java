@@ -1,7 +1,6 @@
 package org.nextframework.bean.internal;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import org.nextframework.bean.PropertyDescriptor;
@@ -67,9 +66,9 @@ public class PropertyDescriptorIndexedImpl implements PropertyDescriptor {
 		if (type instanceof Class<?>) {
 			return (Class<?>) type;
 		}
-		if (type instanceof ParameterizedType) {
-			return convertToRawType((ParameterizedType) type);
-		}
+		//if (type instanceof ParameterizedType) {
+		//	return convertToRawType((ParameterizedType) type); Recursivo??
+		//}
 		throw new RuntimeException("Cannot determine raw type of " + this.type);
 	}
 

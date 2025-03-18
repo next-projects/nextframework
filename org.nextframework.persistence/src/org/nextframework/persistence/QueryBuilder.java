@@ -1026,7 +1026,7 @@ public class QueryBuilder<E> {
 
 	}
 
-	public static class Where {
+	public static class Where implements Cloneable {
 
 		private StringBuilder stringBuilder = new StringBuilder();
 		private List<Object> parameters = new ArrayList<Object>();

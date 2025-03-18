@@ -21,6 +21,41 @@ import static org.stjs.generator.ast.ASTNodeData.resolvedType;
 import static org.stjs.generator.ast.ASTNodeData.resolvedVariable;
 import static org.stjs.generator.ast.ASTNodeData.resolvedVariableScope;
 import static org.stjs.generator.ast.ASTNodeData.scope;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.stjs.generator.GenerationContext;
+import org.stjs.generator.JavascriptGenerationException;
+import org.stjs.generator.ast.ASTNodeData;
+import org.stjs.generator.ast.SourcePosition;
+import org.stjs.generator.type.ClassLoaderWrapper;
+import org.stjs.generator.type.ClassWrapper;
+import org.stjs.generator.type.FieldWrapper;
+import org.stjs.generator.type.MethodWrapper;
+import org.stjs.generator.type.ParameterizedTypeImpl;
+import org.stjs.generator.type.ParameterizedTypeWrapper;
+import org.stjs.generator.type.PrimitiveTypes;
+import org.stjs.generator.type.TypeWrapper;
+import org.stjs.generator.type.TypeWrappers;
+import org.stjs.generator.type.WildcardTypeImpl;
+import org.stjs.generator.type.WildcardTypeWrapper;
+import org.stjs.generator.utils.ClassUtils;
+import org.stjs.generator.utils.NodeUtils;
+import org.stjs.generator.utils.Operators;
+import org.stjs.generator.utils.Option;
+import org.stjs.generator.utils.PreConditions;
+import org.stjs.generator.variable.LocalVariable;
+import org.stjs.generator.variable.ParameterVariable;
+import org.stjs.generator.visitor.ForEachNodeVisitor;
+
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.ImportDeclaration;
 import japa.parser.ast.Node;
@@ -75,40 +110,6 @@ import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.GenericDeclaration;
-import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.stjs.generator.GenerationContext;
-import org.stjs.generator.JavascriptGenerationException;
-import org.stjs.generator.ast.ASTNodeData;
-import org.stjs.generator.ast.SourcePosition;
-import org.stjs.generator.type.ClassLoaderWrapper;
-import org.stjs.generator.type.ClassWrapper;
-import org.stjs.generator.type.FieldWrapper;
-import org.stjs.generator.type.MethodWrapper;
-import org.stjs.generator.type.ParameterizedTypeImpl;
-import org.stjs.generator.type.ParameterizedTypeWrapper;
-import org.stjs.generator.type.PrimitiveTypes;
-import org.stjs.generator.type.TypeWrapper;
-import org.stjs.generator.type.TypeWrappers;
-import org.stjs.generator.type.WildcardTypeImpl;
-import org.stjs.generator.type.WildcardTypeWrapper;
-import org.stjs.generator.utils.ClassUtils;
-import org.stjs.generator.utils.NodeUtils;
-import org.stjs.generator.utils.Operators;
-import org.stjs.generator.utils.Option;
-import org.stjs.generator.utils.PreConditions;
-import org.stjs.generator.variable.LocalVariable;
-import org.stjs.generator.variable.ParameterVariable;
-import org.stjs.generator.visitor.ForEachNodeVisitor;
 
 /**
  * This class resolves the variables, methods and types and writes the corresponding information in the AST nodes.
@@ -470,13 +471,14 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 		if (n.getAnonymousClassBody() != null) {
 			ClassScope classScope = scope.closest(ClassScope.class);
 			ClassWrapper anonymousClass = searchAnonymousClass(classScope.getClazz().getClazz(), n, scope);
-			PreConditions.checkStateNode(n, anonymousClass != null,
-					"Could not find anoynmous class for node at line %d", n.getBeginLine());
-			ClassScope anonymousClassScope = addClassToScope((AbstractScope) scope, anonymousClass);
-			resolvedType(n, anonymousClass);
-			scope(n, anonymousClassScope);
-			for (BodyDeclaration member : n.getAnonymousClassBody()) {
-				member.accept(this, anonymousClassScope);
+			PreConditions.checkStateNode(n, anonymousClass != null, "Could not find anoynmous class for node at line %d", n.getBeginLine());
+			if (anonymousClass != null) {
+				ClassScope anonymousClassScope = addClassToScope((AbstractScope) scope, anonymousClass);
+				resolvedType(n, anonymousClass);
+				scope(n, anonymousClassScope);
+				for (BodyDeclaration member : n.getAnonymousClassBody()) {
+					member.accept(this, anonymousClassScope);
+				}
 			}
 		} else {
 			resolvedType(n, resolveType(scope, n.getType()));
@@ -737,9 +739,10 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 				resolvedVariable(n, field.getOrThrow());
 			} else {
 				TypeWithScope innerType = arg.resolveType(scopeType.getName() + "$" + n.getField());
-				PreConditions.checkStateNode(n, innerType != null,
-						"%s no inner type nor field could be resolved for '%s'", location(n), n.getField());
-				resolvedType(n, innerType.getType());
+				PreConditions.checkStateNode(n, innerType != null, "%s no inner type nor field could be resolved for '%s'", location(n), n.getField());
+				if (innerType != null) {
+					resolvedType(n, innerType.getType());
+				}
 			}
 		}
 

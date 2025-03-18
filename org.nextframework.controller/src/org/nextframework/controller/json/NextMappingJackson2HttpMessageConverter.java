@@ -9,9 +9,9 @@ import org.nextframework.service.ServiceFactory;
 		</mvc:message-converters>
 	</mvc:annotation-driven>
  */
-public class MappingJackson2HttpMessageConverter extends org.springframework.http.converter.json.MappingJackson2HttpMessageConverter {
+public class NextMappingJackson2HttpMessageConverter extends org.springframework.http.converter.json.MappingJackson2HttpMessageConverter {
 
-	public MappingJackson2HttpMessageConverter() {
+	public NextMappingJackson2HttpMessageConverter() {
 		super();
 		JacksonJsonTranslator translator = (JacksonJsonTranslator) ServiceFactory.getService(JsonTranslator.class);
 		setObjectMapper(translator.createObjectMapper());

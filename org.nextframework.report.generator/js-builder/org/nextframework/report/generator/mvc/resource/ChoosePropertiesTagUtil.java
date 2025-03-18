@@ -54,7 +54,7 @@ public class ChoosePropertiesTagUtil {
 					colapseGroup(row, rows);
 					openClose.setAttribute("data-open", "false");
 				}
-				return null;
+				return true;
 			}
 
 		};

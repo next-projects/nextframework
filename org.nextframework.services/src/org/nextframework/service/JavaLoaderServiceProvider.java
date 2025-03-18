@@ -24,9 +24,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JavaLoaderServiceProvider implements ServiceProvider {
 
-	public static int PRIORITY = 50;
-
 	private Log log = LogFactory.getLog(JavaLoaderServiceProvider.class.getSimpleName());
+
+	public static int PRIORITY = 50;
 
 	private Map<Class<?>, List<Object>> javaServices = new HashMap<Class<?>, List<Object>>();
 
@@ -100,19 +100,22 @@ public class JavaLoaderServiceProvider implements ServiceProvider {
 		}
 	}
 
+	public void clean() {
+		javaServices = new HashMap<Class<?>, List<Object>>();
+	}
+
 	@Override
 	public int priority() {
 		return PRIORITY;
 	}
 
-	@Override
-	public void release() {
-		javaServices = null;
-		log = null;
-	}
-
 	private int getPriority(Object o) {
 		return PriorityCache.getPriority(o);
+	}
+
+	@Override
+	public void release() {
+		clean();
 	}
 
 }

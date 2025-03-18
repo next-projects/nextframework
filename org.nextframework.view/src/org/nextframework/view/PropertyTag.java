@@ -210,7 +210,11 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 					value = beanDescriptor.getTargetBean();
 				}
 			} catch (LazyInitializationException e) {
-				value = "[Could not initializate proxy] " + propertyDescriptor.getName();
+				if (propertyDescriptor != null) {
+					value = "[Could not initializate proxy] " + propertyDescriptor.getName();
+				} else {
+					value = "[Could not initializate proxy] " + beanDescriptor.getTargetBean();
+				}
 			}
 		}
 		return value;
@@ -279,10 +283,10 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 			if (Util.strings.isNotEmpty(propertyIndex)) {
 				prefix += "[" + propertyIndex + "]";
 			}
-			if (prefix.length() != 0 && name != null && !name.equals("this")) {
+			if (prefix.length() != 0 && !name.equals("this")) {
 				prefix += ".";
 			}
-			if ("this".equals(name) || name == null) {
+			if ("this".equals(name)) {
 				fullName = prefix;
 				return fullName;
 			}

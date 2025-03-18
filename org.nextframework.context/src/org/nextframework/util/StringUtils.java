@@ -74,6 +74,16 @@ public class StringUtils {
 		return !isEmpty(str);
 	}
 
+	public boolean equals(String txt1, String txt2) {
+		if (txt1 == null && txt2 == null) {
+			return true;
+		}
+		if (txt1 == null || txt2 == null) {
+			return false;
+		}
+		return txt1.equals(txt2);
+	}
+
 	/**
 	 * Separa parametros no formato key=value;
 	 * @param parameters

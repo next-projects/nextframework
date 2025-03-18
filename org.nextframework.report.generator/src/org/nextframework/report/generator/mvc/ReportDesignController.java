@@ -149,7 +149,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 
 		try {
-			if (model != null && model.getId() != null) {
+			if (model.getId() != null) {
 				CUSTOM_BEAN customBean = loadPersistedReportById(model.getId()); //FIXME Está carregando 2 vezes
 				setAttribute("customBean", customBean);
 			}

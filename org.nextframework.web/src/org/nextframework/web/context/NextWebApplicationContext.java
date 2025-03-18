@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 
 import org.nextframework.context.ApplicationScanPathsProvider;
 import org.nextframework.context.BeanDefinitionLoader;
+import org.nextframework.context.factory.support.QualifiedListableBeanFactory;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.web.service.ServletContextServiceProvider;
 import org.springframework.beans.BeansException;
@@ -45,7 +46,7 @@ public class NextWebApplicationContext extends AnnotationConfigWebApplicationCon
 
 	@Override
 	protected DefaultListableBeanFactory createBeanFactory() {
-		return new org.nextframework.context.factory.support.DefaultListableBeanFactory(getInternalParentBeanFactory());
+		return new QualifiedListableBeanFactory(getInternalParentBeanFactory());
 	}
 
 	@Override

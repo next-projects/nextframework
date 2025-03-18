@@ -5,7 +5,7 @@ import java.io.File;
 public class QuickGenerator {
 
 	public static void main(String[] args) throws ClassNotFoundException, InterruptedException {
-		
+
 //		System.out.println(args[3]);
 //		System.out.println("=====================");
 //		Thread.sleep(5000);
@@ -47,12 +47,14 @@ public class QuickGenerator {
 
 	private static void configureAllowedPackages(GeneratorConfigurationBuilder builder, String sourceDir, File file) {
 		File[] listFiles = file.listFiles();
-		for (File dir : listFiles) {
-			if (dir.isDirectory()) {
-				String path = dir.getAbsolutePath();
-				String packageName = path.substring(sourceDir.length() + 1).replace(File.separatorChar, '.');
-				builder.allowedPackage(packageName);
-				configureAllowedPackages(builder, sourceDir, dir);
+		if (listFiles != null) {
+			for (File dir : listFiles) {
+				if (dir.isDirectory()) {
+					String path = dir.getAbsolutePath();
+					String packageName = path.substring(sourceDir.length() + 1).replace(File.separatorChar, '.');
+					builder.allowedPackage(packageName);
+					configureAllowedPackages(builder, sourceDir, dir);
+				}
 			}
 		}
 	}

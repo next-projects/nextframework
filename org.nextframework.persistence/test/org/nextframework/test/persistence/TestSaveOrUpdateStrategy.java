@@ -79,7 +79,7 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 
 	@Test
 	public void testNew() {
-		SaveOrUpdateStrategy ss = new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent());
+		new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent());
 	}
 
 	@Test

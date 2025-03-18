@@ -329,7 +329,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 					OneToMany otm = AnnotationUtils.getAnnotation(getterMethod, OneToMany.class);
 					if (otm != null) {
 
-						if (mainAttribute != field) {
+						if (!mainAttribute.equals(field)) {
 							throw new IllegalArgumentException("Atributos OneToMany não podem ter sub-atributos especificados com ponto!");
 						}
 
@@ -347,7 +347,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 
 						} else {
 
-							if (mainAttribute != field) {
+							if (!mainAttribute.equals(field)) {
 								throw new IllegalArgumentException("Atributos primitivos não podem ter sub-atributos especificados com ponto!");
 							}
 

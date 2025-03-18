@@ -23,36 +23,35 @@
  */
 package org.nextframework.bean.editors;
 
-import java.text.NumberFormat;
+import java.beans.PropertyEditor;
+import java.util.Collection;
 
-public class CustomNumberEditor extends org.springframework.beans.propertyeditors.CustomNumberEditor {
+public class NextCustomCollectionEditor extends org.springframework.beans.propertyeditors.CustomCollectionEditor {
 
-	public CustomNumberEditor(Class<? extends Number> numberClass, boolean allowEmpty) throws IllegalArgumentException {
-		super(numberClass, allowEmpty);
-	}
-
-	public CustomNumberEditor(Class<? extends Number> numberClass, NumberFormat numberFormat, boolean allowEmpty) throws IllegalArgumentException {
-		super(numberClass, numberFormat, allowEmpty);
+	@SuppressWarnings("rawtypes")
+	public NextCustomCollectionEditor(Class<? extends Collection> collectionType) {
+		super(collectionType);
 	}
 
 	@Override
-	public void setAsText(String text) throws IllegalArgumentException {
-		if (text != null) {
-			text = text.replace(".", "").replace(",", ".");
+	protected boolean alwaysCreateNewCollection() {
+		return true;
+	}
+
+	@Override
+	protected Object convertElement(Object element) {
+		if (element == null) {
+			return null;
+		}
+		String stringValue = element.toString();
+		// TODO verificar se já existe um property editor para o required type e path
+		if (stringValue.equals("<null>") || stringValue.matches("\\w*((\\.\\w*)*)\\[((.)*)\\]")) {
+			PropertyEditor editor = new ValueBasedPropertyEditor();
+			editor.setAsText(stringValue);
+			return editor.getValue();
 		} else {
-			text = "";
+			return super.convertElement(element);
 		}
-		boolean negative = text.startsWith("-");
-		if (negative) {
-			text = text.substring(1);
-		}
-		while (text.startsWith("0") && text.length() > 1) {
-			text = text.substring(1);
-		}
-		if (negative) {
-			text = "-" + text;
-		}
-		super.setAsText(text);
 	}
 
 }

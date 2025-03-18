@@ -190,8 +190,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 				}
 				if (arquivoNovo != null && arquivoNovo.getSize() > 0) {
 					getHibernateTemplate().saveOrUpdate(arquivoNovo);
-					String nomeArquivo = getNomeArquivo(arquivoNovo);
-					writeFile(arquivoNovo, nomeArquivo);
+					writeFile(arquivoNovo);
 				} else {
 					return null;
 				}
@@ -207,8 +206,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 					arquivoNovo.setCdfile(arquivoVelho.getCdfile());
 					//sobrescrever o arquivo
 					getHibernateTemplate().saveOrUpdate(arquivoNovo);
-					String nomeArquivo = getNomeArquivo(arquivoNovo);
-					writeFile(arquivoNovo, nomeArquivo);
+					writeFile(arquivoNovo);
 				} else {
 					//se o tamanho for zero não mexer no arquivo
 					arquivoNovo.setCdfile(arquivoVelho.getCdfile());
@@ -235,6 +233,27 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 		}
 	}
 
+	protected void writeFile(File arquivoNovo) throws IOException {
+		if (autoDetectTransient) {
+			boolean isTransient = checkTransientContent(arquivoNovo);
+			if (!isTransient) {
+				//se nao for transiente será salvo no banco de dados entao devemos sair do método
+				return;
+			}
+		}
+		String nomeArquivo = getNomeArquivo(arquivoNovo);
+		log.debug("Gravando arquivo no disco (upload): " + nomeArquivo);
+		java.io.File file = new java.io.File(nomeArquivo);
+		if (!file.exists()) {
+			file.getParentFile().mkdirs();
+			//file.mkdirs();
+			file.createNewFile();
+		}
+		OutputStream out = new FileOutputStream(file);
+		out.write(arquivoNovo.getContent());
+		out.close();
+	}
+
 	public void delete(BEAN bean) {
 		super.delete(bean);
 		if (autoDetectTransient) {
@@ -250,26 +269,6 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 	protected void deleteFile(String nomeArquivo) {
 		java.io.File file = new java.io.File(nomeArquivo);
 		file.delete();
-	}
-
-	protected void writeFile(File arquivoNovo, String nomeArquivo) throws IOException {
-		if (autoDetectTransient) {
-			boolean isTransient = checkTransientContent(arquivoNovo);
-			if (!isTransient) {
-				//se nao for transiente será salvo no banco de dados entao devemos sair do método
-				return;
-			}
-		}
-		log.debug("Gravando arquivo no disco (upload): " + nomeArquivo);
-		java.io.File file = new java.io.File(nomeArquivo);
-		if (!file.exists()) {
-			file.getParentFile().mkdirs();
-			//file.mkdirs();
-			file.createNewFile();
-		}
-		OutputStream out = new FileOutputStream(file);
-		out.write(arquivoNovo.getContent());
-		out.close();
 	}
 
 }

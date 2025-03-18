@@ -4,11 +4,11 @@ import org.nextframework.report.definition.elements.style.ReportItemStyle;
 
 public abstract class ReportTextElement extends ReportItem {
 
-	protected ReportItemStyle style = new ReportItemStyle();
+	protected ReportItemStyle itemStyle = new ReportItemStyle();
 	protected int height = ReportConstants.AUTO_HEIGHT;
 
 	public ReportItemStyle getStyle() {
-		return style;
+		return itemStyle;
 	}
 
 	public boolean isHeightAuto() {
@@ -35,7 +35,7 @@ public abstract class ReportTextElement extends ReportItem {
 	}
 
 	public ReportTextElement setStyle(ReportItemStyle style) {
-		this.style = style;
+		this.itemStyle = style;
 		return this;
 	}
 
