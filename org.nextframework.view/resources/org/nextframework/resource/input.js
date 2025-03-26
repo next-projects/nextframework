@@ -39,6 +39,7 @@ function valida_tecla(campo, event, acceptEnter) {
 }
 
 function valida_tecla_data(campo, event, pattern) {
+
 	var BACKSPACE = 8;
 	var key;
 	var tecla;
@@ -59,22 +60,25 @@ function valida_tecla_data(campo, event, pattern) {
 	if(tecla == 16){
 		return false;
 	}
-	
+
 	key = String.fromCharCode(tecla);
-	
-	
+
 	if(tecla != 8){
+
 		var l = campo.value.length;
-		
+
 		var charBefore;
 		if(l > 0){
 			charBefore = pattern.charAt(l - 1);
 		}
+
 		var currChar = pattern.charAt(l);
+
 		if(	(currChar == 'm' ||
 			currChar == 's') && charBefore != currChar){ //primeira casa dos minutos ou segundos
 			return isTime(key);
 		}
+
 		if( (currChar == 'h' || currChar == 'H') && charBefore != currChar){ //primeira casa da hora
 			return key == '0' || key == '1' || key == '2';
 		} else if( (currChar == 'h' || currChar == 'H') && charBefore == currChar){ //segunda casa da hora
@@ -82,7 +86,7 @@ function valida_tecla_data(campo, event, pattern) {
 				return key == '0' || key == '1' || key == '2'|| key == '3' || key == '4';
 			}
 		}
-		
+
 		if( (currChar == 'M' ) && charBefore != currChar){ //primeira casa do mes
 			return key == '0' || key == '1';
 		} else if( (currChar == 'M' ) && charBefore == currChar){ //segunda casa do mes
@@ -92,6 +96,7 @@ function valida_tecla_data(campo, event, pattern) {
 				return false;
 			}
 		}
+
 		if( (currChar == 'd' ) && charBefore != currChar){ //primeira casa do dia
 			return key == '0' || key == '1' || key == '2' || key == '3';
 		} else if( (currChar == 'd' ) && charBefore == currChar){ //segunda casa do dia
@@ -101,6 +106,7 @@ function valida_tecla_data(campo, event, pattern) {
 				return false;
 			}
 		}
+
 	}
 
 	if (tecla == 13) {
@@ -109,6 +115,7 @@ function valida_tecla_data(campo, event, pattern) {
 	if (tecla == BACKSPACE) {
 		return true;
 	}
+
 	return (isNum(key));
 }
 
@@ -197,6 +204,7 @@ function mascara_data(el, event, pattern) {
 }
 
 function verifica_data(data) {
+
 	var situacao = '';
 
 	if (data.length == 0) {
@@ -343,6 +351,11 @@ function mascara_inscricaoestadual(el) {
 //------------------------------------------------------------
 
 function formata_money(campo, teclapres) {
+
+	if (campo.readOnly) {
+		return false;
+	}
+
 	if(navigator.appName.indexOf("Netscape")!= -1) {
 		var tecla= teclapres.which;
 	} else {
@@ -501,21 +514,22 @@ function selectManyBoxRemove(btn){
 }
 
 function selectManyBoxMove(a, b, adding){
+
 	if(a.selectedIndex < 0){
 		return;
 	}
-	
+
 	var el = a.options.item(a.selectedIndex);
 	var newOp = new Option(el.innerHTML, el.value);
 	newOp.properties = el.properties;
-	
+
 	b.options.add(newOp);
 	if(a.options.remove){
 		a.options.remove(a.selectedIndex);	
 	} else {
 		a.remove(el);
 	}
-	
+
 	var name = a.name.substring(0, a.name.length - 6);
 	from  = next.dom.toElement(name + '_from_');
 	if(adding){
