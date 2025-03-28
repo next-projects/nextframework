@@ -27,9 +27,6 @@ import org.nextframework.exception.NextException;
 import org.nextframework.persistence.DAOUtils;
 import org.nextframework.persistence.GenericDAO;
 import org.nextframework.report.definition.ReportDefinition;
-import org.nextframework.report.definition.elements.ReportItem;
-import org.nextframework.report.definition.elements.ReportItemIterator;
-import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.generator.ReportElement;
 import org.nextframework.report.generator.ReportGenerator;
 import org.nextframework.report.generator.ReportReader;
@@ -534,13 +531,13 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		ReportSpec spec = rg.generateReportSpec(filterMap, locale, maxResults);
 
 		if (debugMode()) {
-			debug(reportElement.getName(), rg, spec);
+			debug(reportElement.getName(), rg, spec, progressMonitor);
 		}
 
 		ReportDefinition definition = spec.getReportBuilder().getDefinition();
 
 		if (debugMode()) {
-			debug(reportElement.getName(), definition);
+			debug(reportElement.getName(), definition, progressMonitor);
 		}
 
 		util.insertMaxResultsWarning(definition, maxResults);
@@ -592,32 +589,28 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		return false;
 	}
 
-	private void debug(String title, ReportGenerator rg, ReportSpec spec) {
+	private void debug(String title, ReportGenerator rg, ReportSpec spec, IProgressMonitor progressMonitor) {
 		title = Util.strings.onlyAlphanumerics(title);
-		debugSource(title, rg.getSourceCode(), spec.getSummary().getSourceCode());
+		debugSource(title, rg.getSourceCode().getBytes(), spec.getSummary().getSourceCode().getBytes(), progressMonitor);
 	}
 
-	protected void debugSource(String title, String sourceCodeReport, String sourceCodeSummary) {
+	protected void debugSource(String title, byte[] sourceCodeReport, byte[] sourceCodeSummary, IProgressMonitor progressMonitor) {
 	}
 
-	private void debug(String title, ReportDefinition definition) {
+	private void debug(String title, ReportDefinition definition, IProgressMonitor progressMonitor) {
 		title = Util.strings.onlyAlphanumerics(title);
-		ReportItemIterator reportItemIterator = new ReportItemIterator(definition);
+		List<ReportDefinition> reportDefinitions = JasperUtils.getReportDefinitions(definition);
 		int i = 1;
-		while (reportItemIterator.hasNext()) {
-			ReportItem next = reportItemIterator.next();
-			if (next instanceof Subreport) {
-				debug(title + (i++), ((Subreport) next).getReport());
-			}
+		for (ReportDefinition reportDefinition : reportDefinitions) {
+			debugSource(title + (i++), JasperReportsRenderer.renderAsJRXML(reportDefinition), progressMonitor);
+			debugDataCSV(title + (i++), JasperUtils.generateDataCSV(reportDefinition).getBytes(), progressMonitor);
 		}
-		debugSource(title, JasperReportsRenderer.renderAsJRXML(definition));
-		debugDataCSV(title, JasperUtils.generateDataCSV(definition));
 	}
 
-	protected void debugSource(String title, byte[] jrxml) {
+	protected void debugSource(String title, byte[] jrxml, IProgressMonitor progressMonitor) {
 	}
 
-	protected void debugDataCSV(String title, String csv) {
+	protected void debugDataCSV(String title, byte[] csv, IProgressMonitor progressMonitor) {
 	}
 
 }

@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -18,9 +19,23 @@ import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportItem;
 import org.nextframework.report.definition.elements.ReportItemIterator;
 import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.renderer.ValueConverter;
 
 public class JasperUtils {
+
+	public static List<ReportDefinition> getReportDefinitions(ReportDefinition mainDefinition) {
+		List<ReportDefinition> defs = new ArrayList<>();
+		addReportDefinitions(defs, mainDefinition);
+		return defs;
+	}
+
+	private static void addReportDefinitions(List<ReportDefinition> defs, ReportDefinition mainDefinition) {
+		defs.add(mainDefinition);
+		for (Subreport sub : mainDefinition.getSubreports()) {
+			addReportDefinitions(defs, sub.getReport());
+		}
+	}
 
 	@SuppressWarnings("rawtypes")
 	public static String generateDataCSV(ReportDefinition definition) {

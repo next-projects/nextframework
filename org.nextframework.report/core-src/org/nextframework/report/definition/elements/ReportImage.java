@@ -5,11 +5,15 @@ import java.io.InputStream;
 
 public class ReportImage extends ReportItem {
 
-	private byte[] image;
+	private ByteArrayInputStream image;
 	private int height;
 	private String reference;
 
 	public ReportImage(byte[] image, int width, int height) {
+		this(new ByteArrayInputStream(image), width, height);
+	}
+
+	public ReportImage(ByteArrayInputStream image, int width, int height) {
 		this.image = image;
 		this.width = width;
 		this.height = height;
@@ -43,7 +47,7 @@ public class ReportImage extends ReportItem {
 	 * @return
 	 */
 	public InputStream getInputStream() {
-		return new ByteArrayInputStream(image);
+		return image;
 	}
 
 	/**
