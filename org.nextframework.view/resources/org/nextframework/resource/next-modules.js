@@ -1648,7 +1648,6 @@ NextAjax.prototype.getFormData = function(formName){
 	formData.delete("ACTION");
 	formData.delete("suppressValidation");
 	formData.delete("suppressErrors");
-	formData.delete("form-token");
 	return formData;
 }
 
