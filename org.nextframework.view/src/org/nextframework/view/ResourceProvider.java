@@ -62,6 +62,11 @@ public class ResourceProvider {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String[] references = getReferences(request);
+		if (references == null) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+
 		String tipo = references[0];
 		String file = references[1];
 
@@ -122,9 +127,14 @@ public class ResourceProvider {
 	}
 
 	protected String[] getReferences(HttpServletRequest request) {
+
+		String requestResource = getRequestedResource(request);
+		if (requestResource == null) {
+			return null;
+		}
+
 		String tipo = null;
 		String file = null;
-		String requestResource = getRequestedResource(request);
 		int indexOfFile = requestResource.lastIndexOf('/');
 		if (indexOfFile < 0) {
 			if (requestResource.indexOf(".") > -1) {
@@ -137,6 +147,7 @@ public class ResourceProvider {
 			tipo = requestResource.substring(0, indexOfFile);
 			file = requestResource.substring(indexOfFile);
 		}
+
 		return new String[] { tipo, file };
 	}
 
@@ -144,8 +155,11 @@ public class ResourceProvider {
 		String requestURI = request.getRequestURI();
 		requestURI = requestURI.replace((CharSequence) "//", "/");
 		String servletPath = request.getServletPath();
-		int s = requestURI.indexOf(servletPath) + servletPath.length() + 1;
-		String requestResource = requestURI.substring(s);
+		int resourceIndex = requestURI.indexOf(servletPath) + servletPath.length() + 1;
+		if (requestURI.length() < resourceIndex) {
+			return null;
+		}
+		String requestResource = requestURI.substring(resourceIndex);
 		return requestResource;
 	}
 
@@ -185,10 +199,14 @@ public class ResourceProvider {
 	public long getLastModified(HttpServletRequest request) {
 
 		String[] references = getReferences(request);
+		if (references == null) {
+			return -1;
+		}
+
 		String tipo = references[0];
 		String file = references[1];
 
-		if (!tipo.equals(RESOURCE)) {
+		if (!RESOURCE.equals(tipo)) {
 			String chave = RESOURCE_LASTMOD + tipo + file;
 			Long last = (Long) request.getSession().getServletContext().getAttribute(chave);
 			if (last != null && last != -1) {
