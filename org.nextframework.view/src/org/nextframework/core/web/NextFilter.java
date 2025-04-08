@@ -124,6 +124,10 @@ public class NextFilter implements Filter {
 			//Toca o barco
 			chain.doFilter(request, response);
 
+			if (request.getAttribute(org.springframework.web.servlet.DispatcherServlet.EXCEPTION_ATTRIBUTE) != null) {
+				userProcessPrefix += " ERROR!";
+			}
+
 			//Marca fim do processo
 			long elapsed = (System.currentTimeMillis() - beginTime);
 			if (elapsed < 1000 * 10) {

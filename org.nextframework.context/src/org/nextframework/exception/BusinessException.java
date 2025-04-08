@@ -34,6 +34,10 @@ public class BusinessException extends ApplicationException implements MessageSo
 	private MessageSourceResolvable resolvable;
 	private String mensagem;
 
+	public BusinessException() {
+		super();
+	}
+
 	public BusinessException(Throwable cause) {
 		super(cause);
 	}
