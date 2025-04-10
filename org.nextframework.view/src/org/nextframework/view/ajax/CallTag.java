@@ -24,7 +24,6 @@
 package org.nextframework.view.ajax;
 
 import org.nextframework.controller.MultiActionController;
-import org.nextframework.core.web.NextWeb;
 import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
 import org.nextframework.web.WebUtils;
@@ -74,25 +73,26 @@ public class CallTag extends BaseTag {
 
 	@Override
 	protected void doComponent() throws Exception {
-		NextWeb.getRequestContext();
-		getOut().println("<script language=\"javascript\">");
-		url = getRequest().getContextPath() + (url == null ? WebUtils.getFirstUrl() : url);
+
+		url = url == null ? WebUtils.getFirstFullUrl() : (url.startsWith("/") ? WebUtils.getFullUrl(getRequest(), url) : url);
+		url = WebUtils.rewriteUrl(url);
+
 		if (getParameters().startsWith("javascript:")) {
 			parameters = getParameters().substring("javascript:".length());
 		} else {
 			parameters = "'" + Util.strings.escape(getParameters()) + "'";
 		}
-		if (Util.strings.isEmpty(callback)) {
-			callback = "function (data){try{eval(data);}catch(e){alert('Erro ao executar callback!\\n'+e.name+': '+e.message); document.write('<b>Código enviado pelo servidor</b><br><hr>'+data.replace(/\\n/g, '<BR>'));}}";
-			//callback = "function (data){eval(data);}";
-		}
+
 		if (!functionName.contains("(")) {
 			functionName = functionName + "()";
 		}
-		getOut().println("    function " + functionName + "{");
-		getOut().println("        sendRequest('" + url + "', '" + MultiActionController.ACTION_PARAMETER + "=" + action + "&' + " + parameters + ", 'POST', " + callback + ", ajaxcallerrorcallback, arguments);");
-		getOut().println("    }");
-		getOut().println("</script>");
+
+		includeJspTemplate();
+
+	}
+
+	public String getActionParameter() {
+		return MultiActionController.ACTION_PARAMETER;
 	}
 
 	public String getFunctionName() {
