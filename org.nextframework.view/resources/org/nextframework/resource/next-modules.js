@@ -1640,6 +1640,7 @@ NextAjax.prototype.send = function(options){
 				options.afterComplete(request.responseText, options.callbackParameters, request);
 			} else if(request.status && request.status == 404){
 				options.on404(request.responseText, request.status, options.callbackParameters, request);
+				options.afterError(request.responseText, request.status, options.callbackParameters, request);
 			} else {
 				options.onError(request.responseText, request.status, options.callbackParameters, request);
 				options.afterError(request.responseText, request.status, options.callbackParameters, request);
