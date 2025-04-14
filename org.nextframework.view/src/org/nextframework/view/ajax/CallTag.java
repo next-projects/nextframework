@@ -75,7 +75,6 @@ public class CallTag extends BaseTag {
 	protected void doComponent() throws Exception {
 
 		url = url == null ? WebUtils.getFirstFullUrl() : (url.startsWith("/") ? WebUtils.getFullUrl(getRequest(), url) : url);
-		url = WebUtils.rewriteUrl(url);
 
 		if (getParameters().startsWith("javascript:")) {
 			parameters = getParameters().substring("javascript:".length());
