@@ -30,6 +30,7 @@ import java.util.Set;
 import org.nextframework.core.standard.Next;
 import org.nextframework.exception.ApplicationException;
 import org.nextframework.exception.BusinessException;
+import org.nextframework.service.ServiceException;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 
@@ -54,6 +55,8 @@ public class ExceptionUtils {
 					exTipo = Next.getMessageSource().getMessage(clazz.getName(), null, locale);
 				} catch (NoSuchMessageException e) {
 					//Não encontrado...
+				} catch (ServiceException e) {
+					//Serviço não encontrado...
 				}
 				clazz = clazz.getSuperclass();
 			} while (exTipo == null && clazz != Object.class);
@@ -65,8 +68,15 @@ public class ExceptionUtils {
 			String exMsg = null;
 
 			if (cause instanceof MessageSourceResolvable) {
-				exMsg = Next.getMessageSource().getMessage((MessageSourceResolvable) cause, locale);
-			} else {
+				try {
+					exMsg = Next.getMessageSource().getMessage((MessageSourceResolvable) cause, locale);
+				} catch (NoSuchMessageException e) {
+					//Não encontrado...
+				} catch (ServiceException e) {
+					//Serviço não encontrado...
+				}
+			}
+			if (exMsg == null) {
 				exMsg = cause.getMessage();
 				if (exMsg == null) {
 					exMsg = cause.toString();
