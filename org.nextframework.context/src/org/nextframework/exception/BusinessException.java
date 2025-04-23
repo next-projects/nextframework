@@ -36,10 +36,7 @@ public class BusinessException extends ApplicationException implements MessageSo
 
 	public BusinessException() {
 		super();
-	}
-
-	public BusinessException(Throwable cause) {
-		super(cause);
+		this.mensagem = "";
 	}
 
 	public BusinessException(String code) {
@@ -58,6 +55,11 @@ public class BusinessException extends ApplicationException implements MessageSo
 		super();
 		this.resolvable = msr;
 		this.mensagem = msr.toString();
+	}
+
+	public BusinessException(Throwable cause) {
+		super(cause);
+		this.mensagem = "";
 	}
 
 	public BusinessException(Throwable cause, String code) {
@@ -85,17 +87,17 @@ public class BusinessException extends ApplicationException implements MessageSo
 
 	@Override
 	public String[] getCodes() {
-		return this.resolvable.getCodes();
+		return this.resolvable != null ? this.resolvable.getCodes() : null;
 	}
 
 	@Override
 	public Object[] getArguments() {
-		return this.resolvable.getArguments();
+		return this.resolvable != null ? this.resolvable.getArguments() : null;
 	}
 
 	@Override
 	public String getDefaultMessage() {
-		return this.resolvable.getDefaultMessage();
+		return this.resolvable != null ? this.resolvable.getDefaultMessage() : null;
 	}
 
 	@Override

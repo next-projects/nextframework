@@ -89,10 +89,12 @@ public class ExceptionUtils {
 				}
 			}
 
-			allDesc += (allDesc.length() == 0 ? "" : " -> ") +
-					(exTipo != null ? exTipo : "") +
-					(exTipo != null && exMsg != null ? ": " : "") +
-					(exMsg != null ? exMsg : "");
+			if (Util.strings.isNotEmpty(exTipo) || Util.strings.isNotEmpty(exMsg)) {
+				allDesc += (allDesc.length() == 0 ? "" : " -> ") +
+						(exTipo != null ? exTipo : "") +
+						(exTipo != null && exMsg != null ? ": " : "") +
+						(exMsg != null ? exMsg : "");
+			}
 
 			if (!includeCauses) {
 				break;
