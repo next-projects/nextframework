@@ -216,12 +216,12 @@ function aplicaHTML(html, elemento){
 }
 
 function globalEval(src) {
-    if (window.execScript) {
-        window.execScript(src);
-        return;
-    }
-    var fn = function() {
-        window.eval.call(window,src);
-    };
-    fn();
+	if (window.execScript) {
+		window.execScript(src);
+		return;
+	}
+	var fn = function() {
+		window.eval.call(window,src);
+	};
+	fn();
 };

@@ -556,7 +556,9 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				.entity(bean)
 				.unique();
 
-		Objects.requireNonNull(newBean, "Bean não encontrado!");
+		if (newBean == null) {
+			throw new NullPointerException(bean.getClass().getSimpleName() + " id " + HibernateUtils.getId(getHibernateTemplate(), bean) + " não encontrado!");
+		}
 
 		Util.beans.copyAttributes(newBean, bean, attributesToLoad);
 

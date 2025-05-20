@@ -109,7 +109,7 @@
 		<sequential>
 			<echo>Building Target: @{target} ${next.workspace.dir}</echo>
 			<subant target="next-module-execute-task">
-				<reference refid="ivy.instance" />
+				<!--<reference refid="ivy.instance" />-->
 				<property name="next.module.execute.task.name" value="@{target}"/>
 				<propertyset refid="@{parameters}"/>
 				<fileset dir="${next.workspace.dir}" 
@@ -149,7 +149,7 @@
 	<target name="next-module-execute-task" depends="show-module-info" unless="module.disabled">
 		<echo>${next.module.execute.task.name}: ${basedir}</echo>
 		<antcall target="${next.module.execute.task.name}">
-			<reference refid="ivy.instance" />
+			<!--<reference refid="ivy.instance" />-->
 		</antcall>
 	</target>
 

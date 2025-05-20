@@ -142,7 +142,7 @@
 		
 	<target name="retrieve-ivy-dependencies">
 		<ant antfile="${ant.file.Project Dependencies Download}" target="copy-module-dependencies">
-			<reference refid="ivy.instance" />
+			<!--<reference refid="ivy.instance" />-->
 		</ant>
 	</target>
 			
@@ -157,7 +157,7 @@
 		<attribute name="workspace" default="."/>
 		<sequential>
 			<ant antfile="../@{workspace}/@{name}/build-module.xml" target="${project.module.ant.target}" inheritall="false">
-				<reference refid="ivy.instance" />
+				<!--<reference refid="ivy.instance" />-->
 				<property name="deploy.dir" value="${deploy.dir}"/>
 				<property name="module.name" value="@{name}"/>
 			</ant>
@@ -170,8 +170,7 @@
 		<sequential>
 			<echo message="Building dynamic-module @{name}"></echo>
 			<ant antfile="${ant.file}" target="${project.module.ant.target}" inheritall="false" dir="../@{workspace}/@{name}">
-				
-				<reference refid="ivy.instance" />
+				<!--<reference refid="ivy.instance" />-->
 				<property name="deploy.dir" value="${deploy.dir}"/>
 				<property name="module.name" value="@{name}"/>
 			</ant>
