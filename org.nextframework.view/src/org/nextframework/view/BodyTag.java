@@ -38,7 +38,7 @@ public class BodyTag extends ColumnChildTag {
 
 	@Override
 	protected void doColumnChild(Status status) throws JspException, IOException {
-		//Quando no data grid vinha uma célula vazia, ele atrapalhava o estilo css, entao foi adicionado &nbsp; quando nao possuir nenhum valor.
+		//Quando no data grid vinha uma cÃ©lula vazia, ele atrapalhava o estilo css, entao foi adicionado &nbsp; quando nao possuir nenhum valor.
 		//modificado por pedrogoncalves em 20/04/2007
 		if (dataGrid.getCurrentStatus() == Status.BODY) {
 			String body = getBody();

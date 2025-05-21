@@ -35,7 +35,7 @@ public class Phone implements Serializable {
 	private String value;
 
 	/**
-	 * @deprecated Utilize o mÈtodo que recebe uma String, esse mÈtodo sÛ existe por causa do hibernate
+	 * @deprecated Utilize o m√©todo que recebe uma String, esse m√©todo s√≥ existe por causa do hibernate
 	 */
 	@Deprecated
 	public Phone() {
@@ -51,7 +51,7 @@ public class Phone implements Serializable {
 
 	private void checkPattern(String value) throws IllegalArgumentException {
 		if (!value.trim().equals("") && !value.matches("(\\(\\d{2}\\)( )?)?\\d{4,5}-\\d{4}|\\d{8}|\\d{10}")) {
-			throw new IllegalArgumentException("N„o foi possÌvel converter \"" + value + "\" para um telefone v·lido");
+			throw new IllegalArgumentException("N√£o foi poss√≠vel converter \"" + value + "\" para um telefone v√°lido");
 		}
 	}
 
@@ -104,7 +104,7 @@ public class Phone implements Serializable {
 				}
 				return builder.toString();
 			} catch (IndexOutOfBoundsException e) {
-				//System.out.println("\n************************\nTelefone inv·lido: "+value);
+				//System.out.println("\n************************\nTelefone inv√°lido: "+value);
 				return value;
 			}
 		}

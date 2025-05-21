@@ -9,12 +9,12 @@ public class LegacyReportUtils {
 	public static ReportGenerator getReportGenerator() {
 		if (reportGenerator == null) {
 			try {
-				// se nao estiver em um contexto Web d· pau aqui
+				// se nao estiver em um contexto Web d√° pau aqui
 				ReportNameResolverImpl nameResolverImpl = new ReportNameResolverImpl("/WEB-INF/relatorio/", ".jasper", WebContext.getServletContext());
 				ReportTranslatorImpl translatorImpl = new ReportTranslatorImpl(nameResolverImpl);
 				reportGenerator = new ReportGeneratorImpl(translatorImpl);
 			} catch (ClassCastException e) {
-				throw new ReportException("A geraÁ„o de relatÛrios sÛ pode ser feita em um contexto WEB");
+				throw new ReportException("A gera√ß√£o de relat√≥rios s√≥ pode ser feita em um contexto WEB");
 			}
 		}
 		return reportGenerator;

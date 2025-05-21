@@ -125,7 +125,7 @@ public class ReportDesignControllerUtil {
 				if (m2.getAnnotation(Id.class) != null) {
 					return 1;
 				}
-				//Restante ordena pela descriÁ„o
+				//Restante ordena pela descri√ß√£o
 				String o1Desc = toFullDescription(m1);
 				String o2Desc = toFullDescription(m2);
 				return o1Desc.compareTo(o2Desc);
@@ -278,7 +278,7 @@ public class ReportDesignControllerUtil {
 			numberType = isNumberType(propertyClass);
 		}
 
-		//Campos normais da entidade e que n„o sejam extendidos, ou que sejam filtr·veis. Nenhum n˙mero.
+		//Campos normais da entidade e que n√£o sejam extendidos, ou que sejam filtr√°veis. Nenhum n√∫mero.
 		boolean filterable = (!trans && !extended || filter) && !numberType;
 		return filterable;
 	}
@@ -385,7 +385,7 @@ public class ReportDesignControllerUtil {
 	public void insertMaxResultsWarning(ReportDefinition definition, int maxResults) {
 		int total = getResultCount(definition);
 		if (total == maxResults) {
-			ReportLabel label = new ReportLabel("Obs: Apenas os " + maxResults + " primeiros registros est„o sendo mostrados.");
+			ReportLabel label = new ReportLabel("Obs: Apenas os " + maxResults + " primeiros registros est√£o sendo mostrados.");
 			label.getStyle().setForegroundColor(Color.RED);
 			label.getStyle().setFontSize(6);
 			label.getStyle().setItalic(true);
@@ -512,7 +512,7 @@ public class ReportDesignControllerUtil {
 				ReportField reportField = propertyDescriptor.getAnnotation(ReportField.class);
 				Id idField = propertyDescriptor.getAnnotation(Id.class);
 				if (reportField == null && idField == null) {
-					throw new BusinessException("org.nextframework.report.generator.mvc.ReportDesignController.invalidProperty", new Object[] { property, reportElement.getData().getMainType().getSimpleName() }, "N„o È possÌvel executar o relatÛrio, pois a propriedade {0} de {1} n„o È permitida!");
+					throw new BusinessException("org.nextframework.report.generator.mvc.ReportDesignController.invalidProperty", new Object[] { property, reportElement.getData().getMainType().getSimpleName() }, "N√£o √© poss√≠vel executar o relat√≥rio, pois a propriedade {0} de {1} n√£o √© permitida!");
 				}
 			}
 		}

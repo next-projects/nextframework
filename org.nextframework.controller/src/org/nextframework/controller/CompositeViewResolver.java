@@ -104,18 +104,18 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 		}
 
 		if (baseView == null) {
-			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property baseView n„o pode ser null");
+			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property baseView n√£o pode ser null");
 		}
 
 		if (parameterName == null) {
-			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property parameterName n„o pode ser null");
+			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property parameterName n√£o pode ser null");
 		}
 
 		//url q seria usada
 		String previousURL = view.getUrl();
 		view.addStaticAttribute(parameterName, previousURL);
 		if (getServletContext().getResourceAsStream(previousURL) == null) {
-			log.warn("P·gina n„o existente: " + previousURL);
+			log.warn("P√°gina n√£o existente: " + previousURL);
 		}
 
 		view.setUrl(baseView);

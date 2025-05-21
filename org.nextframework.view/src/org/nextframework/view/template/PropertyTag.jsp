@@ -2,11 +2,11 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<%-- Ao utilizar PropertyTagFastRenderer, o renderizador pode renderizar a tag apenas em código java e o template não ser chamado nesse caso.
-     As modificações nesse arquivo devem ser refletidas no fastRenderer para manter a coerencia na renderização --%>
+<%-- Ao utilizar PropertyTagFastRenderer, o renderizador pode renderizar a tag apenas em cÃ³digo java e o template nÃ£o ser chamado nesse caso.
+     As modificaÃ§Ãµes nesse arquivo devem ser refletidas no fastRenderer para manter a coerencia na renderizaÃ§Ã£o --%>
 
 <n:property name="${propertyTag.name}">
-	${propertyTag.idConfig} <%-- Le os atributos da propriedade para saber se é ID --%>
+	${propertyTag.idConfig} <%-- LÃª os atributos da propriedade para saber se Ã© ID --%>
 	<c:choose>
 		<%-- column --%>
 		<c:when test="${propertyTag.renderAs == 'column'}">
@@ -37,7 +37,7 @@
 		</c:when>
 		<%-- id --%>
 		<c:when test="${propertyTag.entityId && empty value}">
-			<%-- Se a propriedade for ID e for nula, não escrever nada... Se for ID mas tiver valor, cai nas outras opções
+			<%-- Se a propriedade for ID e for nula, nÃ£o escrever nada... Se for ID mas tiver valor, cai nas outras opÃ§Ãµes
 			<c:if test="${propertyTag.mode == 'input'}">
 				<n:input pattern="${propertyTag.pattern}" selectOnePathParameters="${propertyTag.selectOnePathParameters}" insertPath="${propertyTag.insertPath}" holdValue="${propertyTag.holdValue}" showDeleteButton="${propertyTag.showDeleteButton}" optionalParams="${propertyTag.optionalParams}" transientFile="${propertyTag.transientFile}" autoSugestUniqueItem="${propertyTag.autoSugestUniqueItem}" onLoadItens="${propertyTag.onLoadItens}" useAjax="${propertyTag.useAjax}" showLabel="false" type="${propertyTag.type}" reloadOnChange="${propertyTag.reloadOnChange}" trueFalseNullLabels="${propertyTag.trueFalseNullLabels}" selectOnePath="${propertyTag.selectOnePath}" itens="${propertyTag.itens}"
 					includeBlank="${propertyTag.includeBlank}" cols="${propertyTag.cols}" rows="${propertyTag.rows}" write="${propertyTag.write}" dynamicAttributesMap="${propertyTag.dynamicAttributesMap}">

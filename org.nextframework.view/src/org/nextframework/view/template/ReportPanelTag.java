@@ -39,7 +39,7 @@ public class ReportPanelTag extends SimplePanelTag {
 		}
 
 		if (submitLabel == null) {
-			submitLabel = getDefaultViewLabel("submitLabel", "Gerar relatório");
+			submitLabel = getDefaultViewLabel("submitLabel", "Gerar relatÃ³rio");
 		}
 
 		includeJspTemplate();

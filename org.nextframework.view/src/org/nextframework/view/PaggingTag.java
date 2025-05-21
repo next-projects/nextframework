@@ -51,7 +51,7 @@ public class PaggingTag extends BaseTag {
 		int start = Math.max(1, currentPage + 1 - 4) - 1;
 		boolean start3pontos = start != 0;
 		int fim = Math.min(9 - (currentPage - start) + currentPage, totalNumberOfPages);
-		boolean fim3pontos = fim < totalNumberOfPages;//fim nao é incluido
+		boolean fim3pontos = fim < totalNumberOfPages;//fim nao Ã© incluido
 
 		getOut().println("<ul class=\"" + panelClass + "\">");
 

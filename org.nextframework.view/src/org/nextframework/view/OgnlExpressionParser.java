@@ -53,7 +53,7 @@ public class OgnlExpressionParser {
 				X toString = (X) value.toString();
 				return toString;
 			}
-			throw new ExpressionParseException("A express„o #{" + expression + "} retornou um objeto do tipo " + value.getClass().getName() + " era esperado " + expectedClass.getName() + "! N„o foi possÌvel fazer a convers„o");
+			throw new ExpressionParseException("A express√£o #{" + expression + "} retornou um objeto do tipo " + value.getClass().getName() + " era esperado " + expectedClass.getName() + "! N√£o foi poss√≠vel fazer a convers√£o");
 		}
 		@SuppressWarnings("unchecked")
 		X x = (X) value;

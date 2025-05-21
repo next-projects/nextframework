@@ -68,7 +68,7 @@ public class PropertyLayoutTag extends TemplateTag {
 
 	@Override
 	protected void applyDefaultStyleClasses() throws JspException {
-		//N„o aplica no fluxo natural.
+		//N√£o aplica no fluxo natural.
 	}
 
 	@Override
@@ -90,12 +90,12 @@ public class PropertyLayoutTag extends TemplateTag {
 		verifyRenderAs(configTag, findFirst);
 		verifyShowLabel(configTag);
 
-		//Aplica estilos padr„o apenas apÛs resolver o 'renderAs'
+		//Aplica estilos padr√£o apenas ap√≥s resolver o 'renderAs'
 		super.applyDefaultStyleClasses();
 
 		verifyColspan();
 
-		includeJspTemplate(); //se nao for possÌvel, utilizar renderizaÁ„o normal
+		includeJspTemplate(); //se nao for poss√≠vel, utilizar renderiza√ß√£o normal
 
 	}
 
@@ -139,11 +139,11 @@ public class PropertyLayoutTag extends TemplateTag {
 		}
 		if (showLabel == null) {
 			if (org.nextframework.view.template.PropertyTag.SINGLE.equals(renderAs)) {
-				showLabel = false; // nao faz muito sentido escreve sozinho o label, È melhor mandar escrever quando quiser
+				showLabel = false; // nao faz muito sentido escreve sozinho o label, √© melhor mandar escrever quando quiser
 			}
 		}
 		if (org.nextframework.view.template.PropertyTag.DOUBLE.equals(renderAs) || org.nextframework.view.template.PropertyTag.INVERT.equals(renderAs)) {
-			showLabel = false;//se for modo double n„o imprimir o label porque j· vai estar sendo escrito um
+			showLabel = false;//se for modo double n√£o imprimir o label porque j√° vai estar sendo escrito um
 		}
 		if (org.nextframework.view.template.PropertyTag.DOUBLELINE.equals(renderAs)) {
 			showLabel = true;

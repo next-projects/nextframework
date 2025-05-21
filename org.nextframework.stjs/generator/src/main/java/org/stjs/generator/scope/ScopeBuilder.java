@@ -154,7 +154,7 @@ public class ScopeBuilder extends ForEachNodeVisitor<Scope> {
 				"A compilationUnitScope was expected. Got %s", inputScope);
 
 		CompilationUnitScope scope = (CompilationUnitScope) inputScope;
-		// asterisk declaration have lower priority => process them first (JLS §7.5.2)
+		// asterisk declaration have lower priority => process them first (JLS Â§7.5.2)
 		if (n.getImports() != null) {
 
 			for (ImportDeclaration importDecl : n.getImports()) {

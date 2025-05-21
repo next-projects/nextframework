@@ -46,7 +46,7 @@ public class ByteValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È um n˙mero v·lido! Deve ser inteiro e estar entre -128 e 127";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© um n√∫mero v√°lido! Deve ser inteiro e estar entre -128 e 127";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

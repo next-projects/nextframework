@@ -19,7 +19,7 @@ public class InputTagChecklistComponent extends InputTagCheckboxBaseComponent {
 		super.prepare();
 
 		if (inputTag.getValue() instanceof Collection<?> || inputTag.getValue() != null && inputTag.getValue().getClass().isArray()) {
-			throw new NextException("O atributo value da tag input não pode ser um Collection ou Array quando o tipo for CHECKLIST. Você deve utilizar a tag property para montar esse input. Nesse caso deve ser explicitado qual é o valor desse checkbox ao invés de utilizar o value adquirido automaticamente pelo property. Coloque no atributo value desse input qual o valor que esse checkbox deve representar");
+			throw new NextException("O atributo value da tag input nÃ£o pode ser um Collection ou Array quando o tipo for CHECKLIST. VocÃª deve utilizar a tag property para montar esse input. Nesse caso deve ser explicitado qual Ã© o valor desse checkbox ao invÃ©s de utilizar o value adquirido automaticamente pelo property. Coloque no atributo value desse input qual o valor que esse checkbox deve representar");
 		}
 
 		Object itensValue = null;

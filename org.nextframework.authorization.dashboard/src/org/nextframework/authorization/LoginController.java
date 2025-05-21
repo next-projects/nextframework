@@ -33,7 +33,7 @@ public class LoginController extends MultiActionController implements Authentica
 	}
 
 	/**
-	 * Action que envia para a p·gina de login
+	 * Action que envia para a p√°gina de login
 	 */
 	@DefaultAction
 	public String doPage(UserForm user) {
@@ -64,40 +64,40 @@ public class LoginController extends MultiActionController implements Authentica
 	}
 
 	/**
-	 * Efetua o login do usu·rio
+	 * Efetua o login do usu√°rio
 	 */
 	public String doLogin(UserForm user) {
 
 		String login = user.getUsername();
 
-		//se foi passado o login na requisiÁ„o, iremos verificar se o usu·rio existe e a senha est· correta
+		//se foi passado o login na requisi√ß√£o, iremos verificar se o usu√°rio existe e a senha est√° correta
 		if (login != null) {
 
-			//buscamos o usu·rio do banco pelo login
+			//buscamos o usu√°rio do banco pelo login
 			User userByLogin = authorizationDAO.findUserByUsername(login);
 
-			// se o usu·rio existe e a senha est· correta
+			// se o usu√°rio existe e a senha est√° correta
 			String passwordPersisted = userByLogin != null ? userByLogin.getPassword() : null;
 			String passwordProvided = user.getPassword();
 
 			if (userByLogin != null && validPassword(passwordPersisted, passwordProvided)) {
 
-				//Setando o atributo de seÁ„o USER fazemos o login do usu·rio no sistema.
+				//Setando o atributo de se√ß√£o USER fazemos o login do usu√°rio no sistema.
 				getRequest().setUserAttribute("USER", userByLogin);
 
-				//Limpamos o cache de permissıes o menu.
-				//O menu ser· refeito levando em consideraÁ„o as permissıes do usu·rio
+				//Limpamos o cache de permiss√µes o menu.
+				//O menu ser√° refeito levando em considera√ß√£o as permiss√µes do usu√°rio
 				//TODO REBUILD MENU CACHE
 				//getRequest().setUserAttribute(MenuTag.MENU_CACHE_MAP, null);
 				return "redirect:" + afterLoginRedirectTo();
 			}
 
-			//Se o login e/ou a senha n„o estiverem corretos, avisar o usu·rio
+			//Se o login e/ou a senha n√£o estiverem corretos, avisar o usu√°rio
 			getRequest().setAttribute("invalidLogin", true);
-			getRequest().addMessage(Util.objects.newMessage("next.login.invalidLogin", null, "Login e/ou senha inv·lidos!"), MessageType.ERROR);
+			getRequest().addMessage(Util.objects.newMessage("next.login.invalidLogin", null, "Login e/ou senha inv√°lidos!"), MessageType.ERROR);
 		}
 
-		//limpar o campo senha, e enviar para a tela de login j· que o processo falhou
+		//limpar o campo senha, e enviar para a tela de login j√° que o processo falhou
 		user.setPassword(null);
 
 		return doPage(user);

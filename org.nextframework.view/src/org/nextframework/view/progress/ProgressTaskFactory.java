@@ -13,7 +13,7 @@ import org.nextframework.util.Util;
 public class ProgressTaskFactory {
 
 	/**
-	 * Executa a tarefa definida por ProgressTask em uma outra thread e retorna o monitor de progresso relacionado (ser· criado um monitor padr„o)
+	 * Executa a tarefa definida por ProgressTask em uma outra thread e retorna o monitor de progresso relacionado (ser√° criado um monitor padr√£o)
 	 * @param task
 	 * @return
 	 */
@@ -25,7 +25,7 @@ public class ProgressTaskFactory {
 
 	/**
 	 * Executa a tarefa definida por ProgressTask em uma outra thread.
-	 * O monitor usado deve ser passado como par‚metro. 
+	 * O monitor usado deve ser passado como par√¢metro. 
 	 * @param task
 	 * @return
 	 */

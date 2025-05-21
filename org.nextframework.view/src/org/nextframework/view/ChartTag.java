@@ -23,7 +23,7 @@ public class ChartTag extends BaseTag {
 		}
 		ChartRenderer renderer = ChartRendererFactory.getRendererForOutput(ChartRendererGoogleTools.TYPE);
 		if (renderer == null) {
-			throw new RuntimeException("Renderer para o tipo " + ChartRendererGoogleTools.TYPE + " n„o encontrado.");
+			throw new RuntimeException("Renderer para o tipo " + ChartRendererGoogleTools.TYPE + " n√£o encontrado.");
 		}
 		this.chartRendered = renderer.renderChart(chart);
 

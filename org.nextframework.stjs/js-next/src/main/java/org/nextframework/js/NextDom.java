@@ -48,7 +48,7 @@ public abstract class NextDom {
 	public abstract <X extends Input> X newInput();
 
 	/**
-	 * Cria um wrapper para o elemento. Se o elemento j· possui um wrapper, retorna o wrapper j· criado.
+	 * Cria um wrapper para o elemento. Se o elemento j√° possui um wrapper, retorna o wrapper j√° criado.
 	 * @param el
 	 * @return
 	 */

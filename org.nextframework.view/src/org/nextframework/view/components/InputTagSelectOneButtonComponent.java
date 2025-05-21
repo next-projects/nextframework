@@ -13,13 +13,13 @@ public class InputTagSelectOneButtonComponent extends InputTagSelectComponent {
 
 	@Override
 	protected InputTag prepareComboReload(ComboReloadGroupTag comboReload) {
-		inputTag.setItens(new ArrayList<Object>()); // se for select_one_button n„o existe lista
+		inputTag.setItens(new ArrayList<Object>()); // se for select_one_button n√£o existe lista
 		return comboReload.getLastInput(inputTag);
 	}
 
 	public String getSelectOneButtonOnClick() {
 		if (inputTag.getSelectOnePath() == null) {
-			throw new NextException("Quando o tipo do input for select-one-button o atributo selectOnePath È obrigatÛrio");
+			throw new NextException("Quando o tipo do input for select-one-button o atributo selectOnePath √© obrigat√≥rio");
 		}
 		String contextPath = inputTag.getRequest().getContextPath();
 		String fullPath = contextPath + SelecionarCadastrarServlet.SELECIONAR_CADASTRAR_PATH + inputTag.getSelectOnePath();
@@ -41,7 +41,7 @@ public class InputTagSelectOneButtonComponent extends InputTagSelectComponent {
 			typeString = ((Class<?>) inputTag.getType()).getName();
 		} else {
 			//throw new NextException("Cannot use select-one-button with type not set with class.");
-			//log.warn("O atributo type foi informado com o valor "+type+" para um select-one-button ("+getName()+"). Isso poder· ocasionar erros. Tente n„o utilizar o atributo type para esse input. Use apenas selectOnePath. " );
+			//log.warn("O atributo type foi informado com o valor "+type+" para um select-one-button ("+getName()+"). Isso poder√° ocasionar erros. Tente n√£o utilizar o atributo type para esse input. Use apenas selectOnePath. " );
 		}
 		String windowWidth = "window.document.body.clientWidth";
 		String windowHeight = "window.document.body.clientHeight";

@@ -63,7 +63,7 @@ public class ReportNameResolverImpl implements ReportNameResolver {
 	public InputStream resolveName(String name) {
 		InputStream resourceAsStream = servletContext.getResourceAsStream(getPrefix() + name + getSuffix());
 		if (resourceAsStream == null) {
-			throw new NullPointerException("RelatÛrio n„o encontrado! " + name);
+			throw new NullPointerException("Relat√≥rio n√£o encontrado! " + name);
 		}
 		return resourceAsStream;
 	}

@@ -38,7 +38,7 @@ public class AuthorizationHandlerInterceptor implements HandlerInterceptor {
 		AuthorizationManager authorizationManager = Authorization.getAuthorizationManager();
 		boolean autorized = authorizationManager.isAuthorized(WebUtils.getRequestModuleAndControllerURL(), WebUtils.getRequestAction());
 		if (!autorized) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Sem permissão para acessar conteúdo");
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Sem permissÃ£o para acessar conteÃºdo");
 			return false;
 		}
 		return true;

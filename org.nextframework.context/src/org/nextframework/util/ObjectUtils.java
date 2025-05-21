@@ -110,7 +110,7 @@ public class ObjectUtils {
 	@SuppressWarnings("all")
 	public Method findMethod(Object object, String methodName, Class... arguments) {
 		if (object == null) {
-			throw new NullPointerException("N„o foi possÌvel encontrar mÈtodo " + methodName + ": objeto nulo ");
+			throw new NullPointerException("N√£o foi poss√≠vel encontrar m√©todo " + methodName + ": objeto nulo ");
 		}
 		try {
 			Method[] methods = object.getClass().getMethods();
@@ -149,7 +149,7 @@ public class ObjectUtils {
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException("MÈtodo " + methodName + " n„o encontrado na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("M√©todo " + methodName + " n√£o encontrado na classe " + object.getClass().getSimpleName(), e);
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException(e);
 		}
@@ -209,11 +209,11 @@ public class ObjectUtils {
 		try {
 			return findMethod.invoke(object, params);
 		} catch (IllegalArgumentException e) {
-			throw new RuntimeException("Argumentos inv·lidos ao chamar mÈtodo " + methodName + " na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Argumentos inv√°lidos ao chamar m√©todo " + methodName + " na classe " + object.getClass().getSimpleName(), e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException("Acesso ilegal ao chamar mÈtodo " + methodName + " da classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Acesso ilegal ao chamar m√©todo " + methodName + " da classe " + object.getClass().getSimpleName(), e);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException("MÈtodo " + methodName + " lanÁou exeÁ„o " + e.getClass().getSimpleName(), e);
+			throw new RuntimeException("M√©todo " + methodName + " lan√ßou exe√ß√£o " + e.getClass().getSimpleName(), e);
 		}
 	}
 
@@ -222,11 +222,11 @@ public class ObjectUtils {
 		try {
 			return findMethod.invoke(object, params);
 		} catch (IllegalArgumentException e) {
-			throw new RuntimeException("Argumentos inv·lidos ao chamar mÈtodo " + methodName + " na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Argumentos inv√°lidos ao chamar m√©todo " + methodName + " na classe " + object.getClass().getSimpleName(), e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException("Acesso ilegal ao chamar mÈtodo " + methodName + " na classe " + object.getClass().getSimpleName(), e);
+			throw new RuntimeException("Acesso ilegal ao chamar m√©todo " + methodName + " na classe " + object.getClass().getSimpleName(), e);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException("MÈtodo " + methodName + " lanÁou exeÁ„o " + e.getTargetException().getClass().getSimpleName(), e.getTargetException());
+			throw new RuntimeException("M√©todo " + methodName + " lan√ßou exe√ß√£o " + e.getTargetException().getClass().getSimpleName(), e.getTargetException());
 		}
 	}
 

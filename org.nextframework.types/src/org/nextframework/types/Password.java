@@ -29,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation que indica que a propriedade é um password. Usado no input para mostrar *
+ * Annotation que indica que a propriedade Ã© um password. Usado no input para mostrar *
  * Deve ser colocado no metodo get da propriedade
  * @author rogelgarcia
  *

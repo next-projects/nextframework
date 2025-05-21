@@ -80,7 +80,7 @@ public class ProgressMonitor implements IProgressMonitor {
 		return retorno;
 	}
 
-	/* Métodos da implementação */
+	/* MÃ©todos da implementaÃ§Ã£o */
 	public List<Object> getTasks() {
 		return tasks;
 	}

@@ -35,7 +35,7 @@ public class InputTagFileComponent extends InputTagComponent {
 			String fileName = getFileName();
 			if (!VAZIO.equals(fileName)) {
 				Long cdfile = ((File) inputTag.getValue()).getCdfile();
-				if (cdfile == null) {//temos um arquivo sem ID com conteúdo
+				if (cdfile == null) {//temos um arquivo sem ID com conteÃºdo
 					if (ServiceFactory.getService(ViewConfig.class).isPersistTemporaryFiles()) {
 						long tempFileId = DownloadFileServlet.getNewTempFileId();
 						try {
@@ -80,7 +80,7 @@ public class InputTagFileComponent extends InputTagComponent {
 			try {
 				cdfile = ((File) inputTag.getValue()).getCdfile();
 			} catch (Exception e) {
-				return "<span id=\"" + inputTag.getName() + "_div\" style=\"color: red\"><B>Ocorreu um erro ao adquirir o código do arquivo.</B> " + e.getMessage() + "</span>";
+				return "<span id=\"" + inputTag.getName() + "_div\" style=\"color: red\"><B>Ocorreu um erro ao adquirir o cÃ³digo do arquivo.</B> " + e.getMessage() + "</span>";
 			}
 
 			// dar autorizacao para fazer o download do arquivo

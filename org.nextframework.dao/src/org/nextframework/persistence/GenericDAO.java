@@ -231,7 +231,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	private Map<String, QueryBuilder<BEAN>> queryWithSimpleFieldsCache = new HashMap<String, QueryBuilder<BEAN>>();
 
 	/**
-	 * Retorna a query contendo apenas o @Id e o @DescriptionProperty, alÈm de campos extras.
+	 * Retorna a query contendo apenas o @Id e o @DescriptionProperty, al√©m de campos extras.
 	 */
 	protected QueryBuilder<BEAN> queryWithSimpleFields(String... extraFields) {
 
@@ -330,7 +330,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 					if (otm != null) {
 
 						if (!mainAttribute.equals(field)) {
-							throw new IllegalArgumentException("Atributos OneToMany n„o podem ter sub-atributos especificados com ponto!");
+							throw new IllegalArgumentException("Atributos OneToMany n√£o podem ter sub-atributos especificados com ponto!");
 						}
 
 						query.fetchCollection(mainAttribute);
@@ -348,7 +348,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 						} else {
 
 							if (!mainAttribute.equals(field)) {
-								throw new IllegalArgumentException("Atributos primitivos n„o podem ter sub-atributos especificados com ponto!");
+								throw new IllegalArgumentException("Atributos primitivos n√£o podem ter sub-atributos especificados com ponto!");
 							}
 
 							select += (select.length() == 0 ? "" : ", ") + (field.contains(".") ? field : fromAlias + "." + field);
@@ -358,14 +358,14 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 					}
 
 				} else {
-					throw new IllegalArgumentException("O atributo " + mainAttribute + " È inv·ldo!");
+					throw new IllegalArgumentException("O atributo " + mainAttribute + " √© inv√°ldo!");
 				}
 
 			}
 
 			if (Util.strings.isNotEmpty(select)) {
 
-				//Se apenas 1 atributo foi informado, È importante forÁar um atributo simples para que o select tenha mais de 1 coluna.
+				//Se apenas 1 atributo foi informado, √© importante for√ßar um atributo simples para que o select tenha mais de 1 coluna.
 				if (!select.contains(",")) {
 					BeanDescriptor beanDescriptor = BeanDescriptorFactory.forClass(beanClass);
 					String idPropertyName = beanDescriptor.getIdPropertyName();
@@ -421,7 +421,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	}
 
 	/**
-	 * Cria um saveOrUpdateStrategy e salva o objeto (N„o executa)
+	 * Cria um saveOrUpdateStrategy e salva o objeto (N√£o executa)
 	 * @param entity
 	 */
 	protected SaveOrUpdateStrategy save(Object entity) {
@@ -437,7 +437,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 					@Override
 					public Object doInHibernate(Session session) throws HibernateException {
 						session.flush();
-						session.clear(); //Importante limpar o cache dos beans na transaÁ„o, pois objetos s„o carregados dentro do mÈtodo saveFile e o cache atrapalha
+						session.clear(); //Importante limpar o cache dos beans na transa√ß√£o, pois objetos s√£o carregados dentro do m√©todo saveFile e o cache atrapalha
 						fileDAO.saveFile(bean, pd.getName());
 						return null;
 					}
@@ -459,7 +459,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	}
 
 	/**
-	 * Cria um saveOrUpdateStrategy e salva o objeto (N„o executa)
+	 * Cria um saveOrUpdateStrategy e salva o objeto (N√£o executa)
 	 * @param entity
 	 */
 	protected SaveOrUpdateStrategy save(Object entity, boolean clearSession) {
@@ -533,7 +533,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	public BEAN load(BEAN bean, String[] attributesToLoad) {
 
 		if (bean == null || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
-			throw new IllegalArgumentException("Para carregar o atributo de algum bean È necess·rio informar um bean j· persistido e os atributos");
+			throw new IllegalArgumentException("Para carregar o atributo de algum bean √© necess√°rio informar um bean j√° persistido e os atributos");
 		}
 
 		return queryWithFields(attributesToLoad)
@@ -542,14 +542,14 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	}
 
 	/** Carrega os atributos de um bean.
-	 *  @param bean Entidade com a PK definida que ser· usada como referencia.
+	 *  @param bean Entidade com a PK definida que ser√° usada como referencia.
 	 *  @param attributesToLoad Array de strings com os nomes dos atributos que devem ser carregados.
 	 **/
 	@SuppressWarnings("all")
 	public void loadAttributes(BEAN bean, String[] attributesToLoad) {
 
 		if (bean == null || attributesToLoad == null || attributesToLoad.length == 0 || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
-			throw new IllegalArgumentException("Para carregar o atributo de algum bean È necess·rio informar um bean j· persistido e os atributos!");
+			throw new IllegalArgumentException("Para carregar o atributo de algum bean √© necess√°rio informar um bean j√° persistido e os atributos!");
 		}
 
 		BEAN newBean = queryWithFields(attributesToLoad)
@@ -557,7 +557,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				.unique();
 
 		if (newBean == null) {
-			throw new NullPointerException(bean.getClass().getSimpleName() + " id " + HibernateUtils.getId(getHibernateTemplate(), bean) + " n„o encontrado!");
+			throw new NullPointerException(bean.getClass().getSimpleName() + " id " + HibernateUtils.getId(getHibernateTemplate(), bean) + " n√£o encontrado!");
 		}
 
 		Util.beans.copyAttributes(newBean, bean, attributesToLoad);
@@ -567,7 +567,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	public void loadDescriptionProperty(BEAN bean, String... extraFields) {
 
 		if (bean == null || HibernateUtils.getId(getHibernateTemplate(), bean) == null) {
-			throw new IllegalArgumentException("Para carregar o atributo de algum bean È necess·rio informar um bean j· persistido!");
+			throw new IllegalArgumentException("Para carregar o atributo de algum bean √© necess√°rio informar um bean j√° persistido!");
 		}
 
 		QueryBuilder<BEAN> query = queryWithSimpleFields(extraFields);
@@ -575,7 +575,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 				.entity(bean)
 				.unique();
 
-		Objects.requireNonNull(newBean, "Bean n„o encontrado!");
+		Objects.requireNonNull(newBean, "Bean n√£o encontrado!");
 
 		String[] simpleFields = getSimpleFields();
 		Util.beans.copyAttributes(newBean, bean, simpleFields);
@@ -588,7 +588,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		}
 		QueryBuilder<BEAN> query = query()
 				.entity(bean);
-		//È provavel que se existir uma propriedade do tipo File ela deva ser carregada
+		//√© provavel que se existir uma propriedade do tipo File ela deva ser carregada
 		if (autoManageFileProperties() && fileDAO != null) {
 			for (PropertyDescriptor pd : fileProperties) {
 				query.leftOuterJoinFetch(query.getAlias() + "." + pd.getName());
@@ -660,7 +660,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		Class<?> propertyClass = Util.objects.getRealClass(o.getClass());
 		String[] propertiesForClass = findPropertiesForClass(propertyClass);
 		if (propertiesForClass.length == 0 || propertiesForClass.length > 1) {
-			throw new IllegalArgumentException("N„o foi possÌvel executar findBy(..). Deve haver apenas uma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName());
+			throw new IllegalArgumentException("N√£o foi poss√≠vel executar findBy(..). Deve haver apenas uma propriedade da classe " + propertyClass.getName() + " na classe " + this.beanClass.getName());
 		}
 
 		QueryBuilder<BEAN> query = queryWithSimpleFields(extraFields);
@@ -702,14 +702,14 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 	}
 
 	/**
-	 * Permite alterar a query que ser· utilizada no findForCombo.
+	 * Permite alterar a query que ser√° utilizada no findForCombo.
 	 */
 	protected void updateFindForComboQuery(QueryBuilder<BEAN> query) {
 	}
 
 	public ResultList<BEAN> loadListModel(ListViewFilter filter) {
 		QueryBuilder<BEAN> query = queryWithOrderBy();
-		if (orderBy == null) {//ordenaÁ„o default para telas de listagem de dados
+		if (orderBy == null) {//ordena√ß√£o default para telas de listagem de dados
 			query.orderBy(Util.strings.uncaptalize(beanClass.getSimpleName()) + ".id");
 		}
 		updateListQuery(query, filter);

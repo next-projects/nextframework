@@ -147,12 +147,12 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 		try {
 			if (model.getId() != null) {
-				CUSTOM_BEAN customBean = loadPersistedReportById(model.getId()); //FIXME Est· carregando 2 vezes
+				CUSTOM_BEAN customBean = loadPersistedReportById(model.getId()); //FIXME Est√° carregando 2 vezes
 				setAttribute("customBean", customBean);
 			}
 			setAttribute("customBeanClass", customBeanClass);
 		} catch (Exception e) {
-			throw new RuntimeException("N„o foi possÌvel carregar os dados customizados", e);
+			throw new RuntimeException("N√£o foi poss√≠vel carregar os dados customizados", e);
 		}
 
 		setAttribute("emptyList", new ArrayList<Object>());
@@ -205,15 +205,15 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		ServletRequestDataBinder binder = bind(request, customBean, false);
 		BindException errors = new BindException(binder.getBindingResult());
 		if (errors.hasErrors()) {
-			throw new NextException("N„o foi possÌvel fazer o bind dos dados customizados", errors);
+			throw new NextException("N√£o foi poss√≠vel fazer o bind dos dados customizados", errors);
 		}
 
-		//Faz leitura da composiÁ„o do relatÛrio
+		//Faz leitura da composi√ß√£o do relat√≥rio
 		ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
 
 		validateRequiredFields(model, reportElement);
 
-		//Define atributos b·sicos do custombean
+		//Define atributos b√°sicos do custombean
 		customBean.setId(model.getId());
 		customBean.setXml(model.getReportXml());
 		customBean.setReportPublic(model.getReportPublic());
@@ -226,7 +226,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 	private void validateRequiredFields(ReportDesignModel model, ReportElement reportElement) {
 
-		if (model.getSelectedType() == null) { //Se tiver no modo ediÁ„o de XML
+		if (model.getSelectedType() == null) { //Se tiver no modo edi√ß√£o de XML
 			return;
 		}
 
@@ -255,7 +255,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 
 		if (!possuiFiltro && camposRequired.length() > 0) {
-			throw new NextException("… necess·rio que pelo menos um dos filtros obrigatÛrios seja definido: " + camposRequired);
+			throw new NextException("√â necess√°rio que pelo menos um dos filtros obrigat√≥rios seja definido: " + camposRequired);
 		}
 
 	}
@@ -265,7 +265,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		try {
 			return showFilterView(request, model);
 		} catch (Exception e) {
-			throw new RuntimeException("N„o foi possÌvel executar o relatÛrio", e);
+			throw new RuntimeException("N√£o foi poss√≠vel executar o relat√≥rio", e);
 		}
 	}
 
@@ -329,7 +329,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 					if (monitor.getError() != null) {
 						request.addError(monitor.getError());
 					}
-					//Se houver resultado v·lido, apresenta. … possÌvel que o resultado seja um outro ModelAndView
+					//Se houver resultado v√°lido, apresenta. √â poss√≠vel que o resultado seja um outro ModelAndView
 					if (monitor.getReturn() != null) {
 						ReportDesignTask task = getTaskMap(request).get(model.getId());
 						ModelAndView customResult = task.showResults(request, model, monitor.getReturn());
@@ -342,7 +342,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 					monitorMap.remove(model.getId());
 					getTaskMap(request).remove(model.getId());
 				} else {
-					//Caso n„o existe, simplesmente envia o monitor para a barra de rolagem ser apresentada
+					//Caso n√£o existe, simplesmente envia o monitor para a barra de rolagem ser apresentada
 					request.setAttribute("progressMonitor", monitor);
 				}
 			}
@@ -454,7 +454,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 
 	protected ModelAndView executeTask(WebRequestContext request, ReportDesignModel model, final ReportDesignTask task) throws Exception {
 
-		//Faz a bindagem dos par‚metros
+		//Faz a bindagem dos par√¢metros
 		final ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
 		final Map<String, Object> filterMap = getFilterMap(request, model, reportElement, true);
 
@@ -465,14 +465,14 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		Map<Integer, ProgressMonitor> monitorMap = getMonitorMap(request);
 		synchronized (monitorMap) {
 
-			//Se j· existir, d· bomba
+			//Se j√° existir, d√° bomba
 			ProgressMonitor monitor = monitorMap.get(model.getId());
 			if (monitor != null) {
-				request.addError(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.alreadyRunning", null, "N„o È possÌvel executar o relatÛrio, pois uma requisiÁ„o ainda est· em andamento!"));
+				request.addError(Util.objects.newMessage("org.nextframework.report.generator.mvc.ReportDesignController.alreadyRunning", null, "N√£o √© poss√≠vel executar o relat√≥rio, pois uma requisi√ß√£o ainda est√° em andamento!"));
 				return showFilterView(request, model);
 			}
 
-			//Se n„o existir, inicia a thread e obtÈm o monitor
+			//Se n√£o existir, inicia a thread e obt√©m o monitor
 			ProgressTask pTask = new ProgressTask() {
 
 				@Override

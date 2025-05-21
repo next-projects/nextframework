@@ -158,7 +158,7 @@ public class InputTag extends BaseTag {
 
 	@Override
 	protected void applyDefaultStyleClasses() throws JspException {
-		//N„o aplica no fluxo natural.
+		//N√£o aplica no fluxo natural.
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class InputTag extends BaseTag {
 		inputTagHelper.autowireAttributes(this);
 		selectedType = inputTagHelper.chooseType(this);
 
-		//Aplica estilos padr„o apenas apÛs resolver o 'selectedType'
+		//Aplica estilos padr√£o apenas ap√≥s resolver o 'selectedType'
 		super.applyDefaultStyleClasses();
 
 		inputComponent = InputTagComponentManager.getInstance().getInputComponent(selectedType);
@@ -212,7 +212,7 @@ public class InputTag extends BaseTag {
 				BeanDescriptorFactory.forClass(class1).getPropertyDescriptor(name);
 			} catch (Exception e) {
 				getDynamicAttributesMap().put("style", "border: 1px solid red");
-				getDynamicAttributesMap().put("title", "Propriedade inv·lida: " + name);
+				getDynamicAttributesMap().put("title", "Propriedade inv√°lida: " + name);
 			}
 		}
 

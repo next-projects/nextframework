@@ -32,8 +32,8 @@ public class ChartDataBuilder {
 	}
 
 	/**
-	 * ConstrÛi um ChartData utilizando propriedades dos beans da lista para formar o grupo e as sÈries.<BR>
-	 * Ser· feito a contagem dos itens da lista para cada conjunto de grupo e sÈrie para formar os valores.
+	 * Constr√≥i um ChartData utilizando propriedades dos beans da lista para formar o grupo e as s√©ries.<BR>
+	 * Ser√° feito a contagem dos itens da lista para cada conjunto de grupo e s√©rie para formar os valores.
 	 * @param objects
 	 * @param groupProperty
 	 * @param seriesProperty
@@ -44,8 +44,8 @@ public class ChartDataBuilder {
 	}
 
 	/**
-	 * ConstrÛi um ChartData utilizando propriedades dos beans da lista para formar o grupo, as sÈries e os valores.<BR>
-	 * Se houver conjuntos de grupos e sÈries repetidos, uma exceÁ„o ser· lanÁada.
+	 * Constr√≥i um ChartData utilizando propriedades dos beans da lista para formar o grupo, as s√©ries e os valores.<BR>
+	 * Se houver conjuntos de grupos e s√©ries repetidos, uma exce√ß√£o ser√° lan√ßada.
 	 * @param objects
 	 * @param groupProperty
 	 * @param seriesProperty
@@ -57,7 +57,7 @@ public class ChartDataBuilder {
 	}
 
 	/**
-	 * ConstrÛi um chart data builder somando valores duplicados
+	 * Constr√≥i um chart data builder somando valores duplicados
 	 * @param objects
 	 * @param groupProperty
 	 * @param seriesProperty
@@ -174,7 +174,7 @@ public class ChartDataBuilder {
 						numbers.add((Number) beanDescriptor.getPropertyDescriptor(valueProperty).getValue());
 					}
 				} catch (Exception e) {
-					throw new RuntimeException("Erro ao configurar grupo " + group + " e sÈrie " + serie, e);
+					throw new RuntimeException("Erro ao configurar grupo " + group + " e s√©rie " + serie, e);
 				}
 			}
 		}
@@ -234,7 +234,7 @@ public class ChartDataBuilder {
 			}
 			serie = BeanDescriptorFactory.forBean(serie).getDescription();
 			if (!(serie instanceof Comparable<?>)) {
-				throw new RuntimeException("O valor da sÈrie " + serie + " da propriedade" + seriesProperty + " n„o implementa Comparable");
+				throw new RuntimeException("O valor da s√©rie " + serie + " da propriedade" + seriesProperty + " n√£o implementa Comparable");
 			}
 		}
 		return (Comparable<?>) serie;

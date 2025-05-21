@@ -40,7 +40,7 @@ public class MaxLengthValidator implements PropertyValidator {
 			MaxLength maxLength = (MaxLength) annotation;
 			int max = maxLength.value();
 			if (!GenericValidator.maxLength(value.toString(), max)) {
-				errors.rejectValue(fieldName, "maxLenght", "O campo " + fieldDisplayName + " deve ter um tamanho menor ou igual à " + max);
+				errors.rejectValue(fieldName, "maxLenght", "O campo " + fieldDisplayName + " deve ter um tamanho menor ou igual Ã  " + max);
 			}
 		}
 	}

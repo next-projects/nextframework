@@ -99,7 +99,7 @@ public class StringUtils {
 		for (String string : split) {
 			String[] split2 = string.split("=");
 			if (split2.length != 2) {
-				throw new NextException("Parametros inv·lidos: " + parameters);
+				throw new NextException("Parametros inv√°lidos: " + parameters);
 			}
 			hashMap.put(split2[0], split2[1]);
 		}
@@ -162,7 +162,7 @@ public class StringUtils {
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(o);
 		String idProperty = beanDescriptor.getIdPropertyName();
 		if (idProperty == null) {
-			//CODIGO INSERIDO EM 16 DE NOVEMBRO DE 2006 PARA O AJAX SUPORTAR LISTAS QUE NAO S√O DE BEANS (EX LISTA DE INTEIROS)		
+			//CODIGO INSERIDO EM 16 DE NOVEMBRO DE 2006 PARA O AJAX SUPORTAR LISTAS QUE NAO S√ÉO DE BEANS (EX LISTA DE INTEIROS)		
 			if (o.getClass().isEnum()) {
 				Enum e = (Enum) o;
 				return e.name();
@@ -238,7 +238,7 @@ public class StringUtils {
 					mf.setValueContainsLiteralCharacters(false);
 					return mf.valueToString((String) value);
 				} catch (ParseException e) {
-					throw new NextException("Erro ao aplicar m·scara '" + formatString + "' em '" + value + "'!");
+					throw new NextException("Erro ao aplicar m√°scara '" + formatString + "' em '" + value + "'!");
 				}
 			}
 			return (String) value;
@@ -342,7 +342,7 @@ public class StringUtils {
 	public String removeAccents(String string) {
 		//copied from apache commons lang
 		String str = string;
-		String searchChars = "¡…Õ”⁄¿»Ã“Ÿ¬ Œ‘€ƒÀœ÷‹√’«·ÈÌÛ˙‡ËÏÚ˘‚ÍÓÙ˚‰ÎÔˆ¸„ıÁ";
+		String searchChars = "√Å√â√ç√ì√ö√Ä√à√å√í√ô√Ç√ä√é√î√õ√Ñ√ã√è√ñ√ú√É√ï√á√°√©√≠√≥√∫√†√®√¨√≤√π√¢√™√Æ√¥√ª√§√´√Ø√∂√º√£√µ√ß";
 		String replaceChars = "AEIOUAEIOUAEIOUAEIOUAOCaeiouaeiouaeiouaeiouaoc";
 		if (isEmpty(str) || isEmpty(searchChars)) {
 			return str;

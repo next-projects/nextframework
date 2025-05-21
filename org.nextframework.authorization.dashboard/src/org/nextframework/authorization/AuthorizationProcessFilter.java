@@ -43,7 +43,7 @@ public class AuthorizationProcessFilter {
 		this.groupAuthorizationMap = groupAuthorizationMap;
 	}
 
-	@DisplayName("Nível")
+	@DisplayName("NÃ­vel")
 	public Role getRole() {
 		return role;
 	}

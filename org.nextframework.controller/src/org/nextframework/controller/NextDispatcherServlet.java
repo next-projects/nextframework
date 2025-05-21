@@ -180,7 +180,7 @@ public class NextDispatcherServlet extends org.springframework.web.servlet.Dispa
 				interceptorsList.add((HandlerInterceptor) BeanUtils.instantiate(class1));
 			}
 		} catch (Exception e) {
-			//se ocorrer alguma exceÁ„o apenas logar o erro
+			//se ocorrer alguma exce√ß√£o apenas logar o erro
 			throw new RuntimeException(e);
 		}
 		HandlerInterceptor[] interceptors = interceptorsList.toArray(new HandlerInterceptor[interceptorsList.size()]);
@@ -197,7 +197,7 @@ public class NextDispatcherServlet extends org.springframework.web.servlet.Dispa
 		Object strategy = super.createDefaultStrategy(context, clazz);
 		if (strategy instanceof AnnotationMethodHandlerAdapter) {
 			AnnotationMethodHandlerAdapter handlerAdapter = (AnnotationMethodHandlerAdapter) strategy;
-			//Para @Controller padr„o do Spring fazer mapeamento completo declarado em @RequestMapping
+			//Para @Controller padr√£o do Spring fazer mapeamento completo declarado em @RequestMapping
 			handlerAdapter.setAlwaysUseFullPath(true);
 			//Para converter para json
 			List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();

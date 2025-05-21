@@ -65,7 +65,7 @@ public class PersistenceUtils {
 	}
 
 	public static String removeAccents(String string) {
-		String source = "ÁÉÍÓÚÀÈÌÒÙÂÊÎÔÛÄËÏÖÜÃÕÇáéíóúàèìòùâêîôûäëïöüãõç";
+		String source = "ÃÃ‰ÃÃ“ÃšÃ€ÃˆÃŒÃ’Ã™Ã‚ÃŠÃÃ”Ã›Ã„Ã‹ÃÃ–ÃœÃƒÃ•Ã‡Ã¡Ã©Ã­Ã³ÃºÃ Ã¨Ã¬Ã²Ã¹Ã¢ÃªÃ®Ã´Ã»Ã¤Ã«Ã¯Ã¶Ã¼Ã£ÃµÃ§";
 		String target = "AEIOUAEIOUAEIOUAEIOUAOCaeiouaeiouaeiouaeiouaoc";
 		return translate(string, source, target);
 	}

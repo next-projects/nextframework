@@ -225,7 +225,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 			((JRDesignSection) jrGroup.getGroupHeaderSection()).addBand(groupHeaderBand);
 			((JRDesignSection) jrGroup.getGroupFooterSection()).addBand(new JRDesignBand());
 
-			//configurar as seçoes
+			//configurar as seÃ§oes
 			configureSection(reportGroup.getSectionHeader(), null);
 			configureSection(reportGroup.getSectionFooter(), null);
 			configureSection(reportGroup.getSectionDetail(), null);

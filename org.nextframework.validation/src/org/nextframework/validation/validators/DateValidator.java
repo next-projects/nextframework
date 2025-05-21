@@ -36,7 +36,7 @@ public class DateValidator implements PropertyValidator {
 	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
 		if (value != null && !value.toString().trim().equals("")) {
 			if (!GenericValidator.isDate(value.toString(), "dd/MM/yyyy", true)) {
-				errors.rejectValue(fieldName, "data", "O campo \\\"" + fieldDisplayName + "\\\" n„o È uma data v·lida");
+				errors.rejectValue(fieldName, "data", "O campo \\\"" + fieldDisplayName + "\\\" n√£o √© uma data v√°lida");
 			}
 		}
 	}
@@ -54,7 +54,7 @@ public class DateValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È uma data v·lida";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© uma data v√°lida";
 	}
 
 	public String getValidationFunctionName() {

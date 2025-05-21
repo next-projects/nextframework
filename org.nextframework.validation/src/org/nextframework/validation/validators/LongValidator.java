@@ -44,7 +44,7 @@ public class LongValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" não é um número inteiro válido! Deve ser inteiro e estar entre –9.223.372.036.854.775.808 e 9.223.372.036.854.775.807";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" nÃ£o Ã© um nÃºmero inteiro vÃ¡lido! Deve ser inteiro e estar entre Â–9.223.372.036.854.775.808 e 9.223.372.036.854.775.807";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

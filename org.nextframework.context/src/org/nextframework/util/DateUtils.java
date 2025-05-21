@@ -14,7 +14,7 @@ public class DateUtils {
 	private final SimpleDateFormat sdfyyyyMMdd_HHmmss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	/**
-	 * Retornar true se as duas datas são a mesma data. Ignorando as horas minutos segundos e milisegundos
+	 * Retornar true se as duas datas sÃ£o a mesma data. Ignorando as horas minutos segundos e milisegundos
 	 * @param a
 	 * @param b
 	 * @return
@@ -28,7 +28,7 @@ public class DateUtils {
 	}
 
 	/**
-	 * Retornar true se as duas datas são a mesma data. Ignorando as horas minutos segundos e milisegundos
+	 * Retornar true se as duas datas sÃ£o a mesma data. Ignorando as horas minutos segundos e milisegundos
 	 * @param a
 	 * @param b
 	 * @return
@@ -65,7 +65,7 @@ public class DateUtils {
 
 	/**
 	 * Configura como 0 as horas minutos segundos e milisegundos.
-	 * Retorna o calendar alterado (mesma instancia do que foi passado como parâmetro).
+	 * Retorna o calendar alterado (mesma instancia do que foi passado como parÃ¢metro).
 	 * @param date
 	 * @return
 	 */
@@ -183,7 +183,7 @@ public class DateUtils {
 	}
 
 	/**
-	 * Retorna o String dd/MM/yyyy HH:mm correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String dd/MM/yyyy HH:mm correspondente ao Date ou Calendar passado como parÃ¢metro
 	 * @param date
 	 * @return
 	 */
@@ -195,7 +195,7 @@ public class DateUtils {
 	}
 
 	/**
-	 * Retorna o String dd/MM/yyyy HH:mm:ss correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String dd/MM/yyyy HH:mm:ss correspondente ao Date ou Calendar passado como parÃ¢metro
 	 * @param date
 	 * @return
 	 */
@@ -207,7 +207,7 @@ public class DateUtils {
 	}
 
 	/**
-	 * Retorna o String dd/MM/yyyy correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String dd/MM/yyyy correspondente ao Date ou Calendar passado como parÃ¢metro
 	 * @param date
 	 * @return
 	 */
@@ -219,7 +219,7 @@ public class DateUtils {
 	}
 
 	/**
-	 * Retorna o String no formato informado correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String no formato informado correspondente ao Date ou Calendar passado como parÃ¢metro
 	 * @param data
 	 * @param pattern
 	 * @return

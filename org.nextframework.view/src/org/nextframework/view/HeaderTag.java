@@ -55,7 +55,7 @@ public class HeaderTag extends ColumnChildTag {
 				dataGrid.onRenderColumnHeader(title.toString());
 			}
 			if (dataGrid.isRenderResizeColumns()) {
-				//reconfigurar os widths pois eles n„o podem ter largura em percentual quando existe o datagrid resize
+				//reconfigurar os widths pois eles n√£o podem ter largura em percentual quando existe o datagrid resize
 				getDynamicAttributesMap().put("style", ColumnTag.checkStyleForHeaderNoPercent((String) getDynamicAttributesMap().get("style")));
 			}
 			if (doTd()) {

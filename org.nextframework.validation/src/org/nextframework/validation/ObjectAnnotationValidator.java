@@ -44,7 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
- * Valida um objeto baseado nas suas anotaÁıes
+ * Valida um objeto baseado nas suas anota√ß√µes
  * @author rogelgarcia | marcusabreu
  */
 public class ObjectAnnotationValidator extends WebApplicationObjectSupport implements Validator {
@@ -74,7 +74,7 @@ public class ObjectAnnotationValidator extends WebApplicationObjectSupport imple
 				MultipartFile file = multipartHttpServletRequest.getFile(filename);
 				if (file.getOriginalFilename() != null && file.getOriginalFilename().length() > 0) {
 					if (file.getSize() == 0) {
-						errors.reject("", "O arquivo '" + filename + "' n„o pode ter tamanho 0 (zero)");
+						errors.reject("", "O arquivo '" + filename + "' n√£o pode ter tamanho 0 (zero)");
 					}
 				}
 			}

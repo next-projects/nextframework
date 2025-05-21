@@ -111,7 +111,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 	@Override
 	protected void doBind(MutablePropertyValues mpvs) {
 
-		//cria se necess·rio o file property editor
+		//cria se necess√°rio o file property editor
 		PropertyEditor customEditor = this.getPropertyAccessor().findCustomEditor(File.class, null);
 		if (customEditor == null) {
 			final Class<?>[] classes = ClassManagerFactory.getClassManager().getAllClassesOfType(File.class);
@@ -169,7 +169,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 	}
 
 	/**
-	 * Faz a traduÁ„o de parametros do tipo meupacote.MinhaClasse[id=1] para o objeto esperado<BR>
+	 * Faz a tradu√ß√£o de parametros do tipo meupacote.MinhaClasse[id=1] para o objeto esperado<BR>
 	 * 
 	 * @param name
 	 * @param value
@@ -181,7 +181,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 	}
 
 	/**
-	 * Faz a traduÁ„o de parametros do tipo meupacote.MinhaClasse[id=1] para o objeto esperado<BR>
+	 * Faz a tradu√ß√£o de parametros do tipo meupacote.MinhaClasse[id=1] para o objeto esperado<BR>
 	 * 
 	 * @param name
 	 * @param value
@@ -194,11 +194,11 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 
 			//temos que remover todos os nomes subsequentes ao objeto nulo..
 			//ex.: se tivermoos municipio = <null>
-			//municipio.uf tambÈm tem que ser nulo
+			//municipio.uf tamb√©m tem que ser nulo
 			//TODO MOVER ESSA CHECAGEM PARA OUTRO LUGAR
 
 			//modificado por Pedro em 16/10/2007
-			//tambÈm È possÌvel dar um translate com o mpvs null, neste caso apenas retorna o objeto como null.
+			//tamb√©m √© poss√≠vel dar um translate com o mpvs null, neste caso apenas retorna o objeto como null.
 
 			if (mpvs == null) {
 				//System.out.println("Found null MPVS in translateObjectValue");
@@ -241,7 +241,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 			try {
 				clazz = Class.forName(nomeClasse);
 			} catch (ClassNotFoundException e) {
-				throw new NextException("N„o foi possÌvel instanciar classe [" + nomeClasse + "] da propriedade " + name, e);
+				throw new NextException("N√£o foi poss√≠vel instanciar classe [" + nomeClasse + "] da propriedade " + name, e);
 			}
 
 //			if(mpvs == null){
@@ -254,8 +254,8 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 //				}
 //				resultado = createObject(properties, clazz);
 //			}
-			//Modificado em 16/02/2014.. N„o deve adicionar as subpropriedades ao mpvs
-			//pois o objeto retornado j· foi montado de maneira completa
+			//Modificado em 16/02/2014.. N√£o deve adicionar as subpropriedades ao mpvs
+			//pois o objeto retornado j√° foi montado de maneira completa
 
 			Object resultado = createObject(properties, clazz);
 			return resultado;
@@ -317,7 +317,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 				return true;
 			}
 
-			//fazer uma verificacao r·pida para evitar o matches que deu pau em determinadas strings
+			//fazer uma verificacao r√°pida para evitar o matches que deu pau em determinadas strings
 			char[] toCharArray = string.toCharArray();
 
 			if (toCharArray.length > 3) {
@@ -330,7 +330,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 						break;
 					}
 					if (toCharArray[i] == ' ') {
-						//se achou espaco em branco antes de um colchetes nao È objectvalue. Pode retornar falso
+						//se achou espaco em branco antes de um colchetes nao √© objectvalue. Pode retornar falso
 						return false;
 					}
 				}
@@ -341,7 +341,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 					i--;
 				}
 				if (toCharArray[i] != ']') {
-					return false; // se nao termina com ] pode retornar falso porque nao È objectValue
+					return false; // se nao termina com ] pode retornar falso porque nao √© objectValue
 				}
 
 				if (!temColchetes) {
@@ -389,7 +389,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 		super.checkFieldMarkers(mpvs);
 
 		// checar se existe algum campo com remove
-		// se existir o valor ser· setado para null
+		// se existir o valor ser√° setado para null
 		PropertyValue[] propertyValues = mpvs.getPropertyValues();
 
 		for (PropertyValue propertyValue : propertyValues) {
@@ -410,7 +410,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - EXCLUDE.length());
 				mpvs.removePropertyValue(fieldName);
 				mpvs.removePropertyValue(fieldName + TEMP);
-				//excluir as propriedades subsequentes tambÈm
+				//excluir as propriedades subsequentes tamb√©m
 				for (int i = 0; i < propertyValues.length; i++) {
 					if (propertyValues[i].getName().startsWith(fieldName)) {
 						mpvs.removePropertyValue(propertyValues[i]);
@@ -461,7 +461,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 			try {
 				mpvs.addPropertyValue(new PropertyValue(dateProperty, dateFormat.parse(dataString)));
 			} catch (ParseException e) {
-				// se n„o conseguir converter n„o fazer nada.. deixa a exceÁ„o vazar
+				// se n√£o conseguir converter n√£o fazer nada.. deixa a exce√ß√£o vazar
 			}
 		}
 	}

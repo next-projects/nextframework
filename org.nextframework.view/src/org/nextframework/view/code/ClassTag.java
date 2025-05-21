@@ -59,7 +59,7 @@ public class ClassTag extends BaseTag implements CodeTag, LogicalTag {
 	public void executeMethod(String name, Map<String, Object> parameters, String callBody) throws JspException, IOException {
 		JspFragment jspFragment = metodos.get(name);
 		if (jspFragment == null) {
-			throw new NextException("MÈtodo n„o encontrado: " + name);
+			throw new NextException("M√©todo n√£o encontrado: " + name);
 		} else {
 			Set<String> keySet = parameters.keySet();
 			for (String parameter : keySet) {
@@ -76,7 +76,7 @@ public class ClassTag extends BaseTag implements CodeTag, LogicalTag {
 
 	public void registerMethod(String method, JspFragment jspFragment) {
 		if (metodos.put(method, jspFragment) != null) {
-			throw new NextException("MÈtodo JSP duplicado: " + method);
+			throw new NextException("M√©todo JSP duplicado: " + method);
 		}
 	}
 

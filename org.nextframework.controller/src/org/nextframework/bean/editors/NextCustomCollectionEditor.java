@@ -44,7 +44,7 @@ public class NextCustomCollectionEditor extends org.springframework.beans.proper
 			return null;
 		}
 		String stringValue = element.toString();
-		// TODO verificar se j· existe um property editor para o required type e path
+		// TODO verificar se j√° existe um property editor para o required type e path
 		if (stringValue.equals("<null>") || stringValue.matches("\\w*((\\.\\w*)*)\\[((.)*)\\]")) {
 			PropertyEditor editor = new ValueBasedPropertyEditor();
 			editor.setAsText(stringValue);

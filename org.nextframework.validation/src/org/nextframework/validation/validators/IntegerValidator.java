@@ -46,7 +46,7 @@ public class IntegerValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È um n˙mero inteiro v·lido";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© um n√∫mero inteiro v√°lido";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

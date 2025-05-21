@@ -147,7 +147,7 @@ public class InputTagComponent {
 			Locale locale = NextWeb.getRequestContext().getLocale();
 			message = Next.getMessageSource().getMessage(Util.objects.newMessage(codes, null, defaultValue), locale);
 		} catch (NoSuchMessageException e) {
-			//Se n„o foi encontrado, n„o dispara o erro, pois, nas tags, os atributos s„o opcionais
+			//Se n√£o foi encontrado, n√£o dispara o erro, pois, nas tags, os atributos s√£o opcionais
 		}
 
 		return message;

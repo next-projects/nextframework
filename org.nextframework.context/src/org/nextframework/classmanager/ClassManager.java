@@ -26,17 +26,17 @@ package org.nextframework.classmanager;
 import java.lang.annotation.Annotation;
 
 /**
- * O ClassManager funciona como um repositório de classes.<BR>
- * É como um filtro para classes, voce determina que tipo de classe deseja e o ClassManger
- * retorna todas as classes com aquelas características.<BR>
- * Ex.: Você registra uma classe A que extende a classe B. Mais tarde você pode pedir todas as 
- * classes que são do tipo B, o classManager irá retornar a classe A.<BR> 
- * É possivel também criar familias de classes. Uma familia é um grupo de classes ou 
- * anotações. Se determinada classe X for uma subclasse de uma das classes da familia Y ou 
- * tiver uma anotaçao que fizer parte da familia Y, 
- * podemos dizer que a classe X faz parte da família Y. <BR>
+ * O ClassManager funciona como um repositÃ³rio de classes.<BR>
+ * Ã‰ como um filtro para classes, voce determina que tipo de classe deseja e o ClassManger
+ * retorna todas as classes com aquelas caracterÃ­sticas.<BR>
+ * Ex.: VocÃª registra uma classe A que extende a classe B. Mais tarde vocÃª pode pedir todas as 
+ * classes que sÃ£o do tipo B, o classManager irÃ¡ retornar a classe A.<BR> 
+ * Ã‰ possivel tambÃ©m criar familias de classes. Uma familia Ã© um grupo de classes ou 
+ * anotaÃ§Ãµes. Se determinada classe X for uma subclasse de uma das classes da familia Y ou 
+ * tiver uma anotaÃ§ao que fizer parte da familia Y, 
+ * podemos dizer que a classe X faz parte da famÃ­lia Y. <BR>
  * 
- * O classManager não procura as classes no classPath. As classes retornadas nas pesquisas devem ter 
+ * O classManager nÃ£o procura as classes no classPath. As classes retornadas nas pesquisas devem ter 
  * sido previamente registradas!
  * 
  * @author rogelgarcia
@@ -57,7 +57,7 @@ public interface ClassManager {
 //	Class<?>[] getAllClassesFromPackage(String pacote);
 
 	/**
-	 * Procura as classes que são subtipo da classe fornecida
+	 * Procura as classes que sÃ£o subtipo da classe fornecida
 	 * @param <T> Tipo da classe
 	 * @param type Classe que deve ser procurada
 	 * @return Classes do mesmo tipo da classe fornecida
@@ -65,9 +65,9 @@ public interface ClassManager {
 	<E> Class<E>[] getAllClassesOfType(Class<E> type);
 
 	/**
-	 * Retorna todas as classes que possuem determinada anotação
-	 * @param annotationType Anotação a ser procurada
-	 * @return Classes com a anotação fornecida
+	 * Retorna todas as classes que possuem determinada anotaÃ§Ã£o
+	 * @param annotationType AnotaÃ§Ã£o a ser procurada
+	 * @return Classes com a anotaÃ§Ã£o fornecida
 	 */
 	Class<?>[] getClassesWithAnnotation(Class<? extends Annotation> annotationType);
 //

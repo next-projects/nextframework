@@ -31,7 +31,7 @@ public class TimestampPropertyEditor extends PropertyEditorSupport {
 
 	@Override
 	public void setAsText(String text) throws IllegalArgumentException {
-		throw new RuntimeException("Conversor ainda n„o completamente implementado");
+		throw new RuntimeException("Conversor ainda n√£o completamente implementado");
 		/*
 		if(text != null){
 			if(text.matches("(dd:dd:dddd)?(.*)(dd:dd(:dd)?)")){
@@ -43,7 +43,7 @@ public class TimestampPropertyEditor extends PropertyEditorSupport {
 				int segundo = 0;
 				
 			} else {
-				throw new IllegalArgumentException("N„o È possÌvel converter: "+text);
+				throw new IllegalArgumentException("N√£o √© poss√≠vel converter: "+text);
 			}
 		} else {
 			setValue(null);

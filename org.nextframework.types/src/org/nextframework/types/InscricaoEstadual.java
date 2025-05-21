@@ -39,7 +39,7 @@ public class InscricaoEstadual implements UserType, Serializable {
 	private String value;
 
 	/**
-	 * @deprecated Utilize o mÈtodo que recebe uma String, esse mÈtodo sÛ existe por causa do hibernate
+	 * @deprecated Utilize o m√©todo que recebe uma String, esse m√©todo s√≥ existe por causa do hibernate
 	 */
 	@Deprecated
 	public InscricaoEstadual() {
@@ -55,7 +55,7 @@ public class InscricaoEstadual implements UserType, Serializable {
 
 	private void checkPattern(String value) throws IllegalArgumentException {
 		if (!value.trim().equals("") && !value.matches("\\d{13}-?\\d{1}")) {
-			throw new IllegalArgumentException("N„o foi possÌvel converter \"" + value + "\" para uma inscriÁ„o estadual v·lida");
+			throw new IllegalArgumentException("N√£o foi poss√≠vel converter \"" + value + "\" para uma inscri√ß√£o estadual v√°lida");
 		}
 	}
 
@@ -102,7 +102,7 @@ public class InscricaoEstadual implements UserType, Serializable {
 				builder.insert(13, '-');
 				return builder.toString();
 			} catch (IndexOutOfBoundsException e) {
-				//System.out.println("\n************************\nInscriÁ„o Estadual inv·lida: "+value);
+				//System.out.println("\n************************\nInscri√ß√£o Estadual inv√°lida: "+value);
 				return value;
 			}
 		}

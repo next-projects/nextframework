@@ -66,10 +66,10 @@ public class FileEditor extends ByteArrayPropertyEditor {
 
 	protected File createFile(Object value) {
 		throw new IllegalArgumentException("\n\nPara utilizar o editor de arquivos, " +
-				"você deve extender a classe org.nextframework.spring.beans.editors.FileEditor e sobrescrever o método createFile.\n" +
-				"O createFile sobrescrito deve criar um File específico da aplicacao.\n" +
-				"Você deve registrar o editor criado, sobrescrevendo o método initBinder nos Controllers se quiser utilizar uploads de arquivos.\n" +
-				"O método initBinder recebe um argumento binder que possui um método para registrar conversores (registerCustomEditor)");
+				"vocÃª deve extender a classe org.nextframework.spring.beans.editors.FileEditor e sobrescrever o mÃ©todo createFile.\n" +
+				"O createFile sobrescrito deve criar um File especÃ­fico da aplicacao.\n" +
+				"VocÃª deve registrar o editor criado, sobrescrevendo o mÃ©todo initBinder nos Controllers se quiser utilizar uploads de arquivos.\n" +
+				"O mÃ©todo initBinder recebe um argumento binder que possui um mÃ©todo para registrar conversores (registerCustomEditor)");
 	}
 
 	public String getAsText() {

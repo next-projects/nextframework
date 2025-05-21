@@ -81,10 +81,10 @@ public class ComboReloadGroupTag extends BaseTag implements LogicalTag {
 	public void registerProperty(String name, FunctionCall call, Boolean includeBlank) {
 		List<String> dependencies = new ArrayList<String>();
 		if (call == null) {
-			//Quando È sem call, pega o nome do controle anterior, 
+			//Quando √© sem call, pega o nome do controle anterior, 
 			if (lastInput != null) {
 				String lastInputName = lastInput.getName();
-				//mas deve remover o prefixo, pois j· È colocado no proximo passo
+				//mas deve remover o prefixo, pois j√° √© colocado no proximo passo
 				String prefix = getPrefixFromBeanTag();
 				if (Util.strings.isNotEmpty(prefix)) {
 					lastInputName = lastInputName.substring(prefix.length());
@@ -171,14 +171,14 @@ public class ComboReloadGroupTag extends BaseTag implements LogicalTag {
 			boolean bypass = false;
 
 			//se a propriedade em questao tiver outra dependencia (sem ser a em questao)
-			//e essa outra dependencia tambÈm depender da dependencia em questao
+			//e essa outra dependencia tamb√©m depender da dependencia em questao
 			//e essa outra dependencia for includeBlank false... passar essa dependencia
 			//exemplo
 			// temos propriedade A
 			// temos propriedade B que depende de A e includeBlank = false
 			// temos propriedade C que depende de B e depende de A 
-			// quando a propriedade A for mudada n„o deve ser recarregado o combo C
-			// isso, porque o combo A modificar· o combo B que por ser includeBlank = false j· ir· modificar o combo C
+			// quando a propriedade A for mudada n√£o deve ser recarregado o combo C
+			// isso, porque o combo A modificar√° o combo B que por ser includeBlank = false j√° ir√° modificar o combo C
 			for (String dependencia2 : propertyCall.dependencies) {
 				if (dependencia2 != dependencia) {
 					PropertyCall propertyCallDependencia2 = getPropertyCall(dependencia2);

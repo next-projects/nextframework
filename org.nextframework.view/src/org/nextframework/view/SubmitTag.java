@@ -77,7 +77,7 @@ public class SubmitTag extends BaseTag {
 	protected void doComponent() throws Exception {
 
 		//if(action == null){
-		//a action deve ser explicita para qual mÈtodo deve ser chamado
+		//a action deve ser explicita para qual m√©todo deve ser chamado
 		//action = NextWeb.getRequestContext().getLastAction();
 		//}
 
@@ -85,7 +85,7 @@ public class SubmitTag extends BaseTag {
 		url = montarUrlCompleta();
 
 		if (!hasAuthorization) {
-			getOut().println("<!-- Sem autorizaÁ„o para acessar: " + url + "-->");
+			getOut().println("<!-- Sem autoriza√ß√£o para acessar: " + url + "-->");
 			return;
 		}
 
@@ -111,8 +111,8 @@ public class SubmitTag extends BaseTag {
 
 		if (confirmationScript != null && confirmationScript.trim().length() > 0) {
 			if (confirmationScript.contains(";")) {
-				throw new NextException("O confirmationScript n„o pode conter ';' Ele deve ser uma express„o (ou chamada de funÁ„o) booleana. " +
-						"Se a express„o retornar true o submit ser· executado. confirmationScriptEncontrado: " + confirmationScript);
+				throw new NextException("O confirmationScript n√£o pode conter ';' Ele deve ser uma express√£o (ou chamada de fun√ß√£o) booleana. " +
+						"Se a express√£o retornar true o submit ser√° executado. confirmationScriptEncontrado: " + confirmationScript);
 			}
 			onclick = "if (" + confirmationScript + ") {" + onclick + "}";
 		}
@@ -166,7 +166,7 @@ public class SubmitTag extends BaseTag {
 		try {
 			return Authorization.getAuthorizationManager().isAuthorized(getPartialURL(), action, Authorization.getUserLocator().getUser());
 		} catch (Exception e) {
-			throw new NextException("Problema ao verificar autorizaÁ„o", e);
+			throw new NextException("Problema ao verificar autoriza√ß√£o", e);
 		}
 	}
 

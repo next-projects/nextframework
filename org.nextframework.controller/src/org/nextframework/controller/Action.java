@@ -30,7 +30,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * AnotaÁ„o que indica que o mÈtodo È o mÈtodo default quando n„o 
+ * Anota√ß√£o que indica que o m√©todo √© o m√©todo default quando n√£o 
  * for passado o parametro de acao em determinado controller
  * @author rogelgarcia
  * @since 25/01/2006

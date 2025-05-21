@@ -70,7 +70,7 @@ public class IncludeTag extends TagSupport {
 
 		} catch (Exception e) {
 			try {
-				saida.write("Erro ao incluir o conteúdo da URL \"" + url + "\"");
+				saida.write("Erro ao incluir o conteÃºdo da URL \"" + url + "\"");
 			} catch (IOException e1) {
 			}
 		} finally {

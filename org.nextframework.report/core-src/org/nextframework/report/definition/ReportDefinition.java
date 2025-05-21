@@ -183,7 +183,7 @@ public class ReportDefinition implements ReportParent {
 	}
 
 	/*
-	 * Métodos auxiliares
+	 * MÃ©todos auxiliares
 	 */
 	public void addRenderParameter(String key, Object value) {
 		renderParameters.put(key, value);
@@ -323,7 +323,7 @@ public class ReportDefinition implements ReportParent {
 
 	public <E extends ReportItem> E addItem(E e, ReportSection reportSection, ReportColumn column) {
 		if (reportSection.getRows().size() == 0) {
-			reportSection.getRows().get(0);//força a criaçao da linha 0
+			reportSection.getRows().get(0);//forÃ§a a criaÃ§ao da linha 0
 		}
 		return addItem(e, reportSection.getRows().get(reportSection.getRows().size() - 1), column);
 	}

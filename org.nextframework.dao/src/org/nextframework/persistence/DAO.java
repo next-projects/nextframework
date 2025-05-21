@@ -17,10 +17,10 @@ public interface DAO<BEAN> {
 
 	/**
 	 * Salva determinado bean.
-	 * Se quiser alterar o funcionamento do SaveOrUpdateStrategy sobrescreva o mÈtodo updateSaveOrUpdate.
-	 * Se o bean j· possuir um id, ser· feito um UPDATE. Se n„o ser· feito um INSERT.
-	 * Caso tenha sido feito um INSERT, apÛs esse mÈtodo retornar o bean passado como par‚metro,
-	 * possuir· um id. 
+	 * Se quiser alterar o funcionamento do SaveOrUpdateStrategy sobrescreva o m√©todo updateSaveOrUpdate.
+	 * Se o bean j√° possuir um id, ser√° feito um UPDATE. Se n√£o ser√° feito um INSERT.
+	 * Caso tenha sido feito um INSERT, ap√≥s esse m√©todo retornar o bean passado como par√¢metro,
+	 * possuir√° um id. 
 	 * @param bean O objeto a ser salvo.
 	 */
 	public abstract void saveOrUpdate(BEAN bean);
@@ -28,8 +28,8 @@ public interface DAO<BEAN> {
 	public abstract void bulkSaveOrUpdate(Collection<BEAN> list);
 
 	/**
-	 * Carrega determinado bean. Esse bean dever· ter algum valor no ID. 
-	 * O retorno ser· um bean com as propriedades carregadas.
+	 * Carrega determinado bean. Esse bean dever√° ter algum valor no ID. 
+	 * O retorno ser√° um bean com as propriedades carregadas.
 	 * @param bean
 	 * @return
 	 */
@@ -52,7 +52,7 @@ public interface DAO<BEAN> {
 
 	/**
 	 * Carrega o bean para a tela de entrada de dados, no caso de um CRUD.
-	 * Se quiser atualizar o QueryBuilder para essa query, sobrescreva o mÈtodo updateEntradaQuery
+	 * Se quiser atualizar o QueryBuilder para essa query, sobrescreva o m√©todo updateEntradaQuery
 	 * @param bean
 	 * @return
 	 */
@@ -61,7 +61,7 @@ public interface DAO<BEAN> {
 	public boolean isEmpty();
 
 	/**
-	 * Retorna uma lista com todos os beans encontrados no banco, ordenados pela anotaÁ„o @OrderBy da classe
+	 * Retorna uma lista com todos os beans encontrados no banco, ordenados pela anota√ß√£o @OrderBy da classe
 	 * @return
 	 */
 	public abstract List<BEAN> findAll();
@@ -69,7 +69,7 @@ public interface DAO<BEAN> {
 	/**
 	 * Retorna uma lista com todos os beans encontrados no banco 
 	 * ordenados por determinada propriedade
-	 * @param orderBy propriedade que deve ser utilizada na ordenaÁ„o
+	 * @param orderBy propriedade que deve ser utilizada na ordena√ß√£o
 	 * @return
 	 */
 	public abstract List<BEAN> findAll(String orderBy);
@@ -80,9 +80,9 @@ public interface DAO<BEAN> {
 
 	/**
 	 * Executa um find utilizando como filtro o objeto passado. <BR>
-	 * Por exemplo, supondo que estamos em um DAO de municipio, e passamos como par‚metro um objeto do tipo estado.
-	 * Ser· procurado no bean municipio qual campo da classe faz referencia ao estado, e esse campo ser· utilizado como filtro.
-	 * O parametro do filtro ser· o objeto passado para esse mÈtodo.
+	 * Por exemplo, supondo que estamos em um DAO de municipio, e passamos como par√¢metro um objeto do tipo estado.
+	 * Ser√° procurado no bean municipio qual campo da classe faz referencia ao estado, e esse campo ser√° utilizado como filtro.
+	 * O parametro do filtro ser√° o objeto passado para esse m√©todo.
 	 * @param o Objeto que deve ser utilizado como filtro.
 	 * @param extraFields Campos extras que devem ser carregados
 	 * @return
@@ -92,7 +92,7 @@ public interface DAO<BEAN> {
 	/**
 	 * Retorna todos os objetos encontrados no banco de dados.
 	 * Pode ser informado quais campos devem ser carregados.
-	 * Esse mÈtodo È utilizado pelos combo boxes nos JSPs.
+	 * Esse m√©todo √© utilizado pelos combo boxes nos JSPs.
 	 * @param extraFields
 	 * @return
 	 */
@@ -100,7 +100,7 @@ public interface DAO<BEAN> {
 
 	/**
 	 * Executa um find para a tela de listagem de dados, utilizando determinado filtro.
-	 * Para atualizar a query sobrescreva o mÈtodo updateListagemQuery.
+	 * Para atualizar a query sobrescreva o m√©todo updateListagemQuery.
 	 * @param filtro
 	 * @return
 	 */
@@ -108,7 +108,7 @@ public interface DAO<BEAN> {
 
 	/**
 	 * Exclui determinado bean do banco de dados.
-	 * Utilizar· caso exista a transaÁ„o atual.
+	 * Utilizar√° caso exista a transa√ß√£o atual.
 	 * @param bean
 	 */
 	public abstract void delete(final BEAN bean);

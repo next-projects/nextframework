@@ -144,7 +144,7 @@ public class PropertyTag extends TemplateTag {
 
 	@Override
 	protected void applyDefaultStyleClasses() throws JspException {
-		//N„o aplica no fluxo natural, pois È necess·rio chamar 'verifyRenderAs' para definir o atributo que ser· getSubComponent.
+		//N√£o aplica no fluxo natural, pois √© necess√°rio chamar 'verifyRenderAs' para definir o atributo que ser√° getSubComponent.
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class PropertyTag extends TemplateTag {
 
 		verifyRenderAs(configTag, findFirst);
 
-		//Aplica estilos padr„o apenas apÛs resolver o 'renderAs'
+		//Aplica estilos padr√£o apenas ap√≥s resolver o 'renderAs'
 		super.applyDefaultStyleClasses();
 
 		verifyMode(configTag);
@@ -184,8 +184,8 @@ public class PropertyTag extends TemplateTag {
 		pushAttribute("compId", id);
 		pushAttribute("Tproperty", this); //Legacy
 		checkFastRenderer();
-		if (!fastRenderer.get().render(this)) {//tentar renderizaÁ„o r·pida
-			includeJspTemplate(); //se nao for possÌvel, utilizar renderizaÁ„o normal
+		if (!fastRenderer.get().render(this)) {//tentar renderiza√ß√£o r√°pida
+			includeJspTemplate(); //se nao for poss√≠vel, utilizar renderiza√ß√£o normal
 		}
 		popAttribute("Tproperty");
 		popAttribute("compId");
@@ -262,11 +262,11 @@ public class PropertyTag extends TemplateTag {
 		}
 		if (showLabel == null) {
 			if (SINGLE.equals(renderAs)) {
-				showLabel = false; // nao faz muito sentido escreve sozinho o label, È melhor mandar escrever quando quiser
+				showLabel = false; // nao faz muito sentido escreve sozinho o label, √© melhor mandar escrever quando quiser
 			}
 		}
 		if (DOUBLE.equals(renderAs) || INVERT.equals(renderAs)) {
-			showLabel = false;//se for modo double n„o imprimir o label porque j· vai estar sendo escrito um
+			showLabel = false;//se for modo double n√£o imprimir o label porque j√° vai estar sendo escrito um
 		}
 		if (DOUBLELINE.equals(renderAs)) {
 			showLabel = true;
@@ -288,7 +288,7 @@ public class PropertyTag extends TemplateTag {
 						}
 					}
 				} catch (Exception e) {
-					//se tentar checar que È transient.. e ocorrer algum problema, nao fazer nada
+					//se tentar checar que √© transient.. e ocorrer algum problema, nao fazer nada
 				}
 			}
 			if (order != null) {
@@ -394,7 +394,7 @@ public class PropertyTag extends TemplateTag {
 	}
 
 	public String getColumnAlignForType(Object type) {
-		//em modo input nao alinhar a direita pois o proprio input ter· alinhamento
+		//em modo input nao alinhar a direita pois o proprio input ter√° alinhamento
 		if ("input".equalsIgnoreCase(getMode())) {
 			return null;
 		}

@@ -56,8 +56,8 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 
 	/** Name para ser utilizado no input completo */
 	//protected String fullName;  //nome do input
-	/** nome da propriedade comeÁando do bean */
-	//protected String fullNestedName; //nome da propriedade comeÁando do bean
+	/** nome da propriedade come√ßando do bean */
+	//protected String fullNestedName; //nome da propriedade come√ßando do bean
 
 	public String getFullNestedName() {
 		return montarFullNestedName(this, name);
@@ -123,7 +123,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 	}
 
 	private void setNameAttribute(String fullName) {
-		pushAttribute(varName, fullName);//TODO FAZER SUPORTE A MAPAS.. QUANDO … MAPA O NOME PODE SER MODIFICADO
+		pushAttribute(varName, fullName);//TODO FAZER SUPORTE A MAPAS.. QUANDO √â MAPA O NOME PODE SER MODIFICADO
 	}
 
 	private void setAnnotations(PropertyDescriptor propertyDescriptor) {
@@ -272,7 +272,7 @@ public class PropertyTag extends BaseTag implements LogicalTag {
 		} else {
 			BeanTag parentBean = ((BeanTag) firstParent);
 			if (parentBean == null) {
-				throw new NullPointerException("Tag property (name=\"" + name + "\") n„o est· aninhada a uma outra tag Property ou Bean");
+				throw new NullPointerException("Tag property (name=\"" + name + "\") n√£o est√° aninhada a uma outra tag Property ou Bean");
 			}
 			String propertyPrefix = parentBean.getPropertyPrefix();
 			String propertyIndex = parentBean.getPropertyIndex();

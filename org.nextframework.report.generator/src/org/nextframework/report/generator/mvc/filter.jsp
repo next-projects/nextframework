@@ -10,8 +10,8 @@
 <t:view title="${reportElement.reportTitle}" useBean="model">
 
 	<n:content id="context">
-		<n:link url="${crudPath}">Voltar para Relatórios</n:link>
-		<n:link action="editDesignForId" parameters="id=${model.id}">Editar Relatório</n:link>
+		<n:link url="${crudPath}">Voltar para RelatÃ³rios</n:link>
+		<n:link action="editDesignForId" parameters="id=${model.id}">Editar RelatÃ³rio</n:link>
 	</n:content>
 
 	<t:simplePanel>
@@ -25,8 +25,8 @@
 								<c:set var="end" value="${filter}_end" />
 								<div class="${useBootstrap ? 'd-flex' : ''}">
 									<n:input id="filter_${filter}_b" name="${filter}_begin" type="${filtersMetadataMap[filter].type}" label="${filtersMetadataMap[filter].displayName}" value="${filterValuesMap[begin]}" required="${filtersMetadataMap[filter].requiredFilter}" />
-									<span class="${useBootstrap ? 'm-1' : ''}">até</span>
-									<n:input id="filter_${filter}_e" name="${filter}_end" type="${filtersMetadataMap[filter].type}" label="${filtersMetadataMap[filter].displayName} (até)" value="${filterValuesMap[end]}" required="${filtersMetadataMap[filter].requiredFilter}" />
+									<span class="${useBootstrap ? 'm-1' : ''}">atÃ©</span>
+									<n:input id="filter_${filter}_e" name="${filter}_end" type="${filtersMetadataMap[filter].type}" label="${filtersMetadataMap[filter].displayName} (atÃ©)" value="${filterValuesMap[end]}" required="${filtersMetadataMap[filter].requiredFilter}" />
 								</div>
 							</c:when>
 							<c:when test="${filtersMetadataMap[filter].filterSelectMultiple}">

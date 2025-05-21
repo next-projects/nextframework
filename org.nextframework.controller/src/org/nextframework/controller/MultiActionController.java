@@ -166,9 +166,9 @@ import org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResol
 public class MultiActionController extends AbstractController {
 
 	/**
-	 * Parametro que indica que È para limpar o filtro asntes de setar as propriedades, mesmo se j· existir um command na sess„o<BR><BR>
+	 * Parametro que indica que √© para limpar o filtro asntes de setar as propriedades, mesmo se j√° existir um command na sess√£o<BR><BR>
 	 * Tem que passar o valor "true".
-	 * ForÁa a criaÁ„o de um novo command
+	 * For√ßa a cria√ß√£o de um novo command
 	 */
 	public static final String CLEAR_FILTER = "clearFilter";
 
@@ -328,7 +328,7 @@ public class MultiActionController extends AbstractController {
 //			}
 //		}
 //
-//		// configurar o methodNameResolver com os mÈtodos encontrados
+//		// configurar o methodNameResolver com os m√©todos encontrados
 //		if(this.getClass().getSimpleName().startsWith("Empresacliente")){
 //			System.out.println(this.getClass());
 //			Set<String> keySet = this.handlerMethodMap.keySet();
@@ -406,19 +406,19 @@ public class MultiActionController extends AbstractController {
 			throws IOException {
 		String parameter = request.getParameter(ACTION_PARAMETER);
 		pageNotFoundLogger.warn(ex.getMessage() + ", ACTION=" + parameter + ". " +
-				"Checar se o mÈtodo possui uma assinatura no seguinte padr„o: public <nome do mÈtodo>(WebRequestContext request, <Classe do Command> <nome do command>). " +
-				"O mÈtodo pode opcionalmente lanÁar exceÁıes. A classe do command pode ser qualquer uma.");
+				"Checar se o m√©todo possui uma assinatura no seguinte padr√£o: public <nome do m√©todo>(WebRequestContext request, <Classe do Command> <nome do command>). " +
+				"O m√©todo pode opcionalmente lan√ßar exce√ß√µes. A classe do command pode ser qualquer uma.");
 		if (parameter == null) {
-			pageNotFoundLogger.warn("Verifique se algum mÈtodo do controller possui a anotaÁ„o @DefaultAction");
+			pageNotFoundLogger.warn("Verifique se algum m√©todo do controller possui a anota√ß√£o @DefaultAction");
 		}
-		response.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage() + ".\n Verifique o log para mais informaÁıes");
+		response.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage() + ".\n Verifique o log para mais informa√ß√µes");
 		return null;
 	}
 
 	/**
-	 * Vai para uma determinada action. Ser· feito o bind dos parametros para o 
-	 * command novamente. … possÌvel utilizar o goToAction pra continuar em um outro action 
-	 * onde a classe do command seje diferente. … o mesmo que utilizar um forward
+	 * Vai para uma determinada action. Ser√° feito o bind dos parametros para o 
+	 * command novamente. √â poss√≠vel utilizar o goToAction pra continuar em um outro action 
+	 * onde a classe do command seje diferente. √â o mesmo que utilizar um forward
 	 * @param action
 	 * @return
 	 */
@@ -521,7 +521,7 @@ public class MultiActionController extends AbstractController {
 
 				if (useCommand == null) {
 
-					input = getAnnotation(method, Input.class);//modificado em 22/10/2010, esse cÛdigo ficava dentro do if.. e sÛ funcionava caso existissem commands
+					input = getAnnotation(method, Input.class);//modificado em 22/10/2010, esse c√≥digo ficava dentro do if.. e s√≥ funcionava caso existissem commands
 
 					if ((hasRequestParameter && method.getParameterTypes().length == 2) || (!hasRequestParameter && method.getParameterTypes().length == 1)) {
 
@@ -560,7 +560,7 @@ public class MultiActionController extends AbstractController {
 								Method handlerMethod = this.methodNameResolver.getHandlerMethod(inputAction);
 								((DefaultWebRequestContext) request).setBindException(new BindException(binder.getBindingResult()));
 								if (!handlerMethod.getName().equals(method.getName())) {
-									//o input deve ter o mesmo command do mÈtodo que declarou o input .. ent„o deixaremos o mÈtodo de input.. fazer o handling como o mesmo command
+									//o input deve ter o mesmo command do m√©todo que declarou o input .. ent√£o deixaremos o m√©todo de input.. fazer o handling como o mesmo command
 									((DefaultWebRequestContext) request).setBindException(new BindException(binder.getBindingResult()));
 									method = handlerMethod;
 								}
@@ -592,11 +592,11 @@ public class MultiActionController extends AbstractController {
 						((DefaultWebRequestContext) request).setLastAction(onErrors.value());
 						Method methodErrors = this.methodNameResolver.getHandlerMethod(onErrors.value());
 						request.addError(ex.getTargetException());
-						logger.error("Erro ao invocar mÈtodo " + method.getName() + " da classe " + this.getClass().getName() + ". Redirecionando para onErrors: " + onErrors.value(), ex.getTargetException());
+						logger.error("Erro ao invocar m√©todo " + method.getName() + " da classe " + this.getClass().getName() + ". Redirecionando para onErrors: " + onErrors.value(), ex.getTargetException());
 						method = methodErrors;
 						continue;
 					} else {
-						// nao tem input e n„o tem onerrors.. deixar a exceÁ„o vazar para algum handler se for o caso
+						// nao tem input e n√£o tem onerrors.. deixar a exce√ß√£o vazar para algum handler se for o caso
 					}
 
 				} else {
@@ -608,15 +608,15 @@ public class MultiActionController extends AbstractController {
 					Method handlerMethod = this.methodNameResolver.getHandlerMethod(inputName);
 					sameMethod = handlerMethod.getName().equals(method.getName());
 
-					//	se for o mesmo mÈtodo.. deixar a excecao vazar (se mandar para o mÈtodo denovo vai dar loop eterno porque a excecao vai ocorrer novamente
+					//	se for o mesmo m√©todo.. deixar a excecao vazar (se mandar para o m√©todo denovo vai dar loop eterno porque a excecao vai ocorrer novamente
 					if (!sameMethod) {
-						// se nao for o mesmo mÈtodo.. redirecionar
-						// poderiamos mandar um flag j· que o mÈtodo a ser invocado tem o mesmo command .. nesse caso economizariamos o bind
-						// mas vamos deixar fazer o bind novamente porque j· pode ter ocorrido algum processamento que alterou os valores do command 
+						// se nao for o mesmo m√©todo.. redirecionar
+						// poderiamos mandar um flag j√° que o m√©todo a ser invocado tem o mesmo command .. nesse caso economizariamos o bind
+						// mas vamos deixar fazer o bind novamente porque j√° pode ter ocorrido algum processamento que alterou os valores do command 
 						method = handlerMethod;
 						request.addError(ex.getTargetException());
 						((DefaultWebRequestContext) request).setLastAction(inputName);
-						logger.error("Erro ao invocar mÈtodo " + method.getName() + " da classe " + this.getClass().getName() + ". Redirecionando para input: " + inputName, ex.getTargetException());
+						logger.error("Erro ao invocar m√©todo " + method.getName() + " da classe " + this.getClass().getName() + ". Redirecionando para input: " + inputName, ex.getTargetException());
 						continue;
 					}
 
@@ -624,7 +624,7 @@ public class MultiActionController extends AbstractController {
 
 				return handleException(request, ex.getTargetException());
 			} catch (IllegalArgumentException ex) {
-				throw new NextException("N„o foi possÌvel invocar o mÈtodo. Se estiver utilizando o mÈtodo continueToAction verifique se o mÈtodo que pede o redirecionamento e o mÈtodo de destino possuem a mesma classe de command", ex);
+				throw new NextException("N√£o foi poss√≠vel invocar o m√©todo. Se estiver utilizando o m√©todo continueToAction verifique se o m√©todo que pede o redirecionamento e o m√©todo de destino possuem a mesma classe de command", ex);
 			} catch (Exception ex) {
 				// The binding process threw an exception.
 				return handleException(request, ex);
@@ -734,7 +734,7 @@ public class MultiActionController extends AbstractController {
 
 	private Class<?> getActualTypeClass(Class<?> absClass, String absClassTypeName) {
 
-		//ObtÈm o Ìndice do tipo genÈrico
+		//Obt√©m o √≠ndice do tipo gen√©rico
 		Integer typeParameterIndex = null;
 		for (int i = 0; i < absClass.getTypeParameters().length; i++) {
 			if (absClass.getTypeParameters()[i].getName().equals(absClassTypeName)) {
@@ -744,10 +744,10 @@ public class MultiActionController extends AbstractController {
 		}
 
 		if (typeParameterIndex == null) {
-			throw new RuntimeException("A classe " + absClass + " n„o contÈm o par‚metro " + absClassTypeName + "!");
+			throw new RuntimeException("A classe " + absClass + " n√£o cont√©m o par√¢metro " + absClassTypeName + "!");
 		}
 
-		//Sobe a hierarquia atÈ achar a superclasse que definiu o tipo genÈrico
+		//Sobe a hierarquia at√© achar a superclasse que definiu o tipo gen√©rico
 		Type genericSuperclass = null;
 		Class<?> superClass = this.getClass();
 		while (!absClass.equals(superClass)) {
@@ -765,7 +765,7 @@ public class MultiActionController extends AbstractController {
 				return (Class<?>) genericSuperclassType;
 			}
 		} else {
-			throw new RuntimeException("A classe " + genericSuperclass + " n„o È parametrizada!");
+			throw new RuntimeException("A classe " + genericSuperclass + " n√£o √© parametrizada!");
 		}
 
 	}
@@ -908,7 +908,7 @@ public class MultiActionController extends AbstractController {
 	}
 
 	/**
-	 * MÈtodo de validaÁ„o que È chamado independentemente do @Command
+	 * M√©todo de valida√ß√£o que √© chamado independentemente do @Command
 	 * @param request
 	 * @param command
 	 * @param binder
@@ -922,7 +922,7 @@ public class MultiActionController extends AbstractController {
 		if (!suppressValidation(request, command)) {
 			BindException errors = new BindException(binder.getBindingResult());
 			if (request.getAttribute(NextCommonsMultipartResolver.MAXUPLOADEXCEEDED) != null) {
-				errors.reject("org.nextframework.controller.MultiActionController.maxUploadExceeded", "O tamanho m·ximo de upload de arquivos (10M) foi excedido");
+				errors.reject("org.nextframework.controller.MultiActionController.maxUploadExceeded", "O tamanho m√°ximo de upload de arquivos (10M) foi excedido");
 			}
 			ObjectAnnotationValidator objectAnnotationValidator = new ObjectAnnotationValidator(ServiceFactory.getService(ValidatorRegistry.class), request.getServletRequest());
 			objectAnnotationValidator.validate(command, errors);
@@ -939,7 +939,7 @@ public class MultiActionController extends AbstractController {
 	}
 
 	/**
-	 * Sobrescreva esse mÈtodo para implementar a validaÁ„o
+	 * Sobrescreva esse m√©todo para implementar a valida√ß√£o
 	 * @param command
 	 * @param errors
 	 */
@@ -1145,7 +1145,7 @@ public class MultiActionController extends AbstractController {
 		return handlerMethodMap;
 	}
 
-	/* MÈtodos utilit·rios */
+	/* M√©todos utilit√°rios */
 
 	/**
 	 * Retorna o request atual

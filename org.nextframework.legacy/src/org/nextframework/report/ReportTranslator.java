@@ -35,7 +35,7 @@ import net.sf.jasperreports.engine.JasperReport;
  */
 public interface ReportTranslator {
 
-	//TODO Criar interface do framework para relatórios
+	//TODO Criar interface do framework para relatÃ³rios
 	JasperReport translate(IReport report) throws JRException;
 
 }

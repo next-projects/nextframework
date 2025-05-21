@@ -163,7 +163,7 @@ public class UnpagedJasperPrint2 {
 			}
 		}
 
-		//Verifica quebra de p·gina
+		//Verifica quebra de p√°gina
 		PrintElement lastPrintElement = null;
 		for (Iterator<PrintElement> iterator = printElements.iterator(); iterator.hasNext();) {
 			PrintElement printElement = iterator.next();
@@ -180,7 +180,7 @@ public class UnpagedJasperPrint2 {
 					ReportItem lastReportItem = lastPrintElement.getReportItem();
 					ReportItem reportItem = printElement.getReportItem();
 					if (lastReportItem.getRow() != null && reportItem.getRow() != null) {
-						//A remoÁ„o dos itens caso mude de p·gina sÛ È possivel se o elemento conhece sua row.
+						//A remo√ß√£o dos itens caso mude de p√°gina s√≥ √© possivel se o elemento conhece sua row.
 						//se nao conhecer, nao ha como comparar a sessao para remover
 						ReportSection lastSection = lastReportItem.getRow().getSection();
 						ReportSection currentSection = reportItem.getRow().getSection();

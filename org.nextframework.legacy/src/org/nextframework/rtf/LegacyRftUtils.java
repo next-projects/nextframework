@@ -9,11 +9,11 @@ public class LegacyRftUtils {
 	public static RTFGenerator getRTFGenerator() {
 		if (rtfGenerator == null) {
 			try {
-				// se nao estiver em um contexto Web d· pau aqui
+				// se nao estiver em um contexto Web d√° pau aqui
 				RTFNameResolverImpl nameResolverImpl = new RTFNameResolverImpl("/WEB-INF/rtf/", ".rtf", WebContext.getServletContext());
 				rtfGenerator = new RTFGeneratorImpl(nameResolverImpl);
 			} catch (ClassCastException e) {
-				throw new RuntimeException("A geraÁ„o de RTFs sÛ pode ser feita em um contexto WEB");
+				throw new RuntimeException("A gera√ß√£o de RTFs s√≥ pode ser feita em um contexto WEB");
 			}
 		}
 		return rtfGenerator;

@@ -25,7 +25,7 @@ public class ReportRendererFactory {
 				return renderer;
 			}
 		}
-		throw new RuntimeException("Nenhum ReportRenderer foi encontrado para o tipo de saída " + outputType);
+		throw new RuntimeException("Nenhum ReportRenderer foi encontrado para o tipo de saÃ­da " + outputType);
 	}
 
 	static {

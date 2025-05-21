@@ -115,7 +115,7 @@ public class ChartDataTimeSeries extends ChartData {
 			}
 		}
 
-		//converter todos os dates para Calendar para facilitar o c·lculo
+		//converter todos os dates para Calendar para facilitar o c√°lculo
 		for (ChartRow row : getData()) {
 			if (row.getGroup() instanceof Date) {
 				Calendar calendar = Calendar.getInstance();

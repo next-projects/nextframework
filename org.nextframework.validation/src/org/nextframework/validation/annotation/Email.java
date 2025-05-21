@@ -29,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation que indica que a propriedade é um email. Usado na validação
+ * Annotation que indica que a propriedade Ã© um email. Usado na validaÃ§Ã£o
  * Deve ser colocado no metodo get da propriedade
  * @author rogelgarcia
  *

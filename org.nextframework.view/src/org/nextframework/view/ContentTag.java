@@ -3,7 +3,7 @@ package org.nextframework.view;
 import org.nextframework.util.Util;
 
 /**
- * Essa tag serve apenas para servir como uma marcacao de tag. Não faz nada.
+ * Essa tag serve apenas para servir como uma marcacao de tag. NÃ£o faz nada.
  * @author rogel
  *
  */

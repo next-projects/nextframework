@@ -103,7 +103,7 @@ public class MessagesTag extends BaseTag {
 		getOut().println("<div id='messagesContainer'" + sc + ">");
 
 		if (!renderAsHtml) {
-			getOut().println("</div>"); //Fecha o container de uma vez, pois seu conte˙do ser· inserido via js.
+			getOut().println("</div>"); //Fecha o container de uma vez, pois seu conte√∫do ser√° inserido via js.
 			getOut().println("<script type='text/javascript'>next.events.onLoad(function(){");
 			declareStyleClasses();
 		}
@@ -134,7 +134,7 @@ public class MessagesTag extends BaseTag {
 		if (errors.hasErrors() && !suppressErrors) {
 
 			title = getDefaultViewLabel("title", "Valores incorretos encontrados em");
-			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inv·lido");
+			invalidValueLabel = getDefaultViewLabel("invalidValueLabel", "Valor inv√°lido");
 
 			if (renderAsHtml) {
 				String sc1 = bindBlockClass != null ? " class='" + bindBlockClass + "'" : "";

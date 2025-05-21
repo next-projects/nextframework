@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * Acessa a API do next framework
  */
 var next = {};

@@ -90,7 +90,7 @@ public class ForEachBeanTag extends PropertyTag {
 		}
 
 		if (propertyDescriptor == null) {
-			throw new NextException("Erro na tag forEachBean. N„o foi possÌvel achar o property descriptor para a propriedade " + fullNestedName);
+			throw new NextException("Erro na tag forEachBean. N√£o foi poss√≠vel achar o property descriptor para a propriedade " + fullNestedName);
 		}
 
 		Object value = propertyDescriptor.getValue();
@@ -99,13 +99,13 @@ public class ForEachBeanTag extends PropertyTag {
 		}
 
 		if (!(value instanceof Collection<?>) && value != null) {
-			throw new NextException("Erro na tag forEachBean. O property leva a um atributo que n„o È uma coleÁ„o. Valor encontrado" + value);
+			throw new NextException("Erro na tag forEachBean. O property leva a um atributo que n√£o √© uma cole√ß√£o. Valor encontrado" + value);
 		}
 
 		if (value != null) {
 			Collection<?> collection = (Collection<?>) value;
 			String fullName = this.fullName;  //nome do input
-			String fullNestedName = this.fullNestedName; //nome da propriedade comeÁando do bean
+			String fullNestedName = this.fullNestedName; //nome da propriedade come√ßando do bean
 			int i = 0;
 			for (Object object : collection) {
 				pushAttribute(var, object);

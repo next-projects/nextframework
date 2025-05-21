@@ -41,7 +41,7 @@ public class CepPropertyEditor extends PropertyEditorSupport {
 					setValue(new Cep(text));
 					break;
 				default:
-					throw new IllegalArgumentException("O CEP deve ter 8 dígitos");
+					throw new IllegalArgumentException("O CEP deve ter 8 dÃ­gitos");
 			}
 
 		} else {

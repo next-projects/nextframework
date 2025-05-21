@@ -605,7 +605,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 					clazz = (Class) ((ParameterizedType) returnType).getRawType();
 				}
 				if (clazz != null) {
-					errorMsg = "O erro pode ser evitado se a classe " + clazz.getName() + " possuir um construtor p˙blico sem argumentos";
+					errorMsg = "O erro pode ser evitado se a classe " + clazz.getName() + " possuir um construtor p√∫blico sem argumentos";
 					propertyValue = clazz.newInstance();
 					setPropertyValue(nestedProperty, propertyValue);
 				}
@@ -713,7 +713,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 				// apply indexes and map keys
 				for (int i = 0; i < tokens.keys.length; i++) {
 					String key = tokens.keys[i];
-					//cria listas sob demanda.. n„o È mais necess·rio utilizar o ListSet no pojo
+					//cria listas sob demanda.. n√£o √© mais necess√°rio utilizar o ListSet no pojo
 					Class originalClass = null;
 					if (value != null) {
 						originalClass = value.getClass();
@@ -748,7 +748,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 								Type type = parameterizedType.getActualTypeArguments()[0];
 								if (type instanceof Class) {
 									Class clazz = (Class) type;
-									extraMessage = "A classe " + clazz.getName() + " n„o possui um construtor publico sem argumentos";
+									extraMessage = "A classe " + clazz.getName() + " n√£o possui um construtor publico sem argumentos";
 									try {
 										value = clazz.newInstance();
 										int index = Integer.parseInt(key);
@@ -757,15 +757,15 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 											list.add(null);
 											insertNulls--;
 										}
-										list.add(index, value); // C”DIGO 15/01/2007
+										list.add(index, value); // C√ìDIGO 15/01/2007
 									} catch (InstantiationException e1) {
 										throw new RuntimeException("Aconteceu um erro ao acessar um elemento da classe " + originalClass.getName()
-												+ " propriedade " + propertyName + "  N„o foi possÌvel instanciar um bean para preencher a lista. " + extraMessage, e);
+												+ " propriedade " + propertyName + "  N√£o foi poss√≠vel instanciar um bean para preencher a lista. " + extraMessage, e);
 									}
 								}
 							} else if (originalClass != null) {
 								throw new RuntimeException("Aconteceu um erro ao acessar um elemento da classe " + originalClass.getName()
-										+ " propriedade " + propertyName + "  Sugest„o: Utilize uma lista que cresÁa quando for necess·rio como o ListSet ou n„o instancie nenhum objeto para essa propriedade", e);
+										+ " propriedade " + propertyName + "  Sugest√£o: Utilize uma lista que cres√ßa quando for necess√°rio como o ListSet ou n√£o instancie nenhum objeto para essa propriedade", e);
 							} else {
 								throw e;
 							}
@@ -778,7 +778,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 						if (index < 0 || index >= set.size()) {
 							throw new InvalidPropertyException(getRootClass(), this.nestedPath + propertyName,
 									"Cannot get element with index " + index + " from Set of size " +
-											set.size() + ", accessed using property path '" + propertyName + "'" + "  Sugest„o: Utilize o ListSet ou n„o instancie nenhum objeto");
+											set.size() + ", accessed using property path '" + propertyName + "'" + "  Sugest√£o: Utilize o ListSet ou n√£o instancie nenhum objeto");
 						}
 						Iterator it = set.iterator();
 						for (int j = 0; it.hasNext(); j++) {
@@ -790,7 +790,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 						}
 					} else if (value instanceof Map) {
 						if (!(genericReturnType instanceof ParameterizedType)) {
-							throw new NotParameterizedTypeException("Path direciona a um Map n„o parameterizado com generics. " +
+							throw new NotParameterizedTypeException("Path direciona a um Map n√£o parameterizado com generics. " +
 									" Propriedade '" + this.nestedPath + propertyName + "' da classe [" + this.rootObject.getClass().getName() + "]");
 						}
 						ParameterizedType parameterizedType = ((ParameterizedType) genericReturnType);
@@ -807,7 +807,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 								Type listType = ((ParameterizedType) mapValueType).getActualTypeArguments()[0];
 								mapValue = new ListSet(listType instanceof Class ? (Class) listType : (Class) ((ParameterizedType) listType).getRawType());
 							} catch (ClassCastException e) {
-								throw new RuntimeException("Na path " + propertyName + " um mapa contÈm uma lista n„o parametrizada");
+								throw new RuntimeException("Na path " + propertyName + " um mapa cont√©m uma lista n√£o parametrizada");
 							}
 							map.put(objectKey, mapValue);
 							value = mapValue;
@@ -1036,7 +1036,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 					} else if (type instanceof Class && ((Class) type).isArray()) {
 						return type;
 					} else {
-						throw new RuntimeException("Implementar convers„o!!!");
+						throw new RuntimeException("Implementar convers√£o!!!");
 					}
 				}
 			}
@@ -1489,7 +1489,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 	}
 
 	public void setConversionService(ConversionService conversionService) {
-		throw new NextException("O ExtendedBeanWrapper n„o suporta ConversionService");
+		throw new NextException("O ExtendedBeanWrapper n√£o suporta ConversionService");
 	}
 
 	public TypeDescriptor getPropertyTypeDescriptor(String propertyName) throws BeansException {

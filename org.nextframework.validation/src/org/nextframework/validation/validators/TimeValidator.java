@@ -46,7 +46,7 @@ public class TimeValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È uma hora v·lida";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© uma hora v√°lida";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

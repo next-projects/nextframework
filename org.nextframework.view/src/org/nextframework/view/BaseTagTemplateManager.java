@@ -34,7 +34,7 @@ public class BaseTagTemplateManager {
 
 		byte[] bytesTemplate = null;
 
-		//se tiver o jar do next, procurar o arquivo l· dentro
+		//se tiver o jar do next, procurar o arquivo l√° dentro
 		if (nextJarPath != null) {
 			String root = servletContext.getRealPath("/");
 			//InputStream streamNext = getServletContext().getResourceAsStream(nextJarPath);
@@ -61,7 +61,7 @@ public class BaseTagTemplateManager {
 				bufferedOutputStream.close();
 				zipFile.close();
 			} catch (IOException e) {
-				throw new IOException("N„o foi possÌvel copiar o template (" + nextJarPath + ") do jar do next para a aplicacao. " + e.getMessage());
+				throw new IOException("N√£o foi poss√≠vel copiar o template (" + nextJarPath + ") do jar do next para a aplicacao. " + e.getMessage());
 			}
 		}
 		return bytesTemplate;
@@ -86,9 +86,9 @@ public class BaseTagTemplateManager {
 				bufferedOutputStream.flush();
 				bufferedOutputStream.close();
 			} catch (FileNotFoundException e) {
-				BaseTag.log.warn("Arquivo n„o encontrado " + realPath + File.separator + template + "  " + e.getMessage());
+				BaseTag.log.warn("Arquivo n√£o encontrado " + realPath + File.separator + template + "  " + e.getMessage());
 			} catch (IOException e) {
-				BaseTag.log.warn("N„o foi possÌvel escrever o arquivo " + realPath + File.separator + template + "  " + e.getMessage());
+				BaseTag.log.warn("N√£o foi poss√≠vel escrever o arquivo " + realPath + File.separator + template + "  " + e.getMessage());
 			}
 		}
 	}
@@ -156,7 +156,7 @@ public class BaseTagTemplateManager {
 		if (text == null) {
 			InputStream resourceAsStream = baseTag.getServletContext().getResourceAsStream(template);
 			if (resourceAsStream == null) {
-				throw new IllegalArgumentException("Template " + template + " n„o encontrado!");
+				throw new IllegalArgumentException("Template " + template + " n√£o encontrado!");
 			}
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resourceAsStream));
 			String line = null;

@@ -106,7 +106,7 @@ public class SQLServerSQLErrorCodeSQLExceptionTranslator extends SQLErrorCodeSQL
 					}
 				}
 			} catch (SQLException e) {
-				log.warn("Não foi possível conseguir o metadata do banco para ler informacoes de FK.");
+				log.warn("NÃ£o foi possÃ­vel conseguir o metadata do banco para ler informacoes de FK.");
 				return null;
 			}
 
@@ -126,13 +126,13 @@ public class SQLServerSQLErrorCodeSQLExceptionTranslator extends SQLErrorCodeSQL
 			String defaultMensagem;
 			sql = matcher.group(1);
 			if (sql.toLowerCase().trim().startsWith("delete")) {
-				defaultMensagem = "Não foi possível remover " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
+				defaultMensagem = "NÃ£o foi possÃ­vel remover " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
 			} else if (sql.toLowerCase().trim().startsWith("update")) {
-				defaultMensagem = "Não foi possível atualizar " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
+				defaultMensagem = "NÃ£o foi possÃ­vel atualizar " + fkTableDisplayName + ". A referÃªncia para " + pkTableDisplayName + " Ã© invÃ¡lida.";
 			} else if (sql.toLowerCase().trim().startsWith("insert")) {
-				defaultMensagem = "Não foi possível inserir " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
+				defaultMensagem = "NÃ£o foi possÃ­vel inserir " + fkTableDisplayName + ". A referÃªncia para " + pkTableDisplayName + " Ã© invÃ¡lida.";
 			} else {
-				defaultMensagem = "Não foi possível efetuar operação em " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
+				defaultMensagem = "NÃ£o foi possÃ­vel efetuar operaÃ§Ã£o em " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
 			}
 
 			return new ForeignKeyException(defaultMensagem, new RuntimeException(task));

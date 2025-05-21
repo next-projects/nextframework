@@ -46,7 +46,7 @@ public class PhoneValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È um telefone v·lido";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© um telefone v√°lido";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

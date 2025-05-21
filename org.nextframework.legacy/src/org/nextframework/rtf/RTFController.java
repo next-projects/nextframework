@@ -90,7 +90,7 @@ public abstract class RTFController<FILTRO> extends ResourceSenderController<FIL
 	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTRO filter) {
 		if (name == null) {
 			if (!this.getClass().getSimpleName().endsWith("RTF")) {
-				throw new NextException("Um controller de rtf deve ter o sufixo RTF ou então setar a variável name");
+				throw new NextException("Um controller de rtf deve ter o sufixo RTF ou entÃ£o setar a variÃ¡vel name");
 			}
 			String className = org.springframework.util.StringUtils.uncapitalize(this.getClass()
 					.getSimpleName());

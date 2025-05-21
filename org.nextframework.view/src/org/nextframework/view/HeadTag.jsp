@@ -92,12 +92,12 @@
 </c:if>
 <script language="JavaScript" src="${app}/resource/menu/theme.js"></script>
 
-<%-- INICIALIZA«√O DO HTMLAREA --%>
+<%-- INICIALIZA√á√ÉO DO HTMLAREA --%>
 <script language="JavaScript">
 	//htmlarea
 	try {
 		preparaHtmlArea('${app}/resource/htmlarea/');	
-	} catch(e){}// se n„o conseguiu achar o javascript n„o dar exceÁ„o
+	} catch(e){}// se n√£o conseguiu achar o javascript n√£o dar exce√ß√£o
 </script>
 
 <%-- GLOBAL MAP --%>

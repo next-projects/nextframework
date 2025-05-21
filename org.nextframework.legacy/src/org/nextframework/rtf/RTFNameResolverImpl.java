@@ -67,7 +67,7 @@ public class RTFNameResolverImpl implements RTFNameResolver {
 	public InputStream resolveName(String name) {
 		InputStream resourceAsStream = servletContext.getResourceAsStream(getPrefix() + name + getSuffix());
 		if (resourceAsStream == null) {
-			throw new NullPointerException("RTF n„o encontrado! " + name);
+			throw new NullPointerException("RTF n√£o encontrado! " + name);
 		}
 		return resourceAsStream;
 	}

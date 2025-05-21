@@ -63,11 +63,11 @@
 		} else if (options.money) {
 			td2.innerHTML = "Dinheiro";
 		} else if (options.numberType) {
-			td2.innerHTML = "Número";
+			td2.innerHTML = "NÃºmero";
 		} else if (options.entity) {
 			td2.innerHTML = "Entidade";
 		} else if (options.enumType) {
-			td2.innerHTML = "Enumeração: " + options.enumExample;
+			td2.innerHTML = "EnumeraÃ§Ã£o: " + options.enumExample;
 		} else if (options.type == 'java.lang.String') {
 			td2.innerHTML = "Texto";
 		}
@@ -76,7 +76,7 @@
 			td2.innerHTML += " [apenas filtragem]";
 		}
 		if (!options.filterable) {
-			td2.innerHTML += " [não filtrável]";
+			td2.innerHTML += " [nÃ£o filtrÃ¡vel]";
 		}
 
 	}

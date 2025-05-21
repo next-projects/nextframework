@@ -46,7 +46,7 @@ public class InscricaoEstadualValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È uma inscriÁ„o estadual v·lida";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© uma inscri√ß√£o estadual v√°lida";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

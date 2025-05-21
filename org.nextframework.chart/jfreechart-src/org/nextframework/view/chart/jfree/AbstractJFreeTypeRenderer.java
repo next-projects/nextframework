@@ -171,7 +171,7 @@ public abstract class AbstractJFreeTypeRenderer implements JFreeTypeRenderer {
 
 			categoryPlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 
-			//espaÁamento na esquerda para n„o atrapalhar a legenda do gr·fico 
+			//espa√ßamento na esquerda para n√£o atrapalhar a legenda do gr√°fico 
 			categoryPlot.setAxisOffset(new RectangleInsets(0, 0, 0, 0));
 
 			categoryPlot.getDomainAxis().setVisible(chart.getStyle().isGroupAxisVisible());
@@ -208,7 +208,7 @@ public abstract class AbstractJFreeTypeRenderer implements JFreeTypeRenderer {
 		renderer.setBaseItemLabelsVisible(true);
 		renderer.setBaseShapesVisible(false);
 		configureCategoryRenderer(renderer);
-		plot.setRenderer(renderer);// forÁa a utilizacao das configuracoes do framework
+		plot.setRenderer(renderer);// for√ßa a utilizacao das configuracoes do framework
 
 	}
 
@@ -240,7 +240,7 @@ public abstract class AbstractJFreeTypeRenderer implements JFreeTypeRenderer {
 		renderer.setMaximumBarWidth(0.08);
 
 		configureCategoryRenderer(renderer);
-		plot.setRenderer(renderer);// forÁa a utilizacao das configuracoes do framework
+		plot.setRenderer(renderer);// for√ßa a utilizacao das configuracoes do framework
 
 	}
 
@@ -298,7 +298,7 @@ public abstract class AbstractJFreeTypeRenderer implements JFreeTypeRenderer {
 		AreaRenderer renderer = new AreaRenderer();
 		renderer.setBaseOutlinePaint(Color.white);
 		renderer.setBaseItemLabelsVisible(true);
-		plot.setRenderer(renderer);// forÁa a utilizacao das configuracoes do framework
+		plot.setRenderer(renderer);// for√ßa a utilizacao das configuracoes do framework
 
 	}
 

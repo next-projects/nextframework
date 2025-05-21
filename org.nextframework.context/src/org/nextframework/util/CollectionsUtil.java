@@ -58,8 +58,8 @@ public class CollectionsUtil {
 	}
 
 	/**
-	 * Verifica se determinada coleÁ„o possui uma propriedade com determinado valor. 
-	 * Se a coleÁ„o for nula È retornado falso. <BR>
+	 * Verifica se determinada cole√ß√£o possui uma propriedade com determinado valor. 
+	 * Se a cole√ß√£o for nula √© retornado falso. <BR>
 	 * Aceita nested properties
 	 * @param collection
 	 * @param property
@@ -70,7 +70,7 @@ public class CollectionsUtil {
 	public boolean contains(Collection<?> collection, String property, Object value) throws NullPointerException {
 		//TODO OTIMIZAR
 		if (property == null) {
-			throw new NullPointerException("O parametro property n„o deve ser nulo");
+			throw new NullPointerException("O parametro property n√£o deve ser nulo");
 		}
 		if (collection == null) {
 			return false;
@@ -99,11 +99,11 @@ public class CollectionsUtil {
 	 * Cria uma lista com uma propriedade de cada bean do collection fornecido
 	 * 
 	 * Ex.: Se tiver um collection de Pessoa e a pessoa tiver uma propriedade chamada nome
-	 * Ser· extraido o nome de cada pessoa e montado uma lista
-	 * A lista n„o pode conter null 
+	 * Ser√° extraido o nome de cada pessoa e montado uma lista
+	 * A lista n√£o pode conter null 
 	 * Todos os objetos da lista devem ser da mesma classe.
 	 * Aceita nested properties
-	 * @param collection ColeÁ„o de beans de onde deve ser extraido a propriedade
+	 * @param collection Cole√ß√£o de beans de onde deve ser extraido a propriedade
 	 * @param property propriedade que deve ser extraida de cada bean
 	 * @return Uma lista com os objetos de cada propriedade do bean
 	 */
@@ -133,11 +133,11 @@ public class CollectionsUtil {
 	 * Cria um HashSet com uma propriedade de cada bean do collection fornecido
 	 * 
 	 * Ex.: Se tiver um collection de Pessoa e a pessoa tiver uma propriedade chamada nome
-	 * Ser· extraido o nome de cada pessoa e montado uma lista
-	 * A lista n„o pode conter null 
+	 * Ser√° extraido o nome de cada pessoa e montado uma lista
+	 * A lista n√£o pode conter null 
 	 * Todos os objetos da lista devem ser da mesma classe.
 	 * Aceita nested properties
-	 * @param collection ColeÁ„o de beans de onde deve ser extraido a propriedade
+	 * @param collection Cole√ß√£o de beans de onde deve ser extraido a propriedade
 	 * @param property propriedade que deve ser extraida de cada bean
 	 * @return Uma lista com os objetos de cada propriedade do bean
 	 */
@@ -164,7 +164,7 @@ public class CollectionsUtil {
 
 	/**
 	 * Concatena todos os elementos de uma determinada collection e insere o token entre cada elemento
-	 * @param collection ColeÁ„o a ser iteragida
+	 * @param collection Cole√ß√£o a ser iteragida
 	 * @param token String que deve ser usada entre cada elemento
 	 * @return
 	 */

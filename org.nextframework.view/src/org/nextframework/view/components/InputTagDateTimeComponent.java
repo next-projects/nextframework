@@ -81,7 +81,7 @@ public class InputTagDateTimeComponent extends InputTagComponent {
 		}
 		DataGridTag dataGrid = inputTag.findParent2(DataGridTag.class, false);
 		if (dataGrid != null && Util.booleans.isTrue(dataGrid.getDynaLine())) {
-			//se tiver dentro de um datagrid que renderiza dynaline n„o funciona
+			//se tiver dentro de um datagrid que renderiza dynaline n√£o funciona
 			return false;
 		}
 		if ("true".equals(inputTag.getDAAtribute("nocalendar", true))) {

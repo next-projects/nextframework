@@ -33,7 +33,7 @@ public class Cep extends CepUserType implements Serializable {
 	private String value;
 
 	/**
-	 * @deprecated Utilize o mÈtodo que recebe uma String, esse mÈtodo sÛ existe por causa do hibernate
+	 * @deprecated Utilize o m√©todo que recebe uma String, esse m√©todo s√≥ existe por causa do hibernate
 	 */
 	@Deprecated
 	public Cep() {
@@ -49,7 +49,7 @@ public class Cep extends CepUserType implements Serializable {
 
 	private void checkPattern(String value) throws IllegalArgumentException {
 		if (!value.trim().equals("") && !value.matches("\\d{5}[-\\.]?\\d{3}")) {
-			throw new IllegalArgumentException("N„o foi possÌvel converter \"" + value + "\" para um CEP v·lido");
+			throw new IllegalArgumentException("N√£o foi poss√≠vel converter \"" + value + "\" para um CEP v√°lido");
 		}
 	}
 
@@ -96,7 +96,7 @@ public class Cep extends CepUserType implements Serializable {
 				builder.insert(5, '-');
 				return builder.toString();
 			} catch (IndexOutOfBoundsException e) {
-				//System.out.println("\n************************\nCEP inv·lido: "+value);
+				//System.out.println("\n************************\nCEP inv√°lido: "+value);
 				return value;
 			}
 		}

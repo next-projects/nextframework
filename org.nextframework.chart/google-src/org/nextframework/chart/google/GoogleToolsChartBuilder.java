@@ -345,12 +345,12 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 	private Chart instanciateChart(ChartType chartType, String id) {
 		Class<? extends Chart> class1 = chartMapping.get(chartType);
 		if (class1 == null) {
-			throw new NextException("N„o È possÌvel renderizar o gr·fico do tipo especificado " + chartType);
+			throw new NextException("N√£o √© poss√≠vel renderizar o gr√°fico do tipo especificado " + chartType);
 		}
 		try {
 			return class1.getConstructor(JavascriptReferenciable.class).newInstance(document.getElementById(id));
 		} catch (Exception e) {
-			throw new NextException("N„o foi possÌvel instanciar o tipo de gr·fico especificado. " + class1, e);
+			throw new NextException("N√£o foi poss√≠vel instanciar o tipo de gr√°fico especificado. " + class1, e);
 		}
 	}
 
@@ -358,7 +358,7 @@ public class GoogleToolsChartBuilder extends JavascriptBuilder implements Google
 	public void build() {
 		final String id = this.chart.getId();
 		if (id == null) {
-			throw new RuntimeException("O id do gr·fico È null, n„o foi possÌvel gerar gr·fico");
+			throw new RuntimeException("O id do gr√°fico √© null, n√£o foi poss√≠vel gerar gr√°fico");
 		}
 		google.load("visualization", "1", map("packages", array("corechart"/*, "table"*/)));
 		Function function = new Function(new JavascriptBuilder() {

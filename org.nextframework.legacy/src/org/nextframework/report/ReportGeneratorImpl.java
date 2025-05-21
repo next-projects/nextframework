@@ -86,7 +86,7 @@ public class ReportGeneratorImpl implements ReportGenerator {
 					ResultSet rs = (ResultSet) report.getDataSource();
 					rs.getStatement().getConnection().close();
 				} catch (Exception e) {
-					System.out.println("AtenÁ„o! N„o foi possÌvel fechar conex„o apÛs gerar relatÛrio!");
+					System.out.println("Aten√ß√£o! N√£o foi poss√≠vel fechar conex√£o ap√≥s gerar relat√≥rio!");
 				}
 			}
 		}
@@ -146,7 +146,7 @@ public class ReportGeneratorImpl implements ReportGenerator {
 		} else if (ds == null) {
 			dataSource = new JREmptyDataSource();
 		} else {
-			throw new ReportException("O tipo de datasource È inv·lido! ");
+			throw new ReportException("O tipo de datasource √© inv√°lido! ");
 		}
 		return dataSource;
 	}

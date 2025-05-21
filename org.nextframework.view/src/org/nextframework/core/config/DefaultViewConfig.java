@@ -42,7 +42,7 @@ public class DefaultViewConfig implements ViewConfig {
 
 	@Override
 	public String getJSPDefaultCharset() {
-		return "iso-8859-1";
+		return "UTF-8";
 	}
 
 	@Override

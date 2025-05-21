@@ -66,7 +66,7 @@ public abstract class ReportController<FILTER> extends ResourceSenderController<
 	protected ModelAndView getFilterModelAndView(WebRequestContext request, FILTER filter) {
 		if (name == null) {
 			if (!this.getClass().getSimpleName().endsWith("Report")) {
-				throw new NextException("Um controller de relatórios deve ter o sufixo Report ou então setar a variável name");
+				throw new NextException("Um controller de relatÃ³rios deve ter o sufixo Report ou entÃ£o setar a variÃ¡vel name");
 			}
 			String className = org.springframework.util.StringUtils.uncapitalize(this.getClass()
 					.getSimpleName());

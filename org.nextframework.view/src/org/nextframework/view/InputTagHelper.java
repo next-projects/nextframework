@@ -39,7 +39,7 @@ public class InputTagHelper {
 					inputTag.setPropertySetter(new PropertySetter() {
 
 						public void set(Object value) {
-							BaseTag.log.warn(inputTag.name + " tentou setar o valor da propriedade, mas n„o existe propertySetter para essa propriedade");
+							BaseTag.log.warn(inputTag.name + " tentou setar o valor da propriedade, mas n√£o existe propertySetter para essa propriedade");
 						}
 
 					});
@@ -70,7 +70,7 @@ public class InputTagHelper {
 					inputTag.setAnnotations(new Annotation[0]);
 				}
 			}
-			// verificar se È required
+			// verificar se √© required
 			if (inputTag.required == null) {
 				for (Annotation ann : inputTag.getAnnotations()) {
 					if (ann instanceof Required) {
@@ -86,7 +86,7 @@ public class InputTagHelper {
 		InputTagType selectedType;
 		if (Util.objects.isEmpty(inputTag.type)) {
 			if (inputTag.value == null) {
-				throw new NullPointerException("Em uma tag input o atributo value e o type n„o podem ser ambos nulos");
+				throw new NullPointerException("Em uma tag input o atributo value e o type n√£o podem ser ambos nulos");
 			}
 			Class<?> c = inputTag.value.getClass();
 			selectedType = inputTag.inputTagHelper.chooseTypeByClass(inputTag, c);
@@ -97,7 +97,7 @@ public class InputTagHelper {
 					InputTagType valueOf = InputTagType.valueOf(typeString);
 					selectedType = valueOf;
 				} catch (IllegalArgumentException e) {
-					throw new NextException("Type n„o suportado por input: " + inputTag.type);
+					throw new NextException("Type n√£o suportado por input: " + inputTag.type);
 				}
 			} else if (inputTag.type instanceof Class<?>) {
 				selectedType = inputTag.inputTagHelper.chooseTypeByClass(inputTag, (Class<?>) inputTag.type);
@@ -106,7 +106,7 @@ public class InputTagHelper {
 			} else if (inputTag.type instanceof Collection<?>) {
 				selectedType = InputTagType.SELECT_MANY;
 			} else {
-				throw new IllegalArgumentException("Input n„o suporta valor '" + inputTag.type + "' no atributo type");
+				throw new IllegalArgumentException("Input n√£o suporta valor '" + inputTag.type + "' no atributo type");
 			}
 		}
 		if (selectedType == InputTagType.TEXT && ((inputTag.rows != null && inputTag.rows != 0) || (inputTag.cols != null && inputTag.cols != 0)) && !"text".equals(inputTag.type)) {
@@ -137,7 +137,7 @@ public class InputTagHelper {
 	@SuppressWarnings("rawtypes")
 	InputTagType chooseTypeByClass(InputTag inputTag, Class c) {
 		if (Map.class.isAssignableFrom(c)) {
-			throw new IllegalArgumentException("O input n„o suporta valores do tipo Map");
+			throw new IllegalArgumentException("O input n√£o suporta valores do tipo Map");
 		}
 		if (Enum.class.isAssignableFrom(c)) {
 			return InputTagType.SELECT_ONE;

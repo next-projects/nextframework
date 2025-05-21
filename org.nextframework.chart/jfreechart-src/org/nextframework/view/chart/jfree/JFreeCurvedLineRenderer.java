@@ -44,7 +44,7 @@ public class JFreeCurvedLineRenderer extends AbstractJFreeTypeRenderer {
 //		renderer.setBaseShapesVisible(true);
 		XYSplineRenderer renderer = new XYSplineRenderer();
 		renderer.setPrecision(16);
-		plot.setRenderer(renderer);// força a utilizacao das configuracoes do framework
+		plot.setRenderer(renderer);// forÃ§a a utilizacao das configuracoes do framework
 
 	}
 

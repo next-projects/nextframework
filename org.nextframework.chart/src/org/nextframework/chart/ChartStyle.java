@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Configura os estilos do gr·fico.
- * Nota: Nem todos os estilos s„o aplicados a todos os tipos de gr·fico ou todas as renderizaÁıes.
+ * Configura os estilos do gr√°fico.
+ * Nota: Nem todos os estilos s√£o aplicados a todos os tipos de gr√°fico ou todas as renderiza√ß√µes.
  * @author rogel
  *
  */
@@ -111,14 +111,14 @@ public class ChartStyle implements Serializable {
 	}
 
 	/**
-	 * Apenas utilizado nos gr·ficos google tools
+	 * Apenas utilizado nos gr√°ficos google tools
 	 */
 	public LegendPosition getLegendPosition() {
 		return legendPosition;
 	}
 
 	/**
-	 * Apenas utilizado nos gr·ficos google tools
+	 * Apenas utilizado nos gr√°ficos google tools
 	 * @param legendPosition
 	 */
 	public void setLegendPosition(LegendPosition legendPosition) {
@@ -174,7 +174,7 @@ public class ChartStyle implements Serializable {
 	}
 
 	/**
-	 * Apenas utilizado no JFreeChart quando o valueAxis È numÈrico
+	 * Apenas utilizado no JFreeChart quando o valueAxis √© num√©rico
 	 * @return
 	 */
 	public Double getValueAxisTickUnit() {
@@ -182,7 +182,7 @@ public class ChartStyle implements Serializable {
 	}
 
 	/**
-	 * Apenas utilizado no JFreeChart quando o valueAxis È numÈrico
+	 * Apenas utilizado no JFreeChart quando o valueAxis √© num√©rico
 	 * @return
 	 */
 	public void setValueAxisTickUnit(Double valueAxisTickUnit) {

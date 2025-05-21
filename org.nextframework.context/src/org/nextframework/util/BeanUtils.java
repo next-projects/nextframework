@@ -106,7 +106,7 @@ public class BeanUtils {
 		ReflectionCache cache = ReflectionCacheFactory.getReflectionCache();
 		Method[] methods = cache.getMethods(clazz);
 		Method method = null;
-		//achar o setter TODO EST¡ DUPLICADO
+		//achar o setter TODO EST√Å DUPLICADO
 		String setterName = "set" + Util.strings.captalize(property);
 		for (int j = 0; j < methods.length; j++) {
 			if (methods[j].getName().equals(setterName) && methods[j].getParameterTypes().length == 1) {
@@ -160,7 +160,7 @@ public class BeanUtils {
 		try {
 			return getPropertyValue(bean, property);
 		} catch (NullValueInNestedPathException e) {
-			//Se o caminho est· incompleto atÈ o valor, considera nulo mesmo. 
+			//Se o caminho est√° incompleto at√© o valor, considera nulo mesmo. 
 			return null;
 		}
 	}
@@ -174,7 +174,7 @@ public class BeanUtils {
 		try {
 			bw.setPropertyValue(property, value);
 		} catch (NullValueInNestedPathException e) {
-			//Se o caminho est· incompleto, mas existe valor a ser definido, completa.
+			//Se o caminho est√° incompleto, mas existe valor a ser definido, completa.
 			if (value != null) {
 				bw = PropertyAccessorFactory.forBeanPropertyAccess(bean); //buscar instancia novamente para limpar o cache de 'setAutoGrowNestedPaths' 
 				bw.setAutoGrowNestedPaths(true);
@@ -214,11 +214,11 @@ public class BeanUtils {
 				}
 			}
 		} catch (InstantiationException e1) {
-			throw new NextException("N„o foi possÌvel clonar o bean. N„o foi possÌvel criar outra instancia.", e1);
+			throw new NextException("N√£o foi poss√≠vel clonar o bean. N√£o foi poss√≠vel criar outra instancia.", e1);
 		} catch (IllegalAccessException e1) {
-			throw new NextException("N„o foi possÌvel clonar o bean. Acesso ilegal.", e1);
+			throw new NextException("N√£o foi poss√≠vel clonar o bean. Acesso ilegal.", e1);
 		} catch (BeansException e) {
-			throw new NextException("N„o foi possÌvel clonar o bean. ", e);
+			throw new NextException("N√£o foi poss√≠vel clonar o bean. ", e);
 		}
 		return o2;
 	}

@@ -36,13 +36,13 @@ public class DownloadFileProvider {
 			return;
 		}
 
-		// Checa se h· permiss„o
+		// Checa se h√° permiss√£o
 		if (!checkCdfile(request, cdfile)) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
 		}
 
-		// ObtÈm o conte˙do
+		// Obt√©m o conte√∫do
 		Resource resource = getResource(request, cdfile);
 		if (resource == null) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -80,7 +80,7 @@ public class DownloadFileProvider {
 		if (matcher.find()) {
 			return new Long(matcher.group(1));
 		} else {
-			throw new Exception("URL inv·lida");
+			throw new Exception("URL inv√°lida");
 		}
 	}
 
@@ -100,10 +100,10 @@ public class DownloadFileProvider {
 		} while (defaultListableBeanFactory != null);
 
 		if (beansOfType.size() == 0) {
-			//se nao tem FileDAO.. criar um default se sÛ tiver um tipo de arquivo
+			//se nao tem FileDAO.. criar um default se s√≥ tiver um tipo de arquivo
 			Class<?>[] classes = Util.objects.removeInterfaces(ClassManagerFactory.getClassManager().getAllClassesOfType(File.class));
 			if (classes.length == 1) {
-				//TODO REFATORAR ESSE C”DIGO, ELE SE REPETE NO GENERICDAO
+				//TODO REFATORAR ESSE C√ìDIGO, ELE SE REPETE NO GENERICDAO
 				FileDAO<?> fileDAO = new FileDAO(classes[0], true);
 				fileDAO.setHibernateTemplate(Next.getObject(HibernateTemplate.class));
 //				fileDAO.setJdbcTemplate(Next.getObject(JdbcTemplate.class));
@@ -133,7 +133,7 @@ public class DownloadFileProvider {
 			}
 		}
 
-		throw new RuntimeException("Estenda a classe DownloadFileServlet e sobrescreva o mÈtodo getResource, ou crie um DAO que extenda FileDAO");
+		throw new RuntimeException("Estenda a classe DownloadFileServlet e sobrescreva o m√©todo getResource, ou crie um DAO que extenda FileDAO");
 	}
 
 	private Resource returnFile(File file) {

@@ -3,7 +3,7 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<t:view titulo="Autorização">
+<t:view titulo="AutorizaÃ§Ã£o">
 	<t:filterPanel showSubmit="false">
 		<t:filterTable>
 			<t:property name="role" itens="${roles}" reloadOnChange="true" />
@@ -31,7 +31,7 @@
 								</n:property>
 							</c:if>
 							<c:if test="${fn:length(authorizationItem.valores) != 2}">
-								(Não implementado ainda)
+								(NÃ£o implementado ainda)
 								<n:input itens="${authorizationItem.valores}" />
 							</c:if>
 						</n:column>

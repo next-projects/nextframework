@@ -77,7 +77,7 @@ public class GenericService<BEAN extends Object> {
 	}
 
 	/** Carrega os atributos de um bean.
-	 *  @param bean Entidade com a PK definida que ser· usada como referencia.
+	 *  @param bean Entidade com a PK definida que ser√° usada como referencia.
 	 *  @param attributesToLoad String com os nomes dos atributos (separados por ',' ou ';') que devem ser carregados.
 	 **/
 	public void loadAttributes(BEAN bean, String[] attributesToLoad) {

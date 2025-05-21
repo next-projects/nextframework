@@ -87,7 +87,7 @@ public class ComboCallback implements AjaxCallbackController {
 
 				String simpleName = type.getSimpleName();
 				if (CHECK_REGISTER && !isRegistered(simpleName, "findBy", new Class[0])) {
-					throw new RuntimeException("N„o registrado para fazer a chamada. " + simpleName + ".findBy, tente pedir a p·gina novamente!");
+					throw new RuntimeException("N√£o registrado para fazer a chamada. " + simpleName + ".findBy, tente pedir a p√°gina novamente!");
 				}
 
 				String daoName = Util.strings.uncaptalize(simpleName) + "DAO";
@@ -122,12 +122,12 @@ public class ComboCallback implements AjaxCallbackController {
 
 					try {
 						if (CHECK_REGISTER && !isRegistered(beanName, function, paramClasses)) {
-							throw new RuntimeException("N„o registrado para fazer a chamada. " + beanName + "." + function + ", tente pedir a p·gina novamente!");
+							throw new RuntimeException("N√£o registrado para fazer a chamada. " + beanName + "." + function + ", tente pedir a p√°gina novamente!");
 						}
 						Object lista = Util.objects.findAndInvokeMethod(bean, function, values, paramClasses);
-						//o mÈtodo sempre deve retornar uma lista, mesmo que seja vazia
+						//o m√©todo sempre deve retornar uma lista, mesmo que seja vazia
 						if (!(lista instanceof List<?>)) {
-							throw new RuntimeException("O retorno do mÈtodo " + loadFunction + " n„o foi uma lista");
+							throw new RuntimeException("O retorno do m√©todo " + loadFunction + " n√£o foi uma lista");
 						}
 						String listaAttr = convertToJavaScript((List<?>) lista, comboFilter.getLabel());
 						response.getWriter().println(listaAttr);
@@ -136,7 +136,7 @@ public class ComboCallback implements AjaxCallbackController {
 					}
 
 				} else {
-					throw new RuntimeException("FunÁ„o inv·lida: " + loadFunction);
+					throw new RuntimeException("Fun√ß√£o inv√°lida: " + loadFunction);
 				}
 
 			}

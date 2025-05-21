@@ -43,7 +43,7 @@ public class ReportGeneratorSelectView implements SelectView {
 			onselect.$invoke(selectedItem);
 		}
 		if (!item.selectView.equals(this)) {
-			alert("Erro: o item n„o È do tipo do select view");
+			alert("Erro: o item n√£o √© do tipo do select view");
 			return;
 		}
 		unselectSelectedItem();

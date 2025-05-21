@@ -65,28 +65,28 @@ public class CrudAuthorizationModule extends AuthorizationModuleSupport implemen
 				if (!canCreate) {
 					String permissionvalue = permissao.getPermissionValue(CREATE);
 					if (permissionvalue == null) {
-						throw new IllegalArgumentException("Sem parâmetro: " + CREATE);
+						throw new IllegalArgumentException("Sem parÃ¢metro: " + CREATE);
 					}
 					canCreate = permissionvalue.equals("true");
 				}
 				if (!canRead) {
 					String permissionvalue = permissao.getPermissionValue(READ);
 					if (permissionvalue == null) {
-						throw new IllegalArgumentException("Sem parâmetro: " + READ);
+						throw new IllegalArgumentException("Sem parÃ¢metro: " + READ);
 					}
 					canRead = permissionvalue.equals("true");
 				}
 				if (!canUpdate) {
 					String permissionvalue = permissao.getPermissionValue(UPDATE);
 					if (permissionvalue == null) {
-						throw new IllegalArgumentException("Sem parâmetro: " + UPDATE);
+						throw new IllegalArgumentException("Sem parÃ¢metro: " + UPDATE);
 					}
 					canUpdate = permissionvalue.equals("true");
 				}
 				if (!canDelete) {
 					String permissionvalue = permissao.getPermissionValue(DELETE);
 					if (permissionvalue == null) {
-						throw new IllegalArgumentException("Sem parâmetro: " + DELETE);
+						throw new IllegalArgumentException("Sem parÃ¢metro: " + DELETE);
 					}
 					canDelete = permissionvalue.equals("true");
 				}

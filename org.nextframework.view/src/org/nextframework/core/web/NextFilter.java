@@ -75,6 +75,10 @@ public class NextFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 
+		ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
+		request.setCharacterEncoding(viewConfig.getJSPDefaultCharset());
+		response.setCharacterEncoding(viewConfig.getJSPDefaultCharset());
+
 		boolean nextRequest = request.getServletPath().equals(URL_NEXT);
 		Exception ex = (Exception) ((HttpServletRequest) req).getSession().getServletContext().getAttribute(ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
@@ -99,7 +103,7 @@ public class NextFilter implements Filter {
 				return;
 			}
 
-			//Marca inÌcio do processo
+			//Marca in√≠cio do processo
 			long beginTime = System.currentTimeMillis();
 			String userProcessPrefix = getUserProcessPrefix(request);
 			log.info(userProcessPrefix + "...");
@@ -111,11 +115,11 @@ public class NextFilter implements Filter {
 			//Uso de bootstrap
 			request.setAttribute(BOOTSTRAP_ATTRIB, ServiceFactory.getService(ViewConfig.class).isUseBootstrap());
 
-			//Locale do usu·rio e do sistema
+			//Locale do usu√°rio e do sistema
 			request.setAttribute(LOCALE_ATTRIB, NextWeb.getRequestContext().getLocale());
 			request.setAttribute(SYSTEM_LOCALE_ATTRIB, Locale.getDefault());
 
-			//colocar um flag na requisiÁ„o indicando que esta È uma p·gina selectone ou cadastrar
+			//colocar um flag na requisi√ß√£o indicando que esta √© uma p√°gina selectone ou cadastrar
 			String parameter = request.getParameter(INSELECTONE);
 			if ("true".equals(parameter)) {
 				request.setAttribute(INSELECTONE, true);
@@ -142,13 +146,12 @@ public class NextFilter implements Filter {
 
 	private void printNextInfo(HttpServletRequest request, HttpServletResponse response, Exception ex) throws IOException {
 
-		response.setCharacterEncoding("ISO-8859-1");
-
+		ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
 		PrintWriter out = response.getWriter();
 
 		out.println("<HTML>");
 		out.println("<head>");
-		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\" />");
+		out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" + viewConfig.getJSPDefaultCharset() + "\" />");
 		out.println("<link rel=\"stylesheet\" href=\"" + request.getContextPath() + "/resource/css/welcome.css\"/>");
 		out.println("</head>");
 		out.println("<BODY>");

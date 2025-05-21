@@ -49,7 +49,7 @@ public class ValueBasedPropertyEditor extends PropertyEditorSupport {
 			return;
 		}
 		if (!text.matches("\\w*((\\.\\w*)*)\\[((.)*)\\]")) {
-			throw new IllegalArgumentException("ValueBasedPropertyEditor: Valor n„o suportado " + text);
+			throw new IllegalArgumentException("ValueBasedPropertyEditor: Valor n√£o suportado " + text);
 		}
 		int classSeparator = text.indexOf('[');
 		String[] properties = text.substring(classSeparator + 1, text.length() - 1).split(",");
@@ -67,7 +67,7 @@ public class ValueBasedPropertyEditor extends PropertyEditorSupport {
 			try {
 				clazz = Class.forName(text.substring(0, classSeparator));
 			} catch (ClassNotFoundException e) {
-				throw new IllegalArgumentException("N„o existe uma classe para o parametro " + text, e);
+				throw new IllegalArgumentException("N√£o existe uma classe para o parametro " + text, e);
 			}
 		}
 		//changed from ExtendedBeanWrapper to BeanWrapperImpl

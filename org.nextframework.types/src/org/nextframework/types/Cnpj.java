@@ -36,7 +36,7 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 	private String value;
 
 	/**
-	 * @deprecated Utilize o mÈtodo que recebe uma String, esse mÈtodo sÛ existe por causa do hibernate
+	 * @deprecated Utilize o m√©todo que recebe uma String, esse m√©todo s√≥ existe por causa do hibernate
 	 */
 	@Deprecated
 	public Cnpj() {
@@ -49,7 +49,7 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 		String original = cnpj;
 		cnpj = removeSymbols(cnpj);
 		if (check && !cnpjValido(cnpj)) {
-			throw new IllegalArgumentException("O CNPJ '" + original + "' n„o È v·lido");
+			throw new IllegalArgumentException("O CNPJ '" + original + "' n√£o √© v√°lido");
 		}
 		value = cnpj.trim().equals("") ? null : cnpj;
 	}
@@ -58,10 +58,10 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 		this(cnpj, true);
 	}
 
-	/** Realiza a validaÁ„o do CNPJ.
+	/** Realiza a valida√ß√£o do CNPJ.
 	*
-	* @param   str_cnpj n˙mero de CNPJ a ser validado
-	* @return  true se o CNPJ È v·lido e false se n„o È v·lido
+	* @param   str_cnpj n√∫mero de CNPJ a ser validado
+	* @return  true se o CNPJ √© v√°lido e false se n√£o √© v√°lido
 	*/
 	public static boolean cnpjValido(String str_cnpj) {
 
@@ -107,7 +107,7 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 
 	private void checkPattern(String value) throws IllegalArgumentException {
 		if (!value.trim().equals("") && !value.matches("\\d{2,3}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}")) {
-			throw new IllegalArgumentException("O CNPJ '" + value + "' n„o est· no formato correto");
+			throw new IllegalArgumentException("O CNPJ '" + value + "' n√£o est√° no formato correto");
 		}
 	}
 
@@ -153,7 +153,7 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 				builder.insert(2, '.');
 				return builder.toString();
 			} catch (IndexOutOfBoundsException e) {
-				//System.out.println("\n************************\nCnpj inv·lido: "+value);
+				//System.out.println("\n************************\nCnpj inv√°lido: "+value);
 				return value;
 			}
 		}

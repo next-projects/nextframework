@@ -41,7 +41,7 @@ public class ImportJSTag extends SimpleTagSupport {
 		ServletContext servletContext = ((PageContext) getJspContext()).getServletContext();
 		Set<String> files = new HashSet<String>();
 
-		//FIXME Se for necess·rio uma ordem de carregamento, o carregamento por pacote n„o est· pronto pra isso... :-(
+		//FIXME Se for necess√°rio uma ordem de carregamento, o carregamento por pacote n√£o est√° pronto pra isso... :-(
 		if (pack != null) {
 			if (!pack.endsWith("resource")) {
 				getJspContext().getOut().println("<div style='color:red; background-color: white'>The package attribute of the importJS tag does not end with \"resource\". " +

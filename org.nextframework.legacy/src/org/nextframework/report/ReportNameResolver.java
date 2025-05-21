@@ -26,7 +26,7 @@ package org.nextframework.report;
 import java.io.InputStream;
 
 /**
- * Acha o inputStream do relatório pelo nome
+ * Acha o inputStream do relatÃ³rio pelo nome
  * @author rogelgarcia
  * @since 22/01/2006
  * @version 1.1

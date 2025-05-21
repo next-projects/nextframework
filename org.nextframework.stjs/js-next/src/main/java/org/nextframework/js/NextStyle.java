@@ -12,7 +12,7 @@ public abstract class NextStyle {
 	public abstract boolean removeClass(Element element, String className);
 
 	/**
-	 * Retorna o valor de uma propriedade CSS computada pelo browser. Deve ser utilizado o padr„o CSS de propriedades exemplo:
+	 * Retorna o valor de uma propriedade CSS computada pelo browser. Deve ser utilizado o padr√£o CSS de propriedades exemplo:
 	 * next.style.getStyleProperty(obj, 'padding-left').
 	 * <BR>
 	 * @param obj Elemento do qual deseja o valor

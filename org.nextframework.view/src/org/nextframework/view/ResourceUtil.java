@@ -43,7 +43,7 @@ public class ResourceUtil {
 	public static Integer save(HttpSession session, Resource resource) {
 
 		if (resource == null) {
-			throw new NullPointerException("O recurso n„o foi informado.");
+			throw new NullPointerException("O recurso n√£o foi informado.");
 		}
 
 		Integer number = null;

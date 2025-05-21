@@ -2,10 +2,10 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<t:view title="Erro no relatório" useBean="model">
+<t:view title="Erro no relatÃ³rio" useBean="model">
 
 	<n:content id="context">
-		<n:link url="${crudPath}">Voltar para Relatórios</n:link>
+		<n:link url="${crudPath}">Voltar para RelatÃ³rios</n:link>
 	</n:content>
 
 	<t:formPanel submitAction="saveReport">

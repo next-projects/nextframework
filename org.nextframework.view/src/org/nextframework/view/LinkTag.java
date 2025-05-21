@@ -73,7 +73,7 @@ public class LinkTag extends BaseTag {
 		url = buildFullUrl();
 
 		if (!hasAuthorization) {
-			getOut().println("<!-- Sem autorização para acessar: " + url + "-->");
+			getOut().println("<!-- Sem autorizaÃ§Ã£o para acessar: " + url + "-->");
 			return;
 		}
 
@@ -131,7 +131,7 @@ public class LinkTag extends BaseTag {
 			User user = Authorization.getUserLocator().getUser();
 			return Authorization.getAuthorizationManager().isAuthorized(partialURL, action, user);
 		} catch (Exception e) {
-			throw new NextException("Problema ao verificar autorização", e);
+			throw new NextException("Problema ao verificar autorizaÃ§Ã£o", e);
 		}
 	}
 

@@ -116,7 +116,7 @@ public class NextFunctions {
 			}
 			return Util.strings.toStringDescription(value, NextWeb.getRequestContext().getLocale());
 		} catch (Exception e) {
-			throw new NextException("Erro ao ler a descrição do objeto. Talvez o problema esteja na propriedade com @DescriptionProperty.", e);
+			throw new NextException("Erro ao ler a descriÃ§Ã£o do objeto. Talvez o problema esteja na propriedade com @DescriptionProperty.", e);
 		}
 	}
 
@@ -207,7 +207,7 @@ public class NextFunctions {
 		try {
 			return Next.getMessageSource().getMessage(code, argumentsArray, defaultValue, locale);
 		} catch (NoSuchMessageException e) {
-			throw new NextException("Nenhuma mensagem encontrada com o código '" + code + "'.", e);
+			throw new NextException("Nenhuma mensagem encontrada com o cÃ³digo '" + code + "'.", e);
 		}
 	}
 
@@ -224,7 +224,7 @@ public class NextFunctions {
 		try {
 			return Next.getMessageSource().getMessage(Util.objects.newMessage(codes, argumentsArray, defaultValue), locale);
 		} catch (NoSuchMessageException e) {
-			throw new NextException("Nenhuma mensagem encontrada com os códigos '" + codes[0] + "' ou '" + codes[1] + "'.", e);
+			throw new NextException("Nenhuma mensagem encontrada com os cÃ³digos '" + codes[0] + "' ou '" + codes[1] + "'.", e);
 		}
 	}
 
@@ -236,7 +236,7 @@ public class NextFunctions {
 		try {
 			return Next.getMessageSource().getMessage(resolvable, locale);
 		} catch (NoSuchMessageException e) {
-			throw new NextException("Nenhuma mensagem encontrada com o código '" + resolvable.getCodes()[0] + "'.", e);
+			throw new NextException("Nenhuma mensagem encontrada com o cÃ³digo '" + resolvable.getCodes()[0] + "'.", e);
 		}
 	}
 

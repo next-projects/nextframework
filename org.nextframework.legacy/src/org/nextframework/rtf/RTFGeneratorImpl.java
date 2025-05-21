@@ -40,7 +40,7 @@ public class RTFGeneratorImpl implements RTFGenerator {
 		try {
 			Map<String, String> parameterMap = rtf.getParameterMap();
 			if (parameterMap == null) {
-				throw new NullPointerException("RTF n„o possui parameterMap");
+				throw new NullPointerException("RTF n√£o possui parameterMap");
 			}
 			InputStream in = nameResolver.resolveName(rtf.getName());
 			out = new ByteArrayOutputStream();

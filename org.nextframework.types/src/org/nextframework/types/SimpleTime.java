@@ -83,7 +83,7 @@ public class SimpleTime extends java.sql.Time implements UserType {
 
 	private void checkPattern(String value) throws IllegalArgumentException {
 		if (!value.trim().equals("") && !value.matches("\\d{1,2}:\\d{2}")) {
-			throw new IllegalArgumentException("N„o foi possÌvel converter \"" + value + "\" para uma hora v·lida");
+			throw new IllegalArgumentException("N√£o foi poss√≠vel converter \"" + value + "\" para uma hora v√°lida");
 		}
 	}
 
@@ -136,7 +136,7 @@ public class SimpleTime extends java.sql.Time implements UserType {
 				return new SimpleTime(timestamp.getTime());
 			}
 		} catch (Exception e) {
-			String msg = "Uma propriedade do tipo Hora n„o tem seu campo no banco com o tipo time, timestamp ou date. Objeto: " + owner;
+			String msg = "Uma propriedade do tipo Hora n√£o tem seu campo no banco com o tipo time, timestamp ou date. Objeto: " + owner;
 			throw new RuntimeException(msg, e);
 		}
 	}

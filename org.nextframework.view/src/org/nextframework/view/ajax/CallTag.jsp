@@ -11,7 +11,7 @@
 					eval(data);
 				}catch(e){
 					alert('Erro ao executar callback!\\n' + e.name + ': ' + e.message);
-					document.write('<b>Código enviado pelo servidor</b><br><hr>' + data.replace(/\\n/g, '<BR>'));
+					document.write('<b>CÃ³digo enviado pelo servidor</b><br><hr>' + data.replace(/\\n/g, '<BR>'));
 				}
 			};
 		</c:if>

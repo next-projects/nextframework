@@ -60,7 +60,7 @@ public class SummaryDefinition<E extends Summary<?>> {
 	protected void init() {
 
 		Method[] methods = summaryClass.getMethods();
-		//TODO FAZER COM QUE OS MÉTODOS DEFINIDOS EM SUBCLASSES TENHAM PRIORIDADE MENOR
+		//TODO FAZER COM QUE OS MÃ‰TODOS DEFINIDOS EM SUBCLASSES TENHAM PRIORIDADE MENOR
 		//TODO VERIFICAR SE OS GRUPOS DEFINIDOS EM ESCOPOS REALMENTE EXISTEM
 		Set<String> groups = new HashSet<String>();
 		for (Method method : methods) {

@@ -3,10 +3,10 @@
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 <%@ taglib prefix="report-generator" uri="report-generator"%>
 
-<t:view title="Design de Relat髍ios - Passo 2: Escolher campos" useBean="model">
+<t:view title="Design de Relat贸rios - Passo 2: Escolher campos" useBean="model">
 
 	<n:content id="context">
-		<n:link url="${crudPath}">Voltar para Relat髍ios</n:link>
+		<n:link url="${crudPath}">Voltar para Relat贸rios</n:link>
 	</n:content>
 	
 	<t:simplePanel>
@@ -16,7 +16,7 @@
 				Tabela: ${reportTypeDisplayName}
 			</n:panel>
 			<n:panel colspan="12">
-				Escolha as propriedades que deseja usar no relat髍io:<br>
+				Escolha as propriedades que deseja usar no relat贸rio:<br>
 				<n:group columns="12">
 					<n:panel colspan="12">
 						<report-generator:chooseProperties />
@@ -26,7 +26,7 @@
 		</t:formTable>
 		<t:actionPanel>
 			<n:link type="button">Voltar</n:link>
-			<n:submit action="designReport">Pr髕imo passo</n:submit>
+			<n:submit action="designReport">Pr贸ximo passo</n:submit>
 		</t:actionPanel>
 	</t:simplePanel>
 

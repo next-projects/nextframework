@@ -95,7 +95,7 @@ public class HibernateUtils {
 					System.out.println("COLECAO LAZY " + owner.getClass().getSimpleName() + "." + role);
 				}
 			} catch (Exception e) {
-				//se nao conseguir carregar o valor lazy, n„o fazer nada
+				//se nao conseguir carregar o valor lazy, n√£o fazer nada
 			}
 		}
 		return value;
@@ -136,7 +136,7 @@ public class HibernateUtils {
 				return Util.objects.equals(v1Id, v2Id);
 			}
 
-			//Se n„o conseguiu comparar os ids, verifica se as inst‚ncias s„o iguais
+			//Se n√£o conseguiu comparar os ids, verifica se as inst√¢ncias s√£o iguais
 			return v1 == v2;
 		}
 

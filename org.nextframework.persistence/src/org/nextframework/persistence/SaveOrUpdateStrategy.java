@@ -36,7 +36,7 @@ import org.hibernate.SessionFactory;
 import org.nextframework.persistence.PersistenceUtils.InverseCollectionProperties;
 import org.nextframework.service.ServiceFactory;
 
-//TODO TERMINAR TRADU«√O DO JAVADOC
+//TODO TERMINAR TRADU√á√ÉO DO JAVADOC
 /**
  * Class to manage the persistence of entities.
  * The methods of this class returns a this object, allowing for a fluent interface.
@@ -82,10 +82,10 @@ public class SaveOrUpdateStrategy {
 	 * 
 	 * Cria um Save or Update managed,
 	 * buscando no contexto do Next os objetos HibernateTemplate e TransactionTemplate.
-	 * Os nomes dos beans devem ser hibernateTemplate e transactionTemplate respectivamente, caso n„o existam ser· lanÁada uma exceÁ„o.
+	 * Os nomes dos beans devem ser hibernateTemplate e transactionTemplate respectivamente, caso n√£o existam ser√° lan√ßada uma exce√ß√£o.
 	 * 
 	 * @param hibernateTemplate
-	 * @param entity Entidade que ser· salva
+	 * @param entity Entidade que ser√° salva
 	 */
 	public SaveOrUpdateStrategy(Object entity) {
 		this(PersistenceConfiguration.DEFAULT_CONFIG, entity);
@@ -97,10 +97,10 @@ public class SaveOrUpdateStrategy {
 	 * 
 	 * Cria um Save or Update managed,
 	 * buscando no contexto do Next os objetos HibernateTemplate e TransactionTemplate.
-	 * Os nomes dos beans devem ser hibernateTemplate e transactionTemplate respectivamente, caso n„o existam ser· lanÁada uma exceÁ„o.
+	 * Os nomes dos beans devem ser hibernateTemplate e transactionTemplate respectivamente, caso n√£o existam ser√° lan√ßada uma exce√ß√£o.
 	 * 
 	 * @param hibernateTemplate
-	 * @param entity Entidade que ser· salva
+	 * @param entity Entidade que ser√° salva
 	 */
 	public SaveOrUpdateStrategy(String persitenceContext, Object entity) {
 		this.hibernateTemplate = (HibernateTransactionSessionProvider<?>) PersistenceUtils.getSessionProvider(persitenceContext);
@@ -110,7 +110,7 @@ public class SaveOrUpdateStrategy {
 	/**
 	 * Returns the entity that is being saved.
 	 * 
-	 * Retorna a entidade que est· sendo salva
+	 * Retorna a entidade que est√° sendo salva
 	 * @return
 	 */
 	public Object getEntity() {
@@ -132,24 +132,24 @@ public class SaveOrUpdateStrategy {
 	 * Configures for each object in the collection referenced by the path parameter the owner (master) entity.
 	 * </p>
 	 * 
-	 * Seta para cada objeto da coleÁ„o em path a entidade pai
-	 * Path È o nome da propriedade, que deve ser um collection, onde encontram-se beans que tem referencia para
-	 * a entidade que est· sendo salva
-	 * parentProperty È o nome da propriedade em cada bean da coleÁ„o que faz referencia a entidade sendo salva
+	 * Seta para cada objeto da cole√ß√£o em path a entidade pai
+	 * Path √© o nome da propriedade, que deve ser um collection, onde encontram-se beans que tem referencia para
+	 * a entidade que est√° sendo salva
+	 * parentProperty √© o nome da propriedade em cada bean da cole√ß√£o que faz referencia a entidade sendo salva
 	 * ex.:
 	 * 
 	 * A classe Pessoa tem uma referencia para municipio
 	 * A classe Municipio tem um conjunto de referencias para Pessoa
 	 * 
-	 * VocÍ ir· salvar municipio mas precisa setar em todas as pessoas o municipio em que elas moram
+	 * Voc√™ ir√° salvar municipio mas precisa setar em todas as pessoas o municipio em que elas moram
 	 * 
-	 * Criando um saveOrUpdateStrategy voce diz que a entidade È municipio
+	 * Criando um saveOrUpdateStrategy voce diz que a entidade √© municipio
 	 * e fala que todas em todas as pessoas tem que ser executado pessoa.setMunicipio
 	 * 
 	 * setParent("pessoas","municipio")
 	 * 
-	 * pessoas È o conjunto que existe em municipio
-	 * municipio È a propriedade em pessoa que faz referencia a municipio
+	 * pessoas √© o conjunto que existe em municipio
+	 * municipio √© a propriedade em pessoa que faz referencia a municipio
 	 * 
 	 * @param path is the name of the bean property, that must be a collection, where there are beans that have reference to the entity being saved.
 	 * @param parentProperty is the name of the property in each bean in the collection that refers to the entity being saved. The name of the property in the detail bean that refers to the master bean. 
@@ -214,7 +214,7 @@ public class SaveOrUpdateStrategy {
 	/**
 	 * Force the executtion of the operations required until now.
 	 * 
-	 * Excecuta as operaÁıes pedidas atÈ o momento
+	 * Excecuta as opera√ß√µes pedidas at√© o momento
 	 * @return
 	 */
 	public SaveOrUpdateStrategy flush() {
@@ -222,8 +222,8 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Excecuta as operaÁıes pedidas atÈ o momento, mas d· preferencia aos comandos que devem ser executados primeiro
-	 * Um exemplo de comando que È executado primeiro sao as deleÁoes dos detalhes
+	 * Excecuta as opera√ß√µes pedidas at√© o momento, mas d√° preferencia aos comandos que devem ser executados primeiro
+	 * Um exemplo de comando que √© executado primeiro sao as dele√ßoes dos detalhes
 	 * @return
 	 */
 	private SaveOrUpdateStrategy flush(boolean insertFirst) {
@@ -257,8 +257,8 @@ public class SaveOrUpdateStrategy {
 	 * Save the objects in the collection.
 	 * </p>
 	 * 
-	 * Salva todos os objetos da coleÁao determinado por path
-	 * path È o nome da propriedade na entidade que possui a coleÁao a ser salva
+	 * Salva todos os objetos da cole√ßao determinado por path
+	 * path √© o nome da propriedade na entidade que possui a cole√ßao a ser salva
 	 * @param path is the property that has reference to the collection.
 	 */
 	public SaveOrUpdateStrategy saveCollection(String path) {
@@ -266,8 +266,8 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Salva todos os objetos da coleÁao determinado por path
-	 * path È o nome da propriedade na entidade que possui a coleÁao a ser salva
+	 * Salva todos os objetos da cole√ßao determinado por path
+	 * path √© o nome da propriedade na entidade que possui a cole√ßao a ser salva
 	 * @param path
 	 * @return
 	 */
@@ -278,7 +278,7 @@ public class SaveOrUpdateStrategy {
 			callbacks.add(new HibernateCommand() {
 				public Object doInHibernate(final Session session) throws HibernateException {
 					if (collection == null) {
-						//se a colecao È nula nao devemos salv·-la
+						//se a colecao √© nula nao devemos salv√°-la
 						return null;
 					}
 					for (Iterator<?> it = collection.iterator(); it.hasNext();) {
@@ -306,7 +306,7 @@ public class SaveOrUpdateStrategy {
 	/**
 	 * Deleta do banco as propriedades que nao foram encontrados no objeto
 	 * 
-	 * @param path Nome da propriedade com a coleÁ„o
+	 * @param path Nome da propriedade com a cole√ß√£o
 	 * @param parentProperty Nome da propriedade nas classes filhas que fazem referencia a entidade
 	 * @param itemClass Classe dos itens da colecao indicada por path
 	 * @return
@@ -318,7 +318,7 @@ public class SaveOrUpdateStrategy {
 	/**
 	 * Deleta do banco as propriedades que nao foram encontrados no objeto
 	 * 
-	 * @param path Nome da propriedade com a coleÁ„o
+	 * @param path Nome da propriedade com a cole√ß√£o
 	 * @param parentProperty Nome da propriedade nas classes filhas que fazem referencia a entidade
 	 * @param itemClass Classe dos itens da colecao indicada por path
 	 * @return
@@ -343,10 +343,10 @@ public class SaveOrUpdateStrategy {
 	/**
 	 * Deleta do banco as propriedades que nao foram encontrados no objeto
 	 * 
-	 * @param path Nome da propriedade com a coleÁ„o
+	 * @param path Nome da propriedade com a cole√ß√£o
 	 * @param parentProperty Nome da propriedade nas classes filhas que fazem referencia a entidade
 	 * @param itemClass Classe dos itens da colecao indicada por path
-	 * @param insertFirst Se for true d· preferencia a esse comando na hora de executar
+	 * @param insertFirst Se for true d√° preferencia a esse comando na hora de executar
 	 * @return
 	 */
 	private SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass, boolean insertFirst) {
@@ -356,11 +356,11 @@ public class SaveOrUpdateStrategy {
 	/**
 	 * Deleta do banco as propriedades que nao foram encontrados no objeto
 	 * 
-	 * @param path Nome da propriedade com a coleÁ„o
+	 * @param path Nome da propriedade com a cole√ß√£o
 	 * @param parentProperty Nome da propriedade nas classes filhas que fazem referencia a entidade
 	 * @param itemClass Classe dos itens da colecao indicada por path
-	 * @param insertFirst Se for true d· preferencia a esse comando na hora de executar
-	 * @param collectionItemDeleteListener Listener que ser· executado para cada objeto excluido (N„o ser· feita exclus„o em batch se listener != null)
+	 * @param insertFirst Se for true d√° preferencia a esse comando na hora de executar
+	 * @param collectionItemDeleteListener Listener que ser√° executado para cada objeto excluido (N√£o ser√° feita exclus√£o em batch se listener != null)
 	 * @return
 	 */
 	@SuppressWarnings("rawtypes")
@@ -507,9 +507,9 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Salva cada objeto novo na coleÁao indicada por path no banco
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
-	 * Deleta do banco os itens nao encontrados na coleÁao
+	 * Deleta do banco os itens nao encontrados na cole√ßao
 	 * @param path
 	 * @param parentProperty
 	 * @param itemClass
@@ -521,9 +521,9 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Deleta do banco os itens nao encontrados na coleÁao e d· um flush na conexao
+	 * Deleta do banco os itens nao encontrados na cole√ßao e d√° um flush na conexao
 	 * 
-	 * Salva cada objeto novo na coleÁao indicada por path no banco
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
 	 * 
 	 * @param path
@@ -534,9 +534,9 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Deleta do banco os itens nao encontrados na coleÁao e d· um flush na conexao
+	 * Deleta do banco os itens nao encontrados na cole√ßao e d√° um flush na conexao
 	 * 
-	 * Salva cada objeto novo na coleÁao indicada por path no banco
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
 	 * 
 	 * @param path
@@ -552,18 +552,18 @@ public class SaveOrUpdateStrategy {
 			executeManagedSavingDeleteFirst(path, itemClass, parentProperty, listener);
 		} catch (Exception e) {
 			if (entity == null) {
-				throw new RuntimeException("N„o foi possÌvel usar o saveOrUpdateManaged(String) para entidade nula ", e);
+				throw new RuntimeException("N√£o foi poss√≠vel usar o saveOrUpdateManaged(String) para entidade nula ", e);
 			}
-			throw new RuntimeException("N„o foi possÌvel usar o saveOrUpdateManaged(String) para " + entity.getClass().getName() + "! PossÌveis causas: " +
-					"Os itens do collection n„o possuem referencia para o pai, O path estava incorreto. O path leva a uma coleÁ„o que n„o tem classe persistente", e);
+			throw new RuntimeException("N√£o foi poss√≠vel usar o saveOrUpdateManaged(String) para " + entity.getClass().getName() + "! Poss√≠veis causas: " +
+					"Os itens do collection n√£o possuem referencia para o pai, O path estava incorreto. O path leva a uma cole√ß√£o que n√£o tem classe persistente", e);
 		}
 		return this;
 	}
 
 	/**
-	 * Deleta do banco os itens nao encontrados na coleÁao e d· um flush na conexao
+	 * Deleta do banco os itens nao encontrados na cole√ßao e d√° um flush na conexao
 	 * 
-	 * Salva cada objeto novo na coleÁao indicada por path no banco
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
 	 * 
 	 * @param path
@@ -580,9 +580,9 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Deleta do banco os itens nao encontrados na coleÁao e d· um flush na conexao
+	 * Deleta do banco os itens nao encontrados na cole√ßao e d√° um flush na conexao
 	 * 
-	 * Salva cada objeto novo na coleÁao indicada por path no banco
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
 	 * 
 	 * @param path
@@ -594,9 +594,9 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Deleta do banco os itens nao encontrados na coleÁao e d· um flush na conexao
+	 * Deleta do banco os itens nao encontrados na cole√ßao e d√° um flush na conexao
 	 * 
-	 * Salva cada objeto novo na coleÁao indicada por path no banco delegando para o DAO da entidade representada por path (caso delegateToEntityDAO for true)
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco delegando para o DAO da entidade representada por path (caso delegateToEntityDAO for true)
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
 	 * 
 	 * @param path
@@ -613,9 +613,9 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Deleta do banco os itens nao encontrados na coleÁao e d· um flush na conexao
+	 * Deleta do banco os itens nao encontrados na cole√ßao e d√° um flush na conexao
 	 * 
-	 * Salva cada objeto novo na coleÁao indicada por path no banco
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
 	 * 
 	 * @param path
@@ -629,9 +629,9 @@ public class SaveOrUpdateStrategy {
 
 	/**
 	 * 
-	 * Salva cada objeto novo na coleÁao indicada por path no banco
+	 * Salva cada objeto novo na cole√ßao indicada por path no banco
 	 * Seta a propriedade pai de cada item da colecao para a entidade sendo salva
-	 * Deleta do banco os itens nao encontrados na coleÁao
+	 * Deleta do banco os itens nao encontrados na cole√ßao
 	 * 
 	 * @param path
 	 * @return
@@ -645,8 +645,8 @@ public class SaveOrUpdateStrategy {
 			String parentProperty = inverseCollectionProperty.property;
 			executeManagedSaving(path, itemClass, parentProperty);
 		} catch (Exception e) {
-			throw new RuntimeException("N„o foi possÌvel usar o saveOrUpdateManaged(String) para " + entity.getClass().getName() + "! PossÌveis causas: " +
-					"Os itens do collection n„o possuem referencia para o pai, O path estava incorreto. O path leva a uma coleÁ„o que n„o tem classe persistente", e);
+			throw new RuntimeException("N√£o foi poss√≠vel usar o saveOrUpdateManaged(String) para " + entity.getClass().getName() + "! Poss√≠veis causas: " +
+					"Os itens do collection n√£o possuem referencia para o pai, O path estava incorreto. O path leva a uma cole√ß√£o que n√£o tem classe persistente", e);
 		}
 		return this;
 	}
@@ -694,12 +694,12 @@ public class SaveOrUpdateStrategy {
 
 	/**
 	 * Anexa um outro save ou update a esse.<BR>
-	 * Depois que esse saveOrUpdate tiver concluido suas tarefas ele executar·
+	 * Depois que esse saveOrUpdate tiver concluido suas tarefas ele executar√°
 	 * as tarefas dos saveOrUpdates anexados.<BR>
-	 * Tanto as tarefas desse strategy quanto do anexado ser„o executadas na mesma transaÁ„o.<BR>
-	 * As tarefas ser„o verificadas na chamada desse mÈtodo, ent„o, se forem adicionadas tarefas
-	 * depois da chamada desse mÈtodo, para o strategy fornecido, elas N√O ser„o excecutadas 
-	 * IMPORTANTE: N√O CHAME O M…TODO EXCECUTE NOS SAVEORUPDATESTRATEGYS ANEXADOS<BR>
+	 * Tanto as tarefas desse strategy quanto do anexado ser√£o executadas na mesma transa√ß√£o.<BR>
+	 * As tarefas ser√£o verificadas na chamada desse m√©todo, ent√£o, se forem adicionadas tarefas
+	 * depois da chamada desse m√©todo, para o strategy fornecido, elas N√ÉO ser√£o excecutadas 
+	 * IMPORTANTE: N√ÉO CHAME O M√âTODO EXCECUTE NOS SAVEORUPDATESTRATEGYS ANEXADOS<BR>
 	 *  
 	 * @param strategy
 	 */
@@ -712,12 +712,12 @@ public class SaveOrUpdateStrategy {
 
 	/**
 	 * Anexa um outro save ou update a esse.<BR>
-	 * Antes que esse saveOrUpdate execute suas tarefas ele executar·
+	 * Antes que esse saveOrUpdate execute suas tarefas ele executar√°
 	 * as tarefas dos saveOrUpdates anexados.<BR>
-	 * Tanto as tarefas desse strategy quanto do anexado ser„o executadas na mesma transaÁ„o.<BR>
-	 * As tarefas ser„o verificadas na chamada desse mÈtodo, ent„o, se forem adicionadas tarefas
-	 * depois da chamada desse mÈtodo, para o strategy fornecido, elas N√O ser„o excecutadas 
-	 * IMPORTANTE: N√O CHAME O M…TODO EXCECUTE NOS SAVEORUPDATESTRATEGYS ANEXADOS<BR>
+	 * Tanto as tarefas desse strategy quanto do anexado ser√£o executadas na mesma transa√ß√£o.<BR>
+	 * As tarefas ser√£o verificadas na chamada desse m√©todo, ent√£o, se forem adicionadas tarefas
+	 * depois da chamada desse m√©todo, para o strategy fornecido, elas N√ÉO ser√£o excecutadas 
+	 * IMPORTANTE: N√ÉO CHAME O M√âTODO EXCECUTE NOS SAVEORUPDATESTRATEGYS ANEXADOS<BR>
 	 *  
 	 * @param strategy
 	 */
@@ -739,11 +739,11 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Anexa uma tarefa a essa estratÈgia.<BR>
-	 * Depois que esse saveOrUpdate tiver concluido suas tarefas ele executar·
+	 * Anexa uma tarefa a essa estrat√©gia.<BR>
+	 * Depois que esse saveOrUpdate tiver concluido suas tarefas ele executar√°
 	 * as tarefas anexadas.<BR>
-	 * Tanto as tarefas desse strategy quanto o anexo ser„o executadas na mesma transaÁ„o. 
-	 * N„o È necess·rio criar um contexto transacional na tarefa anexada<BR>
+	 * Tanto as tarefas desse strategy quanto o anexo ser√£o executadas na mesma transa√ß√£o. 
+	 * N√£o √© necess√°rio criar um contexto transacional na tarefa anexada<BR>
 	 * @param callback
 	 * @return
 	 */
@@ -755,11 +755,11 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Anexa uma tarefa a essa estratÈgia.<BR>
-	 * Antes que esse saveOrUpdate execute suas tarefas ele executar·
+	 * Anexa uma tarefa a essa estrat√©gia.<BR>
+	 * Antes que esse saveOrUpdate execute suas tarefas ele executar√°
 	 * as tarefas anexadas.<BR>
-	 * Tanto as tarefas desse strategy quanto o anexo ser„o executadas na mesma transaÁ„o. 
-	 * N„o È necess·rio criar um contexto transacional na tarefa anexada<BR>
+	 * Tanto as tarefas desse strategy quanto o anexo ser√£o executadas na mesma transa√ß√£o. 
+	 * N√£o √© necess√°rio criar um contexto transacional na tarefa anexada<BR>
 	 * @param callback
 	 * @return
 	 */
@@ -771,9 +771,9 @@ public class SaveOrUpdateStrategy {
 	}
 
 	/**
-	 * Anexa uma tarefa a essa estratÈgia.<BR>
-	 * Caso ocorra alguma exceÁ„o em alguma tarefa desse saveOrUpdate esse callback ser· executado.<BR>
-	 * N„o È necess·rio criar um contexto transacional na tarefa anexada<BR>
+	 * Anexa uma tarefa a essa estrat√©gia.<BR>
+	 * Caso ocorra alguma exce√ß√£o em alguma tarefa desse saveOrUpdate esse callback ser√° executado.<BR>
+	 * N√£o √© necess√°rio criar um contexto transacional na tarefa anexada<BR>
 	 * @param callback
 	 * @return
 	 */

@@ -259,7 +259,7 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 		JFreeTypeRenderer jFreeTypeRenderer = chartMapping.get(chart.getStyle().getChartType());
 
 		if (jFreeTypeRenderer == null) {
-			throw new NextException("N„o È possÌvel renderizar o gr·fico do tipo especificado " + chart.getChartType());
+			throw new NextException("N√£o √© poss√≠vel renderizar o gr√°fico do tipo especificado " + chart.getChartType());
 		}
 
 		JFreeChart chartRendered = jFreeTypeRenderer.render(chart);

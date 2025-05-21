@@ -36,13 +36,13 @@
 	</div>
 
 	<n:tabPanel id="designerTab">
-		<n:panel title="Configuração">
+		<n:panel title="ConfiguraÃ§Ã£o">
 			<t:formTable columns="10">
 
-				<t:propertyLayout label="Título do Relatório" bodyId="reportTitle" colspan="6">
+				<t:propertyLayout label="TÃ­tulo do RelatÃ³rio" bodyId="reportTitle" colspan="6">
 					<input id="reportTitle" class="${inputTagClass}" />
 				</t:propertyLayout>
-				<t:propertyLayout label="Tornar Público" bodyId="reportPublic" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="Tornar PÃºblico" bodyId="reportPublic" invertLabel="true" colspan="4" labelColspan="3">
 					<n:input type="checkbox" name="reportPublic" id="reportPublic" value="${model.reportPublic}" class="${inputCheckTagClass}" />
 				</t:propertyLayout>
 
@@ -65,22 +65,22 @@
 
 				<t:propertyLayout label="Formato" bodyId="patternDate" colspan="8">
 					<select id="patternDate" class="${inputSelectTagClass}" style="text-transform: none;">
-						<option selected="selected" value="">Dia/Mês/Ano (padrão)</option>
-						<option value="dd/MM/yyyy HH:mm">Dia/Mês/Ano Hora:Minuto</option>
-						<option value="dd/MM">Dia/Mês</option>
-						<option value="MM/yyyy">Mês/Ano</option>
-						<option value="MMM yyyy">Mês (abreviado) Ano</option>
-						<option value="MMMMM 'de' yyyy">Mês Ano Extenso</option>
+						<option selected="selected" value="">Dia/MÃªs/Ano (padrÃ£o)</option>
+						<option value="dd/MM/yyyy HH:mm">Dia/MÃªs/Ano Hora:Minuto</option>
+						<option value="dd/MM">Dia/MÃªs</option>
+						<option value="MM/yyyy">MÃªs/Ano</option>
+						<option value="MMM yyyy">MÃªs (abreviado) Ano</option>
+						<option value="MMMMM 'de' yyyy">MÃªs Ano Extenso</option>
 						<option value="yyyy">Ano</option>
-						<option value="dd 'de' MMMMM">Dia/Mês Extenso</option>
-						<option value="dd 'de' MMMMM 'de' yyyy">Dia/Mês/Ano Extenso</option>
+						<option value="dd 'de' MMMMM">Dia/MÃªs Extenso</option>
+						<option value="dd 'de' MMMMM 'de' yyyy">Dia/MÃªs/Ano Extenso</option>
 					</select>
 				</t:propertyLayout>
 				<n:panel colspan="2" />
 
 				<t:propertyLayout label="Formato" bodyId="patternNumber" colspan="8">
 					<select id="patternNumber" class="${inputSelectTagClass}" style="text-transform: none;">
-						<option selected="selected" value="">Padrão</option>
+						<option selected="selected" value="">PadrÃ£o</option>
 						<option value="0">Sem casas decimais</option>
 						<option value="#,##0">Sem casas decimais + separador milhar</option>
 						<option value="0.00">2 casas decimais</option>
@@ -100,10 +100,10 @@
 				<t:propertyLayout bodyId="aggregateType" label="" renderAs="single" colspan="4">
 					<select id="aggregateType" class="${inputSelectTagClass}">
 						<option value="SUM">Soma</option>
-						<option value="AVERAGE">Média</option>
-						<option value="AVERAGENN">Média (não vazios)</option>
-						<option value="MAX">Máximo</option>
-						<option value="MIN">Mínimo</option>
+						<option value="AVERAGE">MÃ©dia</option>
+						<option value="AVERAGENN">MÃ©dia (nÃ£o vazios)</option>
+						<option value="MAX">MÃ¡ximo</option>
+						<option value="MIN">MÃ­nimo</option>
 					</select>
 				</t:propertyLayout>
 
@@ -118,13 +118,13 @@
 
 				<t:propertyLayout label="Formato" bodyId="patternDateGroup" colspan="8">
 					<select id="patternDateGroup" class="${inputSelectTagClass}" style="text-transform: none;">
-						<option selected="selected" value="">Mês/Ano (padrão)</option>
-						<option value="MMMMM 'de' yyyy">Mês/Ano Extenso</option>
-						<option value="MMMMM">Mês</option>
+						<option selected="selected" value="">MÃªs/Ano (padrÃ£o)</option>
+						<option value="MMMMM 'de' yyyy">MÃªs/Ano Extenso</option>
+						<option value="MMMMM">MÃªs</option>
 						<option value="yyyy">Ano</option>
 						<option value="ddddd">Dia da Semana</option>
-						<option value="dd/MM/yyyy">Dia/Mês/Ano</option>
-						<option value="dd 'de' MMMMM 'de' yyyy">Dia/Mês/Ano Extenso</option>
+						<option value="dd/MM/yyyy">Dia/MÃªs/Ano</option>
+						<option value="dd 'de' MMMMM 'de' yyyy">Dia/MÃªs/Ano Extenso</option>
 						<option value="HH">Hora</option>
 					</select>
 				</t:propertyLayout>
@@ -144,26 +144,26 @@
 				</t:propertyLayout>
 				<n:panel colspan="4" />
 
-				<t:propertyLayout label="Valor padrão" bodyId="filterPreSelectDate" colspan="4">
+				<t:propertyLayout label="Valor padrÃ£o" bodyId="filterPreSelectDate" colspan="4">
 					<n:input id="filterPreSelectDate" itens="${reportFilterDateAutoFilterList}" type="${ReportFilterDateAutoFilterType}" />
 				</t:propertyLayout>
-				<t:propertyLayout label="Valor padrão" bodyId="filterPreSelectEntity" colspan="4">
+				<t:propertyLayout label="Valor padrÃ£o" bodyId="filterPreSelectEntity" colspan="4">
 					<select id="filterPreSelectEntity" class="${inputSelectTagClass}"></select>
 				</t:propertyLayout>
-				<t:propertyLayout label="Critério fixo" bodyId="filterFixedCriteria" colspan="4">
+				<t:propertyLayout label="CritÃ©rio fixo" bodyId="filterFixedCriteria" colspan="4">
 					<select id="filterFixedCriteria" class="${inputSelectTagClass}"></select>
 				</t:propertyLayout>
 
-				<t:propertyLayout label="Múltiplos valores" bodyId="filterSelectMultiple" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="MÃºltiplos valores" bodyId="filterSelectMultiple" invertLabel="true" colspan="4" labelColspan="3">
 					<n:input id="filterSelectMultiple" type="checkbox" class="${inputCheckTagClass}"/>
 				</t:propertyLayout>
-				<t:propertyLayout label="Obrigatório" bodyId="filterRequired" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="ObrigatÃ³rio" bodyId="filterRequired" invertLabel="true" colspan="4" labelColspan="3">
 					<n:input id="filterRequired" type="checkbox" class="${inputCheckTagClass}"/>
 				</t:propertyLayout>
 
 			</t:formTable>
 		</n:panel>
-		<n:panel title="Gráficos">
+		<n:panel title="GrÃ¡ficos">
 			<t:formTable columns="10">
 
 				<n:panel colspan="6">
@@ -171,23 +171,23 @@
 					</select>
 				</n:panel>
 				<n:panel class="botoesVerticais" colspan="2">
-					<button onclick="cwizz.show();" class="${btnStyleClass}">Criar Gráfico</button>
-					<button onclick="cwizz.edit(ReportDesigner.getInstance().getSelectedChartConfiguration())" class="${btnStyleClass}">Editar Gráfico</button>
-					<button onclick="ReportDesigner.getInstance().removeSelectedChart()" class="${btnStyleClass}">Remover Gráfico</button>
+					<button onclick="cwizz.show();" class="${btnStyleClass}">Criar GrÃ¡fico</button>
+					<button onclick="cwizz.edit(ReportDesigner.getInstance().getSelectedChartConfiguration())" class="${btnStyleClass}">Editar GrÃ¡fico</button>
+					<button onclick="ReportDesigner.getInstance().removeSelectedChart()" class="${btnStyleClass}">Remover GrÃ¡fico</button>
 				</n:panel>
 
 			</t:formTable>
 		</n:panel>
-		<n:panel title="Cálculos">
+		<n:panel title="CÃ¡lculos">
 			<t:formTable columns="10">
 
 				<n:panel colspan="6">
 					<n:input id="calculatedFields" name="calculatedFields" type="select-many" itens="${emptyList}" useType="java.lang.String" size="10" />
 				</n:panel>
 				<n:panel class="botoesVerticais" colspan="2">
-					<button title="" onclick="ReportDesigner.getInstance().showAddCalculatedProperty();" class="${btnStyleClass}">Adicionar Cálculo</button>
-					<button title="" onclick="ReportDesigner.getInstance().editCalculatedProperty();" class="${btnStyleClass}">Editar Cálculo</button>
-					<button title="" onclick="ReportDesigner.getInstance().removeSelectedCalculatedProperty();" class="${btnStyleClass}">Remover Cálculo</button>
+					<button title="" onclick="ReportDesigner.getInstance().showAddCalculatedProperty();" class="${btnStyleClass}">Adicionar CÃ¡lculo</button>
+					<button title="" onclick="ReportDesigner.getInstance().editCalculatedProperty();" class="${btnStyleClass}">Editar CÃ¡lculo</button>
+					<button title="" onclick="ReportDesigner.getInstance().removeSelectedCalculatedProperty();" class="${btnStyleClass}">Remover CÃ¡lculo</button>
 				</n:panel>
 
 			</t:formTable>
@@ -201,7 +201,7 @@
 	<div id="propertiesWizzard">
 		<t:formTable columns="12">
 			<n:panel colspan="12">
-				Escolha as propriedades que deseja usar no relatório:<br>
+				Escolha as propriedades que deseja usar no relatÃ³rio:<br>
 				<n:group columns="12">
 					<n:panel style="height: 40em; overflow: scroll;" colspan="12">
 						<report-generator:chooseProperties />
@@ -215,7 +215,7 @@
 		<div id="chartWizzard_page_1">
 			<t:formTable columns="12">
 				<n:panel colspan="12">
-					Escolha o tipo do gráfico:
+					Escolha o tipo do grÃ¡fico:
 				</n:panel>
 				<n:panel style="display: flex; justify-content: center; gap: 4em;" colspan="12">
 					<div>
@@ -245,34 +245,34 @@
 		<div id="chartWizzard_page_2" style="display: none">
 			<t:formTable columns="12">
 				
-				<t:propertyLayout label="Título do gráfico" bodyId="chartTitle" colspan="12">
+				<t:propertyLayout label="TÃ­tulo do grÃ¡fico" bodyId="chartTitle" colspan="12">
 					<input type="text" id="chartTitle" class="${inputTagClass}" />
 				</t:propertyLayout>
 
-				<t:propertyLayout label="Rótulo dos grupos (eixo horizontal)" bodyId="chartGroupTitle" colspan="4">
+				<t:propertyLayout label="RÃ­tulo dos grupos (eixo horizontal)" bodyId="chartGroupTitle" colspan="4">
 					<input type="text" id="chartGroupTitle" class="${inputTagClass}" />
 				</t:propertyLayout>
-				<t:propertyLayout label="Rótulo das series (eixo vertical)" bodyId="chartSeriesTitle" colspan="4">
+				<t:propertyLayout label="RÃ­tulo das series (eixo vertical)" bodyId="chartSeriesTitle" colspan="4">
 					<input type="text" id="chartSeriesTitle" class="${inputTagClass}" />
 				</t:propertyLayout>
-				<t:propertyLayout label="Remover séries ou grupos em branco" bodyId="chartIgnoreEmptySeriesAndGroups" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="Remover sÃ©ries ou grupos em branco" bodyId="chartIgnoreEmptySeriesAndGroups" invertLabel="true" colspan="4" labelColspan="3">
 					<input type="checkbox" id="chartIgnoreEmptySeriesAndGroups" class="${inputCheckTagClass}"/>
 				</t:propertyLayout>
 
 				<n:panel colspan="12">
 					<h5>Grupos</h5>
-					Escolha um campo para formar o agrupamento do gráfico.
-					Cada elemento do agrupamento será representado por uma fatia no gráfico de pizza, ou grupo no eixo horizontal de outros gráficos.
+					Escolha um campo para formar o agrupamento do grÃ¡fico.
+					Cada elemento do agrupamento serÃ¡ representado por uma fatia no grÃ¡fico de pizza, ou grupo no eixo horizontal de outros grÃ¡ficos.
 				</n:panel>
 
 				<t:propertyLayout label="Agrupar por" bodyId="chartGroupBy" colspan="4">
 					<select id="chartGroupBy" class="${inputSelectTagClass}"></select>
 				</t:propertyLayout>
-				<t:propertyLayout label="Nível" bodyId="chartGroupByLevel" colspan="4">
+				<t:propertyLayout label="NÃ­vel" bodyId="chartGroupByLevel" colspan="4">
 					<select id="chartGroupByLevel" class="${inputSelectTagClass}">
 						<%-- values from Calendar class --%>
 						<option value="1">Ano</option>
-						<option value="2">Mês</option>
+						<option value="2">MÃªs</option>
 						<option value="5">Dia</option>
 						<option value="11">Hora</option>
 						<option value="12">Minuto</option>
@@ -283,13 +283,13 @@
 			<t:formTable id="chartSeriesSectionType" columns="12">
 
 				<n:panel colspan="12">
-					<h5>Tipo de dados da série</h5>
+					<h5>Tipo de dados da sÃ©rie</h5>
 				</n:panel>
 
-				<t:propertyLayout label="Usar uma propriedade como série e outra como valor" bodyId="propertyTypeDefault" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="Usar uma propriedade como sÃ©rie e outra como valor" bodyId="propertyTypeDefault" invertLabel="true" colspan="4" labelColspan="3">
 					<input type="radio" name="seriesType" value="propertiesDefault" id="propertyTypeDefault" checked="checked" class="${inputCheckTagClass}"/>
 				</t:propertyLayout>
-				<t:propertyLayout label="Usar propriedades como série e valor" bodyId="propertyTypeAsSeries" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="Usar propriedades como sÃ©rie e valor" bodyId="propertyTypeAsSeries" invertLabel="true" colspan="4" labelColspan="3">
 					<input type="radio" name="seriesType" value="propertiesAsSeries" id="propertyTypeAsSeries" class="${inputCheckTagClass}"/>
 				</t:propertyLayout>
 
@@ -299,21 +299,21 @@
 
 					<n:panel colspan="12">
 						<h5>Series</h5>
-						As séries formam um segundo agrupamento, e são representadas pelas linhas, colunas ou barras do gráfico.
+						As sÃ©ries formam um segundo agrupamento, e sÃ£o representadas pelas linhas, colunas ou barras do grÃ¡fico.
 					</n:panel>
 
-					<t:propertyLayout label="Séries" bodyId="chartSeries" colspan="4">
+					<t:propertyLayout label="SÃ©ries" bodyId="chartSeries" colspan="4">
 						<select id="chartSeries" class="${inputSelectTagClass}"></select>
 					</t:propertyLayout>
 					<n:panel stype="padding: 0px;" colspan="8">
 						<t:formTable columns="12">
-							<t:propertyLayout label="Mostrar todos os valores de série" bodyId="chartConfigLimitSeriesShowAll" invertLabel="true" colspan="12" labelColspan="11">
+							<t:propertyLayout label="Mostrar todos os valores de sÃ©rie" bodyId="chartConfigLimitSeriesShowAll" invertLabel="true" colspan="12" labelColspan="11">
 								<input name="chartConfigLimitSeries" id="chartConfigLimitSeriesShowAll" type="radio" value="showall" checked="checked" class="${inputCheckTagClass}"/>
 							</t:propertyLayout>
-							<t:propertyLayout label="Limitar o número de séries (mostrar os valores top)" bodyId="chartConfigLimitSeriesLimit" invertLabel="true" colspan="12" labelColspan="11">
+							<t:propertyLayout label="Limitar o nÃºmero de sÃ©ries (mostrar os valores top)" bodyId="chartConfigLimitSeriesLimit" invertLabel="true" colspan="12" labelColspan="11">
 								<input name="chartConfigLimitSeries" id="chartConfigLimitSeriesLimit" type="radio" value="limit" class="${inputCheckTagClass}"/>
 							</t:propertyLayout>
-							<t:propertyLayout label="Agrupar as séries excedentes (somar as séries menores em 'outros')" bodyId="chartConfigLimitSeriesGroup" invertLabel="true" colspan="12" labelColspan="11">
+							<t:propertyLayout label="Agrupar as sÃ©ries excedentes (somar as sÃ©ries menores em 'outros')" bodyId="chartConfigLimitSeriesGroup" invertLabel="true" colspan="12" labelColspan="11">
 								<input name="chartConfigLimitSeries" id="chartConfigLimitSeriesGroup" type="radio" value="group" class="${inputCheckTagClass}"/>
 							</t:propertyLayout>
 						</t:formTable>
@@ -324,11 +324,11 @@
 
 					<n:panel colspan="12">
 						<h5>Valores</h5>
-						Escolha um campo para formar os valores do gráfico.
-						O valor será usado para definir o tamanho da fatia do grupo num gráfico de pizza, ou a altura de uma barra ou altura linha em outros gráficos.
+						Escolha um campo para formar os valores do grÃ¡fico.
+						O valor serÃ¡ usado para definir o tamanho da fatia do grupo num grÃ¡fico de pizza, ou a altura de uma barra ou altura linha em outros grÃ¡ficos.
 					</n:panel>
 
-					<t:propertyLayout label="Mostrar número de itens como valor" bodyId="chartCountTrue" invertLabel="true" colspan="4" labelColspan="3">
+					<t:propertyLayout label="Mostrar nÃºmero de itens como valor" bodyId="chartCountTrue" invertLabel="true" colspan="4" labelColspan="3">
 						<input type="radio" id="chartCountTrue" name="pieCount" value="true" checked="checked" class="${inputCheckTagClass}"/>
 					</t:propertyLayout>
 					<n:panel colspan="8" />
@@ -344,10 +344,10 @@
 					<t:propertyLayout label="" bodyId="chartAggregateType" renderAs="single" colspan="4">
 						<select id="chartAggregateType" class="${inputSelectTagClass}">
 							<option value="SUM">Soma</option>
-							<option value="AVERAGE">Média</option>
-							<option value="AVERAGENN">Média (não vazios)</option>
-							<option value="MAX">Máximo</option>
-							<option value="MIN">Mínimo</option>
+							<option value="AVERAGE">MÃ©dia</option>
+							<option value="AVERAGENN">MÃ©dia (nÃ£o vazios)</option>
+							<option value="MAX">MÃ¡ximo</option>
+							<option value="MIN">MÃ­nimo</option>
 						</select>
 					</t:propertyLayout>
 
@@ -357,20 +357,20 @@
 
 				<n:panel colspan="12">
 					<h5>Series</h5>
-					Escolha as propriedades que formarão as séries do gráfico. Cada série será representada por uma barra ou linha.
+					Escolha as propriedades que formarÃ£o as sÃ©ries do grÃ¡fico. Cada sÃ©rie serÃ¡ representada por uma barra ou linha.
 				</n:panel>
 
 				<n:panel colspan="12">
 					<n:input name="chartPropertiesAsSeries" type="select-many-box" itens="${emptyList}" useType="java.lang.String" />
 				</n:panel>
 
-				<t:propertyLayout label="Função de Agregação" bodyId="chartAggregateTypeSerie" colspan="4">
+				<t:propertyLayout label="FunÃ§Ã£o de AgregaÃ§Ã£o" bodyId="chartAggregateTypeSerie" colspan="4">
 					<select id="chartAggregateTypeSerie" class="${inputSelectTagClass}">
 						<option value="SUM">Soma</option>
-						<option value="AVERAGE">Média</option>
-						<option value="AVERAGENN">Média (não vazios)</option>
-						<option value="MAX">Máximo</option>
-						<option value="MIN">Mínimo</option>
+						<option value="AVERAGE">MÃ©dia</option>
+						<option value="AVERAGENN">MÃ©dia (nÃ£o vazios)</option>
+						<option value="MAX">MÃ¡ximo</option>
+						<option value="MIN">MÃ­nimo</option>
 					</select>
 				</t:propertyLayout>
 				<t:propertyLayout label="Legenda" bodyId="chartLabelSerie" colspan="4">
@@ -382,7 +382,7 @@
 		<div id="chartWizzard_page_3" style="display: none">
 			<t:formTable columns="12">
 
-				<t:propertyLayout label="Título do gráfico" bodyId="chartTitleSpan">
+				<t:propertyLayout label="TÃ­tulo do grÃ¡fico" bodyId="chartTitleSpan">
 					<span id="chartTitleSpan" class="${inputTagClass}"></span>
 				</t:propertyLayout>
 
@@ -406,11 +406,11 @@
 				<input type="hidden" name="calculationName" value="" readonly="readonly" />
 			</t:propertyLayout>
 
-			<t:propertyLayout label="Expressão" bodyId="calculationExpression" colspan="12">
+			<t:propertyLayout label="ExpressÃ£o" bodyId="calculationExpression" colspan="12">
 				<input type="text" name="calculationExpression" id="calculationExpression" value="" readonly="readonly" class="${inputTagClass}"/>
 			</t:propertyLayout>
 
-			<t:propertyLayout label="Formatar como número" bodyId="calculationFormatAsNumber" invertLabel="true" colspan="6" labelColspan="5">
+			<t:propertyLayout label="Formatar como nÃºmero" bodyId="calculationFormatAsNumber" invertLabel="true" colspan="6" labelColspan="5">
 				<input type="radio" name="calculationFormatAs" id="calculationFormatAsNumber" value="number" checked="checked" class="${inputCheckTagClass}"/>
 			</t:propertyLayout>
 			<t:propertyLayout label="Formatar como tempo" bodyId="calculationFormatAsTime" invertLabel="true" colspan="6" labelColspan="5">
@@ -438,17 +438,17 @@
 				<button class="${btnStyleClass}">EXAMPLE</button>
 			</n:panel>
 			<n:panel class="botoesHorizontais" colspan="6">
-				<button id="op_nmb" onclick="ReportDesigner.getInstance().appendNumberToExpression()" class="${btnStyleClass}" title="Insere um número digitado pelo usuário na expressão">Inserir Número</button>
-				<button id="op_now" onclick="ReportDesigner.getInstance().appendToExpression('$N')" class="${btnStyleClass}" title="Insere a data atual na expressão">Inserir data atual</button>
+				<button id="op_nmb" onclick="ReportDesigner.getInstance().appendNumberToExpression()" class="${btnStyleClass}" title="Insere um nÃºmero digitado pelo usuÃ¡rio na expressÃ£o">Inserir NÃºmero</button>
+				<button id="op_now" onclick="ReportDesigner.getInstance().appendToExpression('$N')" class="${btnStyleClass}" title="Insere a data atual na expressÃ£o">Inserir data atual</button>
 				<div style="flex-basis: 100%;" />
-				<button id="op_add" onclick="ReportDesigner.getInstance().appendToExpression('+')" class="${btnStyleClass}" title="Adição">&nbsp;&nbsp;+&nbsp;&nbsp;</button>
-				<button id="op_sub" onclick="ReportDesigner.getInstance().appendToExpression('-')" class="${btnStyleClass}" title="Subtração">&nbsp;&nbsp;-&nbsp;&nbsp;</button>
-				<button id="op_mlt" onclick="ReportDesigner.getInstance().appendToExpression('*')" class="${btnStyleClass}" title="Multiplicação">&nbsp;&nbsp;*&nbsp;&nbsp;</button>
-				<button id="op_dvd" onclick="ReportDesigner.getInstance().appendToExpression('/')" class="${btnStyleClass}" title="Divisão">&nbsp;&nbsp;/&nbsp;&nbsp;</button>
-				<button id="op_pop" onclick="ReportDesigner.getInstance().appendToExpression('(')" class="${btnStyleClass}" title="Abrir parênteses">&nbsp;&nbsp;(&nbsp;&nbsp;</button>
-				<button id="op_pcl" onclick="ReportDesigner.getInstance().appendToExpression(')')" class="${btnStyleClass}" title="Fechar parênteses">&nbsp;&nbsp;)&nbsp;&nbsp;</button>
-				<button id="op_bck" onclick="ReportDesigner.getInstance().appendToExpression('$B')" class="${btnStyleClass}" title="Apagar último item">&nbsp;&#8592;&nbsp;</button>
-				<button id="op_cln" onclick="ReportDesigner.getInstance().appendToExpression('$C')" class="${btnStyleClass}" title="Limpar expressão">&nbsp;&nbsp;C&nbsp;&nbsp;</button>
+				<button id="op_add" onclick="ReportDesigner.getInstance().appendToExpression('+')" class="${btnStyleClass}" title="AdiÃ§Ã£o">&nbsp;&nbsp;+&nbsp;&nbsp;</button>
+				<button id="op_sub" onclick="ReportDesigner.getInstance().appendToExpression('-')" class="${btnStyleClass}" title="SubtraÃ§Ã£o">&nbsp;&nbsp;-&nbsp;&nbsp;</button>
+				<button id="op_mlt" onclick="ReportDesigner.getInstance().appendToExpression('*')" class="${btnStyleClass}" title="MultiplicaÃ§Ã£o">&nbsp;&nbsp;*&nbsp;&nbsp;</button>
+				<button id="op_dvd" onclick="ReportDesigner.getInstance().appendToExpression('/')" class="${btnStyleClass}" title="DivisÃ£o">&nbsp;&nbsp;/&nbsp;&nbsp;</button>
+				<button id="op_pop" onclick="ReportDesigner.getInstance().appendToExpression('(')" class="${btnStyleClass}" title="Abrir parÃªnteses">&nbsp;&nbsp;(&nbsp;&nbsp;</button>
+				<button id="op_pcl" onclick="ReportDesigner.getInstance().appendToExpression(')')" class="${btnStyleClass}" title="Fechar parÃªnteses">&nbsp;&nbsp;)&nbsp;&nbsp;</button>
+				<button id="op_bck" onclick="ReportDesigner.getInstance().appendToExpression('$B')" class="${btnStyleClass}" title="Apagar Ãºltimo item">&nbsp;&#8592;&nbsp;</button>
+				<button id="op_cln" onclick="ReportDesigner.getInstance().appendToExpression('$C')" class="${btnStyleClass}" title="Limpar expressÃ£o">&nbsp;&nbsp;C&nbsp;&nbsp;</button>
 			</n:panel>
 
 		</t:formTable>

@@ -155,10 +155,10 @@ public class TagUtils {
 			} catch (LazyInitializationException e2) {
 				//Nada...
 			}
-			return value.getClass().getSimpleName() + " [Não foi possível fazer toString LazyInicializationException] " + id;
+			return value.getClass().getSimpleName() + " [NÃ£o foi possÃ­vel fazer toString LazyInicializationException] " + id;
 		} catch (InvalidPropertyException e1) {
 			if (ServiceFactory.getService(ViewConfig.class).isAutoLoadOnView()) {
-				//UMA COISA MUITO FORÇADA.. TENTANDO LOADAR O OBJETO NA FORÇA
+				//UMA COISA MUITO FORÃ‡ADA.. TENTANDO LOADAR O OBJETO NA FORÃ‡A
 				try {
 					BaseTag.log.warn("Perda de performance! Carregando objeto sob demanda " + value.getClass());
 					if (value != null && value.getClass().getName().contains("$$") && e1.getCause().getCause() instanceof LazyInitializationException) {
@@ -211,7 +211,7 @@ public class TagUtils {
 
 		} catch (LazyInitializationException e) {
 
-			return value.getClass().getSimpleName() + " [Não foi possível fazer toString LazyInicializationException]";
+			return value.getClass().getSimpleName() + " [NÃ£o foi possÃ­vel fazer toString LazyInicializationException]";
 
 		} catch (InvalidPropertyException e1) {
 
@@ -233,7 +233,7 @@ public class TagUtils {
 			} else {
 				if (e1.getCause() instanceof InvocationTargetException
 						&& ((InvocationTargetException) e1.getCause()).getTargetException() instanceof LazyInitializationException) {
-					throw new RuntimeException("Não foi possível fazer ObjectDescriptionToString de " + value.getClass().getSimpleName() + ". (Talvez seja necessário um fetch)", e1);
+					throw new RuntimeException("NÃ£o foi possÃ­vel fazer ObjectDescriptionToString de " + value.getClass().getSimpleName() + ". (Talvez seja necessÃ¡rio um fetch)", e1);
 				} else {
 					throw e1;
 				}

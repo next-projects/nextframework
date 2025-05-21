@@ -29,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation que indica o valor mínimo do campo. Usado na validação
+ * Annotation que indica o valor mÃ­nimo do campo. Usado na validaÃ§Ã£o
  * Deve ser colocado no metodo get da propriedade
  * @author rogelgarcia
  *

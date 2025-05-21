@@ -37,7 +37,7 @@ public class MethodTag extends BaseTag implements CodeTag, LogicalTag {
 
 	public void setName(String name) {
 		if (MainTag.NAME.equals(name)) {
-			throw new NextException(MainTag.NAME + " È um nome reservado e n„o pode ser utilizado na tag method");
+			throw new NextException(MainTag.NAME + " √© um nome reservado e n√£o pode ser utilizado na tag method");
 		}
 		this.name = name;
 	}

@@ -21,7 +21,7 @@ public class InputTagCheckboxComponent extends InputTagCheckboxBaseComponent {
 
 	@Override
 	protected void configureValidation(boolean disabled) {
-		//checkbox n„o possui validaÁ„o
+		//checkbox n√£o possui valida√ß√£o
 	}
 
 }

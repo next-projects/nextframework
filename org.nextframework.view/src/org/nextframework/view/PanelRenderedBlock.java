@@ -26,7 +26,7 @@ package org.nextframework.view;
 import java.util.Map;
 
 /**
- * Representa o corpo de uma tag PanelTag j· renderizada
+ * Representa o corpo de uma tag PanelTag j√° renderizada
  * @author rogelgarcia
  * @since 30/01/2006
  * @version 1.1

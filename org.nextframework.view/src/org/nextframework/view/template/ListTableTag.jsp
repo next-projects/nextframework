@@ -18,7 +18,7 @@
 					</script>
 					<c:if test="${!empty exSelecionar}">
 						${n:printStackTrace(exSelecionar)}
-						<span style="font-size: 10px; color: red; white-space: pre; display: block;">Erro ao imprimir bot„o selecionar: ${exSelecionar.message} <c:catch>${exSelecionar.rootCause.message}</c:catch></span>
+						<span style="font-size: 10px; color: red; white-space: pre; display: block;">Erro ao imprimir bot√£o selecionar: ${exSelecionar.message} <c:catch>${exSelecionar.rootCause.message}</c:catch></span>
 					</c:if>
 					<c:if test="${listTableTag.showViewLink}">
 						<n:link action="view" parameters="${n:idProperty(n:reevaluate(listTableTag.name,pageContext))}=${n:id(n:reevaluate(listTableTag.name,pageContext))}">${listTableTag.viewLinkLabel}</n:link>

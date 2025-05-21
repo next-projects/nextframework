@@ -84,7 +84,7 @@ public class FormViewTag extends TemplateTag {
 	}
 
 	/**
-	 * método para ser chamado do template
+	 * mÃ©todo para ser chamado do template
 	 */
 	public String getInvokeLinkArea() {
 		CharArrayWriter charArrayWriter = new CharArrayWriter();

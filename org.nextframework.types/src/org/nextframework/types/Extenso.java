@@ -38,18 +38,18 @@ public class Extenso {
 			{ "centavo", "centavos" },
 			{ "", "" },
 			{ "mil", "mil" },
-			{ "milhão", "milhões" },
-			{ "bilhão", "bilhões" },
-			{ "trilhão", "trilhões" },
-			{ "quatrilhão", "quatrilhões" },
-			{ "quintilhão", "quintilhões" },
-			{ "sextilhão", "sextilhões" },
-			{ "septilhão", "septilhões" }
+			{ "milhÃ£o", "milhÃµes" },
+			{ "bilhÃ£o", "bilhÃµes" },
+			{ "trilhÃ£o", "trilhÃµes" },
+			{ "quatrilhÃ£o", "quatrilhÃµes" },
+			{ "quintilhÃ£o", "quintilhÃµes" },
+			{ "sextilhÃ£o", "sextilhÃµes" },
+			{ "septilhÃ£o", "septilhÃµes" }
 	};
 	private String Numeros[][] = {
-			{ "zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez",
+			{ "zero", "um", "dois", "trÃªs", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez",
 					"onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove" },
-			{ "vinte", "trinta", "quarenta", "cinqüenta", "sessenta", "setenta", "oitenta", "noventa" },
+			{ "vinte", "trinta", "quarenta", "cinqÃ¼enta", "sessenta", "setenta", "oitenta", "noventa" },
 			{ "cem", "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos",
 					"setecentos", "oitocentos", "novecentos" }
 	};
@@ -147,7 +147,7 @@ public class Extenso {
 		int ct;
 
 		for (ct = nro.size() - 1; ct > 0; ct--) {
-			// Se ja existe texto e o atual não é zero
+			// Se ja existe texto e o atual nÃ£o Ã© zero
 			if (buf.length() > 0 && !ehGrupoZero(ct)) {
 				buf.append(" e ");
 			}

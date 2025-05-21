@@ -1,16 +1,16 @@
 /**
- * Para alterar o CSS padrão da aplicação, basta adicionar um arquivo default.css na pasta /css 
+ * Para alterar o CSS padrÃ£o da aplicaÃ§Ã£o, basta adicionar um arquivo default.css na pasta /css 
  *
- * Se copiar esse CSS para o diretório /css da sua aplicação
- * será necessário refatorar o caminho das imagens para
+ * Se copiar esse CSS para o diretÃ³rio /css da sua aplicaÃ§Ã£o
+ * serÃ¡ necessÃ¡rio refatorar o caminho das imagens para
  * ../resource/layout/lightblue/
- * Exemplo: onde tiver url("header-background.jpg"); terá que ser url("../resource/css/layout/lightblue/header-background.jpg");
+ * Exemplo: onde tiver url("header-background.jpg"); terÃ¡ que ser url("../resource/css/layout/lightblue/header-background.jpg");
  *
- * Você poderá excluir o conteúdo desse arquivo e importar outro CSS se desejar, para isso basta ter um arquivo com o seguinte conteúdo:
+ * VocÃª poderÃ¡ excluir o conteÃºdo desse arquivo e importar outro CSS se desejar, para isso basta ter um arquivo com o seguinte conteÃºdo:
  *
  * @IMPORT url("../resource/layout/lightblue/default.css");
  *
- * Isso importará o arquivo CSS padrão, você poderá adicionar regras CSS para incrementar ou alterar o estilo padrão.
+ * Isso importarÃ¡ o arquivo CSS padrÃ£o, vocÃª poderÃ¡ adicionar regras CSS para incrementar ou alterar o estilo padrÃ£o.
  *
  */
 

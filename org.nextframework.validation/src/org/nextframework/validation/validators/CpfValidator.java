@@ -46,7 +46,7 @@ public class CpfValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È um CPF v·lido";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© um CPF v√°lido";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

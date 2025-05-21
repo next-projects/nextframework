@@ -129,13 +129,13 @@ public class OutputTag extends BaseTag {
 	private String[] getResolvedTrueFalseNullLabels() {
 		if (Util.strings.isEmpty(trueFalseNullLabels)) {
 			String trueString = getDefaultViewLabel("trueLabel", "Sim");
-			String falseString = getDefaultViewLabel("falseLabel", "N„o");
+			String falseString = getDefaultViewLabel("falseLabel", "N√£o");
 			String nullString = getDefaultViewLabel("nullLabel", "");
 			return new String[] { trueString, falseString, nullString };
 		}
 		String[] split = trueFalseNullLabels.split(",");
 		if (split.length != 3) {
-			throw new NextException("trueFalseNullLabels inv·lido " + trueFalseNullLabels + ". Esse atributo deve ser uma string separada por vÌrgula indicando o valor de TRUE FALSE e NULL. ex.: sim,n„o,vazio");
+			throw new NextException("trueFalseNullLabels inv√°lido " + trueFalseNullLabels + ". Esse atributo deve ser uma string separada por v√≠rgula indicando o valor de TRUE FALSE e NULL. ex.: sim,n√£o,vazio");
 		}
 		return split;
 	}

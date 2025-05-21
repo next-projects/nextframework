@@ -65,7 +65,7 @@ import org.nextframework.validation.validators.TimeValidator;
 import org.nextframework.validation.validators.YearValidator;
 
 /**
- * Onde s„o registrados todos os validadores
+ * Onde s√£o registrados todos os validadores
  * @author rogelgarcia
  *
  */

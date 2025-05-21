@@ -44,7 +44,7 @@ public class NextCommonsMultipartResolver extends CommonsMultipartResolver {
 			request.setAttribute(RESOLVED_MULTIPART_REQUEST, resolvedMultipartRequest);
 			return resolvedMultipartRequest;
 		} catch (MaxUploadSizeExceededException e) {
-			throw new NextException("O tamanho m·ximo de upload de arquivos (" + e.getMaxUploadSize() + ") foi excedido ");
+			throw new NextException("O tamanho m√°ximo de upload de arquivos (" + e.getMaxUploadSize() + ") foi excedido ");
 		}
 	}
 

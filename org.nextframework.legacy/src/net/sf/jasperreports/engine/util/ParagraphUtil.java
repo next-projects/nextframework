@@ -30,7 +30,7 @@ import net.sf.jasperreports.engine.JRParagraph;
 import net.sf.jasperreports.engine.TabStop;
 import net.sf.jasperreports.engine.type.TabStopAlignEnum;
 
-//CORRE«√O DA CLASSE DA API COM BUG
+//CORRE√á√ÉO DA CLASSE DA API COM BUG
 
 /**
  * @author Teodor Danciu (teodord@users.sourceforge.net)
@@ -153,7 +153,7 @@ public final class ParagraphUtil {
 	public static TabStop getFirstTabStop(JRParagraph paragraph, float endX) {
 		TabStop firstTabStop = new TabStop();
 		TabStop[] tabStops = getTabStops(paragraph, endX);
-		//CORRE«√O DA CLASSE DA API COM BUG
+		//CORRE√á√ÉO DA CLASSE DA API COM BUG
 		// Old code.
 		//firstTabStop = tabStops[0];
 		// New proposed code:

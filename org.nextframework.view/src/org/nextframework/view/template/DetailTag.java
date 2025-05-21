@@ -92,10 +92,10 @@ public class DetailTag extends TemplateTag {
 			} else if (type2 instanceof ParameterizedType) {
 				detailClass = (Class<?>) ((ParameterizedType) type2).getRawType();
 			} else {
-				throw new NextException("Tipo n„o suportado " + type2);
+				throw new NextException("Tipo n√£o suportado " + type2);
 			}
 		} else {
-			throw new NextException("A propriedade " + fullNestedName + " de " + beanDescriptor.getTargetClass().getName() + " deveria ser uma lista genÈrica");
+			throw new NextException("A propriedade " + fullNestedName + " de " + beanDescriptor.getTargetClass().getName() + " deveria ser uma lista gen√©rica");
 		}
 
 		detailDysplayName = Util.beans.getDisplayName(propertyDescriptor, NextWeb.getRequestContext().getLocale());
@@ -115,7 +115,7 @@ public class DetailTag extends TemplateTag {
 		onDelete = onDelete == null ? "return true;" : onDelete.trim();
 
 		if (actionColumnName == null) {
-			actionColumnName = getDefaultViewLabel("actionColumnName", "AÁ„o");
+			actionColumnName = getDefaultViewLabel("actionColumnName", "A√ß√£o");
 		}
 
 		if (deleteLinkLabel == null) {

@@ -62,7 +62,7 @@ public class ListTableTag extends TemplateTag {
 		autowireValues();
 
 		if (actionColumnName == null) {
-			actionColumnName = getDefaultViewLabel("actionColumnName", "AÁ„o");
+			actionColumnName = getDefaultViewLabel("actionColumnName", "A√ß√£o");
 		}
 
 		if (selectLinkLabel == null) {
@@ -86,13 +86,13 @@ public class ListTableTag extends TemplateTag {
 		}
 
 		if (pageLabel == null) {
-			pageLabel = getDefaultViewLabel("pageLabel", "P·gina");
+			pageLabel = getDefaultViewLabel("pageLabel", "P√°gina");
 		}
 
 		if (name == null) {
-			throw new IllegalArgumentException("O atributo name da tag ListTableTag n„o foi informado, e tambÈm n„o foi configurado por um CrudController. " +
-					"Se estiver utilizando um controller do tipo CrudController verifique se os atributos est„o sendo colocados no escopo corretamente " +
-					"ou se vocÍ n„o sobrescreveu a funcionalidade padr„o do controller.");
+			throw new IllegalArgumentException("O atributo name da tag ListTableTag n√£o foi informado, e tamb√©m n√£o foi configurado por um CrudController. " +
+					"Se estiver utilizando um controller do tipo CrudController verifique se os atributos est√£o sendo colocados no escopo corretamente " +
+					"ou se voc√™ n√£o sobrescreveu a funcionalidade padr√£o do controller.");
 		}
 
 		pushAttribute("TtabelaResultados", this);

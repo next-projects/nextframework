@@ -62,7 +62,7 @@ public class GZIPFilter implements Filter {
 	}
 
 	private boolean acceptsGZipEncoding(HttpServletRequest request) {
-		//Se for IE, n„o rola o gzip em .js e .css
+		//Se for IE, n√£o rola o gzip em .js e .css
 		//Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko
 		//Mozilla/5.0 (Windows NT 6.0; Win64; x64; Trident/7.0; rv:11.0) like Gecko
 		//Mozilla/5.0 (Windows NT 6.2; Trident/7.0; rv:11.0) like Gecko

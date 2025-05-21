@@ -32,8 +32,8 @@ import java.util.Map;
 public class ReflectionCacheImpl implements ReflectionCache {
 
 	// Classes devem ser indexadas pelo nome: clazz.getName().
-	// Métodos devem ser indexados por eles mesmos: method.
-	// Vetores de classes devem ser indexados por sua representação em String: classArrayToString(vetor).
+	// MÃ©todos devem ser indexados por eles mesmos: method.
+	// Vetores de classes devem ser indexados por sua representaÃ§Ã£o em String: classArrayToString(vetor).
 
 	protected Map<String, Annotation[]> hashGetAnnotationsClass = Collections.synchronizedMap(new HashMap<String, Annotation[]>());
 	protected Map<Method, Annotation[]> hashGetAnnotationsMethod = Collections.synchronizedMap(new HashMap<Method, Annotation[]>());

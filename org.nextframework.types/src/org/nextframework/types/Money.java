@@ -42,7 +42,7 @@ import org.hibernate.usertype.UserType;
 import org.nextframework.summary.aggregator.Incrementable;
 
 /**
- * @@author Fabrício
+ * @@author FabrÃ­cio
  */
 public class Money extends Number implements Serializable, Comparable<Object>, UserType, Incrementable<Money>, Formattable {
 
@@ -145,8 +145,8 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 	}
 
 	/**
-	 * Testa se o objeto passado é o mesmo do objeto atual. ATENÇÂO: Não use
-	 * este método para comparar valores. Neste caso, use o método
+	 * Testa se o objeto passado Ã© o mesmo do objeto atual. ATENÃ‡Ã‚O: NÃ£o use
+	 * este mÃ©todo para comparar valores. Neste caso, use o mÃ©todo
 	 * compareTo(Object object).
 	 */
 	public boolean equals(Object object) {
@@ -198,7 +198,7 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 			return null;
 		}
 		if (!(obj instanceof Number)) {
-			String msg = "O campo de uma propriedade do tipo Money não está com o tipo long no banco.";
+			String msg = "O campo de uma propriedade do tipo Money nÃ£o estÃ¡ com o tipo long no banco.";
 			// log.error(msg);
 			throw new RuntimeException(msg);
 		}

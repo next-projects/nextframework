@@ -52,7 +52,7 @@ public class InputTagHiddenComponent extends InputTagComponent {
 		if (inputTag.getWrite() != null && inputTag.getWrite()) {
 			String booleanDescription = null;
 			try {
-				// se nao for boolean utilizar o mÈtodo normal
+				// se nao for boolean utilizar o m√©todo normal
 				if ((inputTag.getValue() instanceof Boolean || inputTag.getValue() == null) && Util.strings.isNotEmpty(inputTag.getTrueFalseNullLabels())) {
 					String[] split = inputTag.getTrueFalseNullLabels().split(",");
 					String trueString = split[0];
@@ -75,7 +75,7 @@ public class InputTagHiddenComponent extends InputTagComponent {
 					if (((Boolean) inputTag.getValue())) {
 						booleanDescription = "Sim";
 					} else {
-						booleanDescription = "N„o";
+						booleanDescription = "N√£o";
 					}
 					return booleanDescription;
 				} else if ((inputTag.getValue() instanceof Number) && Util.strings.isNotEmpty(inputTag.getPattern())) {
@@ -90,7 +90,7 @@ public class InputTagHiddenComponent extends InputTagComponent {
 					return dateFormat.format(value);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
-				throw new NextException("trueFalseNullLabels inv·lido " + inputTag.getTrueFalseNullLabels() + ". Esse atributo deve ser uma string separada por vÌrgula indicando o valor de TRUE FALSE e NULL. ex.: sim,n„o,vazio");
+				throw new NextException("trueFalseNullLabels inv√°lido " + inputTag.getTrueFalseNullLabels() + ". Esse atributo deve ser uma string separada por v√≠rgula indicando o valor de TRUE FALSE e NULL. ex.: sim,n√£o,vazio");
 			}
 			return TagUtils.getObjectDescriptionToString(inputTag.getValue());
 		} else {

@@ -42,7 +42,7 @@ public class ReportGeneratorUtils {
 			String qualifiedName = filterElement.getName().replace('.', '_');
 			if (isDate(propertyDescriptor)) {
 				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName + "_begin", filterElement.getFilterDisplayName());
-				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName + "_end", "atÈ");
+				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName + "_end", "at√©");
 			} else if (filterElement.isFilterSelectMultiple()) {
 				codeBuilder.addProperty(propertyDescriptor.getType(), qualifiedName, filterElement.getFilterDisplayName(), 1);
 			} else {
@@ -241,7 +241,7 @@ public class ReportGeneratorUtils {
 		if ("$now".equals(part)) {
 			return "java.util.Calendar.getInstance().getTimeInMillis()";
 		}
-		throw new IllegalArgumentException("O campo especial " + part + " È inv·lido!");
+		throw new IllegalArgumentException("O campo especial " + part + " √© inv√°lido!");
 	}
 
 }

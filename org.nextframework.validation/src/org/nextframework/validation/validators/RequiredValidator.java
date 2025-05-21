@@ -32,7 +32,7 @@ import org.nextframework.validation.PropertyValidator;
 import org.springframework.validation.Errors;
 
 /**
- * Validador para campos obrigatórios
+ * Validador para campos obrigatÃ³rios
  * @author rogelgarcia
  *
  */
@@ -40,12 +40,12 @@ public class RequiredValidator implements PropertyValidator {
 
 	public void validate(Object bean, Object value, String fieldName, String fieldDisplayName, Annotation validation, Errors errors, ObjectAnnotationValidator annotationValidator) {
 		if (value == null || (value instanceof String && ((String) value).trim().equals(""))) {
-			errors.rejectValue(fieldName, "required", "O campo " + fieldDisplayName + " é obrigatório.");
+			errors.rejectValue(fieldName, "required", "O campo " + fieldDisplayName + " Ã© obrigatÃ³rio.");
 		}
 		if (value instanceof List<?>) {
 			List<?> list = (List<?>) value;
 			if (list.isEmpty()) {
-				errors.rejectValue(fieldName, "required", "O campo " + fieldDisplayName + " é obrigatório.");
+				errors.rejectValue(fieldName, "required", "O campo " + fieldDisplayName + " Ã© obrigatÃ³rio.");
 			}
 		}
 	}
@@ -59,7 +59,7 @@ public class RequiredValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo " + validationItem.getFieldDisplayName() + " é obrigatório.";
+		return "O campo " + validationItem.getFieldDisplayName() + " Ã© obrigatÃ³rio.";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

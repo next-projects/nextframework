@@ -140,7 +140,7 @@ public class AuthorizationController extends MultiActionController {
 //				ControlMappingLocator controlMappingLocator = request.getWebApplicationContext().getConfig().getControlMappingLocator();
 
 				//TODO FIXME USE DI
-				//usar o authorizationModule j· configurado, apenas o primeiro path È necess·rio para reconhecer o controller
+				//usar o authorizationModule j√° configurado, apenas o primeiro path √© necess√°rio para reconhecer o controller
 				AuthorizationModule authorizationModule = ServiceFactory.getService(ResourceAuthorizationMapper.class).getAuthorizationModule(paths[0]);//controller.authorizationModule().newInstance();
 
 				mapaGroupModule.put(authorizationModule.getAuthorizationGroupName(), authorizationModule);
@@ -210,7 +210,7 @@ public class AuthorizationController extends MultiActionController {
 		for (AuthorizationItem item : authorizationItens) {
 			String id = item.getId();
 			if (item.getValues() == null || item.getValues().length == 0)
-				throw new IllegalArgumentException("Os valores possÌveis de um item de autorizaÁ„o n„o pode ser um array vazio ou null");
+				throw new IllegalArgumentException("Os valores poss√≠veis de um item de autoriza√ß√£o n√£o pode ser um array vazio ou null");
 			String valorMaisRestritivo = item.getValues()[item.getValues().length - 1];
 			defaultPermissionMap.put(id, valorMaisRestritivo);
 		}

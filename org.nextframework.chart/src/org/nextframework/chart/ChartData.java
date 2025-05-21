@@ -31,7 +31,7 @@ public class ChartData implements Serializable {
 
 	public void addRow(ChartRow row) {
 		if (series == null || row.getValues().length != series.length) {
-			throw new RuntimeException("O número de series da linha \"" + row + "\" é diferente do configurado no ChartData \"" + Arrays.deepToString(series) + "\". Chame o método setSeries do ChartData para configurar as series corretamente. Deveria configurar " + row.getValues().length + " serie(s).");
+			throw new RuntimeException("O nÃºmero de series da linha \"" + row + "\" Ã© diferente do configurado no ChartData \"" + Arrays.deepToString(series) + "\". Chame o mÃ©todo setSeries do ChartData para configurar as series corretamente. Deveria configurar " + row.getValues().length + " serie(s).");
 		}
 		data.add(row);
 	}

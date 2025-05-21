@@ -40,7 +40,7 @@ public class MinLengthValidator implements PropertyValidator {
 			MinLength minLength = (MinLength) annotation;
 			int min = minLength.value();
 			if (!GenericValidator.minLength(value.toString(), min)) {
-				errors.rejectValue(fieldName, "minLenght", "O campo " + fieldDisplayName + " deve ter um tamanho menor ou igual à " + min);
+				errors.rejectValue(fieldName, "minLenght", "O campo " + fieldDisplayName + " deve ter um tamanho menor ou igual Ã  " + min);
 			}
 		}
 	}

@@ -2,10 +2,10 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<t:view title="Design de Relatórios - Passo 1: Escolher dados">
+<t:view title="Design de RelatÃ³rios - Passo 1: Escolher dados">
 
 	<n:content id="context">
-		<n:link url="${crudPath}">Voltar para Relatórios</n:link>
+		<n:link url="${crudPath}">Voltar para RelatÃ³rios</n:link>
 	</n:content>
 
 	<n:dataGrid itens="${entities}" itemType="<%=Class.class%>">

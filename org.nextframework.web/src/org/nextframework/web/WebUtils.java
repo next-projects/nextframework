@@ -61,7 +61,7 @@ public class WebUtils {
 
 	/**
 	 * Usa o URL Rewriter para reescrever a URL
-	 * O urlRewriter default apenas retorna a url passada como par‚metro
+	 * O urlRewriter default apenas retorna a url passada como par√¢metro
 	 * @param url
 	 * @return
 	 */
@@ -76,7 +76,7 @@ public class WebUtils {
 	}
 
 	public static String getFullUrl(HttpServletRequest request, String path) {
-		//nao utilizar o nome do mÛdulo igual ao nome da aplicacao
+		//nao utilizar o nome do m√≥dulo igual ao nome da aplicacao
 		String contextPath = request.getContextPath();
 		if (!path.startsWith(contextPath)) {
 			return contextPath + path;
@@ -193,13 +193,13 @@ public class WebUtils {
 		if (valor instanceof String) {
 			String valorStr = (String) valor;
 			if (containsTagsOrCodes(valorStr)) {
-				throw new ApplicationException("O valor do par‚metro " + parametro + " contÈm marcaÁıes HTML n„o permitidas!");
+				throw new ApplicationException("O valor do par√¢metro " + parametro + " cont√©m marca√ß√µes HTML n√£o permitidas!");
 			}
 		} else if (valor instanceof String[]) {
 			String[] valoresArray = (String[]) valor;
 			for (String valorStr : valoresArray) {
 				if (containsTagsOrCodes(valorStr)) {
-					throw new ApplicationException("O valor do par‚metro " + parametro + " contÈm marcaÁıes HTML n„o permitidas!");
+					throw new ApplicationException("O valor do par√¢metro " + parametro + " cont√©m marca√ß√µes HTML n√£o permitidas!");
 				}
 			}
 		}

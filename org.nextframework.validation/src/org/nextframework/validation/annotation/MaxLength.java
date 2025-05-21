@@ -29,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation que indica o tamanho m·ximo da string. Usado na validaÁ„o
+ * Annotation que indica o tamanho m√°ximo da string. Usado na valida√ß√£o
  * Deve ser colocado no metodo get da propriedade
  * @author rogelgarcia
  *

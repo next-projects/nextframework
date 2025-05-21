@@ -51,7 +51,7 @@ public class ViewUtils {
 				throw new NextException(e);
 			}
 		} else {
-			//tentar servlet 3 (se esse cÛdigo n„o compilar e estiver utilizando servlet 2, pode excluir)
+			//tentar servlet 3 (se esse c√≥digo n√£o compilar e estiver utilizando servlet 2, pode excluir)
 			ExpressionFactory expressionFactory = JspFactory.getDefaultFactory().getJspApplicationContext(pageContext.getServletContext()).getExpressionFactory();
 			ValueExpression ve = expressionFactory.createValueExpression(pageContext.getELContext(), expression, clazz);
 			E evaluate = (E) ve.getValue(pageContext.getELContext());

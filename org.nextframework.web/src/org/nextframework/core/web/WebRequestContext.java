@@ -61,7 +61,7 @@ public interface WebRequestContext extends RequestContext {
 
 	/**
 	 * Informa qual o ultimo parametro ACTION foi pedido
-	 * Quando é feito um redirecionamento por qualquer motivo esse valor é atualizado
+	 * Quando Ã© feito um redirecionamento por qualquer motivo esse valor Ã© atualizado
 	 * @return
 	 */
 	String getLastAction();

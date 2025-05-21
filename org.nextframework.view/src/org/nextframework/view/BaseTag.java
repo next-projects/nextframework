@@ -258,7 +258,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			Locale locale = NextWeb.getRequestContext().getLocale();
 			message = Next.getMessageSource().getMessage(Util.objects.newMessage(codes, null, defaultValue), locale);
 		} catch (NoSuchMessageException e) {
-			//Se n„o foi encontrado, n„o dispara o erro, pois, nas tags, os atributos s„o opcionais
+			//Se n√£o foi encontrado, n√£o dispara o erro, pois, nas tags, os atributos s√£o opcionais
 		}
 
 		return message;
@@ -318,7 +318,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	/**
-	 * Retorna a lista de tags ordenadas dessa tag(primeira) atÈ a ultima(topo das tags)
+	 * Retorna a lista de tags ordenadas dessa tag(primeira) at√© a ultima(topo das tags)
 	 */
 	protected List<BaseTag> getTagsFromThisToTop() {
 		List<BaseTag> tags = new ArrayList<BaseTag>();
@@ -343,7 +343,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 		}
 		if (throwExceptionIfNotFound) {
-			throw new TagNotFoundException("A tag " + this.getClass().getName() + " tentou procurar uma tag " + tagClass.getName() + " mas n„o encontrou. Provavelmente È obrigatÛrio a tag " + this.getClass().getName() + " estar aninhada a uma tag " + tagClass.getName());
+			throw new TagNotFoundException("A tag " + this.getClass().getName() + " tentou procurar uma tag " + tagClass.getName() + " mas n√£o encontrou. Provavelmente √© obrigat√≥rio a tag " + this.getClass().getName() + " estar aninhada a uma tag " + tagClass.getName());
 		}
 		return null;
 	}
@@ -362,7 +362,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 		}
 		if (throwExceptionIfNotFound) {
-			throw new TagNotFoundException("A tag " + this.getClass().getName() + " tentou procurar uma tag " + tagClass.getName() + " mas n„o encontrou.");
+			throw new TagNotFoundException("A tag " + this.getClass().getName() + " tentou procurar uma tag " + tagClass.getName() + " mas n√£o encontrou.");
 		}
 		return null;
 	}
@@ -375,14 +375,14 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		}
 
 		if (Boolean.TRUE.equals(bypass)) {
-			//se for para pular a funcionalidade dessa tag.. e utilizar sÛ as tags filhas
+			//se for para pular a funcionalidade dessa tag.. e utilizar s√≥ as tags filhas
 			doBody();
 			return;
 		}
 
 		boolean registeringDataGrid = getRequest().getAttribute(ColumnTag.REGISTERING_DATAGRID) != null;
 		if (registeringDataGrid && !(this instanceof ColumnChildTag)) {
-			//se estiver registrando o datagrid n„o precisa renderizar nada
+			//se estiver registrando o datagrid n√£o precisa renderizar nada
 			return;
 		}
 
@@ -397,7 +397,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 			applyDefaultStyleClasses();
 
-			//verificar se est· dentro de um panelGrid
+			//verificar se est√° dentro de um panelGrid
 			//panelGrid tem um comportamento especial para poder suportar tags dentro dele sem utilizar a tag Panel
 			BaseTag parent = getParent();
 			while (parent != null && parent instanceof LogicalTag && !(parent instanceof CodeTag)) {
@@ -628,7 +628,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		evaluateAndPrint(text[0]);
 		if (getJspBody() != null) {
 			getJspBody().invoke(null);
-			//tirei o println talvez dÍ algum efeito colateral 31/08/2006 -> O println tava atrapalhando em determinadas tags
+			//tirei o println talvez d√™ algum efeito colateral 31/08/2006 -> O println tava atrapalhando em determinadas tags
 			//getOut().println();
 		}
 		if (!text[1].trim().equals("")) {
@@ -739,7 +739,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 			boolean inPanelGrid = findParent(PanelGridTag.class) != null;
 			if (inPanelGrid && key.startsWith("panel")) {
-				continue;//nao montar tags iniciadas com panel... provavelmente est· configurando o panel externo
+				continue;//nao montar tags iniciadas com panel... provavelmente est√° configurando o panel externo
 			}
 
 			Object object = dynamicAttributesMap.get(key);

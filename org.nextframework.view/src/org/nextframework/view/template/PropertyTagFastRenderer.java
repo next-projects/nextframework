@@ -24,19 +24,19 @@
 package org.nextframework.view.template;
 
 /**
- * Possibilita a renderizaÁ„o da tag t:property via cÛdigo java.
- * N„o utilizando o template, a renderizaÁ„o ter uma performance bem superior.
+ * Possibilita a renderiza√ß√£o da tag t:property via c√≥digo java.
+ * N√£o utilizando o template, a renderiza√ß√£o ter uma performance bem superior.
  * 
- * Se existir uma classe na aplicaÁ„o que implemente essa interface, ela ser· autodetectada, e a do framework ser· ignorada.
+ * Se existir uma classe na aplica√ß√£o que implemente essa interface, ela ser√° autodetectada, e a do framework ser√° ignorada.
  * @author rogel
  *
  */
 public interface PropertyTagFastRenderer {
 
 	/**
-	 * Renderiza a tag, caso n„o seja possÌvel fazer a renderizaÁ„o o retorno deve ser falso.
-	 * Se for possÌvel fazer a renderizaÁ„o o retorno deve ser true.
-	 * Se o retorno for false, ser· utilizado o template da tag property (PropertyTag.jsp)
+	 * Renderiza a tag, caso n√£o seja poss√≠vel fazer a renderiza√ß√£o o retorno deve ser falso.
+	 * Se for poss√≠vel fazer a renderiza√ß√£o o retorno deve ser true.
+	 * Se o retorno for false, ser√° utilizado o template da tag property (PropertyTag.jsp)
 	 * @param tag
 	 * @return
 	 * @throws Exception 

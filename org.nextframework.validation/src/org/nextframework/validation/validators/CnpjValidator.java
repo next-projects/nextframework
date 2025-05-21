@@ -46,7 +46,7 @@ public class CnpjValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È um CNPJ v·lido";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© um CNPJ v√°lido";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

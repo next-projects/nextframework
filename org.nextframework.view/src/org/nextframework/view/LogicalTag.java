@@ -24,9 +24,9 @@
 package org.nextframework.view;
 
 /**
- * Indica que a tag que implementou essa interface n„o renderiza HTML, ela È apenas uma tag lÛgica.
+ * Indica que a tag que implementou essa interface n√£o renderiza HTML, ela √© apenas uma tag l√≥gica.
  * 
- * Em determinadas etapas da renderizaÁ„o tags lÛgicas tem um tratamento diferenciado.
+ * Em determinadas etapas da renderiza√ß√£o tags l√≥gicas tem um tratamento diferenciado.
  * 
  * 
  * @author rogelgarcia

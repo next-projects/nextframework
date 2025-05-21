@@ -1,4 +1,4 @@
-﻿NEXT_MODULES_DEFINED = true;
+NEXT_MODULES_DEFINED = true;
 
 /**************************************************************************************  UTIL  **/
 
@@ -1586,9 +1586,15 @@ NextAjax.prototype.send = function(options){
 			if(!exmessage){
 				exmessage = req.getResponseHeader("EX-ERROR-MESSAGE");
 			}
-			exmessage = "Erro " + status + ": Erro no servidor ao efetuar AJAX\nURL: " + options.url + "?" + options.params + "\n\n" + exmessage;
-			alert(exmessage);
-			console.error(exmessage);
+			var message = "Erro " + status + ": Erro no servidor ao efetuar AJAX\nURL: " + options.url;
+			if (options.params) {
+				message += "?" + options.params;
+			}
+			if (exmessage) {
+				message += "\n\n" + exmessage;
+			}
+			alert(message);
+			console.error(message);
 		});
 	p("afterError", function(data){});	
 	p("on404", function(data, status){

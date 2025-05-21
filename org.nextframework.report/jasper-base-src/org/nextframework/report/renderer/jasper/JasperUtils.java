@@ -124,10 +124,10 @@ public class JasperUtils {
 		beanDescriptor = BeanDescriptorFactory.forBean(value);
 		Object description = beanDescriptor.getDescription();
 		if (description == null) {
-			//CÓDIGO ALTERADO EM 16 DE NOVEMBRO DE 2006
+			//CÃ“DIGO ALTERADO EM 16 DE NOVEMBRO DE 2006
 			//description = value.toString();
-			// CÓDIGO ALTERADO EM 05 DE DEZEMBRO DE 2006
-			// MOTIVO: O CÓDIGO ANTERIOR IMPRIMIA:   br....Aluno@93CD21
+			// CÃ“DIGO ALTERADO EM 05 DE DEZEMBRO DE 2006
+			// MOTIVO: O CÃ“DIGO ANTERIOR IMPRIMIA:   br....Aluno@93CD21
 			if (beanDescriptor.getDescriptionPropertyName() == null) {
 				description = value.toString();
 			} else {

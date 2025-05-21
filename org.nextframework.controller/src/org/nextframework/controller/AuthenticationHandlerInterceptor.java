@@ -37,7 +37,7 @@ public class AuthenticationHandlerInterceptor implements HandlerInterceptor {
 			} else {
 				//TODO VERIFY INFINITE LOOP
 				logger.debug("Redirecting user to login page.");
-				NextWeb.getRequestContext().addMessage(Util.objects.newMessage("next.authentication.acessDenied", null, "O recurso que deseja acessar requer autenticação."), MessageType.WARN);
+				NextWeb.getRequestContext().addMessage(Util.objects.newMessage("next.authentication.acessDenied", null, "O recurso que deseja acessar requer autenticaÃ§Ã£o."), MessageType.WARN);
 				AuthenticationController authenticationController = authenticationControllers.iterator().next();
 				String path = request.getContextPath() + authenticationController.getPath() + "?ar=1";
 				response.sendRedirect(path);

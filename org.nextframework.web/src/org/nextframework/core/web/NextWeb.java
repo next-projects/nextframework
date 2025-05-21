@@ -105,11 +105,11 @@ public class NextWeb extends Next {
 	}
 
 	public static WebApplicationContext getWebApplicationContext(ServletContext servletContext) {
-		//verificar se j· existe um applicationContext
+		//verificar se j√° existe um applicationContext
 		WebApplicationContext applicationContext = (WebApplicationContext) servletContext.getAttribute(WebApplicationContext.APPLICATION_CONTEXT_ATTRIBUTE);
 		if (applicationContext == null) {
 			applicationContext = createApplicationContext(servletContext);
-			//throw new NotInNextContextException("O contexto de aplicaÁ„o NEXT ainda n„o foi criado. Verifique se o listener ContextLoaderListener est· configurado no web.xml");
+			//throw new NotInNextContextException("O contexto de aplica√ß√£o NEXT ainda n√£o foi criado. Verifique se o listener ContextLoaderListener est√° configurado no web.xml");
 		}
 		Next.applicationContext.set(applicationContext);
 		return applicationContext;

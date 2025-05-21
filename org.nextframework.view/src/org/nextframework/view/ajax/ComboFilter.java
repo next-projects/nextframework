@@ -44,7 +44,7 @@ public class ComboFilter {
 			try {
 				classes[i] = Class.forName(split[i]);
 			} catch (ClassNotFoundException e) {
-				throw new RuntimeException("Classe " + split[i] + " n„o encontrada");
+				throw new RuntimeException("Classe " + split[i] + " n√£o encontrada");
 			}
 		}
 		return classes;

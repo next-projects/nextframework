@@ -72,7 +72,7 @@ public class FunctionCall {
 				this.functionName = matcher2.group(2);
 				this.parameters = "";
 			} else {
-				throw new RuntimeException("FunÁ„o fora do padr„o: " + call);
+				throw new RuntimeException("Fun√ß√£o fora do padr√£o: " + call);
 			}
 		}
 		this.callInfo = montarCallInfo(this, beanDescriptor);
@@ -111,7 +111,7 @@ public class FunctionCall {
 					value = Authorization.getUserLocator().getUser();
 					break;
 				default:
-					throw new RuntimeException("Tipo de parametro n„o suportado: " + param.getParameterType() + "   " + param.getParameterValue());
+					throw new RuntimeException("Tipo de parametro n√£o suportado: " + param.getParameterType() + "   " + param.getParameterValue());
 			}
 			callInfo.addParam(param.getParameterValue(), value, clazz);
 		}
@@ -356,7 +356,7 @@ public class FunctionCall {
 						}
 						break;
 					default:
-						throw new RuntimeException("Ocorreu um erro inesperado ao fazer parsing da funÁ„o " + call + " Passo inv·lido: " + step);
+						throw new RuntimeException("Ocorreu um erro inesperado ao fazer parsing da fun√ß√£o " + call + " Passo inv√°lido: " + step);
 				}
 				currentParam.append(currentChar);
 			} catch (CharacterInvalidException e) {

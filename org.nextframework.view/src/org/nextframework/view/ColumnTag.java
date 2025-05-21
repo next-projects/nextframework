@@ -65,7 +65,7 @@ public class ColumnTag extends BaseTag {
 		}
 		// pega o corpo atual da tag (dependendo o status do datagrid apenas uma
 		// parte HEADER, BODY OU FOOTER
-		// ser· renderizado)
+		// ser√° renderizado)
 		Map<String, Object> mapHeader = new HashMap<String, Object>();
 		Map<String, Object> mapBody = new HashMap<String, Object>();
 		Set<String> keySet = getDynamicAttributesMap().keySet();
@@ -81,10 +81,10 @@ public class ColumnTag extends BaseTag {
 		}
 		if (dataGrid.getCurrentStatus() == Status.REGISTER) {
 			pushAttribute(REGISTERING_DATAGRID, true);
-			//temos que falar que estamos registrando um dataGrid para determinados cÛdigos do corpo do column n„o ser executados. Por exemplo validaÁ„o
+			//temos que falar que estamos registrando um dataGrid para determinados c√≥digos do corpo do column n√£o ser executados. Por exemplo valida√ß√£o
 		}
 		String tagBody = null;
-		if (!(dataGrid.getCurrentStatus() == Status.HEADER && header != null)) {// SE ESTIVER NA ETAPA DE HEADER.. MAS J¡ TIVER HEADER.. NAO INVOCAR O CORPO
+		if (!(dataGrid.getCurrentStatus() == Status.HEADER && header != null)) {// SE ESTIVER NA ETAPA DE HEADER.. MAS J√Å TIVER HEADER.. NAO INVOCAR O CORPO
 			tagBody = getBody();
 		}
 		if (dataGrid.getCurrentStatus() == Status.REGISTER) {
@@ -93,7 +93,7 @@ public class ColumnTag extends BaseTag {
 		switch (dataGrid.getCurrentStatus()) {
 			case HEADER:
 				if (dataGrid.isRenderResizeColumns()) {
-					//se for reziseColumns n„o poder· haver colunas com width em percentual
+					//se for reziseColumns n√£o poder√° haver colunas com width em percentual
 					Object styleO = mapHeader.get("style");
 					if (styleO != null) {
 						String style = styleO.toString();
@@ -104,7 +104,7 @@ public class ColumnTag extends BaseTag {
 					header = "";
 				} else if (header == null && !Util.strings.isEmpty(tagBody) && tagBody.trim().startsWith("<!--HEADER-->")) {
 					getOut().print(tagBody);
-					//o tagBody j· conter· o TD ent„o nao vamos continuar 
+					//o tagBody j√° conter√° o TD ent√£o nao vamos continuar 
 					break;
 				}
 				if (header == null) {
@@ -128,7 +128,7 @@ public class ColumnTag extends BaseTag {
 				break;
 			case BODY:
 				if (dataGrid.isRenderResizeColumns()) {
-					//se for reziseColumns n„o poder· haver colunas com width em percentual
+					//se for reziseColumns n√£o poder√° haver colunas com width em percentual
 					Object styleO = mapBody.get("style");
 					if (styleO != null) {
 						String style = styleO.toString();
@@ -140,9 +140,9 @@ public class ColumnTag extends BaseTag {
 					getOut().print(tagBody == null || tagBody.trim().equals("") ? "&nbsp;" : tagBody.trim());
 					getOut().print("</td>");
 				} else {
-					//Adicionado, porque o tagBody pode vir com <td ...> ... </td> e precisa validar se o conte˙do entre as tags È em branco.
+					//Adicionado, porque o tagBody pode vir com <td ...> ... </td> e precisa validar se o conte√∫do entre as tags √© em branco.
 					//modificado por pedrogoncalves em 17/04/2007
-					//CÛdigo removido, o uso de express„o regular estava deixando o datagrid lento, foi alterado para fazer semelhante no arquivo BodyTag.java
+					//C√≥digo removido, o uso de express√£o regular estava deixando o datagrid lento, foi alterado para fazer semelhante no arquivo BodyTag.java
 					//modificado por pedrogoncalves em 20/04/2007
 					//Pattern pattern = Pattern.compile("<td (.*?)>(.*)</td>",Pattern.DOTALL);
 					//Matcher matcher = pattern.matcher(tagBody.trim());
@@ -185,7 +185,7 @@ public class ColumnTag extends BaseTag {
 	}
 
 	public static String checkStyleForHeaderNoPercent(String style) {
-		//o Javascript ir· remover os %
+		//o Javascript ir√° remover os %
 //		if(style == null){
 //			return style;
 //		}
@@ -201,7 +201,7 @@ public class ColumnTag extends BaseTag {
 //		if(widthAttribute.contains("%")){
 //			String newStyle = style.substring(0, indexOfWidth) + "/* Nao pode utilizar width em % com colunas dinamicas */" + style.substring(indexOfEndWidth);
 //			return newStyle;
-//			//throw new NextException("Quando o datagrid estiver usando colunas din‚micas, n„o pode haver estilos que atribuam width com percentuais nas colunas. "+style+" // "+newStyle);
+//			//throw new NextException("Quando o datagrid estiver usando colunas din√¢micas, n√£o pode haver estilos que atribuam width com percentuais nas colunas. "+style+" // "+newStyle);
 //		}
 		return style;
 	}

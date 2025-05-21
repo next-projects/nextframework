@@ -42,7 +42,6 @@ function sendRequest(url,params,HttpMethod, callbackfunction1, errorcallback, or
 			}
 		};
 		request.open(HttpMethod, url, true);
-	//	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=ISO-8859-1");
 		request.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
 		request.send(params);
 	} else {
@@ -66,7 +65,6 @@ function sendRequest(url,params,HttpMethod, callbackfunction1, errorcallback, or
 			}
 	
 			req.open(HttpMethod,url,true);
-			//req.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=ISO-8859-1");
 			req.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
 			req.send(params);
 		}

@@ -44,7 +44,7 @@ public class MethodNameResolverImpl {
 	private Class<?> clazz;
 	//cache dos actions
 
-	private Map<String/*ACTION*/, Method/*M…TODO*/> mapAction = new HashMap<String, Method>();
+	private Map<String/*ACTION*/, Method/*M√âTODO*/> mapAction = new HashMap<String, Method>();
 
 	public MethodNameResolverImpl(Object delegate) {
 		this.clazz = delegate.getClass();
@@ -66,7 +66,7 @@ public class MethodNameResolverImpl {
 			return method;
 		}
 
-		//se o mÈtodo nao est· no cache ... procurar
+		//se o m√©todo nao est√° no cache ... procurar
 		Class<?>[] hierarquia = getHierarquia();
 
 		if (Util.strings.isEmpty(action)) {
@@ -89,7 +89,7 @@ public class MethodNameResolverImpl {
 		if (Util.strings.isEmpty(action)) {
 			throw new NoActionHandlerException("No method with annotation @DefaultAction found in controller [" + this.clazz.getName() + "] that may receive requests.");
 		} else {
-			throw new NoActionHandlerException("Nenhum mÈtodo com nome " + action + " ou anotado com @Action(\"" + action + "\") encontrado no controller [" + this.clazz.getName() + "] que possa receber requisiÁıes.");
+			throw new NoActionHandlerException("Nenhum m√©todo com nome " + action + " ou anotado com @Action(\"" + action + "\") encontrado no controller [" + this.clazz.getName() + "] que possa receber requisi√ß√µes.");
 		}
 
 	}
@@ -115,8 +115,8 @@ public class MethodNameResolverImpl {
 					String value = annotation.value();
 					if (value.equals(action)) {
 						//TODO TESTAR MODIFICADO EM 31/08/2010
-						//QUANDO ENCONTRAR O M…TODO QUE TEM A ANOTACAO.. PROCURAR POR UM M…TODO COM NOME IGUAL, POR…M EM UMA CLASSE MAIS ESPECÕFICA
-						//SE NAO ENCONTRAR UM MAIS ESPECÕFICO, CERTAMENTE ENCONTRAR¡ O PR”PRIO M…TODO ENCONTRADO AQUI
+						//QUANDO ENCONTRAR O M√âTODO QUE TEM A ANOTACAO.. PROCURAR POR UM M√âTODO COM NOME IGUAL, POR√âM EM UMA CLASSE MAIS ESPEC√çFICA
+						//SE NAO ENCONTRAR UM MAIS ESPEC√çFICO, CERTAMENTE ENCONTRAR√Å O PR√ìPRIO M√âTODO ENCONTRADO AQUI
 						return findMethodName(hierarquia, method.getName());
 					}
 				}
@@ -131,9 +131,9 @@ public class MethodNameResolverImpl {
 			Method[] methods = class1.getMethods();
 			for (Method method : methods) {
 				if (method.getAnnotation(DefaultAction.class) != null) {
-					//Se j· encontrou, mas o nome È diferente, n„o considera.
-					//Assim, È possÌvel mudar o defaultAction herdado.
-					//… necess·rio subir a hierarquia para pegar o primeiro mÈtodo de todos, caso sobrescrito.
+					//Se j√° encontrou, mas o nome √© diferente, n√£o considera.
+					//Assim, √© poss√≠vel mudar o defaultAction herdado.
+					//√â necess√°rio subir a hierarquia para pegar o primeiro m√©todo de todos, caso sobrescrito.
 					if (result != null && !result.getName().equals(method.getName())) {
 						continue;
 					}
@@ -148,7 +148,7 @@ public class MethodNameResolverImpl {
 		List<Class<?>> hierarquia = new ArrayList<Class<?>>();
 		Class<?> clazz = this.clazz;
 		while (!MultiActionController.class.equals(clazz)) {
-			hierarquia.add(clazz);//colocar as classes mais especÌficas primeiro
+			hierarquia.add(clazz);//colocar as classes mais espec√≠ficas primeiro
 			clazz = clazz.getSuperclass();
 		}
 		return hierarquia.toArray(new Class[hierarquia.size()]);

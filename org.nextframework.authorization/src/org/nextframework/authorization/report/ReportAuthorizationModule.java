@@ -34,7 +34,7 @@ public class ReportAuthorizationModule extends AuthorizationModuleSupport implem
 
 	private static final long serialVersionUID = 2485969955102950222L;
 
-	public static final String RELATORIOS = "Relatórios";
+	public static final String RELATORIOS = "RelatÃ³rios";
 
 	protected static final String GENERATE = "generate";
 

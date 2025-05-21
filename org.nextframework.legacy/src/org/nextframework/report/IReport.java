@@ -26,7 +26,7 @@ package org.nextframework.report;
 import java.util.Map;
 
 /**
- * Interface que define um relat髍io
+ * Interface que define um relat贸rio
  * @author rogelgarcia
  * @since 22/01/2006
  * @version 1.1
@@ -34,29 +34,29 @@ import java.util.Map;
 public interface IReport {
 
 	/**
-	 * @return nome do arquivo do relat髍io
+	 * @return nome do arquivo do relat贸rio
 	 */
 	String getFileName();
 
 	/**
-	 * @return nome do relat髍io
+	 * @return nome do relat贸rio
 	 */
 	String getName();
 
 	/**
-	 * @return mapa de parametros do relat髍io
+	 * @return mapa de parametros do relat贸rio
 	 */
 	Map<String, Object> getParameters();
 
 	/**
-	 * Fonte de dados do Relat髍io
+	 * Fonte de dados do Relat贸rio
 	 * Pode ser um array (beans ou map) ou Collection (beans ou map).
-	 * @return objeto com os dados do relat髍io
+	 * @return objeto com os dados do relat贸rio
 	 */
 	Object getDataSource();
 
 	/**
-	 * @return mapa de subrelat髍ios
+	 * @return mapa de subrelat贸rios
 	 */
 	Map<String, IReport> getSubReportMap();
 

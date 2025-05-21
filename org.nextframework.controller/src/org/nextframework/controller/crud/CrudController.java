@@ -236,7 +236,7 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 	@Deprecated
 	private void checkIfNull(BEAN bean) {
 		if (bean == null) {
-			throw new NextException("Registro n„o encontrado no banco de dados!");
+			throw new NextException("Registro n√£o encontrado no banco de dados!");
 		}
 	}
 

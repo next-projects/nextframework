@@ -26,7 +26,7 @@ package org.nextframework.report;
 import net.sf.jasperreports.engine.JRException;
 
 /**
- * Respons·vel por gerar os relatÛrios do framework
+ * Respons√°vel por gerar os relat√≥rios do framework
  * @author rogelgarcia
  * @since 22/01/2006
  * @version 1.1
@@ -34,7 +34,7 @@ import net.sf.jasperreports.engine.JRException;
 public interface ReportGenerator {
 
 	/**
-	 * Transforma um relatÛrio num arquivo PDF
+	 * Transforma um relat√≥rio num arquivo PDF
 	 * @param iReport
 	 * @return
 	 * @throws JRException

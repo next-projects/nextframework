@@ -22,7 +22,7 @@ public class ResolvableValueConverter extends PropertyEditorSupport implements V
 
 	private String[] getTrueFalseNullLabels() {
 		String trueString = Next.getMessageSource().getMessage(Util.objects.newMessage("org.nextframework.view.OutputTag.trueLabel", null, "Sim"), locale);
-		String falseString = Next.getMessageSource().getMessage(Util.objects.newMessage("org.nextframework.view.OutputTag.falseLabel", null, "Não"), locale);
+		String falseString = Next.getMessageSource().getMessage(Util.objects.newMessage("org.nextframework.view.OutputTag.falseLabel", null, "NÃ£o"), locale);
 		String nullString = Next.getMessageSource().getMessage(Util.objects.newMessage("org.nextframework.view.OutputTag.nullLabel", null, ""), locale);
 		return new String[] { trueString, falseString, nullString };
 	}

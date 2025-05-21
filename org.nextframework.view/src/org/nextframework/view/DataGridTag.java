@@ -84,8 +84,8 @@ public class DataGridTag extends BaseTag {
 
 	protected DataGridListener compositeListener = null;  //Interno
 	protected List<DataGridListener> listeners = new ArrayList<DataGridListener>(); //Interno
-	protected Boolean renderResizeColumns = null; //Din‚mico. Fora do TLD
-	protected Boolean hideDatagridWhileLoading = null; //Din‚mico. Fora do TLD
+	protected Boolean renderResizeColumns = null; //Din√¢mico. Fora do TLD
+	protected Boolean hideDatagridWhileLoading = null; //Din√¢mico. Fora do TLD
 
 	//View
 
@@ -109,7 +109,7 @@ public class DataGridTag extends BaseTag {
 	//Rows e columns
 	private String rowSeparator;
 	private Map<String, CyclicIterator<String>> rowAttributes = new LinkedHashMap<String, CyclicIterator<String>>(); //Interno
-	private String row; //Esse atributo nao È utilzado
+	private String row; //Esse atributo nao √© utilzado
 	private boolean hasColumns = false; // Interno
 	protected List<ColumnTag> columns = new ArrayList<ColumnTag>(); // Interno
 
@@ -145,7 +145,7 @@ public class DataGridTag extends BaseTag {
 	protected void doComponent() throws Exception {
 
 		if (itens != null && property != null) {
-			throw new RuntimeException("O dataGrid n„o pode ter as propriedades property e itens configuradas ao mesmo tempo.");
+			throw new RuntimeException("O dataGrid n√£o pode ter as propriedades property e itens configuradas ao mesmo tempo.");
 		}
 
 		if (itens != null && itens instanceof TypedValue && itemType == null) {
@@ -154,7 +154,7 @@ public class DataGridTag extends BaseTag {
 		}
 
 		if (itemType != null && property != null) {
-			throw new RuntimeException("O dataGrid n„o pode ter as propriedades property e itemType configuradas ao mesmo tempo.");
+			throw new RuntimeException("O dataGrid n√£o pode ter as propriedades property e itemType configuradas ao mesmo tempo.");
 		}
 
 		if (property != null) {
@@ -186,7 +186,7 @@ public class DataGridTag extends BaseTag {
 			try {
 				itemClass = (Class) (itemType instanceof Class ? itemType : Class.forName((String) itemType));
 			} catch (ClassNotFoundException e) {
-				throw new RuntimeException("Atributo itemType inv·lido: " + itemType, e);
+				throw new RuntimeException("Atributo itemType inv√°lido: " + itemType, e);
 			}
 
 			BeanTag beanTag = new BeanTag();
@@ -211,7 +211,7 @@ public class DataGridTag extends BaseTag {
 		Object sessionObject = getRequest().getSession().getAttribute(var);
 		Object contextAttribute = getRequest().getSession().getServletContext().getAttribute(var);
 
-		// o var que estava no escopo deve ser retirado (ele È recolocado no final da tag)
+		// o var que estava no escopo deve ser retirado (ele √© recolocado no final da tag)
 		getRequest().setAttribute(var, null);
 		getRequest().getSession().setAttribute(var, null);
 		getRequest().getSession().getServletContext().setAttribute(var, null);
@@ -241,7 +241,7 @@ public class DataGridTag extends BaseTag {
 		}
 
 		if (!(itens instanceof Collection)) {
-			throw new IllegalArgumentException("Tipo de itens n„o suportado por dataGrid: " + itens);
+			throw new IllegalArgumentException("Tipo de itens n√£o suportado por dataGrid: " + itens);
 		}
 
 		if (Util.strings.isNotEmpty(indexProperty)) {
@@ -287,7 +287,7 @@ public class DataGridTag extends BaseTag {
 			}
 		}
 
-		//È necess·rio configurar o RenderResize antes de usar
+		//√© necess√°rio configurar o RenderResize antes de usar
 		configureResizeColumns();
 
 		configureHideDatagridWhileLoading();

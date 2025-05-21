@@ -119,7 +119,7 @@ public class JavascriptValidationFunctionBuilder {
 			}
 			builder.append("\n");
 		} catch (IOException e) {
-			throw new RuntimeException("Não foi possível ler o arquivo de validação do Javascript",e);
+			throw new RuntimeException("NÃ£o foi possÃ­vel ler o arquivo de validaÃ§Ã£o do Javascript",e);
 		}
 		*/
 		builder.append("  ")
@@ -165,7 +165,7 @@ public class JavascriptValidationFunctionBuilder {
 			}
 			builder.append("\n");
 		} catch (IOException e) {
-			throw new RuntimeException("Não foi possível ler o arquivo de validação do Javascript",e);
+			throw new RuntimeException("NÃ£o foi possÃ­vel ler o arquivo de validaÃ§Ã£o do Javascript",e);
 		}
 		*/
 		return builder;
@@ -207,7 +207,7 @@ class ValidationHolder {
 			PropertyValidator typeValidator = validationItem.getTypeValidator();
 			if (typeValidator != null) {
 				if (typeValidator.getJavascriptFunctionPath() != null) {
-					// só adicionar funcoes para validação se tiver arquivo javascript
+					// sÃ³ adicionar funcoes para validaÃ§Ã£o se tiver arquivo javascript
 					List<JavascriptValidationItem> validationItensForValidator = map
 							.get(typeValidator);
 					if (validationItensForValidator == null) {
@@ -220,7 +220,7 @@ class ValidationHolder {
 			for (Annotation annotation : list) {
 				PropertyValidator validator = validatorRegistry.getPropertyValidator(annotation.annotationType());
 				if (validator.getJavascriptFunctionPath() != null) {
-					// só adicionar funcoes para validação se tiver arquivo javascript
+					// sÃ³ adicionar funcoes para validaÃ§Ã£o se tiver arquivo javascript
 					List<JavascriptValidationItem> validationItensForValidator = map.get(validator);
 					if (validationItensForValidator == null) {
 						validationItensForValidator = new ArrayList<JavascriptValidationItem>();

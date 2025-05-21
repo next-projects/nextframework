@@ -29,7 +29,7 @@ import org.nextframework.persistence.QueryBuilder.GroupBy;
 
 /**
  * Cria um resultSet para ser usado na listagem
- * Atualiza o listingFilter com o número de paginas e a página atual
+ * Atualiza o listingFilter com o nÃºmero de paginas e a pÃ¡gina atual
  */
 public class ResultListImpl<E> implements ResultList<E> {
 

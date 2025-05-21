@@ -43,7 +43,7 @@ public class JasperReportsRendererUtils {
 					return (E) jrDesignElement;
 				}
 			} catch (ClassCastException e) {
-				//se der exceçao é porque o finder nao aceita o tipo
+				//se der exceÃ§ao Ã© porque o finder nao aceita o tipo
 			}
 			if (jrDesignElement instanceof JRElementGroup) {
 				E result = findTopElement(convertToChildList((JRElementGroup) jrDesignElement), finder);
@@ -71,7 +71,7 @@ public class JasperReportsRendererUtils {
 					return (E) jrDesignElement;
 				}
 			} catch (ClassCastException e) {
-				//se der exceçao é porque o finder nao aceita o tipo
+				//se der exceÃ§ao Ã© porque o finder nao aceita o tipo
 			}
 			if (jrDesignElement instanceof JRElementGroup) {
 				E result = findElement((JRElementGroup) jrDesignElement, finder);
@@ -92,7 +92,7 @@ public class JasperReportsRendererUtils {
 					return (E) jrChild;
 				}
 			} catch (ClassCastException e) {
-				//se der exceçao é porque o finder nao aceita o tipo
+				//se der exceÃ§ao Ã© porque o finder nao aceita o tipo
 			}
 			if (jrChild instanceof JRElementGroup) {
 				E result = findElement((JRElementGroup) jrChild, finder);

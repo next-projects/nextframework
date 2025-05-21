@@ -318,7 +318,7 @@ class ReportFilterManager extends AbstractManager {
 		designer.filterFixedCriteria.options.length = 0;
 		designer.filterFixedCriteria.add(new Option("", "<null>"));
 		designer.filterFixedCriteria.add(new Option("NULO", "ISNULL"));
-		designer.filterFixedCriteria.add(new Option("N√O NULO", "NOTNULL"));
+		designer.filterFixedCriteria.add(new Option("N√ÉO NULO", "NOTNULL"));
 		String selectedValue = ReportPropertyConfigUtils.getFilterFixedCriteria(properties);
 		next.dom.setSelectedValue(bigThis.designer.filterFixedCriteria, selectedValue);
 		designer.filterFixedCriteria.onchange = new Function1<DOMEvent, Boolean>() {
@@ -327,7 +327,7 @@ class ReportFilterManager extends AbstractManager {
 				String selectedValue = next.dom.getSelectedValue(bigThis.designer.filterFixedCriteria);
 				ReportPropertyConfigUtils.setFilterFixedCriteria(properties, selectedValue);
 				bigThis.designer.writeXml();
-				bigThis.onSelectElement(value); //ForÁa redesenhar os controles para sumir ou aparecer os demais controles em funÁ„o da seleÁ„o do critÈrio
+				bigThis.onSelectElement(value); //For√ßa redesenhar os controles para sumir ou aparecer os demais controles em fun√ß√£o da sele√ß√£o do crit√©rio
 				return true;
 			}
 

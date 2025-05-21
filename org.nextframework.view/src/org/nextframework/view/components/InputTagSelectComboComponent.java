@@ -107,7 +107,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			} else {
 				FunctionCall call = getFunctionCall();
 				if (call == null) {
-					throw new NullPointerException("Resultado inesperado. call nulo. O algoritmo do framework n„o est· correto");
+					throw new NullPointerException("Resultado inesperado. call nulo. O algoritmo do framework n√£o est√° correto");
 				}
 				String functionName = call.getFunctionName();
 				Object bean = WebApplicationContextUtils.getRequiredWebApplicationContext(WebContext.getServletContext()).getBean(call.getObject());
@@ -137,7 +137,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				int i = 0;
 				for (Object object : values) {
 					if (!optionalParametersSet.contains(callParameterArray[i].getParameterValue())) {
-						// se for obrigatorio e for null n„o fazer a chamada
+						// se for obrigatorio e for null n√£o fazer a chamada
 						if (object == null) {
 							anynull = true;
 							break;
@@ -157,7 +157,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 					if (lista == null) {
 						lista = Util.objects.findAndInvokeMethod(bean, functionName, values, paramClasses);
 						if (!(lista instanceof List)) {
-							throw new RuntimeException("O retorno do mÈtodo " + functionName + " n„o foi uma lista");
+							throw new RuntimeException("O retorno do m√©todo " + functionName + " n√£o foi uma lista");
 						}
 						if (cacheControl != null) {
 							cacheControl.getCache().put((String) inputTag.getItens(), lista);
@@ -221,7 +221,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 
 	/**
 	 * Monta a lista de itens para ser colocado no combo (cada posicao do array
-	 * È um option ou um optgroup)
+	 * √© um option ou um optgroup)
 	 * @param input 
 	 * @param itens
 	 * @return
@@ -417,7 +417,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			}
 		} else {
 			//TODO TROCAR POR LOG
-			System.out.println("GenericDAO n„o encontrado para o tipo " + usingType.getName() + ". Ignorando busca de itens de combo.");
+			System.out.println("GenericDAO n√£o encontrado para o tipo " + usingType.getName() + ". Ignorando busca de itens de combo.");
 		}
 		return null;
 	}
@@ -444,15 +444,15 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 			}
 			if (call == null && lastInput != null) {
 				// registrar a chamada (o registro quando call !=
-				// null È feita depois
+				// null √© feita depois
 				ComboCallback.register(getRawClassType().getSimpleName(), "findBy", new Class[0]);
 			}
 		} else {
-			// para enums o lastInput sempre È ignorado (a n„o ser que itensFunction estiver definido)
+			// para enums o lastInput sempre √© ignorado (a n√£o ser que itensFunction estiver definido)
 			comboReload.getLastInput(inputTag);
 		}
 
-		// cÛdigo removido em 30/11/2006
+		// c√≥digo removido em 30/11/2006
 		// if(lastInput == null){
 		// useAjax = false;
 		// }
@@ -545,7 +545,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 						parameterListFunction += ComboReloadGroupTag.PARAMETER_SEPARATOR;
 						break;
 					default:
-						throw new RuntimeException("Tipo n„o suportado: " + parameterArray[j].getParameterType());
+						throw new RuntimeException("Tipo n√£o suportado: " + parameterArray[j].getParameterType());
 				}
 			}
 		}

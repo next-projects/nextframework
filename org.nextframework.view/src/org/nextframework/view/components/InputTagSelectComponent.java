@@ -17,7 +17,7 @@ public class InputTagSelectComponent extends InputTagComponent {
 	@Override
 	public void validateTag() {
 		if (Util.strings.isNotEmpty(inputTag.getOnLoadItens()) && !inputTag.getUseAjax()) {
-			throw new NextException("N„o È possÌvel utilizar onLoadItens se useAjax n„o for true");
+			throw new NextException("N√£o √© poss√≠vel utilizar onLoadItens se useAjax n√£o for true");
 		}
 	}
 

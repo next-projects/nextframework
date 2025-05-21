@@ -10,7 +10,7 @@ public class InputTagSelectOneInsertComponent extends InputTagSelectComboCompone
 
 	public String getSelectOneInsertOnClick() {
 		if (inputTag.getInsertPath() == null) {
-			throw new NextException("Quando o tipo do input for select-one-insert o atributo insertPath é obrigatório");
+			throw new NextException("Quando o tipo do input for select-one-insert o atributo insertPath Ã© obrigatÃ³rio");
 		}
 		String contextPath = inputTag.getRequest().getContextPath();
 		String fullPath = contextPath + SelecionarCadastrarServlet.SELECIONAR_CADASTRAR_PATH + inputTag.getInsertPath();

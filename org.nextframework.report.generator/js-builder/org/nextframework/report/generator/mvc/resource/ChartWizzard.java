@@ -322,7 +322,7 @@ public class ChartWizzard {
 				return radio.value;
 			}
 		}
-		Global.alert("Erro: Nenhum tipo de gr·fico selecionado");
+		Global.alert("Erro: Nenhum tipo de gr√°fico selecionado");
 		return null;
 	}
 
@@ -480,7 +480,7 @@ public class ChartWizzard {
 
 		final MessageDialog dialog = new MessageDialog();
 		dialog.setSize(NextDialogs.SIZE_EXTRALARGE);
-		dialog.setTitle("Configurar gr·fico");
+		dialog.setTitle("Configurar gr√°fico");
 		dialog.appendToBody(panelDiv);
 		dialog.setCommandsMap($map("CANCEL", "Cancelar", "NEXT", "Proximo"));
 		dialog.setCallback(new NextDialogs.DialogCallback() {

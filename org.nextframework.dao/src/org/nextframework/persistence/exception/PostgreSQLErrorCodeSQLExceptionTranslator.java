@@ -44,9 +44,9 @@ public class PostgreSQLErrorCodeSQLExceptionTranslator extends SQLErrorCodeSQLEx
 
 	static String errorRegexInglesNull = "ERROR: null value in column \"(.*)\" violates not-null constraint";
 	static Pattern patternInglesNull = Pattern.compile(errorRegexInglesNull);
-	static String errorRegexNull = "ERRO: valor nulo na coluna \"(.*)\" viola a restrição não-nula";
+	static String errorRegexNull = "ERRO: valor nulo na coluna \"(.*)\" viola a restriÃ§Ã£o nÃ£o-nula";
 	static Pattern patternNull = Pattern.compile(errorRegexNull);
-	static String errorRegex = "ERRO: atualização ou exclusão em \"(.*)\" viola restrição de chave estrangeira \"(.*)\" em \"(.*)\".*?";
+	static String errorRegex = "ERRO: atualizaÃ§Ã£o ou exclusÃ£o em \"(.*)\" viola restriÃ§Ã£o de chave estrangeira \"(.*)\" em \"(.*)\".*?";
 	static String errorRegexIngles = "ERROR: update or delete on (?:table)? \"(.*)\" violates foreign key constraint \"(.*)\" on (?:table)? \"(.*)\".*?";
 	//static String errorRegex = "(.*) statement conflicted with COLUMN REFERENCE constraint '(.*?)'. The conflict occurred in database '(?:.*?)', table '(.*?)', column '(.*?)'.";
 	static Pattern pattern = Pattern.compile(errorRegex);
@@ -105,7 +105,7 @@ public class PostgreSQLErrorCodeSQLExceptionTranslator extends SQLErrorCodeSQLEx
 		}
 
 		if (matcher.find()) {
-			//exceção de FK
+			//exceÃ§Ã£o de FK
 			String fk_table_name = matcher.group(3).toUpperCase();
 			String pk_table_name = matcher.group(1).toUpperCase();
 			String fkTableDisplayName = null;
@@ -126,13 +126,13 @@ public class PostgreSQLErrorCodeSQLExceptionTranslator extends SQLErrorCodeSQLEx
 
 			String defaultMensagem;
 			if (sql.toLowerCase().trim().startsWith("delete")) {
-				defaultMensagem = "Não foi possível remover " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
+				defaultMensagem = "NÃ£o foi possÃ­vel remover " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
 			} else if (sql.toLowerCase().trim().startsWith("update")) {
-				defaultMensagem = "Não foi possível atualizar " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
+				defaultMensagem = "NÃ£o foi possÃ­vel atualizar " + fkTableDisplayName + ". A referÃªncia para " + pkTableDisplayName + " Ã© invÃ¡lida.";
 			} else if (sql.toLowerCase().trim().startsWith("insert")) {
-				defaultMensagem = "Não foi possível inserir " + fkTableDisplayName + ". A referência para " + pkTableDisplayName + " é inválida.";
+				defaultMensagem = "NÃ£o foi possÃ­vel inserir " + fkTableDisplayName + ". A referÃªncia para " + pkTableDisplayName + " Ã© invÃ¡lida.";
 			} else {
-				defaultMensagem = "Não foi possível efetuar operação em " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
+				defaultMensagem = "NÃ£o foi possÃ­vel efetuar operaÃ§Ã£o em " + pkTableDisplayName + ". Existe(m) registro(s) vinculado(s) em " + fkTableDisplayName + ".";
 			}
 
 			return new ForeignKeyException(defaultMensagem);
@@ -162,7 +162,7 @@ public class PostgreSQLErrorCodeSQLExceptionTranslator extends SQLErrorCodeSQLEx
 		String msg = "ERROR: update or delete on \"campus\" violates foreign key constraint \"fk_curso_campus\" on \"curso\"\n  Detalhe: Key (cdcampus)=(1) is still referenced from table \"curso\".";
 		Matcher matcher = patternIngles.matcher(msg);
 		if (matcher.find()) {
-			//exceção de FK
+			//exceÃ§Ã£o de FK
 			String fk_name = matcher.group(2);
 			System.out.println(fk_name);
 			String fk_table_name = matcher.group(3).toUpperCase();

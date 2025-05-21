@@ -19,7 +19,7 @@
 <t:view useBean="model">
 
 	<n:content id="context">
-		<n:link url="${crudPath}">Voltar para RelatÛrios</n:link>
+		<n:link url="${crudPath}">Voltar para Relat√≥rios</n:link>
 	</n:content>
 
 	<t:simplePanel>
@@ -33,7 +33,7 @@
 			</n:panel>
 		</t:formTable>
 		<t:actionPanel>
-			<n:submit action="saveReport">Salvar RelatÛrio</n:submit>
+			<n:submit action="saveReport">Salvar Relat√≥rios</n:submit>
 		</t:actionPanel>
 	</t:simplePanel>
 
@@ -55,10 +55,10 @@
 			{
 				var comp = document.getElementById('selProp_${property}');
 				if (comp == null) {
-					alert('O campo ${property} especificado no XML n„o existe mais!');
+					alert('O campo ${property} especificado no XML n√£o existe mais!');
 				}else{
 					document.getElementById('selProp_${property}').disabled = true;
-					document.getElementById('selProp_${property}').title = 'Essa propriedade n„o pode ser removida.';
+					document.getElementById('selProp_${property}').title = 'Essa propriedade n√£o pode ser removida.';
 				}
 			}
 		</c:if>

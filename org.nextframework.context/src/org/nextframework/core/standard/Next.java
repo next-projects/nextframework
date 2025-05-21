@@ -61,8 +61,8 @@ public class Next {
 	/**
 	 * Retorna um objeto registrado no Spring de determinada classe 
 	 * <B>IMPORTANTE:</B>
-	 * Inicialmente, o objeto ser· obtido a partir do nome simples da classe com a primeira letra min˙scula.
-	 * Se n„o for encontrado, ser· procurado pelo tipo da classe.
+	 * Inicialmente, o objeto ser√° obtido a partir do nome simples da classe com a primeira letra min√∫scula.
+	 * Se n√£o for encontrado, ser√° procurado pelo tipo da classe.
 	 */
 	@SuppressWarnings("unchecked")
 	public static <E> E getObject(Class<E> clazz) {
@@ -111,7 +111,7 @@ public class Next {
 	/**
 	 * Retorna o contexto NEXT
 	 * @return
-	 * @throws NotInNextContextException se n„o existir um contexto Next nessa Thread
+	 * @throws NotInNextContextException se n√£o existir um contexto Next nessa Thread
 	 */
 	public static RequestContext getRequestContext() throws NotInNextContextException {
 		RequestContext nextContext = requestContext.get();

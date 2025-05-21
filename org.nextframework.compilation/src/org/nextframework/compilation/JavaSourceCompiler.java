@@ -65,7 +65,7 @@ public class JavaSourceCompiler {
 	public static synchronized Class<?> compileClass(ClassLoader classLoader, String className, byte[] source) throws InstantiationException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
 		try {
-			//verificar se a classe j· est· compilada e carregada
+			//verificar se a classe j√° est√° compilada e carregada
 			Class<?> class1 = classLoader.loadClass(className);
 			return class1;
 		} catch (Exception e) {

@@ -31,7 +31,7 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 
 	// private static final Log log = LogFactory.getLog(ObjectAnnotationValidator.class);
 
-	// registro com as validaÁıes possÌveis
+	// registro com as valida√ß√µes poss√≠veis
 	protected ValidatorRegistry validatorRegistry;
 
 	public ValidatorAnnotationExtractorImpl(ValidatorRegistry registry) {
@@ -65,13 +65,13 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 		Annotation[] methodAnnotations = annotations;
 		for (Annotation annotation : methodAnnotations) {
 			if (validatorRegistry.getPropertyValidator(annotation.annotationType()) != null) {
-				// se entrar aqui quer dizer que essa anotaÁ„o foi registrada para validaÁ„o
+				// se entrar aqui quer dizer que essa anota√ß√£o foi registrada para valida√ß√£o
 //				if (validMethod) {
 //					//methodsRequiringValidation.add(method);
 //				} else {
-//					throw new RuntimeException("O mÈtodo "+method.getName()+" possui uma anotaÁ„o de validaÁ„o "+annotation+". " +
-//							"Somente mÈtodos getters podem ter anotaÁıes de validaÁ„o. " +
-//							"O mÈtodo n„o ser· incluido na validaÁ„o");
+//					throw new RuntimeException("O m√©todo "+method.getName()+" possui uma anota√ß√£o de valida√ß√£o "+annotation+". " +
+//							"Somente m√©todos getters podem ter anota√ß√µes de valida√ß√£o. " +
+//							"O m√©todo n√£o ser√° incluido na valida√ß√£o");
 //				}
 				//validationItem.setMethod(method);
 				validationItem.addValidation(annotation);
@@ -94,13 +94,13 @@ public class ValidatorAnnotationExtractorImpl implements ValidatorAnnotationExtr
 		Annotation[] methodAnnotations = annotations;
 		for (Annotation annotation : methodAnnotations) {
 			if (validatorRegistry.getPropertyValidator(annotation.annotationType()) != null) {
-				// se entrar aqui quer dizer que essa anotaÁ„o foi registrada para validaÁ„o
+				// se entrar aqui quer dizer que essa anota√ß√£o foi registrada para valida√ß√£o
 //				if (validMethod) {
 //					//methodsRequiringValidation.add(method);
 //				} else {
-//					throw new RuntimeException("O mÈtodo "+method.getName()+" possui uma anotaÁ„o de validaÁ„o "+annotation+". " +
-//							"Somente mÈtodos getters podem ter anotaÁıes de validaÁ„o. " +
-//							"O mÈtodo n„o ser· incluido na validaÁ„o");
+//					throw new RuntimeException("O m√©todo "+method.getName()+" possui uma anota√ß√£o de valida√ß√£o "+annotation+". " +
+//							"Somente m√©todos getters podem ter anota√ß√µes de valida√ß√£o. " +
+//							"O m√©todo n√£o ser√° incluido na valida√ß√£o");
 //				}
 				//validationItem.setMethod(method);
 				validationItem.addValidation(annotation);

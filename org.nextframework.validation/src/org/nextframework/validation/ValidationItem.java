@@ -51,7 +51,7 @@ public class ValidationItem {
 
 	public String getFieldName() {
 //		if(fieldName == null && method!=null){
-//			// achar o nome do field pelo Método
+//			// achar o nome do field pelo MÃ©todo
 //			if (method.getName().startsWith("get")) {
 //				//get?
 //				fieldName = method.getName().substring(3);

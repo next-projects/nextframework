@@ -18,13 +18,13 @@ public enum ReportFilterDateAutoFilter {
 	public String getDescription() {
 		switch (this) {
 			case MES_ANTERIOR:
-				return "Mês Anterior";
+				return "MÃªs Anterior";
 			case ULTIMOS_30_DIAS:
-				return "Últimos 30 Dias";
+				return "Ãšltimos 30 Dias";
 			case SEMANA_ANTERIOR:
 				return "Semana Anterior";
 			case ULTIMOS_7_DIAS:
-				return "Últimos 7 dias";
+				return "Ãšltimos 7 dias";
 			case DIA_ANTERIOR:
 				return "Dia Anterior";
 			case DIA_ATUAL:

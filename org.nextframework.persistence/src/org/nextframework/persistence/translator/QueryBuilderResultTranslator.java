@@ -35,8 +35,8 @@ public interface QueryBuilderResultTranslator {
 	public String getFinalSelect();
 
 	/**
-	 * Não Thread-Safe a chamada deve ser synchronizada
-	 * Recomendação: utilizar translate(List) que é Thread Safe
+	 * NÃ£o Thread-Safe a chamada deve ser synchronizada
+	 * RecomendaÃ§Ã£o: utilizar translate(List) que Ã© Thread Safe
 	 * @param values
 	 * @return
 	 */

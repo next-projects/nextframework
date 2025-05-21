@@ -15,7 +15,7 @@ public class ProgressBarTag extends BaseTag {
 	protected void doComponent() throws Exception {
 
 		if (progressMonitor == null) {
-			throw new NextException("O progressMonitor de um progressBar n„o pode ser nulo");
+			throw new NextException("O progressMonitor de um progressBar n√£o pode ser nulo");
 		}
 
 		if (getId() == null) {

@@ -64,7 +64,7 @@ public class MenuParser {
 	public Menu parse(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
 
 		if (inputStream == null) {
-			throw new NullPointerException("O arquivo de menu n„o foi encontrado");
+			throw new NullPointerException("O arquivo de menu n√£o foi encontrado");
 		}
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -137,7 +137,7 @@ public class MenuParser {
 		try {
 			return Next.getMessageSource().getMessage(Util.objects.newMessage(codes, null, id), locale);
 		} catch (NoSuchMessageException e) {
-			//Se n„o foi encontrado, n„o dispara o erro, pois, nas tags, os atributos s„o opcionais
+			//Se n√£o foi encontrado, n√£o dispara o erro, pois, nas tags, os atributos s√£o opcionais
 		}
 
 		return null;

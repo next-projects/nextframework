@@ -23,15 +23,15 @@ public class PhoneBrazil implements Serializable {
 
 	private void checkPattern(String value) throws IllegalArgumentException {
 		if (value.length() > 15) {
-			throw new IllegalArgumentException("O tamanho m·ximo do campo telefone È 15");
+			throw new IllegalArgumentException("O tamanho m√°ximo do campo telefone √© 15");
 		}
 		String cleanValue = removeSymbols(value);
 		char[] charArray = cleanValue.toCharArray();
 		for (int i = 0; i < charArray.length; i++) {
 			char c = charArray[i];
 			if (!Character.isDigit(c)) {
-				throw new IllegalArgumentException("N„o foi possÌvel converter \"" + value
-						+ "\" para um telefone v·lido. Caracter inv·lido \"" + c + "\"");
+				throw new IllegalArgumentException("N√£o foi poss√≠vel converter \"" + value
+						+ "\" para um telefone v√°lido. Caracter inv√°lido \"" + c + "\"");
 			}
 		}
 	}

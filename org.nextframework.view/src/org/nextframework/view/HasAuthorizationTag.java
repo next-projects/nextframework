@@ -28,9 +28,9 @@ import org.nextframework.exception.NextException;
 import org.nextframework.web.WebUtils;
 
 /**
- * Verifica se o usu·rio atual possui permiss„o para acessar a url especificada
+ * Verifica se o usu√°rio atual possui permiss√£o para acessar a url especificada
  * 
- * @author Pedro GonÁalves
+ * @author Pedro Gon√ßalves
  * @since 31/07/2007
  * @version 1.0
  */
@@ -64,7 +64,7 @@ public class HasAuthorizationTag extends BaseTag {
 			}
 			return Authorization.getAuthorizationManager().isAuthorized(partialURL, action, Authorization.getUserLocator().getUser());
 		} catch (Exception e) {
-			throw new NextException("Problema ao verificar autorizaÁ„o", e);
+			throw new NextException("Problema ao verificar autoriza√ß√£o", e);
 		}
 	}
 

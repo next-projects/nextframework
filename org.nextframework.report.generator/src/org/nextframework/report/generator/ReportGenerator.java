@@ -308,7 +308,7 @@ public class ReportGenerator {
 					CalculatedFieldElement calc = reportElement.getData().getCalculatedFieldWithName(name);
 					displayName = calc.getDisplayName();
 					//if (!fieldDetailElement.isAggregateField() && fieldDetailElement.isCustomPattern()) {
-					//summary.addVariable(name, displayName, CalculationType.NONE); //O mÈtodo configureExpressions j· acrescentar· a vari·vel do campo calculado
+					//summary.addVariable(name, displayName, CalculationType.NONE); //O m√©todo configureExpressions j√° acrescentar√° a vari√°vel do campo calculado
 					//}
 				}
 				if (fieldDetailElement.isCustomPattern()) {

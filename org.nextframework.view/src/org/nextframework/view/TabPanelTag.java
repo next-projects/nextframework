@@ -72,7 +72,7 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 			tabBlocks.add(new TabPanelBlock(block, this.id, currentPanel++));
 		}
 
-		//verificar se j· existia algum prÈ-selecionado
+		//verificar se j√° existia algum pr√©-selecionado
 		int selectedIndex = 0;
 		String index = getRequest().getParameter("TABPANEL_" + this.id);
 		if (index != null) {
@@ -93,7 +93,7 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 	private void renderScript(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
 
 		if (tabBlocks.size() <= 1 && !renderUniqueTab) {
-			return;//se o n˙mero de tabs nao for maior que 1, nao È necess·rio criar um script
+			return;//se o n√∫mero de tabs nao for maior que 1, nao √© necess√°rio criar um script
 		}
 
 		if (this.id != null) {
@@ -138,7 +138,7 @@ public class TabPanelTag extends BaseTag implements AcceptPanelRenderedBlock {
 	private void renderSelectArea(List<TabPanelBlock> tabBlocks, int selectedIndex) throws IOException {
 
 		if (tabBlocks.size() == 1 && !renderUniqueTab) {
-			return;//manter compatibilidade com o estilo de rernderizacao antigo, onde, quando houver apenas uma aba.. n„o mostrar o tabpanel
+			return;//manter compatibilidade com o estilo de rernderizacao antigo, onde, quando houver apenas uma aba.. n√£o mostrar o tabpanel
 		}
 
 		pushAttribute("id", this.id);

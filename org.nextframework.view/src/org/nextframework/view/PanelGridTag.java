@@ -98,7 +98,7 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			flatMode = getViewConfig().isDefaultFlatMode();
 		}
 
-		if (columns == null || columns == 0/*forçado*/) {
+		if (columns == null || columns == 0/*forÃ§ado*/) {
 			columns = 1;
 		}
 		if (columns <= 0) {

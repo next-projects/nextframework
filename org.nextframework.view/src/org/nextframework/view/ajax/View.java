@@ -37,7 +37,7 @@ import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
 
 /**
- * Classe que representa a vis„o do browser. Essa classe deve ser utilizada em chamadas Ajax
+ * Classe que representa a vis√£o do browser. Essa classe deve ser utilizada em chamadas Ajax
  * @author rogelgarcia
  *
  */
@@ -90,7 +90,7 @@ public class View {
 			try {
 				out = response.getWriter();
 			} catch (IOException e) {
-				throw new NextException("Erro ao enviar cÛdigo para o cliente na chamada ajax", e);
+				throw new NextException("Erro ao enviar c√≥digo para o cliente na chamada ajax", e);
 			}
 			response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		}
@@ -99,7 +99,7 @@ public class View {
 	}
 
 	/**
-	 * Monta e envia o cÛdigo para o cliente
+	 * Monta e envia o c√≥digo para o cliente
 	 *
 	 */
 	public void flush() {
@@ -107,7 +107,7 @@ public class View {
 			try {
 				out = response.getWriter();
 			} catch (IOException e) {
-				throw new NextException("Erro ao enviar cÛdigo para o cliente na chamada ajax", e);
+				throw new NextException("Erro ao enviar c√≥digo para o cliente na chamada ajax", e);
 			}
 			response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 		}

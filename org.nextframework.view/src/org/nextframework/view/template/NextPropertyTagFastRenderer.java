@@ -28,7 +28,7 @@ public class NextPropertyTagFastRenderer implements PropertyTagFastRenderer {
 
 		LabelAndValue labelAndValue;
 
-		//utilizar renderizaÁ„o r·pida
+		//utilizar renderiza√ß√£o r√°pida
 		DataGridTag dataGrid = tag.findParent2(DataGridTag.class, true);
 		dataGrid.setHasColumns(true);
 		dataGrid.setRenderHeader(true);

@@ -197,7 +197,7 @@ public class ReportDesigner {
 			calculatedFieldsSelect.removeChild(calculatedFieldsSelect.options.$get(selectedIndex));
 		}
 		writeXml();
-		Global.alert("O campo calculado foi removido. É necessário remover também (se houver) todas as referências para esse campo no relatório.");
+		Global.alert("O campo calculado foi removido. Ã‰ necessÃ¡rio remover tambÃ©m (se houver) todas as referÃªncias para esse campo no relatÃ³rio.");
 	}
 
 	public void editCalculatedProperty() {
@@ -328,7 +328,7 @@ public class ReportDesigner {
 
 	public void appendNumberToExpression() {
 		final ReportDesigner bigThis = this;
-		MessageDialog dialog = next.dialogs.showInputNumberDialog("Inserir Número", "Digite o número que deseja inserir na fórmula:");
+		MessageDialog dialog = next.dialogs.showInputNumberDialog("Inserir NÃºmero", "Digite o nÃºmero que deseja inserir na fÃ³rmula:");
 		dialog.setCallback(new NextDialogs.DialogCallback() {
 
 			@Override
@@ -452,7 +452,7 @@ public class ReportDesigner {
 			return;
 		}
 		if (ReportPropertyConfigUtils.isEmpty(calculationName.value)) {
-			Global.alert("É necessário dar um nome para a variável");
+			Global.alert("Ã‰ necessÃ¡rio dar um nome para a variÃ¡vel");
 			next.effects.blink(calculationDisplayName);
 			calculationDisplayName.focus();
 			return;

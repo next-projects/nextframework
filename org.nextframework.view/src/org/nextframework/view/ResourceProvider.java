@@ -166,14 +166,14 @@ public class ResourceProvider {
 	protected InputStream getResource(HttpServletRequest request, HttpServletResponse response, String tipo, String file) throws IOException {
 		String basePath = map.get(tipo);
 		if (basePath == null) {
-			//solicitaÁıes de js dentro de pacotes
+			//solicita√ß√µes de js dentro de pacotes
 			if (tipo.endsWith(RESOURCE)) {
 				InputStream inputStream = getInputStream(request, tipo, file);
 				if (inputStream != null) {
 					return inputStream;
 				}
 			}
-			//Se n„o encontrou...
+			//Se n√£o encontrou...
 			return null;
 		}
 		return getInputStream(request, basePath, file);
@@ -183,7 +183,7 @@ public class ResourceProvider {
 		//Tenta encontrar o arquivo explodido
 		InputStream stream = request.getSession().getServletContext().getResourceAsStream("/WEB-INF/classes/" + tipo + file);
 		if (stream == null) {
-			//Se n„o encontrar, tenta no classpath
+			//Se n√£o encontrar, tenta no classpath
 			stream = getClass().getClassLoader().getResourceAsStream(tipo + file);
 		}
 		return stream;

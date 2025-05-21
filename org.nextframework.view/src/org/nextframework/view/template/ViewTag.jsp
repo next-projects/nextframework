@@ -15,7 +15,7 @@
 
 		<c:if test="${viewTag.includeForm && viewTag.validateForm}">
 			<script language="javascript">
-				// caso seja alterada a funÁ„o validateExtra ela ser· chamada apÛs a validacao do formulario
+				// caso seja alterada a fun√ß√£o validateExtra ela ser√° chamada ap√≥s a valida√ß√£o do formul√°rio
 				var validateExtra;
 				function validate(){
 					<c:if test="${!viewTag.validateForm}">

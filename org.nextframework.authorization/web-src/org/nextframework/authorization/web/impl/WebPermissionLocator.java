@@ -133,7 +133,7 @@ public class WebPermissionLocator implements PermissionLocator {
 		for (AuthorizationItem item : authorizationItens) {
 			String id = item.getId();
 			if (item.getValues() == null || item.getValues().length == 0)
-				throw new IllegalArgumentException("Os valores possÌveis de um item de autorizaÁ„o n„o pode ser um array vazio ou null");
+				throw new IllegalArgumentException("Os valores poss√≠veis de um item de autoriza√ß√£o n√£o pode ser um array vazio ou null");
 			String valorMaisRestritivo = item.getValues()[item.getValues().length - 1];
 			defaultPermissionMap.put(id, valorMaisRestritivo);
 		}

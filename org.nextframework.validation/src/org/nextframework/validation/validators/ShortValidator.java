@@ -46,7 +46,7 @@ public class ShortValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È um n˙mero inteiro v·lido! Deve ser inteiro e estar entre -32768 e 32767";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© um n√∫mero inteiro v√°lido! Deve ser inteiro e estar entre -32768 e 32767";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

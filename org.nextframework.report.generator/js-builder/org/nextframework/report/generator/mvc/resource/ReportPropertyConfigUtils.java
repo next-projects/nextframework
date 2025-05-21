@@ -298,7 +298,7 @@ public class ReportPropertyConfigUtils {
 			if (token == ")") {
 				parentesesStack--;
 				if (parentesesStack < 0) {
-					return "Existem mais ')' do que '('. Verifique a expressão.";
+					return "Existem mais ')' do que '('. Verifique a expressÃ£o.";
 				}
 			}
 			if (token == "(") {
@@ -314,12 +314,12 @@ public class ReportPropertyConfigUtils {
 						status = ReportPropertyConfigUtils.IN_VAR;
 					}
 					if (tokenType == ReportPropertyConfigUtils.CLOSE_PARENTHESIS) {
-						return "Fecha parênteses inesperado [item " + (i + 1) + "]";
+						return "Fecha parÃªnteses inesperado [item " + (i + 1) + "]";
 					}
 					break;
 				case ReportPropertyConfigUtils.IN_VAR:
 					if (tokenType == ReportPropertyConfigUtils.VAR) {
-						return "Variável inesperada '" + token + "'";
+						return "VariÃ¡vel inesperada '" + token + "'";
 					}
 					if (tokenType == ReportPropertyConfigUtils.OPEN_PARENTHESIS) {
 						return "Operador esperado '(' [item " + (i + 1) + "]";
@@ -348,7 +348,7 @@ public class ReportPropertyConfigUtils {
 			}
 		}
 		if (parentesesStack != 0) {
-			return "O número de '(' e ')' são diferentes. Verifique a expressão.";
+			return "O nÃºmero de '(' e ')' sÃ£o diferentes. Verifique a expressÃ£o.";
 		}
 		return null;
 	}

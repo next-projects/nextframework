@@ -41,7 +41,7 @@ public class YearValidator implements PropertyValidator {
 			String fieldDisplayName, Annotation annotation, Errors errors, ObjectAnnotationValidator annotationValidator) {
 		if (value != null && value instanceof Number) {
 			if (!GenericValidator.isInRange(((Number) value).intValue(), 1950, 2050)) {
-				errors.rejectValue(fieldName, "year", "O campo " + fieldDisplayName + " deve ser um ano (1950 atÈ 2050)");
+				errors.rejectValue(fieldName, "year", "O campo " + fieldDisplayName + " deve ser um ano (1950 at√© 2050)");
 			}
 		}
 	}
@@ -55,7 +55,7 @@ public class YearValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo " + validationItem.getFieldDisplayName() + " deve ser um ano v·lido (de 1950 atÈ 2050)";
+		return "O campo " + validationItem.getFieldDisplayName() + " deve ser um ano v√°lido (de 1950 at√© 2050)";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

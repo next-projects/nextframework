@@ -74,7 +74,7 @@ public class AjaxCallbackSupport implements AjaxCallbackController {
 			}
 			for (int i = 0; i < callbacks.size(); i++) {
 				if (callbacks.get(i) == null) {
-					//achou uma posição vazia
+					//achou uma posiÃ§Ã£o vazia
 					callbacks.set(i, ajax);
 					return i;
 				}
@@ -94,7 +94,7 @@ public class AjaxCallbackSupport implements AjaxCallbackController {
 			List<Callback> callbacks = getCallbacks(requestContext);
 			for (int i = 0; i < callbacks.size(); i++) {
 				if (callbacks.get(i) == null) {
-					//achou uma posição vazia
+					//achou uma posiÃ§Ã£o vazia
 					callbacks.set(i, ajax);
 					return i;
 				}

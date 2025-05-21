@@ -78,7 +78,7 @@ public class QueryBuilder<E> {
 	protected int maxResults = Integer.MIN_VALUE;
 	protected int firstResult = Integer.MIN_VALUE;
 
-	protected boolean useTranslator = true; // Utilizar· o tradutor quando o resultado for do tipo array
+	protected boolean useTranslator = true; // Utilizar√° o tradutor quando o resultado for do tipo array
 	protected Class<? extends QueryBuilderResultTranslator> resultTranslatorClass = QueryBuilderResultTranslatorImpl.class;
 	protected String translatorAlias;
 	private Set<String> ignoreJoinPaths = new HashSet<String>();
@@ -133,7 +133,7 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Seta a cl·usula from desse queryBuilder
+	 * Seta a cl√°usula from desse queryBuilder
 	 * Seta o alias para o nome da clase minusculo
 	 * @param clazz
 	 * @return
@@ -143,7 +143,7 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Cria uma cl·usula from a partir de outra cl·usula from
+	 * Cria uma cl√°usula from a partir de outra cl√°usula from
 	 * @param from
 	 * @return
 	 */
@@ -153,7 +153,7 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Seta a cl·usula from desse queryBuilder e o alias
+	 * Seta a cl√°usula from desse queryBuilder e o alias
 	 * O alias pode ser utilizado em clausulas where por exemplo
 	 * 
 	 * @param _clazz
@@ -170,7 +170,7 @@ public class QueryBuilder<E> {
 
 	/**
 	 * Efetua um inner join sem fetch 
-	 * Equivalente ‡: join(JoinMode.INNER, false, path);
+	 * Equivalente √†: join(JoinMode.INNER, false, path);
 	 * @param path
 	 * @return
 	 */
@@ -180,7 +180,7 @@ public class QueryBuilder<E> {
 
 	/**
 	 * Efetua um inner join com fetch
-	 * Equivalente ‡: join(JoinMode.INNER, true, path);
+	 * Equivalente √†: join(JoinMode.INNER, true, path);
 	 * @param path
 	 * @return
 	 */
@@ -190,7 +190,7 @@ public class QueryBuilder<E> {
 
 	/**
 	 * Efetua um left outer join sem fetch
-	 * Equivalente ‡: join(JoinMode.LEFT_OUTER, false, path);
+	 * Equivalente √†: join(JoinMode.LEFT_OUTER, false, path);
 	 * @param path
 	 * @return
 	 */
@@ -200,7 +200,7 @@ public class QueryBuilder<E> {
 
 	/**
 	 * Efetua um left outer join com fetch
-	 * Equivalente ‡: join(JoinMode.LEFT_OUTER, false, path);
+	 * Equivalente √†: join(JoinMode.LEFT_OUTER, false, path);
 	 * @param path
 	 * @return
 	 */
@@ -211,7 +211,7 @@ public class QueryBuilder<E> {
 	/**
 	 * Cria uma clausula join
 	 * @param joinMode Tipo do join: INNER, LEFT, RIGHT
-	 * @param fetch Indica se a entidade relacionada com o join È para ser inicializada
+	 * @param fetch Indica se a entidade relacionada com o join √© para ser inicializada
 	 * @param path PAth da propriedade, utilizar o alias + ponto + propriedade. ex.: pessoa.municipio
 	 * @return
 	 */
@@ -230,8 +230,8 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Inicializa determinada coleÁ„o dos beans que essa query retornar
-	 * IMPORTANTE: N„o utilizar o alias, apenas o nome da propriedade que deve ser um Collection
+	 * Inicializa determinada cole√ß√£o dos beans que essa query retornar
+	 * IMPORTANTE: N√£o utilizar o alias, apenas o nome da propriedade que deve ser um Collection
 	 * e deve estar mapeado no hibernate
 	 * @param path
 	 * @return
@@ -280,12 +280,12 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Cria uma cl·usulua where ... like ...
-	 * SÛ È necess·rio informar a expressao que deve ser usado o like, n„o utilizar '?'
+	 * Cria uma cl√°usulua where ... like ...
+	 * S√≥ √© necess√°rio informar a expressao que deve ser usado o like, n√£o utilizar '?'
 	 * Ex.:
 	 * whereLike("associado.nome", associado.getNome())
-	 * Isso ser· transformado em: associado.nome like '%'||nome||'%'
-	 * Se o parametro for null ou string vazia essa condiÁ„o n„o ser· criada
+	 * Isso ser√° transformado em: associado.nome like '%'||nome||'%'
+	 * Se o parametro for null ou string vazia essa condi√ß√£o n√£o ser√° criada
 	 * @param whereClause
 	 * @param parameter
 	 * @return
@@ -293,7 +293,7 @@ public class QueryBuilder<E> {
 	public QueryBuilder<E> whereLike(String whereClause, String parameter) {
 		if (parameter != null && !parameter.equals("")) {
 			if (parameter.indexOf('?') > 0) {
-				throw new IllegalArgumentException("A cl·usula where do QueryBuilder n„o pode ter o caracter '?'. Deve ser passada apenas a express„o que se dejesa fazer o like. Veja javadoc!");
+				throw new IllegalArgumentException("A cl√°usula where do QueryBuilder n√£o pode ter o caracter '?'. Deve ser passada apenas a express√£o que se dejesa fazer o like. Veja javadoc!");
 			}
 			where(whereClause + " like '%'||?||'%'", parameter);
 		}
@@ -326,12 +326,12 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Cria uma cl·usulua where ... like ... ignorando caixa e acentos.
-	 * SÛ È necess·rio informar a expressao que deve ser usado o like, n„o utilizar '?'
+	 * Cria uma cl√°usulua where ... like ... ignorando caixa e acentos.
+	 * S√≥ √© necess√°rio informar a expressao que deve ser usado o like, n√£o utilizar '?'
 	 * Ex.:
 	 * whereLikeIgnoreAll("associado.nome", associado.getNome())
-	 * Isso ser· transformado em: UPPER(TIRAACENTO(associado.nome)) LIKE '%'||UPPER(TIRAACENTO(nome))||'%'
-	 * Se o parametro for null ou string vazia essa condiÁ„o n„o ser· criada
+	 * Isso ser√° transformado em: UPPER(TIRAACENTO(associado.nome)) LIKE '%'||UPPER(TIRAACENTO(nome))||'%'
+	 * Se o parametro for null ou string vazia essa condi√ß√£o n√£o ser√° criada
 	 * @param whereClause
 	 * @param parameter
 	 * @return
@@ -339,7 +339,7 @@ public class QueryBuilder<E> {
 	public QueryBuilder<E> whereLikeIgnoreAll(String whereClause, String parameter) {
 		if (parameter != null && !parameter.equals("")) {
 			if (parameter.indexOf('?') > 0) {
-				throw new IllegalArgumentException("A cl·usula where do QueryBuilder n„o pode ter o caracter '?'. Deve ser passada apenas a express„o que se deseja fazer o like. Veja javadoc!");
+				throw new IllegalArgumentException("A cl√°usula where do QueryBuilder n√£o pode ter o caracter '?'. Deve ser passada apenas a express√£o que se deseja fazer o like. Veja javadoc!");
 			}
 			String funcaoTiraacento = config.getRemoveAccentFunction();
 			if (funcaoTiraacento != null) {
@@ -353,11 +353,11 @@ public class QueryBuilder<E> {
 
 	/**
 	 * Cria uma clausula where ... in ...
-	 * SÛ È necess·rio informar a expressao que deve ser usado o in, n„o utilizar '?'
+	 * S√≥ √© necess√°rio informar a expressao que deve ser usado o in, n√£o utilizar '?'
 	 * Ex.:
 	 * whereIn("associado.inscricoes", inscricoes)
-	 * Isso ser· transformado em: associado.inscricoes in ? [onde no lugar de '?' ser· colocado a colecao]
-	 * Se a colecao for vazia a query retornar· verdadeiro
+	 * Isso ser√° transformado em: associado.inscricoes in ? [onde no lugar de '?' ser√° colocado a colecao]
+	 * Se a colecao for vazia a query retornar√° verdadeiro
 	 * @param whereClause 
 	 * @param collection
 	 * @return
@@ -367,12 +367,12 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Cria uma clausula where ... in ... SÛ È necess·rio informar a expressao que deve ser usado o in, n„o utilizar '?' Ex.: whereIn("associado.inscricoes", inscricoes) Isso ser· transformado em: associado.inscricoes in ? [onde no lugar de '?' ser· colocado a colecao] Se o parametro for null ou
-	 * string vazia e emptyCollectionReturnFalse for false essa condiÁ„o n„o ser· criada
+	 * Cria uma clausula where ... in ... S√≥ √© necess√°rio informar a expressao que deve ser usado o in, n√£o utilizar '?' Ex.: whereIn("associado.inscricoes", inscricoes) Isso ser√° transformado em: associado.inscricoes in ? [onde no lugar de '?' ser√° colocado a colecao] Se o parametro for null ou
+	 * string vazia e emptyCollectionReturnFalse for false essa condi√ß√£o n√£o ser√° criada
 	 * @param whereClause
 	 * @param collection
 	 * @param emptyCollectionReturnTrue
-	 *            Se a colecao for vazia È para retornar verdadeiro?
+	 *            Se a colecao for vazia √© para retornar verdadeiro?
 	 * @return
 	 */
 	public QueryBuilder<E> whereIn(String whereClause, Collection<?> collection, boolean emptyCollectionReturnTrue) {
@@ -392,14 +392,14 @@ public class QueryBuilder<E> {
 
 	/**
 	 * Cria uma clausula where ... in ...
-	 * SÛ È necess·rio informar a expressao que deve ser usado o in, n„o utilizar '?'
+	 * S√≥ √© necess√°rio informar a expressao que deve ser usado o in, n√£o utilizar '?'
 	 * Ex.:
 	 * whereIn("associado.inscricoes", "1,2,4,5")
-	 * Isso ser· transformado em: associado.inscricoes in ? [onde no lugar de '?' ser· colocado o values]
-	 * Se o parametro for null ou string vazia essa condiÁ„o n„o ser· criada
+	 * Isso ser√° transformado em: associado.inscricoes in ? [onde no lugar de '?' ser√° colocado o values]
+	 * Se o parametro for null ou string vazia essa condi√ß√£o n√£o ser√° criada
 	 * @param whereClause 
 	 * @param values valores separados por virgula
-	 * @param emptyCollectionReturnTrue Se a colecao for vazia È para retornar verdadeiro?
+	 * @param emptyCollectionReturnTrue Se a colecao for vazia √© para retornar verdadeiro?
 	 * @return
 	 */
 	public QueryBuilder<E> whereIn(String whereClause, String values) {
@@ -408,14 +408,14 @@ public class QueryBuilder<E> {
 
 	/**
 	 * Cria uma clausula where ... in ...
-	 * SÛ È necess·rio informar a expressao que deve ser usado o in, n„o utilizar '?'
+	 * S√≥ √© necess√°rio informar a expressao que deve ser usado o in, n√£o utilizar '?'
 	 * Ex.:
 	 * whereIn("associado.inscricoes", "1,2,4,5")
-	 * Isso ser· transformado em: associado.inscricoes in ? [onde no lugar de '?' ser· colocado o values]
-	 * Se o parametro for null ou string vazia e emptyCollectionReturnTrue for true essa condiÁ„o n„o ser· criada
+	 * Isso ser√° transformado em: associado.inscricoes in ? [onde no lugar de '?' ser√° colocado o values]
+	 * Se o parametro for null ou string vazia e emptyCollectionReturnTrue for true essa condi√ß√£o n√£o ser√° criada
 	 * @param whereClause 
 	 * @param values valores separados por virgula
-	 * @param emptyCollectionReturnTrue Se a colecao for vazia È para retornar verdadeiro?
+	 * @param emptyCollectionReturnTrue Se a colecao for vazia √© para retornar verdadeiro?
 	 * @return
 	 */
 	public QueryBuilder<E> whereIn(String whereClause, String values, boolean emptyCollectionReturnTrue) {
@@ -443,8 +443,8 @@ public class QueryBuilder<E> {
 	 * Cria uma clausula where.
 	 * Escrever a clausula completa . Ex:
 	 * where("pessoa.municipio.nome like '?'", nome)
-	 * Onde a ? ser· substituida por parameter
-	 * Se parameter for null essa clausula nao ser· criada
+	 * Onde a ? ser√° substituida por parameter
+	 * Se parameter for null essa clausula nao ser√° criada
 	 * @param whereClause
 	 * @param parameter
 	 * @return
@@ -469,8 +469,8 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Cria uma clausula where com v·rios par‚metros.
-	 * Se parameter for null essa clausula nao ser· criada
+	 * Cria uma clausula where com v√°rios par√¢metros.
+	 * Se parameter for null essa clausula nao ser√° criada
 	 * @param whereClause
 	 * @param parameter
 	 * @return
@@ -550,7 +550,7 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Adiciona ao where uma cl·usula onde o id deve ser igual ao 
+	 * Adiciona ao where uma cl√°usula onde o id deve ser igual ao 
 	 * Serializable fornecido
 	 * @param serializable
 	 * @return
@@ -562,8 +562,8 @@ public class QueryBuilder<E> {
 	}
 
 	/**
-	 * Descobre o id do objeto e adiciona uma cl·usula where
-	 * que retornar· o objeto com o mesmo id do objeto fornecido
+	 * Descobre o id do objeto e adiciona uma cl√°usula where
+	 * que retornar√° o objeto com o mesmo id do objeto fornecido
 	 * @param object
 	 * @return
 	 */
@@ -601,13 +601,13 @@ public class QueryBuilder<E> {
 		where.append(")");
 		subConditionStack--;
 		if (subConditionStack < 0) {
-			throw new QueryBuilderException("N„o existem subcondicoes a serem fechadas");
+			throw new QueryBuilderException("N√£o existem subcondicoes a serem fechadas");
 		}
 		return this;
 	}
 
 	/**
-	 * Cria uma condiÁ„o or. A prÛxima instruÁ„o ser· concatenada a query com um or e nao com um and
+	 * Cria uma condi√ß√£o or. A pr√≥xima instru√ß√£o ser√° concatenada a query com um or e nao com um and
 	 * @see openParentheses
 	 * @return
 	 */
@@ -720,14 +720,14 @@ public class QueryBuilder<E> {
 			}
 		} catch (RuntimeException e) {
 			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-			throw new QueryBuilderException("Erro ao inicializar Proxys (ColeÁıes). " + stackTrace[7], e);
+			throw new QueryBuilderException("Erro ao inicializar Proxys (Cole√ß√µes). " + stackTrace[7], e);
 		}
 
 		return (List<E>) list;
 	}
 
 	/**
-	 * Exceuta a query e retorna um ˙nico resultado
+	 * Exceuta a query e retorna um √∫nico resultado
 	 */
 	@SuppressWarnings({ "unchecked" })
 	public E unique() {
@@ -782,7 +782,7 @@ public class QueryBuilder<E> {
 			initializeProxys(result);
 		} catch (RuntimeException e) {
 			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-			throw new QueryBuilderException("Erro ao inicializar Proxys (ColeÁıes). " + stackTrace[7], e);
+			throw new QueryBuilderException("Erro ao inicializar Proxys (Cole√ß√µes). " + stackTrace[7], e);
 		}
 
 		return (E) result;
@@ -795,7 +795,7 @@ public class QueryBuilder<E> {
 			if (resultadoOriginalList.isEmpty()) {
 				return null;
 			} else if (resultadoOriginalList.size() > 1) {
-				throw new IllegalArgumentException("V·rios registros foram encontrados!");
+				throw new IllegalArgumentException("V√°rios registros foram encontrados!");
 			}
 			return qbt.translate((Object[]) resultadoOriginalList.get(0));
 		}
@@ -825,7 +825,7 @@ public class QueryBuilder<E> {
 				qbt = resultTranslatorClass.newInstance();
 				qbt.init(getSessionFactory(), this);
 			} catch (Exception e) {
-				throw new QueryBuilderException("N„o foi possÌvel inicializar o " + resultTranslatorClass.getSimpleName(), e);
+				throw new QueryBuilderException("N√£o foi poss√≠vel inicializar o " + resultTranslatorClass.getSimpleName(), e);
 			}
 
 			select.select = qbt.getFinalSelect();
@@ -838,7 +838,7 @@ public class QueryBuilder<E> {
 	protected void initializeProxys(Object object) {
 
 		if (object == null) {
-			return;//se o objeto for nulo, nao devemos inicializar os proxys pois n„o houve resultados
+			return;//se o objeto for nulo, nao devemos inicializar os proxys pois n√£o houve resultados
 		}
 
 		Set<Entry<String, CollectionFetcher>> entrySet = fetches.entrySet();

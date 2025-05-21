@@ -200,7 +200,7 @@ LI.validation:before, .validation:before {
 }
 
 .input-group-text {
-	padding: 0.375rem 0.4rem; /* para não esconder a data */
+	padding: 0.375rem 0.4rem; /* para nÃ£o esconder a data */
 }
 
 .requiredMark{

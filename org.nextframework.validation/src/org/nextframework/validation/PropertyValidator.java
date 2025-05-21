@@ -49,7 +49,7 @@ public interface PropertyValidator {
 	public String getValidationName();
 
 	/**
-	 * Nome da função que valida. Ex.: para validateRequired() deve retornar Required
+	 * Nome da funÃ§Ã£o que valida. Ex.: para validateRequired() deve retornar Required
 	 * @return
 	 */
 	public String getValidationFunctionName();
@@ -57,7 +57,7 @@ public interface PropertyValidator {
 	public String getJavascriptFunctionPath();
 
 	/**
-	 * Monta a função de validação do javascript
+	 * Monta a funÃ§Ã£o de validaÃ§Ã£o do javascript
 	 * @param validationItem
 	 * @return
 	 */

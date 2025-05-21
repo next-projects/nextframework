@@ -64,7 +64,7 @@ public class NumberUtils {
 		return equals(n1, n2, null);
 	}
 
-	private static final double DEFAULT_EPSILON = 0.000001d; //Precis„o de 5 casas decimais. 20.12345 != 20.12346; 0.123456 == 20.123457
+	private static final double DEFAULT_EPSILON = 0.000001d; //Precis√£o de 5 casas decimais. 20.12345 != 20.12346; 0.123456 == 20.123457
 
 	public boolean equals(Number n1, Number n2, Double epsilon) {
 		if (n1 == null && n2 == null) {

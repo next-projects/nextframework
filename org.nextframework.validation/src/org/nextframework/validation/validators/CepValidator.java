@@ -47,7 +47,7 @@ public class CepValidator implements PropertyValidator {
 	}
 
 	public String getMessage(JavascriptValidationItem validationItem) {
-		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n„o È um CEP v·lido";
+		return "O campo \\\"" + validationItem.getFieldDisplayName() + "\\\" n√£o √© um CEP v√°lido";
 	}
 
 	public String getJavascriptFunction(JavascriptValidationItem validationItem) {

@@ -18,7 +18,7 @@ public class SummaryBuilder {
 		try {
 			return (CompiledSummary<Y, E>) summary.getClassLoader().loadClass(compiledSummaryClassName).newInstance();
 		} catch (Exception e1) {
-			//se nao conseguir carregar a classe é porque ela nao foi gerada ainda
+			//se nao conseguir carregar a classe Ã© porque ela nao foi gerada ainda
 		}
 
 		SummaryJavaBuilder javaBuilder = new SummaryJavaBuilder();

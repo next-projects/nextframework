@@ -6,7 +6,7 @@ import org.stjs.javascript.Map;
 public abstract class NextAjax {
 
 	/**
-	 * Envia uma requisição AJAX
+	 * Envia uma requisiÃ§Ã£o AJAX
 	 * @param options 
 	 *   appendContext <BR>
 	 *   url<BR>

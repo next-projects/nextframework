@@ -232,8 +232,8 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 			}
 		}
 
-		//Melhor reaordenar fora do BD para ordenar pelos atributos calculados tambÈm.
-		//PorÈm, È necess·rio que haja pelo menos 1 critÈrio de ordenaÁ„o, para garantir a paginaÁ„o.
+		//Melhor reaordenar fora do BD para ordenar pelos atributos calculados tamb√©m.
+		//Por√©m, √© necess√°rio que haja pelo menos 1 crit√©rio de ordena√ß√£o, para garantir a pagina√ß√£o.
 		query.orderBy(query.getAlias() + "." + bd.getIdPropertyName());
 
 		return query;

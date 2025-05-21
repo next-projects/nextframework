@@ -34,6 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.nextframework.classmanager.ClassManager;
 import org.nextframework.classmanager.ClassManagerFactory;
+import org.nextframework.core.config.ViewConfig;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.view.ajax.AjaxCallbackController;
 import org.nextframework.view.ajax.AjaxCallbackSupport;
@@ -94,7 +96,8 @@ public class AjaxServlet extends HttpServlet {
 		}
 		AjaxCallbackController ajaxCallback = callbacks.get(item);
 		if (ajaxCallback != null) {
-			response.addHeader("Content-Type", "text/html; charset=iso-8859-1");
+			ViewConfig viewConfig = ServiceFactory.getService(ViewConfig.class);
+			response.addHeader("Content-Type", "text/html; charset=" + viewConfig.getJSPDefaultCharset());
 			try {
 				ajaxCallback.doAjax(request, response);
 			} catch (Exception e) {

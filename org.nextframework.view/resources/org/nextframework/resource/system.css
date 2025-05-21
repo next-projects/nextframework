@@ -38,7 +38,7 @@ th.datagridresizeblock {
 	border-bottom: 0px;
 }
 
-/* Os dois estilos abaixo s„o necess·rios para corrigir o problema de background que pode acontecer nos datagrids*/
+/* Os dois estilos abaixo s√£o necess√°rios para corrigir o problema de background que pode acontecer nos datagrids*/
 TABLE.dataGrid TR.dataGridHeader TH TABLE.datagridresizeblocktable TR TH.datagridoriginalcontents
 	{
 	background-image: none;

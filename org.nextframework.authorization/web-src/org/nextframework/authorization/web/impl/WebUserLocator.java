@@ -85,9 +85,9 @@ public class WebUserLocator implements UserLocator {
 						throw new RuntimeException("Cannot load user: " + username);
 					}
 				} else {
-					// O C”DIGO PROVAVELMENTE N√O CHEGAR¡ AQUI
-					// userPrincipal.getName() n„o deve retornar null
-					throw new RuntimeException("Erro inesperado: Algoritmo inv·lido em UserLocatorImpl");
+					// O C√ìDIGO PROVAVELMENTE N√ÉO CHEGAR√Å AQUI
+					// userPrincipal.getName() n√£o deve retornar null
+					throw new RuntimeException("Erro inesperado: Algoritmo inv√°lido em UserLocatorImpl");
 				}
 			} else {
 				//NINGUEM LOGADO

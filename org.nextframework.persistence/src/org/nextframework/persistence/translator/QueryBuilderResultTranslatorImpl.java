@@ -68,19 +68,19 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		for (Join join : queryBuilder.getJoins()) {
 			String[] joinpath = join.getPath().split(" +");
 			if (join.isFetch()) {
-				throw new QueryBuilderException("… necess·rio utilizar joins sem Fetch quando especificar os campos a serem selecionados. Erro no join: " + join);
+				throw new QueryBuilderException("√â necess√°rio utilizar joins sem Fetch quando especificar os campos a serem selecionados. Erro no join: " + join);
 			}
 			if (joinpath.length < 2) {
-				throw new QueryBuilderException("… necess·rio informar um alias para todos os joins quando especificar os campos a serem selecionados. Erro no join: " + join);
+				throw new QueryBuilderException("√â necess√°rio informar um alias para todos os joins quando especificar os campos a serem selecionados. Erro no join: " + join);
 			}
 			if (queryBuilder.getIgnoreJoinPaths().contains(joinpath[1])) {
 				continue;
 			}
 			if (!aliases.add(joinpath[1])) {
-				throw new QueryBuilderException("O alias " + joinpath[1] + " est· repetido. Erro no join: " + join);
+				throw new QueryBuilderException("O alias " + joinpath[1] + " est√° repetido. Erro no join: " + join);
 			}
 			if (joinpath[0].split("\\.").length > 2) {
-				throw new QueryBuilderException("N„o È possÌvel ter propriedade de propriedade nos joins: " + joinpath[0]);
+				throw new QueryBuilderException("N√£o √© poss√≠vel ter propriedade de propriedade nos joins: " + joinpath[0]);
 			}
 			aliasMaps.add(new AliasMap(joinpath[1], joinpath[0], null));
 		}
@@ -121,18 +121,18 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		Set<String> uniqueProperties = new HashSet<String>();
 		for (String property : selectedProperties) {
 			if (!uniqueProperties.add(property)) {
-				throw new QueryBuilderException("O campo \"" + property + "\" do select est· repetido.");
+				throw new QueryBuilderException("O campo \"" + property + "\" do select est√° repetido.");
 			}
 			String[] propertyParts = property.split("\\.");
 			if (propertyParts.length > 2) {
-				throw new QueryBuilderException("N„o È possÌvel ter propriedade de propriedade no select: " + property);
+				throw new QueryBuilderException("N√£o √© poss√≠vel ter propriedade de propriedade no select: " + property);
 			}
 			String propertyOwner = propertyParts[0];
 			if (!aliases.contains(propertyOwner)) {
-				throw new QueryBuilderException("O campo \"" + property + "\" do select n„o È v·lido, pois seu alias n„o foi declarado.");
+				throw new QueryBuilderException("O campo \"" + property + "\" do select n√£o √© v√°lido, pois seu alias n√£o foi declarado.");
 			}
 			if (property.contains(".") && fullProperties.contains(propertyOwner)) {
-				throw new QueryBuilderException("O campo \"" + property + "\" do select n„o È v·lido, pois j· existe uma declaraÁ„o de propriedade completa (sem ponto) com o alias \"" + propertyOwner + "\".");
+				throw new QueryBuilderException("O campo \"" + property + "\" do select n√£o √© v√°lido, pois j√° existe uma declara√ß√£o de propriedade completa (sem ponto) com o alias \"" + propertyOwner + "\".");
 			}
 		}
 
@@ -195,14 +195,14 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 					aliasMap.setCollectionType((Class<?>) parameterizedType.getActualTypeArguments()[0]);
 					aliasMap.setType(ArrayList.class);
 				} else {
-					throw new QueryBuilderException("Tipo n„o suportado: " + parameterizedType.getRawType() + " alias: " + aliasMap.getAlias());
+					throw new QueryBuilderException("Tipo n√£o suportado: " + parameterizedType.getRawType() + " alias: " + aliasMap.getAlias());
 				}
-				//precisamos fazer o array de dependencias porque È do tipo collection
+				//precisamos fazer o array de dependencias porque √© do tipo collection
 				if (aliasMap.getDependencias() == null) {
 					aliasMap.setDependencias(getDependencias(aliasMaps, aliasMap));
 				}
 			} else {
-				throw new QueryBuilderException("Tipo n„o suportado: " + type + " alias: " + aliasMap.getAlias());
+				throw new QueryBuilderException("Tipo n√£o suportado: " + type + " alias: " + aliasMap.getAlias());
 			}
 		}
 	}
@@ -231,7 +231,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 	private Set<AliasMap> getDependencias(AliasMap[] aliasMaps, AliasMap aliasMap) {
 		Set<AliasMap> dependencias = new HashSet<AliasMap>();
 		if (aliasMap.getPath() == null) {//root nao tem dependencias
-			//acho que esse cÛdigo n„o È necess·rio.. 
+			//acho que esse c√≥digo n√£o √© necess√°rio.. 
 			dependencias.add(aliasMap);
 			return dependencias;
 		}
@@ -307,7 +307,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 			if (resultAlias != null) {
 				Object object = objectTree.aliasObjectMap.get(resultAlias);
 				if (object == null) {
-					throw new QueryBuilderException("Tentativa de achar um objeto falhou ao traduzir o resultado. Alias n„o encontrado: " + resultAlias + ".");
+					throw new QueryBuilderException("Tentativa de achar um objeto falhou ao traduzir o resultado. Alias n√£o encontrado: " + resultAlias + ".");
 				}
 				return object;
 			}
@@ -318,7 +318,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 	}
 
 	/**
-	 * N„o È Thread-safe a chamada deve ser synchronizada do lado de fora
+	 * N√£o √© Thread-safe a chamada deve ser synchronizada do lado de fora
 	 */
 	public Object translate(Object[] values) {
 		ObjectTree objectTree = treeBuilder.buildObjectTree(values);
@@ -327,7 +327,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 			if (resultAlias != null) {
 				Object object = objectTree.aliasObjectMap.get(resultAlias);
 				if (object == null) {
-					throw new QueryBuilderException("Tentativa de achar um objeto falhou ao traduzir o resultado. Alias n„o encontrado: " + resultAlias + ".");
+					throw new QueryBuilderException("Tentativa de achar um objeto falhou ao traduzir o resultado. Alias n√£o encontrado: " + resultAlias + ".");
 				}
 				return object;
 			}
@@ -344,7 +344,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 }
 
 /**
- * Cria a arvore de objetos (MantÈm cache das operacoes a serem feitas)
+ * Cria a arvore de objetos (Mant√©m cache das operacoes a serem feitas)
  * @author fumec
  *
  */
@@ -395,7 +395,7 @@ class ObjectTreeBuilder {
 	}
 
 	/**
-	 * Cria o Objeto que ser· usado no resultado (cria os beans)
+	 * Cria o Objeto que ser√° usado no resultado (cria os beans)
 	 * @author rogelgarcia
 	 */
 	interface ObjectCreator {
@@ -466,7 +466,7 @@ class ObjectTreeBuilder {
 				return createResult;
 			} catch (InstantiationException e) {
 				if (Collection.class.isAssignableFrom(this.clazz)) {
-					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.clazz.getName() + "  " + path + ". Joins com tipos Collection (Set, List) n„o s„o suportados", e);
+					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.clazz.getName() + "  " + path + ". Joins com tipos Collection (Set, List) n√£o s√£o suportados", e);
 				} else {
 					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.clazz.getName() + "  " + path, e);
 				}
@@ -551,7 +551,7 @@ class ObjectTreeBuilder {
 				return createResult;
 			} catch (InstantiationException e) {
 				if (Collection.class.isAssignableFrom(this.collectionItemClass)) {
-					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.collectionItemClass.getName() + "  " + path + ". Joins com tipos Collection (Set, List) n„o s„o suportados", e);
+					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.collectionItemClass.getName() + "  " + path + ". Joins com tipos Collection (Set, List) n√£o s√£o suportados", e);
 				} else {
 					throw new QueryBuilderException("Erro ao criar o objeto da query: " + this.collectionItemClass.getName() + "  " + path, e);
 				}
@@ -570,7 +570,7 @@ class ObjectTreeBuilder {
 			try {
 				if (owner == null && objectTree.aliasObjectMap.get(alias) == null) {
 					return;
-					//throw new NullPointerException("N„o È possÌvel achar o alias: "+owneralias+" . Tentando configurar alias: "+alias+" ("+objectTree.getAliasObject().get(alias)+")"+" root: "+objectTree.getRoot());
+					//throw new NullPointerException("N√£o √© poss√≠vel achar o alias: "+owneralias+" . Tentando configurar alias: "+alias+" ("+objectTree.getAliasObject().get(alias)+")"+" root: "+objectTree.getRoot());
 				}
 				Collection<Object> collection = (Collection<Object>) getter.invoke(owner);
 				if (collection == null) {
@@ -681,7 +681,7 @@ class ObjectMapper {
 			AliasMap ownerAliasMap = QueryBuilderResultTranslatorImpl.getAliasMap(aliasMaps, ownerAlias);
 			Class<?> ownerClass = ownerAliasMap != null ? ownerAliasMap.getOwner() : null;
 			if (ownerClass == null) {
-				throw new QueryBuilderException("N„o foi encontrada a classe para o alias '" + ownerAlias + "'");
+				throw new QueryBuilderException("N√£o foi encontrada a classe para o alias '" + ownerAlias + "'");
 			}
 			PropertyDescriptor propertyDescriptor = PersistenceUtils.getPropertyDescriptor(ownerClass, property);
 			Method method = propertyDescriptor.getWriteMethod();
@@ -718,7 +718,7 @@ class ObjectMapper {
 			Object value = values[index];
 			boolean usertype = value instanceof UserType;
 			boolean hasValue = (!usertype && value != null) || (usertype && ((UserType) value).toString() != null && ((UserType) value).toString().length() > 0);
-			//TODO MELHORARA A FORMA DE VERIFICAR SE UM USERTYPE … NULO
+			//TODO MELHORARA A FORMA DE VERIFICAR SE UM USERTYPE √â NULO
 			Object object = objectTree.aliasObjectMap.get(alias);
 			if (object != null) {
 				try {
@@ -727,7 +727,7 @@ class ObjectMapper {
 					throw new QueryBuilderException("Erro ao configurar propriedade de " + alias + " ... " + setter, e);
 				}
 			} else if (hasValue) {
-				throw new QueryBuilderException("Erro ao configurar propriedade de " + alias + " ... " + setter + ". O objeto com alias " + alias + " n„o foi criado!! Valor: " + value);
+				throw new QueryBuilderException("Erro ao configurar propriedade de " + alias + " ... " + setter + ". O objeto com alias " + alias + " n√£o foi criado!! Valor: " + value);
 			}
 		}
 
@@ -736,7 +736,7 @@ class ObjectMapper {
 }
 
 /**
- * ContÈm o mapa com os alias e os objetos criados (POJO)
+ * Cont√©m o mapa com os alias e os objetos criados (POJO)
  * @author rogelgarcia
  */
 class ObjectTree {

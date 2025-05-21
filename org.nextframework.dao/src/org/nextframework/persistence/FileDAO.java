@@ -79,7 +79,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 		if (autoDetectTransient) {
 			boolean isTransient = checkTransientContent(arquivo);
 			if (!isTransient) {
-				//se nao for transiente ser· salvo no banco de dados entao devemos sair do mÈtodo
+				//se nao for transiente ser√° salvo no banco de dados entao devemos sair do m√©todo
 				return;
 			}
 		}
@@ -94,9 +94,9 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 			arquivo.setContent(bytes);
 			inputStream.close();
 		} catch (FileNotFoundException e) {
-			throw new NextException("Arquivo n„o encontrado. CÛdigo: " + arquivo.getCdfile(), e);
+			throw new NextException("Arquivo n√£o encontrado. C√≥digo: " + arquivo.getCdfile(), e);
 		} catch (IOException e) {
-			throw new NextException("N„o foi possÌvel ler o arquivo. ", e);
+			throw new NextException("N√£o foi poss√≠vel ler o arquivo. ", e);
 		}
 	}
 
@@ -114,15 +114,15 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 
 	protected String getNomeArquivo(File file) {
 		if (file == null) {
-			throw new NullPointerException("Arquivo inv·lido (nulo)");
+			throw new NullPointerException("Arquivo inv√°lido (nulo)");
 		}
 		if (file.getCdfile() == null) {
-			throw new NullPointerException("Id do arquivo inv·lido (nulo)");
+			throw new NullPointerException("Id do arquivo inv√°lido (nulo)");
 		}
 		if (autoDetectTransient) {
 			boolean isTransient = checkTransientContent(file);
 			if (!isTransient) {
-				//se nao for transiente ser· salvo no banco de dados entao devemos sair do mÈtodo
+				//se nao for transiente ser√° salvo no banco de dados entao devemos sair do m√©todo
 				return null;
 			}
 		}
@@ -151,7 +151,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 			pd = new PropertyDescriptor(filePropertyName, bean.getClass());
 			arquivoAtual = (File) pd.getReadMethod().invoke(bean);
 		} catch (Exception e) {
-			throw new NextException("N„o foi possivel adquirir arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass() + " (id=" + beanId + ")", e);
+			throw new NextException("N√£o foi possivel adquirir arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass() + " (id=" + beanId + ")", e);
 		}
 		if (beanId != null) {
 			Object beanVelho = new QueryBuilder<Object>()
@@ -160,24 +160,24 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 					.entity(bean)
 					.unique();
 			if (beanVelho == null) {
-				throw new NextException("N„o foi possivel adquirir arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass().getName() + " (id=" + beanId + "). " +
-						"N„o foi encontrado no banco de dados um objeto " + bean.getClass().getName() + " com chave " + beanId + ". ", new NextException("Verifique se o campo com @Id da classe " + bean.getClass() + " est· utilizando um tipo de dados primitivo, e se for o caso substitua por uma classe Wrapper. "));
+				throw new NextException("N√£o foi possivel adquirir arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass().getName() + " (id=" + beanId + "). " +
+						"N√£o foi encontrado no banco de dados um objeto " + bean.getClass().getName() + " com chave " + beanId + ". ", new NextException("Verifique se o campo com @Id da classe " + bean.getClass() + " est√° utilizando um tipo de dados primitivo, e se for o caso substitua por uma classe Wrapper. "));
 			}
 			try {
 				arquivoVelho = (File) pd.getReadMethod().invoke(beanVelho);
 			} catch (Exception e) {
-				throw new NextException("N„o foi possivel adquirir arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass().getName() + " (id=" + beanId + ")", e);
+				throw new NextException("N√£o foi possivel adquirir arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass().getName() + " (id=" + beanId + ")", e);
 			}
 		}
 		if (arquivoVelho != null && arquivoAtual == null) {
-			//atualizar o objeto com file = null antes de excluir o arquivo para n„o ocasionar problema de constraint
+			//atualizar o objeto com file = null antes de excluir o arquivo para n√£o ocasionar problema de constraint
 			getHibernateTemplate().bulkUpdate("update " + bean.getClass().getName() + " set " + filePropertyName + " = null where id = " + beanId);
 		}
 		File save = save(arquivoAtual, arquivoVelho);
 		try {
 			pd.getWriteMethod().invoke(bean, save);
 		} catch (Exception e) {
-			throw new NextException("N„o foi possÌvel configurar o arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass(), e);
+			throw new NextException("N√£o foi poss√≠vel configurar o arquivo. Propriedade " + filePropertyName + " da classe " + bean.getClass(), e);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 			if (arquivoVelho == null) {
 				// criar
 				if (arquivoNovo != null && arquivoNovo.getSize() == null) {
-					throw new NullPointerException("Propriedade size do arquivo È null");
+					throw new NullPointerException("Propriedade size do arquivo √© null");
 				}
 				if (arquivoNovo != null && arquivoNovo.getSize() > 0) {
 					getHibernateTemplate().saveOrUpdate(arquivoNovo);
@@ -208,7 +208,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 					getHibernateTemplate().saveOrUpdate(arquivoNovo);
 					writeFile(arquivoNovo);
 				} else {
-					//se o tamanho for zero n„o mexer no arquivo
+					//se o tamanho for zero n√£o mexer no arquivo
 					arquivoNovo.setCdfile(arquivoVelho.getCdfile());
 				}
 			}
@@ -219,17 +219,17 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 			try {
 				name = getNomeArquivo(arquivoNovo);
 			} catch (Exception e2) {
-				name = "(N„o foi possÌvel adquirir o nome do arquivo. Erro: " + e2.getMessage() + ")";
+				name = "(N√£o foi poss√≠vel adquirir o nome do arquivo. Erro: " + e2.getMessage() + ")";
 			}
-			throw new NextException("N„o foi possÌvel salvar o conte˙do do arquivo no disco. " + name, e);
+			throw new NextException("N√£o foi poss√≠vel salvar o conte√∫do do arquivo no disco. " + name, e);
 		} catch (Exception e) {
 			String name;
 			try {
 				name = getNomeArquivo(arquivoNovo);
 			} catch (Exception e2) {
-				name = "(N„o foi possÌvel adquirir o nome do arquivo. Erro: " + e2.getMessage() + ")";
+				name = "(N√£o foi poss√≠vel adquirir o nome do arquivo. Erro: " + e2.getMessage() + ")";
 			}
-			throw new NextException("N„o foi possÌvel salvar o registro do arquivo no banco de dados. " + name, e);
+			throw new NextException("N√£o foi poss√≠vel salvar o registro do arquivo no banco de dados. " + name, e);
 		}
 	}
 
@@ -237,7 +237,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 		if (autoDetectTransient) {
 			boolean isTransient = checkTransientContent(arquivoNovo);
 			if (!isTransient) {
-				//se nao for transiente ser· salvo no banco de dados entao devemos sair do mÈtodo
+				//se nao for transiente ser√° salvo no banco de dados entao devemos sair do m√©todo
 				return;
 			}
 		}
@@ -259,7 +259,7 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 		if (autoDetectTransient) {
 			boolean isTransient = checkTransientContent(bean);
 			if (!isTransient) {
-				//se nao for transiente ser· salvo no banco de dados entao devemos sair do mÈtodo
+				//se nao for transiente ser√° salvo no banco de dados entao devemos sair do m√©todo
 				return;
 			}
 		}
