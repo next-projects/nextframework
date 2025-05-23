@@ -1654,6 +1654,20 @@ NextAjax.prototype.send = function(options){
 		}
 	}
 
+	if (options.method == 'GET') {
+		var paramsGet = options.params;
+		if(options.params instanceof FormData){
+			paramsGet = Object.keys()
+				.map(function(key){return key + "=" + encodeURIComponent(options.params[key]);})
+				.join("&");
+		}
+		if(paramsGet.startsWith('&')){
+			paramsGet = paramsGet.substring(1);
+		}
+		options.url += (!options.url.includes("?") ? "?" : "&") + paramsGet;
+		options.params = '';
+	}
+
 	request.open(options.method, options.url, options.async);
 
 	if(!(options.params instanceof FormData)){
@@ -1781,6 +1795,11 @@ NextAjaxRequest.prototype.setParameter = function(name, value){
 
 NextAjaxRequest.prototype.setUrl = function(url){
 	this.options['url'] = url;
+	return this;
+};
+
+NextAjaxRequest.prototype.setMethod = function(method){
+	this.options['method'] = method;
 	return this;
 };
 

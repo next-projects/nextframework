@@ -47,6 +47,8 @@ public abstract class AjaxRequest {
 
 	public abstract AjaxRequest setUrl(String url);
 
+	public abstract AjaxRequest setMethod(String method);
+
 	public abstract AjaxRequest setAppendContext(boolean b);
 
 	public abstract AjaxRequest setOnComplete(Callback1<String> callback);

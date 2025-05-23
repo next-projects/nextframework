@@ -257,7 +257,7 @@ ReportFilterManager.prototype.configureFilterPreSelectEntityCombo = function(pro
     var path = this.designer.controllerPath;
     this.designer.filterPreSelectEntity.options.length = 0;
     this.designer.filterPreSelectEntity.add(new Option("", "<null>"));
-    next.ajax.newRequest().setUrl(path).setAction("getFilterList").setParameter("type", type).setCallback(function(p1) {
+    next.ajax.newRequest().setUrl(path).setMethod("GET").setAction("getFilterList").setParameter("type", type).setCallback(function(p1) {
         for (var k in p1) {
             if (!(p1).hasOwnProperty(k)) continue;
             var item = p1[k];

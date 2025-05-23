@@ -360,6 +360,7 @@ class ReportFilterManager extends AbstractManager {
 
 		next.ajax.newRequest()
 				.setUrl(path)
+				.setMethod("GET")
 				.setAction("getFilterList")
 				.setParameter("type", type)
 				.setCallback(new Callback1<Array<Array<String>>>() {
