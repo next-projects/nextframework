@@ -158,7 +158,7 @@ public class NextDispatcherServlet extends org.springframework.web.servlet.Dispa
 			compositeViewResolver.setParameterName("bodyPage");
 			compositeViewResolver.setPrefix("/WEB-INF/jsp/" + getServletName() + "/");
 			compositeViewResolver.setSuffix(".jsp");
-			compositeViewResolver.setBaseView("/WEB-INF/jsp/" + getServletName() + "/base.jsp,/WEB-INF/jsp/base.jsp");
+			compositeViewResolver.setBaseViews("/WEB-INF/jsp/" + getServletName() + "/base.jsp", "/WEB-INF/jsp/base.jsp");
 			defaultStrategies.add(0, compositeViewResolver);
 		}
 		return defaultStrategies;

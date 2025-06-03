@@ -39,8 +39,9 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 
 	private static final Log log = org.apache.commons.logging.LogFactory.getLog(CompositeViewResolver.class);
 
+	private String[] baseViews;
+	private Boolean useBase;
 	private String baseView;
-	private Boolean useBase = null;
 	private String parameterName;
 
 	@Override
@@ -87,8 +88,10 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 		}
 
 		if (useBase == null) {
-			String[] bases = baseView.split(",");
-			for (String base : bases) {
+			if (baseViews == null || baseViews.length == 0) {
+				throw new RuntimeException(CompositeViewResolver.class.getName() + ": property baseViews não pode ser null");
+			}
+			for (String base : baseViews) {
 				if (getServletContext().getResourceAsStream(base) == null) {
 					useBase = false;
 				} else {
@@ -101,10 +104,6 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 
 		if (!useBase) {
 			return view;
-		}
-
-		if (baseView == null) {
-			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property baseView não pode ser null");
 		}
 
 		if (parameterName == null) {
@@ -127,16 +126,16 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 		return parameterName;
 	}
 
-	public String getBaseView() {
-		return baseView;
+	public String[] getBaseViews() {
+		return baseViews;
 	}
 
 	public void setParameterName(String parameterName) {
 		this.parameterName = parameterName;
 	}
 
-	public void setBaseView(String resource) {
-		this.baseView = resource;
+	public void setBaseViews(String... baseViews) {
+		this.baseViews = baseViews;
 	}
 
 }
