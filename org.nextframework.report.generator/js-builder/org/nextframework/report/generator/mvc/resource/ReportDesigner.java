@@ -286,20 +286,16 @@ public class ReportDesigner {
 			});
 		}
 
-		final Element panelDiv = Global.window.document.getElementById("calculatedPropertiesWizzard");
-		final Element panelDivParent = panelDiv.parentNode;
-
 		final MessageDialog dialog = new MessageDialog();
 		dialog.setSize(NextDialogs.SIZE_LARGE);
 		dialog.setTitle("Configurar campo calculado");
-		dialog.appendToBody(panelDiv);
+		dialog.appendToBodyBorrowedElement(Global.window.document.getElementById("calculatedPropertiesWizzard"));
 		dialog.setCallback(new NextDialogs.DialogCallback() {
 
 			public boolean onClick(String command, Object value, Element button) {
 				if (command.equals("OK")) {
 					bigThis.saveCalculatedProperty();
 				}
-				panelDivParent.appendChild(panelDiv);
 				return true;
 			}
 
@@ -398,19 +394,15 @@ public class ReportDesigner {
 			}
 		}
 
+		final ReportDesigner bigThis = this;
+
 		MessageDialog dialog = new MessageDialog();
 		dialog.setSize(NextDialogs.SIZE_LARGE);
 		dialog.setTitle("Configurar campos");
-
-		final Element panelDiv = Global.window.document.getElementById("propertiesWizzard");
-		final Element panelDivParent = panelDiv.parentNode;
-		dialog.appendToBody(panelDiv);
-
-		final ReportDesigner bigThis = this;
+		dialog.appendToBodyBorrowedElement(Global.window.document.getElementById("propertiesWizzard"));
 		dialog.setCallback(new NextDialogs.DialogCallback() {
 
 			public boolean onClick(String command, Object value, Element button) {
-				panelDivParent.appendChild(panelDiv);
 				if (command.equals("OK")) {
 					bigThis.saveConfigureProperties();
 				}
@@ -418,7 +410,6 @@ public class ReportDesigner {
 			}
 
 		});
-
 		dialog.show();
 
 	}

@@ -475,13 +475,10 @@ public class ChartWizzard {
 
 		((Input) Global.window.document.getElementById("chartTypePie")).checked = true;
 
-		final Element panelDiv = mainDiv;
-		final Element panelDivParent = panelDiv.parentNode;
-
 		final MessageDialog dialog = new MessageDialog();
 		dialog.setSize(NextDialogs.SIZE_EXTRALARGE);
 		dialog.setTitle("Configurar gráfico");
-		dialog.appendToBody(panelDiv);
+		dialog.appendToBodyBorrowedElement(mainDiv);
 		dialog.setCommandsMap($map("CANCEL", "Cancelar", "NEXT", "Proximo"));
 		dialog.setCallback(new NextDialogs.DialogCallback() {
 
@@ -492,7 +489,6 @@ public class ChartWizzard {
 						return false;
 					}
 				}
-				panelDivParent.appendChild(panelDiv);
 				return true;
 			}
 

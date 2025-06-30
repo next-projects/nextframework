@@ -1,4 +1,4 @@
-﻿﻿var NextDataGrid = function(){};
+﻿var NextDataGrid = function(){};
 
 NextDataGrid.OptionalColumnsComponent = function(tableId, dropId, columnsMap, ajaxInfo, hideColumns) {
 

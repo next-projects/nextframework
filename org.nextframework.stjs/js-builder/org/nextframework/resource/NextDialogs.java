@@ -36,6 +36,9 @@ public class NextDialogs {
 		private Element bodyDiv;
 		private Element buttonsDiv;
 
+		private Element borrowedElement;
+		private Element borrowedElementParent;
+
 		private Map<String, String> commandsMap;
 		private DialogCallback dialogCallback;
 
@@ -79,6 +82,12 @@ public class NextDialogs {
 
 		public void appendToBody(Element disposableElement) {
 			this.bodyDiv.appendChild(disposableElement);
+		}
+
+		public void appendToBodyBorrowedElement(Element borrowedElement) {
+			this.borrowedElement = borrowedElement;
+			this.borrowedElementParent = this.borrowedElement.parentNode;
+			appendToBody(this.borrowedElement);
 		}
 
 		public void setCommandsMap(Map<String, String> commandsMap) {
@@ -129,6 +138,9 @@ public class NextDialogs {
 
 				public Boolean $invoke(DOMEvent p1) {
 					boolean close = true;
+					if (bigThis.borrowedElementParent != null) {
+						bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
+					}
 					if (bigThis.dialogCallback != null) {
 						close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
 					}

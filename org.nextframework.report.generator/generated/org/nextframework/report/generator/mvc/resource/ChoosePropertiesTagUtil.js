@@ -39,7 +39,7 @@ ChoosePropertiesTagUtil.installOpenCloseButton = function(openClose, row, rows) 
             ChoosePropertiesTagUtil.colapseGroup(row, rows);
             openClose.setAttribute("data-open", "false");
         }
-        return null;
+        return true;
     };
 };
 ChoosePropertiesTagUtil.openGroup = function(row, rows) {

@@ -331,12 +331,10 @@ ChartWizzard.prototype.show = function() {
     this.showPage("chartWizzard_page_1");
     this.currentPage = 110;
     (window.document.getElementById("chartTypePie")).checked = true;
-    var panelDiv = this.mainDiv;
-    var panelDivParent = panelDiv.parentNode;
     var dialog = new NextDialogs.MessageDialog();
     dialog.setSize(NextDialogs.SIZE_EXTRALARGE);
     dialog.setTitle("Configurar gráfico");
-    dialog.appendToBody(panelDiv);
+    dialog.appendToBodyBorrowedElement(this.mainDiv);
     dialog.setCommandsMap({"CANCEL": "Cancelar", 
         "NEXT": "Proximo"});
     dialog.setCallback((function(){
@@ -351,7 +349,6 @@ ChartWizzard.prototype.show = function() {
                 return false;
             }
         }
-        panelDivParent.appendChild(panelDiv);
         return true;
     };
     _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});

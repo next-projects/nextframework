@@ -185,12 +185,10 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
             bigThis.onChangeCalculationVarName(calculationDisplayName, calculationName);
         });
     }
-    var panelDiv = window.document.getElementById("calculatedPropertiesWizzard");
-    var panelDivParent = panelDiv.parentNode;
     var dialog = new NextDialogs.MessageDialog();
     dialog.setSize(NextDialogs.SIZE_LARGE);
     dialog.setTitle("Configurar campo calculado");
-    dialog.appendToBody(panelDiv);
+    dialog.appendToBodyBorrowedElement(window.document.getElementById("calculatedPropertiesWizzard"));
     dialog.setCallback((function(){
     var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
 
@@ -200,7 +198,6 @@ ReportDesigner.prototype.showAddCalculatedProperty = function() {
         if ((command == "OK")) {
             bigThis.saveCalculatedProperty();
         }
-        panelDivParent.appendChild(panelDiv);
         return true;
     };
     _InlineType.$typeDescription=stjs.copyProps(NextDialogs.DialogCallback.$typeDescription, {});
@@ -292,20 +289,17 @@ ReportDesigner.prototype.showConfigureProperties = function() {
             checkbox.checked = false;
         }
     }
+    var bigThis = this;
     var dialog = new NextDialogs.MessageDialog();
     dialog.setSize(NextDialogs.SIZE_LARGE);
     dialog.setTitle("Configurar campos");
-    var panelDiv = window.document.getElementById("propertiesWizzard");
-    var panelDivParent = panelDiv.parentNode;
-    dialog.appendToBody(panelDiv);
-    var bigThis = this;
+    dialog.appendToBodyBorrowedElement(window.document.getElementById("propertiesWizzard"));
     dialog.setCallback((function(){
     var _InlineType = function(){NextDialogs.DialogCallback.call(this);};
 
     stjs.extend(_InlineType, NextDialogs.DialogCallback);
 
     _InlineType.prototype.onClick = function(command, value, button) {
-        panelDivParent.appendChild(panelDiv);
         if ((command == "OK")) {
             bigThis.saveConfigureProperties();
         }

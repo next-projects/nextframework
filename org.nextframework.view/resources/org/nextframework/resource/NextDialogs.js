@@ -37,6 +37,8 @@ NextDialogs.MessageDialog.prototype.size = null;
 NextDialogs.MessageDialog.prototype.titleDiv = null;
 NextDialogs.MessageDialog.prototype.bodyDiv = null;
 NextDialogs.MessageDialog.prototype.buttonsDiv = null;
+NextDialogs.MessageDialog.prototype.borrowedElement = null;
+NextDialogs.MessageDialog.prototype.borrowedElementParent = null;
 NextDialogs.MessageDialog.prototype.commandsMap = null;
 NextDialogs.MessageDialog.prototype.dialogCallback = null;
 NextDialogs.MessageDialog.prototype.popup = null;
@@ -51,6 +53,11 @@ NextDialogs.MessageDialog.prototype.appendToTitle = function(disposableElement) 
 };
 NextDialogs.MessageDialog.prototype.appendToBody = function(disposableElement) {
     this.bodyDiv.appendChild(disposableElement);
+};
+NextDialogs.MessageDialog.prototype.appendToBodyBorrowedElement = function(borrowedElement) {
+    this.borrowedElement = borrowedElement;
+    this.borrowedElementParent = this.borrowedElement.parentNode;
+    this.appendToBody(this.borrowedElement);
 };
 NextDialogs.MessageDialog.prototype.setCommandsMap = function(commandsMap) {
     this.commandsMap = commandsMap;
@@ -86,6 +93,9 @@ NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
     button.className = next.globalMap.get("NextDialogs.button", "button");
     button.onclick = function(p1) {
         var close = true;
+        if (bigThis.borrowedElementParent != null) {
+            bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
+        }
         if (bigThis.dialogCallback != null) {
             close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
         }
@@ -104,7 +114,7 @@ NextDialogs.MessageDialog.prototype.close = function() {
         this.popup.close();
     }
 };
-NextDialogs.MessageDialog.$typeDescription={"titleDiv":"Element", "bodyDiv":"Element", "buttonsDiv":"Element", "commandsMap":{name:"Map", arguments:[null,null]}, "dialogCallback":"NextDialogs.DialogCallback", "popup":"Popup"};
+NextDialogs.MessageDialog.$typeDescription={"titleDiv":"Element", "bodyDiv":"Element", "buttonsDiv":"Element", "borrowedElement":"Element", "borrowedElementParent":"Element", "commandsMap":{name:"Map", arguments:[null,null]}, "dialogCallback":"NextDialogs.DialogCallback", "popup":"Popup"};
 
 NextDialogs.prototype.showInputNumberDialog = function(title, mensagem) {
     var input = next.dom.newInput("text");
