@@ -138,13 +138,13 @@ public class NextDialogs {
 
 				public Boolean $invoke(DOMEvent p1) {
 					boolean close = true;
-					if (bigThis.borrowedElementParent != null) {
-						bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
-					}
 					if (bigThis.dialogCallback != null) {
 						close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
 					}
 					if (close) {
+						if (bigThis.borrowedElementParent != null) {
+							bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
+						}
 						popup.close();
 					}
 					return true;

@@ -93,13 +93,13 @@ NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
     button.className = next.globalMap.get("NextDialogs.button", "button");
     button.onclick = function(p1) {
         var close = true;
-        if (bigThis.borrowedElementParent != null) {
-            bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
-        }
         if (bigThis.dialogCallback != null) {
             close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
         }
         if (close) {
+            if (bigThis.borrowedElementParent != null) {
+                bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
+            }
             popup.close();
         }
         return true;
