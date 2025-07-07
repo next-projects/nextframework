@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -500,16 +501,28 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	}
 
 	protected void applyDefaultStyleClasses() throws JspException {
-		Set<String> fields = getViewConfig().getStyleClassFields(this.getClass());
-		if (fields != null) {
+		Map<String, String> defaultStyleClassMap = getDefaultStyleClasses(this.getClass());
+		if (defaultStyleClassMap != null) {
 			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+			for (String field : defaultStyleClassMap.keySet()) {
+				applyDefaultStyleClass(bw, field, defaultStyleClassMap.get(field));
+			}
+		}
+	}
+
+	protected Map<String, String> getDefaultStyleClasses(Class<? extends BaseTag> tagClass) throws JspException {
+		Map<String, String> defaultStyleClassMap = null;
+		Set<String> fields = getViewConfig().getStyleClassFields(tagClass);
+		if (fields != null) {
+			defaultStyleClassMap = new LinkedHashMap<>();
 			for (String field : fields) {
-				String defaultStyleClass = getViewConfig().getDefaultStyleClass(this.getClass(), field);
+				String defaultStyleClass = getViewConfig().getDefaultStyleClass(tagClass, field);
 				if (defaultStyleClass != null) {
-					applyDefaultStyleClass(bw, field, defaultStyleClass);
+					defaultStyleClassMap.put(field, defaultStyleClass);
 				}
 			}
 		}
+		return defaultStyleClassMap;
 	}
 
 	protected void applyDefaultStyleClass(BeanWrapper bw, String field, String defaultStyleClass) throws JspException {
