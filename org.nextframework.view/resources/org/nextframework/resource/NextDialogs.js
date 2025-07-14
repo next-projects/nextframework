@@ -93,14 +93,18 @@ NextDialogs.MessageDialog.prototype.createButton = function(popup, key) {
     button.className = next.globalMap.get("NextDialogs.button", "button");
     button.onclick = function(p1) {
         var close = true;
+        if (bigThis.borrowedElementParent != null) {
+            //pois a lógica do callback poderá invocar um submitForm() e os inputs de borrowedElement deverão estar no form original.
+            bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
+        }
         if (bigThis.dialogCallback != null) {
             close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
         }
         if (close) {
-            if (bigThis.borrowedElementParent != null) {
-                bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
-            }
             popup.close();
+        } else {
+            //Se o dialogCallback retornou false (para não fechar o modal, os inputs de borrowedElement deverão voltar para o modal.
+            bigThis.appendToBody(bigThis.borrowedElement);
         }
         return true;
     };

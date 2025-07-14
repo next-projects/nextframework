@@ -138,14 +138,19 @@ public class NextDialogs {
 
 				public Boolean $invoke(DOMEvent p1) {
 					boolean close = true;
+					if (bigThis.borrowedElementParent != null) {
+						//É importante voltar o borrowedElement antes de invocar o dialogCallback,
+						//pois a lógica do callback poderá invocar um submitForm() e os inputs de borrowedElement deverão estar no form original.
+						bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
+					}
 					if (bigThis.dialogCallback != null) {
 						close = bigThis.dialogCallback.onClick(key, bigThis.getValue(), button);
 					}
 					if (close) {
-						if (bigThis.borrowedElementParent != null) {
-							bigThis.borrowedElementParent.appendChild(bigThis.borrowedElement);
-						}
 						popup.close();
+					}else {
+						//Se o dialogCallback retornou false (para não fechar o modal, os inputs de borrowedElement deverão voltar para o modal.
+						bigThis.appendToBody(bigThis.borrowedElement);
 					}
 					return true;
 				}
