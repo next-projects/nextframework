@@ -123,6 +123,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		return fullResult;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <OBJ> QueryBuilder<OBJ> createQueryBuilder(Class<OBJ> mainType, GenericDAO<OBJ> dao, ReportElement element, Map<String, Object> filterMap, Map<String, Object> fixedCriteriaMap) {
 
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(mainType);
@@ -192,7 +193,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 			Object parameterValue = filterMap.get(filter);
 
 			if (dao instanceof GeneratedReportDAOFilter) {
-				GeneratedReportDAOFilter dao2 = (GeneratedReportDAOFilter) dao;
+				GeneratedReportDAOFilter<OBJ> dao2 = (GeneratedReportDAOFilter<OBJ>) dao;
 				if (dao2.isFilterableForPropertyForGeneratedReport(filter)) {
 					dao2.filterQueryForGeneratedReport(query, filter, filterNoSuffix, parameterValue);
 					continue;
@@ -235,6 +236,11 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		//Melhor reaordenar fora do BD para ordenar pelos atributos calculados também.
 		//Porém, é necessário que haja pelo menos 1 critério de ordenação, para garantir a paginação.
 		query.orderBy(query.getAlias() + "." + bd.getIdPropertyName());
+
+		if (dao instanceof GeneratedReportDAOFilter) {
+			GeneratedReportDAOFilter<OBJ> dao2 = (GeneratedReportDAOFilter<OBJ>) dao;
+			dao2.updateQueryForGeneratedReport(query);
+		}
 
 		return query;
 	}
@@ -346,6 +352,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 		return filter;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <OBJ> boolean validateExtendedFilter(GenericDAO<OBJ> dao, Map<String, Object> filterMap, Object extendedBean) {
 
 		BeanDescriptor bd = BeanDescriptorFactory.forBean(extendedBean);
@@ -357,7 +364,7 @@ public class HibernateDataSourceProvider implements DataSourceProvider {
 			}
 
 			if (dao instanceof GeneratedReportDAOFilter) {
-				GeneratedReportDAOFilter dao2 = (GeneratedReportDAOFilter) dao;
+				GeneratedReportDAOFilter<OBJ> dao2 = (GeneratedReportDAOFilter<OBJ>) dao;
 				if (dao2.isFilterableForPropertyForGeneratedReport(filter)) {
 					continue;
 				}
