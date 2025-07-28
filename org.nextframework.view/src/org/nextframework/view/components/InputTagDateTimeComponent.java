@@ -88,7 +88,7 @@ public class InputTagDateTimeComponent extends InputTagComponent {
 			return false;
 		}
 		Object readOnly = inputTag.getDAAtribute("readonly", false);
-		if ("true".equals(readOnly) || "readonly".equals(readOnly)) {
+		if (Boolean.TRUE.equals(readOnly) || "true".equals(readOnly) || "readonly".equals(readOnly)) {
 			return false;
 		}
 		if (readOnly instanceof String) {
