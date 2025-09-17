@@ -43,7 +43,7 @@ public class BeanTag extends BaseTag implements LogicalTag {
 	protected String propertyPrefix;
 	protected String propertyIndex;
 	protected Class valueType;
-	protected String varLabel = "label";
+	protected String varDisplayName = "displayName";
 
 	//extras
 	protected Object bean;
@@ -79,9 +79,9 @@ public class BeanTag extends BaseTag implements LogicalTag {
 			throw new NextException(msg + e.getMessage(), e);
 		}
 
-		pushAttribute(varLabel, Util.beans.getDisplayName(beanDescriptor, NextWeb.getRequestContext().getLocale()));
+		pushAttribute(varDisplayName, Util.beans.getDisplayName(beanDescriptor, NextWeb.getRequestContext().getLocale()));
 		doBody();
-		popAttribute(varLabel);
+		popAttribute(varDisplayName);
 
 	}
 
@@ -117,12 +117,12 @@ public class BeanTag extends BaseTag implements LogicalTag {
 		this.valueType = valueType;
 	}
 
-	public String getVarLabel() {
-		return varLabel;
+	public String getVarDisplayName() {
+		return varDisplayName;
 	}
 
-	public void setVarLabel(String varLabel) {
-		this.varLabel = varLabel;
+	public void setVarDisplayName(String varDisplayName) {
+		this.varDisplayName = varDisplayName;
 	}
 
 	public BeanDescriptor getBeanDescriptor() {

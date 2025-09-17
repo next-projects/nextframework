@@ -359,8 +359,8 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Nome da variável que será exportada com o label desse objeto</description>
-			<name>varLabel</name>
+			<description>Nome da variável que será exportada com o displayName desse objeto</description>
+			<name>varDisplayName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
