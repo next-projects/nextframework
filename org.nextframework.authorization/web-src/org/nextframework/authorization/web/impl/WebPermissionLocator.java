@@ -84,8 +84,13 @@ public class WebPermissionLocator implements PermissionLocator {
 		return permissions;
 	}
 
-	private Role[] getUserRoles(User user) {
-		Map<User, Role[]> cache = getUserRolesCache();
+	@SuppressWarnings("unchecked")
+	protected Role[] getUserRoles(User user) {
+		Map<User, Role[]> cache = (Map<User, Role[]>) WebContext.getRequest().getSession().getAttribute(CACHE_ROLES);
+		if (cache == null) {
+			cache = new HashMap<>();
+			WebContext.getRequest().getSession().setAttribute(CACHE_ROLES, cache);
+		}
 		Role[] allUserRoles = cache.get(user);
 		if (allUserRoles == null) {
 			allUserRoles = authorizationDAO.findUserRoles(user);
@@ -94,20 +99,10 @@ public class WebPermissionLocator implements PermissionLocator {
 		return allUserRoles;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected Map<User, Role[]> getUserRolesCache() {
-		Map<User, Role[]> cache = (Map<User, Role[]>) WebContext.getRequest().getSession().getAttribute(CACHE_ROLES);
-		if (cache == null) {
-			cache = new HashMap<User, Role[]>();
-			WebContext.getRequest().getSession().setAttribute(CACHE_ROLES, cache);
-		}
-		return cache;
-	}
-
 	private Permission getRolePermission(Role role, String resource) {
 		Map<Role, Permission> mapRolePermission = cache.get(resource);
 		if (mapRolePermission == null) {
-			mapRolePermission = new HashMap<Role, Permission>();
+			mapRolePermission = new HashMap<>();
 			cache.put(resource, mapRolePermission);
 		}
 		Permission permission = mapRolePermission.get(role);
