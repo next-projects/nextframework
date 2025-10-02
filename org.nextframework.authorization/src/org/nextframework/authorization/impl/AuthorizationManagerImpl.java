@@ -90,24 +90,16 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 		return isAuthorized(path, actionParameter, user);
 	}
 
-	public boolean isAuthorized(String path, String actionParameter, User usuario) {
+	public boolean isAuthorized(String path, String actionParameter, User user) {
 		init();
 		// pega o localizadorControl no contexto do framework
 		AuthorizationModule authorizationModule = authorizationMapper.getAuthorizationModule(path);
-		return isAuthorized(actionParameter, usuario, path, authorizationModule, false);
+		return isAuthorized(actionParameter, user, path, authorizationModule);
 	}
 
-	public boolean isAuthorized(String actionParameter, User usuario, String resource, AuthorizationModule authorizationModule) {
+	public boolean isAuthorized(String actionParameter, User user, String resource, AuthorizationModule authorizationModule) {
 		init();
-		return isAuthorized(actionParameter, usuario, resource, authorizationModule, false);
-	}
-
-	private boolean isAuthorized(String actionParameter, User user, String resource, AuthorizationModule authorizationModule, boolean saveAuthorization) {
-		init();
-		boolean isAuthorized;
-		//first check static authorization
-		isAuthorized = checkStaticAuthorization(user, resource, actionParameter, authorizationModule);
-
+		boolean isAuthorized = checkStaticAuthorization(user, resource, actionParameter, authorizationModule);
 		if (!isAuthorized) { //if the static authorization has denied access.. let's not check the 
 			return false;
 		}
@@ -120,16 +112,7 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 			isAuthorized = true;
 		} else {
 			UserAuthorization autorizacao = createAuthorization(user, resource, authorizationModule);
-			if (authorizationModule.isAuthorized(actionParameter, autorizacao)) {
-				isAuthorized = true;
-			} else {
-				isAuthorized = false;
-			}
-			if (saveAuthorization) {
-				//salva a autorizacao na requisicao
-				//TODO FIXME NOT DOESNT WORK ANYMORE
-				//Next.getRequestContext().setAttribute(Authorization.AUTHORIZATION_ATTRIBUTE, autorizacao);
-			}
+			isAuthorized = authorizationModule.isAuthorized(actionParameter, user, autorizacao);
 		}
 		return isAuthorized;
 	}
@@ -164,7 +147,7 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 		}
 	}
 
-	protected Map<String, List<String>> cacheResourceRoles = new HashMap<String, List<String>>();
+	protected Map<String, List<String>> cacheResourceRoles = new HashMap<>();
 
 	protected boolean checkStaticAuthorization(User user, String resource, String actionParameter, AuthorizationModule authorizationModule) {
 		List<String> roles = cacheResourceRoles.get(resource);

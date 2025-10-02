@@ -40,9 +40,9 @@ public interface AuthorizationModule {
 
 	public UserAuthorization createAuthorization(Permission[] permissions);
 
-	public boolean isAuthorized(String action, Permission[] permissions);
+	public boolean isAuthorized(String action, User user, Permission[] permissions);
 
-	public boolean isAuthorized(String action, UserAuthorization authorization);
+	public boolean isAuthorized(String action, User user, UserAuthorization authorization);
 
 	public AuthorizationItem[] getAuthorizationItens();
 

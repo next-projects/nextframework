@@ -55,7 +55,7 @@ public class WebPermissionLocator implements PermissionLocator {
 
 	protected AuthorizationDAO authorizationDAO;
 
-	protected Map<String, Map<Role, Permission>> cache = new HashMap<String, Map<Role, Permission>>();
+	protected Map<String, Map<Role, Permission>> cache = new HashMap<>();
 
 	public synchronized Permission[] getPermissions(User user, String resource) {
 
@@ -86,30 +86,36 @@ public class WebPermissionLocator implements PermissionLocator {
 
 	@SuppressWarnings("unchecked")
 	protected Role[] getUserRoles(User user) {
+
 		Map<User, Role[]> cache = (Map<User, Role[]>) WebContext.getRequest().getSession().getAttribute(CACHE_ROLES);
 		if (cache == null) {
 			cache = new HashMap<>();
 			WebContext.getRequest().getSession().setAttribute(CACHE_ROLES, cache);
 		}
+
 		Role[] allUserRoles = cache.get(user);
 		if (allUserRoles == null) {
 			allUserRoles = authorizationDAO.findUserRoles(user);
 			cache.put(user, allUserRoles);
 		}
+
 		return allUserRoles;
 	}
 
 	private Permission getRolePermission(Role role, String resource) {
+
 		Map<Role, Permission> mapRolePermission = cache.get(resource);
 		if (mapRolePermission == null) {
 			mapRolePermission = new HashMap<>();
 			cache.put(resource, mapRolePermission);
 		}
+
 		Permission permission = mapRolePermission.get(role);
 		if (permission == null) {
 			permission = authorizationDAO.findPermission(role, resource);
 			mapRolePermission.put(role, permission);
 		}
+
 		return permission;
 	}
 
@@ -135,12 +141,8 @@ public class WebPermissionLocator implements PermissionLocator {
 		return defaultPermissionMap;
 	}
 
-	public synchronized void reset() {
+	public synchronized void clearCache() {
 		cache = new HashMap<String, Map<Role, Permission>>();
-	}
-
-	public void clearCache() {
-		reset();
 	}
 
 }

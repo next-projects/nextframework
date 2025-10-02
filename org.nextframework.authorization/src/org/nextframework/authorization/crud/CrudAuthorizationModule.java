@@ -29,10 +29,11 @@ package org.nextframework.authorization.crud;
 
 import java.io.Serializable;
 
-import org.nextframework.authorization.UserAuthorization;
 import org.nextframework.authorization.AuthorizationItem;
 import org.nextframework.authorization.AuthorizationModuleSupport;
 import org.nextframework.authorization.Permission;
+import org.nextframework.authorization.User;
+import org.nextframework.authorization.UserAuthorization;
 
 /**
  * @author rogelgarcia
@@ -106,7 +107,7 @@ public class CrudAuthorizationModule extends AuthorizationModuleSupport implemen
 		return autorizacao;
 	}
 
-	public boolean isAuthorized(String acao, UserAuthorization autorizacao) {
+	public boolean isAuthorized(String acao, User user, UserAuthorization autorizacao) {
 		return CrudAuthorizer.getInstance().isAuthorized(acao, autorizacao);
 	}
 

@@ -25,10 +25,11 @@ package org.nextframework.authorization.process;
 
 import java.io.Serializable;
 
-import org.nextframework.authorization.UserAuthorization;
 import org.nextframework.authorization.AuthorizationItem;
 import org.nextframework.authorization.AuthorizationModuleSupport;
 import org.nextframework.authorization.Permission;
+import org.nextframework.authorization.User;
+import org.nextframework.authorization.UserAuthorization;
 
 public class ProcessAuthorizationModule extends AuthorizationModuleSupport implements Serializable {
 
@@ -57,7 +58,7 @@ public class ProcessAuthorizationModule extends AuthorizationModuleSupport imple
 		return authorization;
 	}
 
-	public boolean isAuthorized(String acao, UserAuthorization autorizacao) {
+	public boolean isAuthorized(String acao, User user, UserAuthorization autorizacao) {
 		return ProcessAuthorizer.getInstance().isAuthorized(acao, autorizacao);
 	}
 

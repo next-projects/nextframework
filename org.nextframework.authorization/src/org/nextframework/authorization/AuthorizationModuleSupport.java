@@ -37,8 +37,8 @@ public abstract class AuthorizationModuleSupport implements AuthorizationModule 
 	private Class<?> controllerClass;
 	private String path;
 
-	public boolean isAuthorized(String action, Permission[] permissions) {
-		return isAuthorized(action, createAuthorization(permissions));
+	public boolean isAuthorized(String action, User user, Permission[] permissions) {
+		return isAuthorized(action, user, createAuthorization(permissions));
 	}
 
 	@Override

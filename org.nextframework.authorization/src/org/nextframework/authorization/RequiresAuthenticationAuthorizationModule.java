@@ -36,7 +36,7 @@ public class RequiresAuthenticationAuthorizationModule extends AuthorizationModu
 		return null;
 	}
 
-	public boolean isAuthorized(String action, UserAuthorization authorization) {
+	public boolean isAuthorized(String action, User user, UserAuthorization authorization) {
 		return true;
 	}
 

@@ -39,7 +39,7 @@ public class HasAccessAuthorizationModule extends AuthorizationModuleSupport imp
 		return null;
 	}
 
-	public boolean isAuthorized(String action, UserAuthorization authorization) {
+	public boolean isAuthorized(String action, User user, UserAuthorization authorization) {
 		return true;
 	}
 
