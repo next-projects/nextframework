@@ -31,10 +31,10 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.servlet.jsp.JspException;
 
-import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.types.Money;
 import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
@@ -53,9 +53,6 @@ import org.nextframework.web.WebUtils;
  * @version 1.1
  */
 public class PropertyTag extends TemplateTag {
-
-	private static Class<? extends PropertyTagFastRenderer> fastRendererClass = null;
-	private static ThreadLocal<PropertyTagFastRenderer> fastRenderer = new ThreadLocal<PropertyTagFastRenderer>();
 
 	public static final String INPUT = "input";
 
@@ -183,8 +180,8 @@ public class PropertyTag extends TemplateTag {
 		}
 		pushAttribute("compId", id);
 		pushAttribute("Tproperty", this); //Legacy
-		checkFastRenderer();
-		if (!fastRenderer.get().render(this)) {//tentar renderização rápida
+		PropertyTagFastRenderer fastRenderer = ServiceFactory.getService(PropertyTagFastRenderer.class);
+		if (!fastRenderer.render(this)) {//tentar renderização rápida
 			includeJspTemplate(); //se nao for possível, utilizar renderização normal
 		}
 		popAttribute("Tproperty");
@@ -315,28 +312,6 @@ public class PropertyTag extends TemplateTag {
 			if (comboReloadGroupTag != null) {
 				useAjax = comboReloadGroupTag.getUseAjax();
 			}
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	protected void checkFastRenderer() throws InstantiationException, IllegalAccessException {
-		if (fastRenderer.get() == null) {
-			if (fastRendererClass == null) {
-				Class<?>[] allClassesOfType;
-				allClassesOfType = ClassManagerFactory.getClassManager().getAllClassesOfType(PropertyTagFastRenderer.class);
-				if (allClassesOfType.length > 0) {
-					fastRendererClass = (Class<PropertyTagFastRenderer>) allClassesOfType[0];
-					if (log.isDebugEnabled()) {
-						log.debug("Using custom fast renderer for tag property of class: " + fastRendererClass.getName());
-					}
-				} else {
-					fastRendererClass = NextPropertyTagFastRenderer.class;
-					if (log.isDebugEnabled()) {
-						log.debug("Using fast renderer for default tag property. ");
-					}
-				}
-			}
-			fastRenderer.set(fastRendererClass.newInstance());
 		}
 	}
 
