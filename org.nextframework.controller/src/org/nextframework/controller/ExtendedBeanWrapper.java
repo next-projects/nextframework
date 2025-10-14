@@ -63,11 +63,11 @@ import org.nextframework.bean.editors.CalendarEditor;
 import org.nextframework.bean.editors.CepPropertyEditor;
 import org.nextframework.bean.editors.CnpjPropertyEditor;
 import org.nextframework.bean.editors.CpfPropertyEditor;
-import org.nextframework.bean.editors.NextCustomDateEditor;
-import org.nextframework.bean.editors.NextCustomNumberEditor;
 import org.nextframework.bean.editors.CustomSqlDateEditor;
 import org.nextframework.bean.editors.InscricaoEstadualPropertyEditor;
 import org.nextframework.bean.editors.MoneyPropertyEditor;
+import org.nextframework.bean.editors.NextCustomDateEditor;
+import org.nextframework.bean.editors.NextCustomNumberEditor;
 import org.nextframework.bean.editors.PhoneBrazilPropertyEditor;
 import org.nextframework.bean.editors.PhonePropertyEditor;
 import org.nextframework.bean.editors.SimpleTimePropertyEditor;
@@ -330,6 +330,30 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 		registerCustomEditor(Cep.class, new CepPropertyEditor());
 		registerCustomEditor(PhoneBrazil.class, new PhoneBrazilPropertyEditor());
 		registerCustomEditor(Phone.class, new PhonePropertyEditor());
+
+		//MELHOR A APLICAÇÃO REGISTRAR PARA NÃO CHAMAR A LINHA ABAIXO, POIS ELA É MUITO CARA
+		/*
+		final Class<?>[] classes = ClassManagerFactory.getClassManager().getAllClassesOfType(org.nextframework.types.File.class);
+		for (final Class<?> class1 : classes) {
+			if (!Modifier.isAbstract(class1.getModifiers())) {
+				org.nextframework.bean.editors.FileEditor fileEditor = new org.nextframework.bean.editors.FileEditor() {
+		
+					@Override
+					protected org.nextframework.types.File createFile(Object value) {
+						try {
+							return (org.nextframework.types.File) class1.newInstance();
+						} catch (InstantiationException e) {
+							throw new RuntimeException(e);
+						} catch (IllegalAccessException e) {
+							throw new RuntimeException(e);
+						}
+					}
+		
+				};
+				registerCustomEditor(class1, fileEditor);
+			}
+		}
+		*/
 
 	}
 

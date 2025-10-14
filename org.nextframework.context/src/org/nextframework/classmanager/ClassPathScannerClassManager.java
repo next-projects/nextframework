@@ -39,9 +39,11 @@ public class ClassPathScannerClassManager implements ClassManager {
 	public <E> Class<E>[] getAllClassesOfType(Class<E> type) {
 		if (!classesOfType.containsKey(type)) {
 			synchronized (componentProvider) {
-				componentProvider.resetFilters(false);
-				componentProvider.addIncludeFilter(new AssignableTypeFilter(type));
-				classesOfType.put(type, getClasses());
+				if (!classesOfType.containsKey(type)) {
+					componentProvider.resetFilters(false);
+					componentProvider.addIncludeFilter(new AssignableTypeFilter(type));
+					classesOfType.put(type, getClasses());
+				}
 			}
 		}
 		return classesOfType.get(type);
@@ -51,9 +53,11 @@ public class ClassPathScannerClassManager implements ClassManager {
 	public Class<?>[] getClassesWithAnnotation(Class<? extends Annotation> annotationType) {
 		if (!classesWithAnnotation.containsKey(annotationType)) {
 			synchronized (componentProvider) {
-				componentProvider.resetFilters(false);
-				componentProvider.addIncludeFilter(new AnnotationTypeFilter(annotationType));
-				classesWithAnnotation.put(annotationType, getClasses());
+				if (!classesWithAnnotation.containsKey(annotationType)) {
+					componentProvider.resetFilters(false);
+					componentProvider.addIncludeFilter(new AnnotationTypeFilter(annotationType));
+					classesWithAnnotation.put(annotationType, getClasses());
+				}
 			}
 		}
 		return classesWithAnnotation.get(annotationType);

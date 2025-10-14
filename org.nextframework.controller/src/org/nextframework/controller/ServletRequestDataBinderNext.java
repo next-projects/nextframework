@@ -23,22 +23,17 @@
  */
 package org.nextframework.controller;
 
-import java.beans.PropertyEditor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.nextframework.bean.editors.FileEditor;
-import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
-import org.nextframework.types.File;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.MutablePropertyValues;
@@ -110,31 +105,6 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 
 	@Override
 	protected void doBind(MutablePropertyValues mpvs) {
-
-		//cria se necessário o file property editor
-		PropertyEditor customEditor = this.getPropertyAccessor().findCustomEditor(File.class, null);
-		if (customEditor == null) {
-			final Class<?>[] classes = ClassManagerFactory.getClassManager().getAllClassesOfType(File.class);
-			for (final Class<?> class1 : classes) {
-				if (!Modifier.isAbstract(class1.getModifiers())) {
-					FileEditor fileEditor = new FileEditor() {
-
-						@Override
-						protected File createFile(Object value) {
-							try {
-								return (File) class1.newInstance();
-							} catch (InstantiationException e) {
-								throw new RuntimeException(e);
-							} catch (IllegalAccessException e) {
-								throw new RuntimeException(e);
-							}
-						}
-
-					};
-					registerCustomEditor(class1, fileEditor);
-				}
-			}
-		}
 
 		PropertyValue[] propertyValues = mpvs.getPropertyValues();
 

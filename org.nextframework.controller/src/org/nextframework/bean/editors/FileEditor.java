@@ -24,6 +24,7 @@
 package org.nextframework.bean.editors;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileEditor extends ByteArrayPropertyEditor {
 
 	protected final Log logger = LogFactory.getLog(getClass());
+
+	private Function<Object, File> fileFunction;
+
+	public FileEditor(Function<Object, File> fileFunction) {
+		this.fileFunction = fileFunction;
+	}
 
 	public void setValue(Object value) {
 		if (value instanceof MultipartFile) {
@@ -65,11 +72,7 @@ public class FileEditor extends ByteArrayPropertyEditor {
 	}
 
 	protected File createFile(Object value) {
-		throw new IllegalArgumentException("\n\nPara utilizar o editor de arquivos, " +
-				"você deve extender a classe org.nextframework.spring.beans.editors.FileEditor e sobrescrever o método createFile.\n" +
-				"O createFile sobrescrito deve criar um File específico da aplicacao.\n" +
-				"Você deve registrar o editor criado, sobrescrevendo o método initBinder nos Controllers se quiser utilizar uploads de arquivos.\n" +
-				"O método initBinder recebe um argumento binder que possui um método para registrar conversores (registerCustomEditor)");
+		return fileFunction.apply(value);
 	}
 
 	public String getAsText() {
