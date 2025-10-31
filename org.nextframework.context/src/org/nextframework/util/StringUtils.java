@@ -304,15 +304,6 @@ public class StringUtils {
 			return description;
 		}
 
-		try {
-			Class<?> horaClass = Class.forName("org.nextframework.types.SimpleTime");
-			if (horaClass != null && horaClass.isAssignableFrom(value.getClass())) {
-				return value.toString();
-			}
-		} catch (ClassNotFoundException e) {
-			//e.printStackTrace();
-		}
-
 		BeanDescriptor beanDescriptor = BeanDescriptorFactory.forBean(value);
 		if (beanDescriptor.getDescriptionPropertyName() != null) {
 			value = beanDescriptor.getDescription();
