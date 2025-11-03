@@ -185,9 +185,6 @@ public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 		try {
 			if (arquivoVelho == null) {
 				// criar
-				if (arquivoNovo != null && arquivoNovo.getSize() == null) {
-					throw new NullPointerException("Propriedade size do arquivo é null");
-				}
 				if (arquivoNovo != null && arquivoNovo.getSize() > 0) {
 					getHibernateTemplate().saveOrUpdate(arquivoNovo);
 					writeFile(arquivoNovo);

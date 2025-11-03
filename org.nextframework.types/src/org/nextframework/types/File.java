@@ -35,7 +35,7 @@ public interface File extends Serializable {
 
 	public byte[] getContent();
 
-	public Long getSize();
+	public long getSize();
 
 	public void setCdfile(Long cdfile);
 
@@ -45,6 +45,6 @@ public interface File extends Serializable {
 
 	public void setContent(byte[] content);
 
-	public void setSize(Long size);
+	public void setSize(long size);
 
 }

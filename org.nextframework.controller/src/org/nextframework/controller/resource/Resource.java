@@ -28,7 +28,7 @@ public class Resource {
 	protected String contentType;
 	protected String fileName;
 	protected byte[] contents;
-	protected int size;
+	protected long size;
 
 	public Resource() {
 
@@ -65,11 +65,11 @@ public class Resource {
 		this.fileName = fileName;
 	}
 
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
+	public void setSize(long size) {
 		this.size = size;
 	}
 

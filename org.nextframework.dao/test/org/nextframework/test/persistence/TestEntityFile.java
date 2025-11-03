@@ -15,15 +15,15 @@ public class TestEntityFile implements File {
 	String name;
 	String contenttype;
 	byte[] content;
-	Long size;
+	long size;
 
 	@Override
-	public Long getSize() {
+	public long getSize() {
 		return size;
 	}
 
 	@Override
-	public void setSize(Long size) {
+	public void setSize(long size) {
 		this.size = size;
 	}
 

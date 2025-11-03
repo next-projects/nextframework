@@ -53,7 +53,7 @@ public class DownloadFileProvider {
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
 		//response.setHeader("Last-Modified", );
 		if (resource.getSize() >= 0) {
-			response.setContentLength(resource.getSize());
+			response.setContentLength((int) resource.getSize());
 		}
 
 		response.getOutputStream().write(resource.getContents());
