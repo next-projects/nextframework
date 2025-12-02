@@ -171,9 +171,7 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 		} else if (inputTag.getItens() != null) {
 			itemsValue = inputTag.getItens();
 		} else {
-			if (!inputTag.isLoadAllItems()) {
-				itemsValue = doUseSelectedOnly(getRawClassType());
-			} else {
+			if (inputTag.isLoadAllItems()) {
 				if (Enum.class.isAssignableFrom(getRawClassType())) {
 					Method method;
 					try {
@@ -186,6 +184,8 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 				} else {
 					itemsValue = doSelectAllFromService(lastInput, getRawClassType());
 				}
+			} else {
+				itemsValue = doUseSelectedOnly(getRawClassType());
 			}
 		}
 
@@ -358,14 +358,27 @@ public class InputTagSelectComboComponent extends InputTagSelectComponent {
 					if (inputTag.getSelectLabelProperty() != null && inputTag.getSelectLabelProperty().trim().length() > 0) {
 						extraFields = new String[] { inputTag.getSelectLabelProperty() };
 					}
-					if (HibernateUtils.isLazy(selectedValue)) {
-						selectedValue = dao.load(selectedValue, extraFields);
+					if (selectedValue instanceof Collection) {
+						Collection<?> selectedValueCollection = (Collection<?>) selectedValue;
+						for (Object selectedValueItem : selectedValueCollection) {
+							if (selectedValueItem != null) {
+								dao.loadDescriptionProperty(selectedValueItem, extraFields);
+								items.add(selectedValueItem);
+							}
+						}
+						selectedValue = null;
 					} else {
-						dao.loadDescriptionProperty(selectedValue, extraFields);
+						if (HibernateUtils.isLazy(selectedValue)) {
+							selectedValue = dao.load(selectedValue, extraFields);
+						} else {
+							dao.loadDescriptionProperty(selectedValue, extraFields);
+						}
 					}
 				}
 			}
-			items.add(selectedValue);
+			if (selectedValue != null) {
+				items.add(selectedValue);
+			}
 		}
 		return items;
 	}
