@@ -2,7 +2,7 @@
 
 	//Lista com todas as propriedades.. para evitar um loop em todas as propriedades para cada validação
 	var formProperties = null;
-	
+
 	function organizeProperties(form){
 		formProperties = new Array();
 		for (var j = 0; j < form.elements.length; j+=1){
@@ -115,16 +115,16 @@
 		var fields = new Array();
 		var formName = form.getAttributeNode("name");
 
-
 		oMinLength = eval('new ' + formName.value + '_minlength()');
 
 		for (x in oMinLength) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oMinLength[x][0]];
 
 			var field = null;
 			field = formProperties[oMinLength[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -134,12 +134,12 @@
 				}
 			}
 			*/
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
-
 				var iMin = parseInt(oMinLength[x][2]("minlength"));
 				if ((trim(field.value).length > 0) && (field.value.length < iMin)) {
 					if (i == 0) {
@@ -149,11 +149,14 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
-		   try{focusField.focus();}catch(e){}
-		   alert(fields.join('\n'));
+			try{focusField.focus();}catch(e){}
+			alert(fields.join('\n'));
 		}
+
 		return isValid;
 	}
 
@@ -176,14 +179,16 @@
 		var fieldObjs = new Array();
 		var formName = form.getAttributeNode("name"); 
 
-		oMaxLength = eval('new ' + formName.value + '_maxlength()');		
+		oMaxLength = eval('new ' + formName.value + '_maxlength()');
+
 		for (x in oMaxLength) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
-			
+			//var field = form[oMaxLength[x][0]];
+
 			var field = null;
 			field = formProperties[oMaxLength[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -199,7 +204,6 @@
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
-
 				var iMax = parseInt(oMaxLength[x][2]("maxlength"));
 				if (field.value.length > iMax) {
 					if (i == 0) {
@@ -210,10 +214,13 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'required');
 		}
+
 		return isValid;
 	}
 	
@@ -232,14 +239,16 @@
 		var fields = new Array();
 		var formName = form.getAttributeNode("name"); 
 
-		oRange = eval('new ' + formName.value + '_intRange()');		
+		oRange = eval('new ' + formName.value + '_intRange()');
+
 		for (x in oRange) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oRange[x][0]];
 
 			var field = null;
 			field = formProperties[oRange[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -248,7 +257,7 @@
 					field = element;
 				}
 			}*/
-			
+
 			if (field.disabled == false)  {
 				var value = '';
 				if (field.type == 'hidden' ||
@@ -274,7 +283,6 @@
 						isValid = false;
 					}
 				}
-				
 				var iMax = parseInt(oRange[x][2]("length"));
 				if (field.value.length != iMax) {
 					if (i == 0) {
@@ -284,14 +292,17 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return isValid;
 	}
-	
+
 	function validateYear(form) {
 		var isValid = true;
 		var focusField = null;
@@ -303,10 +314,11 @@
 		for (x in oRange) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oRange[x][0]];
 
 			var field = null;
 			field = formProperties[oRange[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -315,7 +327,7 @@
 					field = element;
 				}
 			}*/
-			
+
 			if (field.disabled == false)  {
 				var value = '';
 				if (field.type == 'hidden' ||
@@ -343,10 +355,12 @@
 				}
 			}
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return isValid;
 	}
 	
@@ -365,12 +379,14 @@
 		var formName = form.getAttributeNode("name"); 
 
 		oNumber = eval('new ' + formName.value + '_' + nomeTipo + 'Validations()');
+
 		for (x in oNumber) {
 			// form[] nao funciona direito quando o nome dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oNumber[x][0]];
 
 			var field = null;
 			field = formProperties[oNumber[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -380,6 +396,7 @@
 				}
 			}
 			*/
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'textarea' ||
@@ -421,10 +438,13 @@
 					}
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, nomeTipo);
 		}
+
 		return bValid;
 	}
 
@@ -432,11 +452,12 @@
 		argvalue = argvalue.toString();
 		var validChars = "0123456789";
 		var startFrom = 0;
+
 		if (argvalue.substring(0, 2) == "0x") {
 			validChars = "0123456789abcdefABCDEF";
 			startFrom = 2;
 		}
-		
+
 		//Este código dá erro ao processar os números 08,8 ou 1,08.
 		//else if (argvalue.charAt(0) == "0") {
 		//	validChars = "01234567";
@@ -449,6 +470,7 @@
 		for (var n = startFrom; n < argvalue.length; n++) {
 			if (validChars.indexOf(argvalue.substring(n, n+1)) == -1) return false;
 		}
+
 		return true;
 	}
 	
@@ -464,9 +486,9 @@
 	function validateShort(form) {
 		return validateAnyNumber(form, 'Short', 32767);
 	}
-	
+
 // ----------------------------------------------------------------------
-	
+
 	/**
 	 * Check to see if fields are a valid integer.
 	 * Fields are not checked if they are disabled.
@@ -476,9 +498,9 @@
 	function validateInteger(form) {
 		return validateAnyNumber(form, 'Integer', 2147483647);
 	}
-	
+
 //----------------------------------------------------------------------
-	
+
 	/**
 	 * Check to see if fields are a valid long.
 	 * Fields are not checked if they are disabled.
@@ -488,7 +510,7 @@
 	function validateLong(form) {
 		return validateAnyNumber(form, 'Long', 9223372036854775807);
 	}
-	
+
 //----------------------------------------------------------------------
 
 	/**
@@ -506,15 +528,16 @@
 		var fieldObjs = new Array();
 		var formName = form.getAttributeNode("name");
 
-			
 		oFloat = eval('new ' + formName.value + '_FloatValidations()');
+
 		for (x in oFloat) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oFloat[x][0]];
 
 			var field = null;
 			field = formProperties[oFloat[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -524,7 +547,7 @@
 				}
 			}
 			*/
-			
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'textarea' ||
@@ -572,7 +595,7 @@
 							fields[i++] = oFloat[x][1];
 							fieldObjs[i] = form[oFloat[x][0]];
 							bValid = false;
-							continue;							
+							continue;
 						}
 					} else {
 							//alert(tempArray.length);
@@ -582,7 +605,7 @@
 							fields[i++] = oFloat[x][1];
 							fieldObjs[i] = form[oFloat[x][0]];
 							bValid = false;
-							continue;					
+							continue;
 					}
 					/*
 					var zeroIndex = 0;
@@ -591,7 +614,6 @@
 						zeroIndex++;
 					}
 					var noZeroString = joinedString.substring(zeroIndex,joinedString.length);
-
 					if (!isAllDigits(noZeroString)) {
 						bValid = false;
 						if (i == 0) {
@@ -613,12 +635,14 @@
 				}
 			}
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'float');
 		}
+
 		return bValid;
 	}
-	
+
 //----------------------------------------------------------------------
 
 	/**
@@ -643,6 +667,7 @@
 
 			var field = null;
 			field = formProperties[oInscricaoEstadual[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -652,15 +677,13 @@
 				}
 			}
 			*/
-			
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
-				
 				if(field.value.replace( /\s*/, "" ).length==0) return true;
-				
 				if (ApenasNum(field.value).length != 14) {
 					if (i == 0) {
 						focusField = field;
@@ -669,10 +692,13 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'inscricaoEstadual');
 		}
+
 		return isValid;
 	}
 	
@@ -692,13 +718,15 @@
 		var formName = form.getAttributeNode("name"); 
 
 		oRange = eval('new ' + formName.value + '_floatRange()');
+
 		for (x in oRange) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oRange[x][0]];
 
 			var field = null;
 			field = formProperties[oRange[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -708,12 +736,11 @@
 				}
 			}
 			*/
-			
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' || field.type == 'textarea') &&
 				(field.value.length > 0)  &&
 				 field.disabled == false) {
-		
 				var fMin = parseFloat(oRange[x][2]("min"));
 				var fMax = parseFloat(oRange[x][2]("max"));
 				var fValue = parseFloat(field.value);
@@ -725,14 +752,17 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return isValid;
 	}
-	
+
 //----------------------------------------------------------------------
 
 	/**
@@ -749,13 +779,15 @@
 		var formName = form.getAttributeNode("name"); 
 
 		oRange = eval('new ' + formName.value + '_floatMinValue()');
+
 		for (x in oRange) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oRange[x][0]];
 
 			var field = null;
 			field = formProperties[oRange[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -765,11 +797,11 @@
 				}
 			}
 			*/
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' || field.type == 'textarea') &&
 				(field.value.length > 0)  &&
 				 field.disabled == false) {
-		
 				var fMin = parseFloat(oRange[x][2]("min"));
 				//var fMax = parseFloat(oRange[x][2]("max"));
 				var fValue = parseFloat(field.value);
@@ -781,11 +813,14 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return isValid;
 	}
 	
@@ -805,13 +840,15 @@
 		var formName = form.getAttributeNode("name"); 
 
 		oRange = eval('new ' + formName.value + '_floatMaxValue()');
+
 		for (x in oRange) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oRange[x][0]];
 
 			var field = null;
 			field = formProperties[oRange[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -821,11 +858,11 @@
 				}
 			}
 			*/
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' || field.type == 'textarea') &&
 				(field.value.length > 0)  &&
 				 field.disabled == false) {
-		
 				//var fMin = parseFloat(oRange[x][2]("min"));
 				var value = field.value;
 				value = value.replace(".","").replace(",",".");
@@ -839,11 +876,14 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return isValid;
 	}
 	
@@ -869,10 +909,11 @@
 		for (x in oEmail) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oEmail[x][0]];
 
 			var field = null;
 			field = formProperties[oEmail[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -882,6 +923,7 @@
 				}
 			}
 			*/
+
 			if ((field.type == 'hidden' || 
 				 field.type == 'text' ||
 				 field.type == 'textarea') &&
@@ -895,11 +937,14 @@
 					bValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return bValid;
 	}
 	
@@ -979,10 +1024,11 @@
 		for (x in oDate) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oDate[x][0]];
 
 			var field = null;
 			field = formProperties[oDate[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -992,7 +1038,7 @@
 				}
 			}
 			 */
-		
+
 			var value = field.value;
 			var datePattern = formProperties[oDate[x][0]+'_datePattern'].value;
 			if (datePattern == null){
@@ -1011,7 +1057,7 @@
 				var HOUR = "HH";
 				var MINUTE = "mm";
 				var SECOND = "ss";
-				
+
 				var orderMonth  = datePattern.indexOf(MONTH);
 				var orderDay	= datePattern.indexOf(DAY);
 				var orderYear   = datePattern.indexOf(YEAR);
@@ -1019,13 +1065,13 @@
 				var orderMinute = datePattern.indexOf(MINUTE);
 				var orderSecond = datePattern.indexOf(SECOND);
 				var orderShortYear = datePattern.indexOf(SHORTYEAR);
-				
+
 				if(datePattern.indexOf('hh') > 0){
 					alert('Hora \'hh\' não suportada! Utilize \'HH\' para formatar hora.');
 				}
-				
+
 				var regex = "^"+datePattern+"$";
-				
+
 				regex = regex.replace("\\", "\\\\");
 				regex = regex.replace("{", "\\{");
 				regex = regex.replace("}", "\\}");
@@ -1034,7 +1080,7 @@
 				regex = regex.replace("-", "\\-");
 				regex = regex.replace("+", "\\+");
 				regex = regex.replace(".", "\\.");
-				
+
 				if(orderMonth != -1){
 					regex = regex.replace(MONTH, '\\d{2}');
 				}
@@ -1056,14 +1102,14 @@
 				if(orderShortYear != -1 && orderYear == -1){
 					regex = regex.replace(SHORTYEAR, '\\d{2}');
 				}
-				
+
 				var matched;
 				try {
 					 matched = new RegExp(regex).exec(value);
 				}catch(e){
 				 	alert('Erro ao verificar regex '+regex+' do pattern '+datePattern);
 				}
-				
+
 				// alert(regex + '\n' + matched);
 				if (matched != null) {
 					// o value é conforme com o pattern.. precisamos verificar os valores
@@ -1073,7 +1119,6 @@
 					var hour = -1;
 					var minute = -1;
 					var second = -1;
-	
 					if (orderMonth != -1) {
 						month = asInt(value.substring(datePattern.indexOf(MONTH),
 								datePattern.indexOf(MONTH) + 2));
@@ -1104,7 +1149,6 @@
 										.indexOf(SHORTYEAR) + 2));
 					}
 					// window.status = datePattern+' '+day+'/'+month+'/'+year+''+hour+':'+minute+':'+second;
-	
 					if (!isValidDate(day, month, year, hour, minute, second)) {
 						if (i == 0) {
 							focusField = field;
@@ -1118,12 +1162,11 @@
 					if (i == 0) {
 						focusField = field;
 					}
-	
 					fields[i++] = oDate[x][1];
 					fieldObjs[i] = form[oDate[x][0]];
 					bValid = false;
 				}
-				
+
 				/*
 				var orderMonth = datePattern.indexOf(MONTH);
 				var orderDay = datePattern.indexOf(DAY);
@@ -1230,9 +1273,11 @@
 				*/
 			}
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'date');
 		}
+
 		return bValid;
 	}
 	
@@ -1314,6 +1359,7 @@
 
 			var field = null;
 			field = formProperties[oCreditCard[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -1323,8 +1369,7 @@
 				}
 			}
 			*/
-		
-		
+
 			if ((field.type == 'text' ||
 				 field.type == 'textarea') &&
 				(field.value.length > 0)  &&
@@ -1337,11 +1382,14 @@
 					bValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return bValid;
 	}
 
@@ -1408,6 +1456,7 @@
 
 			var field = null;
 			field = formProperties[oCpf[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -1417,17 +1466,15 @@
 				}
 			}
 			*/
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
-
 				if(field.value.replace( /\s*/, "" ).length==0) { 
 					continue;
 				}
-
-
 				if (!DigitoCPF(ApenasNum(field.value))) {
 					if (i == 0) {
 						focusField = field;
@@ -1436,10 +1483,13 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'cpf');
 		}
+
 		return isValid;
 	}
 
@@ -1492,9 +1542,8 @@
 		} else {
 			numResto = 0;
 		}
-		// -- Segundo d?gito calculado.
+		// -- Segundo dígito calculado.
 		numDigito = numDigito.concat(numResto);
-		//
 		if (numDigito == numDois) {
 			return true;
 		} else {
@@ -1509,7 +1558,6 @@
 	* <p>
 	* @param form The form validation is taking place on.
 	*/
-
 	function validateCnpj(form) {
 		var isValid = true;
 		var focusField = null;
@@ -1521,14 +1569,13 @@
 		oCnpj = eval('new ' + formName.value + '_cnpj()');
 
 		for (x in oCnpj) {
-			
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
 			//var field = form[oCnpj[x][0]];
 
 			var field = null;
 			field = formProperties[oCnpj[x][0]];
-			 
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -1538,17 +1585,15 @@
 				}
 			}
 			*/
-			
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
- 
 				if(field.value.replace( /\s*/, "" ).length==0) { 
 					continue;
 				}
-
 				if (!digitoCNPJ(ApenasNum(field.value))) {
 					if (i == 0) {
 						focusField = field;
@@ -1556,9 +1601,10 @@
 					fields[i++] = oCnpj[x][1];
 					isValid = false;
 				}
-				
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'cnpj');
 		}
@@ -1571,11 +1617,10 @@
 	
 	//Fun??o para C?lculo do Digito do CPF/CNPJ
 	function digitoCNPJ(numCIC) {
-	
+
 		var numDois = numCIC.substring(numCIC.length-2, numCIC.length);
 		var novoCIC = numCIC.substring(0, numCIC.length-2);
-	
-		
+
 		switch (numCIC.length){
 			case 15 :
 				numLim = 9;
@@ -1587,9 +1632,7 @@
 			default :
 				return false;
 		}
-		
-		
-		//
+
 		var numSoma = 0;
 		var Fator = 1;
 		for (var i=novoCIC.length-1; i>=0; i--) {
@@ -1665,6 +1708,7 @@
 
 			var field = null;
 			field = formProperties[oCep[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -1674,14 +1718,13 @@
 				}
 			}
 			*/
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
-
 				if(field.value.replace( /\s*/, "" ).length==0) return true;
-
 				if (!field.value.match(/[0-9]{4}-[0-9]{3}/)) {
 					if (i == 0) {
 						focusField = field;
@@ -1690,10 +1733,13 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'cep');
 		}
+
 		return isValid;
 	}
 	
@@ -1710,16 +1756,18 @@
 		var focusField = null;
 		var i = 0;
 		var fields = new Array();
-		var formName = form.getAttributeNode("name"); 
+		var formName = form.getAttributeNode("name");
+
 		oByte = eval('new ' + formName.value + '_ByteValidations()');
 
 		for (x in oByte) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oByte[x][0]];
 
 			var field = null;
 			field = formProperties[oByte[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -1755,9 +1803,7 @@
 							focusField = field;
 						}
 						fields[i++] = oByte[x][1];
-
 					} else {
-
 						var iValue = parseInt(value);
 						if (isNaN(iValue) || !(iValue >= -128 && iValue <= 127)) {
 							if (i == 0) {
@@ -1771,10 +1817,12 @@
 
 			}
 		}
+
 		if (fields.length > 0) {
 			try{focusField.focus();}catch(e){}
 			alert(fields.join('\n'));
 		}
+
 		return bValid;
 	}
 	
@@ -1793,14 +1841,16 @@
 		var fields = new Array();
 		var formName = form.getAttributeNode("name"); 
 
-		oMasked = eval('new ' + formName.value + '_mask()');	  
+		oMasked = eval('new ' + formName.value + '_mask()');
+
 		for (x in oMasked) {
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
-			//var field = form[oRequired[x][0]];
+			//var field = form[oMasked[x][0]];
 
 			var field = null;
 			field = formProperties[oMasked[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -1817,7 +1867,6 @@
 				 field.type == 'file') &&
 				 (field.value.length > 0) &&
 				 field.disabled == false) {
-
 				if (!matchPattern(field.value, oMasked[x][2]("mask"))) {
 					if (i == 0) {
 						focusField = field;
@@ -1826,12 +1875,14 @@
 					isValid = false;
 				}
 			}
+
 		}
 
 		if (fields.length > 0) {
-		   try{focusField.focus();}catch(e){}
-		   alert(fields.join('\n'));
+			try{focusField.focus();}catch(e){}
+			alert(fields.join('\n'));
 		}
+
 		return isValid;
 	}
 
@@ -1849,23 +1900,25 @@
 	*/
 
 	function validateRequired(form) {
+
 		var isValid = true;
 		var focusField = null;
 		var i = 0;
 		var fields = new Array();
 		var fieldObjs = new Array();
 		var formName = form.getAttributeNode("name");
+
 		oRequired = eval('new ' + formName.value + '_required()');
 
 		for (x in oRequired) {
-			
 			// form[] n?o funciona direito quando o nome
 			// dos elements mudam dinamicamente
 			//var field = form[oRequired[x][0]];
+
 			//alert('required loop');
 			var field = null;
 			var radiofields = new Array();
-			
+
 			var fprox = formProperties[oRequired[x][0]];
 			if(fprox){
 				if(fprox.isArray){
@@ -1874,7 +1927,7 @@
 					field = fprox;
 				}
 			}
-			
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				//alert('required loop item  '+j+' de '+form.elements.length);
@@ -1887,7 +1940,7 @@
 					}
 				}
 			}*/
-			
+
 			if(radiofields.length > 0){
 				var hasenabled = false;
 				var haschecked = false;
@@ -1906,15 +1959,13 @@
 					isValid = false; 	
 					//alert('Faltando '+oRequired[x][0]);
 				}
-			} else if ((field != null && (field.type == 'hidden' ||
+			} else if (field != null && field.disabled == false && (
+				field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'textarea' ||
 				field.type == 'file' ||
-				//field.type == 'checkbox' ||
 				field.type == 'select-one' ||
-				field.type == 'password')) &&
-				field.disabled == false) {
-				
+				field.type == 'password')) {
 				var value = '';
 				// get field's value
 				if (field.type == "select-one") {
@@ -1950,7 +2001,7 @@
 							isValid = false;
 					}
 				}
-			} else if (field != null && field.type == "select-multiple") { 
+			} else if (field != null && field.disabled == false && field.type == "select-multiple") { 
 				var numOptions = field.options.length;
 				lastSelected=-1;
 				for(loop=numOptions-1;loop>=0;loop--) {
@@ -1986,9 +2037,11 @@
 				}
 			}
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'required');
 		}
+
 		return isValid;
 	}
 
@@ -2023,6 +2076,7 @@
 
 			var field = null;
 			field = formProperties[oTelefone[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -2032,15 +2086,13 @@
 				}
 			}
 			*/
-			
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
-
 				if(field.value.replace( /\s*/, "" ).length==0) return true;
-	
 				if (!field.value.match(/\([0-9][0-9]\)( )?[0-9]{4,5}-[0-9]{4}/)) {
 					if (i == 0) {
 						focusField = field;
@@ -2049,10 +2101,13 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'telefone');
 		}
+
 		return isValid;
 	}
 	
@@ -2081,6 +2136,7 @@
 
 			var field = null;
 			field = formProperties[oTime[x][0]];
+
 			/*
 			for (var j = 0; j < form.elements.length; j++){
 				element = form.elements[j];
@@ -2090,15 +2146,13 @@
 				}
 			}
 			*/
-			
+
 			if ((field.type == 'hidden' ||
 				field.type == 'text' ||
 				field.type == 'password' ||
 				field.type == 'textarea') &&
 				field.disabled == false) {
-
 				if(field.value.replace( /\s*/, "" ).length==0) return true;
-	
 				if (!verifica_hora(field.value)) {
 					if (i == 0) {
 						focusField = field;
@@ -2107,10 +2161,13 @@
 					isValid = false;
 				}
 			}
+
 		}
+
 		if (fields.length > 0) {
 			invalidFields(form, fieldObjs, fields, 'time');
 		}
+
 		return isValid;
 	}
 
@@ -2131,5 +2188,5 @@
 		}
 		return true;
 	}
-	
+
 //----------------------------------------------------------------------

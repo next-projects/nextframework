@@ -18,21 +18,9 @@ import org.nextframework.validation.annotation.Required;
 public class InputTagHelper {
 
 	protected void autowireAttributes(final InputTag inputTag) {
+
 		if (inputTag.autowire) {
-			inputTag.setAutowiredType(inputTag.getPageContext().findAttribute("type"));
-			if (inputTag.type == null) {
-				inputTag.type = inputTag.getPageContext().findAttribute("type");
-			}
-			if (inputTag.name == null) {
-				try {
-					inputTag.name = (String) inputTag.getPageContext().findAttribute("name");
-				} catch (ClassCastException e) {
-					// ignorar se nao for string
-				}
-			}
-			if (inputTag.value == null) {
-				inputTag.value = inputTag.getPageContext().findAttribute("value");
-			}
+
 			if (inputTag.getPropertySetter() == null) {
 				inputTag.setPropertySetter((PropertySetter) inputTag.getPageContext().findAttribute("propertySetter"));
 				if (inputTag.getPropertySetter() == null) {
@@ -45,21 +33,7 @@ public class InputTagHelper {
 					});
 				}
 			}
-			if (inputTag.required == null) {
-				try {
-					inputTag.required = (Boolean) inputTag.getPageContext().findAttribute("required");
-				} catch (ClassCastException e) {
-					// ignorar se nao for boolean
-				}
-			}
-			if (Util.strings.isEmpty(inputTag.label)) {
-				try {
-					Object labelF = inputTag.getPageContext().findAttribute("label");
-					inputTag.label = labelF != null ? labelF.toString() : null;
-				} catch (NullPointerException e) {
-					// ignorar se nao existir o atributo
-				}
-			}
+
 			if (inputTag.getAnnotations() == null) {
 				try {
 					inputTag.setAnnotations((Annotation[]) inputTag.getPageContext().findAttribute("annotations"));
@@ -70,7 +44,32 @@ public class InputTagHelper {
 					inputTag.setAnnotations(new Annotation[0]);
 				}
 			}
-			// verificar se é required
+
+			inputTag.setAutowiredType(inputTag.getPageContext().findAttribute("type"));
+
+			if (inputTag.type == null) {
+				inputTag.type = inputTag.getPageContext().findAttribute("type");
+			}
+
+			if (inputTag.name == null) {
+				try {
+					inputTag.name = (String) inputTag.getPageContext().findAttribute("name");
+				} catch (ClassCastException e) {
+					// ignorar se nao for string
+				}
+			}
+
+			if (inputTag.value == null) {
+				inputTag.value = inputTag.getPageContext().findAttribute("value");
+			}
+
+			if (inputTag.required == null) {
+				try {
+					inputTag.required = (Boolean) inputTag.getPageContext().findAttribute("required");
+				} catch (ClassCastException e) {
+					// ignorar se nao for boolean
+				}
+			}
 			if (inputTag.required == null) {
 				for (Annotation ann : inputTag.getAnnotations()) {
 					if (ann instanceof Required) {
@@ -79,7 +78,18 @@ public class InputTagHelper {
 					}
 				}
 			}
+
+			if (Util.strings.isEmpty(inputTag.label)) {
+				try {
+					Object labelF = inputTag.getPageContext().findAttribute("label");
+					inputTag.label = labelF != null ? labelF.toString() : null;
+				} catch (NullPointerException e) {
+					// ignorar se nao existir o atributo
+				}
+			}
+
 		}
+
 	}
 
 	protected InputTagType chooseType(InputTag inputTag) {

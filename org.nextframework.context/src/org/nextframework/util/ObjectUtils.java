@@ -243,6 +243,10 @@ public class ObjectUtils {
 		return new NextMessageSourceResolvable((String) null, null, value != null ? value : "");
 	}
 
+	public MessageSourceResolvable newSimpleMessage(Object value) {
+		return new NextMessageSourceResolvable((String) null, new Object[] { value }, "{0}");
+	}
+
 	public MessageSourceResolvable newMessage(String code) {
 		return new NextMessageSourceResolvable(code);
 	}

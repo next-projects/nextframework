@@ -33,9 +33,9 @@ public class InputTagComponent {
 	}
 
 	public void prepare() {
+		configureReadOnly();
 		boolean disabled = configureDisabled();
 		configureValidation(disabled);
-		configureReadOnly();
 	}
 
 	protected void configureValidation(boolean disabled) {
@@ -95,8 +95,14 @@ public class InputTagComponent {
 		return false;
 	}
 
+	public void configureReadOnly() {
+		Object readonlyObj = inputTag.getDynamicAttributesMap().get("readonly");
+		if (readonlyObj == null || "false".equals(readonlyObj) || Boolean.FALSE.equals(readonlyObj)) {
+			inputTag.getDynamicAttributesMap().remove("readonly");
+		}
+	}
+
 	protected boolean configureDisabled() {
-		PropertyConfigTag propertyConfig = inputTag.findParent(PropertyConfigTag.class);
 		boolean disabled = false;
 		Object disabledObj = inputTag.getDynamicAttributesMap().get("disabled");
 		if (disabledObj == null || "false".equals(disabledObj) || Boolean.FALSE.equals(disabledObj)) {
@@ -105,6 +111,7 @@ public class InputTagComponent {
 			disabled = true;
 		}
 		DataGridTag dataGridTag = inputTag.findParent(DataGridTag.class);
+		PropertyConfigTag propertyConfig = inputTag.findParent(PropertyConfigTag.class);
 		if (propertyConfig != null && Boolean.TRUE.equals(propertyConfig.getDisabled()) && (dataGridTag == null || dataGridTag.getCurrentStatus() != DataGridTag.Status.DYNALINE)) {
 			if (disabled) {
 				inputTag.getDynamicAttributesMap().put("originaldisabled", "disabled");
@@ -120,13 +127,6 @@ public class InputTagComponent {
 
 	public boolean isToPrintRequired() {
 		return inputTag.isRequiredResolved();
-	}
-
-	public void configureReadOnly() {
-		Object readonlyObj = inputTag.getDynamicAttributesMap().get("readonly");
-		if (readonlyObj == null || "false".equals(readonlyObj) || Boolean.FALSE.equals(readonlyObj)) {
-			inputTag.getDynamicAttributesMap().remove("readonly");
-		}
 	}
 
 	public void afterPrint() {
