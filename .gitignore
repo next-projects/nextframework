@@ -5,3 +5,6 @@
 /build
 */bin
 */bin-js
+
+# Build tools (downloaded by setup-env.sh)
+org.nextframework.build/tools/bin/
