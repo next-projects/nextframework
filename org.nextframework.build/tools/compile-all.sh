@@ -58,23 +58,25 @@ MODULES=(
     "org.nextframework.jsbuilder"
 )
 
-# Build classpath for a module (includes lib/, provided/, and all previous module bin/ directories)
+# Build classpath for a module (includes ALL lib/, provided/, and bin/ directories)
 build_classpath() {
     local module="$1"
-    local module_dir="$PROJECT_ROOT/$module"
     local cp=""
 
-    # Add module's own lib and provided jars
-    if [ -d "$module_dir/lib" ]; then
-        for jar in "$module_dir/lib"/*.jar; do
-            [ -f "$jar" ] && cp="$cp:$jar"
-        done
-    fi
-    if [ -d "$module_dir/provided" ]; then
-        for jar in "$module_dir/provided"/*.jar; do
-            [ -f "$jar" ] && cp="$cp:$jar"
-        done
-    fi
+    # Add ALL module lib and provided jars (dependencies are distributed across modules)
+    for mod in "${MODULES[@]}"; do
+        local mod_dir="$PROJECT_ROOT/$mod"
+        if [ -d "$mod_dir/lib" ]; then
+            for jar in "$mod_dir/lib"/*.jar; do
+                [ -f "$jar" ] && cp="$cp:$jar"
+            done
+        fi
+        if [ -d "$mod_dir/provided" ]; then
+            for jar in "$mod_dir/provided"/*.jar; do
+                [ -f "$jar" ] && cp="$cp:$jar"
+            done
+        fi
+    done
 
     # Add all module bin directories (for cross-module dependencies)
     for mod in "${MODULES[@]}"; do
