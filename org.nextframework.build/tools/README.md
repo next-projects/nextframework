@@ -28,6 +28,7 @@ This runs the full setup:
 | `compile-all.sh` | Compiles all modules in dependency order |
 | `generate-js.sh` | Generates JavaScript from Java using STJS |
 | `clean.sh` | Removes all compiled classes |
+| `show-dependencies.sh` | Prints module dependencies in YAML format |
 
 ---
 
@@ -68,6 +69,9 @@ source tools/setup-env.sh --no-compile --no-js
 
 # Clean compiled classes
 ./tools/clean.sh
+
+# Show module dependencies (YAML)
+./tools/show-dependencies.sh
 ```
 
 ---
