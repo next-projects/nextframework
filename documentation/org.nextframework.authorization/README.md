@@ -2,7 +2,121 @@
 
 ## Overview
 
-Flexible authorization framework with **three levels of complexity**. Choose the level that fits your needs - from simple authentication checks to full role-based access control with granular database permissions.
+Security in Next Framework has two layers:
+
+1. **Authentication** - Is the user logged in?
+2. **Authorization** - Does the user have permission?
+
+```
+Request arrives
+    │
+    ▼
+┌─────────────────────────────┐
+│  AUTHENTICATION             │  ← authentication.properties
+│  Is user logged in?         │     (module-level)
+└─────────────────────────────┘
+    │
+    ▼
+┌─────────────────────────────┐
+│  AUTHORIZATION              │  ← authorization.properties + AuthorizationModule
+│  Does user have permission? │     (resource/action-level)
+└─────────────────────────────┘
+```
+
+---
+
+## Module Authentication
+
+Controllers are organized into **modules** (first path segment). You can require authentication for entire modules via `authentication.properties`.
+
+### Setup
+
+Create `authentication.properties` in your classpath:
+
+```properties
+# Modules requiring authentication (user must be logged in)
+admin=true
+app=true
+reports=true
+
+# Public modules (no authentication required)
+public=false
+```
+
+### How It Works
+
+1. Framework creates a servlet per module at startup
+2. If module is marked `true`, `AuthenticationHandlerInterceptor` is added
+3. Interceptor checks if user is logged in before any controller action
+4. If not logged in → redirects to login page
+
+### Login Controller
+
+You need a login controller implementing `AuthenticationController`:
+
+```java
+@Controller(path = "/public/login",
+            authorizationModule = HasAccessAuthorizationModule.class)
+public class LoginController extends MultiActionController
+                             implements AuthenticationController {
+
+    @Override
+    public String getPath() {
+        return "/public/login";  // Must match @Controller path
+    }
+
+    @DefaultAction
+    public ModelAndView index() {
+        return new ModelAndView("login");
+    }
+
+    public ModelAndView doLogin(String username, String password) {
+        User user = authDAO.findUserByUsername(username);
+
+        if (user != null && checkPassword(password, user.getPassword())) {
+            getSession().setAttribute("USER", user);
+            return new ModelAndView("redirect:/app/dashboard");
+        }
+
+        addError("Invalid credentials");
+        return new ModelAndView("login");
+    }
+
+    public ModelAndView logout() {
+        getSession().removeAttribute("USER");
+        getSession().invalidate();
+        return new ModelAndView("redirect:/public/login");
+    }
+}
+```
+
+**Important:** Login controller must be in a **public module** (not marked as `true` in authentication.properties).
+
+### Example Module Organization
+
+```properties
+# authentication.properties
+public=false    # No authentication
+app=true        # Requires login
+admin=true      # Requires login
+```
+
+```
+/public/login      ← Login page (public)
+/public/about      ← Public pages
+
+/app/dashboard     ← Requires authentication
+/app/profile       ← Requires authentication
+
+/admin/users       ← Requires authentication
+/admin/settings    ← Requires authentication
+```
+
+---
+
+## Authorization Levels
+
+Once authenticated, **authorization** controls what the user can do. Three levels of complexity:
 
 | Level | Description | Requires DAO? |
 |-------|-------------|---------------|
