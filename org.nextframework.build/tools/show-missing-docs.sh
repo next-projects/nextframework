@@ -3,10 +3,18 @@
 # Shows modules missing documentation that have at least one dependency with docs.
 # Format: table with module on left, dependencies on right (✓ = has docs)
 #
+# Usage: ./show-missing-docs.sh [--all]
+#   --all  Show all modules, marking documented ones with ✓
+#
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 DOC_DIR="$PROJECT_ROOT/documentation"
+
+SHOW_ALL=false
+if [ "$1" = "--all" ]; then
+    SHOW_ALL=true
+fi
 
 # Get all modules
 ALL_MODULES=$(ls -d "$PROJECT_ROOT"/org.nextframework.* 2>/dev/null | xargs -n1 basename | sort)
@@ -45,13 +53,30 @@ short_name() {
 COL1=25
 
 # Print header
-printf "%-${COL1}s  %s\n" "MODULE (missing docs)" "DEPENDENCIES (✓ = has docs)"
-printf "%-${COL1}s  %s\n" "---------------------" "----------------------------"
+if $SHOW_ALL; then
+    printf "%-${COL1}s  %s\n" "MODULE (✓ = has docs)" "DEPENDENCIES (✓ = has docs)"
+    printf "%-${COL1}s  %s\n" "---------------------" "----------------------------"
+else
+    printf "%-${COL1}s  %s\n" "MODULE (missing docs)" "DEPENDENCIES (✓ = has docs)"
+    printf "%-${COL1}s  %s\n" "---------------------" "----------------------------"
+fi
+
+# Counters for --all mode
+total_count=0
+docs_count=0
 
 # Process each module
 for module in $ALL_MODULES; do
-    # Skip if module has docs
+    total_count=$((total_count + 1))
+
+    module_has_docs=false
     if has_docs "$module"; then
+        module_has_docs=true
+        docs_count=$((docs_count + 1))
+    fi
+
+    # Skip if module has docs (unless --all)
+    if ! $SHOW_ALL && $module_has_docs; then
         continue
     fi
 
@@ -68,8 +93,8 @@ for module in $ALL_MODULES; do
         fi
     done
 
-    # Only show if has at least one dependency with docs
-    if $has_dep_with_docs; then
+    # Only show if has at least one dependency with docs (unless --all)
+    if $SHOW_ALL || $has_dep_with_docs; then
         # Build dependency list
         first=true
         dep_list=""
@@ -89,6 +114,16 @@ for module in $ALL_MODULES; do
         done
 
         short_module=$(short_name "$module")
-        printf "%-${COL1}s  %s\n" "$short_module" "$dep_list"
+        if $SHOW_ALL && $module_has_docs; then
+            printf "✓ %-$((COL1-2))s  %s\n" "$short_module" "$dep_list"
+        else
+            printf "%-${COL1}s  %s\n" "$short_module" "$dep_list"
+        fi
     fi
 done
+
+# Print summary for --all mode
+if $SHOW_ALL; then
+    echo ""
+    echo "Documented: $docs_count / $total_count"
+fi
