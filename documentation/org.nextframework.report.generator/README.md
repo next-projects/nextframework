@@ -2,7 +2,20 @@
 
 ## Overview
 
-Dynamic report generation from entity classes. Define reports in XML with filters, grouping, aggregation, and charts - the framework handles query building, data retrieval, and rendering.
+This module provides **dynamic report generation** based on XML definitions. Reports are described declaratively - specifying the data source, filters, grouping, columns, and charts - and the framework handles everything else: query building, data retrieval, aggregation, and rendering.
+
+These XML definitions can also be created programmatically, and they serve as the foundation for a **complete report designer UI** with:
+
+- Entity and property selection
+- Visual report builder (groups, filters, columns, charts)
+- Filter forms for end users
+- PDF/HTML generation with progress monitoring
+
+See [CONTROLLER.md](CONTROLLER.md) for the built-in UI.
+
+---
+
+## XML Definition
 
 ```xml
 <report name="SalesReport">
@@ -42,7 +55,9 @@ byte[] pdf = JasperReportsRenderer.renderAsPDF(spec.getReportBuilder().getDefini
 
 See [XML-FORMAT.md](XML-FORMAT.md) for complete XML reference.
 
-### Programmatic Definition
+---
+
+## Programmatic Definition
 
 Build reports entirely in Java:
 
@@ -451,6 +466,14 @@ public class PercentageProcessor implements FieldProcessor {
 ```
 
 Use in calculated field expression via `processors` attribute.
+
+---
+
+## Report Designer Controller
+
+For building a complete report designer UI with entity selection, property picker, visual designer, and PDF/HTML generation, extend `ReportDesignController`.
+
+**See [CONTROLLER.md](CONTROLLER.md) for setup and customization.**
 
 ---
 
