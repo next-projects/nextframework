@@ -9,7 +9,7 @@ How request parameters are bound to Java objects and validated.
 Request parameters automatically bind to command object properties:
 
 ```html
-<form action="/products?action=save" method="post">
+<form action="/admin/products?action=save" method="post">
     <input name="name" value="Widget"/>
     <input name="price" value="29.99"/>
     <input name="active" value="true"/>
@@ -383,7 +383,7 @@ public ModelAndView save(WebRequestContext request, Product product) {
 
     // Proceed with save
     productService.save(product);
-    return new ModelAndView("redirect:/products");
+    return new ModelAndView("redirect:/admin/products");
 }
 ```
 

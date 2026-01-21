@@ -7,19 +7,21 @@ Base class for standard CRUD (Create, Read, Update, Delete) operations. Provides
 ## Quick Start
 
 ```java
-@Controller(path = "/products")
+@Controller(path = "/admin/products")
 public class ProductController extends CrudController<Product> {
     // Ready to use with standard CRUD operations
 }
 ```
 
 This provides:
-- `/products` - List products
-- `/products?action=form` - New product form
-- `/products?action=form&id=5` - Edit product form
-- `/products?action=view&id=5` - View product (read-only)
-- `/products?action=save` - Save product (POST)
-- `/products?action=delete&id=5` - Delete product
+- `/admin/products` - List products
+- `/admin/products?action=form` - New product form
+- `/admin/products?action=form&id=5` - Edit product form
+- `/admin/products?action=view&id=5` - View product (read-only)
+- `/admin/products?action=save` - Save product (POST)
+- `/admin/products?action=delete&id=5` - Delete product
+
+**Note:** Path must include module (e.g., `admin`) as first segment.
 
 ---
 
@@ -288,7 +290,7 @@ public class ProductFilter implements ListViewFilter {
 Use in controller:
 
 ```java
-@Controller(path = "/products")
+@Controller(path = "/admin/products")
 public class ProductController extends CrudController<ProductFilter, Product> {
 
     @Override
@@ -315,7 +317,7 @@ public class ProductForm {
     // Getters and setters...
 }
 
-@Controller(path = "/products")
+@Controller(path = "/admin/products")
 public class ProductController extends CrudController<ProductFilter, ProductForm, Product> {
 
     @Override
@@ -351,7 +353,7 @@ public class ProductController extends CrudController<ProductFilter, ProductForm
 CrudController integrates with GenericService:
 
 ```java
-@Controller(path = "/products")
+@Controller(path = "/admin/products")
 public class ProductController extends CrudController<Product> {
 
     @Autowired
@@ -481,7 +483,7 @@ CrudController uses `CrudAuthorizationModule` by default:
 Override authorization:
 
 ```java
-@Controller(path = "/products", authorizationModule = CustomAuthorizationModule.class)
+@Controller(path = "/admin/products", authorizationModule = CustomAuthorizationModule.class)
 public class ProductController extends CrudController<Product> {
 }
 ```

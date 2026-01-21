@@ -400,7 +400,7 @@ public ModelAndView handleException(WebRequestContext request,
 For standard create/read/update/delete operations:
 
 ```java
-@Controller(path = "/products")
+@Controller(path = "/admin/products")
 public class ProductController extends CrudController<Product> {
 
     // Provides: list, form, create, update, view, save, delete
