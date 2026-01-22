@@ -1,55 +1,77 @@
-<project name="ERP-lite" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="ERP-lite" default="compile-app" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
-    <!-- Next Framework root (passed via -Dnext.root or build.config) -->
+    <!-- Convert deploy.dir to absolute path BEFORE loading properties.
+         This ensures subant tasks in module directories resolve to correct location.
+         The 'location' attribute automatically converts to absolute path. -->
+    <property name="deploy.dir" location="WebContent"/>
+
+    <!-- Load properties -->
     <property file="build.config"/>
+    <property file="build.properties"/>
+
+    <!-- Next Framework root (auto-detected or from build.config) -->
     <property name="next.root" value="../.."/>
 
+    <!-- Web root -->
+    <property name="webroot.dir" value="WebContent"/>
+
+    <!-- App compilation -->
     <property name="src.dir" value="src"/>
     <property name="build.dir" value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="lib.dir" value="lib"/>
-    <property name="provided.dir" value="provided"/>
-    <property name="webroot.dir" value="WebContent"/>
+    <property name="classes.dir" value="${deploy.dir}/WEB-INF/classes"/>
 
     <!-- Ivy settings -->
     <property name="ivy.settings.file" value="${next.root}/org.nextframework.build/ivysettings.xml"/>
 
-    <path id="classpath">
-        <fileset dir="${lib.dir}" includes="*.jar" erroronmissingdir="false"/>
-        <fileset dir="${provided.dir}" includes="*.jar" erroronmissingdir="false"/>
-    </path>
+    <!-- Import Next Framework build -->
+    <import file="${next.root}/org.nextframework.build/build-web-deploy.xml"/>
 
+    <!-- Resolve app dependencies -->
+    <target name="resolve">
+        <mkdir dir="lib"/>
+        <ivy:retrieve pattern="lib/[artifact]-[revision].[ext]" conf="lib" type="jar,bundle"/>
+    </target>
+
+    <!-- Compile app source code only (no deploy dependency) -->
+    <target name="compile-app-only">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}"
+               destdir="${classes.dir}"
+               source="1.8"
+               target="1.8"
+               encoding="UTF-8"
+               includeantruntime="false">
+            <classpath>
+                <fileset dir="lib" includes="*.jar" erroronmissingdir="false"/>
+                <fileset dir="${deploy.dir}/WEB-INF/lib" includes="*.jar" erroronmissingdir="false"/>
+                <pathelement location="${deploy.dir}/WEB-INF/classes"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- Compile app after deploying Next Framework (for standalone use) -->
+    <target name="compile-app" depends="deploy-project,compile-app-only">
+    </target>
+
+    <!-- Run embedded Tomcat -->
+    <target name="run" depends="compile-app">
+        <java classname="org.erplite.Main" fork="true">
+            <classpath>
+                <fileset dir="lib" includes="*.jar"/>
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <!-- Clean -->
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="clean-libs">
-        <delete dir="${lib.dir}"/>
-        <delete dir="${provided.dir}"/>
-    </target>
-
-    <target name="resolve">
-        <ivy:retrieve pattern="[conf]/[artifact]-[revision].[ext]" type="jar,bundle"/>
-    </target>
-
-    <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}"
-               destdir="${classes.dir}"
-               classpathref="classpath"
-               source="1.8"
-               target="1.8"
-               encoding="UTF-8"
-               includeantruntime="false"/>
-    </target>
-
-    <target name="run" depends="compile">
-        <java classname="org.erplite.Main" fork="true">
-            <classpath>
-                <path refid="classpath"/>
-                <pathelement location="${classes.dir}"/>
-            </classpath>
-        </java>
+    <target name="clean-all" depends="clean">
+        <delete dir="lib"/>
+        <delete dir="${deploy.dir}/WEB-INF/lib"/>
+        <delete dir="${deploy.dir}/WEB-INF/classes"/>
     </target>
 
 </project>
