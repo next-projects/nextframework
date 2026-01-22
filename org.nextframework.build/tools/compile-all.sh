@@ -151,6 +151,17 @@ get_src_dirs_from_classpath() {
     echo "$src_dirs"
 }
 
+# Copy resources to bin directory
+copy_resources() {
+    local module_dir="$1"
+    local bin_dir="$module_dir/bin"
+    local resources_dir="$module_dir/resources"
+
+    if [ -d "$resources_dir" ]; then
+        cp -r "$resources_dir"/* "$bin_dir/" 2>/dev/null || true
+    fi
+}
+
 # Compile a single module
 compile_module() {
     local module="$1"
@@ -210,6 +221,8 @@ compile_module() {
     fi
 
     if [ $? -eq 0 ]; then
+        # Copy resources (META-INF, etc.) to bin
+        copy_resources "$module_dir"
         info "$module: OK"
         return 0
     else
@@ -274,11 +287,15 @@ compile_modules_together() {
         $(find $all_src_dirs -name "*.java") 2>&1
 
     if [ $? -eq 0 ]; then
-        # Copy classes to each module's bin based on package
+        # Copy classes to each module's bin based on package (exclude META-INF)
         for module in "${modules[@]}"; do
             if [ "$module" != "$first_module" ]; then
-                cp -r "$bin_dir"/* "$PROJECT_ROOT/$module/bin/" 2>/dev/null || true
+                # Copy only class files, not META-INF (to avoid duplicate web-fragments)
+                find "$bin_dir" -name "*.class" -exec cp --parents {} "$PROJECT_ROOT/$module/bin/" \; 2>/dev/null || \
+                    rsync -a --include='*/' --include='*.class' --exclude='*' "$bin_dir/" "$PROJECT_ROOT/$module/bin/" 2>/dev/null || true
             fi
+            # Copy resources (META-INF, etc.) to bin - only for this module's own resources
+            copy_resources "$PROJECT_ROOT/$module"
         done
         info "${modules[*]}: OK"
         return 0
