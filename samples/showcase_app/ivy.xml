@@ -1,0 +1,14 @@
+<ivy-module version="2.0">
+    <info organisation="org.erplite" module="showcase_app"/>
+
+    <configurations>
+        <conf name="provided"/>
+        <conf name="lib"/>
+    </configurations>
+
+    <dependencies>
+        <!-- Embedded Tomcat (9.0.x for javax.servlet compatibility) -->
+        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-core" rev="9.0.+" conf="lib->default"/>
+        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-jasper" rev="9.0.+" conf="lib->default"/>
+    </dependencies>
+</ivy-module>
