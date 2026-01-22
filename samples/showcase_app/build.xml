@@ -1,0 +1,55 @@
+<project name="ERP-lite" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <!-- Next Framework root (passed via -Dnext.root or build.config) -->
+    <property file="build.config"/>
+    <property name="next.root" value="../.."/>
+
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="provided.dir" value="provided"/>
+    <property name="webroot.dir" value="WebContent"/>
+
+    <!-- Ivy settings -->
+    <property name="ivy.settings.file" value="${next.root}/org.nextframework.build/ivysettings.xml"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="*.jar" erroronmissingdir="false"/>
+        <fileset dir="${provided.dir}" includes="*.jar" erroronmissingdir="false"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="clean-libs">
+        <delete dir="${lib.dir}"/>
+        <delete dir="${provided.dir}"/>
+    </target>
+
+    <target name="resolve">
+        <ivy:retrieve pattern="[conf]/[artifact]-[revision].[ext]" type="jar,bundle"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}"
+               destdir="${classes.dir}"
+               classpathref="classpath"
+               source="1.8"
+               target="1.8"
+               encoding="UTF-8"
+               includeantruntime="false"/>
+    </target>
+
+    <target name="run" depends="compile">
+        <java classname="org.erplite.Main" fork="true">
+            <classpath>
+                <path refid="classpath"/>
+                <pathelement location="${classes.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+</project>
