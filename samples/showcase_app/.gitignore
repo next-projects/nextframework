@@ -1,0 +1,11 @@
+# Build outputs
+build/
+lib/
+provided/
+
+# Next Framework runtime (copied by build.sh)
+WebContent/WEB-INF/lib/
+WebContent/WEB-INF/classes/
+
+# Config (machine-specific)
+build.config
