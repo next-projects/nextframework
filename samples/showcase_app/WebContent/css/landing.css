@@ -41,13 +41,14 @@
     color: #fff !important;
     font-weight: 700;
     border: 2px solid #3875cf !important;
-    box-shadow: 0 0 10px #074695;
+    box-shadow: 0 0 14px #074695;
+    transition: background 0.2s, box-shadow 0.2s;
 }
 
 .btn-login:hover {
-    background: linear-gradient(to right, #0648c4, #1f82cc, #0648c4) !important;
+    background: linear-gradient(to right, #1a6ef5, #3aabf7, #1a6ef5) !important;
     color: #fff !important;
-    box-shadow: 0 0 16px #074695;
+    box-shadow: 0 0 20px #2a8de6;
 }
 
 /* App screenshot */
@@ -71,10 +72,27 @@
 .app-screenshot-placeholder {
     position: relative;
     min-height: 280px;
-    background-color: #fff;
-    border: 2px solid #2c4e76;
     border-radius: 0.75rem;
+    background-color: #fff;
+
+    /* Glowing border: corners darker, sides brighter */
+    border: 3px solid transparent;
+    background-image: linear-gradient(#fff, #fff),
+                      linear-gradient(to right, transparent 0%, #3586b6 50%, transparent 100%),
+                      linear-gradient(to bottom, transparent 0%, #3586b6 50%, transparent 100%);
+    background-origin: padding-box, border-box, border-box;
+    background-clip: padding-box, border-box, border-box;
+
     padding: 1rem;
+    box-shadow: 0 0 80px 20px rgba(10, 74, 110, 0.6);
+    transition: box-shadow 0.3s, background-image 0.3s;
+}
+
+.app-screenshot-placeholder:hover {
+    box-shadow: 0 0 110px 35px rgba(53, 134, 182, 0.45);
+    background-image: linear-gradient(#fff, #fff),
+                      linear-gradient(to right, transparent 0%, #3a90bc 50%, transparent 100%),
+                      linear-gradient(to bottom, transparent 0%, #3a90bc 50%, transparent 100%);
 }
 
 .placeholder-logo {
