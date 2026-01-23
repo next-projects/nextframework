@@ -157,9 +157,22 @@ copy_resources() {
     local bin_dir="$module_dir/bin"
     local resources_dir="$module_dir/resources"
 
+    # Copy from resources/ directory
     if [ -d "$resources_dir" ]; then
         cp -r "$resources_dir"/* "$bin_dir/" 2>/dev/null || true
     fi
+
+    # Copy non-Java files from src directories (JSP, properties, xml, etc.)
+    for src_dir in "$module_dir"/src "$module_dir"/*-src; do
+        if [ -d "$src_dir" ]; then
+            find "$src_dir" -type f \( -name "*.jsp" -o -name "*.properties" -o -name "*.xml" -o -name "*.tld" -o -name "*.js" -o -name "*.css" \) 2>/dev/null | while read file; do
+                rel_path="${file#$src_dir/}"
+                target_dir="$bin_dir/$(dirname "$rel_path")"
+                mkdir -p "$target_dir"
+                cp "$file" "$target_dir/" 2>/dev/null || true
+            done
+        fi
+    done
 }
 
 # Compile a single module
