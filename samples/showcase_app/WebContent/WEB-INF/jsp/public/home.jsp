@@ -72,7 +72,6 @@
     <a href="#"><i class="bi bi-linkedin"></i></a>
 </code:method>
 
-<code:method name="footerText">Powered by Next Framework</code:method>
 
 <%-- ==================== PAGE STRUCTURE ==================== --%>
 
@@ -135,9 +134,6 @@
                         <code:call method="footerSocial"/>
                     </div>
                 </div>
-            </div>
-            <div class="text-center mt-3 pt-3 border-top border-secondary border-opacity-25">
-                <small><code:call method="footerText"/></small>
             </div>
         </div>
     </footer>
