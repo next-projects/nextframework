@@ -24,6 +24,8 @@ showcase_app/
 
 **Next Framework:** 3.9.x
 
+**UI Framework:** Bootstrap 5.3.3 (included via `<n:head/>`)
+
 ---
 
 ## Quick Start
@@ -46,7 +48,8 @@ open http://localhost:8080/app
 | Script | Description |
 |--------|-------------|
 | `scripts/build.sh` | Resolve dependencies, compile, and set up Next Framework |
-| `scripts/run.sh [port]` | Start the application (default port: 8080) |
+| `scripts/compile.sh` | Compile app source code only (after initial build) |
+| `scripts/run.sh [--compile] [port]` | Start the application (default port: 8080) |
 | `scripts/clean.sh [--all]` | Clean build outputs |
 
 ---
