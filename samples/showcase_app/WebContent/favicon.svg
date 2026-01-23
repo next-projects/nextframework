@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="4" fill="#1a1a2e"/>
+  <!-- Gray chevron - top half (light) -->
+  <polygon points="2.5,6 11,6 18,16 10,16" fill="#9ca3af"/>
+  <!-- Gray chevron - bottom half (dark) -->
+  <polygon points="10,16 18,16 11,26 2.5,26" fill="#6b7280"/>
+  <!-- Red chevron - top half (light) -->
+  <polygon points="14,6 22,6 29.5,16 21,16" fill="#ef4444"/>
+  <!-- Red chevron - bottom half (dark) -->
+  <polygon points="21,16 29.5,16 22,26 14,26" fill="#b91c1c"/>
+</svg>

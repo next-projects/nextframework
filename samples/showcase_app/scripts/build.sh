@@ -77,7 +77,7 @@ ant -Dnext.root="$NEXT_ROOT" "Deploy Project on Server" > /dev/null 2>&1 || { er
 
 # Step 5: Compile app
 info "Step 5: Compiling app source code..."
-ant -Dnext.root="$NEXT_ROOT" compile-app-only > /dev/null 2>&1 || { error "Failed to compile app"; exit 1; }
+"$SCRIPT_DIR/compile.sh" > /dev/null 2>&1 || { error "Failed to compile app"; exit 1; }
 
 echo ""
 echo "========================================"

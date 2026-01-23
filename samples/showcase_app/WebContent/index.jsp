@@ -1,2 +1,2 @@
 <%@ page language="java" %>
-<% response.sendRedirect(request.getContextPath() + "/next"); %>
+<% response.sendRedirect(request.getContextPath() + "/public/home"); %>

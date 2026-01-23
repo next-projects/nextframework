@@ -1,0 +1,58 @@
+/* ERP-lite Application Styles */
+
+/* Bootstrap theme overrides */
+:root {
+    --bs-primary: #2563eb;
+    --bs-primary-rgb: 37, 99, 235;
+}
+
+/* Landing page */
+.landing-hero {
+    min-height: 80vh;
+}
+
+.landing-title {
+    font-weight: 700;
+}
+
+.landing-tagline {
+    color: var(--bs-primary);
+}
+
+.landing-description {
+    color: var(--bs-secondary-color);
+}
+
+.btn-login {
+    padding: 0.75rem 3rem;
+}
+
+/* Features section */
+.features-section {
+    background-color: var(--bs-light);
+}
+
+.feature-card {
+    background-color: #fff;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+    height: 100%;
+}
+
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    border-radius: 0.5rem;
+    color: var(--bs-primary);
+    font-size: 1.5rem;
+}
+
+/* Footer */
+.landing-footer {
+    background-color: #fff;
+    border-top: 1px solid var(--bs-border-color);
+}
