@@ -304,7 +304,8 @@ compile_modules_together() {
         for module in "${modules[@]}"; do
             if [ "$module" != "$first_module" ]; then
                 # Copy only class files, not META-INF (to avoid duplicate web-fragments)
-                find "$bin_dir" -name "*.class" -exec cp --parents {} "$PROJECT_ROOT/$module/bin/" \; 2>/dev/null || \
+                # Use subshell with cd to make paths relative (cp --parents with absolute paths creates wrong structure)
+                (cd "$bin_dir" && find . -name "*.class" -exec cp --parents {} "$PROJECT_ROOT/$module/bin/" \;) 2>/dev/null || \
                     rsync -a --include='*/' --include='*.class' --exclude='*' "$bin_dir/" "$PROJECT_ROOT/$module/bin/" 2>/dev/null || true
             fi
             # Copy resources (META-INF, etc.) to bin - only for this module's own resources
