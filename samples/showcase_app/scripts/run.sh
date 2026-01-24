@@ -52,12 +52,12 @@ if [ ! -d "WebContent/WEB-INF/classes" ]; then
     exit 1
 fi
 
-# Build classpath (only Tomcat + Main class)
+# Build classpath
 CLASSPATH="WebContent/WEB-INF/classes"
 
-# Add Tomcat embed jars
-if [ -d "lib" ]; then
-    for jar in lib/*.jar; do
+# Add all JARs from WEB-INF/lib
+if [ -d "WebContent/WEB-INF/lib" ]; then
+    for jar in WebContent/WEB-INF/lib/*.jar; do
         [ -f "$jar" ] && CLASSPATH="$CLASSPATH:$jar"
     done
 fi
