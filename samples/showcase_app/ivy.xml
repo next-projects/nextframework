@@ -11,7 +11,13 @@
         <dependency org="org.apache.tomcat.embed" name="tomcat-embed-core" rev="9.0.115" conf="lib->default"/>
         <dependency org="org.apache.tomcat.embed" name="tomcat-embed-jasper" rev="9.0.115" conf="lib->default"/>
 
+        <!-- H2 Database (file-based) -->
+        <dependency org="com.h2database" name="h2" rev="2.2.220" conf="lib->default"/>
+
+        <!-- Flyway (database migrations) -->
+        <dependency org="org.flywaydb" name="flyway-core" rev="9.22.3" conf="lib->default"/>
+
         <!-- JUL to Log4j2 bridge (for Tomcat logs) -->
-        <dependency org="org.apache.logging.log4j" name="log4j-jul" rev="2.17.1" conf="lib->default"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-jul" rev="2.25.3" conf="lib->default"/>
     </dependencies>
 </ivy-module>
