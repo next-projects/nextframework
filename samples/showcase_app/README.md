@@ -26,6 +26,10 @@ showcase_app/
 
 **UI Framework:** Bootstrap 5.3.3 (included via `<n:head/>`)
 
+**Database:** H2 (file-based, auto-configured)
+
+**Schema Migrations:** Flyway (runs on startup)
+
 ---
 
 ## Quick Start
@@ -66,12 +70,34 @@ The build script (`scripts/build.sh`) sets up the project structure for developm
   - `web-fragment.xml` - Servlet configuration (filters, listeners, servlets)
   - `services/` - Service loader configuration
 
-**WEB-INF/lib/** - Dependencies (JARs)
-- Spring Framework JARs
-- Hibernate JARs
-- Other third-party libraries
+**WEB-INF/lib/** - All dependencies (JARs)
+- Embedded Tomcat
+- Spring Framework
+- Hibernate
+- H2 Database
+- Flyway
 
 This structure allows IDE hot-reload of Next Framework classes during development.
+
+---
+
+## Database
+
+Next Framework auto-detects database configuration from `connection.properties` in the classpath. When found, the framework automatically creates a `DataSource` bean and `JdbcTemplate`.
+
+**Configuration file:** `src/connection.properties`
+
+**Database file:** `data/erplite.mv.db` (created on first run)
+
+---
+
+## Schema Migrations (Flyway)
+
+Database schema is managed by Flyway, which runs migrations automatically on application startup.
+
+**Migrations folder:** `src/db/migration/`
+
+Migration files follow Flyway naming convention: `V1__description.sql`, `V2__description.sql`, etc.
 
 ---
 
