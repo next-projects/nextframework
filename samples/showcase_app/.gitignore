@@ -9,3 +9,6 @@ WebContent/WEB-INF/classes/
 
 # Config (machine-specific)
 build.config
+
+# Database
+data/
