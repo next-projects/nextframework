@@ -95,7 +95,7 @@ info "Step 5: Compiling app source code..."
 if $VERBOSE; then
     "$SCRIPT_DIR/compile.sh" || { error "Failed to compile app"; exit 1; }
 else
-    "$SCRIPT_DIR/compile.sh" > /dev/null 2>&1 || { error "Failed to compile app"; exit 1; }
+    COMPILE_OUTPUT=$("$SCRIPT_DIR/compile.sh" 2>&1) || { error "Failed to compile app"; echo "$COMPILE_OUTPUT"; exit 1; }
 fi
 
 echo ""
