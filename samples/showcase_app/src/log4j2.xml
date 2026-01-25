@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!-- Tomcat -->
+        <Logger name="org.apache.catalina" level="INFO"/>
+        <Logger name="org.apache.catalina.startup" level="WARN"/>
+        <Logger name="org.apache.catalina.webresources" level="ERROR"/>
+        <Logger name="org.apache.coyote" level="WARN"/>
+        <Logger name="org.apache.tomcat" level="INFO"/>
+        <Logger name="org.apache.jasper" level="INFO"/>
+        <Logger name="org.apache.jasper.servlet" level="WARN"/>
+
+        <!-- Spring -->
+        <Logger name="org.springframework" level="INFO"/>
+
+        <!-- Hibernate -->
+        <Logger name="org.hibernate" level="INFO"/>
+
+        <!-- App -->
+        <Logger name="org.erplite" level="DEBUG"/>
+        <Logger name="org.nextframework" level="INFO"/>
+
+        <!-- Specific overrides -->
+        <Logger name="org.apache.catalina.loader.WebappClassLoaderBase" level="INFO"/>
+        <Logger name="org.apache.catalina.util.LifecycleBase" level="INFO"/>
+        <Logger name="org.nextframework.controller.NextAnnotationHandlerMapping" level="WARN"/>
+        <Logger name="org.nextframework.core.web.NextFilter" level="WARN"/>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

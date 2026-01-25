@@ -8,7 +8,10 @@
 
     <dependencies>
         <!-- Embedded Tomcat (9.0.x for javax.servlet compatibility) -->
-        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-core" rev="9.0.+" conf="lib->default"/>
-        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-jasper" rev="9.0.+" conf="lib->default"/>
+        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-core" rev="9.0.115" conf="lib->default"/>
+        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-jasper" rev="9.0.115" conf="lib->default"/>
+
+        <!-- JUL to Log4j2 bridge (for Tomcat logs) -->
+        <dependency org="org.apache.logging.log4j" name="log4j-jul" rev="2.17.1" conf="lib->default"/>
     </dependencies>
 </ivy-module>
