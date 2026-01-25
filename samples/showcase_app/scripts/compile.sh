@@ -47,5 +47,5 @@ fi
 export PATH="$ANT_HOME/bin:$PATH"
 
 info "Compiling app source code..."
-ant -Dnext.root="$NEXT_ROOT" compile-app-only > /dev/null 2>&1 || { error "Failed to compile app"; exit 1; }
+COMPILE_OUTPUT=$(ant -Dnext.root="$NEXT_ROOT" compile-app-only 2>&1) || { error "Failed to compile app"; echo "$COMPILE_OUTPUT"; exit 1; }
 info "Compile complete!"
