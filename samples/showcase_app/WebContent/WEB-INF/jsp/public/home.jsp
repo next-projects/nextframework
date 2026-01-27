@@ -25,7 +25,7 @@
         Manage customers, products, inventory, orders, and payments in one place.
         Everything you need to run your business, without the complexity.
     </p>
-    <n:link url="/next" type="BUTTON" class="btn btn-login">Login</n:link>
+    <n:link url="/public/login" type="BUTTON" class="btn btn-login">Login</n:link>
 </code:method>
 
 <code:method name="screenshot">
