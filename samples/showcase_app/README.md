@@ -101,6 +101,29 @@ Migration files follow Flyway naming convention: `V1__description.sql`, `V2__des
 
 ---
 
+## Authentication
+
+The application uses Next Framework's authorization system with session-based authentication.
+
+**Login page:** `/public/login`
+
+**Protected module:** `/app/*` (requires authentication)
+
+**Password hashing:** BCrypt
+
+**Default users:** (all passwords are `admin`)
+- `admin` - Administrator
+- `sales` - Sales User
+- `stock` - Inventory User
+- `viewer` - Viewer
+
+**Key files:**
+- `src/authentication.properties` - Module security configuration
+- `src/org/erplite/controller/LoginController.java` - Login/logout handling
+- `src/org/erplite/dao/AuthorizationDAO.java` - User lookup
+
+---
+
 ## Entities
 
 - User
