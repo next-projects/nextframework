@@ -1,0 +1,35 @@
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-title {
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.login-brand {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.login-card .text-end,
+.login-card .text-end label {
+    text-align: left !important;
+}
