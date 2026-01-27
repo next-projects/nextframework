@@ -6,3 +6,27 @@
     --bs-primary: #2563eb;
     --bs-primary-rgb: 37, 99, 235;
 }
+
+/* App Navbar */
+.app-navbar {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem 0;
+}
+
+.app-navbar .navbar-brand {
+    color: white;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.app-navbar .nav-link {
+    color: rgba(255,255,255,0.8);
+}
+
+.app-navbar .nav-link:hover {
+    color: white;
+}
+
+.user-info {
+    color: rgba(255,255,255,0.9);
+}
