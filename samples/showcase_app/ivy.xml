@@ -22,5 +22,8 @@
 
         <!-- Lombok (reduce boilerplate) -->
         <dependency org="org.projectlombok" name="lombok" rev="1.18.42" conf="lib->default"/>
+
+        <!-- BCrypt for password hashing -->
+        <dependency org="org.mindrot" name="jbcrypt" rev="0.4" conf="lib->default"/>
     </dependencies>
 </ivy-module>
