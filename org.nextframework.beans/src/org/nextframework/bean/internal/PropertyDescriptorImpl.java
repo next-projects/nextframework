@@ -1,8 +1,11 @@
 package org.nextframework.bean.internal;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.bean.annotation.DisplayName;
@@ -20,18 +23,83 @@ public class PropertyDescriptorImpl implements PropertyDescriptor {
 
 	@Override
 	public Annotation[] getAnnotations() {
-		if (internalPropertyDescriptor.getReadMethod() == null) {
-			return new Annotation[0];
+		// Merge annotations from field and getter (field annotations first, getter can override)
+		Map<Class<?>, Annotation> merged = new LinkedHashMap<>();
+
+		Field field = getField();
+		if (field != null) {
+			for (Annotation annotation : field.getAnnotations()) {
+				merged.put(annotation.annotationType(), annotation);
+			}
 		}
-		return internalPropertyDescriptor.getReadMethod().getAnnotations();
+
+		Method readMethod = internalPropertyDescriptor.getReadMethod();
+		if (readMethod != null) {
+			for (Annotation annotation : readMethod.getAnnotations()) {
+				merged.put(annotation.annotationType(), annotation);
+			}
+		}
+
+		return merged.values().toArray(new Annotation[0]);
 	}
 
 	@Override
 	public <E extends Annotation> E getAnnotation(Class<E> annotationClass) {
-		if (internalPropertyDescriptor.getReadMethod() == null) {
+		// Check getter first, then field
+		Method readMethod = internalPropertyDescriptor.getReadMethod();
+		if (readMethod != null) {
+			E annotation = readMethod.getAnnotation(annotationClass);
+			if (annotation != null) {
+				return annotation;
+			}
+		}
+
+		Field field = getField();
+		if (field != null) {
+			return field.getAnnotation(annotationClass);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the field for this property, searching through the class hierarchy.
+	 * Handles private/protected fields by searching declared fields.
+	 */
+	private Field getField() {
+		String fieldName = getName();
+		Class<?> clazz = getOwnerClassSafe();
+		if (clazz == null) {
 			return null;
 		}
-		return internalPropertyDescriptor.getReadMethod().getAnnotation(annotationClass);
+
+		// Search through class hierarchy for the field
+		while (clazz != null && clazz != Object.class) {
+			try {
+				Field field = clazz.getDeclaredField(fieldName);
+				field.setAccessible(true);
+				return field;
+			} catch (NoSuchFieldException e) {
+				clazz = clazz.getSuperclass();
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the owner class without throwing if read method is null.
+	 */
+	private Class<?> getOwnerClassSafe() {
+		Method readMethod = internalPropertyDescriptor.getReadMethod();
+		if (readMethod != null) {
+			return readMethod.getDeclaringClass();
+		}
+		Method writeMethod = internalPropertyDescriptor.getWriteMethod();
+		if (writeMethod != null) {
+			return writeMethod.getDeclaringClass();
+		}
+		return null;
 	}
 
 	@Override

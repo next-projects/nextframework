@@ -29,13 +29,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotate a type or getter method to describe a human readable text for the element being annotated.
- * 
+ * Annotate a type, field, or getter method to describe a human readable text for the element being annotated.
+ *
  * @author rogelgarcia
  * @since 03/10/2005
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD })
 public @interface DisplayName {
 
 	String value();

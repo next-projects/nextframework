@@ -2,6 +2,7 @@ package org.nextframework.view;
 
 import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,9 +61,17 @@ public class TagUtils {
 		class1 = Util.objects.getRealClass(class1);
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
 		while (class1 != null && !class1.equals(Object.class)) {
+			// Check methods
 			Method[] methods = reflectionCache.getMethods(class1);
 			for (Method method : methods) {
 				if (reflectionCache.isAnnotationPresent(method, Id.class)) {
+					return true;
+				}
+			}
+			// Check fields
+			Field[] fields = class1.getDeclaredFields();
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(Id.class)) {
 					return true;
 				}
 			}
@@ -74,10 +83,18 @@ public class TagUtils {
 	public static boolean hasDescriptionProperty(Class<? extends Object> class1) {
 		class1 = Util.objects.getRealClass(class1);
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-		while (!class1.equals(Object.class)) {
+		while (class1 != null && !class1.equals(Object.class)) {
+			// Check methods
 			Method[] methods = reflectionCache.getMethods(class1);
 			for (Method method : methods) {
 				if (reflectionCache.isAnnotationPresent(method, DescriptionProperty.class)) {
+					return true;
+				}
+			}
+			// Check fields
+			Field[] fields = class1.getDeclaredFields();
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(DescriptionProperty.class)) {
 					return true;
 				}
 			}

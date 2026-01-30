@@ -28,6 +28,8 @@ import java.lang.reflect.Method;
 
 public interface ReflectionCache {
 
+	// TODO add methods to cache fields as well (getFields, getDeclaredFields, isAnnotationPresent for Field)
+
 	public Annotation[] getAnnotations(Class<?> clazz);
 
 	public Annotation[] getAnnotations(Method method);

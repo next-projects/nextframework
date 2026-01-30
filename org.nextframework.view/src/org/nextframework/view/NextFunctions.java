@@ -24,6 +24,7 @@
 package org.nextframework.view;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Locale;
@@ -160,12 +161,23 @@ public class NextFunctions {
 
 	private static boolean hasId(Class<? extends Object> class1) {
 		ReflectionCache reflectionCache = ReflectionCacheFactory.getReflectionCache();
-		Class<? extends Object> realClass = Util.objects.getRealClass(class1);
-		Method[] methods = reflectionCache.getMethods(realClass);
-		for (Method method : methods) {
-			if (reflectionCache.isAnnotationPresent(method, Id.class)) {
-				return true;
+		Class<? extends Object> clazz = Util.objects.getRealClass(class1);
+		while (clazz != null && !clazz.equals(Object.class)) {
+			// Check methods
+			Method[] methods = reflectionCache.getMethods(clazz);
+			for (Method method : methods) {
+				if (reflectionCache.isAnnotationPresent(method, Id.class)) {
+					return true;
+				}
 			}
+			// Check fields
+			Field[] fields = clazz.getDeclaredFields();
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(Id.class)) {
+					return true;
+				}
+			}
+			clazz = clazz.getSuperclass();
 		}
 		return false;
 	}
