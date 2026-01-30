@@ -30,11 +30,9 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation que indica que a propriedade é um password. Usado no input para mostrar *
- * Deve ser colocado no metodo get da propriedade
  * @author rogelgarcia
- *
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Password {
 

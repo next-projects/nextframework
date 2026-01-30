@@ -29,12 +29,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation que indica o valor mínimo do campo. Usado na validação
- * Deve ser colocado no metodo get da propriedade
+ * Annotation que indica o valor mínimo do campo. Usado na validação.
  * @author rogelgarcia
- *
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MinValue {
 

@@ -30,15 +30,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation is to be used on properties that describe a bean. For example, supose a class of type Employee, the property that most describe this class 
+ * This annotation is to be used on properties that describe a bean. For example, supose a class of type Employee, the property that most describe this class
  * is the name property. Then this annotation should be used in the name property to tell that the name property is the one that describes the object.<BR>
- * This annotation should be used in the getter method of the property.
- * 
+ *
  * @author rogelgarcia
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@Target({ ElementType.METHOD })
+@Target({ ElementType.METHOD, ElementType.FIELD })
 public @interface DescriptionProperty {
 
 	/**
