@@ -8,9 +8,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/spring-webmvc-4.1.5.RELEASE.jar" sourcepath="lib/src/spring-webmvc-4.1.5.RELEASE-sources.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.web"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.authorization"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.7.4.jar" sourcepath="lib/src/jackson-annotations-2.7.4-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.7.4.jar" sourcepath="lib/src/jackson-core-2.7.4-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.7.4.jar" sourcepath="lib/src/jackson-databind-2.7.4-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-annotations-2.21.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-core-2.21.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-databind-2.21.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jackson-module-model-versioning-1.2.2.jar" sourcepath="lib/src/jackson-module-model-versioning-1.2.2-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="output" path="bin"/>
