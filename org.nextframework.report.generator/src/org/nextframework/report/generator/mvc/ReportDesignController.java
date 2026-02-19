@@ -1,6 +1,5 @@
 package org.nextframework.report.generator.mvc;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,7 +50,6 @@ import org.springframework.util.ClassUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
-import org.xml.sax.SAXException;
 
 public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCustomBean> extends MultiActionController {
 
@@ -78,7 +76,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		return new ClasspathModelAndView("org.nextframework.report.generator.mvc.design1");
 	}
 
-	public ModelAndView selectProperties(ReportDesignModel model) throws SAXException, IOException {
+	public ModelAndView selectProperties(ReportDesignModel model) throws Exception {
 
 		ReportElement reportElement = null;
 		if (model.getReportXml() != null) {
@@ -116,7 +114,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		}
 	}
 
-	public ModelAndView designReport(ReportDesignModel model) throws SAXException, IOException {
+	public ModelAndView designReport(ReportDesignModel model) throws Exception {
 
 		ReportElement reportElement = null;
 		if (model.getReportXml() != null) {
@@ -174,7 +172,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	@Input("editXMLOnError")
-	public ModelAndView editDesignForId() throws SAXException, IOException {
+	public ModelAndView editDesignForId() throws Exception {
 
 		ReportDesignModel model = loadDesignModel();
 
@@ -270,7 +268,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	protected ReportDesignModel loadDesignModel() {
-		CUSTOM_BEAN customBean = loadPersistedReportById(new Integer(getParameter("id")));
+		CUSTOM_BEAN customBean = loadPersistedReportById(Integer.parseInt(getParameter("id")));
 		ReportDesignModel model = new ReportDesignModel();
 		model.setId(customBean.getId());
 		model.setReportXml(customBean.getXml());
