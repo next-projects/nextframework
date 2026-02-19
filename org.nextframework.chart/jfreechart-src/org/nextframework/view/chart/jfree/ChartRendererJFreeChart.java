@@ -38,8 +38,6 @@ import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.sun.imageio.plugins.jpeg.JPEGImageWriter;
-
 public class ChartRendererJFreeChart implements ChartRenderer {
 
 	public static String TYPE = "JFREECHART";
@@ -222,7 +220,7 @@ public class ChartRendererJFreeChart implements ChartRenderer {
 
 		try {
 			// Image writer 
-			JPEGImageWriter imageWriter = (JPEGImageWriter) ImageIO.getImageWritersBySuffix("jpeg").next();
+			ImageWriter imageWriter = ImageIO.getImageWritersBySuffix("jpeg").next();
 			ImageOutputStream ios = ImageIO.createImageOutputStream(new File(file));
 			imageWriter.setOutput(ios);
 
