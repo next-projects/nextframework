@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="google-src"/>
 	<classpathentry kind="src" path="jfreechart-src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.jsbuilder"/>
 	<classpathentry kind="lib" path="lib/batik-awt-util-1.6-1.jar"/>
 	<classpathentry kind="lib" path="lib/batik-dom-1.6-1.jar"/>

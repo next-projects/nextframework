@@ -38,10 +38,9 @@ import org.nextframework.report.renderer.jasper.builder.ChartDrawRenderer;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
 import org.nextframework.service.ServiceFactory;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.sun.imageio.plugins.png.PNGMetadata;
 
 import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
@@ -428,11 +427,11 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 						ImageReader imageReader = ImageIO.getImageReadersByFormatName("png").next();
 						imageReader.setInput(ImageIO.createImageInputStream(new ByteArrayInputStream(imageData)), true);
 						IIOMetadata metadata = imageReader.getImageMetadata(0);
-						com.sun.imageio.plugins.png.PNGMetadata pngmeta = (PNGMetadata) metadata;
-						NodeList childNodes = pngmeta.getStandardTextNode().getChildNodes();
+						Element root = (Element) metadata.getAsTree("javax_imageio_png_1.0");
+						NodeList textEntries = root.getElementsByTagName("tEXtEntry");
 
-						for (int i = 0; i < childNodes.getLength(); i++) {
-							Node node = childNodes.item(i);
+						for (int i = 0; i < textEntries.getLength(); i++) {
+							Node node = textEntries.item(i);
 							String keyword = node.getAttributes().getNamedItem("keyword").getNodeValue();
 							String value = node.getAttributes().getNamedItem("value").getNodeValue();
 							if ("chart-google-data".equals(keyword)) {

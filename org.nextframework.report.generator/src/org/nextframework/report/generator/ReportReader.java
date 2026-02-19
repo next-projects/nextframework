@@ -1,11 +1,13 @@
 package org.nextframework.report.generator;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.nextframework.exception.NextException;
 import org.nextframework.report.generator.chart.ChartElement;
@@ -28,9 +30,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 public class ReportReader {
 
@@ -44,11 +43,10 @@ public class ReportReader {
 		this.in = in;
 	}
 
-	public ReportElement getReportElement() throws SAXException, IOException {
+	public ReportElement getReportElement() throws Exception {
 
-		DOMParser domParser = new DOMParser();
-		domParser.parse(new InputSource(in));
-		Document document = domParser.getDocument();
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document document = builder.parse(new InputSource(in));
 		Node reportNode = getReportNode(document);
 
 		Node dataNode = getChild(reportNode, "data");
