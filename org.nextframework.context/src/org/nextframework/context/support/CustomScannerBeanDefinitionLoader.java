@@ -32,6 +32,9 @@ public abstract class CustomScannerBeanDefinitionLoader implements BeanDefinitio
 
 	@Override
 	public void loadBeanDefinitions(AbstractApplicationContext applicationContext, DefaultListableBeanFactory beanFactory) {
+		if (applicationScanPaths == null || applicationScanPaths.length == 0) {
+			return;
+		}
 		List<BeanDefinitionHolder> beansList = new ArrayList<BeanDefinitionHolder>();
 		ClassPathBeanDefinitionScanner scanner = createScannerForCustomReader(applicationContext, beanFactory, beansList);
 		applyFilters(scanner);

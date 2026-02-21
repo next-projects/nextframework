@@ -1,6 +1,7 @@
 package org.nextframework.context;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -123,48 +124,69 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 
 	public String[] findScanPaths() {
 		String classpathProperty = System.getProperty(JAVA_CLASS_PATH);
-		String[] paths = classpathProperty.split("[;]{1}");
+		String[] paths = classpathProperty.split(java.util.regex.Pattern.quote(File.pathSeparator));
 		Set<String> packages = new HashSet<String>();
 		for (String pathname : paths) {
 			File file = new File(pathname);
 			if (file.isDirectory()) {
+				if (isIgnoredClasspathDirectory(pathname)) {
+					continue;
+				}
 				packages.addAll(searchPackages(null, file));
 			}
 		}
 		return packages.toArray(new String[packages.size()]);
 	}
 
-	private Collection<? extends String> searchPackages(String basePackage, File file) {
+	/**
+	 * Checks if a classpath directory belongs to the framework itself.
+	 * Framework module directories (e.g. org.nextframework.context/bin) only
+	 * contain org.nextframework packages which are always excluded from scanning,
+	 * so scanning them is unnecessary.
+	 */
+	private boolean isIgnoredClasspathDirectory(String pathname) {
+		String normalized = pathname.replace('\\', '/');
+		String[] segments = normalized.split("/");
+		for (String segment : segments) {
+			if (segment.startsWith("org.nextframework")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static final Set<String> RECURSE_PREFIXES = new HashSet<String>();
+	private static final Set<String> IGNORED_PACKAGES = new HashSet<String>();
+
+	static {
+		RECURSE_PREFIXES.add("org");
+		RECURSE_PREFIXES.add("com");
+		RECURSE_PREFIXES.add("net");
+		IGNORED_PACKAGES.add("org.nextframework");
+		IGNORED_PACKAGES.add("org.stjs");
+		IGNORED_PACKAGES.add("org.eclipse");
+	}
+
+	private Collection<? extends String> searchPackages(String basePackage, File dir) {
 		List<String> packages = new ArrayList<String>();
-		File[] files = file.listFiles();
-		if (files != null) {
-			for (File subdir : files) {
-				if (subdir.isDirectory()) {
-					String packageName = subdir.getName();
-					if (basePackage != null) {
-						packageName = basePackage + "." + packageName;
-					}
-					if (packageName.startsWith(".")) {
-						continue;
-					}
-					if (packageName.startsWith("META-INF")) {
-						continue;
-					}
-					if (packageName.equals("org") || packageName.equals("com") || packageName.equals("net")) {
-						packages.addAll(searchPackages(packageName, subdir));
-						continue;
-					}
-					if (packageName.equals("org.nextframework")) { // ignore org.nextframework
-						continue;
-					}
-					if (packageName.equals("org.stjs")) { // ignore 
-						continue;
-					}
-					if (packageName.equals("org.eclipse")) { // ignore 
-						continue;
-					}
-					packages.add(packageName);
+		String[] children = dir.list();
+		if (children != null) {
+			for (String child : children) {
+				if (!new File(dir, child).isDirectory()) {
+					continue;
 				}
+				String packageName = basePackage != null ? basePackage + "." + child : child;
+				if (packageName.startsWith(".") || packageName.startsWith("META-INF")) {
+					continue;
+				}
+				if (RECURSE_PREFIXES.contains(packageName)) {
+					packages.addAll(searchPackages(packageName, new File(dir, child)));
+					continue;
+				}
+				if (IGNORED_PACKAGES.contains(packageName)) {
+					continue;
+				}
+				packages.add(packageName);
 			}
 		}
 		return packages;
