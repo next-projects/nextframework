@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.nextframework.authorization.Authorization;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.standard.RequestContext;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class AjaxCallbackSupport implements AjaxCallbackController {
 

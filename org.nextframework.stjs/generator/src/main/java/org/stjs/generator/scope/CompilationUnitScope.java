@@ -16,7 +16,6 @@
 package org.stjs.generator.scope;
 
 import static org.stjs.generator.type.TypeWrappers.wrap;
-import japa.parser.ast.expr.NameExpr;
 
 import java.util.Set;
 
@@ -26,6 +25,8 @@ import org.stjs.generator.type.ClassWrapper;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
+
+import japa.parser.ast.expr.NameExpr;
 
 public class CompilationUnitScope extends AbstractScope {
 

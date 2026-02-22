@@ -4,8 +4,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Locale;
 
-import javax.persistence.Entity;
-
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
@@ -17,6 +15,8 @@ import org.nextframework.report.definition.elements.style.ReportAlignment;
 import org.nextframework.report.generator.data.ResolvableValueConverter;
 import org.nextframework.types.Money;
 import org.nextframework.util.Util;
+
+import jakarta.persistence.Entity;
 
 public abstract class RepositoryReportLayoutBuilder extends LayoutReportBuilder {
 

@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.persistence.Transient;
-
 import org.nextframework.authorization.Permission;
+
+import jakarta.persistence.Transient;
 
 public abstract class AbstractPermission implements Permission {
 

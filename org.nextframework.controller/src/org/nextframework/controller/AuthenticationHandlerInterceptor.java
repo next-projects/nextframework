@@ -2,9 +2,6 @@ package org.nextframework.controller;
 
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.authorization.AuthenticationController;
@@ -16,6 +13,9 @@ import org.nextframework.util.Util;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class AuthenticationHandlerInterceptor implements HandlerInterceptor {
 

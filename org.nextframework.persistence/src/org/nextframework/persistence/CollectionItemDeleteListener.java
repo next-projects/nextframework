@@ -14,4 +14,5 @@ public interface CollectionItemDeleteListener<E> {
 	 * @param chain
 	 */
 	public void onDelete(E object, SaveOrUpdateStrategyChain chain);
+
 }

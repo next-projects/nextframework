@@ -19,7 +19,5 @@ public class QueryBuilderException extends PersistenceException {
 	public QueryBuilderException(Throwable cause) {
 		super(cause);
 	}
-	
-	
 
 }

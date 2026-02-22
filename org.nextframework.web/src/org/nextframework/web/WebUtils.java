@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.DefaultWebRequestContext;
 import org.nextframework.core.web.NextWeb;
@@ -17,6 +15,8 @@ import org.nextframework.exception.ApplicationException;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.service.UrlRewriter;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author rogelgarcia | marcusabreu

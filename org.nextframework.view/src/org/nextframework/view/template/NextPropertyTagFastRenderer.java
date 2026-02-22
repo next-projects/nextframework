@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import javax.persistence.Id;
-
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.util.Util;
@@ -13,6 +11,8 @@ import org.nextframework.view.ColumnTag;
 import org.nextframework.view.DataGridTag;
 import org.nextframework.view.DataGridTag.Status;
 import org.nextframework.view.OutputTag;
+
+import jakarta.persistence.Id;
 
 public class NextPropertyTagFastRenderer implements PropertyTagFastRenderer {
 

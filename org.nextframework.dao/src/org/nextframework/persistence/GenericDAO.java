@@ -35,10 +35,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -71,6 +67,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 
 /**
  * Generic implementation of a DataAccessObject. 
@@ -742,7 +743,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 					}
 				}
 
-				session.delete(bean2);
+				session.remove(bean2);
 				if (autoManageFileProperties() && fileDAO != null) {
 					for (PropertyDescriptor pd : fileProperties) {
 						File fileToDelete = null;

@@ -15,10 +15,10 @@
  */
 package org.stjs.generator.visitor;
 
-import japa.parser.ast.Node;
-
 import org.stjs.generator.GenerationContext;
 import org.stjs.generator.ast.ASTNodeData;
+
+import japa.parser.ast.Node;
 
 /**
  * This visitor go to every node and sets it's parent

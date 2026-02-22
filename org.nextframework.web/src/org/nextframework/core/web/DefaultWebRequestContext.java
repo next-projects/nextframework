@@ -31,10 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.nextframework.context.UserPersistentDataProvider;
 import org.nextframework.core.standard.Message;
 import org.nextframework.core.standard.MessageType;
@@ -47,6 +43,10 @@ import org.springframework.context.i18n.TimeZoneAwareLocaleContext;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.LocaleContextResolver;
 import org.springframework.web.servlet.LocaleResolver;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * @author rogelgarcia | marcusabreu

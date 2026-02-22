@@ -6,17 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserType;
 import org.nextframework.types.Cep;
 import org.nextframework.types.TypeUtils;
 
-public class CepUserType implements UserType {
+public class CepUserType implements UserType<Cep> {
 
 	@Override
-	public int[] sqlTypes() {
-		return new int[] { Types.VARCHAR };
+	public int getSqlType() {
+		return Types.VARCHAR;
 	}
 
 	@Override
@@ -24,8 +23,9 @@ public class CepUserType implements UserType {
 		return Cep.class;
 	}
 
-	public boolean equals(Object x, Object y) throws HibernateException {
-		if ((x == null || ((Cep) x).getValue() == null) && (y == null || ((Cep) y).getValue() == null)) {
+	@Override
+	public boolean equals(Cep x, Cep y) {
+		if ((x == null || x.getValue() == null) && (y == null || y.getValue() == null)) {
 			return true;
 		} else if (x == null || y == null) {
 			return false;
@@ -34,24 +34,23 @@ public class CepUserType implements UserType {
 	}
 
 	@Override
-	public int hashCode(Object x) throws HibernateException {
+	public int hashCode(Cep x) {
 		return x.hashCode();
 	}
 
 	@Override
-	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-		String value = rs.getString(names[0]);
+	public Cep nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
+		String value = rs.getString(position);
 		if (TypeUtils.isEmpty(value)) {
-			//return new Cep(); //Pq retornava vazio?
 			return null;
 		}
 		return new Cep(value);
 	}
 
 	@Override
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-		if (value instanceof Cep) {
-			String value2 = ((Cep) value).getValue();
+	public void nullSafeSet(PreparedStatement st, Cep value, int index, WrapperOptions options) throws SQLException {
+		if (value != null) {
+			String value2 = value.getValue();
 			if (TypeUtils.isEmpty(value2)) {
 				st.setNull(index, Types.VARCHAR);
 			} else {
@@ -63,7 +62,7 @@ public class CepUserType implements UserType {
 	}
 
 	@Override
-	public Object deepCopy(Object value) throws HibernateException {
+	public Cep deepCopy(Cep value) {
 		return value;
 	}
 
@@ -72,15 +71,18 @@ public class CepUserType implements UserType {
 		return false;
 	}
 
-	public Serializable disassemble(Object value) throws HibernateException {
-		return ((Cep) value).getValue();
+	@Override
+	public Serializable disassemble(Cep value) {
+		return value != null ? value.getValue() : null;
 	}
 
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return new Cep((String) cached);
+	@Override
+	public Cep assemble(Serializable cached, Object owner) {
+		return cached != null ? new Cep((String) cached) : null;
 	}
 
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	@Override
+	public Cep replace(Cep original, Cep target, Object owner) {
 		return original;
 	}
 

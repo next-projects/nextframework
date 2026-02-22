@@ -11,15 +11,15 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration.Dynamic;
-import javax.servlet.annotation.HandlesTypes;
-
 import org.nextframework.controller.NextDispatcherServlet;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.web.servlet.mvc.Controller;
+
+import jakarta.servlet.ServletContainerInitializer;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration.Dynamic;
+import jakarta.servlet.annotation.HandlesTypes;
 
 @HandlesTypes(Controller.class)
 public class ControllerConfigInitializer implements ServletContainerInitializer {

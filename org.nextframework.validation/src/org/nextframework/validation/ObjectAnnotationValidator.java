@@ -28,8 +28,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
@@ -42,6 +40,8 @@ import org.springframework.validation.Validator;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Valida um objeto baseado nas suas anotações

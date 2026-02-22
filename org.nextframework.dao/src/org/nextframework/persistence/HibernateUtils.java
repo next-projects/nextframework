@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -43,32 +44,21 @@ public class HibernateUtils {
 
 	public static String getIdAttribute(HibernateTemplate hibernateTemplate, Class<? extends Object> class1) {
 		class1 = Util.objects.getRealClass(class1);
-		return hibernateTemplate.getSessionFactory().getClassMetadata(class1).getIdentifierPropertyName();
+		return PersistenceUtils.getIdPropertyName(class1, hibernateTemplate.getSessionFactory());
 	}
 
 	public static String getEntityName(HibernateTemplate hibernateTemplate, Class<? extends Object> class1) {
 		class1 = Util.objects.getRealClass(class1);
-		return hibernateTemplate.getSessionFactory().getClassMetadata(class1).getEntityName();
+		return hibernateTemplate.getSessionFactory().getMetamodel().entity(class1).getName();
 	}
 
 	@SuppressWarnings("all")
 	public static Class getRealClass(Object o) {
-		Class eClazz = o.getClass();
-		if (o instanceof HibernateProxy) {
-			HibernateProxy p = (HibernateProxy) o;
-			eClazz = p.getHibernateLazyInitializer().getPersistentClass();
-		}
-		return eClazz;
+		return Hibernate.getClass(o);
 	}
 
 	public static boolean isLazy(Object value) {
-		if (value instanceof HibernateProxy) {
-			LazyInitializer hibernateLazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
-			return hibernateLazyInitializer.isUninitialized();
-		} else if (value instanceof PersistentCollection) {
-			return !((PersistentCollection) value).wasInitialized();
-		}
-		return false;
+		return !Hibernate.isInitialized(value);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,13 +67,15 @@ public class HibernateUtils {
 			LazyInitializer hibernateLazyInitializer = ((HibernateProxy) value).getHibernateLazyInitializer();
 			if (hibernateLazyInitializer.isUninitialized()) {
 				try {
-					Class<?> superclass = value.getClass().getSuperclass();
-					Serializable identifier = hibernateLazyInitializer.getIdentifier();
+					Class<?> superclass = Hibernate.getClass(value);
+					Serializable identifier = (Serializable) hibernateLazyInitializer.getIdentifier();
 
 					value = loadValue(value, superclass, identifier);
 				} catch (IllegalArgumentException e) {
 				} catch (SecurityException e) {
 				}
+			} else {
+				value = (E) hibernateLazyInitializer.getImplementation();
 			}
 		} else if (value instanceof PersistentCollection) {
 			try {
@@ -92,7 +84,9 @@ public class HibernateUtils {
 					Object owner = collection.getOwner();
 					String role = collection.getRole();
 					value = (E) DAOUtils.getDAOForClass(owner.getClass()).loadCollection(owner, role.substring(role.lastIndexOf('.') + 1));
-					System.out.println("COLECAO LAZY " + owner.getClass().getSimpleName() + "." + role);
+					if (log.isDebugEnabled()) {
+						log.debug("COLECAO LAZY " + owner.getClass().getSimpleName() + "." + role);
+					}
 				}
 			} catch (Exception e) {
 				//se nao conseguir carregar o valor lazy, não fazer nada

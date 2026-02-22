@@ -3,11 +3,11 @@ package org.nextframework.report.renderer.jasper.builder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import net.sf.jasperreports.engine.design.JRDesignElement;
-import net.sf.jasperreports.engine.design.JasperDesign;
-
 import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.elements.ReportItem;
+
+import net.sf.jasperreports.engine.design.JRDesignElement;
+import net.sf.jasperreports.engine.design.JasperDesign;
 
 public class MappedJasperDesign {
 
