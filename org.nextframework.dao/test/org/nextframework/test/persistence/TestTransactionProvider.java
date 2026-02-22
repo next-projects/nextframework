@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.nextframework.persistence.HibernateTransactionTemplateSessionProvider;
 import org.springframework.orm.hibernate4.HibernateTemplate;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.jpa.hibernate.HibernateTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 public class TestTransactionProvider extends TestSaveOrUpdateStrategy {

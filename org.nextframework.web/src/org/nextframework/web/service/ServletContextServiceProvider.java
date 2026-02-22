@@ -2,10 +2,10 @@ package org.nextframework.web.service;
 
 import java.lang.reflect.Array;
 
-import javax.servlet.ServletContext;
-
 import org.nextframework.service.ServiceProvider;
 import org.nextframework.web.WebContext;
+
+import jakarta.servlet.ServletContext;
 
 public class ServletContextServiceProvider implements ServiceProvider {
 

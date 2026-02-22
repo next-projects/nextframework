@@ -13,18 +13,22 @@ public class JSCollectionsTest {
 
 	@Test
 	public void testArrayImpl() {
+
 		Array<Integer> array = JSCollections.$array(1, 2, 3);
 		assertNotNull(array);
 		assertEquals(3, array.$length());
 		assertEquals(2, (int) array.$get(1));
 		assertNull(array.$get(3));// null when out of bound
 		array.$set(1, 4);
+
 		// 1,4,3
 		assertEquals(4, (int) array.$get(1));
 		array.push(5);
+
 		// 1,4,3,5
 		assertEquals(4, array.$length());
 		Array<Integer> removed = array.splice(0, 2, 10);
+
 		// 10, 3,5
 		assertEquals(2, removed.$length());
 		assertEquals(4, (int) removed.$get(1));
@@ -42,10 +46,12 @@ public class JSCollectionsTest {
 		array.$length(3);
 		assertEquals(3, array.$length());
 		assertNull(array.$get(4));
+
 	}
 
 	@Test
 	public void testMapImpl() {
+
 		Map<String, Integer> map = JSCollections.$map("a", 1);
 		assertNotNull(map);
 		assertEquals(1, (int) map.$get("a"));
@@ -61,4 +67,5 @@ public class JSCollectionsTest {
 		assertNull(map.$get("b"));
 
 	}
+
 }

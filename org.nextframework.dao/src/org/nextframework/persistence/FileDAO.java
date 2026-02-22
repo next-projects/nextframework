@@ -32,13 +32,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.persistence.Transient;
-
 import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
 import org.nextframework.types.File;
 import org.nextframework.util.Util;
 import org.springframework.util.ClassUtils;
+
+import jakarta.persistence.Transient;
 
 public class FileDAO<BEAN extends File> extends GenericDAO<BEAN> {
 

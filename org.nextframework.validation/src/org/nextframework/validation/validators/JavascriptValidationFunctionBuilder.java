@@ -31,11 +31,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-
 import org.nextframework.validation.JavascriptValidationItem;
 import org.nextframework.validation.PropertyValidator;
 import org.nextframework.validation.ValidatorRegistry;
+
+import jakarta.servlet.ServletContext;
 
 /**
  * @author rogelgarcia | marcusabreu

@@ -23,16 +23,10 @@
  */
 package org.nextframework.compilation;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,7 +73,7 @@ public class JavaSourceCompiler {
 			List<JavaFileObject> compilationUnits = new ArrayList<JavaFileObject>(Arrays.asList(file));
 
 			JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-			final StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
+			StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
 			memoryManager = new MemoryJavaOutputFileManager(standardFileManager, compiledFiles);
 
 			DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
@@ -126,18 +120,9 @@ public class JavaSourceCompiler {
 	}
 
 	private static List<String> getCompilerOptions() {
-		List<String> options = new ArrayList<String>();
+		List<String> options = new ArrayList<>();
 		options.add("-classpath");
-		StringBuilder sb = new StringBuilder();
-		URLClassLoader urlClassLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
-		for (URL url : urlClassLoader.getURLs()) {
-			try {
-				sb.append(URLDecoder.decode(url.getFile(), StandardCharsets.UTF_8.name())).append(File.pathSeparator);
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		options.add(sb.toString());
+		options.add(System.getProperty("java.class.path"));
 		return options;
 	}
 

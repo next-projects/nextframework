@@ -3,7 +3,7 @@ package org.nextframework.web.context;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 class WebInitUtils {
 

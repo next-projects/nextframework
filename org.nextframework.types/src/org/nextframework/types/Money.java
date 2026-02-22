@@ -36,15 +36,14 @@ import java.text.DecimalFormat;
 import java.util.Formattable;
 import java.util.Formatter;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserType;
 import org.nextframework.summary.aggregator.Incrementable;
 
 /**
- * @@author Fabrício
+ * @author Fabrício
  */
-public class Money extends Number implements Serializable, Comparable<Object>, UserType, Incrementable<Money>, Formattable {
+public class Money extends Number implements Serializable, Comparable<Object>, UserType<Money>, Incrementable<Money>, Formattable {
 
 	// private static final Log log = LogFactory.getLog(Money.class);
 
@@ -88,11 +87,11 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 	}
 
 	public Money(long value, boolean multipliedBy100) {
-		this(new Long(value), multipliedBy100);
+		this(Long.valueOf(value), multipliedBy100);
 	}
 
 	public Money(double value) {
-		this(new Double(value), false);
+		this(Double.valueOf(value), false);
 	}
 
 	public Money(Double value) {
@@ -135,6 +134,7 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 
 	// -----------------------------------------------
 
+	@Override
 	public String toString() {
 		// return new DecimalFormat("#,##0.00").format(value);
 		return value != null ? value.toString() : "";
@@ -149,14 +149,17 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 	 * este método para comparar valores. Neste caso, use o método
 	 * compareTo(Object object).
 	 */
+	@Override
 	public boolean equals(Object object) {
 		return this == object;
 	}
 
+	@Override
 	public int hashCode() {
 		return value.hashCode();
 	}
 
+	@Override
 	public int compareTo(Object object) {
 		if (object instanceof Money) {
 			return -((Money) object).value.compareTo(value);
@@ -171,29 +174,34 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 
 	// -----------------------------------------------
 
-	public int[] sqlTypes() {
-		return new int[] { Types.BIGINT };
+	@Override
+	public int getSqlType() {
+		return Types.BIGINT;
 	}
 
+	@Override
 	public Class<Money> returnedClass() {
 		return Money.class;
 	}
 
-	public boolean equals(Object x, Object y) throws HibernateException {
+	@Override
+	public boolean equals(Money x, Money y) {
 		if (x != null) {
-			return ((Money) x).compareTo(y) == 0;
+			return x.compareTo(y) == 0;
 		} else if (x == null && y == null) {
 			return true;
 		}
 		return false;
 	}
 
-	public int hashCode(Object x) throws HibernateException {
-		return x.hashCode();
+	@Override
+	public int hashCode(Money x) {
+		return x != null ? x.hashCode() : 0;
 	}
 
-	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-		Object obj = rs.getObject(names[0]);
+	@Override
+	public Money nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
+		Object obj = rs.getObject(position);
 		if (obj == null) {
 			return null;
 		}
@@ -206,35 +214,41 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 		return new Money(value, true);
 	}
 
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-		if (value instanceof Money) {
-			if (((Money) value).isNull()) {
+	@Override
+	public void nullSafeSet(PreparedStatement st, Money value, int index, WrapperOptions options) throws SQLException {
+		if (value != null) {
+			if (value.isNull()) {
 				st.setNull(index, Types.BIGINT);
 			} else {
-				st.setLong(index, ((Money) value).toLong());
+				st.setLong(index, value.toLong());
 			}
 		} else {
 			st.setNull(index, Types.BIGINT);
 		}
 	}
 
-	public Object deepCopy(Object value) throws HibernateException {
+	@Override
+	public Money deepCopy(Money value) {
 		return value;
 	}
 
+	@Override
 	public boolean isMutable() {
 		return false;
 	}
 
-	public Serializable disassemble(Object value) throws HibernateException {
-		return (Money) value;
+	@Override
+	public Serializable disassemble(Money value) {
+		return value;
 	}
 
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return cached;
+	@Override
+	public Money assemble(Serializable cached, Object owner) {
+		return (Money) cached;
 	}
 
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	@Override
+	public Money replace(Money original, Money target, Object owner) {
 		return original;
 	}
 
@@ -281,7 +295,7 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Integer(300).compareTo(new Integer(200)));
+		System.out.println(Integer.valueOf(300).compareTo(Integer.valueOf(200)));
 		System.out.println(new Money("300").compareTo(new Money("200")));
 	}
 

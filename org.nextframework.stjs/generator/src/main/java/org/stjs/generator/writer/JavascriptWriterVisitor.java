@@ -22,6 +22,38 @@ import static org.stjs.generator.ast.ASTNodeData.resolvedMethod;
 import static org.stjs.generator.ast.ASTNodeData.resolvedType;
 import static org.stjs.generator.ast.ASTNodeData.resolvedVariable;
 import static org.stjs.generator.ast.ASTNodeData.scope;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import org.stjs.generator.GenerationContext;
+import org.stjs.generator.GeneratorConstants;
+import org.stjs.generator.JavascriptGenerationException;
+import org.stjs.generator.ast.ASTNodeData;
+import org.stjs.generator.ast.SourcePosition;
+import org.stjs.generator.name.DefaultNameProvider;
+import org.stjs.generator.name.NameProvider;
+import org.stjs.generator.scope.ClassScope;
+import org.stjs.generator.scope.Scope;
+import org.stjs.generator.scope.ScopeBuilder;
+import org.stjs.generator.type.ClassWrapper;
+import org.stjs.generator.type.FieldWrapper;
+import org.stjs.generator.type.MethodWrapper;
+import org.stjs.generator.type.ParameterizedTypeWrapper;
+import org.stjs.generator.type.TypeWrapper;
+import org.stjs.generator.type.TypeWrappers;
+import org.stjs.generator.utils.ClassUtils;
+import org.stjs.generator.utils.NodeUtils;
+import org.stjs.generator.utils.Option;
+import org.stjs.generator.utils.PreConditions;
+import org.stjs.generator.variable.Variable;
+import org.stjs.javascript.Array;
+import org.stjs.javascript.annotation.GlobalScope;
+
 import japa.parser.ast.BlockComment;
 import japa.parser.ast.Comment;
 import japa.parser.ast.CompilationUnit;
@@ -109,37 +141,6 @@ import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 import japa.parser.ast.visitor.VoidVisitor;
-
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import org.stjs.generator.GenerationContext;
-import org.stjs.generator.GeneratorConstants;
-import org.stjs.generator.JavascriptGenerationException;
-import org.stjs.generator.ast.ASTNodeData;
-import org.stjs.generator.ast.SourcePosition;
-import org.stjs.generator.name.DefaultNameProvider;
-import org.stjs.generator.name.NameProvider;
-import org.stjs.generator.scope.ClassScope;
-import org.stjs.generator.scope.Scope;
-import org.stjs.generator.scope.ScopeBuilder;
-import org.stjs.generator.type.ClassWrapper;
-import org.stjs.generator.type.FieldWrapper;
-import org.stjs.generator.type.MethodWrapper;
-import org.stjs.generator.type.ParameterizedTypeWrapper;
-import org.stjs.generator.type.TypeWrapper;
-import org.stjs.generator.type.TypeWrappers;
-import org.stjs.generator.utils.ClassUtils;
-import org.stjs.generator.utils.NodeUtils;
-import org.stjs.generator.utils.Option;
-import org.stjs.generator.utils.PreConditions;
-import org.stjs.generator.variable.Variable;
-import org.stjs.javascript.Array;
-import org.stjs.javascript.annotation.GlobalScope;
 
 /**
  * This class visits the AST corresponding to a Java file and generates the corresponding Javascript code. It presumes

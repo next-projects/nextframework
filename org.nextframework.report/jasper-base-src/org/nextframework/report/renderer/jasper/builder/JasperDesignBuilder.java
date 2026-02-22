@@ -2,9 +2,9 @@ package org.nextframework.report.renderer.jasper.builder;
 
 import java.awt.Color;
 
-import net.sf.jasperreports.engine.design.JasperDesign;
-
 import org.nextframework.report.definition.ReportDefinition;
+
+import net.sf.jasperreports.engine.design.JasperDesign;
 
 public interface JasperDesignBuilder {
 

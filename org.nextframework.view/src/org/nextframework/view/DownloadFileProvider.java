@@ -8,10 +8,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.controller.resource.Resource;
 import org.nextframework.core.standard.Next;
@@ -23,6 +19,10 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class DownloadFileProvider {
 

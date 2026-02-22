@@ -25,7 +25,7 @@ package org.nextframework.report;
 
 import java.io.InputStream;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * @author rogelgarcia

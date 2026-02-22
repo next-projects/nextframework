@@ -1,11 +1,11 @@
 package org.nextframework.web.context;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
 import org.springframework.context.ApplicationContextException;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
 
 public class NextContextLoaderListener extends org.springframework.web.context.ContextLoaderListener {
 

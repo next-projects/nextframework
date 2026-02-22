@@ -25,7 +25,7 @@ package org.nextframework.rtf;
 
 import java.io.InputStream;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 public class RTFNameResolverImpl implements RTFNameResolver {
 

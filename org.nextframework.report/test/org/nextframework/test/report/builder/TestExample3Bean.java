@@ -2,13 +2,11 @@ package org.nextframework.test.report.builder;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.nextframework.chart.Chart;
-import org.nextframework.chart.ChartData;
 import org.nextframework.chart.ChartDataBuilder;
 import org.nextframework.chart.ChartType;
 import org.nextframework.view.chart.jfree.ChartRendererJFreeChart;

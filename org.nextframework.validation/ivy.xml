@@ -5,6 +5,6 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
-		<dependency org="commons-validator"		name="commons-validator"	rev="1.4.1"		conf="lib" />
+		<dependency org="commons-validator" name="commons-validator"	rev="1.10.1" conf="lib" />
 	</dependencies>
 </ivy-module>

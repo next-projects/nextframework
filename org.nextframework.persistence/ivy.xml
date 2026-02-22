@@ -5,18 +5,20 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
+	
 		<!-- Compile time dependencies -->
-		<dependency org="org.hibernate" 					name="hibernate-core" 			rev="4.3.8.Final"	conf="lib"/>
-		<dependency org="org.hibernate.javax.persistence" 	name="hibernate-jpa-2.1-api" 	rev="1.0.0.Final"	conf="lib"/>
+		<dependency org="org.hibernate.orm" 					name="hibernate-core" 					rev="7.2.4.Final"	conf="lib"/>
+		<dependency org="jakarta.persistence" 				name="jakarta.persistence-api"			rev="3.2.0"			conf="lib"/>
+		<dependency org="org.springframework" 				name="spring-orm" 						rev="7.0.4" 			conf="lib" />
+		<dependency org="org.springframework" 				name="spring-tx" 						rev="7.0.5" 			conf="lib" />
 		
 		<!-- Runtime dependencies -->
-		<dependency org="dom4j"								name="dom4j"							rev="1.6.1"			conf="lib" />
-		<dependency org="org.hibernate.common" 				name="hibernate-commons-annotations" 	rev="4.0.5.Final"	conf="lib" />
-		<dependency org="org.jboss.spec.javax.transaction"	name="jboss-transaction-api_1.2_spec" 	rev="1.0.0.Final"	conf="lib" />
-		<dependency org="org.jboss.logging" 				name="jboss-logging" 					rev="3.2.1.Final"	conf="lib"/>
-		<dependency org="org.javassist" 					name="javassist" 						rev="3.18.1-GA" 	conf="lib"/>
-		<dependency org="antlr" 							name="antlr" 							rev="2.7.7" 		conf="lib"/>
+		<dependency org="org.dom4j"							name="dom4j"								rev="2.2.0"			conf="lib" />
+		<dependency org="org.hibernate.common" 				name="hibernate-commons-annotations" 		rev="7.0.3.Final"	conf="lib" />
+		<dependency org="jakarta.transaction"					name="jakarta.transaction-api" 			rev="2.0.1"			conf="lib" />
 		
-		<dependency org="org.hsqldb" 						name="hsqldb" 							rev="2.3.2" 		conf="lib-test"/>
+		<!-- Test -->
+		<dependency org="org.hsqldb" 						name="hsqldb" 							rev="2.7.4" 			conf="lib-test"/>
+		
 	</dependencies>
 </ivy-module>

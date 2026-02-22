@@ -155,7 +155,7 @@ public class LinkTag extends BaseTag {
 	}
 
 	private String buildFullUrl() {
-		
+
 		if (url != null && url.startsWith("javascript:")) {
 			return url;
 		}

@@ -13,11 +13,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Entity;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.metamodel.MappingMetamodel;
 import org.hibernate.persister.collection.AbstractCollectionPersister;
 import org.hibernate.persister.entity.AbstractEntityPersister;
 import org.hibernate.type.AssociationType;
@@ -27,6 +25,9 @@ import org.hibernate.type.ManyToOneType;
 import org.hibernate.type.Type;
 import org.nextframework.service.ServiceException;
 import org.nextframework.service.ServiceFactory;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.metamodel.EntityType;
 
 public class PersistenceUtils {
 
@@ -108,21 +109,26 @@ public class PersistenceUtils {
 		}
 	}
 
-	public static String getIdPropertyName(Class<?> fromClass, SessionFactory sessionFactory) {
-		return getClassMetadata(fromClass, sessionFactory).getIdentifierPropertyName();
+	public static <ENTITY> String getIdPropertyName(Class<ENTITY> fromClass, SessionFactory sessionFactory) {
+		EntityType<ENTITY> entity = getClassMetadata(fromClass, sessionFactory);
+		return entity.getSingularAttributes().stream()
+				.filter(jakarta.persistence.metamodel.SingularAttribute::isId)
+				.findFirst()
+				.map(jakarta.persistence.metamodel.Attribute::getName)
+				.orElseThrow(() -> new PersistenceException("Cannot find ID property for " + fromClass));
 	}
 
-	@SuppressWarnings("deprecation")
-	public static Serializable getId(Object entity, SessionFactory sessionFactory) {
-		return getClassMetadata(entity.getClass(), sessionFactory).getIdentifier(entity);
+	public static <ENTITY> Serializable getId(ENTITY entity, SessionFactory sessionFactory) {
+		return (Serializable) sessionFactory.getPersistenceUnitUtil().getIdentifier(entity);
 	}
 
-	private static ClassMetadata getClassMetadata(Class<? extends Object> class1, SessionFactory sessionFactory) {
+	@SuppressWarnings("unchecked")
+	private static <ENTITY> EntityType<ENTITY> getClassMetadata(Class<ENTITY> class1, SessionFactory sessionFactory) {
 		if (class1.getSimpleName().contains("$$")) {
 			//this is a generated class.. get the user class
-			class1 = class1.getSuperclass();
+			class1 = (Class<ENTITY>) class1.getSuperclass();
 		}
-		return sessionFactory.getClassMetadata(class1);
+		return sessionFactory.getMetamodel().entity(class1);
 	}
 
 	public static Object getProperty(Object object, String property) {
@@ -157,7 +163,7 @@ public class PersistenceUtils {
 			if (baseValue == null) {
 				Class<?> baseType = readMethod.getReturnType();
 				try {
-					baseValue = baseType.newInstance();
+					baseValue = baseType.getDeclaredConstructor().newInstance();
 				} catch (Exception e) {
 					throw new IllegalArgumentException("Error instanciating " + baseType + " for " + base + " of path " + property + " of object " + object, e);
 				}
@@ -231,16 +237,17 @@ public class PersistenceUtils {
 
 	public static Class<?> getPropertyAssociationType(SessionFactory sessionFactory, Class<?> clazz, String property) {
 		Class<?> result = null;
-		ClassMetadata classMetadata = getClassMetadata(clazz, sessionFactory);
-		if (classMetadata == null) {
+		MappingMetamodel metamodel = (MappingMetamodel) ((SessionFactoryImplementor) sessionFactory).getRuntimeMetamodels().getMappingMetamodel();
+		AbstractEntityPersister persister = (AbstractEntityPersister) metamodel.getEntityDescriptor(clazz);
+		if (persister == null) {
 			throw new PersistenceException("Class " + clazz.getName() + " is not mapped. ");
 		}
-		org.hibernate.type.Type propertyType = classMetadata.getPropertyType(property);
+		org.hibernate.type.Type propertyType = persister.getPropertyType(property);
 		if (propertyType instanceof AssociationType) {
 			AssociationType associationType = (AssociationType) propertyType;
 			String associatedEntityName = associationType.getAssociatedEntityName((SessionFactoryImplementor) sessionFactory);
-			AbstractEntityPersister abstractEntityPersister = (AbstractEntityPersister) sessionFactory.getClassMetadata(associatedEntityName);
-			result = abstractEntityPersister.getEntityType().getReturnedClass();
+			AbstractEntityPersister associatedPersister = (AbstractEntityPersister) metamodel.getEntityDescriptor(associatedEntityName);
+			result = associatedPersister.getMappedClass();
 		} else {
 			throw new PersistenceException("Property \"" + property + "\" of " + clazz + " is not an association type (i.e. ManyToOne, OneToMany, AnyType, etc)");
 		}
@@ -248,24 +255,25 @@ public class PersistenceUtils {
 	}
 
 	public static InverseCollectionProperties getInverseCollectionProperty(SessionFactory sessionFactory, Class<? extends Object> clazz, String collectionProperty) {
-		SessionFactoryImplementor sessionFactoryImplementor;
+
+		SessionFactoryImplementor sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
+		MappingMetamodel metamodel = (MappingMetamodel) sessionFactoryImplementor.getRuntimeMetamodels().getMappingMetamodel();
 		String[] keyColumnNames;
 		Class<?> returnedClass;
 		try {
-			sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
-			ClassMetadata classMetadata = getClassMetadata(clazz, sessionFactory);
-			if (classMetadata == null) {
+			AbstractEntityPersister persister = (AbstractEntityPersister) metamodel.getEntityDescriptor(clazz);
+			if (persister == null) {
 				throw new PersistenceException("Class " + clazz.getName() + " is not mapped. ");
 			}
-			CollectionType ct = (CollectionType) classMetadata.getPropertyType(collectionProperty);
-			AbstractCollectionPersister collectionMetadata = (AbstractCollectionPersister) sessionFactoryImplementor.getCollectionMetadata(ct.getRole());
-			keyColumnNames = ((AbstractCollectionPersister) collectionMetadata).getKeyColumnNames();
+			CollectionType ct = (CollectionType) persister.getPropertyType(collectionProperty);
+			AbstractCollectionPersister collectionMetadata = (AbstractCollectionPersister) metamodel.getCollectionDescriptor(ct.getRole());
+			keyColumnNames = collectionMetadata.getKeyColumnNames();
 			returnedClass = ct.getElementType(sessionFactoryImplementor).getReturnedClass();
 		} catch (ClassCastException e) {
 			throw new PersistenceException("Property \"" + collectionProperty + "\" of " + clazz + " is not a mapped as a collection.");
 		}
 
-		AbstractEntityPersister collectionItemMetadata = (AbstractEntityPersister) sessionFactoryImplementor.getClassMetadata(returnedClass);
+		AbstractEntityPersister collectionItemMetadata = (AbstractEntityPersister) metamodel.getEntityDescriptor(returnedClass);
 		Type[] propertyTypes = collectionItemMetadata.getPropertyTypes();
 		String[] propertyNames = collectionItemMetadata.getPropertyNames();
 		for (int i = 0; i < propertyTypes.length; i++) {
@@ -277,6 +285,7 @@ public class PersistenceUtils {
 				return inverseCollectionProperties;
 			}
 		}
+
 		//check id
 		Type identifierType = collectionItemMetadata.getIdentifierType();
 		String identifierName = collectionItemMetadata.getIdentifierPropertyName();
@@ -286,6 +295,7 @@ public class PersistenceUtils {
 			return inverseCollectionProperties;
 		}
 		throw new PersistenceException("Collection " + collectionProperty + " of " + clazz + " does not have an inverse path!");
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -310,7 +320,7 @@ public class PersistenceUtils {
 			for (int i = 0; i < propertyTypes.length; i++) {
 				Type subType = propertyTypes[i];
 				String subPropertyName = propertyNames[i];
-				int columnSpan = subType.getColumnSpan(sessionFactoryImplementor);
+				int columnSpan = subType.getColumnSpan(sessionFactoryImplementor.getRuntimeMetamodels());
 				String[] propertyColumnNamesMapping = new String[columnSpan];
 				System.arraycopy(propertyColumnNames, beginIndex, propertyColumnNamesMapping, 0, columnSpan);
 				InverseCollectionProperties inverseCollectionProperties = getInverseCollectionProperties(sessionFactoryImplementor, clazz, returnedClass, keyColumnNames, propertyColumnNamesMapping, subType, subPropertyName);

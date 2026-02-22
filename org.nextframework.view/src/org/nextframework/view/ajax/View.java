@@ -29,12 +29,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Classe que representa a visão do browser. Essa classe deve ser utilizada em chamadas Ajax

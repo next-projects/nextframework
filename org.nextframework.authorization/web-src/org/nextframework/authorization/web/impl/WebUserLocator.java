@@ -29,13 +29,13 @@ package org.nextframework.authorization.web.impl;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.nextframework.authorization.AuthorizationDAO;
 import org.nextframework.authorization.User;
 import org.nextframework.authorization.UserLocator;
 import org.nextframework.service.ServiceFactory;
 import org.nextframework.web.WebContext;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * User Locator Service default implementation for Web applications.<BR>

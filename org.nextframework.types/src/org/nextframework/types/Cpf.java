@@ -65,15 +65,15 @@ public class Cpf extends CpfUserType implements Document, Serializable {
 	 * @return true se o CPF é válido e false se não é válido
 	 */
 	public static boolean cpfValido(String strCpf) {
-		
+
 		if (strCpf.length() > 11) {
 			strCpf = removeSymbols(strCpf);
 		}
-		
+
 		if (strCpf.length() != 11) {
 			return false;
 		}
-		
+
 		int d1, d2;
 		int digito1, digito2, resto;
 		int digitoCPF;

@@ -23,7 +23,7 @@
  */
 package org.nextframework.view;
 
-import javax.servlet.jsp.tagext.JspFragment;
+import jakarta.servlet.jsp.tagext.JspFragment;
 
 /**
  * @author rogelgarcia

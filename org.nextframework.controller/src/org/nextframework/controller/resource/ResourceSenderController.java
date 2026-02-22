@@ -23,10 +23,10 @@
  */
 package org.nextframework.controller.resource;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.nextframework.core.web.WebRequestContext;
 import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author rogelgarcia

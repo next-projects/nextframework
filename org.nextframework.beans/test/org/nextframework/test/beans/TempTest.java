@@ -9,8 +9,8 @@ public class TempTest {
 		TestABean a = new TestABean();
 		BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(a);
 		wrapper.setAutoGrowNestedPaths(true);
-		System.out.println(wrapper.getPropertyValue("b.c"));
-		System.out.println(a.getB());
+		wrapper.setPropertyValue("b.c.nome", "Zé");
+		System.out.println(wrapper.getPropertyValue("b.c.nome"));
 	}
 
 }

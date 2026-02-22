@@ -38,9 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletException;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.jstl.core.LoopTagStatus;
 
 import org.nextframework.exception.NextException;
@@ -52,6 +49,10 @@ import org.nextframework.view.combo.ComboTag;
 import org.nextframework.view.combo.ComboTag.TagHolder;
 import org.nextframework.view.util.AbstractGroupPropertyAnaliser;
 import org.springframework.beans.PropertyAccessorFactory;
+
+import jakarta.el.ELException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.jsp.JspException;
 
 /**
  * @author rogelgarcia | marcusabreu

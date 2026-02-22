@@ -52,8 +52,6 @@ import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -64,6 +62,9 @@ import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 public class FirebirdSQLErrorCodesTranslator extends SQLErrorCodeSQLExceptionTranslator {
 

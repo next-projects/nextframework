@@ -26,8 +26,6 @@ package org.nextframework.view.template;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.exception.NextException;
 import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
@@ -35,6 +33,8 @@ import org.nextframework.view.ColumnTag;
 import org.nextframework.view.GroupTag;
 import org.nextframework.view.PanelGridTag;
 import org.nextframework.view.PanelTag;
+
+import jakarta.servlet.jsp.JspException;
 
 /**
  * @author rogelgarcia and marcusabreu

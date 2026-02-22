@@ -3,10 +3,10 @@ package org.nextframework.report.renderer.html.builder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nextframework.report.definition.ReportDefinition;
+
 import net.sf.jasperreports.engine.JRPrintRectangle;
 import net.sf.jasperreports.engine.JRPrintText;
-
-import org.nextframework.report.definition.ReportDefinition;
 
 public class GroupPrintElements extends PrintElement {
 

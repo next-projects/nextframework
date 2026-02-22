@@ -2,10 +2,10 @@ package org.nextframework.web;
 
 import java.beans.Introspector;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import org.apache.commons.logging.LogFactory;
+
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 /**
  * Releases the commons logging and Introspector references, avoiding memory leaks.

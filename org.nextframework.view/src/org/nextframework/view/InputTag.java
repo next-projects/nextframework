@@ -27,9 +27,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import javax.servlet.ServletException;
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.core.config.ViewConfig;
@@ -41,6 +38,9 @@ import org.nextframework.util.Util;
 import org.nextframework.view.code.DebugInputsTag;
 import org.nextframework.view.components.InputTagComponent;
 import org.springframework.beans.BeanUtils;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.jsp.JspException;
 
 /**
  * @author rogelgarcia | marcusabreu

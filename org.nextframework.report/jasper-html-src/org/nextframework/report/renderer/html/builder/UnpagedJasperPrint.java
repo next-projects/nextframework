@@ -7,13 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.jasperreports.engine.JRPrintElement;
-import net.sf.jasperreports.engine.JRPrintFrame;
-import net.sf.jasperreports.engine.JRPrintLine;
-import net.sf.jasperreports.engine.JRPrintPage;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.type.BandTypeEnum;
-
 import org.nextframework.exception.NextException;
 import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.definition.ReportSectionType;
@@ -22,6 +15,13 @@ import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.renderer.jasper.builder.JasperDesignBuilder;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
+
+import net.sf.jasperreports.engine.JRPrintElement;
+import net.sf.jasperreports.engine.JRPrintFrame;
+import net.sf.jasperreports.engine.JRPrintLine;
+import net.sf.jasperreports.engine.JRPrintPage;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.type.BandTypeEnum;
 
 public class UnpagedJasperPrint {
 
