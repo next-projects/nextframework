@@ -1,14 +1,14 @@
 package org.nextframework.persistence.internal;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import jakarta.persistence.TableGenerator;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "_next_keyvalue", uniqueConstraints = @UniqueConstraint(name = "_nx_uk_un_mp", columnNames = { "username", "map_key" }), indexes = @Index(name = "_nx_idx_un", columnList = "username"))

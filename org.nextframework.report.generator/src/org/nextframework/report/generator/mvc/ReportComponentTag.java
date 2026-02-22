@@ -52,9 +52,11 @@ public class ReportComponentTag extends BaseTag {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		Class<FieldFormatter>[] fieldProcessors = ClassManagerFactory.getClassManager().getAllClassesOfType(FieldFormatter.class);
 		Arrays.sort(fieldProcessors, new Comparator<Class<FieldFormatter>>() {
+
 			public int compare(Class<FieldFormatter> o1, Class<FieldFormatter> o2) {
 				return o1.getSimpleName().compareTo(o2.getSimpleName());
 			};
+
 		});
 		for (Class<FieldFormatter> class1 : fieldProcessors) {
 			if (!Modifier.isAbstract(class1.getModifiers())) {

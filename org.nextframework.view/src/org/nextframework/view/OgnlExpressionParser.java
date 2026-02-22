@@ -3,11 +3,11 @@ package org.nextframework.view;
 import java.util.HashMap;
 import java.util.Map;
 
-import ognl.Ognl;
-import ognl.OgnlException;
-
 import org.nextframework.exception.ExpressionParseException;
 import org.springframework.beans.BeanWrapperImpl;
+
+import ognl.Ognl;
+import ognl.OgnlException;
 
 /**
  * @author rogelgarcia

@@ -36,9 +36,9 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.nextframework.persistence.PersistenceUtils.InverseCollectionProperties;
 import org.nextframework.persistence.translator.QueryBuilderResultTranslator;
 import org.nextframework.persistence.translator.QueryBuilderResultTranslatorImpl;

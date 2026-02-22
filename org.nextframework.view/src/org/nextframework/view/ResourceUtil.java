@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.servlet.http.HttpSession;
-
 import org.nextframework.controller.resource.Resource;
+
+import jakarta.servlet.http.HttpSession;
 
 public class ResourceUtil {
 

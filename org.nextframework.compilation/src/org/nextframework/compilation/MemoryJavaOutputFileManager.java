@@ -40,9 +40,9 @@ import javax.tools.JavaFileObject.Kind;
  */
 public class MemoryJavaOutputFileManager implements JavaFileManager {
 
-	JavaFileManager delegate;
+	private JavaFileManager delegate;
 
-	List<MemoryJavaOutputFileObject> outputs = new ArrayList<MemoryJavaOutputFileObject>();
+	private List<MemoryJavaOutputFileObject> outputs = new ArrayList<>();
 
 	private List<JavaFileObject> compiledFiles;
 
@@ -113,8 +113,8 @@ public class MemoryJavaOutputFileManager implements JavaFileManager {
 	}
 
 	public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
-		Iterable<JavaFileObject> result = delegate.list(location, packageName, kinds, recurse);
 		ArrayList<JavaFileObject> list = new ArrayList<JavaFileObject>();
+		Iterable<JavaFileObject> result = delegate.list(location, packageName, kinds, recurse);
 		for (JavaFileObject javaFileObject : result) {
 			list.add(javaFileObject);
 		}

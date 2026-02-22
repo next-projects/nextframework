@@ -15,12 +15,12 @@
  */
 package org.stjs.generator.ast;
 
-import japa.parser.ast.Node;
-
 import org.stjs.generator.scope.Scope;
 import org.stjs.generator.type.MethodWrapper;
 import org.stjs.generator.type.TypeWrapper;
 import org.stjs.generator.variable.Variable;
+
+import japa.parser.ast.Node;
 
 /**
  * this is the data associated to a node in the AST

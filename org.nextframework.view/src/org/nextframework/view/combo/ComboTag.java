@@ -34,11 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.JspContext;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.el.ELException;
-import javax.servlet.jsp.tagext.JspFragment;
-
 import org.nextframework.exception.NextException;
 import org.nextframework.util.ReflectionCache;
 import org.nextframework.util.ReflectionCacheFactory;
@@ -46,6 +41,11 @@ import org.nextframework.util.Util;
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.LogicalTag;
 import org.nextframework.view.TagUtils;
+
+import jakarta.el.ELException;
+import jakarta.servlet.jsp.JspContext;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.JspFragment;
 
 /**
  * @author rogelgarcia

@@ -15,9 +15,9 @@
  */
 package org.stjs.generator;
 
-import japa.parser.ast.body.ClassOrInterfaceDeclaration;
-
 import java.io.File;
+
+import japa.parser.ast.body.ClassOrInterfaceDeclaration;
 
 /**
  * This class can resolve an identifier or a method in the given source context. There is one context create for each

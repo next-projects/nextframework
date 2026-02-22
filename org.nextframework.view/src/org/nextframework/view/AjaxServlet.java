@@ -27,11 +27,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.nextframework.classmanager.ClassManager;
 import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.core.config.ViewConfig;
@@ -42,6 +37,11 @@ import org.nextframework.view.ajax.AjaxCallbackSupport;
 import org.nextframework.view.ajax.ComboCallback;
 import org.nextframework.view.ajax.ProgressBarCallback;
 import org.nextframework.web.WebContext;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class AjaxServlet extends HttpServlet {
 

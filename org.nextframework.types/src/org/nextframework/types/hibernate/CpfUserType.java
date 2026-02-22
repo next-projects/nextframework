@@ -6,17 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserType;
 import org.nextframework.types.Cpf;
 import org.nextframework.types.TypeUtils;
 
-public class CpfUserType implements UserType {
+public class CpfUserType implements UserType<Cpf> {
 
 	@Override
-	public int[] sqlTypes() {
-		return new int[] { Types.VARCHAR };
+	public int getSqlType() {
+		return Types.VARCHAR;
 	}
 
 	@Override
@@ -25,8 +24,8 @@ public class CpfUserType implements UserType {
 	}
 
 	@Override
-	public boolean equals(Object x, Object y) throws HibernateException {
-		if ((x == null || ((Cpf) x).getValue() == null) && (y == null || ((Cpf) y).getValue() == null)) {
+	public boolean equals(Cpf x, Cpf y) {
+		if ((x == null || x.getValue() == null) && (y == null || y.getValue() == null)) {
 			return true;
 		} else if (x == null || y == null) {
 			return false;
@@ -35,13 +34,13 @@ public class CpfUserType implements UserType {
 	}
 
 	@Override
-	public int hashCode(Object x) throws HibernateException {
+	public int hashCode(Cpf x) {
 		return x.hashCode();
 	}
 
 	@Override
-	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-		String value = rs.getString(names[0]);
+	public Cpf nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
+		String value = rs.getString(position);
 		if (TypeUtils.isEmpty(value)) {
 			return null;
 		}
@@ -49,9 +48,9 @@ public class CpfUserType implements UserType {
 	}
 
 	@Override
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-		if (value instanceof Cpf) {
-			String value2 = ((Cpf) value).getValue();
+	public void nullSafeSet(PreparedStatement st, Cpf value, int index, WrapperOptions options) throws SQLException {
+		if (value != null) {
+			String value2 = value.getValue();
 			if (TypeUtils.isEmpty(value2)) {
 				st.setNull(index, Types.VARCHAR);
 			} else {
@@ -63,7 +62,7 @@ public class CpfUserType implements UserType {
 	}
 
 	@Override
-	public Object deepCopy(Object value) throws HibernateException {
+	public Cpf deepCopy(Cpf value) {
 		return value;
 	}
 
@@ -73,16 +72,17 @@ public class CpfUserType implements UserType {
 	}
 
 	@Override
-	public Serializable disassemble(Object value) throws HibernateException {
-		return ((Cpf) value).getValue();
-	}
-
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return new Cpf((String) cached, Cpf.AUTO_VALIDATION);
+	public Serializable disassemble(Cpf value) {
+		return value != null ? value.getValue() : null;
 	}
 
 	@Override
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	public Cpf assemble(Serializable cached, Object owner) {
+		return cached != null ? new Cpf((String) cached, Cpf.AUTO_VALIDATION) : null;
+	}
+
+	@Override
+	public Cpf replace(Cpf original, Cpf target, Object owner) {
 		return original;
 	}
 

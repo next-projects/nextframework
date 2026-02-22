@@ -1,8 +1,8 @@
 package org.nextframework.persistence.internal;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 public class UserPropertiesDAO {
 
@@ -34,13 +34,13 @@ public class UserPropertiesDAO {
 	}
 
 	private void delete(UserKeyValueMapEntity userProperty, Session session) {
-		session.delete(userProperty);
+		session.remove(userProperty);
 	}
 
 	public void saveKey(UserKeyValueMapEntity keyValueMapEntity) {
 		Session session = sessionFactory.openSession();
 		try {
-			session.saveOrUpdate(keyValueMapEntity);
+			session.merge(keyValueMapEntity);
 			session.flush();
 		} finally {
 			session.close();
@@ -50,9 +50,9 @@ public class UserPropertiesDAO {
 	private UserKeyValueMapEntity getUserKey(String propertyName, Session session) {
 		Query createQuery = session.createQuery(
 				"from " + UserKeyValueMapEntity.class.getSimpleName() + " map " +
-						"where map.username = ? and map.key = ?");
-		createQuery.setString(0, username);
-		createQuery.setString(1, propertyName);
+						"where map.username = :username and map.key = :key");
+		createQuery.setParameter("username", username);
+		createQuery.setParameter("key", propertyName);
 		UserKeyValueMapEntity userKeyValueMapEntity = (UserKeyValueMapEntity) createQuery.uniqueResult();
 		return userKeyValueMapEntity;
 	}

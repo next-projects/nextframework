@@ -6,24 +6,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserType;
 import org.nextframework.types.PhoneBrazil;
 import org.nextframework.types.TypeUtils;
 
-public class PhoneBrazilUserType implements UserType {
+public class PhoneBrazilUserType implements UserType<PhoneBrazil> {
 
-	public int[] sqlTypes() {
-		return new int[] { Types.VARCHAR };
+	@Override
+	public int getSqlType() {
+		return Types.VARCHAR;
 	}
 
-	public Class<?> returnedClass() {
+	@Override
+	public Class<PhoneBrazil> returnedClass() {
 		return PhoneBrazil.class;
 	}
 
-	public boolean equals(Object x, Object y) throws HibernateException {
-		if ((x == null || ((PhoneBrazil) x).getValue() == null) && (y == null || ((PhoneBrazil) y).getValue() == null)) {
+	@Override
+	public boolean equals(PhoneBrazil x, PhoneBrazil y) {
+		if ((x == null || x.getValue() == null) && (y == null || y.getValue() == null)) {
 			return true;
 		} else if (x == null || y == null) {
 			return false;
@@ -31,21 +33,24 @@ public class PhoneBrazilUserType implements UserType {
 		return x.equals(y);
 	}
 
-	public int hashCode(Object x) throws HibernateException {
+	@Override
+	public int hashCode(PhoneBrazil x) {
 		return x.hashCode();
 	}
 
-	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-		String value = rs.getString(names[0]);
+	@Override
+	public PhoneBrazil nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
+		String value = rs.getString(position);
 		if (TypeUtils.isEmpty(value)) {
 			return null;
 		}
 		return new PhoneBrazil(value);
 	}
 
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-		if (value instanceof PhoneBrazil) {
-			String value2 = ((PhoneBrazil) value).getValue();
+	@Override
+	public void nullSafeSet(PreparedStatement st, PhoneBrazil value, int index, WrapperOptions options) throws SQLException {
+		if (value != null) {
+			String value2 = value.getValue();
 			if (value2 == null) {
 				st.setNull(index, Types.VARCHAR);
 			} else {
@@ -56,26 +61,28 @@ public class PhoneBrazilUserType implements UserType {
 		}
 	}
 
-	public Object deepCopy(Object value) throws HibernateException {
-		if (value == null) {
-			return new PhoneBrazil();
-		}
+	@Override
+	public PhoneBrazil deepCopy(PhoneBrazil value) {
 		return value;
 	}
 
+	@Override
 	public boolean isMutable() {
 		return false;
 	}
 
-	public Serializable disassemble(Object value) throws HibernateException {
-		return (PhoneBrazil) value;
+	@Override
+	public Serializable disassemble(PhoneBrazil value) {
+		return value;
 	}
 
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return cached;
+	@Override
+	public PhoneBrazil assemble(Serializable cached, Object owner) {
+		return (PhoneBrazil) cached;
 	}
 
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	@Override
+	public PhoneBrazil replace(PhoneBrazil original, PhoneBrazil target, Object owner) {
 		return original;
 	}
 

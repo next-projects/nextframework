@@ -37,14 +37,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import javax.persistence.Transient;
-
 import org.hibernate.SessionFactory;
 import org.hibernate.usertype.UserType;
 import org.nextframework.persistence.PersistenceUtils;
 import org.nextframework.persistence.QueryBuilder;
 import org.nextframework.persistence.QueryBuilder.Join;
 import org.nextframework.persistence.QueryBuilderException;
+
+import jakarta.persistence.Transient;
 
 public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTranslator {
 

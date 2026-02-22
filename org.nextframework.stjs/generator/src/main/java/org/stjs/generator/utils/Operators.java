@@ -15,10 +15,10 @@
  */
 package org.stjs.generator.utils;
 
+import java.util.EnumSet;
+
 import japa.parser.ast.expr.BinaryExpr;
 import japa.parser.ast.expr.BinaryExpr.Operator;
-
-import java.util.EnumSet;
 
 /**
  * This class is a helper for the {@link BinaryExpr.Operator} class

@@ -15,25 +15,6 @@
  */
 package org.stjs.generator.scope;
 
-import japa.parser.ast.body.BodyDeclaration;
-import japa.parser.ast.body.ClassOrInterfaceDeclaration;
-import japa.parser.ast.body.ConstructorDeclaration;
-import japa.parser.ast.body.EnumDeclaration;
-import japa.parser.ast.body.FieldDeclaration;
-import japa.parser.ast.body.MethodDeclaration;
-import japa.parser.ast.body.ModifierSet;
-import japa.parser.ast.body.Parameter;
-import japa.parser.ast.body.VariableDeclarator;
-import japa.parser.ast.body.VariableDeclaratorId;
-import japa.parser.ast.expr.LiteralExpr;
-import japa.parser.ast.expr.MethodCallExpr;
-import japa.parser.ast.expr.NameExpr;
-import japa.parser.ast.expr.ObjectCreationExpr;
-import japa.parser.ast.expr.SuperExpr;
-import japa.parser.ast.expr.ThisExpr;
-import japa.parser.ast.expr.UnaryExpr;
-import japa.parser.ast.type.ClassOrInterfaceType;
-
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
@@ -52,6 +33,25 @@ import org.stjs.generator.utils.Option;
 import org.stjs.generator.variable.Variable;
 import org.stjs.generator.writer.JavascriptKeywords;
 import org.stjs.javascript.annotation.JavascriptFunction;
+
+import japa.parser.ast.body.BodyDeclaration;
+import japa.parser.ast.body.ClassOrInterfaceDeclaration;
+import japa.parser.ast.body.ConstructorDeclaration;
+import japa.parser.ast.body.EnumDeclaration;
+import japa.parser.ast.body.FieldDeclaration;
+import japa.parser.ast.body.MethodDeclaration;
+import japa.parser.ast.body.ModifierSet;
+import japa.parser.ast.body.Parameter;
+import japa.parser.ast.body.VariableDeclarator;
+import japa.parser.ast.body.VariableDeclaratorId;
+import japa.parser.ast.expr.LiteralExpr;
+import japa.parser.ast.expr.MethodCallExpr;
+import japa.parser.ast.expr.NameExpr;
+import japa.parser.ast.expr.ObjectCreationExpr;
+import japa.parser.ast.expr.SuperExpr;
+import japa.parser.ast.expr.ThisExpr;
+import japa.parser.ast.expr.UnaryExpr;
+import japa.parser.ast.type.ClassOrInterfaceType;
 
 /**
  * this class generate different checks made on the Java statements before they are converted to Javascript

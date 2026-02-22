@@ -16,9 +16,6 @@
 package org.stjs.generator.writer;
 
 import static org.stjs.generator.ast.ASTNodeData.resolvedMethod;
-import japa.parser.ast.expr.Expression;
-import japa.parser.ast.expr.MethodCallExpr;
-import japa.parser.ast.expr.StringLiteralExpr;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -33,6 +30,10 @@ import org.stjs.generator.ast.ASTNodeData;
 import org.stjs.generator.ast.SourcePosition;
 import org.stjs.generator.type.MethodWrapper;
 import org.stjs.generator.utils.ClassUtils;
+
+import japa.parser.ast.expr.Expression;
+import japa.parser.ast.expr.MethodCallExpr;
+import japa.parser.ast.expr.StringLiteralExpr;
 
 /**
  * this is a handler to handle special method names (those starting with $).

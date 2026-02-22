@@ -1,7 +1,5 @@
 package org.nextframework.web.context;
 
-import javax.servlet.ServletContext;
-
 import org.nextframework.context.ApplicationScanPathsProvider;
 import org.nextframework.context.BeanDefinitionLoader;
 import org.nextframework.context.factory.support.QualifiedListableBeanFactory;
@@ -20,6 +18,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
+
+import jakarta.servlet.ServletContext;
 
 /**
  * Enhances Spring AnnotationConfigWebApplicationContext to also read XML files. <BR>

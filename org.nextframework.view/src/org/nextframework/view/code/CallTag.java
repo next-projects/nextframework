@@ -23,10 +23,10 @@
  */
 package org.nextframework.view.code;
 
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.LogicalTag;
+
+import jakarta.servlet.jsp.JspException;
 
 public class CallTag extends BaseTag implements CodeTag, LogicalTag {
 

@@ -23,15 +23,15 @@
  */
 package org.nextframework.view;
 
-import javax.el.ExpressionFactory;
-import javax.el.ValueExpression;
-import javax.servlet.jsp.JspFactory;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.el.ELException;
-
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
 import org.nextframework.web.WebUtils;
+
+import jakarta.el.ELContext;
+import jakarta.el.ExpressionFactory;
+import jakarta.el.ValueExpression;
+import jakarta.servlet.jsp.JspFactory;
+import jakarta.servlet.jsp.PageContext;
 
 /**
  * @author rogelgarcia | marcusabreu
@@ -43,19 +43,17 @@ public class ViewUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <E> E evaluate(String expression, PageContext pageContext, Class<E> clazz) {
-		if (pageContext.getExpressionEvaluator() != null && pageContext.getVariableResolver() != null) {
-			//tentar a forma servlet 2
-			try {
-				return (E) pageContext.getExpressionEvaluator().evaluate(expression, clazz, pageContext.getVariableResolver(), null);
-			} catch (ELException e) {
-				throw new NextException(e);
-			}
-		} else {
-			//tentar servlet 3 (se esse código não compilar e estiver utilizando servlet 2, pode excluir)
-			ExpressionFactory expressionFactory = JspFactory.getDefaultFactory().getJspApplicationContext(pageContext.getServletContext()).getExpressionFactory();
-			ValueExpression ve = expressionFactory.createValueExpression(pageContext.getELContext(), expression, clazz);
-			E evaluate = (E) ve.getValue(pageContext.getELContext());
-			return evaluate;
+		try {
+			ExpressionFactory expressionFactory = JspFactory.getDefaultFactory()
+					.getJspApplicationContext(pageContext.getServletContext())
+					.getExpressionFactory();
+
+			ELContext elContext = pageContext.getELContext();
+			ValueExpression ve = expressionFactory.createValueExpression(elContext, expression, clazz);
+			E result = (E) ve.getValue(elContext);
+			return result;
+		} catch (Exception e) {
+			throw new NextException("Erro ao avaliar expressão EL: " + expression, e);
 		}
 	}
 

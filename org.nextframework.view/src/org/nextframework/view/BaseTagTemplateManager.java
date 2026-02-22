@@ -20,9 +20,9 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.servlet.ServletContext;
-
 import org.nextframework.exception.NextException;
+
+import jakarta.servlet.ServletContext;
 
 public class BaseTagTemplateManager {
 

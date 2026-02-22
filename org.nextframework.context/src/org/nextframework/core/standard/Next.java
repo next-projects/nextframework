@@ -101,7 +101,7 @@ public class Next {
 
 //	public static User getUser(){
 //		return Authorization.getUserLocator().getUser();
-////		return Authorization.getUserLocator().getUser();
+	//// return Authorization.getUserLocator().getUser();
 //	}
 
 //	public static Config getConfig(){

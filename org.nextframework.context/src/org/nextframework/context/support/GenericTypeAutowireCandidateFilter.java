@@ -21,7 +21,7 @@ public class GenericTypeAutowireCandidateFilter implements AutowireCandidateFilt
 		if (candidateBeans.size() <= 1) {
 			return candidateBeans;
 		}
-		if (candidateBeans.size() > 1 && descriptor.getCollectionType() != null) {
+		if (candidateBeans.size() > 1 && descriptor.getResolvableType().asCollection() != ResolvableType.NONE) {
 			return candidateBeans;
 		}
 		Map<String, Object> matchingBeans = new HashMap<String, Object>();

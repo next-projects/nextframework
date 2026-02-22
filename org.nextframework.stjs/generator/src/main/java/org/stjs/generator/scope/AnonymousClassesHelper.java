@@ -15,13 +15,6 @@
  */
 package org.stjs.generator.scope;
 
-import japa.parser.ast.Node;
-import japa.parser.ast.body.ConstructorDeclaration;
-import japa.parser.ast.body.FieldDeclaration;
-import japa.parser.ast.body.InitializerDeclaration;
-import japa.parser.ast.body.MethodDeclaration;
-import japa.parser.ast.expr.ObjectCreationExpr;
-
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,6 +31,13 @@ import org.stjs.generator.ast.ASTNodeData;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+
+import japa.parser.ast.Node;
+import japa.parser.ast.body.ConstructorDeclaration;
+import japa.parser.ast.body.FieldDeclaration;
+import japa.parser.ast.body.InitializerDeclaration;
+import japa.parser.ast.body.MethodDeclaration;
+import japa.parser.ast.expr.ObjectCreationExpr;
 
 /**
  * As the anonymous class names using numbering seem not to be the same between compilers, this class identifies the

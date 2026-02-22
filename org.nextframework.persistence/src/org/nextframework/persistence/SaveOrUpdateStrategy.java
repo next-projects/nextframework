@@ -30,9 +30,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.nextframework.persistence.PersistenceUtils.InverseCollectionProperties;
 import org.nextframework.service.ServiceFactory;
 
@@ -183,13 +183,14 @@ public class SaveOrUpdateStrategy {
 	 */
 	public SaveOrUpdateStrategy saveEntity(final boolean clearSession) {
 		HibernateCommand callback = new HibernateCommand() {
+
 			public Object doInHibernate(Session session) throws HibernateException {
 				if (clearSession) {
 					session.clear();
 				}
-				session.saveOrUpdate(entity);
-				return null;
+				return session.merge(entity);
 			}
+
 		};
 		callbacks.add(callback);
 		return this;
@@ -201,11 +202,13 @@ public class SaveOrUpdateStrategy {
 	 */
 	public SaveOrUpdateStrategy insertEntity() {
 		HibernateCommand callback = new HibernateCommand() {
+
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.clear();
-				session.save(entity);
-				return null;
+				session.persist(entity);
+				return entity;
 			}
+
 		};
 		callbacks.add(callback);
 		return this;
@@ -228,10 +231,12 @@ public class SaveOrUpdateStrategy {
 	 */
 	private SaveOrUpdateStrategy flush(boolean insertFirst) {
 		HibernateCommand callback = new HibernateCommand() {
+
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.flush();
 				return null;
 			}
+
 		};
 		if (insertFirst) {
 			firstCallbacks.add(callback);
@@ -243,10 +248,12 @@ public class SaveOrUpdateStrategy {
 
 	public SaveOrUpdateStrategy clear() {
 		HibernateCommand callback = new HibernateCommand() {
+
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.clear();
 				return null;
 			}
+
 		};
 		callbacks.add(callback);
 		return this;
@@ -276,6 +283,7 @@ public class SaveOrUpdateStrategy {
 		try {
 			final Collection<?> collection = (Collection) PersistenceUtils.getProperty(entity, path);
 			callbacks.add(new HibernateCommand() {
+
 				public Object doInHibernate(final Session session) throws HibernateException {
 					if (collection == null) {
 						//se a colecao é nula nao devemos salvá-la
@@ -284,9 +292,11 @@ public class SaveOrUpdateStrategy {
 					for (Iterator<?> it = collection.iterator(); it.hasNext();) {
 						final Object next = it.next();
 						SaveOrUpdateStrategyChain chain = new SaveOrUpdateStrategyChain() {
+
 							public void execute() {
-								session.saveOrUpdate(next);
+								session.merge(next);
 							}
+
 						};
 						if (collectionItemSaveOrUpdateListener != null) {
 							collectionItemSaveOrUpdateListener.onSaveOrUpdate(next, chain);
@@ -296,6 +306,7 @@ public class SaveOrUpdateStrategy {
 					}
 					return null;
 				}
+
 			});
 			return this;
 		} catch (Exception e) {
@@ -383,12 +394,14 @@ public class SaveOrUpdateStrategy {
 						.append(entity.getClass().getSimpleName())
 						.toString();
 				deleteCallback = new HibernateCommand() {
+
 					public Object doInHibernate(Session session) throws HibernateException {
-						Query queryObject = session.createQuery(deleteQueryString);
-						queryObject.setEntity(entity.getClass().getSimpleName(), entity);
+						Query queryObject = session.createQuery(deleteQueryString, itemClass);
+						queryObject.setParameter(entity.getClass().getSimpleName(), entity);
 						queryObject.executeUpdate();
 						return null;
 					}
+
 				};
 
 			} else {
@@ -397,12 +410,15 @@ public class SaveOrUpdateStrategy {
 					return this;
 				}
 				deleteCallback = new HibernateCommand() {
+
 					public Object doInHibernate(final Session session) throws HibernateException {
 						for (final Object object : toDelete) {
 							SaveOrUpdateStrategyChain chain = new SaveOrUpdateStrategyChain() {
+
 								public void execute() {
-									session.delete(object);
+									session.remove(object);
 								}
+
 							};
 							if (collectionItemDeleteListener != null) {
 								collectionItemDeleteListener.onDelete(object, chain);
@@ -412,6 +428,7 @@ public class SaveOrUpdateStrategy {
 						}
 						return null;
 					}
+
 				};
 			}
 			if (insertFirst) {
@@ -427,6 +444,7 @@ public class SaveOrUpdateStrategy {
 
 	private List<?> findItensToDelete(final String parentProperty, final Class<?> itemClass, final Collection<?> collection) {
 		final List<?> toDelete = (List<?>) hibernateTemplate.execute(new HibernateCommand() {
+
 			public Object doInHibernate(Session session) {
 
 				// remover dessa lista os objetos transientes
@@ -453,8 +471,8 @@ public class SaveOrUpdateStrategy {
 							.append(" = :")
 							.append(entity.getClass().getSimpleName())
 							.toString();
-					Query q = session.createQuery(findQueryString);
-					q.setEntity(entity.getClass().getSimpleName(), entity);
+					Query q = session.createQuery(findQueryString, itemClass);
+					q.setParameter(entity.getClass().getSimpleName(), entity);
 					return q.list();
 				} else {
 					boolean compositeParentProperty = parentProperty.indexOf('.') > 0;
@@ -474,8 +492,8 @@ public class SaveOrUpdateStrategy {
 								.append(" = :")
 								.append(entity.getClass().getSimpleName())
 								.toString();
-						Query q = session.createQuery(findQueryString);
-						q.setEntity(entity.getClass().getSimpleName(), entity);
+						Query q = session.createQuery(findQueryString, itemClass);
+						q.setParameter(entity.getClass().getSimpleName(), entity);
 						List<?> databaseItems = q.list();
 						return PersistenceUtils.removeFromCollectionUsingId(session.getSessionFactory(), databaseItems, itens);
 					} else {
@@ -494,14 +512,15 @@ public class SaveOrUpdateStrategy {
 								.append(" = :")
 								.append(entity.getClass().getSimpleName())
 								.toString();
-						Query q = session.createQuery(findQueryString);
+						Query q = session.createQuery(findQueryString, itemClass);
 						q.setParameterList("collection", itens);
-						q.setEntity(entity.getClass().getSimpleName(), entity);
+						q.setParameter(entity.getClass().getSimpleName(), entity);
 						return q.list();
 					}
 				}
 
 			}
+
 		});
 		return toDelete;
 	}
@@ -666,6 +685,7 @@ public class SaveOrUpdateStrategy {
 	public void execute() {
 		flush();
 		hibernateTemplate.executeInTransaction(new HibernateTransactionCommand() {
+
 			@Override
 			public Object doInHibernate(Session session, Object transactionStatus) {
 				List<HibernateCommand> callbacks = getCallbacks();
@@ -689,6 +709,7 @@ public class SaveOrUpdateStrategy {
 					hibernateCallback.doInHibernate(session);
 				}
 			}
+
 		});
 	}
 
@@ -730,10 +751,12 @@ public class SaveOrUpdateStrategy {
 
 	public SaveOrUpdateStrategy attachFlushBefore() {
 		this.attachmentsBefore.add(new HibernateCommand() {
+
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.flush();
 				return null;
 			}
+
 		});
 		return this;
 	}

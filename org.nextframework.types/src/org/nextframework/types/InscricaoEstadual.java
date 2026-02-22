@@ -29,11 +29,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserType;
 
-public class InscricaoEstadual implements UserType, Serializable {
+public class InscricaoEstadual implements UserType<InscricaoEstadual>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String value;
@@ -108,36 +107,42 @@ public class InscricaoEstadual implements UserType, Serializable {
 		}
 	}
 
-	public int[] sqlTypes() {
-		return new int[] { Types.VARCHAR };
+	@Override
+	public int getSqlType() {
+		return Types.VARCHAR;
 	}
 
+	@Override
 	public Class<InscricaoEstadual> returnedClass() {
 		return InscricaoEstadual.class;
 	}
 
-	public boolean equals(Object x, Object y) throws HibernateException {
+	@Override
+	public boolean equals(InscricaoEstadual x, InscricaoEstadual y) {
 		if (x == null) {
-			return false;
+			return y == null;
 		}
 		return x.equals(y);
 	}
 
-	public int hashCode(Object x) throws HibernateException {
-		return x.hashCode();
+	@Override
+	public int hashCode(InscricaoEstadual x) {
+		return x != null ? x.hashCode() : 0;
 	}
 
-	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-		String value = rs.getString(names[0]);
+	@Override
+	public InscricaoEstadual nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
+		String value = rs.getString(position);
 		if (value == null) {
 			return new InscricaoEstadual();
 		}
 		return new InscricaoEstadual(value);
 	}
 
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-		if (value instanceof InscricaoEstadual) {
-			String value2 = ((InscricaoEstadual) value).getValue();
+	@Override
+	public void nullSafeSet(PreparedStatement st, InscricaoEstadual value, int index, WrapperOptions options) throws SQLException {
+		if (value != null) {
+			String value2 = value.getValue();
 			if (TypeUtils.isEmpty(value2)) {
 				st.setNull(index, Types.VARCHAR);
 			} else {
@@ -152,23 +157,28 @@ public class InscricaoEstadual implements UserType, Serializable {
 		return value2.replace(".", "").replace("-", "");
 	}
 
-	public Object deepCopy(Object value) throws HibernateException {
+	@Override
+	public InscricaoEstadual deepCopy(InscricaoEstadual value) {
 		return value;
 	}
 
+	@Override
 	public boolean isMutable() {
 		return false;
 	}
 
-	public Serializable disassemble(Object value) throws HibernateException {
-		return (InscricaoEstadual) value;
+	@Override
+	public Serializable disassemble(InscricaoEstadual value) {
+		return value;
 	}
 
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return cached;
+	@Override
+	public InscricaoEstadual assemble(Serializable cached, Object owner) {
+		return (InscricaoEstadual) cached;
 	}
 
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	@Override
+	public InscricaoEstadual replace(InscricaoEstadual original, InscricaoEstadual target, Object owner) {
 		return original;
 	}
 

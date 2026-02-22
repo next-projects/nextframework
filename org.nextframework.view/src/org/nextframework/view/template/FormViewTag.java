@@ -25,10 +25,10 @@ package org.nextframework.view.template;
 
 import java.io.CharArrayWriter;
 
-import javax.servlet.jsp.tagext.JspFragment;
-
 import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.exception.NextException;
+
+import jakarta.servlet.jsp.tagext.JspFragment;
 
 /**
  * @author rogelgarcia

@@ -6,17 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserType;
 import org.nextframework.types.Cnpj;
 import org.nextframework.types.TypeUtils;
 
-public class CnpjUserType implements UserType {
+public class CnpjUserType implements UserType<Cnpj> {
 
 	@Override
-	public int[] sqlTypes() {
-		return new int[] { Types.VARCHAR };
+	public int getSqlType() {
+		return Types.VARCHAR;
 	}
 
 	@Override
@@ -24,8 +23,9 @@ public class CnpjUserType implements UserType {
 		return Cnpj.class;
 	}
 
-	public boolean equals(Object x, Object y) throws HibernateException {
-		if ((x == null || ((Cnpj) x).getValue() == null) && (y == null || ((Cnpj) y).getValue() == null)) {
+	@Override
+	public boolean equals(Cnpj x, Cnpj y) {
+		if ((x == null || x.getValue() == null) && (y == null || y.getValue() == null)) {
 			return true;
 		} else if (x == null || y == null) {
 			return false;
@@ -34,13 +34,13 @@ public class CnpjUserType implements UserType {
 	}
 
 	@Override
-	public int hashCode(Object x) throws HibernateException {
+	public int hashCode(Cnpj x) {
 		return x.hashCode();
 	}
 
 	@Override
-	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-		String value = rs.getString(names[0]);
+	public Cnpj nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
+		String value = rs.getString(position);
 		if (TypeUtils.isEmpty(value)) {
 			return null;
 		}
@@ -48,9 +48,9 @@ public class CnpjUserType implements UserType {
 	}
 
 	@Override
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-		if (value instanceof Cnpj) {
-			String value2 = ((Cnpj) value).getValue();
+	public void nullSafeSet(PreparedStatement st, Cnpj value, int index, WrapperOptions options) throws SQLException {
+		if (value != null) {
+			String value2 = value.getValue();
 			if (TypeUtils.isEmpty(value2)) {
 				st.setNull(index, Types.VARCHAR);
 			} else {
@@ -62,7 +62,7 @@ public class CnpjUserType implements UserType {
 	}
 
 	@Override
-	public Object deepCopy(Object value) throws HibernateException {
+	public Cnpj deepCopy(Cnpj value) {
 		return value;
 	}
 
@@ -71,15 +71,18 @@ public class CnpjUserType implements UserType {
 		return false;
 	}
 
-	public Serializable disassemble(Object value) throws HibernateException {
-		return ((Cnpj) value).getValue();
+	@Override
+	public Serializable disassemble(Cnpj value) {
+		return value != null ? value.getValue() : null;
 	}
 
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return new Cnpj((String) cached, Cnpj.AUTO_VALIDATION);
+	@Override
+	public Cnpj assemble(Serializable cached, Object owner) {
+		return cached != null ? new Cnpj((String) cached, Cnpj.AUTO_VALIDATION) : null;
 	}
 
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	@Override
+	public Cnpj replace(Cnpj original, Cnpj target, Object owner) {
 		return original;
 	}
 

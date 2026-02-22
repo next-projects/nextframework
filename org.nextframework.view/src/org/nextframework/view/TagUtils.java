@@ -9,13 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Id;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspContext;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.el.ELException;
-import javax.servlet.jsp.tagext.JspFragment;
-
 import org.hibernate.LazyInitializationException;
 import org.nextframework.bean.annotation.DescriptionProperty;
 import org.nextframework.core.config.ViewConfig;
@@ -31,6 +24,13 @@ import org.nextframework.util.Util;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.InvalidPropertyException;
 import org.springframework.context.MessageSourceResolvable;
+
+import jakarta.el.ELException;
+import jakarta.persistence.Id;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.jsp.JspContext;
+import jakarta.servlet.jsp.PageContext;
+import jakarta.servlet.jsp.tagext.JspFragment;
 
 @SuppressWarnings("deprecation")
 public class TagUtils {

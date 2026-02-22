@@ -16,12 +16,13 @@
 package org.stjs.generator.utils;
 
 import static japa.parser.ast.body.ModifierSet.isStatic;
+
+import java.util.List;
+
 import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.body.Parameter;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.ReferenceType;
-
-import java.util.List;
 
 /**
  * different methods to work with AST nodes.

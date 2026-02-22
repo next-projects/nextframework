@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.DependencyDescriptor;
 import org.springframework.beans.factory.support.AbstractBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.core.ResolvableType;
 
 public class PackageSimilarityAutowireCandidateFilter implements AutowireCandidateFilter {
 
@@ -19,7 +20,7 @@ public class PackageSimilarityAutowireCandidateFilter implements AutowireCandida
 
 	@Override
 	public Map<String, Object> filterAutowireCandidates(AbstractBeanFactory abstractBeanFactory, String beanName, Map<String, Object> candidateBeans, DependencyDescriptor descriptor) {
-		if (candidateBeans.size() > 1 && descriptor.getCollectionType() != null) {
+		if (candidateBeans.size() > 1 && descriptor.getResolvableType().asCollection() != ResolvableType.NONE) {
 			return candidateBeans;
 		}
 		if (abstractBeanFactory instanceof DefaultListableBeanFactory) {

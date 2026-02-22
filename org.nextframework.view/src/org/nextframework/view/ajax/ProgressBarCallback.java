@@ -9,9 +9,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.nextframework.authorization.Authorization;
 import org.nextframework.core.standard.Next;
 import org.nextframework.core.standard.RequestContext;
@@ -20,6 +17,9 @@ import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.exception.BusinessException;
 import org.nextframework.util.Util;
 import org.nextframework.view.progress.ProgressMonitor;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ProgressBarCallback implements AjaxCallbackController {
 

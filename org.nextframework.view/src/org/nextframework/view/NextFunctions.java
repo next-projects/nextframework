@@ -28,10 +28,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Locale;
 
-import javax.persistence.Id;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.el.ELException;
-
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.core.config.ViewConfig;
 import org.nextframework.core.standard.Message;
@@ -47,6 +43,10 @@ import org.nextframework.util.Util;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.validation.BindException;
+
+import jakarta.el.ELException;
+import jakarta.persistence.Id;
+import jakarta.servlet.jsp.PageContext;
 
 /**
  * @author rogelgarcia

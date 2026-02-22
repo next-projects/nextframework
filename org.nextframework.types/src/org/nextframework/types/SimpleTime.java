@@ -32,13 +32,10 @@ import java.sql.Types;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.UserType;
 
-public class SimpleTime extends java.sql.Time implements UserType {
-
-	// private static final Log log = LogFactory.getLog(Hora.class);
+public class SimpleTime extends java.sql.Time implements UserType<SimpleTime> {
 
 	private static final long serialVersionUID = -654280595599726647L;
 
@@ -61,6 +58,7 @@ public class SimpleTime extends java.sql.Time implements UserType {
 		setTime(SimpleTime.valueOf(time + ":00").getTime());
 	}
 
+	@Override
 	public String toString() {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTimeInMillis(getTime());
@@ -87,64 +85,73 @@ public class SimpleTime extends java.sql.Time implements UserType {
 		}
 	}
 
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return cached;
+	@Override
+	public SimpleTime assemble(Serializable cached, Object owner) {
+		return (SimpleTime) cached;
 	}
 
-	public Object deepCopy(Object value) throws HibernateException {
+	@Override
+	public SimpleTime deepCopy(SimpleTime value) {
 		return value;
 	}
 
-	public Serializable disassemble(Object value) throws HibernateException {
-		return (SimpleTime) value;
+	@Override
+	public Serializable disassemble(SimpleTime value) {
+		return value;
 	}
 
-	public boolean equals(Object x, Object y) throws HibernateException {
+	@Override
+	public boolean equals(SimpleTime x, SimpleTime y) {
 		if (x != null) {
 			return x.equals(y);
 		}
 		return (x == null && y == null);
 	}
 
-	public int hashCode(Object x) throws HibernateException {
-		return x.hashCode();
+	@Override
+	public int hashCode(SimpleTime x) {
+		return x != null ? x.hashCode() : 0;
 	}
 
+	@Override
 	public boolean isMutable() {
 		return false;
 	}
 
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	@Override
+	public SimpleTime replace(SimpleTime original, SimpleTime target, Object owner) {
 		return original;
 	}
 
+	@Override
 	public Class<SimpleTime> returnedClass() {
 		return SimpleTime.class;
 	}
 
-	public int[] sqlTypes() {
-		return new int[] { Types.TIMESTAMP };
+	@Override
+	public int getSqlType() {
+		return Types.TIMESTAMP;
 	}
 
 	@Override
-	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+	public SimpleTime nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
 		try {
-			Timestamp timestamp = rs.getTimestamp(names[0]);
+			Timestamp timestamp = rs.getTimestamp(position);
 			if (timestamp == null) {
 				return null;
 			} else {
 				return new SimpleTime(timestamp.getTime());
 			}
 		} catch (Exception e) {
-			String msg = "Uma propriedade do tipo Hora não tem seu campo no banco com o tipo time, timestamp ou date. Objeto: " + owner;
+			String msg = "Uma propriedade do tipo Hora não tem seu campo no banco com o tipo time, timestamp ou date.";
 			throw new RuntimeException(msg, e);
 		}
 	}
 
 	@Override
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-		if (value instanceof SimpleTime) {
-			st.setTimestamp(index, new Timestamp(((SimpleTime) value).getTime()));
+	public void nullSafeSet(PreparedStatement st, SimpleTime value, int index, WrapperOptions options) throws SQLException {
+		if (value != null) {
+			st.setTimestamp(index, new Timestamp(value.getTime()));
 		} else {
 			st.setNull(index, Types.TIMESTAMP);
 		}

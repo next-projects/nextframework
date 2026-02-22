@@ -24,15 +24,11 @@
 package org.nextframework.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.nextframework.classmanager.ClassManager;
 import org.nextframework.classmanager.ClassManagerFactory;
@@ -53,7 +49,10 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author rogelgarcia
@@ -192,18 +191,13 @@ public class NextDispatcherServlet extends org.springframework.web.servlet.Dispa
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
+	// Removido @SuppressWarnings("deprecation") pois as novas classes não estão obsoletas
 	protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
 		Object strategy = super.createDefaultStrategy(context, clazz);
-		if (strategy instanceof AnnotationMethodHandlerAdapter) {
-			AnnotationMethodHandlerAdapter handlerAdapter = (AnnotationMethodHandlerAdapter) strategy;
-			//Para @Controller padrão do Spring fazer mapeamento completo declarado em @RequestMapping
-			handlerAdapter.setAlwaysUseFullPath(true);
-			//Para converter para json
-			List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-			messageConverters.addAll(Arrays.asList(handlerAdapter.getMessageConverters()));
+		if (strategy instanceof RequestMappingHandlerAdapter handlerAdapter) { // Uso de Pattern Matching do Java 17+
+			List<HttpMessageConverter<?>> messageConverters = new ArrayList<>(handlerAdapter.getMessageConverters());
 			messageConverters.add(new NextMappingJackson2HttpMessageConverter());
-			handlerAdapter.setMessageConverters(messageConverters.toArray(new HttpMessageConverter<?>[messageConverters.size()]));
+			handlerAdapter.setMessageConverters(messageConverters);
 		}
 		return strategy;
 	}

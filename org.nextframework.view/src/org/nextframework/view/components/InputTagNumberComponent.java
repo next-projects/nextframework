@@ -2,9 +2,9 @@ package org.nextframework.view.components;
 
 import java.text.DecimalFormat;
 
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.util.Util;
+
+import jakarta.servlet.jsp.JspException;
 
 public class InputTagNumberComponent extends InputTagComponent {
 

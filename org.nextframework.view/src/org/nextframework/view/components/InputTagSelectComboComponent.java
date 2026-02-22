@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.nextframework.authorization.User;
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
@@ -35,6 +33,8 @@ import org.nextframework.view.util.FunctionParameter;
 import org.nextframework.view.util.ParameterType;
 import org.nextframework.web.WebContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class InputTagSelectComboComponent extends InputTagSelectComponent {
 

@@ -2,12 +2,12 @@ package org.nextframework.report.renderer.jasper.builder;
 
 import java.util.Map;
 
+import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.elements.ReportItem;
+
 import net.sf.jasperreports.engine.JRChild;
 import net.sf.jasperreports.engine.design.JRDesignElement;
 import net.sf.jasperreports.engine.design.JasperDesign;
-
-import org.nextframework.report.definition.ReportDefinition;
-import org.nextframework.report.definition.elements.ReportItem;
 
 public abstract class AbstractJasperDesignBuilder implements JasperDesignBuilder {
 

@@ -37,11 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nextframework.authorization.Authorization;
@@ -70,11 +65,12 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.mvc.multiaction.InternalPathMethodNameResolver;
-import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
-import org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver;
-import org.springframework.web.servlet.mvc.multiaction.PropertiesMethodNameResolver;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Copy of Spring's MultiActionController
@@ -391,7 +387,7 @@ public class MultiActionController extends AbstractController {
 			}
 			request.setAttribute("lastAction", requestContext.getLastAction());
 			return result;
-		} catch (NoSuchRequestHandlingMethodException ex) {
+		} catch (NoResourceFoundException ex) {
 			return noSuchMethodHandler(request, response, ex);
 		} catch (NoActionHandlerException e) {
 			return noActionHandler(request, response, e);
@@ -402,7 +398,7 @@ public class MultiActionController extends AbstractController {
 		throw e;
 	}
 
-	protected ModelAndView noSuchMethodHandler(HttpServletRequest request, HttpServletResponse response, NoSuchRequestHandlingMethodException ex)
+	protected ModelAndView noSuchMethodHandler(HttpServletRequest request, HttpServletResponse response, NoResourceFoundException ex)
 			throws IOException {
 		String parameter = request.getParameter(ACTION_PARAMETER);
 		pageNotFoundLogger.warn(ex.getMessage() + ", ACTION=" + parameter + ". " +
@@ -450,7 +446,7 @@ public class MultiActionController extends AbstractController {
 			}
 			request.setAttribute("lastAction", request.getLastAction());
 			return result;
-		} catch (NoSuchRequestHandlingMethodException ex) {
+		} catch (NoResourceFoundException ex) {
 			pageNotFoundLogger.warn(ex.getMessage());
 			try {
 				servletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -577,7 +573,7 @@ public class MultiActionController extends AbstractController {
 				Object result = method.invoke(this.delegate, params.toArray(new Object[params.size()]));
 
 				return convertActionResultToModelAndView(method, result);
-			} catch (NoSuchRequestHandlingMethodException e) {
+			} catch (NoResourceFoundException e) {
 				throw e;
 			} catch (NextException e) {
 				throw e;

@@ -2,7 +2,7 @@ package org.nextframework.test.beans;
 
 public class TestBBean {
 
-	TestCBean c;
+	private TestCBean c;
 
 	public void setC(TestCBean c) {
 		this.c = c;

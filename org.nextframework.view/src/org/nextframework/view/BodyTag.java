@@ -25,9 +25,9 @@ package org.nextframework.view;
 
 import java.io.IOException;
 
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.view.DataGridTag.Status;
+
+import jakarta.servlet.jsp.JspException;
 
 /**
  * @author rogelgarcia

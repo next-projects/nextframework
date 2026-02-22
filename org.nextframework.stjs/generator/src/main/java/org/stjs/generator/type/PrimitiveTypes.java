@@ -15,14 +15,14 @@
  */
 package org.stjs.generator.type;
 
-import japa.parser.ast.type.PrimitiveType;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.stjs.generator.utils.ClassUtils;
 
 import com.google.common.primitives.Primitives;
+
+import japa.parser.ast.type.PrimitiveType;
 
 public class PrimitiveTypes {
 

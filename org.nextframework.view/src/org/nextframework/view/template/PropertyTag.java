@@ -27,10 +27,6 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.Id;
-import javax.persistence.Transient;
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.controller.crud.CrudContext;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.exception.NextException;
@@ -46,6 +42,10 @@ import org.nextframework.view.GroupTag;
 import org.nextframework.view.PanelGridTag;
 import org.nextframework.view.PanelTag;
 import org.nextframework.web.WebUtils;
+
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+import jakarta.servlet.jsp.JspException;
 
 /**
  * @author rogelgarcia

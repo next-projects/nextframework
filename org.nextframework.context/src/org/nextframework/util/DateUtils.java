@@ -125,7 +125,7 @@ public class DateUtils {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	/**
 	 * Retorna o Date correspondente a string no formato yyyy-MM-dd HH:mm:ss
 	 * @param date

@@ -23,15 +23,15 @@
  */
 package org.nextframework.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.nextframework.exception.NextException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
-public class NextCommonsMultipartResolver extends CommonsMultipartResolver {
+import jakarta.servlet.http.HttpServletRequest;
+
+public class NextCommonsMultipartResolver extends StandardServletMultipartResolver {
 
 	public static final String MAXUPLOADEXCEEDED = "MAXUPLOADEXCEEDED";
 

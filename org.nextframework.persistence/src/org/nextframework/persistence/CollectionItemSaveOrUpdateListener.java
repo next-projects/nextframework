@@ -9,4 +9,5 @@ public interface CollectionItemSaveOrUpdateListener<E> {
 	 * @param chain
 	 */
 	public void onSaveOrUpdate(E object, SaveOrUpdateStrategyChain chain);
+
 }

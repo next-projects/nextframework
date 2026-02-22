@@ -16,13 +16,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Embedded;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
-import javax.servlet.http.HttpServletRequest;
-
 import org.nextframework.bean.BeanDescriptor;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
@@ -47,6 +40,13 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.web.bind.ServletRequestParameterPropertyValues;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
+import jakarta.servlet.http.HttpServletRequest;
 
 @SuppressWarnings("rawtypes")
 public class ReportDesignControllerUtil {

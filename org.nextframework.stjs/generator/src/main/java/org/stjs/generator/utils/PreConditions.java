@@ -16,6 +16,7 @@
 package org.stjs.generator.utils;
 
 import static java.lang.String.format;
+
 import japa.parser.ast.Node;
 
 public class PreConditions {

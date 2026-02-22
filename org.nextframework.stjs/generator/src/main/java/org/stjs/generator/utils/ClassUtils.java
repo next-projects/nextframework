@@ -15,9 +15,6 @@
  */
 package org.stjs.generator.utils;
 
-import japa.parser.ast.type.PrimitiveType;
-import japa.parser.ast.type.Type;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -44,6 +41,9 @@ import org.stjs.javascript.annotation.SyntheticType;
 
 import com.google.common.base.Strings;
 import com.google.common.primitives.Primitives;
+
+import japa.parser.ast.type.PrimitiveType;
+import japa.parser.ast.type.Type;
 
 public class ClassUtils {
 

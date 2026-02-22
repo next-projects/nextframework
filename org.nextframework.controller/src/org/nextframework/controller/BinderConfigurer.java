@@ -1,8 +1,8 @@
 package org.nextframework.controller;
 
-import javax.servlet.ServletRequest;
-
 import org.springframework.web.bind.ServletRequestDataBinder;
+
+import jakarta.servlet.ServletRequest;
 
 /**
  * Implemente uma classe BinderConfigurer para configurar os binders dos requests. 

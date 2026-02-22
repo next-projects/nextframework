@@ -5,9 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
-import net.sf.jasperreports.engine.JRAbstractSvgRenderer;
-import net.sf.jasperreports.engine.JRException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfree.chart.JFreeChart;
@@ -23,6 +20,9 @@ import org.jfree.chart.title.TextTitle;
 import org.nextframework.chart.Chart;
 import org.nextframework.chart.ChartRendererFactory;
 import org.nextframework.view.chart.jfree.ChartRendererJFreeChart;
+
+import net.sf.jasperreports.engine.JRAbstractSvgRenderer;
+import net.sf.jasperreports.engine.JRException;
 
 public class ChartDrawRenderer extends JRAbstractSvgRenderer {
 

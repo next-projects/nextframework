@@ -29,9 +29,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.nextframework.controller.crud.CrudContext.ListModel;
 import org.nextframework.core.web.DefaultWebRequestContext;
 import org.nextframework.core.web.WebRequestContext;
@@ -42,6 +39,9 @@ import org.nextframework.util.Util;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author rogelgarcia

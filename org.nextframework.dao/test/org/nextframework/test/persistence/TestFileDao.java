@@ -23,11 +23,11 @@ public class TestFileDao extends TestHibernate {
 	@Override
 	@Before
 	public void setUp() throws ClassNotFoundException, SQLException {
-		
+
 		super.setUp();
-		
+
 		PersistenceConfiguration config = new PersistenceConfiguration();
-		
+
 		HibernateTransactionSessionProvider sessionProvider = new HibernateTransactionSessionProvider() {
 
 			public Session newSession() {
@@ -72,10 +72,10 @@ public class TestFileDao extends TestHibernate {
 			}
 
 		};
-		
+
 		config.setSessionProvider(sessionProvider);
 		PersistenceConfiguration.configure(config);
-		
+
 	}
 
 	@Override

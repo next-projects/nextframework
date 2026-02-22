@@ -26,11 +26,11 @@ package org.nextframework.view;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.jsp.JspException;
-
 import org.nextframework.util.Util;
 import org.nextframework.view.combo.ComboTag;
 import org.nextframework.view.template.PropertyConfigTag;
+
+import jakarta.servlet.jsp.JspException;
 
 /**
  * @author rogelgarcia

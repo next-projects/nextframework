@@ -23,9 +23,9 @@
  */
 package org.nextframework.core.web;
 
-import javax.servlet.ServletContext;
-
 import org.nextframework.core.standard.ApplicationContext;
+
+import jakarta.servlet.ServletContext;
 
 /**
  * @author rogelgarcia

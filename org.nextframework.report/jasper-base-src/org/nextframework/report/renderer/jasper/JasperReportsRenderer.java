@@ -2,6 +2,14 @@ package org.nextframework.report.renderer.jasper;
 
 import java.io.InputStream;
 
+import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.renderer.ReportRendererFactory;
+import org.nextframework.report.renderer.jasper.builder.JasperDesignBuilder;
+import org.nextframework.report.renderer.jasper.builder.MappedJasperDesign;
+import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
+import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
+import org.springframework.beans.BeanUtils;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -10,14 +18,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
-import org.nextframework.report.definition.ReportDefinition;
-import org.nextframework.report.renderer.ReportRendererFactory;
-import org.nextframework.report.renderer.jasper.builder.JasperDesignBuilder;
-import org.nextframework.report.renderer.jasper.builder.MappedJasperDesign;
-import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
-import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
-import org.springframework.beans.BeanUtils;
 
 @SuppressWarnings("unchecked")
 public class JasperReportsRenderer extends AbstractJasperReportsRenderer implements JasperRenderer {

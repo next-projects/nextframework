@@ -30,12 +30,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.JspFragment;
-
 import org.nextframework.exception.NextException;
 import org.nextframework.view.BaseTag;
 import org.nextframework.view.LogicalTag;
+
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.JspFragment;
 
 public class ClassTag extends BaseTag implements CodeTag, LogicalTag {
 

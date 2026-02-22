@@ -19,7 +19,7 @@ public class TestContextUnit {
 		loader.addBeanForClass(TestServiceConsumer.class);
 		loader.addBeanForClass(TestService1.class);
 		NextStandard.start();
-		Assert.notNull(Next.getObject(TestService1.class));
+		Assert.notNull(Next.getObject(TestService1.class), "Service not found!");
 	}
 
 	@Test
@@ -29,7 +29,7 @@ public class TestContextUnit {
 		loader.addBeanForClass(TestService1.class);
 		loader.addBeanForClass(TestService2.class);
 		NextStandard.start();
-		Assert.notNull(Next.getObject(TestService1.class));
+		Assert.notNull(Next.getObject(TestService1.class), "Service not found!");
 		BeanDefinition beanDefinition = ((QualifiedListableBeanFactory) ServiceFactory.getService(ListableBeanFactory.class)).getBeanDefinition("testService1");
 		System.out.println(((AbstractBeanDefinition) beanDefinition).getQualifiers());
 	}
