@@ -3,8 +3,6 @@ package org.nextframework.summary.dynamic;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +36,7 @@ class DynamicSummaryImpl<E> extends DynamicSummary<E> {
 	}
 
 	protected Class<Summary<E>> createSummaryClass() {
-		return createSummaryClass(new URLClassLoader(new URL[0], DynamicSummary.class.getClassLoader()));
-		//return createSummaryClass(DynamicSummary.class.getClassLoader());
+		return createSummaryClass(DynamicSummary.class.getClassLoader());
 	}
 
 	public String getSourceCode() {

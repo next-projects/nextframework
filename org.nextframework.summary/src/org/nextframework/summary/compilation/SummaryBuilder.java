@@ -16,7 +16,7 @@ public class SummaryBuilder {
 
 		String compiledSummaryClassName = summary.getName() + "CompiledSummary__$$";
 		try {
-			return (CompiledSummary<Y, E>) summary.getClassLoader().loadClass(compiledSummaryClassName).newInstance();
+			return (CompiledSummary<Y, E>) summary.getClassLoader().loadClass(compiledSummaryClassName).getDeclaredConstructor().newInstance();
 		} catch (Exception e1) {
 			//se nao conseguir carregar a classe é porque ela nao foi gerada ainda
 		}
@@ -25,7 +25,7 @@ public class SummaryBuilder {
 		byte[] source = javaBuilder.generateSourceForSummary(summary, compiledSummaryClassName);
 		try {
 			//System.out.println(new String(source));
-			return (CompiledSummary<Y, E>) JavaSourceCompiler.compileClass(summary.getClassLoader(), compiledSummaryClassName, source).newInstance();
+			return (CompiledSummary<Y, E>) JavaSourceCompiler.compileClass(summary.getClassLoader(), compiledSummaryClassName, source).getDeclaredConstructor().newInstance();
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Could not load summary for " + summary, e);
 		} catch (Exception e) {
