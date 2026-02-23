@@ -17,5 +17,6 @@
 		<dependency org="com.github.jonpeterson" 		name="jackson-module-model-versioning"	rev="1.2.2"				conf="lib"/>
 
 		<dependency org="org.mockito"					name="mockito-core"						rev="4.11.0"			conf="lib-test"/>
+		<dependency org="org.springframework"			name="spring-test"						rev="4.1.5.RELEASE"		conf="lib-test"/>
 	</dependencies>
 </ivy-module>
