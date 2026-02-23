@@ -6,7 +6,6 @@ import java.util.HashMap;
 import org.nextframework.summary.TextReportPrinter;
 import org.nextframework.summary.compilation.SummaryResult;
 
-@SuppressWarnings("serial")
 public class TestSummaryMap {
 
 	public static void main(String[] args) {

@@ -11,6 +11,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.services"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.core"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-beans-7.0.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-beans-7.0.5.jar" sourcepath="lib/src/spring-beans-7.0.5-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

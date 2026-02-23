@@ -7,7 +7,8 @@
 	<dependencies>
 	
 		<!-- Compile time dependencies -->
-		<dependency org="org.hibernate.orm" 					name="hibernate-core" 					rev="7.2.4.Final"	conf="lib"/>
+		<dependency org="org.hibernate.orm" 					name="hibernate-core" 					rev="7.2.5.Final"	conf="lib"/>
+		<dependency org="org.hibernate.models"				name="hibernate-models"					rev="1.0.1"			conf="lib"/>
 		<dependency org="jakarta.persistence" 				name="jakarta.persistence-api"			rev="3.2.0"			conf="lib"/>
 		<dependency org="org.springframework" 				name="spring-orm" 						rev="7.0.4" 			conf="lib" />
 		<dependency org="org.springframework" 				name="spring-tx" 						rev="7.0.5" 			conf="lib" />
@@ -16,6 +17,11 @@
 		<dependency org="org.dom4j"							name="dom4j"								rev="2.2.0"			conf="lib" />
 		<dependency org="org.hibernate.common" 				name="hibernate-commons-annotations" 		rev="7.0.3.Final"	conf="lib" />
 		<dependency org="jakarta.transaction"					name="jakarta.transaction-api" 			rev="2.0.1"			conf="lib" />
+		<dependency org="com.fasterxml"						name="classmate"							rev="1.7.3"			conf="lib" />
+		<dependency org="jakarta.xml.bind"					name="jakarta.xml.bind-api"				rev="4.0.5"			conf="lib" />
+		<dependency org="net.bytebuddy"						name="byte-buddy"						rev="1.18.5"			conf="lib" />
+		<dependency org="org.antlr"							name="antlr4-runtime"					rev="4.13.2"			conf="lib" />
+		<dependency org="org.jboss.logging"					name="jboss-logging"						rev="3.6.2.Final"	conf="lib" />
 		
 		<!-- Test -->
 		<dependency org="org.hsqldb" 						name="hsqldb" 							rev="2.7.4" 			conf="lib-test"/>

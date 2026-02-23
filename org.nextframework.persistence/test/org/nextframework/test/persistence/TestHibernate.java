@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.jdbc.Work;
 import org.junit.After;
@@ -13,8 +14,9 @@ import org.junit.Before;
 
 public class TestHibernate {
 
-	SessionFactory sessionFactory;
-	Session session;
+	protected SessionFactory sessionFactory;
+	protected Session session;
+	protected Transaction transaction;
 
 	@Before
 	public void setUp() throws ClassNotFoundException, SQLException {
@@ -23,7 +25,6 @@ public class TestHibernate {
 
 		addAnnotatedClasses(annotationConfiguration);
 
-		annotationConfiguration.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 		annotationConfiguration.setProperty("hibernate.show_sql", "true");
 		annotationConfiguration.setProperty("hibernate.hbm2ddl.auto", "update");
 		annotationConfiguration.setProperty("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver");
@@ -34,6 +35,7 @@ public class TestHibernate {
 		sessionFactory = annotationConfiguration.buildSessionFactory();
 
 		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
 
 		//validateHibernateSession();
 	}
@@ -60,6 +62,9 @@ public class TestHibernate {
 
 	@After
 	public void tearDown() throws SQLException {
+		if (transaction.isActive()) {
+			transaction.rollback();
+		}
 		session.close();
 		sessionFactory.close();
 	}
