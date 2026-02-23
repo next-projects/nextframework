@@ -24,8 +24,6 @@
 package org.nextframework.compilation;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +54,7 @@ public class JavaSourceCompiler {
 	 * If the class loader already contains a class with the same name, the existing class will be returned.
 	 * 
 	 */
-	public static synchronized Class<?> compileClass(ClassLoader classLoader, String className, byte[] source) throws InstantiationException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	public static synchronized Class<?> compileClass(ClassLoader classLoader, String className, byte[] source) throws ClassNotFoundException, InstantiationException {
 
 		try {
 			//verificar se a classe já está compilada e carregada
@@ -87,26 +85,15 @@ public class JavaSourceCompiler {
 				throw new RuntimeException(errorMessage);
 			}
 
+			MemoryClassLoader memoryClassLoader = new MemoryClassLoader(classLoader);
 			for (MemoryJavaOutputFileObject javaFileObject : memoryManager.getOutputs()) {
 				compiledFiles.add(javaFileObject);
 				byte[] byteArray = javaFileObject.toByteArray();
-				Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
-				defineClass.setAccessible(true);
-				defineClass.invoke(classLoader, javaFileObject.getClassName(), byteArray, 0, byteArray.length);
+				memoryClassLoader.addClass(javaFileObject.getClassName(), byteArray);
 			}
 
-			return classLoader.loadClass(className);
+			return memoryClassLoader.loadClass(className);
 
-		} catch (SecurityException e) {
-			throw e;
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (IllegalArgumentException e) {
-			throw e;
-		} catch (IllegalAccessException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
 		} finally {
 			if (memoryManager != null) {
 				try {
@@ -115,6 +102,22 @@ public class JavaSourceCompiler {
 					throw new RuntimeException(e);
 				}
 			}
+		}
+
+	}
+
+	/**
+	 * ClassLoader that can define classes from in-memory bytecode.
+	 * Used instead of reflection on ClassLoader.defineClass (blocked since JDK 16+).
+	 */
+	private static class MemoryClassLoader extends ClassLoader {
+
+		MemoryClassLoader(ClassLoader parent) {
+			super(parent);
+		}
+
+		Class<?> addClass(String name, byte[] bytes) {
+			return defineClass(name, bytes, 0, bytes.length);
 		}
 
 	}
