@@ -26,21 +26,19 @@ package org.nextframework.compilation;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.tools.FileObject;
-import javax.tools.JavaFileManager;
+import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
+import javax.tools.StandardJavaFileManager;
 
 /**
  * @author rogelgarcia
  */
-public class MemoryJavaOutputFileManager implements JavaFileManager {
-
-	private JavaFileManager delegate;
+public class MemoryJavaOutputFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
 
 	private List<MemoryJavaOutputFileObject> outputs = new ArrayList<>();
 
@@ -50,71 +48,38 @@ public class MemoryJavaOutputFileManager implements JavaFileManager {
 		return outputs;
 	}
 
-	public MemoryJavaOutputFileManager(JavaFileManager delegate, List<JavaFileObject> compiledFiles) {
-		this.delegate = delegate;
+	public MemoryJavaOutputFileManager(StandardJavaFileManager delegate, List<JavaFileObject> compiledFiles) {
+		super(delegate);
 		this.compiledFiles = compiledFiles;
 	}
 
-	public void close() throws IOException {
-		delegate.close();
-	}
-
+	@Override
 	public void flush() throws IOException {
 		for (MemoryJavaOutputFileObject output : outputs) {
 			output.flush();
 		}
-		delegate.flush();
+		super.flush();
 	}
 
-	public ClassLoader getClassLoader(Location location) {
-		return delegate.getClassLoader(location);
-	}
-
-	public FileObject getFileForInput(Location location, String packageName, String relativeName) throws IOException {
-		return delegate.getFileForInput(location, packageName, relativeName);
-	}
-
-	public FileObject getFileForOutput(Location location, String packageName, String relativeName, FileObject sibling) throws IOException {
-		return delegate.getFileForOutput(location, packageName, relativeName, sibling);
-	}
-
-	public JavaFileObject getJavaFileForInput(Location location, String className, Kind kind) throws IOException {
-		return delegate.getJavaFileForInput(location, className, kind);
-	}
-
+	@Override
 	public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind, FileObject sibling) throws IOException {
-		//System.out.println("MemoryJavaOutputFileManager.getJavaFileForOutput("+location+", "+className+", "+kind+", "+sibling+")");
 		MemoryJavaOutputFileObject memoryJavaOutputFileObject = new MemoryJavaOutputFileObject(URI.create("string:///" + className.replace('.', '/') + Kind.SOURCE.extension), kind, className);
 		outputs.add(memoryJavaOutputFileObject);
 		return memoryJavaOutputFileObject;
 	}
 
-	public boolean handleOption(String current, Iterator<String> remaining) {
-		return delegate.handleOption(current, remaining);
-	}
-
-	public boolean hasLocation(Location location) {
-		return delegate.hasLocation(location);
-	}
-
+	@Override
 	public String inferBinaryName(Location location, JavaFileObject file) {
 		if (file instanceof MemoryJavaOutputFileObject) {
 			return ((MemoryJavaOutputFileObject) file).getClassName();
 		}
-		return delegate.inferBinaryName(location, file);
+		return super.inferBinaryName(location, file);
 	}
 
-	public boolean isSameFile(FileObject a, FileObject b) {
-		return delegate.isSameFile(a, b);
-	}
-
-	public int isSupportedOption(String option) {
-		return delegate.isSupportedOption(option);
-	}
-
+	@Override
 	public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
 		ArrayList<JavaFileObject> list = new ArrayList<JavaFileObject>();
-		Iterable<JavaFileObject> result = delegate.list(location, packageName, kinds, recurse);
+		Iterable<JavaFileObject> result = super.list(location, packageName, kinds, recurse);
 		for (JavaFileObject javaFileObject : result) {
 			list.add(javaFileObject);
 		}
