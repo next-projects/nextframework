@@ -59,7 +59,7 @@ public class SaveOrUpdateStrategy {
 
 	private Object entity;
 
-	private HibernateTransactionSessionProvider<?> hibernateTemplate;
+	private HibernateTransactionSessionProvider<?> hibernateTransactionSessionProvider;
 
 	private List<HibernateCommand> firstCallbacks = new ArrayList<HibernateCommand>();
 	private List<HibernateCommand> callbacks = new ArrayList<HibernateCommand>();
@@ -71,8 +71,8 @@ public class SaveOrUpdateStrategy {
 	 * @param hibernateTemplate
 	 * @param entity Entity that will be persisted
 	 */
-	public SaveOrUpdateStrategy(HibernateTransactionSessionProvider<?> hibernateTemplate, Object entity) {
-		this.hibernateTemplate = hibernateTemplate;
+	public SaveOrUpdateStrategy(HibernateTransactionSessionProvider<?> hibernateTransactionSessionProvider, Object entity) {
+		this.hibernateTransactionSessionProvider = hibernateTransactionSessionProvider;
 		this.entity = entity;
 	}
 
@@ -84,7 +84,7 @@ public class SaveOrUpdateStrategy {
 	 * buscando no contexto do Next os objetos HibernateTemplate e TransactionTemplate.
 	 * Os nomes dos beans devem ser hibernateTemplate e transactionTemplate respectivamente, caso não existam será lançada uma exceção.
 	 * 
-	 * @param hibernateTemplate
+	 * @param hibernateTransactionSessionProvider
 	 * @param entity Entidade que será salva
 	 */
 	public SaveOrUpdateStrategy(Object entity) {
@@ -99,11 +99,11 @@ public class SaveOrUpdateStrategy {
 	 * buscando no contexto do Next os objetos HibernateTemplate e TransactionTemplate.
 	 * Os nomes dos beans devem ser hibernateTemplate e transactionTemplate respectivamente, caso não existam será lançada uma exceção.
 	 * 
-	 * @param hibernateTemplate
+	 * @param hibernateTransactionSessionProvider
 	 * @param entity Entidade que será salva
 	 */
 	public SaveOrUpdateStrategy(String persitenceContext, Object entity) {
-		this.hibernateTemplate = (HibernateTransactionSessionProvider<?>) PersistenceUtils.getSessionProvider(persitenceContext);
+		this.hibernateTransactionSessionProvider = (HibernateTransactionSessionProvider<?>) PersistenceUtils.getSessionProvider(persitenceContext);
 		this.entity = entity;
 	}
 
@@ -188,7 +188,15 @@ public class SaveOrUpdateStrategy {
 				if (clearSession) {
 					session.clear();
 				}
-				return session.merge(entity);
+				Serializable id = PersistenceUtils.getId(entity, hibernateTransactionSessionProvider.getSessionFactory());
+				if (id == null) {
+					session.persist(entity);
+					PersistenceUtils.refreshBeanId(session, entity, null);
+				} else {
+					Object merged = session.merge(entity);
+					PersistenceUtils.refreshBeanId(session, entity, merged);
+				}
+				return null;
 			}
 
 		};
@@ -206,6 +214,7 @@ public class SaveOrUpdateStrategy {
 			public Object doInHibernate(Session session) throws HibernateException {
 				session.clear();
 				session.persist(entity);
+				PersistenceUtils.refreshBeanId(session, entity, null);
 				return entity;
 			}
 
@@ -294,7 +303,8 @@ public class SaveOrUpdateStrategy {
 						SaveOrUpdateStrategyChain chain = new SaveOrUpdateStrategyChain() {
 
 							public void execute() {
-								session.merge(next);
+								Object merged = session.merge(next);
+								PersistenceUtils.refreshBeanId(session, next, merged);
 							}
 
 						};
@@ -344,7 +354,7 @@ public class SaveOrUpdateStrategy {
 
 	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy deleteNotInEntity(String path, CollectionItemDeleteListener<?> listener) {
-		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
+		SessionFactory sessionFactory = hibernateTransactionSessionProvider.getSessionFactory();
 		InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(sessionFactory, entity.getClass(), path);
 		Class itemClass = inverseCollectionProperty.type;
 		String parentProperty = inverseCollectionProperty.property;
@@ -377,7 +387,7 @@ public class SaveOrUpdateStrategy {
 	@SuppressWarnings("rawtypes")
 	private SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass, boolean insertFirst, final CollectionItemDeleteListener collectionItemDeleteListener) {
 		try {
-			Serializable entityid = PersistenceUtils.getId(entity, hibernateTemplate.getSessionFactory());
+			Serializable entityid = PersistenceUtils.getId(entity, hibernateTransactionSessionProvider.getSessionFactory());
 			if (entityid == null) {
 				return this;
 			}
@@ -443,7 +453,7 @@ public class SaveOrUpdateStrategy {
 	}
 
 	private List<?> findItensToDelete(final String parentProperty, final Class<?> itemClass, final Collection<?> collection) {
-		final List<?> toDelete = (List<?>) hibernateTemplate.execute(new HibernateCommand() {
+		final List<?> toDelete = (List<?>) hibernateTransactionSessionProvider.execute(new HibernateCommand() {
 
 			public Object doInHibernate(Session session) {
 
@@ -451,7 +461,7 @@ public class SaveOrUpdateStrategy {
 				Collection<Object> itens = new ArrayList<Object>(collection == null ? new ArrayList<Object>() : collection);
 				for (Iterator<Object> iter = itens.iterator(); iter.hasNext();) {
 					Object entity = iter.next();
-					Serializable id = PersistenceUtils.getId(entity, hibernateTemplate.getSessionFactory());
+					Serializable id = PersistenceUtils.getId(entity, hibernateTransactionSessionProvider.getSessionFactory());
 					if (id == null) {
 						iter.remove();
 					}
@@ -564,7 +574,7 @@ public class SaveOrUpdateStrategy {
 	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy saveOrUpdateManagedDeleteFirst(String path, SaveOrUpdateStrategyListener<?> listener) {
 		try {
-			SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
+			SessionFactory sessionFactory = hibernateTransactionSessionProvider.getSessionFactory();
 			InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(sessionFactory, entity.getClass(), path);
 			Class itemClass = inverseCollectionProperty.type;
 			String parentProperty = inverseCollectionProperty.property;
@@ -658,7 +668,7 @@ public class SaveOrUpdateStrategy {
 	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy saveOrUpdateManagedNormal(String path) {
 		try {
-			SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
+			SessionFactory sessionFactory = hibernateTransactionSessionProvider.getSessionFactory();
 			InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(sessionFactory, entity.getClass(), path);
 			Class itemClass = inverseCollectionProperty.type;
 			String parentProperty = inverseCollectionProperty.property;
@@ -684,7 +694,7 @@ public class SaveOrUpdateStrategy {
 	@SuppressWarnings("rawtypes")
 	public void execute() {
 		flush();
-		hibernateTemplate.executeInTransaction(new HibernateTransactionCommand() {
+		hibernateTransactionSessionProvider.executeInTransaction(new HibernateTransactionCommand() {
 
 			@Override
 			public Object doInHibernate(Session session, Object transactionStatus) {
