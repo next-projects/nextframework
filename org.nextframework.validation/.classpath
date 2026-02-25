@@ -9,6 +9,6 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.types"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.web"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-validator-1.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-validator-1.10.1.jar" sourcepath="lib/src/commons-validator-1.10.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -10,7 +10,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.persistence"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.summary"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="provided/hibernate-core-7.2.4.Final.jar"/>
-	<classpathentry kind="lib" path="provided/jakarta.persistence-api-3.2.0.jar"/>
+	<classpathentry kind="lib" path="provided/jakarta.persistence-api-3.2.0.jar" sourcepath="provided/src/jakarta.persistence-api-3.2.0-sources.jar"/>
+	<classpathentry kind="lib" path="provided/hibernate-core-7.2.5.Final.jar" sourcepath="provided/src/hibernate-core-7.2.5.Final-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

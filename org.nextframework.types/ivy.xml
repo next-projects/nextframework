@@ -5,7 +5,7 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
-		<dependency org="org.hibernate.orm" 		name="hibernate-core" 			rev="7.2.4.Final"	conf="provided"/>
+		<dependency org="org.hibernate.orm" 		name="hibernate-core" 			rev="7.2.5.Final"	conf="provided"/>
 		<dependency org="jakarta.persistence" 	name="jakarta.persistence-api" 	rev="3.2.0"			conf="provided"/>
 	</dependencies>
 </ivy-module>
