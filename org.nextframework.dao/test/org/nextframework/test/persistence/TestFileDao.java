@@ -1,7 +1,5 @@
 package org.nextframework.test.persistence;
 
-import java.sql.SQLException;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,11 +20,9 @@ public class TestFileDao extends TestHibernate {
 
 	@Override
 	@Before
-	public void setUp() throws ClassNotFoundException, SQLException {
+	public void setUp() throws Exception {
 
 		super.setUp();
-
-		PersistenceConfiguration config = new PersistenceConfiguration();
 
 		HibernateTransactionSessionProvider sessionProvider = new HibernateTransactionSessionProvider() {
 
@@ -50,7 +46,10 @@ public class TestFileDao extends TestHibernate {
 			public Object executeInTransaction(final HibernateTransactionCommand command) {
 				Session newSession = newSession();
 				System.out.println("begin");
-				Transaction t = newSession.beginTransaction();
+				Transaction t = newSession.getTransaction();
+				if (t == null || !t.isActive()) {
+					t = newSession.beginTransaction();
+				}
 				try {
 					Object value = execute(new HibernateCommand() {
 
@@ -73,6 +72,7 @@ public class TestFileDao extends TestHibernate {
 
 		};
 
+		PersistenceConfiguration config = new PersistenceConfiguration();
 		config.setSessionProvider(sessionProvider);
 		PersistenceConfiguration.configure(config);
 
@@ -82,43 +82,45 @@ public class TestFileDao extends TestHibernate {
 	protected void addAnnotatedClasses(Configuration annotationConfiguration) {
 		super.addAnnotatedClasses(annotationConfiguration);
 		annotationConfiguration.addAnnotatedClass(TestEntitySuperDao.class);
+		annotationConfiguration.addAnnotatedClass(TestEntityChildDAO.class);
 		annotationConfiguration.addAnnotatedClass(TestEntityExtDao.class);
 		annotationConfiguration.addAnnotatedClass(TestEntityFile.class);
 	}
 
 	@Test
-	public void testSaveChildFile() {
-		final FileDAO<?> fd = new FileDAO(TestEntityFile.class, true) {
+	@SuppressWarnings("all")
+	public void testSaveChildFile() throws Exception {
+
+		final FileDAO<?> fd = new FileDAO(TestEntityFile.class, true);
+		GenericDAO<TestEntityExtDao> dao = new GenericDAO<TestEntityExtDao>(TestEntityExtDao.class) {
+
+			{
+				fileDAO = (FileDAO<File>) fd;
+				initDao();
+			}
+
 		};
-		GenericDAO<TestEntityExtDao> dao;
-		try {
-			dao = new GenericDAO<TestEntityExtDao>(TestEntityExtDao.class) {
 
-				{
-					fileDAO = (FileDAO<File>) fd;
-					initDao();
-				}
-
-			};
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		HibernateTemplate ht = new HibernateTemplate(PersistenceConfiguration.getConfig().getSessionProvider().getSessionFactory());
-		fd.setPersistenceContext(PersistenceConfiguration.DEFAULT_CONFIG);
-		dao.setPersistenceContext(PersistenceConfiguration.DEFAULT_CONFIG);
+		PersistenceConfiguration config = PersistenceConfiguration.getConfig();
+		HibernateTemplate ht = new HibernateTemplate(config.getSessionProvider().getSessionFactory());
+		fd.setPersistenceContext(config.getPersistenceContext());
+		dao.setPersistenceContext(config.getPersistenceContext());
 		fd.setHibernateTemplate(ht);
 		dao.setHibernateTemplate(ht);
+
 		TestEntityExtDao child1 = new TestEntityExtDao();
+		dao.saveOrUpdate(child1);
+		System.out.println(child1.getId());
+
 		TestEntityFile entityFile = new TestEntityFile();
 		entityFile.setName("f.txt");
 		entityFile.setSize(10L);
 		entityFile.setContent(new byte[10]);
-		dao.saveOrUpdate(child1);
-		System.out.println(child1.getId());
 		child1 = new TestEntityExtDao();
 		child1.setId(1L);
 		child1.setEntityFile(entityFile);
 		dao.saveOrUpdate(child1);
+
 	}
 
 }

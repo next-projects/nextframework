@@ -16,12 +16,10 @@ import jakarta.persistence.OneToMany;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class TestEntitySuperDao {
 
-	Long id;
-	String name;
-
-	List<TestEntityChild> children;
-
-	TestEntityFile entityFile;
+	private Long id;
+	private String name;
+	private List<TestEntityChildDAO> children;
+	private TestEntityFile entityFile;
 
 	@Id
 	@GeneratedValue
@@ -43,11 +41,11 @@ public class TestEntitySuperDao {
 	}
 
 	@OneToMany(mappedBy = "parentSuper")
-	public List<TestEntityChild> getChildren() {
+	public List<TestEntityChildDAO> getChildren() {
 		return children;
 	}
 
-	public void setChildren(List<TestEntityChild> children) {
+	public void setChildren(List<TestEntityChildDAO> children) {
 		this.children = children;
 	}
 

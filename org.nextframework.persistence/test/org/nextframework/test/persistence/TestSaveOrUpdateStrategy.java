@@ -1,6 +1,7 @@
 package org.nextframework.test.persistence;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -26,7 +27,7 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 	@SuppressWarnings("rawtypes")
 	@Override
 	@Before
-	public void setUp() throws ClassNotFoundException, SQLException {
+	public void setUp() throws Exception {
 
 		super.setUp();
 
@@ -79,13 +80,15 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 
 	@Test
 	public void testNew() {
-		new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent());
+		TestEntityParent entity = new TestEntityParent();
+		new SaveOrUpdateStrategy(sessionProvider, entity);
 	}
 
 	@Test
 	public void testSaveEntity() {
 
-		SaveOrUpdateStrategy ss = new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent());
+		TestEntityParent entity = new TestEntityParent();
+		SaveOrUpdateStrategy ss = new SaveOrUpdateStrategy(sessionProvider, entity);
 		ss.saveEntity();
 		ss.execute();
 
@@ -93,7 +96,9 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 
 			@Override
 			public void execute(Connection connection) throws SQLException {
-				boolean saved = connection.prepareStatement("select * from testentityparent").executeQuery().next();
+				PreparedStatement ps = connection.prepareStatement("select * from testentityparent");
+				ResultSet rs = ps.executeQuery();
+				boolean saved = rs.next();
 				Assert.assertEquals(true, saved);
 
 				connection.prepareStatement("delete from testentityparent").executeUpdate();
@@ -107,10 +112,12 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 	@Test
 	public void testSave2Entity() {
 
-		SaveOrUpdateStrategy ss = new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent("A"));
+		TestEntityParent entityA = new TestEntityParent("A");
+		SaveOrUpdateStrategy ss = new SaveOrUpdateStrategy(sessionProvider, entityA);
 		ss.saveEntity();
 
-		SaveOrUpdateStrategy ss2 = new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent("B"));
+		TestEntityParent entityB = new TestEntityParent("B");
+		SaveOrUpdateStrategy ss2 = new SaveOrUpdateStrategy(sessionProvider, entityB);
 		ss2.saveEntity();
 
 		ss.attach(ss2);
@@ -139,10 +146,12 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 	@Test
 	public void testSave2EntityRollback() {
 
-		SaveOrUpdateStrategy ss = new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent("A"));
+		TestEntityParent entityA = new TestEntityParent("A");
+		SaveOrUpdateStrategy ss = new SaveOrUpdateStrategy(sessionProvider, entityA);
 		ss.saveEntity();
 
-		SaveOrUpdateStrategy ss2 = new SaveOrUpdateStrategy(sessionProvider, new TestEntityParent("B"));
+		TestEntityParent entityB = new TestEntityParent("B");
+		SaveOrUpdateStrategy ss2 = new SaveOrUpdateStrategy(sessionProvider, entityB);
 		ss2.saveEntity();
 
 		ss.attach(new HibernateCommand() {
