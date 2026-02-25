@@ -1,7 +1,5 @@
 package org.nextframework.test.persistence;
 
-import java.sql.SQLException;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Before;
@@ -21,7 +19,7 @@ public class TestQueryBuilder extends TestHibernate {
 
 	@Override
 	@Before
-	public void setUp() throws ClassNotFoundException, SQLException {
+	public void setUp() throws Exception {
 
 		super.setUp();
 

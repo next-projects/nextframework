@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.context.internal.ManagedSessionContext;
 import org.hibernate.jdbc.Work;
 import org.junit.After;
 import org.junit.Before;
@@ -19,23 +20,26 @@ public class TestHibernate {
 	protected Transaction transaction;
 
 	@Before
-	public void setUp() throws ClassNotFoundException, SQLException {
+	public void setUp() throws Exception {
 
-		Configuration annotationConfiguration = new Configuration();
+		Configuration config = new Configuration();
 
-		addAnnotatedClasses(annotationConfiguration);
+		config.setProperty("hibernate.show_sql", "true");
+		config.setProperty("hibernate.hbm2ddl.auto", "update");
+		config.setProperty("hibernate.current_session_context_class", "managed");
 
-		annotationConfiguration.setProperty("hibernate.show_sql", "true");
-		annotationConfiguration.setProperty("hibernate.hbm2ddl.auto", "update");
-		annotationConfiguration.setProperty("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver");
-		annotationConfiguration.setProperty("hibernate.connection.url", "jdbc:hsqldb:mem:memdb");
-		annotationConfiguration.setProperty("hibernate.connection.username", "sa");
-		annotationConfiguration.setProperty("hibernate.connection.password", "update");
+		config.setProperty("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver");
+		config.setProperty("hibernate.connection.url", "jdbc:hsqldb:mem:memdb");
+		config.setProperty("hibernate.connection.username", "sa");
+		config.setProperty("hibernate.connection.password", "update");
 
-		sessionFactory = annotationConfiguration.buildSessionFactory();
+		addAnnotatedClasses(config);
 
+		sessionFactory = config.buildSessionFactory();
 		session = sessionFactory.openSession();
 		transaction = session.beginTransaction();
+
+		ManagedSessionContext.bind(session);
 
 		//validateHibernateSession();
 	}
@@ -62,9 +66,10 @@ public class TestHibernate {
 
 	@After
 	public void tearDown() throws SQLException {
-		if (transaction.isActive()) {
+		if (transaction != null && transaction.isActive()) {
 			transaction.rollback();
 		}
+		ManagedSessionContext.unbind(sessionFactory);
 		session.close();
 		sessionFactory.close();
 	}
