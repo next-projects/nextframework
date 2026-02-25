@@ -5,7 +5,5 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
-		<dependency org="javax.mail"			name="mail"						rev="1.4.7"		conf="lib"/>
-		<dependency org="aopalliance" 			name="aopalliance"				rev="1.0"		conf="lib" />
 	</dependencies>
 </ivy-module>
