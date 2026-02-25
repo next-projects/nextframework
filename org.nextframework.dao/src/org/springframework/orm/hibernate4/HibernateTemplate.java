@@ -25,7 +25,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Filter;
-import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
@@ -35,6 +34,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.nextframework.exception.ApplicationException;
+import org.nextframework.persistence.PersistenceUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -370,7 +370,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<T>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public T doInHibernate(Session session) throws HibernateException {
 				if (lockMode != null) {
 					return (T) session.get(entityClass, id, new LockOptions(lockMode));
@@ -394,6 +394,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<Object>() {
 
 			@Override
+			@SuppressWarnings("all")
 			public Object doInHibernate(Session session) throws HibernateException {
 				if (lockMode != null) {
 					return session.get(entityName, id, new LockOptions(lockMode));
@@ -417,7 +418,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<T>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public T doInHibernate(Session session) throws HibernateException {
 				if (lockMode != null) {
 					return (T) session.get(entityClass, id, new LockOptions(lockMode));
@@ -558,6 +559,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			public Serializable doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
 				session.persist(entity);
+				PersistenceUtils.refreshBeanId(session, entity, null);
 				return (Serializable) session.getIdentifier(entity);
 			}
 
@@ -572,6 +574,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			public Serializable doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
 				session.persist(entityName, entity);
+				PersistenceUtils.refreshBeanId(session, entity, null);
 				return (Serializable) session.getIdentifier(entity);
 			}
 
@@ -590,10 +593,8 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				session.merge(entity);
-				//if (lockMode != null) {
-				//	session.buildLockRequest(new LockOptions(lockMode)).lock(entity);
-				//}
+				Object merged = session.merge(entity);
+				PersistenceUtils.refreshBeanId(session, entity, merged);
 				return null;
 			}
 
@@ -614,10 +615,8 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				session.merge(entityName, entity);
-				//if (lockMode != null) {
-				//	session.buildLockRequest(new LockOptions(lockMode)).lock(entityName, entity);
-				//}
+				Object merged = session.merge(entityName, entity);
+				PersistenceUtils.refreshBeanId(session, entity, merged);
 				return null;
 			}
 
@@ -631,7 +630,8 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				session.merge(entity);
+				Object merged = session.merge(entity);
+				PersistenceUtils.refreshBeanId(session, entity, merged);
 				return null;
 			}
 
@@ -645,7 +645,8 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				session.merge(entityName, entity);
+				Object merged = session.merge(entityName, entity);
+				PersistenceUtils.refreshBeanId(session, entity, merged);
 				return null;
 			}
 
@@ -692,6 +693,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
 				session.persist(entity);
+				PersistenceUtils.refreshBeanId(session, entity, null);
 				return null;
 			}
 
@@ -706,6 +708,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
 				session.persist(entityName, entity);
+				PersistenceUtils.refreshBeanId(session, entity, null);
 				return null;
 			}
 
@@ -717,10 +720,11 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<T>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
 			public T doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				return (T) session.merge(entity);
+				Object merged = session.merge(entity);
+				PersistenceUtils.refreshBeanId(session, entity, merged);
+				return null;
 			}
 
 		});
@@ -731,10 +735,11 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<T>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
 			public T doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				return (T) session.merge(entityName, entity);
+				Object merged = session.merge(entityName, entity);
+				PersistenceUtils.refreshBeanId(session, entity, merged);
+				return null;
 			}
 
 		});
@@ -752,9 +757,6 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				//if (lockMode != null) {
-				//	session.buildLockRequest(new LockOptions(lockMode)).lock(entity);
-				//}
 				session.remove(entity);
 				return null;
 			}
@@ -824,7 +826,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<List<?>>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public List<?> doInHibernate(Session session) throws HibernateException {
 				Query queryObject = session.createQuery(queryString);
 				prepareQuery(queryObject);
@@ -856,7 +858,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<List<?>>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public List<?> doInHibernate(Session session) throws HibernateException {
 				Query queryObject = session.createQuery(queryString);
 				prepareQuery(queryObject);
@@ -878,7 +880,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<List<?>>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public List<?> doInHibernate(Session session) throws HibernateException {
 				Query queryObject = session.createQuery(queryString);
 				prepareQuery(queryObject);
@@ -898,7 +900,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<List<?>>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public List<?> doInHibernate(Session session) throws HibernateException {
 				Query queryObject = session.getNamedQuery(queryName);
 				prepareQuery(queryObject);
@@ -931,7 +933,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<List<?>>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public List<?> doInHibernate(Session session) throws HibernateException {
 				Query queryObject = session.getNamedQuery(queryName);
 				prepareQuery(queryObject);
@@ -953,7 +955,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<List<?>>() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("all")
 			public List<?> doInHibernate(Session session) throws HibernateException {
 				Query queryObject = session.getNamedQuery(queryName);
 				prepareQuery(queryObject);
@@ -1009,6 +1011,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		return executeWithNativeSession(new HibernateCallback<Integer>() {
 
 			@Override
+			@SuppressWarnings("all")
 			public Integer doInHibernate(Session session) throws HibernateException {
 				Query queryObject = session.createQuery(queryString);
 				prepareQuery(queryObject);
@@ -1038,7 +1041,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	 * @see org.hibernate.FlushMode#MANUAL
 	 */
 	protected void checkWriteOperationAllowed(Session session) throws InvalidDataAccessApiUsageException {
-		if (isCheckWriteOperations() && session.getFlushMode().ordinal() < FlushMode.COMMIT.ordinal()) {
+		if (isCheckWriteOperations() && session.getFlushMode().ordinal() < FlushModeType.COMMIT.ordinal()) {
 			throw new InvalidDataAccessApiUsageException(
 					"Write operations are not allowed in read-only mode (FlushMode.MANUAL): " +
 							"Turn your Session into FlushMode.COMMIT/AUTO or remove 'readOnly' marker from transaction definition.");

@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.metamodel.MappingMetamodel;
@@ -361,6 +362,15 @@ public class PersistenceUtils {
 			}
 		}
 		return false;
+	}
+
+	public static void refreshBeanId(Session session, Object originalEntity, Object returnedEntity) {
+		session.flush();
+		if (originalEntity != null && returnedEntity != null) {
+			String idAttribute = PersistenceUtils.getIdPropertyName(originalEntity.getClass(), session.getSessionFactory());
+			Object id = PersistenceUtils.getProperty(returnedEntity, idAttribute);
+			PersistenceUtils.setProperty(originalEntity, idAttribute, id);
+		}
 	}
 
 }
