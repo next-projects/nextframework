@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportComposite;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
 
 public class TestHtml {
@@ -60,7 +62,10 @@ public class TestHtml {
 	}
 
 	public static void main(String[] args) throws Exception {
+
 		ReportDefinition def = new ReportDefinition("BASE");
+		def.setParameter(BaseReportBuilder.CONVERTER, new ReportBuilderValueConverter());
+
 		List<Bean> beans = new ArrayList<TestHtml.Bean>();
 		for (int i = 0; i < 2; i++) {
 			beans.add(Bean.builder().a("a" + i).b("b" + i).build());
@@ -91,6 +96,7 @@ public class TestHtml {
 		out.write(renderAsHtml.getBytes());
 		out.flush();
 		out.close();
+
 	}
 
 	public static ReportDefinition getSub1() {

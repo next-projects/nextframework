@@ -2,8 +2,8 @@ package org.nextframework.test.report.builder;
 
 public class TestExample3BeanEvaluation {
 
-	String driver;
-	Integer points;
+	private String driver;
+	private Integer points;
 
 	public TestExample3BeanEvaluation(String driver, Integer points) {
 		this.driver = driver;

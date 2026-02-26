@@ -3,14 +3,18 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="google-src"/>
 	<classpathentry kind="src" path="jfreechart-src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.jsbuilder"/>
 	<classpathentry kind="lib" path="lib/batik-awt-util-1.6-1.jar"/>
 	<classpathentry kind="lib" path="lib/batik-dom-1.6-1.jar"/>
 	<classpathentry kind="lib" path="lib/batik-svggen-1.6-1.jar"/>
 	<classpathentry kind="lib" path="lib/batik-util-1.6-1.jar"/>
 	<classpathentry kind="lib" path="lib/batik-xml-1.6-1.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.23.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.23.jar" sourcepath="lib/src/jcommon-1.0.23-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.19.jar" sourcepath="lib/src/jfreechart-1.0.19-sources.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.summary"/>
 	<classpathentry kind="output" path="bin"/>
