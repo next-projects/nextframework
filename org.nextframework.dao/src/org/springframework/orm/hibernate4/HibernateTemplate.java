@@ -17,6 +17,9 @@
 package org.springframework.orm.hibernate4;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,12 +41,49 @@ import org.nextframework.persistence.PersistenceUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.orm.jpa.hibernate.HibernateTransactionManager;
+import org.springframework.orm.jpa.hibernate.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.hibernate.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
 import jakarta.persistence.FlushModeType;
 
+/**
+ * Helper class that simplifies Hibernate data access code. Automatically
+ * converts HibernateExceptions into DataAccessExceptions, following the
+ * {@code org.springframework.dao} exception hierarchy.
+ *
+ * <p>The central method is {@code execute}, supporting Hibernate access code
+ * implementing the {@link HibernateCallback} interface. It provides Hibernate Session
+ * handling such that neither the HibernateCallback implementation nor the calling
+ * code needs to explicitly care about retrieving/closing Hibernate Sessions,
+ * or handling Session lifecycle exceptions. For typical single step actions,
+ * there are various convenience methods (find, load, saveOrUpdate, delete).
+ *
+ * <p>Can be used within a service implementation via direct instantiation
+ * with a SessionFactory reference, or get prepared in an application context
+ * and given to services as bean reference. Note: The SessionFactory should
+ * always be configured as bean in the application context, in the first case
+ * given to the service directly, in the second case to the prepared template.
+ *
+ * <p><b>NOTE: Hibernate access code can also be coded in plain Hibernate style.
+ * Hence, for newly started projects, consider adopting the standard Hibernate
+ * style of coding data access objects instead, based on
+ * {@link org.hibernate.SessionFactory#getCurrentSession()}.
+ * This HibernateTemplate primarily exists as a migration helper for Hibernate 3
+ * based data access code, to benefit from bug fixes in Hibernate 4.x.</b>
+ *
+ * @author Juergen Hoeller
+ * @since 4.0.1
+ * @see #setSessionFactory
+ * @see HibernateCallback
+ * @see org.hibernate.Session
+ * @see LocalSessionFactoryBean
+ * @see HibernateTransactionManager
+ * @see org.springframework.orm.hibernate4.support.OpenSessionInViewFilter
+ * @see org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor
+ */
 public class HibernateTemplate implements HibernateOperations, InitializingBean {
 
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -1092,6 +1132,53 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		} else {
 			queryObject.setParameter(paramName, value);
 		}
+	}
+
+	/**
+	 * Invocation handler that suppresses close calls on Hibernate Sessions.
+	 * Also prepares returned Query and Criteria objects.
+	 * @see org.hibernate.Session#close
+	 */
+	private class CloseSuppressingInvocationHandler implements InvocationHandler {
+
+		private final Session target;
+
+		public CloseSuppressingInvocationHandler(Session target) {
+			this.target = target;
+		}
+
+		@Override
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			// Invocation on Session interface coming in...
+
+			if (method.getName().equals("equals")) {
+				// Only consider equal when proxies are identical.
+				return (proxy == args[0]);
+			} else if (method.getName().equals("hashCode")) {
+				// Use hashCode of Session proxy.
+				return System.identityHashCode(proxy);
+			} else if (method.getName().equals("close")) {
+				// Handle close method: suppress, not valid.
+				return null;
+			}
+
+			// Invoke method on target Session.
+			try {
+				Object retVal = method.invoke(this.target, args);
+
+				// If return value is a Query or Criteria, apply transaction timeout.
+				// Applies to createQuery, getNamedQuery, createCriteria.
+				if (retVal instanceof Query) {
+					prepareQuery(((Query) retVal));
+				}
+
+				return retVal;
+			} catch (InvocationTargetException ex) {
+				throw ex.getTargetException();
+			}
+
+		}
+
 	}
 
 }
