@@ -917,9 +917,6 @@ public class MultiActionController extends AbstractController {
 	protected void validate(WebRequestContext request, Object command, ServletRequestDataBinder binder) {
 		if (!suppressValidation(request, command)) {
 			BindException errors = new BindException(binder.getBindingResult());
-			if (request.getAttribute(NextCommonsMultipartResolver.MAXUPLOADEXCEEDED) != null) {
-				errors.reject("org.nextframework.controller.MultiActionController.maxUploadExceeded", "O tamanho máximo de upload de arquivos (10M) foi excedido");
-			}
 			ObjectAnnotationValidator objectAnnotationValidator = new ObjectAnnotationValidator(ServiceFactory.getService(ValidatorRegistry.class), request.getServletRequest());
 			objectAnnotationValidator.validate(command, errors);
 			String acao = request.getParameter(ACTION_PARAMETER);

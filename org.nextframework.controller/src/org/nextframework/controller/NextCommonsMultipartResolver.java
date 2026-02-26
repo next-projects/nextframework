@@ -23,8 +23,6 @@
  */
 package org.nextframework.controller;
 
-import org.nextframework.exception.NextException;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
@@ -33,19 +31,13 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class NextCommonsMultipartResolver extends StandardServletMultipartResolver {
 
-	public static final String MAXUPLOADEXCEEDED = "MAXUPLOADEXCEEDED";
-
 	public static final String RESOLVED_MULTIPART_REQUEST = "RESOLVED_MULTIPART_REQUEST";
 
 	@Override
 	public MultipartHttpServletRequest resolveMultipart(HttpServletRequest request) throws MultipartException {
-		try {
-			MultipartHttpServletRequest resolvedMultipartRequest = super.resolveMultipart(request);
-			request.setAttribute(RESOLVED_MULTIPART_REQUEST, resolvedMultipartRequest);
-			return resolvedMultipartRequest;
-		} catch (MaxUploadSizeExceededException e) {
-			throw new NextException("O tamanho máximo de upload de arquivos (" + e.getMaxUploadSize() + ") foi excedido ");
-		}
+		MultipartHttpServletRequest resolvedMultipartRequest = super.resolveMultipart(request);
+		request.setAttribute(RESOLVED_MULTIPART_REQUEST, resolvedMultipartRequest);
+		return resolvedMultipartRequest;
 	}
 
 }
