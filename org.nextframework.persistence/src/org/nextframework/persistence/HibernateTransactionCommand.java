@@ -3,8 +3,8 @@ package org.nextframework.persistence;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
-public interface HibernateTransactionCommand<E> {
+public interface HibernateTransactionCommand<TS, BEAN> {
 
-	Object doInHibernate(Session session, E transactionStatus) throws HibernateException;
+	BEAN doInHibernate(Session session, TS transactionStatus) throws HibernateException;
 
 }

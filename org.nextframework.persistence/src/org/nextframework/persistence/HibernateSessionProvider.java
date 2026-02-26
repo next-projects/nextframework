@@ -6,6 +6,6 @@ public interface HibernateSessionProvider {
 
 	SessionFactory getSessionFactory();
 
-	Object execute(HibernateCommand command);
+	<BEAN> BEAN execute(HibernateCommand<BEAN> command);
 
 }

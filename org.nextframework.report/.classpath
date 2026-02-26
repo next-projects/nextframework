@@ -7,7 +7,11 @@
 	<classpathentry kind="src" path="builder-src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.chart"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/barbecue-1.5-beta1.jar"/>
@@ -15,8 +19,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/jasperreports-6.0.3.jar" sourcepath="lib/src/jasperreports-6.0.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/itextpdf-5.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/itext-pdfa-5.5.5.jar"/>
-	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.2.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.11.jar" sourcepath="lib/src/commons-codec-1.11-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-1.11.0.jar" sourcepath="lib/src/commons-beanutils-1.11.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.2.jar" sourcepath="lib/src/commons-collections-3.2.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
