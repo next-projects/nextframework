@@ -28,13 +28,13 @@ public class HibernateTransactionTemplateSessionProvider extends HibernateTempla
 	}
 
 	@Override
-	public Object executeInTransaction(final HibernateTransactionCommand<TransactionStatus> command) {
-		return getTransactionTemplate().execute(new TransactionCallback<Object>() {
+	public <BEAN> BEAN executeInTransaction(HibernateTransactionCommand<TransactionStatus, BEAN> command) {
+		return getTransactionTemplate().execute(new TransactionCallback<BEAN>() {
 
-			public Object doInTransaction(final TransactionStatus status) {
-				return execute(new HibernateCommand() {
+			public BEAN doInTransaction(TransactionStatus status) {
+				return execute(new HibernateCommand<BEAN>() {
 
-					public Object doInHibernate(Session session) throws HibernateException {
+					public BEAN doInHibernate(Session session) throws HibernateException {
 						return command.doInHibernate(session, status);
 					}
 

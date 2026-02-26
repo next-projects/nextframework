@@ -7,13 +7,14 @@
 	<dependencies>
 
 		<!-- jasperreports depends on it -->
-		<dependency org="commons-collections"		name="commons-collections"	rev="3.2.1"	conf="lib" /> 
-		<dependency org="commons-beanutils" 		name="commons-beanutils" 	rev="1.9.2"	conf="lib" />
-		<dependency org="commons-codec" 			name="commons-codec" 		rev="1.11"	conf="lib" />
-		<dependency org="commons-digester"		name="commons-digester"		rev="2.1"	conf="lib" />
-		<dependency org="net.sf.jasperreports"	name="jasperreports"			rev="6.0.3" conf="lib" />
-		<dependency org="com.itextpdf" 			name="itextpdf" 				rev="5.5.5" conf="lib" />
-		<dependency org="com.itextpdf" 			name="itext-pdfa" 			rev="5.5.5"	conf="lib"/>
+		<dependency org="commons-collections"		name="commons-collections"	rev="3.2.2"		conf="lib" /> 
+		<dependency org="commons-beanutils" 		name="commons-beanutils" 	rev="1.11.0"		conf="lib" />
+		<dependency org="commons-logging"		name="commons-logging"		rev="1.3.5"		conf="lib" />
+		<dependency org="commons-codec" 			name="commons-codec" 		rev="1.11"		conf="lib" />
+		<dependency org="commons-digester"		name="commons-digester"		rev="2.1"		conf="lib" />
+		<dependency org="net.sf.jasperreports"	name="jasperreports"			rev="6.0.3"		conf="lib" />
+		<dependency org="com.itextpdf" 			name="itextpdf" 				rev="5.5.5"		conf="lib" />
+		<dependency org="com.itextpdf" 			name="itext-pdfa" 			rev="5.5.5"		conf="lib"/>
 
 		<!-- Barcode library -->
 		<dependency org="net.sourceforge.barbecue" name="barbecue" 			rev="1.5-beta1" conf="lib"/>
