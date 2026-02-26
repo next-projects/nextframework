@@ -60,6 +60,9 @@ public class TestTransactionProvider extends TestSaveOrUpdateStrategy {
 
 		sessionProvider = sp;
 
+		// Open a session for verification queries (not part of the transaction)
+		session = sessionFactory.openSession();
+
 	}
 
 	protected void configureDB(Configuration config) {
@@ -93,6 +96,9 @@ public class TestTransactionProvider extends TestSaveOrUpdateStrategy {
 	@After
 	@Override
 	public void tearDown() throws SQLException {
+		if (session != null && session.isOpen()) {
+			session.close();
+		}
 		sessionFactory.close();
 	}
 
