@@ -28,7 +28,6 @@ public class HibernateBeanDefinitionLoader implements BeanDefinitionLoader {
 	protected final Log logger = LogFactory.getLog(LOG_NAME);
 
 	@Override
-	@SuppressWarnings("serial")
 	public void loadBeanDefinitions(AbstractApplicationContext applicationContext, DefaultListableBeanFactory beanFactory) {
 
 //		((AbstractRefreshableApplicationContext)applicationContext).get
@@ -158,7 +157,7 @@ public class HibernateBeanDefinitionLoader implements BeanDefinitionLoader {
 		}
 
 		GenericBeanDefinition sessionFactoryBD = new GenericBeanDefinition();
-		sessionFactoryBD.setBeanClassName("org.springframework.orm.hibernate4.HibernateTransactionManager");
+		sessionFactoryBD.setBeanClassName("org.springframework.orm.jpa.hibernate.HibernateTransactionManager");
 		sessionFactoryBD.setPropertyValues(new MutablePropertyValues());
 		sessionFactoryBD.getPropertyValues().add("sessionFactory", new RuntimeBeanReference("sessionFactory" + discriminator));
 		sessionFactoryBD.getPropertyValues().add("dataSource", new RuntimeBeanReference("dataSource" + discriminator));
@@ -199,7 +198,7 @@ public class HibernateBeanDefinitionLoader implements BeanDefinitionLoader {
 		}
 
 		GenericBeanDefinition sessionFactoryBD = new GenericBeanDefinition();
-		sessionFactoryBD.setBeanClassName("org.springframework.orm.hibernate4.LocalSessionFactoryBean");
+		sessionFactoryBD.setBeanClassName("org.springframework.orm.jpa.hibernate.LocalSessionFactoryBean");
 		sessionFactoryBD.setPropertyValues(new MutablePropertyValues());
 		sessionFactoryBD.getPropertyValues().add("dataSource", new RuntimeBeanReference("dataSource" + discriminator));
 		sessionFactoryBD.getPropertyValues().add("packagesToScan", ServiceFactory.getService(ApplicationScanPathsProvider.class).getApplicationScanPaths());

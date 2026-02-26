@@ -36,7 +36,6 @@ public class MultipartBeanDefinitionLoader implements BeanDefinitionLoader {
 		GenericBeanDefinition multipartResolverBD = new GenericBeanDefinition();
 		multipartResolverBD.setBeanClassName(MULTIPART_CLASS);
 		multipartResolverBD.setPropertyValues(new MutablePropertyValues());
-		multipartResolverBD.getPropertyValues().add("maxUploadSize", MAX_UPLOAD_SIZE);
 
 		beanFactory.registerBeanDefinition(beanName, multipartResolverBD);
 
