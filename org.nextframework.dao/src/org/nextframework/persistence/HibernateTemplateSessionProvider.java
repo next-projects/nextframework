@@ -37,10 +37,10 @@ public class HibernateTemplateSessionProvider implements HibernateSessionProvide
 	}
 
 	@Override
-	public Object execute(final HibernateCommand command) {
-		return getHibernateTemplate().execute(new HibernateCallback<Object>() {
+	public <BEAN> BEAN execute(HibernateCommand<BEAN> command) {
+		return getHibernateTemplate().execute(new HibernateCallback<BEAN>() {
 
-			public Object doInHibernate(Session session) throws HibernateException {
+			public BEAN doInHibernate(Session session) throws HibernateException {
 				return command.doInHibernate(session);
 			}
 

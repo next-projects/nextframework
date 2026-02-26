@@ -3,8 +3,8 @@ package org.nextframework.persistence;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
-public interface HibernateCommand {
+public interface HibernateCommand<BEAN> {
 
-	Object doInHibernate(Session session) throws HibernateException;
+	BEAN doInHibernate(Session session) throws HibernateException;
 
 }
