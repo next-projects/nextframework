@@ -11,8 +11,8 @@ import org.nextframework.report.definition.elements.TableInformationAdaptor;
 
 public class TestExample4GridBuilder extends LayoutReportBuilder {
 
-	Set<TestExample4PhaseBean> phases;
-	List<TestExample4MainBean> gridData;
+	private Set<TestExample4PhaseBean> phases;
+	private List<TestExample4MainBean> gridData;
 
 	@Override
 	protected void layoutReport() {

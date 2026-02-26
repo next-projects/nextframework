@@ -13,9 +13,8 @@ import org.nextframework.view.chart.jfree.ChartRendererJFreeChart;
 
 public class TestExample3Bean {
 
-	String type;
-
-	List<TestExample3BeanEvaluation> evaluations = new ArrayList<TestExample3BeanEvaluation>();
+	private String type;
+	private List<TestExample3BeanEvaluation> evaluations = new ArrayList<>();
 
 	public TestExample3Bean(String type) {
 		this.type = type;
@@ -40,6 +39,8 @@ public class TestExample3Bean {
 	public Chart getDriversChart() {
 		Chart chart = new Chart(ChartType.PIE);
 		chart.setData(ChartDataBuilder.build(evaluations, "driver", null, "points"));
+		chart.getStyle().setWidth("500");
+		chart.getStyle().setHeight("500");
 		byte[] image = ChartRendererJFreeChart.renderAsImage(chart);
 		try {
 			new FileOutputStream("examples/chart.png").write(image);

@@ -6,11 +6,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportComposite;
 import org.nextframework.report.definition.elements.ReportGrid;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportOverlapComposite;
 import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
+import org.nextframework.report.renderer.ValueConverter;
 import org.nextframework.report.renderer.html.HtmlReportRenderer;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
 import org.nextframework.report.renderer.jasper.builder.JasperRenderParameters;
@@ -18,7 +21,9 @@ import org.nextframework.report.renderer.jasper.builder.JasperRenderParameters;
 public class TestComponents {
 
 	public static void main(String[] args) throws Exception {
+
 		ReportDefinition definition = new ReportDefinition("examples/exampleComponents");
+		definition.setParameter(BaseReportBuilder.CONVERTER, new ReportBuilderValueConverter());
 		definition.setData(TestBean.createDataset(30));
 		definition.setTitle("This is Sparta!");
 		definition.addItem(new ReportTextField("name"), definition.getSectionDetail(), 0);
@@ -57,6 +62,7 @@ public class TestComponents {
 		definition.addItem(grid, definition.getSectionDetail(), 1);
 
 		writePDF(definition);
+
 	}
 
 	private static void writePDF(ReportDefinition definition) throws IOException {

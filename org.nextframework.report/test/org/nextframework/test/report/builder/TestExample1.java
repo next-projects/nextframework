@@ -5,14 +5,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
 
 public class TestExample1 {
 
 	public static void main(String[] args) throws Exception {
 		ReportDefinition definition = new ReportDefinition("examples/example1");
+		definition.setParameter(BaseReportBuilder.CONVERTER, new ReportBuilderValueConverter());
 		definition.setData(TestBean.createDataset(100));
 		definition.setTitle("This is Sparta!");
 		definition.addItem(new ReportTextField("name"), definition.getSectionDetail(), 0);

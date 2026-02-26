@@ -14,8 +14,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.persistence"/>
-	<classpathentry kind="lib" path="provided/jakarta.el-api-6.0.1.jar"/>
-	<classpathentry kind="lib" path="provided/jakarta.servlet.jsp-api-4.0.0.jar"/>
-	<classpathentry kind="lib" path="provided/jakarta.servlet-api-6.1.0.jar"/>
+	<classpathentry kind="lib" path="provided/jakarta.el-api-6.0.1.jar" sourcepath="provided/src/jakarta.el-api-6.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="provided/jakarta.servlet.jsp-api-4.0.0.jar" sourcepath="provided/src/jakarta.servlet.jsp-api-4.0.0-sources.jar"/>
+	<classpathentry kind="lib" path="provided/jakarta.servlet-api-6.1.0.jar" sourcepath="provided/src/jakarta.servlet-api-6.1.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

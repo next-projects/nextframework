@@ -5,8 +5,8 @@ import java.util.List;
 
 public class TestBean {
 
-	String name;
-	Integer mod;
+	private String name;
+	private Integer mod;
 
 	public String getName() {
 		return name;

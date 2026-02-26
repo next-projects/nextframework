@@ -9,9 +9,8 @@ import org.nextframework.bean.annotation.DescriptionProperty;
 
 public class TestExample4MainBean {
 
-	String name;
-
-	List<TestExample4ItemBean> items = new ArrayList<TestExample4ItemBean>();
+	private String name;
+	private List<TestExample4ItemBean> items = new ArrayList<TestExample4ItemBean>();
 
 	public TestExample4MainBean(String name, List<TestExample4ItemBean> items) {
 		super();

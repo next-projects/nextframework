@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.Subreport;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
 
 public class TestExample4Grid {
@@ -22,6 +24,7 @@ public class TestExample4Grid {
 		builder.setGridData(data);
 		builder.setData(Arrays.asList(new Object()));
 		ReportDefinition definition = builder.getDefinition();
+		definition.setParameter(BaseReportBuilder.CONVERTER, new ReportBuilderValueConverter());
 		writePDF(definition);
 	}
 

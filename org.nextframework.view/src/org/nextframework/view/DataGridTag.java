@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.jstl.core.LoopTagStatus;
-
 import org.nextframework.exception.NextException;
 import org.nextframework.persistence.HibernateUtils;
 import org.nextframework.types.TypedValue;
@@ -53,6 +51,7 @@ import org.springframework.beans.PropertyAccessorFactory;
 import jakarta.el.ELException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.jstl.core.LoopTagStatus;
 
 /**
  * @author rogelgarcia | marcusabreu

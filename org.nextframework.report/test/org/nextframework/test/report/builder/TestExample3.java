@@ -7,11 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportChart;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextField;
 import org.nextframework.report.definition.elements.Subreport;
 import org.nextframework.report.definition.elements.style.ReportItemStyle;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
 
 public class TestExample3 {
@@ -27,9 +29,9 @@ public class TestExample3 {
 
 	public static void main(String[] args) throws Exception {
 		ReportDefinition definition = new ReportDefinition("examples/example3");
+		definition.setParameter(BaseReportBuilder.CONVERTER, new ReportBuilderValueConverter());
 		definition.setTitle("Test 3");
 		definition.setData(getData());
-
 		definition.addItem(new ReportTextField("type").setColspan(2).setStyle(new ReportItemStyle(true)), definition.getSectionDetail(), 0);
 		definition.getSectionDetail().breakLine();
 		definition.addItem(new ReportChart("driversChart"), definition.getSectionDetail(), 0);
@@ -39,6 +41,7 @@ public class TestExample3 {
 
 	public static ReportDefinition getSubreport1() {
 		ReportDefinition definition = new ReportDefinition("examples/example3_sub1");
+		definition.setParameter(BaseReportBuilder.CONVERTER, new ReportBuilderValueConverter());
 		definition.getStyle().setNoMargin(true);
 		definition.getStyle().setPageWidth(300);
 		definition.addItem(new ReportLabel("Driver"), definition.getSectionColumnHeader(), 0);

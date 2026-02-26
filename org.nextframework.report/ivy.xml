@@ -14,7 +14,7 @@
 		<dependency org="net.sf.jasperreports"	name="jasperreports"			rev="6.0.3" conf="lib" />
 		<dependency org="com.itextpdf" 			name="itextpdf" 				rev="5.5.5" conf="lib" />
 		<dependency org="com.itextpdf" 			name="itext-pdfa" 			rev="5.5.5"	conf="lib"/>
-		
+
 		<!-- Barcode library -->
 		<dependency org="net.sourceforge.barbecue" name="barbecue" 			rev="1.5-beta1" conf="lib"/>
 
