@@ -2,9 +2,8 @@ package org.nextframework.test.report.builder;
 
 public class TestExample4ItemBean {
 
-	TestExample4PhaseBean phase;
-
-	String info;
+	private TestExample4PhaseBean phase;
+	private String info;
 
 	public TestExample4ItemBean(TestExample4PhaseBean phase, String info) {
 		this.phase = phase;

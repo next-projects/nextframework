@@ -6,7 +6,7 @@ import org.nextframework.report.definition.builder.LayoutReportBuilder;
 
 public class TestExample4Builder extends LayoutReportBuilder {
 
-	Set<TestExample4PhaseBean> phases;
+	private Set<TestExample4PhaseBean> phases;
 
 	@Override
 	protected void layoutReport() {

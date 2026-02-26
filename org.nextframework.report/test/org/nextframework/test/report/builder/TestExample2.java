@@ -8,12 +8,14 @@ import org.nextframework.chart.Chart;
 import org.nextframework.chart.ChartData;
 import org.nextframework.chart.ChartType;
 import org.nextframework.report.definition.ReportDefinition;
+import org.nextframework.report.definition.builder.BaseReportBuilder;
 import org.nextframework.report.definition.elements.ReportChart;
 import org.nextframework.report.definition.elements.ReportComposite;
 import org.nextframework.report.definition.elements.ReportConstants;
 import org.nextframework.report.definition.elements.ReportGrid;
 import org.nextframework.report.definition.elements.ReportLabel;
 import org.nextframework.report.definition.elements.ReportTextField;
+import org.nextframework.report.renderer.ReportBuilderValueConverter;
 import org.nextframework.report.renderer.jasper.JasperReportsRenderer;
 
 public class TestExample2 {
@@ -28,6 +30,7 @@ public class TestExample2 {
 		chart.setData(chartData);
 
 		ReportDefinition definition = new ReportDefinition("examples/example2");
+		definition.setParameter(BaseReportBuilder.CONVERTER, new ReportBuilderValueConverter());
 		definition.setData(TestBean.createDataset(100));
 		definition.setTitle("This is Sparta 2!");
 
