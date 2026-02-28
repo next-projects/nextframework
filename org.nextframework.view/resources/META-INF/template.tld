@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+		version="3.0">
 
 	<description>Next 2.0 template library</description>
 	<display-name>Next template</display-name>
 	<tlib-version>2.0</tlib-version>
 	<short-name>t</short-name>
-	<uri>http://www.nextframework.org/tag-lib/template</uri>
+	<uri>nextframework.tags.template</uri>
 
 	<tag>
 		<description></description>
 		<name>view</name>
 		<tag-class>org.nextframework.view.template.ViewTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>formName</name>
@@ -94,6 +95,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -101,7 +103,6 @@
 		<name>listView</name>
 		<tag-class>org.nextframework.view.template.ListViewTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>title</name>
@@ -143,6 +144,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -150,7 +152,6 @@
 		<name>formView</name>
 		<tag-class>org.nextframework.view.template.FormViewTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>title</name>
@@ -204,6 +205,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -211,7 +213,6 @@
 		<name>reportView</name>
 		<tag-class>org.nextframework.view.template.ReportViewTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>title</name>
@@ -223,6 +224,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -230,7 +232,6 @@
 		<name>simplePanel</name>
 		<tag-class>org.nextframework.view.template.SimplePanelTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>sectionTitle</name>
@@ -296,6 +297,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -303,7 +305,6 @@
 		<name>filterPanel</name>
 		<tag-class>org.nextframework.view.template.FilterPanelTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>name</name>
@@ -421,6 +422,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -428,7 +430,6 @@
 		<name>formPanel</name>
 		<tag-class>org.nextframework.view.template.FormPanelTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>showSubmit</name>
@@ -530,6 +531,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -537,7 +539,6 @@
 		<name>reportPanel</name>
 		<tag-class>org.nextframework.view.template.ReportPanelTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>sectionTitle</name>
@@ -627,6 +628,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -634,7 +636,6 @@
 		<name>listPanel</name>
 		<tag-class>org.nextframework.view.template.ListPanelTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>sectionTitle</name>
@@ -700,6 +701,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -707,7 +709,6 @@
 		<name>filterTable</name>
 		<tag-class>org.nextframework.view.template.FilterTableTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>colspan</name>
@@ -778,6 +779,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -785,7 +787,6 @@
 		<name>formTable</name>
 		<tag-class>org.nextframework.view.template.FormTableTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>colspan</name>
@@ -855,6 +856,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -862,7 +864,6 @@
 		<name>reportTable</name>
 		<tag-class>org.nextframework.view.template.ReportTableTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>colspan</name>
@@ -933,6 +934,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -940,7 +942,6 @@
 		<name>listTable</name>
 		<tag-class>org.nextframework.view.template.ListTableTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>itens</name>
@@ -1042,6 +1043,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1061,7 +1063,6 @@
 		<name>detail</name>
 		<tag-class>org.nextframework.view.template.DetailTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>id</name>
@@ -1175,6 +1176,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1182,7 +1184,6 @@
 		<name>property</name>
 		<tag-class>org.nextframework.view.template.PropertyTag</tag-class>
 		<body-content>empty</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>id</name>
@@ -1450,6 +1451,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1457,7 +1459,6 @@
 		<name>propertyLayout</name>
 		<tag-class>org.nextframework.view.template.PropertyLayoutTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>bodyId</name>
@@ -1547,6 +1548,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>

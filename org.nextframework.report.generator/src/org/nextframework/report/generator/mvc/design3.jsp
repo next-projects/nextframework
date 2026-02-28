@@ -1,7 +1,7 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
-<%@ taglib prefix="report-generator" uri="report-generator"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template"%>
+<%@ taglib prefix="rg" uri="nextframework.tags.reportgenerator"%>
 
 <script type="text/javascript" src="${app}/resource/org/nextframework/report/generator/mvc/resource/Selectable.js"></script>
 <script type="text/javascript" src="${app}/resource/org/nextframework/report/generator/mvc/resource/SelectView.js"></script>
@@ -14,7 +14,7 @@
 <script type="text/javascript" src="${app}/resource/org/nextframework/report/generator/mvc/resource/ChartWizzard.js"></script>
 <script type="text/javascript" src="${app}/resource/org/nextframework/report/generator/mvc/resource/ReportPropertyConfigUtils.js"></script>
 
-<link rel="StyleSheet" href="${app}/resource/org/nextframework/report/generator/mvc/resource/report-generator.css" type="text/css">
+<link rel="StyleSheet" href="${app}/resource/org/nextframework/report/generator/mvc/resource/nextframework.tags.reportgenerator.css" type="text/css">
 
 <t:view useBean="model">
 
@@ -29,7 +29,7 @@
 				Tabela: ${reportTypeDisplayName}
 			</n:panel>
 			<n:panel colspan="12">
-				<report-generator:designer />
+				<rg:designer />
 			</n:panel>
 		</t:formTable>
 		<t:actionPanel>

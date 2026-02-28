@@ -1,2 +1,2 @@
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <select name="${tag.name}" id="${tag.id}" data-rawtype="${tag.inputComponent.rawClassType.name}" data-includeblank="${tag.inputComponent.includeBlank}" data-blanklabel="${tag.blankLabel}" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} ${tag.dynamicAttributesToString}>${tag.selectoneblankoption}${tag.inputComponent.selectItensString}</select>

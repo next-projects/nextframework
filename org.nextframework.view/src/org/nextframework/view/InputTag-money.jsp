@@ -1,2 +1,2 @@
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <input type="text" name="${tag.name}" id="${tag.id}" value="${tag.valueToString}" maxlength="21" onKeyDown="return formata_money(this,event)" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} ${tag.dynamicAttributesToString}/>

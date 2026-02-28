@@ -1,4 +1,4 @@
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <input type="text" name="${tag.name}_label" id="${tag.id}" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} readonly="true" value="${tag.descriptionToString}" ${tag.dynamicAttributesToString}/>
 <input type="hidden" name="${tag.name}" value="${tag.valueWithDescriptionToString}" />
 <button id="${tag.name}_btn" name="${tag.name}_btn" type="button" onclick="${tag.inputComponent.selectOneButtonOnClick} " style='${tag.inputComponent.selectOneButtonStyle}'>Selecionar</button>

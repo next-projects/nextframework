@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+		version="3.0">
 
 	<description>Next 1.1 code library</description>
 	<display-name>Next code</display-name>
 	<tlib-version>1.1</tlib-version>
 	<short-name>code</short-name>
-	<uri>code</uri>
+	<uri>nextframework.tags.code</uri>
 
 	<tag>
 		<description>Verifica se os inputs serão 'bindados' corretamente no servidor</description>
@@ -53,13 +55,13 @@
 		<name>call</name>
 		<tag-class>org.nextframework.view.code.CallTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>method</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 </taglib>

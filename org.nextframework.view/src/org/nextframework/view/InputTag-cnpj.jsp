@@ -1,2 +1,2 @@
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <input type="text" id="${tag.id}" name="${tag.name}" value="${tag.valueToString}" onKeyUp="mascara_cnpj(this)" onKeyPress="return valida_tecla(this, event)" ${n:attributeNotEmpty('onchange', tag.reloadOnChangeString)} maxlength="18" size="19" ${tag.dynamicAttributesToString}/>

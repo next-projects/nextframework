@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+<taglib xmlns="https://jakarta.ee/xml/ns/jakartaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+		version="3.0">
 
 	<description>Next 2.0 core library</description>
 	<display-name>Next Core</display-name>
 	<tlib-version>2.0</tlib-version>
 	<short-name>n</short-name>
-	<uri>http://www.nextframework.org/tag-lib/next</uri>
+	<uri>nextframework.tags.next</uri>
 
 	<tag>
 		<description>Form</description>
 		<name>form</name>
 		<tag-class>org.nextframework.view.FormTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>action</name>
@@ -78,6 +79,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -95,7 +97,6 @@
 		<name>chart</name>
 		<tag-class>org.nextframework.view.ChartTag</tag-class>
 		<body-content>empty</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>chart</name>
@@ -113,6 +114,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -120,7 +122,6 @@
 		<name>head</name>
 		<tag-class>org.nextframework.view.HeadTag</tag-class>
 		<body-content>empty</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>includeNormalizeCss</name>
@@ -186,6 +187,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -193,7 +195,6 @@
 		<name>link</name>
 		<tag-class>org.nextframework.view.LinkTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>url</name>
@@ -249,6 +250,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -256,7 +258,6 @@
 		<name>submit</name>
 		<tag-class>org.nextframework.view.SubmitTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>url</name>
@@ -318,6 +319,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -466,7 +468,6 @@
 		<name>img</name>
 		<tag-class>org.nextframework.view.ImgTag</tag-class>
 		<body-content>empty</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>resource</name>
@@ -478,6 +479,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -491,7 +493,6 @@
 		<name>input</name>
 		<tag-class>org.nextframework.view.InputTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>id</name>
@@ -701,6 +702,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -708,7 +710,6 @@
 		<name>output</name>
 		<tag-class>org.nextframework.view.OutputTag</tag-class>
 		<body-content>empty</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>value</name>
@@ -768,6 +769,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -775,7 +777,6 @@
 		<name>dataGrid</name>
 		<tag-class>org.nextframework.view.DataGridTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>itens</name>
@@ -930,6 +931,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -937,7 +939,6 @@
 		<name>column</name>
 		<tag-class>org.nextframework.view.ColumnTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description></description>
 			<name>header</name>
@@ -955,6 +956,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -962,7 +964,6 @@
 		<name>dataGridOptionalColumns</name>
 		<tag-class>org.nextframework.view.DataGridOptionalColumnsTag</tag-class>
 		<body-content>empty</body-content>
-		<dynamic-attributes>false</dynamic-attributes>
 		<attribute>
 			<description>The key to be used to save the configuration</description>
 			<name>cacheKey</name>
@@ -974,6 +975,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>false</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1005,7 +1007,6 @@
 		<name>panelGrid</name>
 		<tag-class>org.nextframework.view.PanelGridTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<name>flatMode</name>
 			<required>false</required>
@@ -1074,6 +1075,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1081,7 +1083,6 @@
 		<name>group</name>
 		<tag-class>org.nextframework.view.GroupTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<name>flatMode</name>
 			<required>false</required>
@@ -1175,6 +1176,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1182,7 +1184,6 @@
 		<name>panel</name>
 		<tag-class>org.nextframework.view.PanelTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<description>Utilizado quando esse panel estiver dentro de um panelGrid</description>
 			<name>colspan</name>
@@ -1216,6 +1217,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1223,7 +1225,6 @@
 		<name>tabPanel</name>
 		<tag-class>org.nextframework.view.TabPanelTag</tag-class>
 		<body-content>scriptless</body-content>
-		<dynamic-attributes>true</dynamic-attributes>
 		<attribute>
 			<name>renderUniqueTab</name>
 			<required>false</required>
@@ -1274,6 +1275,7 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 	<tag>
@@ -1730,7 +1732,7 @@
 	<function>
 		<name>reevaluate</name>
 		<function-class>org.nextframework.view.NextFunctions</function-class>
-		<function-signature>java.lang.Object reevaluate(java.lang.String, javax.servlet.jsp.PageContext)</function-signature>
+		<function-signature>java.lang.Object reevaluate(java.lang.String, jakarta.servlet.jsp.PageContext)</function-signature>
 	</function>
 
 	<function>

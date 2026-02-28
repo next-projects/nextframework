@@ -2,11 +2,11 @@
 <%@page import="org.nextframework.core.config.ViewConfig"%>
 <%@page import="org.nextframework.service.ServiceFactory"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
-<%@ taglib prefix="code" uri="code"%>
-<%@ taglib prefix="report-generator" uri="report-generator"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template"%>
+<%@ taglib prefix="code" uri="nextframework.tags.code"%>
+<%@ taglib prefix="rg" uri="nextframework.tags.reportgenerator"%>
 
 <style>
 	.xmlinputstyle {
@@ -204,7 +204,7 @@
 				Escolha as propriedades que deseja usar no relatório:<br>
 				<n:group columns="12">
 					<n:panel style="height: 40em; overflow: scroll;" colspan="12">
-						<report-generator:chooseProperties />
+						<rg:chooseProperties />
 					</n:panel>
 				</n:group>
 			</n:panel>

@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
 
 <div class="${n:defaultStyleClass('org.nextframework.view.InputTag','SELECT_MANY_BOX-group')}">
 	<select name="${tag.name}_from_" id="${tag.name}_from_" onclick="selectManyBoxCancelTo(this)" ondblclick="selectManyBoxAdd(this)" ${tag.dynamicAttributesToString} size="10">${tag.inputComponent.avaiableValues}</select>

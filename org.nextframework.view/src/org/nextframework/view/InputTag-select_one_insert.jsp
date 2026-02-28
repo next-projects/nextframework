@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <span style="white-space: nowrap; width: ${tag.dynamicAttributesMap['spanwidth']};">
 <table border="0" style="width: ${tag.dynamicAttributesMap['spanwidth']}; display:inline" cellpadding="0" cellspacing="0">
 <tr>

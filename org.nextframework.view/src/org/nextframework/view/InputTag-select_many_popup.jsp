@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <div class="${n:defaultStyleClass('org.nextframework.view.InputTag','SELECT_MANY_POPUP-group')}">
 	<input id="${tag.id}_labels" type="text" name="${tag.name}_labels" value="" class="select_many_popup_labels ${tag.dynamicAttributesMap['class']}" readonly="readonly" ${tag.dynamicAttributesToString} />
 	<c:if test="${(empty tag.dynamicAttributesMap['disabled'] || tag.dynamicAttributesMap['disabled'] == 'false') && (empty tag.dynamicAttributesMap['readonly'] || tag.dynamicAttributesMap['readonly'] == 'false')}">
