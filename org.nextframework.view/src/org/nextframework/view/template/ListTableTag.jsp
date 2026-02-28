@@ -1,6 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template"%>
 
 <n:dataGrid itens="${listTableTag.itens}" var="${listTableTag.name}" varStatus="${listTableTag.statusName}" groupProperty="${listTableTag.groupProperty}" nocolumnresize="${listTableTag.dynamicAttributesMap['nocolumnresize']}">
 	<n:bean name="${listTableTag.name}" valueType="${listTableTag.valueType}">

@@ -1,7 +1,7 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template"%>
 
 <t:view titulo="Autorização">
 	<t:filterPanel showSubmit="false">

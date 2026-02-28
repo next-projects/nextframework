@@ -1,6 +1,7 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
+<%@ taglib prefix="combo" uri="nextframework.tags.combo"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template"%>
 
 <n:panelGrid colspan="${reportTableTag.colspan}" flatMode="${reportTableTag.flatMode}"
 	columns="${reportTableTag.columns}" scaleToGridSystem="${reportTableTag.scaleToGridSystem}"
