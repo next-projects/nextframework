@@ -29,20 +29,37 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.apache.commons.logging.Log;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-public class CompositeViewResolver extends InternalResourceViewResolver {
+public class NextCompositeViewResolver extends InternalResourceViewResolver {
 
-	private static final Log log = org.apache.commons.logging.LogFactory.getLog(CompositeViewResolver.class);
+	private static final Log log = org.apache.commons.logging.LogFactory.getLog(NextCompositeViewResolver.class);
 
+	private String module;
 	private String[] baseViews;
 	private Boolean useBase;
 	private String baseView;
 	private String parameterName;
+
+	@Override
+	protected void initApplicationContext() {
+		initAttributesFromServlet();
+		setParameterName("bodyPage");
+		setPrefix("/WEB-INF/jsp/" + module + "/");
+		setSuffix(".jsp");
+		setBaseViews("/WEB-INF/jsp/" + module + "/base.jsp", "/WEB-INF/jsp/base.jsp");
+		super.initApplicationContext();
+	}
+
+	private void initAttributesFromServlet() {
+		this.module = (String) getServletContext().getAttribute(NextDispatcherServlet.ACTUAL_SERVLET_NAME);
+		Objects.requireNonNull(module);
+	}
 
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
@@ -89,7 +106,7 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 
 		if (useBase == null) {
 			if (baseViews == null || baseViews.length == 0) {
-				throw new RuntimeException(CompositeViewResolver.class.getName() + ": property baseViews não pode ser null");
+				throw new RuntimeException(NextCompositeViewResolver.class.getName() + ": property baseViews não pode ser null");
 			}
 			for (String base : baseViews) {
 				if (getServletContext().getResourceAsStream(base) == null) {
@@ -107,7 +124,7 @@ public class CompositeViewResolver extends InternalResourceViewResolver {
 		}
 
 		if (parameterName == null) {
-			throw new RuntimeException(CompositeViewResolver.class.getName() + ": property parameterName não pode ser null");
+			throw new RuntimeException(NextCompositeViewResolver.class.getName() + ": property parameterName não pode ser null");
 		}
 
 		//url q seria usada

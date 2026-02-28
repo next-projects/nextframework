@@ -2,11 +2,8 @@ package org.nextframework.controller.context;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -26,54 +23,13 @@ public class ControllerConfigInitializer implements ServletContainerInitializer 
 
 	public static final String MODULES_ATTRIBUTE = ControllerConfigInitializer.class.getName() + ".modulesFound";
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onStartup(Set<Class<?>> controllerClasses, ServletContext servletContext) throws ServletException {
 
-		List<Class<? extends Controller>> controllerList = new LinkedList<Class<? extends Controller>>();
-
-		if (controllerClasses != null) {
-			for (Class<?> controllerClass : controllerClasses) {
-				// Be defensive: Some servlet containers provide us with invalid classes,
-				// no matter what @HandlesTypes says... (copied from spring)
-				if (!controllerClass.isInterface() && !Modifier.isAbstract(controllerClass.getModifiers()) &&
-						Controller.class.isAssignableFrom(controllerClass)) {
-					controllerList.add((Class<? extends Controller>) controllerClass);
-				}
-			}
-		}
-
-		Map<String, List<Class<? extends Controller>>> moduleControllers = new HashMap<String, List<Class<? extends Controller>>>();
-
-		for (Class<? extends Controller> controllerClass : controllerList) {
-			org.nextframework.controller.Controller annotation = controllerClass.getAnnotation(org.nextframework.controller.Controller.class);
-			if (annotation == null) {
-				//if (!Modifier.isAbstract(controllerClass.getModifiers())) {
-				//servletContext.log("WARN: Controller "+controllerClass+" is not annotated with @Controller");
-				//}
-			} else {
-				String[] paths = annotation.path();
-				if (paths != null) {
-					for (String path : paths) {
-						if (!path.startsWith("/")) {
-							servletContext.log("WARN: Controller " + controllerClass + " has a wrong path " + path + ". Paths must be started with '/'.");
-						} else {
-							addController(moduleControllers, getModule(path), controllerClass);
-						}
-					}
-				}
-			}
-		}
-
-		Properties authenticationProperties = new Properties();
-		try {
-			authenticationProperties = PropertiesLoaderUtils.loadAllProperties("authentication.properties");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Set<String> modules = getModules(controllerClasses, servletContext);
+		Properties authenticationProperties = getAuthenticationProperties();
 
 		int i = 0;
-		Set<String> modules = new TreeSet<String>(moduleControllers.keySet());
 		for (String module : modules) {
 			Dynamic servlet = servletContext.addServlet(module, NextDispatcherServlet.class);
 			if (servlet != null) {
@@ -90,19 +46,59 @@ public class ControllerConfigInitializer implements ServletContainerInitializer 
 		}
 
 		servletContext.setAttribute(MODULES_ATTRIBUTE, modules);
+
 	}
 
-	private void addController(Map<String, List<Class<? extends Controller>>> moduleControllers, String module, Class<? extends Controller> controllerClass) {
-		List<Class<? extends Controller>> list = moduleControllers.get(module);
-		if (list == null) {
-			list = new ArrayList<Class<? extends Controller>>();
-			moduleControllers.put(module, list);
+	@SuppressWarnings("unchecked")
+	private Set<String> getModules(Set<Class<?>> controllerClasses, ServletContext servletContext) {
+
+		List<Class<? extends Controller>> controllerList = new LinkedList<>();
+
+		if (controllerClasses != null) {
+			for (Class<?> controllerClass : controllerClasses) {
+				// Be defensive: Some servlet containers provide us with invalid classes,
+				// no matter what @HandlesTypes says... (copied from spring)
+				if (!controllerClass.isInterface() && !Modifier.isAbstract(controllerClass.getModifiers()) &&
+						Controller.class.isAssignableFrom(controllerClass)) {
+					controllerList.add((Class<? extends Controller>) controllerClass);
+				}
+			}
 		}
-		list.add(controllerClass);
+
+		Set<String> modules = new TreeSet<>();
+
+		for (Class<? extends Controller> controllerClass : controllerList) {
+			org.nextframework.controller.Controller annotation = controllerClass.getAnnotation(org.nextframework.controller.Controller.class);
+			if (annotation == null) {
+				//if (!Modifier.isAbstract(controllerClass.getModifiers())) {
+				//servletContext.log("WARN: Controller "+controllerClass+" is not annotated with @Controller");
+				//}
+			} else {
+				String[] paths = annotation.path();
+				if (paths != null) {
+					for (String path : paths) {
+						if (!path.startsWith("/")) {
+							servletContext.log("WARN: Controller " + controllerClass + " has a wrong path " + path + ". Paths must be started with '/'.");
+						} else {
+							String module = path.substring(1, path.indexOf('/', 1));
+							modules.add(module);
+						}
+					}
+				}
+			}
+		}
+
+		return modules;
 	}
 
-	private String getModule(String path) {
-		return path.substring(1, path.indexOf('/', 1));
+	private Properties getAuthenticationProperties() {
+		Properties authenticationProperties = new Properties();
+		try {
+			authenticationProperties = PropertiesLoaderUtils.loadAllProperties("authentication.properties");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return authenticationProperties;
 	}
 
 }
