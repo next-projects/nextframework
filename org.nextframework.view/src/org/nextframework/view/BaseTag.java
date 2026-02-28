@@ -71,7 +71,6 @@ import jakarta.servlet.jsp.tagext.SimpleTagSupport;
  * @since 25/01/2006
  * @version 1.1
  */
-@SuppressWarnings("deprecation")
 public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	private static final String IDSEQUENCE = "IDSEQUENCE";

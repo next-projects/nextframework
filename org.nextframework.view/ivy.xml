@@ -7,5 +7,6 @@
 	<dependencies>
 		<dependency org="ognl"						name="ognl"							rev="2.6.7"		conf="lib" />
 		<dependency org="jakarta.servlet.jsp.jstl"	name="jakarta.servlet.jsp.jstl-api"	rev="3.0.2"		conf="lib" />
+		<dependency org="org.glassfish.web"			name="jakarta.servlet.jsp.jstl"		rev="3.0.1"		conf="lib" />
 	</dependencies>
 </ivy-module>

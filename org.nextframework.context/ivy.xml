@@ -5,21 +5,23 @@
 		<include file="../org.nextframework.build/configurations.xml"/>
 	</configurations>
 	<dependencies>
-		<dependency org="org.springframework"		name="spring-context"			rev="7.0.4"	conf="lib" />
-		<dependency org="org.springframework"		name="spring-context-support" 	rev="7.0.5"	conf="lib" />
+		<dependency org="org.springframework"		name="spring-context"			rev="7.0.4"		conf="lib" />
+		<dependency org="org.springframework"		name="spring-context-support" 	rev="7.0.5"		conf="lib" />
 		
 		<!-- Runtime dependencies -->
-		<dependency org="org.springframework"		name="spring-aop" 				rev="7.0.4"	conf="lib" />
-		<dependency org="org.springframework"		name="spring-expression" 		rev="7.0.5"	conf="lib" />
-		<dependency org="org.jspecify"			name="jspecify" 					rev="1.0.0"	conf="lib" />
+		<dependency org="org.springframework"		name="spring-aop" 				rev="7.0.4"		conf="lib" />
+		<dependency org="org.springframework"		name="spring-expression" 		rev="7.0.5"		conf="lib" />
+		<dependency org="io.micrometer"				name="micrometer-observation"	rev="1.16.3"	conf="lib" />
+		<dependency org="io.micrometer"				name="micrometer-commons"		rev="1.16.3"	conf="lib" />
+		<dependency org="org.jspecify"				name="jspecify" 				rev="1.0.0"		conf="lib" />
 		
-		<dependency org="aopalliance" 			name="aopalliance" 				rev="1.0"	conf="lib" />
+		<dependency org="aopalliance" 				name="aopalliance" 				rev="1.0"		conf="lib" />
 
 		<!-- optional -->
 		<!-- 
-		<dependency org="org.springframework"		name="spring-aspects" 			rev="3.2.0.M1"	conf="lib" />
-		<dependency org="org.aspectj"			name="aspectjrt" 				rev="1.6.12"		conf="lib" />
-		<dependency org="org.aspectj"			name="aspectjweaver" 			rev="1.6.12"		conf="lib" />		
+		<dependency org="org.springframework"		name="spring-aspects" 			rev="3.2.0.M1"		conf="lib" />
+		<dependency org="org.aspectj"				name="aspectjrt" 				rev="1.6.12"		conf="lib" />
+		<dependency org="org.aspectj"				name="aspectjweaver" 			rev="1.6.12"		conf="lib" />		
 		 -->
 	</dependencies>
 </ivy-module>
