@@ -1,7 +1,7 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
-<%@ taglib prefix="report-generator" uri="report-generator"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template"%>
+<%@ taglib prefix="rg" uri="nextframework.tags.reportgenerator"%>
 
 <t:view title="Design de Relatórios - Passo 2: Escolher campos" useBean="model">
 
@@ -19,7 +19,7 @@
 				Escolha as propriedades que deseja usar no relatório:<br>
 				<n:group columns="12">
 					<n:panel colspan="12">
-						<report-generator:chooseProperties />
+						<rg:chooseProperties />
 					</n:panel>
 				</n:group>
 			</n:panel>
