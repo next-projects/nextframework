@@ -12,6 +12,7 @@ import org.nextframework.controller.NextDispatcherServlet;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.web.servlet.mvc.Controller;
 
+import jakarta.servlet.MultipartConfigElement;
 import jakarta.servlet.ServletContainerInitializer;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -35,6 +36,7 @@ public class ControllerConfigInitializer implements ServletContainerInitializer 
 			if (servlet != null) {
 				servlet.addMapping("/" + module + "/*");
 				servlet.setLoadOnStartup(i++);
+				servlet.setMultipartConfig(new MultipartConfigElement(""));
 				String authentication = (String) authenticationProperties.get(module);
 				if (authentication == null) {
 					authentication = (String) authenticationProperties.get("/" + module);
