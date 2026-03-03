@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.nextframework.classmanager.ClassManager;
+import org.nextframework.classmanager.ClassManagerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.Controller;
@@ -28,10 +31,18 @@ public class NextAnnotationHandlerMapping extends SimpleUrlHandlerMapping {
 
 	@Override
 	protected void extendInterceptors(List<Object> interceptors) {
+
 		if (secured) {
 			interceptors.add(new AuthenticationHandlerInterceptor());
 		}
 		interceptors.add(new AuthorizationHandlerInterceptor());
+
+		ClassManager classManager = ClassManagerFactory.getClassManager();
+		Class<NextHandlerInterceptor>[] interceptorsClasses = classManager.getAllClassesOfType(NextHandlerInterceptor.class);
+		for (Class<NextHandlerInterceptor> class1 : interceptorsClasses) {
+			interceptors.add((NextHandlerInterceptor) BeanUtils.instantiateClass(class1));
+		}
+
 	}
 
 	@Override
