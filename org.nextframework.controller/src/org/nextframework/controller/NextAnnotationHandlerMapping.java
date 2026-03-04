@@ -24,7 +24,7 @@ public class NextAnnotationHandlerMapping extends SimpleUrlHandlerMapping {
 	}
 
 	private void initAttributesFromServlet() {
-		this.secured = "true".equalsIgnoreCase(getServletContext().getInitParameter("secured"));
+		this.secured = (boolean) getServletContext().getAttribute(NextDispatcherServlet.ACTUAL_SERVLET_SECURED);
 		this.module = (String) getServletContext().getAttribute(NextDispatcherServlet.ACTUAL_SERVLET_NAME);
 		Objects.requireNonNull(module);
 	}
