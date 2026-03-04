@@ -18,12 +18,11 @@ package org.springframework.orm.hibernate4;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Filter;
 import org.hibernate.LockMode;
-import org.hibernate.ReplicationMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.jpa.hibernate.HibernateTransactionManager;
 
@@ -94,12 +93,11 @@ public interface HibernateOperations {
 	 * the Hibernate API documentation in the first instance.
 	 * @param entityClass a persistent class
 	 * @param id the identifier of the persistent instance
-	 * @param lockMode the lock mode to obtain
 	 * @return the persistent instance, or {@code null} if not found
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#get(Class, java.io.Serializable, org.hibernate.LockMode)
 	 */
-	<T> T get(Class<T> entityClass, Serializable id, LockMode lockMode) throws DataAccessException;
+	//<T> T get(Class<T> entityClass, Serializable id, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Return the persistent instance of the given entity class
@@ -114,7 +112,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#get(Class, java.io.Serializable)
 	 */
-	Object get(String entityName, Serializable id) throws DataAccessException;
+	//Object get(String entityName, Serializable id) throws DataAccessException;
 
 	/**
 	 * Return the persistent instance of the given entity class
@@ -131,7 +129,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#get(Class, java.io.Serializable, org.hibernate.LockMode)
 	 */
-	Object get(String entityName, Serializable id, LockMode lockMode) throws DataAccessException;
+	//Object get(String entityName, Serializable id, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Return the persistent instance of the given entity class
@@ -159,13 +157,12 @@ public interface HibernateOperations {
 	 * the Hibernate API documentation in the first instance.
 	 * @param entityClass a persistent class
 	 * @param id the identifier of the persistent instance
-	 * @param lockMode the lock mode to obtain
 	 * @return the persistent instance
 	 * @throws org.springframework.orm.ObjectRetrievalFailureException if not found
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#load(Class, java.io.Serializable)
 	 */
-	<T> T load(Class<T> entityClass, Serializable id, LockMode lockMode) throws DataAccessException;
+	//<T> T load(Class<T> entityClass, Serializable id, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Return the persistent instance of the given entity class
@@ -181,7 +178,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#load(Class, java.io.Serializable)
 	 */
-	Object load(String entityName, Serializable id) throws DataAccessException;
+	//Object load(String entityName, Serializable id) throws DataAccessException;
 
 	/**
 	 * Return the persistent instance of the given entity class
@@ -199,7 +196,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#load(Class, java.io.Serializable)
 	 */
-	Object load(String entityName, Serializable id, LockMode lockMode) throws DataAccessException;
+	//Object load(String entityName, Serializable id, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Return all persistent instances of the given entity class.
@@ -209,7 +206,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException if there is a Hibernate error
 	 * @see org.hibernate.Session#createCriteria
 	 */
-	<T> List<T> loadAll(Class<T> entityClass) throws DataAccessException;
+	//<T> List<T> loadAll(Class<T> entityClass) throws DataAccessException;
 
 	/**
 	 * Load the persistent instance with the given identifier
@@ -242,7 +239,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#refresh(Object, org.hibernate.LockMode)
 	 */
-	void refresh(Object entity, LockMode lockMode) throws DataAccessException;
+	//void refresh(Object entity, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Check whether the given object is in the Session cache.
@@ -294,7 +291,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#lock(Object, org.hibernate.LockMode)
 	 */
-	void lock(Object entity, LockMode lockMode) throws DataAccessException;
+	//void lock(Object entity, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Obtain the specified lock level upon the given object, implicitly
@@ -306,7 +303,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#lock(String, Object, org.hibernate.LockMode)
 	 */
-	void lock(String entityName, Object entity, LockMode lockMode) throws DataAccessException;
+	//void lock(String entityName, Object entity, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Persist the given transient instance.
@@ -404,7 +401,7 @@ public interface HibernateOperations {
 	 * @throws DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#replicate(Object, org.hibernate.ReplicationMode)
 	 */
-	void replicate(Object entity, ReplicationMode replicationMode) throws DataAccessException;
+	//void replicate(Object entity, ReplicationMode replicationMode) throws DataAccessException;
 
 	/**
 	 * Persist the state of the given detached instance according to the
@@ -415,7 +412,7 @@ public interface HibernateOperations {
 	 * @throws DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#replicate(String, Object, org.hibernate.ReplicationMode)
 	 */
-	void replicate(String entityName, Object entity, ReplicationMode replicationMode) throws DataAccessException;
+	//void replicate(String entityName, Object entity, ReplicationMode replicationMode) throws DataAccessException;
 
 	/**
 	 * Persist the given transient instance. Follows JSR-220 semantics.
@@ -438,7 +435,7 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Session#persist(String, Object)
 	 * @see #save
 	 */
-	void persist(String entityName, Object entity) throws DataAccessException;
+	//void persist(String entityName, Object entity) throws DataAccessException;
 
 	/**
 	 * Copy the state of the given object onto the persistent object
@@ -477,7 +474,7 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Session#merge(String, Object)
 	 * @see #saveOrUpdate
 	 */
-	<T> T merge(String entityName, T entity) throws DataAccessException;
+	//<T> T merge(String entityName, T entity) throws DataAccessException;
 
 	/**
 	 * Delete the given persistent instance.
@@ -497,7 +494,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#delete(Object)
 	 */
-	void delete(Object entity, LockMode lockMode) throws DataAccessException;
+	//void delete(Object entity, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Delete the given persistent instance.
@@ -506,7 +503,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#delete(Object)
 	 */
-	void delete(String entityName, Object entity) throws DataAccessException;
+	//void delete(String entityName, Object entity) throws DataAccessException;
 
 	/**
 	 * Delete the given persistent instance.
@@ -519,7 +516,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#delete(Object)
 	 */
-	void delete(String entityName, Object entity, LockMode lockMode) throws DataAccessException;
+	//void delete(String entityName, Object entity, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Delete all given persistent instances.
@@ -563,7 +560,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#createQuery
 	 */
-	List<?> find(String queryString, Object... values) throws DataAccessException;
+	//List<?> find(String queryString, Object... values) throws DataAccessException;
 
 	/**
 	 * Execute an HQL query, binding one value to a ":" named parameter
@@ -575,7 +572,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#getNamedQuery(String)
 	 */
-	List<?> findByNamedParam(String queryString, String paramName, Object value) throws DataAccessException;
+	<T> List<T> findByNamedParam(String queryString, Class<T> resultClass, String paramName, Object value) throws DataAccessException;
 
 	/**
 	 * Execute an HQL query, binding a number of values to ":" named
@@ -587,7 +584,9 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#getNamedQuery(String)
 	 */
-	List<?> findByNamedParam(String queryString, String[] paramNames, Object[] values) throws DataAccessException;
+	<T> List<T> findByNamedParam(String queryString, Class<T> resultClass, String[] paramNames, Object[] values) throws DataAccessException;
+
+	<T> List<T> findByNamedParam(String queryString, Class<T> resultClass, Map<String, Object> paramsMap) throws DataAccessException;
 
 	/**
 	 * Execute an HQL query, binding the properties of the given bean to
@@ -599,7 +598,7 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Query#setProperties
 	 * @see org.hibernate.Session#createQuery
 	 */
-	List<?> findByValueBean(String queryString, Object valueBean) throws DataAccessException;
+	<T> List<T> findByValueBean(String queryString, Class<T> resultClass, Object valueBean) throws DataAccessException;
 
 	//-------------------------------------------------------------------------
 	// Convenience finder methods for named queries
@@ -615,7 +614,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#getNamedQuery(String)
 	 */
-	List<?> findByNamedQuery(String queryName, Object... values) throws DataAccessException;
+	//List<?> findByNamedQuery(String queryName, Object... values) throws DataAccessException;
 
 	/**
 	 * Execute a named query, binding one value to a ":" named parameter
@@ -628,7 +627,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#getNamedQuery(String)
 	 */
-	List<?> findByNamedQueryAndNamedParam(String queryName, String paramName, Object value)
+	<T> List<T> findByNamedQueryAndNamedParam(String queryName, Class<T> resultClass, String paramName, Object value)
 			throws DataAccessException;
 
 	/**
@@ -642,7 +641,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#getNamedQuery(String)
 	 */
-	List<?> findByNamedQueryAndNamedParam(String queryName, String[] paramNames, Object[] values)
+	<T> List<T> findByNamedQueryAndNamedParam(String queryName, Class<T> resultClass, String[] paramNames, Object[] values)
 			throws DataAccessException;
 
 	/**
@@ -656,7 +655,7 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Query#setProperties
 	 * @see org.hibernate.Session#getNamedQuery(String)
 	 */
-	List<?> findByNamedQueryAndValueBean(String queryName, Object valueBean) throws DataAccessException;
+	<T> List<T> findByNamedQueryAndValueBean(String queryName, Class<T> resultClass, Object valueBean) throws DataAccessException;
 
 	/**
 	 * Execute a query based on the given example entity object.
@@ -666,7 +665,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.criterion.Example#create(Object)
 	 */
-	<T> List<T> findByExample(T exampleEntity) throws DataAccessException;
+	//<T> List<T> findByExample(T exampleEntity) throws DataAccessException;
 
 	/**
 	 * Execute a query based on the given example entity object.
@@ -677,7 +676,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.criterion.Example#create(Object)
 	 */
-	<T> List<T> findByExample(String entityName, T exampleEntity) throws DataAccessException;
+	//<T> List<T> findByExample(String entityName, T exampleEntity) throws DataAccessException;
 
 	/**
 	 * Execute a query based on a given example entity object.
@@ -693,7 +692,7 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Criteria#setFirstResult(int)
 	 * @see org.hibernate.Criteria#setMaxResults(int)
 	 */
-	<T> List<T> findByExample(T exampleEntity, int firstResult, int maxResults) throws DataAccessException;
+	//<T> List<T> findByExample(T exampleEntity, int firstResult, int maxResults) throws DataAccessException;
 
 	/**
 	 * Execute a query based on a given example entity object.
@@ -710,8 +709,7 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Criteria#setFirstResult(int)
 	 * @see org.hibernate.Criteria#setMaxResults(int)
 	 */
-	<T> List<T> findByExample(String entityName, T exampleEntity, int firstResult, int maxResults)
-			throws DataAccessException;
+	//<T> List<T> findByExample(String entityName, T exampleEntity, int firstResult, int maxResults) throws DataAccessException;
 
 	//-------------------------------------------------------------------------
 	// Convenience query methods for iteration and bulk updates/deletes
@@ -729,7 +727,7 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Session#createQuery
 	 * @see org.hibernate.Query#iterate
 	 */
-	Iterator<?> iterate(String queryString, Object... values) throws DataAccessException;
+	//Iterator<?> iterate(String queryString, Object... values) throws DataAccessException;
 
 	/**
 	 * Immediately close an {@link Iterator} created by any of the various
@@ -739,7 +737,7 @@ public interface HibernateOperations {
 	 * @throws DataAccessException if the {@code Iterator} could not be closed
 	 * @see org.hibernate.Hibernate#close
 	 */
-	void closeIterator(Iterator<?> it) throws DataAccessException;
+	//void closeIterator(Iterator<?> it) throws DataAccessException;
 
 	/**
 	 * Update/delete all objects according to the given query, binding a number of
@@ -751,6 +749,10 @@ public interface HibernateOperations {
 	 * @see org.hibernate.Session#createQuery
 	 * @see org.hibernate.Query#executeUpdate
 	 */
-	int bulkUpdate(String queryString, Object... values) throws DataAccessException;
+	//int bulkUpdate(String queryString, Object... values) throws DataAccessException;
+
+	int bulkUpdate(String queryString) throws DataAccessException;
+
+	int bulkUpdate(String queryString, Map<String, Object> paramsMap) throws DataAccessException;
 
 }
