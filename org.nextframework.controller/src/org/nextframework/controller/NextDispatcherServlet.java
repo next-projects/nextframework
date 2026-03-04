@@ -58,6 +58,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class NextDispatcherServlet extends org.springframework.web.servlet.DispatcherServlet {
 
 	public static final String ACTUAL_SERVLET_NAME = "ACTUAL_SERVLET_NAME";
+	public static final String ACTUAL_SERVLET_SECURED = "ACTUAL_SERVLET_SECURED";
 	private static final long serialVersionUID = 1L;
 
 	public NextDispatcherServlet() {
@@ -153,8 +154,10 @@ public class NextDispatcherServlet extends org.springframework.web.servlet.Dispa
 	protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
 
 		getServletContext().setAttribute(ACTUAL_SERVLET_NAME, getServletName());
+		getServletContext().setAttribute(ACTUAL_SERVLET_SECURED, isSecured());
 		Object strategy = super.createDefaultStrategy(context, clazz);
 		getServletContext().removeAttribute(ACTUAL_SERVLET_NAME);
+		getServletContext().removeAttribute(ACTUAL_SERVLET_SECURED);
 
 		if (strategy instanceof RequestMappingHandlerAdapter handlerAdapter) {
 			List<HttpMessageConverter<?>> messageConverters = new ArrayList<>(handlerAdapter.getMessageConverters());
