@@ -22,8 +22,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,12 +32,9 @@ import org.hibernate.Filter;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
-import org.hibernate.LockOptions;
-import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.nextframework.exception.ApplicationException;
 import org.nextframework.persistence.PersistenceUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
@@ -316,6 +314,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 */
 	protected <T> T doExecute(HibernateCallback<T> action, boolean enforceNativeSession) throws DataAccessException {
+
 		Assert.notNull(action, "Callback object must not be null");
 
 		Session session = null;
@@ -347,6 +346,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 				disableFilters(session);
 			}
 		}
+
 	}
 
 	/**
@@ -400,103 +400,121 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 
 	@Override
 	public <T> T get(Class<T> entityClass, Serializable id) throws DataAccessException {
-		return get(entityClass, id, null);
-	}
-
-	@Override
-	public <T> T get(final Class<T> entityClass, final Serializable id, final LockMode lockMode)
-			throws DataAccessException {
-
 		return executeWithNativeSession(new HibernateCallback<T>() {
 
 			@Override
-			@SuppressWarnings("all")
 			public T doInHibernate(Session session) throws HibernateException {
-				if (lockMode != null) {
-					return (T) session.get(entityClass, id, new LockOptions(lockMode));
-				} else {
-					return (T) session.get(entityClass, id);
-				}
+				return (T) session.find(entityClass, id);
 			}
 
 		});
 	}
 
-	@Override
-	public Object get(String entityName, Serializable id) throws DataAccessException {
-		return get(entityName, id, null);
-	}
+//	@Override
+//	public <T> T get(final Class<T> entityClass, final Serializable id, final LockMode lockMode)
+//			throws DataAccessException {
+//
+//		return executeWithNativeSession(new HibernateCallback<T>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public T doInHibernate(Session session) throws HibernateException {
+//				if (lockMode != null) {
+//					return (T) session.get(entityClass, id, new LockOptions(lockMode));
+//				}
+//				else {
+//					return (T) session.get(entityClass, id);
+//				}
+//			}
+//		});
+//	}
 
-	@Override
-	public Object get(final String entityName, final Serializable id, final LockMode lockMode)
-			throws DataAccessException {
+//	@Override
+//	public Object get(String entityName, Serializable id) throws DataAccessException {
+//		return get(entityName, id, null);
+//	}
 
-		return executeWithNativeSession(new HibernateCallback<Object>() {
-
-			@Override
-			@SuppressWarnings("all")
-			public Object doInHibernate(Session session) throws HibernateException {
-				if (lockMode != null) {
-					return session.get(entityName, id, new LockOptions(lockMode));
-				} else {
-					return session.get(entityName, id);
-				}
-			}
-
-		});
-	}
+//	@Override
+//	public Object get(final String entityName, final Serializable id, final LockMode lockMode)
+//			throws DataAccessException {
+//
+//		return executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				if (lockMode != null) {
+//					return session.get(entityName, id, new LockOptions(lockMode));
+//				}
+//				else {
+//					return session.get(entityName, id);
+//				}
+//			}
+//		});
+//	}
 
 	@Override
 	public <T> T load(Class<T> entityClass, Serializable id) throws DataAccessException {
-		return load(entityClass, id, null);
-	}
-
-	@Override
-	public <T> T load(final Class<T> entityClass, final Serializable id, final LockMode lockMode)
-			throws DataAccessException {
-
 		return executeWithNativeSession(new HibernateCallback<T>() {
 
 			@Override
-			@SuppressWarnings("all")
 			public T doInHibernate(Session session) throws HibernateException {
-				if (lockMode != null) {
-					return (T) session.get(entityClass, id, new LockOptions(lockMode));
-				} else {
-					return (T) session.get(entityClass, id);
-				}
+				return (T) session.find(entityClass, id);
 			}
 
 		});
 	}
 
-	@Override
-	public Object load(String entityName, Serializable id) throws DataAccessException {
-		return load(entityName, id, null);
-	}
+//	@Override
+//	public <T> T load(final Class<T> entityClass, final Serializable id, final LockMode lockMode)
+//			throws DataAccessException {
+//
+//		return executeWithNativeSession(new HibernateCallback<T>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public T doInHibernate(Session session) throws HibernateException {
+//				if (lockMode != null) {
+//					return (T) session.load(entityClass, id, new LockOptions(lockMode));
+//				}
+//				else {
+//					return (T) session.load(entityClass, id);
+//				}
+//			}
+//		});
+//	}
 
-	@Override
-	public Object load(final String entityName, final Serializable id, final LockMode lockMode)
-			throws DataAccessException {
+//	@Override
+//	public Object load(String entityName, Serializable id) throws DataAccessException {
+//		return load(entityName, id, null);
+//	}
 
-		return executeWithNativeSession(new HibernateCallback<Object>() {
+//	@Override
+//	public Object load(final String entityName, final Serializable id, final LockMode lockMode)
+//			throws DataAccessException {
+//
+//		return executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				if (lockMode != null) {
+//					return session.load(entityName, id, new LockOptions(lockMode));
+//				}
+//				else {
+//					return session.load(entityName, id);
+//				}
+//			}
+//		});
+//	}
 
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException {
-				if (lockMode != null) {
-					return session.get(entityName, id, new LockOptions(lockMode));
-				} else {
-					return session.get(entityName, id);
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public <T> List<T> loadAll(final Class<T> entityClass) throws DataAccessException {
-		throw new ApplicationException("NAO IMPLEMENTADO");
-	}
+//	@Override
+//	public <T> List<T> loadAll(final Class<T> entityClass) throws DataAccessException {
+//		return executeWithNativeSession(new HibernateCallback<List<T>>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public List<T> doInHibernate(Session session) throws HibernateException {
+//				Criteria criteria = session.createCriteria(entityClass);
+//				criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+//				prepareCriteria(criteria);
+//				return criteria.list();
+//			}
+//		});
+//	}
 
 	@Override
 	public void load(final Object entity, final Serializable id) throws DataAccessException {
@@ -513,25 +531,32 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 
 	@Override
 	public void refresh(final Object entity) throws DataAccessException {
-		refresh(entity, null);
-	}
-
-	@Override
-	public void refresh(final Object entity, final LockMode lockMode) throws DataAccessException {
 		executeWithNativeSession(new HibernateCallback<Object>() {
 
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException {
-				if (lockMode != null) {
-					session.refresh(entity, new LockOptions(lockMode));
-				} else {
-					session.refresh(entity);
-				}
+				session.refresh(entity);
 				return null;
 			}
 
 		});
 	}
+
+//	@Override
+//	public void refresh(final Object entity, final LockMode lockMode) throws DataAccessException {
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				if (lockMode != null) {
+//					session.refresh(entity, new LockOptions(lockMode));
+//				}
+//				else {
+//					session.refresh(entity);
+//				}
+//				return null;
+//			}
+//		});
+//	}
 
 	@Override
 	public boolean contains(final Object entity) throws DataAccessException {
@@ -581,15 +606,29 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	// Convenience methods for storing individual objects
 	//-------------------------------------------------------------------------
 
-	@Override
-	public void lock(final Object entity, final LockMode lockMode) throws DataAccessException {
-		throw new ApplicationException("NAO IMPLEMENTADO");
-	}
+//	@Override
+//	public void lock(final Object entity, final LockMode lockMode) throws DataAccessException {
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				session.buildLockRequest(new LockOptions(lockMode)).lock(entity);
+//				return null;
+//			}
+//		});
+//	}
 
-	@Override
-	public void lock(final String entityName, final Object entity, final LockMode lockMode) throws DataAccessException {
-		throw new ApplicationException("NAO IMPLEMENTADO");
-	}
+//	@Override
+//	public void lock(final String entityName, final Object entity, final LockMode lockMode)
+//			throws DataAccessException {
+//
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				session.buildLockRequest(new LockOptions(lockMode)).lock(entityName, entity);
+//				return null;
+//			}
+//		});
+//	}
 
 	@Override
 	public Serializable save(final Object entity) throws DataAccessException {
@@ -693,37 +732,33 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		});
 	}
 
-	@Override
-	public void replicate(final Object entity, final ReplicationMode replicationMode)
-			throws DataAccessException {
+//	@Override
+//	public void replicate(final Object entity, final ReplicationMode replicationMode)
+//			throws DataAccessException {
+//
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				session.replicate(entity, replicationMode);
+//				return null;
+//			}
+//		});
+//	}
 
-		executeWithNativeSession(new HibernateCallback<Object>() {
-
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException {
-				checkWriteOperationAllowed(session);
-				session.replicate(entity, replicationMode);
-				return null;
-			}
-
-		});
-	}
-
-	@Override
-	public void replicate(final String entityName, final Object entity, final ReplicationMode replicationMode)
-			throws DataAccessException {
-
-		executeWithNativeSession(new HibernateCallback<Object>() {
-
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException {
-				checkWriteOperationAllowed(session);
-				session.replicate(entityName, entity, replicationMode);
-				return null;
-			}
-
-		});
-	}
+//	@Override
+//	public void replicate(final String entityName, final Object entity, final ReplicationMode replicationMode)
+//			throws DataAccessException {
+//
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				session.replicate(entityName, entity, replicationMode);
+//				return null;
+//			}
+//		});
+//	}
 
 	@Override
 	public void persist(final Object entity) throws DataAccessException {
@@ -740,20 +775,17 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		});
 	}
 
-	@Override
-	public void persist(final String entityName, final Object entity) throws DataAccessException {
-		executeWithNativeSession(new HibernateCallback<Object>() {
-
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException {
-				checkWriteOperationAllowed(session);
-				session.persist(entityName, entity);
-				PersistenceUtils.refreshBeanId(session, entity, null);
-				return null;
-			}
-
-		});
-	}
+//	@Override
+//	public void persist(final String entityName, final Object entity) throws DataAccessException {
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				session.persist(entityName, entity);
+//				return null;
+//			}
+//		});
+//	}
 
 	@Override
 	public <T> T merge(final T entity) throws DataAccessException {
@@ -770,28 +802,20 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		});
 	}
 
-	@Override
-	public <T> T merge(final String entityName, final T entity) throws DataAccessException {
-		return executeWithNativeSession(new HibernateCallback<T>() {
-
-			@Override
-			public T doInHibernate(Session session) throws HibernateException {
-				checkWriteOperationAllowed(session);
-				Object merged = session.merge(entityName, entity);
-				PersistenceUtils.refreshBeanId(session, entity, merged);
-				return null;
-			}
-
-		});
-	}
+//	@Override
+//	public <T> T merge(final String entityName, final T entity) throws DataAccessException {
+//		return executeWithNativeSession(new HibernateCallback<T>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public T doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				return (T) session.merge(entityName, entity);
+//			}
+//		});
+//	}
 
 	@Override
 	public void delete(Object entity) throws DataAccessException {
-		delete(entity, null);
-	}
-
-	@Override
-	public void delete(final Object entity, final LockMode lockMode) throws DataAccessException {
 		executeWithNativeSession(new HibernateCallback<Object>() {
 
 			@Override
@@ -804,16 +828,42 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		});
 	}
 
-	@Override
-	public void delete(String entityName, Object entity) throws DataAccessException {
-		delete(entityName, entity, null);
-	}
+//	@Override
+//	public void delete(final Object entity, final LockMode lockMode) throws DataAccessException {
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				if (lockMode != null) {
+//					session.buildLockRequest(new LockOptions(lockMode)).lock(entity);
+//				}
+//				session.delete(entity);
+//				return null;
+//			}
+//		});
+//	}
 
-	@Override
-	public void delete(final String entityName, final Object entity, final LockMode lockMode)
-			throws DataAccessException {
-		throw new ApplicationException("NAO IMPLEMENTADO");
-	}
+//	@Override
+//	public void delete(String entityName, Object entity) throws DataAccessException {
+//		delete(entityName, entity, null);
+//	}
+
+//	@Override
+//	public void delete(final String entityName, final Object entity, final LockMode lockMode)
+//			throws DataAccessException {
+//
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				if (lockMode != null) {
+//					session.buildLockRequest(new LockOptions(lockMode)).lock(entityName, entity);
+//				}
+//				session.delete(entityName, entity);
+//				return null;
+//			}
+//		});
+//	}
 
 	@Override
 	public void deleteAll(final Collection<?> entities) throws DataAccessException {
@@ -861,46 +911,41 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	// Convenience finder methods for HQL strings
 	//-------------------------------------------------------------------------
 
+//	@Override
+//	public List<?> find(final String queryString, final Object... values) throws DataAccessException {
+//		return executeWithNativeSession(new HibernateCallback<List<?>>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public List<?> doInHibernate(Session session) throws HibernateException {
+//				Query queryObject = session.createQuery(queryString);
+//				prepareQuery(queryObject);
+//				if (values != null) {
+//					for (int i = 0; i < values.length; i++) {
+//						queryObject.setParameter(i, values[i]);
+//					}
+//				}
+//				return queryObject.list();
+//			}
+//		});
+//	}
+
 	@Override
-	public List<?> find(final String queryString, final Object... values) throws DataAccessException {
-		return executeWithNativeSession(new HibernateCallback<List<?>>() {
-
-			@Override
-			@SuppressWarnings("all")
-			public List<?> doInHibernate(Session session) throws HibernateException {
-				Query queryObject = session.createQuery(queryString);
-				prepareQuery(queryObject);
-				if (values != null) {
-					for (int i = 0; i < values.length; i++) {
-						queryObject.setParameter(i, values[i]);
-					}
-				}
-				return queryObject.list();
-			}
-
-		});
+	public <T> List<T> findByNamedParam(String queryString, Class<T> resultClass, String paramName, Object value) throws DataAccessException {
+		return findByNamedParam(queryString, resultClass, new String[] { paramName }, new Object[] { value });
 	}
 
 	@Override
-	public List<?> findByNamedParam(String queryString, String paramName, Object value)
-			throws DataAccessException {
-
-		return findByNamedParam(queryString, new String[] { paramName }, new Object[] { value });
-	}
-
-	@Override
-	public List<?> findByNamedParam(final String queryString, final String[] paramNames, final Object[] values)
-			throws DataAccessException {
+	public <T> List<T> findByNamedParam(final String queryString, Class<T> resultClass, final String[] paramNames, final Object[] values) throws DataAccessException {
 
 		if (paramNames.length != values.length) {
 			throw new IllegalArgumentException("Length of paramNames array must match length of values array");
 		}
-		return executeWithNativeSession(new HibernateCallback<List<?>>() {
+
+		return executeWithNativeSession(new HibernateCallback<List<T>>() {
 
 			@Override
-			@SuppressWarnings("all")
-			public List<?> doInHibernate(Session session) throws HibernateException {
-				Query queryObject = session.createQuery(queryString);
+			public List<T> doInHibernate(Session session) throws HibernateException {
+				Query<T> queryObject = session.createQuery(queryString, resultClass);
 				prepareQuery(queryObject);
 				if (values != null) {
 					for (int i = 0; i < values.length; i++) {
@@ -914,15 +959,31 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	}
 
 	@Override
-	public List<?> findByValueBean(final String queryString, final Object valueBean)
-			throws DataAccessException {
-
-		return executeWithNativeSession(new HibernateCallback<List<?>>() {
+	public <T> List<T> findByNamedParam(String queryString, Class<T> resultClass, Map<String, Object> paramsMap) throws DataAccessException {
+		return executeWithNativeSession(new HibernateCallback<List<T>>() {
 
 			@Override
-			@SuppressWarnings("all")
-			public List<?> doInHibernate(Session session) throws HibernateException {
-				Query queryObject = session.createQuery(queryString);
+			public List<T> doInHibernate(Session session) throws HibernateException {
+				Query<T> queryObject = session.createQuery(queryString, resultClass);
+				prepareQuery(queryObject);
+				if (paramsMap != null) {
+					for (Entry<String, Object> paramEntry : paramsMap.entrySet()) {
+						applyNamedParameterToQuery(queryObject, paramEntry.getKey(), paramEntry.getValue());
+					}
+				}
+				return queryObject.list();
+			}
+
+		});
+	}
+
+	@Override
+	public <T> List<T> findByValueBean(final String queryString, Class<T> resultClass, final Object valueBean) throws DataAccessException {
+		return executeWithNativeSession(new HibernateCallback<List<T>>() {
+
+			@Override
+			public List<T> doInHibernate(Session session) throws HibernateException {
+				Query<T> queryObject = session.createQuery(queryString, resultClass);
 				prepareQuery(queryObject);
 				queryObject.setProperties(valueBean);
 				return queryObject.list();
@@ -935,47 +996,41 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	// Convenience finder methods for named queries
 	//-------------------------------------------------------------------------
 
+//	@Override
+//	public List<?> findByNamedQuery(final String queryName, final Object... values) throws DataAccessException {
+//		return executeWithNativeSession(new HibernateCallback<List<?>>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public List<?> doInHibernate(Session session) throws HibernateException {
+//				Query queryObject = session.getNamedQuery(queryName);
+//				prepareQuery(queryObject);
+//				if (values != null) {
+//					for (int i = 0; i < values.length; i++) {
+//						queryObject.setParameter(i, values[i]);
+//					}
+//				}
+//				return queryObject.list();
+//			}
+//		});
+//	}
+
 	@Override
-	public List<?> findByNamedQuery(final String queryName, final Object... values) throws DataAccessException {
-		return executeWithNativeSession(new HibernateCallback<List<?>>() {
-
-			@Override
-			@SuppressWarnings("all")
-			public List<?> doInHibernate(Session session) throws HibernateException {
-				Query queryObject = session.getNamedQuery(queryName);
-				prepareQuery(queryObject);
-				if (values != null) {
-					for (int i = 0; i < values.length; i++) {
-						queryObject.setParameter(i, values[i]);
-					}
-				}
-				return queryObject.list();
-			}
-
-		});
+	public <T> List<T> findByNamedQueryAndNamedParam(String queryName, Class<T> resultClass, String paramName, Object value) throws DataAccessException {
+		return findByNamedQueryAndNamedParam(queryName, resultClass, new String[] { paramName }, new Object[] { value });
 	}
 
 	@Override
-	public List<?> findByNamedQueryAndNamedParam(String queryName, String paramName, Object value)
-			throws DataAccessException {
-
-		return findByNamedQueryAndNamedParam(queryName, new String[] { paramName }, new Object[] { value });
-	}
-
-	@Override
-	public List<?> findByNamedQueryAndNamedParam(
-			final String queryName, final String[] paramNames, final Object[] values)
-			throws DataAccessException {
+	public <T> List<T> findByNamedQueryAndNamedParam(final String queryName, Class<T> resultClass, final String[] paramNames, final Object[] values) throws DataAccessException {
 
 		if (values != null && (paramNames == null || paramNames.length != values.length)) {
 			throw new IllegalArgumentException("Length of paramNames array must match length of values array");
 		}
-		return executeWithNativeSession(new HibernateCallback<List<?>>() {
+
+		return executeWithNativeSession(new HibernateCallback<List<T>>() {
 
 			@Override
-			@SuppressWarnings("all")
-			public List<?> doInHibernate(Session session) throws HibernateException {
-				Query queryObject = session.getNamedQuery(queryName);
+			public List<T> doInHibernate(Session session) throws HibernateException {
+				Query<T> queryObject = session.createNamedQuery(queryName, resultClass);
 				prepareQuery(queryObject);
 				if (values != null) {
 					for (int i = 0; i < values.length; i++) {
@@ -989,15 +1044,13 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	}
 
 	@Override
-	public List<?> findByNamedQueryAndValueBean(final String queryName, final Object valueBean)
-			throws DataAccessException {
+	public <T> List<T> findByNamedQueryAndValueBean(final String queryName, Class<T> resultClass, final Object valueBean) throws DataAccessException {
 
-		return executeWithNativeSession(new HibernateCallback<List<?>>() {
+		return executeWithNativeSession(new HibernateCallback<List<T>>() {
 
 			@Override
-			@SuppressWarnings("all")
-			public List<?> doInHibernate(Session session) throws HibernateException {
-				Query queryObject = session.getNamedQuery(queryName);
+			public List<T> doInHibernate(Session session) throws HibernateException {
+				Query<T> queryObject = session.createNamedQuery(queryName, resultClass);
 				prepareQuery(queryObject);
 				queryObject.setProperties(valueBean);
 				return queryObject.list();
@@ -1010,60 +1063,117 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	// Convenience finder methods for detached criteria
 	//-------------------------------------------------------------------------
 
-	@Override
-	public <T> List<T> findByExample(T exampleEntity) throws DataAccessException {
-		return findByExample(null, exampleEntity, -1, -1);
-	}
+//	@Override
+//	public <T> List<T> findByExample(T exampleEntity) throws DataAccessException {
+//		return findByExample(null, exampleEntity, -1, -1);
+//	}
 
-	@Override
-	public <T> List<T> findByExample(String entityName, T exampleEntity) throws DataAccessException {
-		return findByExample(entityName, exampleEntity, -1, -1);
-	}
+//	@Override
+//	public <T> List<T> findByExample(String entityName, T exampleEntity) throws DataAccessException {
+//		return findByExample(entityName, exampleEntity, -1, -1);
+//	}
 
-	@Override
-	public <T> List<T> findByExample(T exampleEntity, int firstResult, int maxResults) throws DataAccessException {
-		return findByExample(null, exampleEntity, firstResult, maxResults);
-	}
+//	@Override
+//	public <T> List<T> findByExample(T exampleEntity, int firstResult, int maxResults) throws DataAccessException {
+//		return findByExample(null, exampleEntity, firstResult, maxResults);
+//	}
 
-	@Override
-	public <T> List<T> findByExample(
-			final String entityName, final T exampleEntity, final int firstResult, final int maxResults)
-			throws DataAccessException {
-		throw new ApplicationException("NAO IMPLEMENTADO");
-	}
+//	@Override
+//	public <T> List<T> findByExample(
+//			final String entityName, final T exampleEntity, final int firstResult, final int maxResults)
+//			throws DataAccessException {
+//
+//		Assert.notNull(exampleEntity, "Example entity must not be null");
+//		return executeWithNativeSession(new HibernateCallback<List<T>>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public List<T> doInHibernate(Session session) throws HibernateException {
+//				Criteria executableCriteria = (entityName != null ?
+//						session.createCriteria(entityName) : session.createCriteria(exampleEntity.getClass()));
+//				executableCriteria.add(Example.create(exampleEntity));
+//				prepareCriteria(executableCriteria);
+//				if (firstResult >= 0) {
+//					executableCriteria.setFirstResult(firstResult);
+//				}
+//				if (maxResults > 0) {
+//					executableCriteria.setMaxResults(maxResults);
+//				}
+//				return executableCriteria.list();
+//			}
+//		});
+//	}
 
 	//-------------------------------------------------------------------------
 	// Convenience query methods for iteration and bulk updates/deletes
 	//-------------------------------------------------------------------------
 
-	@Override
-	public Iterator<?> iterate(final String queryString, final Object... values) throws DataAccessException {
-		throw new ApplicationException("NAO IMPLEMENTADO");
+//	@Override
+//	public Iterator<?> iterate(final String queryString, final Object... values) throws DataAccessException {
+//		return executeWithNativeSession(new HibernateCallback<Iterator<?>>() {
+//			@Override
+//			@SuppressWarnings("unchecked")
+//			public Iterator<?> doInHibernate(Session session) throws HibernateException {
+//				Query queryObject = session.createQuery(queryString);
+//				prepareQuery(queryObject);
+//				if (values != null) {
+//					for (int i = 0; i < values.length; i++) {
+//						queryObject.setParameter(i, values[i]);
+//					}
+//				}
+//				return queryObject.iterate();
+//			}
+//		});
+//	}
+
+//	@Override
+//	public void closeIterator(Iterator<?> it) throws DataAccessException {
+//		try {
+//			Hibernate.close(it);
+//		}
+//		catch (HibernateException ex) {
+//			throw SessionFactoryUtils.convertHibernateAccessException(ex);
+//		}
+//	}
+
+//	@Override
+//	public int bulkUpdate(final String queryString, final Object... values) throws DataAccessException {
+//		return executeWithNativeSession(new HibernateCallback<Integer>() {
+//			@Override
+//			public Integer doInHibernate(Session session) throws HibernateException {
+//				Query queryObject = session.createQuery(queryString);
+//				prepareQuery(queryObject);
+//				if (values != null) {
+//					for (int i = 0; i < values.length; i++) {
+//						queryObject.setParameter(i, values[i]);
+//					}
+//				}
+//				return queryObject.executeUpdate();
+//			}
+//		});
+//	}
+
+	public int bulkUpdate(final String queryString) throws DataAccessException {
+		return bulkUpdate(queryString, (Map<String, Object>) null);
 	}
 
 	@Override
-	public void closeIterator(Iterator<?> it) throws DataAccessException {
-		throw new ApplicationException("NAO IMPLEMENTADO");
-	}
-
-	@Override
-	public int bulkUpdate(final String queryString, final Object... values) throws DataAccessException {
+	public int bulkUpdate(final String queryString, Map<String, Object> paramsMap) throws DataAccessException {
 		return executeWithNativeSession(new HibernateCallback<Integer>() {
 
 			@Override
-			@SuppressWarnings("all")
 			public Integer doInHibernate(Session session) throws HibernateException {
-				Query queryObject = session.createQuery(queryString);
+				Query<?> queryObject = session.createQuery(queryString, null);
 				prepareQuery(queryObject);
-				if (values != null) {
-					for (int i = 0; i < values.length; i++) {
-						queryObject.setParameter(i, values[i]);
+				if (paramsMap != null) {
+					for (Entry<String, Object> paramEntry : paramsMap.entrySet()) {
+						applyNamedParameterToQuery(queryObject, paramEntry.getKey(), paramEntry.getValue());
 					}
 				}
 				return queryObject.executeUpdate();
 			}
 
 		});
+
 	}
 
 	//-------------------------------------------------------------------------
@@ -1095,7 +1205,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	 * @see #setCacheQueries
 	 * @see #setQueryCacheRegion
 	 */
-	protected void prepareQuery(Query queryObject) {
+	protected void prepareQuery(Query<?> queryObject) {
 		if (isCacheQueries()) {
 			queryObject.setCacheable(true);
 			if (getQueryCacheRegion() != null) {
@@ -1108,7 +1218,6 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		if (getMaxResults() > 0) {
 			queryObject.setMaxResults(getMaxResults());
 		}
-
 		SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.getResource(getSessionFactory());
 		if (sessionHolder != null && sessionHolder.hasTimeout()) {
 			queryObject.setTimeout(sessionHolder.getTimeToLiveInSeconds());
@@ -1122,9 +1231,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	 * @param value the value of the parameter
 	 * @throws HibernateException if thrown by the Query object
 	 */
-	protected void applyNamedParameterToQuery(Query queryObject, String paramName, Object value)
-			throws HibernateException {
-
+	protected void applyNamedParameterToQuery(Query<?> queryObject, String paramName, Object value) throws HibernateException {
 		if (value instanceof Collection) {
 			queryObject.setParameterList(paramName, (Collection<?>) value);
 		} else if (value instanceof Object[]) {
@@ -1164,12 +1271,13 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 
 			// Invoke method on target Session.
 			try {
+
 				Object retVal = method.invoke(this.target, args);
 
 				// If return value is a Query or Criteria, apply transaction timeout.
 				// Applies to createQuery, getNamedQuery, createCriteria.
 				if (retVal instanceof Query) {
-					prepareQuery(((Query) retVal));
+					prepareQuery(((Query<?>) retVal));
 				}
 
 				return retVal;
