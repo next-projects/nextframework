@@ -5,8 +5,7 @@
 		<include file="../org.nextframework.build/configurations.xml"/>
 	</configurations>
 	<dependencies>
-		<dependency org="org.springframework"		name="spring-jdbc"	rev="7.0.5"	conf="lib" />
-		<dependency org="org.springframework"		name="spring-orm"	rev="7.0.5"	conf="lib" />
-		<dependency org="org.springframework"		name="spring-tx"		rev="7.0.5"	conf="lib" />
+		<dependency org="org.springframework"	name="spring-jdbc"	rev="7.0.5"	conf="lib" />
+		<dependency org="org.springframework"	name="spring-tx"	rev="7.0.5"	conf="lib" />
 	</dependencies>
 </ivy-module>

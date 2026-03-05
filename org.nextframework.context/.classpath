@@ -11,12 +11,12 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.beans"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar" sourcepath="lib/src/aopalliance-1.0-sources.jar"/>
-	<classpathentry kind="lib" path="lib/spring-aop-7.0.4.jar" sourcepath="lib/src/spring-aop-7.0.4-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-context-7.0.4.jar" sourcepath="lib/src/spring-context-7.0.4-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-context-support-7.0.5.jar" sourcepath="lib/src/spring-context-support-7.0.5-sources.jar"/>
 	<classpathentry kind="lib" path="lib/spring-expression-7.0.5.jar" sourcepath="lib/src/spring-expression-7.0.5-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jspecify-1.0.0.jar" sourcepath="lib/src/jspecify-1.0.0-sources.jar"/>
 	<classpathentry kind="lib" path="lib/micrometer-commons-1.16.3.jar" sourcepath="lib/src/micrometer-commons-1.16.3-sources.jar"/>
 	<classpathentry kind="lib" path="lib/micrometer-observation-1.16.3.jar" sourcepath="lib/src/micrometer-observation-1.16.3-sources.jar"/>
+	<classpathentry kind="lib" path="lib/spring-aop-7.0.5.jar" sourcepath="lib/src/spring-aop-7.0.5-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/spring-context-7.0.5.jar" sourcepath="lib/src/spring-context-7.0.5-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
