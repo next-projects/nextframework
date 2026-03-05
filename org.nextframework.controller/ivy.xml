@@ -5,9 +5,9 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
-		<dependency org="org.springframework"			name="spring-webmvc"						rev="7.0.5"			conf="lib" />
+		<dependency org="org.springframework"			name="spring-webmvc"					rev="7.0.5"			conf="lib" />
 
-		<dependency org="commons-io" 				name="commons-io" 						rev="2.21.0" 		conf="lib" />
+		<dependency org="commons-io" 				name="commons-io" 							rev="2.21.0" 		conf="lib" />
 
 		<dependency org="com.fasterxml.jackson.core" 	name="jackson-core" 					rev="2.21.0"			conf="lib"/>
 		<dependency org="com.fasterxml.jackson.core" 	name="jackson-databind"					rev="2.21.0"			conf="lib"/>

@@ -13,7 +13,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.context"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-jdbc-7.0.5.jar" sourcepath="lib/src/spring-jdbc-7.0.5-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/spring-orm-7.0.5.jar" sourcepath="lib/src/spring-orm-7.0.5-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-tx-7.0.5.jar" sourcepath="lib/src/spring-tx-7.0.5-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
