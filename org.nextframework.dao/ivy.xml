@@ -6,7 +6,6 @@
 	</configurations>
 	<dependencies>
 		<dependency org="org.springframework"		name="spring-jdbc"	rev="7.0.5"	conf="lib" />
-		<dependency org="org.springframework"		name="spring-orm"	rev="7.0.5"	conf="lib" />
 		<dependency org="org.springframework"		name="spring-tx"		rev="7.0.5"	conf="lib" />
 		<dependency org="org.mockito"			name="mockito-core"				rev="4.11.0"		conf="lib-test"/>
 	</dependencies>
