@@ -30,9 +30,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.nextframework.classmanager.ClassManager;
+import org.nextframework.classmanager.ClassManagerFactory;
 import org.nextframework.context.ResourceHandlerMap;
 import org.nextframework.controller.json.NextMappingJackson2HttpMessageConverter;
 import org.nextframework.web.service.ServletContextServiceProvider;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.context.ApplicationContext;
@@ -41,6 +44,7 @@ import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ViewResolver;
@@ -57,8 +61,6 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class NextDispatcherServlet extends org.springframework.web.servlet.DispatcherServlet {
 
-	public static final String ACTUAL_SERVLET_NAME = "ACTUAL_SERVLET_NAME";
-	public static final String ACTUAL_SERVLET_SECURED = "ACTUAL_SERVLET_SECURED";
 	private static final long serialVersionUID = 1L;
 
 	public NextDispatcherServlet() {
@@ -66,13 +68,16 @@ public class NextDispatcherServlet extends org.springframework.web.servlet.Dispa
 
 	@Override
 	protected void onRefresh(ApplicationContext context) {
+
 		super.onRefresh(context);
+
 		DispatcherServletResourceHandlerMap handlerMap = (DispatcherServletResourceHandlerMap) ServletContextServiceProvider.getService(getServletContext(), ResourceHandlerMap.class);
 		if (handlerMap == null) {
 			handlerMap = new DispatcherServletResourceHandlerMap();
 			ServletContextServiceProvider.registerService(getServletContext(), ResourceHandlerMap.class, handlerMap);
 		}
 		handlerMap.servlets.add(this);
+
 	}
 
 	private static class DispatcherServletResourceHandlerMap implements ResourceHandlerMap {
@@ -130,34 +135,64 @@ public class NextDispatcherServlet extends org.springframework.web.servlet.Dispa
 
 	}
 
+	@Override
+	@SuppressWarnings("all")
+	protected List getDefaultStrategies(ApplicationContext context, Class strategyInterface) throws BeansException {
+
+		List defaultStrategies = super.getDefaultStrategies(context, strategyInterface);
+
+		if (HandlerMapping.class.isAssignableFrom(strategyInterface)) {
+			defaultStrategies.add(0, createHandlerMapping(context));
+		}
+
+		if (ViewResolver.class.isAssignableFrom(strategyInterface)) {
+			defaultStrategies.add(0, createViewResolver(context));
+		}
+
+		return defaultStrategies;
+	}
+
+	@SuppressWarnings("all")
+	private NextAnnotationHandlerMapping createHandlerMapping(ApplicationContext context) {
+		NextAnnotationHandlerMapping handlerMapping = new NextAnnotationHandlerMapping();
+		handlerMapping.setModule(getServletName());
+		handlerMapping.setInterceptors(getHandlerMappingInterceptors());
+		handlerMapping.setApplicationContext(context);
+		return handlerMapping;
+	}
+
+	protected HandlerInterceptor[] getHandlerMappingInterceptors() {
+		List<HandlerInterceptor> interceptorsList = new ArrayList<>();
+		if (isSecured()) {
+			interceptorsList.add(new AuthenticationHandlerInterceptor());
+		}
+		interceptorsList.add(new AuthorizationHandlerInterceptor());
+		ClassManager classManager = ClassManagerFactory.getClassManager();
+		Class<NextHandlerInterceptor>[] interceptorsClasses = classManager.getAllClassesOfType(NextHandlerInterceptor.class);
+		for (Class<NextHandlerInterceptor> class1 : interceptorsClasses) {
+			interceptorsList.add((NextHandlerInterceptor) BeanUtils.instantiateClass(class1));
+		}
+		return interceptorsList.toArray(new HandlerInterceptor[interceptorsList.size()]);
+	}
+
+	private NextCompositeViewResolver createViewResolver(ApplicationContext context) {
+		NextCompositeViewResolver viewResolver = new NextCompositeViewResolver();
+		viewResolver.setBaseViews("/WEB-INF/jsp/" + getServletName() + "/base.jsp", "/WEB-INF/jsp/base.jsp");
+		viewResolver.setParameterName("bodyPage");
+		viewResolver.setPrefix("/WEB-INF/jsp/" + getServletName() + "/");
+		viewResolver.setSuffix(".jsp");
+		viewResolver.setApplicationContext(context);
+		return viewResolver;
+	}
+
 	private boolean isSecured() {
 		return "true".equalsIgnoreCase(this.getInitParameter("secured"));
 	}
 
-	@SuppressWarnings("all")
 	@Override
-	protected List getDefaultStrategies(ApplicationContext context, Class strategyInterface) throws BeansException {
-		List defaultStrategies = super.getDefaultStrategies(context, strategyInterface);
-		if (HandlerMapping.class.isAssignableFrom(strategyInterface)) {
-			Object handlerMapping = createDefaultStrategy(context, NextAnnotationHandlerMapping.class);
-			defaultStrategies.add(0, handlerMapping);
-		}
-		if (ViewResolver.class.isAssignableFrom(strategyInterface)) {
-			Object viewResolver = createDefaultStrategy(context, NextCompositeViewResolver.class);
-			defaultStrategies.add(0, viewResolver);
-		}
-		return defaultStrategies;
-	}
-
-	@Override
-	// Removido @SuppressWarnings("deprecation") pois as novas classes não estão obsoletas
 	protected Object createDefaultStrategy(ApplicationContext context, Class<?> clazz) {
 
-		getServletContext().setAttribute(ACTUAL_SERVLET_NAME, getServletName());
-		getServletContext().setAttribute(ACTUAL_SERVLET_SECURED, isSecured());
 		Object strategy = super.createDefaultStrategy(context, clazz);
-		getServletContext().removeAttribute(ACTUAL_SERVLET_NAME);
-		getServletContext().removeAttribute(ACTUAL_SERVLET_SECURED);
 
 		if (strategy instanceof RequestMappingHandlerAdapter handlerAdapter) {
 			List<HttpMessageConverter<?>> messageConverters = new ArrayList<>(handlerAdapter.getMessageConverters());

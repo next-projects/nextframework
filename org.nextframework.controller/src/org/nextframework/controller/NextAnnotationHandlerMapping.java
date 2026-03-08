@@ -1,49 +1,15 @@
 package org.nextframework.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import org.nextframework.classmanager.ClassManager;
-import org.nextframework.classmanager.ClassManagerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.servlet.mvc.Controller;
 
 public class NextAnnotationHandlerMapping extends SimpleUrlHandlerMapping {
 
-	private boolean secured;
 	private String module;
-
-	@Override
-	public void initApplicationContext() throws BeansException {
-		initAttributesFromServlet();
-		super.initApplicationContext();
-	}
-
-	private void initAttributesFromServlet() {
-		this.secured = (boolean) getServletContext().getAttribute(NextDispatcherServlet.ACTUAL_SERVLET_SECURED);
-		this.module = (String) getServletContext().getAttribute(NextDispatcherServlet.ACTUAL_SERVLET_NAME);
-		Objects.requireNonNull(module);
-	}
-
-	@Override
-	protected void extendInterceptors(List<Object> interceptors) {
-
-		if (secured) {
-			interceptors.add(new AuthenticationHandlerInterceptor());
-		}
-		interceptors.add(new AuthorizationHandlerInterceptor());
-
-		ClassManager classManager = ClassManagerFactory.getClassManager();
-		Class<NextHandlerInterceptor>[] interceptorsClasses = classManager.getAllClassesOfType(NextHandlerInterceptor.class);
-		for (Class<NextHandlerInterceptor> class1 : interceptorsClasses) {
-			interceptors.add((NextHandlerInterceptor) BeanUtils.instantiateClass(class1));
-		}
-
-	}
 
 	@Override
 	protected void registerHandlers(Map<String, Object> urlMap) throws BeansException {
@@ -68,6 +34,10 @@ public class NextAnnotationHandlerMapping extends SimpleUrlHandlerMapping {
 			}
 		}
 		return urlMap;
+	}
+
+	public void setModule(String module) {
+		this.module = module;
 	}
 
 }

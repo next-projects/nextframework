@@ -29,7 +29,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Locale;
-import java.util.Objects;
 
 import org.apache.commons.logging.Log;
 import org.springframework.web.servlet.View;
@@ -40,26 +39,11 @@ public class NextCompositeViewResolver extends InternalResourceViewResolver {
 
 	private static final Log log = org.apache.commons.logging.LogFactory.getLog(NextCompositeViewResolver.class);
 
-	private String module;
 	private String[] baseViews;
-	private Boolean useBase;
-	private String baseView;
 	private String parameterName;
 
-	@Override
-	protected void initApplicationContext() {
-		initAttributesFromServlet();
-		setParameterName("bodyPage");
-		setPrefix("/WEB-INF/jsp/" + module + "/");
-		setSuffix(".jsp");
-		setBaseViews("/WEB-INF/jsp/" + module + "/base.jsp", "/WEB-INF/jsp/base.jsp");
-		super.initApplicationContext();
-	}
-
-	private void initAttributesFromServlet() {
-		this.module = (String) getServletContext().getAttribute(NextDispatcherServlet.ACTUAL_SERVLET_NAME);
-		Objects.requireNonNull(module);
-	}
+	private Boolean useBase;
+	private String baseView;
 
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
@@ -139,20 +123,12 @@ public class NextCompositeViewResolver extends InternalResourceViewResolver {
 		return view;
 	}
 
-	public String getParameterName() {
-		return parameterName;
-	}
-
-	public String[] getBaseViews() {
-		return baseViews;
+	public void setBaseViews(String... baseViews) {
+		this.baseViews = baseViews;
 	}
 
 	public void setParameterName(String parameterName) {
 		this.parameterName = parameterName;
-	}
-
-	public void setBaseViews(String... baseViews) {
-		this.baseViews = baseViews;
 	}
 
 }
