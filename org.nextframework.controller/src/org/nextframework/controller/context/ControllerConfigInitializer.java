@@ -2,8 +2,6 @@ package org.nextframework.controller.context;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -51,39 +49,25 @@ public class ControllerConfigInitializer implements ServletContainerInitializer 
 
 	}
 
-	@SuppressWarnings("unchecked")
 	private Set<String> getModules(Set<Class<?>> controllerClasses, ServletContext servletContext) {
-
-		List<Class<? extends Controller>> controllerList = new LinkedList<>();
-
-		if (controllerClasses != null) {
-			for (Class<?> controllerClass : controllerClasses) {
-				// Be defensive: Some servlet containers provide us with invalid classes,
-				// no matter what @HandlesTypes says... (copied from spring)
-				if (!controllerClass.isInterface() && !Modifier.isAbstract(controllerClass.getModifiers()) &&
-						Controller.class.isAssignableFrom(controllerClass)) {
-					controllerList.add((Class<? extends Controller>) controllerClass);
-				}
-			}
-		}
 
 		Set<String> modules = new TreeSet<>();
 
-		for (Class<? extends Controller> controllerClass : controllerList) {
-			org.nextframework.controller.Controller annotation = controllerClass.getAnnotation(org.nextframework.controller.Controller.class);
-			if (annotation == null) {
-				//if (!Modifier.isAbstract(controllerClass.getModifiers())) {
-				//servletContext.log("WARN: Controller "+controllerClass+" is not annotated with @Controller");
-				//}
-			} else {
-				String[] paths = annotation.path();
-				if (paths != null) {
-					for (String path : paths) {
-						if (!path.startsWith("/")) {
-							servletContext.log("WARN: Controller " + controllerClass + " has a wrong path " + path + ". Paths must be started with '/'.");
-						} else {
-							String module = path.substring(1, path.indexOf('/', 1));
-							modules.add(module);
+		if (controllerClasses != null) {
+			for (Class<?> controllerClass : controllerClasses) {
+				if (!controllerClass.isInterface() && !Modifier.isAbstract(controllerClass.getModifiers()) && Controller.class.isAssignableFrom(controllerClass)) {
+					org.nextframework.controller.Controller annotation = controllerClass.getAnnotation(org.nextframework.controller.Controller.class);
+					if (annotation != null) {
+						String[] paths = annotation.path();
+						if (paths != null) {
+							for (String path : paths) {
+								if (!path.startsWith("/")) {
+									servletContext.log("WARN: Controller " + controllerClass + " has a wrong path " + path + ". Paths must be started with '/'.");
+								} else {
+									String module = path.substring(1, path.indexOf('/', 1));
+									modules.add(module);
+								}
+							}
 						}
 					}
 				}
