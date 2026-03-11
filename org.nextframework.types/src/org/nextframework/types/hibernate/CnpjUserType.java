@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.type.descriptor.WrapperOptions;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 import org.nextframework.types.Cnpj;
 import org.nextframework.types.TypeUtils;
@@ -39,7 +39,7 @@ public class CnpjUserType implements UserType<Cnpj> {
 	}
 
 	@Override
-	public Cnpj nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
+	public Cnpj nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
 		String value = rs.getString(position);
 		if (TypeUtils.isEmpty(value)) {
 			return null;
@@ -48,7 +48,7 @@ public class CnpjUserType implements UserType<Cnpj> {
 	}
 
 	@Override
-	public void nullSafeSet(PreparedStatement st, Cnpj value, int index, WrapperOptions options) throws SQLException {
+	public void nullSafeSet(PreparedStatement st, Cnpj value, int index, SharedSessionContractImplementor session) throws SQLException {
 		if (value != null) {
 			String value2 = value.getValue();
 			if (TypeUtils.isEmpty(value2)) {

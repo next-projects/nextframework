@@ -25,9 +25,7 @@ package org.nextframework.types;
 
 import java.io.Serializable;
 
-import org.nextframework.types.hibernate.CepUserType;
-
-public class Cep extends CepUserType implements Serializable {
+public class Cep implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String value;
