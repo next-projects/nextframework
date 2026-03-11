@@ -645,20 +645,20 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		});
 	}
 
-	@Override
-	public Serializable save(final String entityName, final Object entity) throws DataAccessException {
-		return executeWithNativeSession(new HibernateCallback<Serializable>() {
-
-			@Override
-			public Serializable doInHibernate(Session session) throws HibernateException {
-				checkWriteOperationAllowed(session);
-				session.persist(entityName, entity);
-				PersistenceUtils.refreshBeanId(session, entity, null);
-				return (Serializable) session.getIdentifier(entity);
-			}
-
-		});
-	}
+//	@Override
+//	public Serializable save(final String entityName, final Object entity) throws DataAccessException {
+//		return executeWithNativeSession(new HibernateCallback<Serializable>() {
+//
+//			@Override
+//			public Serializable doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				session.persist(entityName, entity);
+//				PersistenceUtils.refreshBeanId(session, entity, null);
+//				return (Serializable) session.getIdentifier(entity);
+//			}
+//
+//		});
+//	}
 
 	@Override
 	public void update(Object entity) throws DataAccessException {
@@ -680,27 +680,27 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 		});
 	}
 
-	@Override
-	public void update(String entityName, Object entity) throws DataAccessException {
-		update(entityName, entity, null);
-	}
+//	@Override
+//	public void update(String entityName, Object entity) throws DataAccessException {
+//		update(entityName, entity, null);
+//	}
 
-	@Override
-	public void update(final String entityName, final Object entity, final LockMode lockMode)
-			throws DataAccessException {
-
-		executeWithNativeSession(new HibernateCallback<Object>() {
-
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException {
-				checkWriteOperationAllowed(session);
-				Object merged = session.merge(entityName, entity);
-				PersistenceUtils.refreshBeanId(session, entity, merged);
-				return null;
-			}
-
-		});
-	}
+//	@Override
+//	public void update(final String entityName, final Object entity, final LockMode lockMode)
+//			throws DataAccessException {
+//
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				Object merged = session.merge(entityName, entity);
+//				PersistenceUtils.refreshBeanId(session, entity, merged);
+//				return null;
+//			}
+//
+//		});
+//	}
 
 	@Override
 	public void saveOrUpdate(final Object entity) throws DataAccessException {
@@ -709,28 +709,40 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 			@Override
 			public Object doInHibernate(Session session) throws HibernateException {
 				checkWriteOperationAllowed(session);
-				Object merged = session.merge(entity);
-				PersistenceUtils.refreshBeanId(session, entity, merged);
+				Serializable id = PersistenceUtils.getId(entity, session.getSessionFactory());
+				if (id == null) {
+					session.persist(entity);
+					PersistenceUtils.refreshBeanId(session, entity, null);
+				} else {
+					Object merged = session.merge(entity);
+					PersistenceUtils.refreshBeanId(session, entity, merged);
+				}
 				return null;
 			}
 
 		});
 	}
 
-	@Override
-	public void saveOrUpdate(final String entityName, final Object entity) throws DataAccessException {
-		executeWithNativeSession(new HibernateCallback<Object>() {
-
-			@Override
-			public Object doInHibernate(Session session) throws HibernateException {
-				checkWriteOperationAllowed(session);
-				Object merged = session.merge(entityName, entity);
-				PersistenceUtils.refreshBeanId(session, entity, merged);
-				return null;
-			}
-
-		});
-	}
+//	@Override
+//	public void saveOrUpdate(final String entityName, final Object entity) throws DataAccessException {
+//		executeWithNativeSession(new HibernateCallback<Object>() {
+//
+//			@Override
+//			public Object doInHibernate(Session session) throws HibernateException {
+//				checkWriteOperationAllowed(session);
+//				Serializable id = PersistenceUtils.getId(entity, session.getSessionFactory());
+//				if (id == null) {
+//					session.persist(entityName, entity);
+//					PersistenceUtils.refreshBeanId(session, entity, null);
+//				} else {
+//					Object merged = session.merge(entityName, entity);
+//					PersistenceUtils.refreshBeanId(session, entity, merged);
+//				}
+//				return null;
+//			}
+//
+//		});
+//	}
 
 //	@Override
 //	public void replicate(final Object entity, final ReplicationMode replicationMode)
