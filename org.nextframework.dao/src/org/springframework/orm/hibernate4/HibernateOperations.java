@@ -322,7 +322,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#save(String, Object)
 	 */
-	Serializable save(String entityName, Object entity) throws DataAccessException;
+	//Serializable save(String entityName, Object entity) throws DataAccessException;
 
 	/**
 	 * Update the given persistent instance,
@@ -354,7 +354,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#update(String, Object)
 	 */
-	void update(String entityName, Object entity) throws DataAccessException;
+	//void update(String entityName, Object entity) throws DataAccessException;
 
 	/**
 	 * Update the given persistent instance,
@@ -368,7 +368,7 @@ public interface HibernateOperations {
 	 * @throws org.springframework.dao.DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#update(String, Object)
 	 */
-	void update(String entityName, Object entity, LockMode lockMode) throws DataAccessException;
+	//void update(String entityName, Object entity, LockMode lockMode) throws DataAccessException;
 
 	/**
 	 * Save or update the given persistent instance,
@@ -391,7 +391,7 @@ public interface HibernateOperations {
 	 * @throws DataAccessException in case of Hibernate errors
 	 * @see org.hibernate.Session#saveOrUpdate(String, Object)
 	 */
-	void saveOrUpdate(String entityName, Object entity) throws DataAccessException;
+	//void saveOrUpdate(String entityName, Object entity) throws DataAccessException;
 
 	/**
 	 * Persist the state of the given detached instance according to the
