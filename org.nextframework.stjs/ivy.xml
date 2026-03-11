@@ -5,9 +5,16 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies >
-		<dependency org="org.apache.bcel"				name="bcel"				rev="5.2"		conf="provided" />
-		<dependency org="com.google.code.gson"			name="gson"				rev="2.1"		conf="provided" />
-		<dependency org="com.google.guava"				name="guava"			rev="16.0"		conf="provided" />
-		<dependency org="com.google.code.javaparser"	name="javaparser"		rev="1.0.8"		conf="provided"/>
+
+		<dependency org="org.apache.bcel"				name="bcel"						rev="6.12.0"		conf="provided" />
+		<dependency org="commons-io"					name="commons-io"				rev="2.21.0"		conf="provided" />
+		<dependency org="org.apache.commons"			name="commons-lang3"			rev="3.20.0"		conf="provided" />
+
+		<dependency org="com.google.code.gson"			name="gson"						rev="2.13.2"		conf="provided" />
+		<dependency org="com.google.errorprone"			name="error_prone_annotations"	rev="2.48.0"		conf="provided" />
+
+		<dependency org="com.google.guava" 				name="guava" 					rev="33.5.0-jre"	conf="provided"/>
+		<dependency org="com.google.code.javaparser"	name="javaparser"				rev="1.0.8"			conf="provided"/>
+
 	</dependencies>
 </ivy-module>

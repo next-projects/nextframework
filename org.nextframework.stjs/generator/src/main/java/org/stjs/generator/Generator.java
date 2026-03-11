@@ -25,6 +25,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -37,7 +38,7 @@ import org.stjs.generator.visitor.SetParentVisitor;
 import org.stjs.generator.writer.JavascriptWriterVisitor;
 
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.Resources;
 
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
@@ -192,28 +193,15 @@ public class Generator {
 	 * @param folder
 	 */
 	public void copyJavascriptSupport(File folder) {
-		final InputStream stjs = Thread.currentThread().getContextClassLoader().getResourceAsStream(STJS_FILE);
-		if (stjs == null) {
-			throw new RuntimeException(STJS_FILE + " is missing from the Generator's classpath");
-		}
-		File outputFile = new File(folder, STJS_FILE);
 		try {
-			Files.copy(new InputSupplier<InputStream>() {
-
-				@Override
-				public InputStream getInput() throws IOException {
-					return stjs;
-				}
-
-			}, outputFile);
+			URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(STJS_FILE);
+			if (resourceUrl == null) {
+				throw new RuntimeException(STJS_FILE + " is missing from the Generator's classpath");
+			}
+			File outputFile = new File(folder, STJS_FILE);
+			Resources.asByteSource(resourceUrl).copyTo(Files.asByteSink(outputFile));
 		} catch (IOException e) {
 			throw new RuntimeException("Could not copy the " + STJS_FILE + " file to the folder " + folder, e);
-		} finally {
-			try {
-				stjs.close();
-			} catch (IOException e) {
-				// silent
-			}
 		}
 	}
 
