@@ -25,9 +25,7 @@ package org.nextframework.types;
 
 import java.io.Serializable;
 
-import org.nextframework.types.hibernate.CpfUserType;
-
-public class Cpf extends CpfUserType implements Document, Serializable {
+public class Cpf implements Document, Serializable {
 
 	private static final long serialVersionUID = 2090169993922126029L;
 

@@ -25,9 +25,7 @@ package org.nextframework.types;
 
 import java.io.Serializable;
 
-import org.nextframework.types.hibernate.CnpjUserType;
-
-public class Cnpj extends CnpjUserType implements Document, Serializable {
+public class Cnpj implements Document, Serializable {
 
 	private static final long serialVersionUID = 7515600575750828297L;
 

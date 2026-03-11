@@ -28,22 +28,16 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.text.DecimalFormat;
 import java.util.Formattable;
 import java.util.Formatter;
 
-import org.hibernate.type.descriptor.WrapperOptions;
-import org.hibernate.usertype.UserType;
 import org.nextframework.summary.aggregator.Incrementable;
 
 /**
  * @author Fabrício
  */
-public class Money extends Number implements Serializable, Comparable<Object>, UserType<Money>, Incrementable<Money>, Formattable {
+public class Money extends Number implements Serializable, Comparable<Object>, Incrementable<Money>, Formattable {
 
 	// private static final Log log = LogFactory.getLog(Money.class);
 
@@ -173,84 +167,6 @@ public class Money extends Number implements Serializable, Comparable<Object>, U
 	}
 
 	// -----------------------------------------------
-
-	@Override
-	public int getSqlType() {
-		return Types.BIGINT;
-	}
-
-	@Override
-	public Class<Money> returnedClass() {
-		return Money.class;
-	}
-
-	@Override
-	public boolean equals(Money x, Money y) {
-		if (x != null) {
-			return x.compareTo(y) == 0;
-		} else if (x == null && y == null) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public int hashCode(Money x) {
-		return x != null ? x.hashCode() : 0;
-	}
-
-	@Override
-	public Money nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
-		Object obj = rs.getObject(position);
-		if (obj == null) {
-			return null;
-		}
-		if (!(obj instanceof Number)) {
-			String msg = "O campo de uma propriedade do tipo Money não está com o tipo long no banco.";
-			// log.error(msg);
-			throw new RuntimeException(msg);
-		}
-		Long value = ((Number) obj).longValue();
-		return new Money(value, true);
-	}
-
-	@Override
-	public void nullSafeSet(PreparedStatement st, Money value, int index, WrapperOptions options) throws SQLException {
-		if (value != null) {
-			if (value.isNull()) {
-				st.setNull(index, Types.BIGINT);
-			} else {
-				st.setLong(index, value.toLong());
-			}
-		} else {
-			st.setNull(index, Types.BIGINT);
-		}
-	}
-
-	@Override
-	public Money deepCopy(Money value) {
-		return value;
-	}
-
-	@Override
-	public boolean isMutable() {
-		return false;
-	}
-
-	@Override
-	public Serializable disassemble(Money value) {
-		return value;
-	}
-
-	@Override
-	public Money assemble(Serializable cached, Object owner) {
-		return (Money) cached;
-	}
-
-	@Override
-	public Money replace(Money original, Money target, Object owner) {
-		return original;
-	}
 
 	public BigDecimal getValue() {
 		return value;
