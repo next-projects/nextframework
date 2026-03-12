@@ -29,6 +29,7 @@ import org.nextframework.service.ServiceFactory;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 public class PersistenceUtils {
 
@@ -110,13 +111,16 @@ public class PersistenceUtils {
 		}
 	}
 
-	public static <ENTITY> String getIdPropertyName(Class<ENTITY> fromClass, SessionFactory sessionFactory) {
+	public static <ENTITY> SingularAttribute<? super ENTITY, ?> getIdPropertyMetadata(Class<ENTITY> fromClass, SessionFactory sessionFactory) {
 		EntityType<ENTITY> entity = getClassMetadata(fromClass, sessionFactory);
 		return entity.getSingularAttributes().stream()
 				.filter(jakarta.persistence.metamodel.SingularAttribute::isId)
 				.findFirst()
-				.map(jakarta.persistence.metamodel.Attribute::getName)
 				.orElseThrow(() -> new PersistenceException("Cannot find ID property for " + fromClass));
+	}
+
+	public static <ENTITY> String getIdPropertyName(Class<ENTITY> fromClass, SessionFactory sessionFactory) {
+		return getIdPropertyMetadata(fromClass, sessionFactory).getName();
 	}
 
 	public static <ENTITY> Serializable getId(ENTITY entity, SessionFactory sessionFactory) {
