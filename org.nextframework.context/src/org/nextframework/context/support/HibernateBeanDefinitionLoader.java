@@ -96,6 +96,10 @@ public class HibernateBeanDefinitionLoader implements BeanDefinitionLoader {
 		nextPersistenceDB.setPropertyValues(new MutablePropertyValues());
 		nextPersistenceDB.getPropertyValues().add("dataSource", new RuntimeBeanReference(DATA_SOURCE_BEAN_NAME_PREFFIX + NEXT_DATASOURCE_DISCRIMINATOR));
 
+		if (beanFactory.containsBean("sessionFactory")) {
+			nextPersistenceDB.getPropertyValues().add("sessionFactory", new RuntimeBeanReference("sessionFactory"));
+		}
+
 		beanFactory.registerBeanDefinition("_nextPersistenceManager", nextPersistenceDB);
 
 	}
