@@ -9,10 +9,11 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.controller"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.chart"/>
-	<classpathentry kind="lib" path="lib/ognl-2.6.7.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.persistence"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.web"/>
 	<classpathentry kind="lib" path="lib/jakarta.servlet.jsp.jstl-api-3.0.2.jar" sourcepath="lib/src/jakarta.servlet.jsp.jstl-api-3.0.2-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jakarta.servlet.jsp.jstl-3.0.1.jar" sourcepath="lib/src/jakarta.servlet.jsp.jstl-3.0.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.30.2-GA.jar" sourcepath="lib/src/javassist-3.30.2-GA-sources.jar"/>
+	<classpathentry kind="lib" path="lib/ognl-3.4.10.jar" sourcepath="lib/src/ognl-3.4.10-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
