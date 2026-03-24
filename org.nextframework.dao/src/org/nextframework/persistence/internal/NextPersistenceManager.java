@@ -25,9 +25,32 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class NextPersistenceManager implements InitializingBean, DisposableBean {
 
+	private DataSource dataSource;
 	private SessionFactory sessionFactory;
 
-	private DataSource dataSource;
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (this.sessionFactory == null) {
+			initializeHibernate();
+		}
+	}
+
+	private void initializeHibernate() {
+		Configuration config = new Configuration()
+				.setProperty("hibernate.hbm2ddl.auto", "update")
+				.setProperty("hibernate.show_sql", "false")
+				.addAnnotatedClass(UserKeyValueMapEntity.class);
+		StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+				.applySettings(config.getProperties())
+				.applySetting(Environment.DATASOURCE, dataSource)
+				.build();
+		this.sessionFactory = config.buildSessionFactory(serviceRegistry);
+	}
+
+	@Override
+	public void destroy() throws Exception {
+		sessionFactory.close();
+	}
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
@@ -41,28 +64,8 @@ public class NextPersistenceManager implements InitializingBean, DisposableBean 
 		return sessionFactory;
 	}
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		initializeHibernate();
-	}
-
-	private void initializeHibernate() {
-		Configuration config = new Configuration()
-				.setProperty("hibernate.hbm2ddl.auto", "update")
-				.setProperty("hibernate.show_sql", "false")
-				.addAnnotatedClass(UserKeyValueMapEntity.class);
-		StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-				.applySettings(config.getProperties())
-				.applySetting(Environment.DATASOURCE, dataSource)
-				.build();
-		this.sessionFactory = config
-				.buildSessionFactory(serviceRegistry);
-
-	}
-
-	@Override
-	public void destroy() throws Exception {
-		sessionFactory.close();
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
 	protected UserPropertiesDAO getPropertiesDAOForUser(String username) {
