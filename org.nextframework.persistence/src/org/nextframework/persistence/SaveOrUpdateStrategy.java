@@ -32,6 +32,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import org.nextframework.persistence.PersistenceUtils.InverseCollectionProperties;
 import org.nextframework.service.ServiceFactory;
@@ -406,10 +407,9 @@ public class SaveOrUpdateStrategy {
 				deleteCallback = new HibernateCommand() {
 
 					public Object doInHibernate(Session session) throws HibernateException {
-						Query queryObject = session.createQuery(deleteQueryString, itemClass);
+						MutationQuery queryObject = session.createMutationQuery(deleteQueryString);
 						queryObject.setParameter(entity.getClass().getSimpleName(), entity);
-						queryObject.executeUpdate();
-						return null;
+						return queryObject.executeUpdate();
 					}
 
 				};
@@ -452,10 +452,10 @@ public class SaveOrUpdateStrategy {
 		return this;
 	}
 
-	private List<?> findItensToDelete(final String parentProperty, final Class<?> itemClass, final Collection<?> collection) {
-		final List<?> toDelete = (List<?>) hibernateTransactionSessionProvider.execute(new HibernateCommand() {
+	private <TD> List<TD> findItensToDelete(final String parentProperty, final Class<TD> itemClass, final Collection<?> collection) {
+		final List<TD> toDelete = hibernateTransactionSessionProvider.execute(new HibernateCommand<List<TD>>() {
 
-			public Object doInHibernate(Session session) {
+			public List<TD> doInHibernate(Session session) {
 
 				// remover dessa lista os objetos transientes
 				Collection<Object> itens = new ArrayList<Object>(collection == null ? new ArrayList<Object>() : collection);
@@ -481,7 +481,7 @@ public class SaveOrUpdateStrategy {
 							.append(" = :")
 							.append(entity.getClass().getSimpleName())
 							.toString();
-					Query q = session.createQuery(findQueryString, itemClass);
+					Query<TD> q = session.createQuery(findQueryString, itemClass);
 					q.setParameter(entity.getClass().getSimpleName(), entity);
 					return q.list();
 				} else {
@@ -502,7 +502,7 @@ public class SaveOrUpdateStrategy {
 								.append(" = :")
 								.append(entity.getClass().getSimpleName())
 								.toString();
-						Query q = session.createQuery(findQueryString, itemClass);
+						Query<TD> q = session.createQuery(findQueryString, itemClass);
 						q.setParameter(entity.getClass().getSimpleName(), entity);
 						List<?> databaseItems = q.list();
 						return PersistenceUtils.removeFromCollectionUsingId(session.getSessionFactory(), databaseItems, itens);
@@ -522,7 +522,7 @@ public class SaveOrUpdateStrategy {
 								.append(" = :")
 								.append(entity.getClass().getSimpleName())
 								.toString();
-						Query q = session.createQuery(findQueryString, itemClass);
+						Query<TD> q = session.createQuery(findQueryString, itemClass);
 						q.setParameterList("collection", itens);
 						q.setParameter(entity.getClass().getSimpleName(), entity);
 						return q.list();
