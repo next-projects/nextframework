@@ -34,6 +34,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
 import org.nextframework.persistence.PersistenceUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -1174,8 +1175,7 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 
 			@Override
 			public Integer doInHibernate(Session session) throws HibernateException {
-				Query<?> queryObject = session.createQuery(queryString, null);
-				prepareQuery(queryObject);
+				MutationQuery queryObject = session.createMutationQuery(queryString);
 				if (paramsMap != null) {
 					for (Entry<String, Object> paramEntry : paramsMap.entrySet()) {
 						applyNamedParameterToQuery(queryObject, paramEntry.getKey(), paramEntry.getValue());
@@ -1244,6 +1244,16 @@ public class HibernateTemplate implements HibernateOperations, InitializingBean 
 	 * @throws HibernateException if thrown by the Query object
 	 */
 	protected void applyNamedParameterToQuery(Query<?> queryObject, String paramName, Object value) throws HibernateException {
+		if (value instanceof Collection) {
+			queryObject.setParameterList(paramName, (Collection<?>) value);
+		} else if (value instanceof Object[]) {
+			queryObject.setParameterList(paramName, (Object[]) value);
+		} else {
+			queryObject.setParameter(paramName, value);
+		}
+	}
+
+	protected void applyNamedParameterToQuery(MutationQuery queryObject, String paramName, Object value) throws HibernateException {
 		if (value instanceof Collection) {
 			queryObject.setParameterList(paramName, (Collection<?>) value);
 		} else if (value instanceof Object[]) {
