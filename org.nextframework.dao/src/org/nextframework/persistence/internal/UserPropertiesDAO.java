@@ -48,12 +48,13 @@ public class UserPropertiesDAO {
 	}
 
 	private UserKeyValueMapEntity getUserKey(String propertyName, Session session) {
-		Query createQuery = session.createQuery(
+		Query<UserKeyValueMapEntity> createQuery = session.createQuery(
 				"from " + UserKeyValueMapEntity.class.getSimpleName() + " map " +
-						"where map.username = :username and map.key = :key");
+						"where map.username = :username and map.key = :key",
+				UserKeyValueMapEntity.class);
 		createQuery.setParameter("username", username);
 		createQuery.setParameter("key", propertyName);
-		UserKeyValueMapEntity userKeyValueMapEntity = (UserKeyValueMapEntity) createQuery.uniqueResult();
+		UserKeyValueMapEntity userKeyValueMapEntity = createQuery.uniqueResult();
 		return userKeyValueMapEntity;
 	}
 

@@ -884,8 +884,8 @@ public class QueryBuilder<E> {
 		return query;
 	}
 
-	protected Query createQuery(Session session) {
-		Query query;
+	protected Query<E> createQuery(Session session) {
+		Query<E> query;
 		String queryString = null;
 		try {
 			queryString = getQuery();
