@@ -3,7 +3,7 @@
 <%@ taglib prefix="combo" uri="nextframework.tags.combo"%>
 <%@ taglib prefix="t" uri="nextframework.tags.template"%>
 
-<t:view title="${formViewTag.title}" useBean="${crudContext.beanName}" propertyMode="${param.ACTION=='view' ? 'output' : 'input'}">
+<t:view title="${formViewTag.title}" useBean="${crudContext.beanName}" propertyMode="${param.ACTION=='view' ? 'output' : 'input'}" enctype="${formViewTag.dynamicAttributesMap['enctype']}">
 
 	<c:if test="${param.fromInsertOne == 'true'}">
 		<input type="hidden" name="fromInsertOne" value="true" />

@@ -2,7 +2,7 @@
 <%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <%@ taglib prefix="t" uri="nextframework.tags.template"%>
 
-<t:view title="${listViewTag.title}">
+<t:view title="${listViewTag.title}" enctype="${listViewTag.dynamicAttributesMap['enctype']}">
 
 	<input type="hidden" name="currentPage" value="0" />
 	<input type="hidden" name="notFirstTime" value="true" />
