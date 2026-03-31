@@ -7,34 +7,54 @@
 	<input type="hidden" name="suppressValidation" value="false"/>
 	<input type="hidden" name="suppressErrors" value="false"/>
 	<script language="javascript">
+
 		var ${tag.name} = document.forms["${tag.name}"];
 		${tag.name}.validate = '${tag.validate}';
+
 		function ${tag.submitFunction}(action) {
+
+			try {
+				clearMessages();//limpa as mensagens que vieram do servidor
+			} catch(e){
+			}
+
 			var validar = ${tag.name}.validate;
 			try {
 				${tag.validateFunction};
 			} catch (e) {
 				validar = false;
 			}
-			try {
-				clearMessages();//limpa as mensagens que vieram do servidor
-			} catch(e){
-			}
+
 			if(validar == 'true') {
 				var valid = ${tag.validateFunction}();
-				if(valid) {
-					if(action){
-						${tag.name}.${tag.actionParameter}.value = action;
-					}
-					${tag.name}.submit();
+				if(!valid) {
+					return false;
 				}
-			} else {
-				if(action){
-					${tag.name}.${tag.actionParameter}.value = action;
+			}
+
+			if(action){
+				${tag.name}.${tag.actionParameter}.value = action;
+			}
+
+			${tag.submitFunction}_checkMultipart(${tag.name});
+			${tag.name}.submit();
+
+		}
+
+		function ${tag.submitFunction}_checkMultipart(form) {
+			if (form.enctype !== 'multipart/form-data') {
+				const hasFileInput = form.querySelector('input[type="file"]');
+				if (hasFileInput && form.method.toUpperCase() === 'POST') {
+					console.info('Ajustando enctype para multipart/form-data...');
+					 form.enctype = 'multipart/form-data';
 				}
-				${tag.name}.submit();
 			}
 		}
+
+		document.addEventListener('submit', function(event) {
+			${tag.submitFunction}_checkMultipart(event.target);
+		});
+
 	</script>
 	<n:bean name="${tag.forBean}" bypass="${empty tag.forBean}">
 		<t:propertyConfig mode="${tag.propertyMode}">
