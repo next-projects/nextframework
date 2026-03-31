@@ -710,19 +710,23 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	 * Verifica a igualdade de dois objetos (analiza id)
 	 */
 	public boolean areEqual(Object value1, Object value2) {
+
 		boolean id = true;
+
 		if (value1 == null) {
 			return false;
 		} else {
 			id = TagUtils.hasId(value1.getClass()) && id;
 		}
 		Class<?> class1 = Util.objects.getRealClass(value1.getClass());
+
 		if (value2 == null) {
 			return false;
 		} else {
 			id = TagUtils.hasId(value2.getClass()) && id;
 		}
 		Class<?> class2 = Util.objects.getRealClass(value2.getClass());
+
 		if (id) {
 			BeanDescriptor bd1 = BeanDescriptorFactory.forBean(value1);
 			BeanDescriptor bd2 = BeanDescriptorFactory.forBean(value2);
@@ -739,6 +743,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			}
 			return TagUtils.getObjectValueToString(value1, false, null).equals(TagUtils.getObjectValueToString(value2, false, null));
 		}
+
 		return value1.equals(value2);
 	}
 

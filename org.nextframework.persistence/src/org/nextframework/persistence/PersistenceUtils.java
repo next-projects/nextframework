@@ -129,7 +129,7 @@ public class PersistenceUtils {
 
 	@SuppressWarnings("unchecked")
 	private static <ENTITY> EntityType<ENTITY> getClassMetadata(Class<ENTITY> class1, SessionFactory sessionFactory) {
-		if (class1.getSimpleName().contains("$$")) {
+		if (class1.getSimpleName().contains("$")) {
 			//this is a generated class.. get the user class
 			class1 = (Class<ENTITY>) class1.getSuperclass();
 		}

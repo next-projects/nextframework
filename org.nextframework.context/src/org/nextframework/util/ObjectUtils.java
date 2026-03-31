@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.nextframework.bean.internal.AbstractBeanDescriptor;
 import org.nextframework.exception.NextException;
 import org.nextframework.message.NextMessageSourceResolvable;
 import org.springframework.context.MessageSourceResolvable;
@@ -232,11 +233,7 @@ public class ObjectUtils {
 
 	@SuppressWarnings("unchecked")
 	public <OBJ> Class<OBJ> getRealClass(Class<OBJ> clazz) {
-		Class<OBJ> clazz2 = clazz;
-		while (clazz2.getName().contains("$$")) {
-			clazz2 = (Class<OBJ>) clazz2.getSuperclass();
-		}
-		return clazz2;
+		return (Class<OBJ>) AbstractBeanDescriptor.getUserClass(clazz);
 	}
 
 	public MessageSourceResolvable newSimpleMessage(String value) {
