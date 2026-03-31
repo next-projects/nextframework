@@ -2,14 +2,7 @@
 <%@ taglib prefix="n" uri="nextframework.tags.next"%>
 <%@ taglib prefix="t" uri="nextframework.tags.template"%>
 
-<c:if test="${empty viewTag.dynamicAttributesMap['enctype']}">
-	<c:set var="_form_enctype" scope="page" value="multipart/form-data" />
-</c:if>
-<c:if test="${!empty viewTag.dynamicAttributesMap['enctype']}">
-	<c:set var="_form_enctype" scope="page" value="${viewTag.dynamicAttributesMap['enctype']}" />
-</c:if>
-
-<n:form name="${viewTag.formName}" enctype="${_form_enctype}" method="${viewTag.formMethod}" action="${viewTag.formAction}" validate="${viewTag.validateForm}" validateFunction="validate" bypass="${!viewTag.includeForm}">
+<n:form name="${viewTag.formName}" method="${viewTag.formMethod}" action="${viewTag.formAction}" enctype="${viewTag.formEnctype}" validate="${viewTag.validateForm}" validateFunction="validate"  bypass="${!viewTag.includeForm}">
 
 	<n:validation functionName="validateForm" bypass="${!viewTag.includeForm || !viewTag.validateForm}">
 

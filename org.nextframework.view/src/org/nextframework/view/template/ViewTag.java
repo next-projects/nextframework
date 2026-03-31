@@ -33,6 +33,7 @@ public class ViewTag extends TemplateTag {
 	protected String formName;
 	protected String formMethod = "POST";
 	protected String formAction;
+	protected String formEnctype;
 	protected boolean includeForm = true;
 	protected boolean validateForm = true;
 
@@ -81,6 +82,14 @@ public class ViewTag extends TemplateTag {
 
 	public void setFormAction(String formAction) {
 		this.formAction = formAction;
+	}
+
+	public String getFormEnctype() {
+		return formEnctype;
+	}
+
+	public void setFormEnctype(String formEnctype) {
+		this.formEnctype = formEnctype;
 	}
 
 	public boolean isIncludeForm() {
