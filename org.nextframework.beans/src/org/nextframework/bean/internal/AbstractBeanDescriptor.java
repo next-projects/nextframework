@@ -13,6 +13,7 @@ import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.PropertyAccessorUtils;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 
 public abstract class AbstractBeanDescriptor implements BeanDescriptor {
 
@@ -162,19 +163,25 @@ public abstract class AbstractBeanDescriptor implements BeanDescriptor {
 		return builder.toString();
 	}
 
-	private static final String CGLIB_CLASS_SEPARATOR = "$$";
 	private static final String BEAN_EXTENDER_SEPARATOR = "ExtendedByBeanExtender";
+	private static final String HIBERNATE_PROXY_SUFIX = "$HibernateProxy";
+	private static final String BYTE_BUDDY_SUFIX = "$ByteBuddy$";
+	private static final String CGLIB_SUFIX = "$$";
 
-	//code from SpringFramework - Apache Licence http://www.apache.org/licenses/LICENSE-2.0
-	private static Class<?> getUserClass(Class<?> clazz) {
-		if (clazz != null && clazz.getName().contains(CGLIB_CLASS_SEPARATOR)
-				&& !clazz.getName().contains(BEAN_EXTENDER_SEPARATOR)) {
+	public static Class<?> getUserClass(Class<?> clazz) {
+		if (clazz == null) {
+			return null;
+		}
+		if (clazz.getName().contains(BEAN_EXTENDER_SEPARATOR)) {
+			return clazz;
+		}
+		if (clazz.getName().contains(HIBERNATE_PROXY_SUFIX) || clazz.getName().contains(BYTE_BUDDY_SUFIX) || clazz.getName().contains(CGLIB_SUFIX)) {
 			Class<?> superClass = clazz.getSuperclass();
 			if (superClass != null && !Object.class.equals(superClass)) {
 				return superClass;
 			}
 		}
-		return clazz;
+		return ClassUtils.getUserClass(clazz);
 	}
 
 }
