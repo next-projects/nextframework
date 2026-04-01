@@ -6,11 +6,12 @@
 	<target name="copy-all-dependencies" depends="init-ivy">
 		<dirname  file="${basedir}../" property="next.workspace.dir"/>
 		<echo>Using next workspace: ${next.workspace.dir}</echo>
-		
 		<build-next-modules target="copy-module-dependencies"/>
 	</target>
 	
 	<target name="Remove Next Ivy Dependencies" >
+		<dirname  file="${basedir}../" property="next.workspace.dir"/>
+		<echo>Using next workspace: ${next.workspace.dir}</echo>
 		<build-next-modules target="remove-libs"/>
 	</target>
 	
