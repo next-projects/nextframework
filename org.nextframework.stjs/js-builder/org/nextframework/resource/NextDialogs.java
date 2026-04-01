@@ -148,7 +148,7 @@ public class NextDialogs {
 					}
 					if (close) {
 						popup.close();
-					}else {
+					} else if (bigThis.borrowedElementParent != null) {
 						//Se o dialogCallback retornou false (para não fechar o modal, os inputs de borrowedElement deverão voltar para o modal.
 						bigThis.appendToBody(bigThis.borrowedElement);
 					}
