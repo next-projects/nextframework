@@ -180,13 +180,11 @@ public class SourceCodeBuilder {
 		if (class1.isPrimitive() || isJavaLang(class1)) {
 			return;
 		}
-
 		if (class1.isArray()) {
 			Class<?> componentType = class1.getComponentType();
 			addImport(componentType);
 			return;
 		}
-
 		imports.add(class1.getName());
 	}
 
