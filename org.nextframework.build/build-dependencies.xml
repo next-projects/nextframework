@@ -22,6 +22,7 @@
 	<target name="remove-libs">
 		<echo>Deleting libs ${basedir}</echo>
 		<delete dir="lib" />
+		<delete dir="lib-test" />
 		<delete dir="provided" />
 	</target>
 	
