@@ -39,11 +39,15 @@ import org.nextframework.view.template.PropertyTag;
  */
 public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
-	protected List<PanelRenderedBlock> blocks = new ArrayList<PanelRenderedBlock>();
+	protected Integer colspan;
+
+	protected List<PanelRenderedBlock> blocks = new ArrayList<>();
 
 	protected Boolean flatMode;
 
-	protected Integer columns = null;
+	protected Integer columns;
+
+	protected Boolean scaleToGridSystem;
 
 	protected String styleClass;
 
@@ -56,8 +60,6 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 	protected String columnStyleClasses;
 
 	protected String columnStyles;
-
-	protected Integer colspan;
 
 	protected String propertyRenderAs;
 
@@ -72,6 +74,9 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 			if (parentPanel != null) {
 				if (flatMode == null) {
 					flatMode = parentPanel.getFlatMode();
+				}
+				if (scaleToGridSystem == null) {
+					scaleToGridSystem = parentPanel.getScaleToGridSystem();
 				}
 				if (Util.strings.isEmpty(style)) {
 					style = parentPanel.getStyle();
@@ -177,24 +182,10 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 				String classString = "";
 				if (Util.strings.isNotEmpty(columnStyleClass)) {
-					/*
-					 * The {CS} placeholder in columnStyleClasses (e.g. "col-md-{CS}") must be
-					 * scaled to Bootstrap's 12-column grid. The 'columns' attribute represents
-					 * the logical grid size, which may differ from 12 (e.g. columns=3 for a
-					 * DOUBLE layout with 4+8 label/input ratio).
-					 *
-					 * Without scaling, a colspan of 1 with columns=3 would produce "col-md-1"
-					 * (1/12 = 8.3% width), leaving most of the row empty. By scaling, we get
-					 * "col-md-4" (4/12 = 33.3%), which correctly fills the row proportionally.
-					 *
-					 * Formula: bootstrapSize = (colspan * 12) / columns
-					 * Examples with the scaling:
-					 *   columns=12, colspan=2 (STACKED default) -> (2*12)/12 = 2  -> col-md-2  (unchanged)
-					 *   columns=2,  colspan=1 (DOUBLE 6+6)      -> (1*12)/2  = 6  -> col-md-6
-					 *   columns=3,  colspan=1 (DOUBLE label)     -> (1*12)/3  = 4  -> col-md-4
-					 *   columns=3,  colspan=2 (DOUBLE input)     -> (2*12)/3  = 8  -> col-md-8
-					 */
-					int csValue = flatMode ? (colspanBlock * 12) / columns : colspanBlock;
+					int csValue = colspanBlock;
+					if (flatMode && Util.booleans.isTrue(scaleToGridSystem)) {
+						csValue = calcScaleToGridSystem(colspanBlock);
+					}
 					columnStyleClass = columnStyleClass.replaceAll("\\{CS\\}", String.valueOf(csValue));
 					classString = " class=\"" + columnStyleClass + "\"";
 				}
@@ -235,6 +226,27 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 	}
 
+	private int calcScaleToGridSystem(Integer colspanBlock) {
+		/*
+		 * The {CS} placeholder in columnStyleClasses (e.g. "col-md-{CS}") must be
+		 * scaled to Bootstrap's 12-column grid system. The 'columns' attribute represents
+		 * the logical grid size, which may differ from 12 (e.g. columns=3 for a
+		 * DOUBLE layout with 4+8 label/input ratio).
+		 *
+		 * Without scaling, a colspan of 1 with columns=3 would produce "col-md-1"
+		 * (1/12 = 8.3% width), leaving most of the row empty. By scaling, we get
+		 * "col-md-4" (4/12 = 33.3%), which correctly fills the row proportionally.
+		 *
+		 * Formula: bootstrapSize = (colspan * 12) / columns
+		 * Examples with the scaling:
+		 *   columns=12, colspan=2 (STACKED default) -> (2*12)/12 = 2  -> col-md-2  (unchanged)
+		 *   columns=2,  colspan=1 (DOUBLE 6+6)      -> (1*12)/2  = 6  -> col-md-6
+		 *   columns=3,  colspan=1 (DOUBLE label)     -> (1*12)/3  = 4  -> col-md-4
+		 *   columns=3,  colspan=2 (DOUBLE input)     -> (2*12)/3  = 8  -> col-md-8
+		 */
+		return (colspanBlock * getViewConfig().getGridSystemColumns()) / columns;
+	}
+
 	public Integer asInteger(Object value) {
 		try {
 			if (value instanceof String) {
@@ -262,6 +274,14 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 		return blocks.add(o);
 	}
 
+	public Integer getColspan() {
+		return colspan;
+	}
+
+	public void setColspan(Integer colspan) {
+		this.colspan = colspan;
+	}
+
 	public Boolean getFlatMode() {
 		return flatMode;
 	}
@@ -276,6 +296,14 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 	public void setColumns(Integer columns) {
 		this.columns = columns;
+	}
+
+	public Boolean getScaleToGridSystem() {
+		return scaleToGridSystem;
+	}
+
+	public void setScaleToGridSystem(Boolean scaleToGridSystem) {
+		this.scaleToGridSystem = scaleToGridSystem;
 	}
 
 	public String getStyleClass() {
@@ -324,14 +352,6 @@ public class PanelGridTag extends BaseTag implements AcceptPanelRenderedBlock {
 
 	public void setColumnStyles(String columnStyles) {
 		this.columnStyles = columnStyles;
-	}
-
-	public Integer getColspan() {
-		return colspan;
-	}
-
-	public void setColspan(Integer colspan) {
-		this.colspan = colspan;
 	}
 
 	public String getPropertyRenderAs() {

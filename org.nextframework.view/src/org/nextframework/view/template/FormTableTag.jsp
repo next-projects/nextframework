@@ -2,7 +2,8 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:panelGrid colspan="${formTableTag.colspan}" columns="${formTableTag.columns}" flatMode="${formTableTag.flatMode}"
+<n:panelGrid colspan="${formTableTag.colspan}" flatMode="${formTableTag.flatMode}"
+	columns="${formTableTag.columns}" scaleToGridSystem="${formTableTag.scaleToGridSystem}"
 	styleClass="${formTableTag.styleClass}" style="${formTableTag.style}"
 	columnStyleClasses="${formTableTag.columnStyleClasses}" columnStyles="${formTableTag.columnStyles}"
 	rowStyleClasses="${formTableTag.rowStyleClasses}" rowStyles="${formTableTag.rowStyles}"

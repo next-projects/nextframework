@@ -28,6 +28,10 @@ public interface ViewConfig {
 
 	boolean isDefaultFlatMode();
 
+	boolean isDefaultScaleToGridSystem();
+
+	Integer getGridSystemColumns();
+
 	Integer getDefaultColumns();
 
 	Integer getDefaultColspan(String renderAs);

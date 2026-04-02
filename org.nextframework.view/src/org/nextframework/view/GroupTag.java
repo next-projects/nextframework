@@ -43,6 +43,8 @@ public class GroupTag extends ComboTag {
 
 	protected Integer columns;
 
+	protected Boolean scaleToGridSystem;
+
 	protected String fieldsetStyle;
 
 	protected String fieldsetStyleClass;
@@ -80,6 +82,9 @@ public class GroupTag extends ComboTag {
 			if (parentPanel != null) {
 				if (flatMode == null) {
 					flatMode = parentPanel.getFlatMode();
+				}
+				if (scaleToGridSystem == null) {
+					scaleToGridSystem = parentPanel.getScaleToGridSystem();
 				}
 				if (Util.strings.isEmpty(style)) {
 					style = parentPanel.getStyle();
@@ -162,6 +167,7 @@ public class GroupTag extends ComboTag {
 		setDynamicAttributes("panelGrid", panelGridTag);
 		panelGridTag.setFlatMode(flatMode);
 		panelGridTag.setColumns(columns);
+		panelGridTag.setScaleToGridSystem(scaleToGridSystem);
 		panelGridTag.setStyle(style);
 		panelGridTag.setStyleClass(styleClass);
 		panelGridTag.setRowStyleClasses(rowStyleClasses);
@@ -203,6 +209,14 @@ public class GroupTag extends ComboTag {
 
 	public void setColumns(Integer columns) {
 		this.columns = columns;
+	}
+
+	public Boolean getScaleToGridSystem() {
+		return scaleToGridSystem;
+	}
+
+	public void setScaleToGridSystem(Boolean scaleToGridSystem) {
+		this.scaleToGridSystem = scaleToGridSystem;
 	}
 
 	public String getFieldsetStyle() {

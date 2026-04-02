@@ -716,12 +716,19 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>flatMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>columns</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>flatMode</name>
+			<description></description>
+			<name>scaleToGridSystem</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -794,12 +801,19 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>flatMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>columns</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>flatMode</name>
+			<description></description>
+			<name>scaleToGridSystem</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -871,12 +885,19 @@
 		</attribute>
 		<attribute>
 			<description></description>
+			<name>flatMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description></description>
 			<name>columns</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>flatMode</name>
+			<description></description>
+			<name>scaleToGridSystem</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

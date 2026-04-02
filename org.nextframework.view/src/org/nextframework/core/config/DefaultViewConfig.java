@@ -91,8 +91,18 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
+	public boolean isDefaultScaleToGridSystem() {
+		return true;
+	}
+
+	@Override
+	public Integer getGridSystemColumns() {
+		return 12; //See "https://getbootstrap.com/docs/5.3/layout/grid", the $grid-columns sass variable.
+	}
+
+	@Override
 	public Integer getDefaultColumns() {
-		return isUseBootstrap() ? 12 : 2;
+		return isUseBootstrap() ? getGridSystemColumns() : 2;
 	}
 
 	@Override
