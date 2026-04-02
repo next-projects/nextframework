@@ -34,8 +34,10 @@ public class FormTableTag extends TemplateTag {
 	private static final String SUBCOMPONENT_FLAT = "FLAT";
 
 	protected Integer colspan;
-	protected Integer columns;
+
 	protected Boolean flatMode;
+	protected Integer columns;
+	protected Boolean scaleToGridSystem;
 
 	protected String styleClass;
 	protected String style;
@@ -64,6 +66,10 @@ public class FormTableTag extends TemplateTag {
 			columns = getViewConfig().getDefaultColumns();
 		}
 
+		if (scaleToGridSystem == null) {
+			scaleToGridSystem = getViewConfig().isDefaultScaleToGridSystem();
+		}
+
 		if (propertyRenderAs == null) {
 			propertyRenderAs = getViewConfig().getDefaultPropertyRenderAs();
 		}
@@ -84,6 +90,14 @@ public class FormTableTag extends TemplateTag {
 		this.colspan = colspan;
 	}
 
+	public Boolean getFlatMode() {
+		return flatMode;
+	}
+
+	public void setFlatMode(Boolean flatMode) {
+		this.flatMode = flatMode;
+	}
+
 	public Integer getColumns() {
 		return columns;
 	}
@@ -92,12 +106,12 @@ public class FormTableTag extends TemplateTag {
 		this.columns = columns;
 	}
 
-	public Boolean getFlatMode() {
-		return flatMode;
+	public Boolean getScaleToGridSystem() {
+		return scaleToGridSystem;
 	}
 
-	public void setFlatMode(Boolean flatMode) {
-		this.flatMode = flatMode;
+	public void setScaleToGridSystem(Boolean scaleToGridSystem) {
+		this.scaleToGridSystem = scaleToGridSystem;
 	}
 
 	public String getStyleClass() {

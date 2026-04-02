@@ -2,7 +2,8 @@
 <%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
 <%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
 
-<n:panelGrid colspan="${reportTableTag.colspan}" columns="${reportTableTag.columns}" flatMode="${reportTableTag.flatMode}"
+<n:panelGrid colspan="${reportTableTag.colspan}" flatMode="${reportTableTag.flatMode}"
+	columns="${reportTableTag.columns}" scaleToGridSystem="${reportTableTag.scaleToGridSystem}"
 	styleClass="${reportTableTag.styleClass}" style="${reportTableTag.style}"
 	columnStyleClasses="${reportTableTag.columnStyleClasses}" columnStyles="${reportTableTag.columnStyles}"
 	rowStyleClasses="${reportTableTag.rowStyleClasses}" rowStyles="${reportTableTag.rowStyles}"
