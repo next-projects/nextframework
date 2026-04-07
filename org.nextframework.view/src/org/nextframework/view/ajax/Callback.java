@@ -21,8 +21,7 @@ public abstract class Callback implements Serializable {
 		return "next.ajax.send({" +
 				"url:'" + getServerUrl() + "', " +
 				"params: 'serverId=" + index + "', " +
-				"evalResponse:true, " +
-				"appendContext:false " +
+				"appendContext:false" +
 				extraProperties + "});";
 	}
 
