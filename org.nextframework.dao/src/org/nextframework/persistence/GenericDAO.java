@@ -688,7 +688,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		for (Method method : methods) {
 			if (Util.beans.isGetter(method)) {
 				if (method.getReturnType().equals(propertyClass)) {
-					properties.add(Util.beans.getPropertyFromGetter(method.getName()));
+					properties.add(Util.beans.getPropertyFromGetter(method));
 				}
 			}
 		}

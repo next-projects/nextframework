@@ -57,7 +57,7 @@ public class BeanUtils {
 		Method[] declaredMethods = clazz.getDeclaredMethods();
 		for (Method method : declaredMethods) {
 			if (isGetter(method)) {
-				String property = getPropertyFromGetter(method.getName());
+				String property = getPropertyFromGetter(method);
 				properties.add(property);
 			}
 		}
@@ -133,16 +133,16 @@ public class BeanUtils {
 		Method[] declaredMethods = clazz.getDeclaredMethods();
 		for (Method method : declaredMethods) {
 			if (isGetter(method) && method.isAnnotationPresent(annotationClass)) {
-				String property = getPropertyFromGetter(method.getName());
+				String property = getPropertyFromGetter(method);
 				properties.add(property);
 			}
 		}
 		return properties;
 	}
 
-	public String getPropertyFromGetter(String getterMethodName) {
+	public String getPropertyFromGetter(Method getter) {
 		//algoritmo otimizado
-		char[] toCharArray = getterMethodName.toCharArray();
+		char[] toCharArray = getter.getName().toCharArray();
 		if (toCharArray[0] == 'i') { //is
 			char[] prop = new char[toCharArray.length - 2];
 			System.arraycopy(toCharArray, 2, prop, 0, prop.length);
@@ -154,6 +154,15 @@ public class BeanUtils {
 			prop[0] = Character.toLowerCase(prop[0]);
 			return new String(prop);
 		}
+	}
+
+	public String getPropertyFromSetter(Method setter) {
+		//algoritmo otimizado
+		char[] toCharArray = setter.getName().toCharArray();
+		char[] prop = new char[toCharArray.length - 3];
+		System.arraycopy(toCharArray, 3, prop, 0, prop.length);
+		prop[0] = Character.toLowerCase(prop[0]);
+		return new String(prop);
 	}
 
 	public Object getPropertyValueNullSafe(Object bean, String property) {

@@ -81,7 +81,7 @@ public class ReportDesignControllerUtil {
 
 		List<Method> propertyGetters = getOrderedProperties(selectedType);
 		for (Method method : propertyGetters) {
-			String property = Util.beans.getPropertyFromGetter(method.getName());
+			String property = Util.beans.getPropertyFromGetter(method);
 			if (parentProperty != null && parentProperty.equals(property)) {
 				continue;
 			}
@@ -132,7 +132,7 @@ public class ReportDesignControllerUtil {
 			}
 
 			private String toFullDescription(Method m) {
-				String property = Util.beans.getPropertyFromGetter(m.getName());
+				String property = Util.beans.getPropertyFromGetter(m);
 				return Util.beans.getDisplayName(bd.getPropertyDescriptor(property), null, null);
 			}
 
