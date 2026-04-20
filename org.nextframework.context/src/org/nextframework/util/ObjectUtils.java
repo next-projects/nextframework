@@ -67,6 +67,10 @@ public class ObjectUtils {
 		return !isEmpty(type);
 	}
 
+	public boolean isJavaPackageClass(Class<?> clazz) {
+		return clazz.getPackage() != null && clazz.getPackage().getName().startsWith("java");
+	}
+
 	public Enum<?>[] getEnumItems(Class<Enum<?>> enumClass) {
 		try {
 			Method method = enumClass.getMethod("values");

@@ -96,10 +96,12 @@ public class ReportDesignControllerUtil {
 					ReportEntity refereceReportEntity = method.getReturnType().getAnnotation(ReportEntity.class);
 					if (manyToOne != null || oneToOne != null || extendBean != null || embedded != null || refereceReportEntity != null) {
 						Class<?> subPropertyClass = method.getReturnType();
-						Set<String> subProperties = getAvailablePropertiesForClass(subPropertyClass, property, deepLevel - 1);
-						for (String subProperty : subProperties) {
-							if (!subProperty.equals("id")) {
-								avaiableProperties.add(property + "." + subProperty);
+						if (!Util.objects.isJavaPackageClass(subPropertyClass)) {
+							Set<String> subProperties = getAvailablePropertiesForClass(subPropertyClass, property, deepLevel - 1);
+							for (String subProperty : subProperties) {
+								if (!subProperty.equals("id")) {
+									avaiableProperties.add(property + "." + subProperty);
+								}
 							}
 						}
 					}
