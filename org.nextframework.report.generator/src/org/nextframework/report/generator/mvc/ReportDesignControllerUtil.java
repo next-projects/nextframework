@@ -318,8 +318,9 @@ public class ReportDesignControllerUtil {
 		MutablePropertyValues mpvs = new ServletRequestParameterPropertyValues(request);
 		dataBinder.bind(mpvs);
 
+		Map<String, Object> parametersMap = new HashMap<>();
+
 		List<FilterElement> filters = reportElement.getData().getFilters();
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		for (FilterElement filterElement : filters) {
 			if (filterElement.getFixedCriteria() != null) {
 				continue;

@@ -455,8 +455,15 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	protected ModelAndView executeTask(WebRequestContext request, ReportDesignModel model, final ReportDesignTask task) throws Exception {
 
 		//Faz a bindagem dos parâmetros
-		final ReportElement reportElement = new ReportReader(model.getReportXml()).getReportElement();
-		final Map<String, Object> filterMap = getFilterMap(request, model, reportElement, true);
+		final ReportElement reportElement;
+		final Map<String, Object> filterMap;
+		try {
+			reportElement = new ReportReader(model.getReportXml()).getReportElement();
+			filterMap = getFilterMap(request, model, reportElement, true);
+		} catch (NextException ex) {
+			request.addError(ex);
+			return showFilterView(request, model);
+		}
 
 		//Valida campos permitidos
 		util.validadeAllowedProperties(reportElement);
