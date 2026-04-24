@@ -30,7 +30,8 @@ public class AjaxCallbackSupport implements AjaxCallbackController {
 		}
 		Callback ajaxCallback;
 		synchronized (syncobj) {
-			ajaxCallback = getCallbacks(requestContext).get(serverId);
+			List<Callback> callbacks = getCallbacks(requestContext);
+			ajaxCallback = callbacks.size() > serverId ? callbacks.get(serverId) : null;
 		}
 		if (ajaxCallback != null) {
 			tokens.set(serverId);
