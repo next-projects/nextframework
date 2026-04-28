@@ -5,8 +5,10 @@
 		<include file="../org.nextframework.build/configurations.xml"/>
 	</configurations>
 	<dependencies>
-		<dependency org="org.springframework"		name="spring-jdbc"	rev="7.0.5"	conf="lib" />
-		<dependency org="org.springframework"		name="spring-tx"		rev="7.0.5"	conf="lib" />
-		<dependency org="org.mockito"			name="mockito-core"				rev="4.11.0"		conf="lib-test"/>
+		<dependency org="org.springframework"		name="spring-jdbc"		rev="7.0.5"		conf="lib" />
+		<dependency org="org.springframework"		name="spring-tx"		rev="7.0.5"		conf="lib" />
+		<dependency org="org.mockito"				name="mockito-core"		rev="5.23.0"	conf="lib-test"/>
+		<dependency org="net.bytebuddy"				name="byte-buddy"		rev="1.18.8"	conf="lib-test"/>
+		<dependency org="net.bytebuddy"				name="byte-buddy-agent"	rev="1.18.8"	conf="lib-test"/>
 	</dependencies>
 </ivy-module>
