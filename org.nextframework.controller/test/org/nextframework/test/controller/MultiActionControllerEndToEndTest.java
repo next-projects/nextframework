@@ -1,14 +1,18 @@
 package org.nextframework.test.controller;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,6 +48,9 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * End-to-end tests for {@link MultiActionController}.
@@ -240,14 +247,14 @@ public class MultiActionControllerEndToEndTest {
 	public static class SampleTestController extends MultiActionController {
 
 		/** Expose protected method for testing */
-		public ModelAndView handleRequest(HttpServletRequest request, javax.servlet.http.HttpServletResponse response) throws Exception {
+		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 			return handleRequestInternal(request, response);
 		}
 
 		@Override
-		protected ModelAndView noActionHandler(HttpServletRequest request, javax.servlet.http.HttpServletResponse response, org.nextframework.controller.NoActionHandlerException e) throws org.nextframework.controller.NoActionHandlerException {
+		protected ModelAndView noActionHandler(HttpServletRequest request, HttpServletResponse response, org.nextframework.controller.NoActionHandlerException e) throws org.nextframework.controller.NoActionHandlerException {
 			try {
-				response.sendError(javax.servlet.http.HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
 			} catch (java.io.IOException ioe) {
 				throw new RuntimeException(ioe);
 			}
@@ -757,8 +764,7 @@ public class MultiActionControllerEndToEndTest {
 		ModelAndView mv = handle(request, response);
 
 		assertNotNull(mv);
-		assertTrue("View should be MappingJackson2JsonView",
-				mv.getView() instanceof MappingJackson2JsonView);
+		assertTrue("View should be MappingJackson2JsonView", mv.getView() instanceof MappingJackson2JsonView);
 		assertNotNull("Model should contain jsonObject", mv.getModel().get("jsonObject"));
 	}
 

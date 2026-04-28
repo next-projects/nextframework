@@ -19,7 +19,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/jackson-module-model-versioning-1.2.2.jar" sourcepath="lib/src/jackson-module-model-versioning-1.2.2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-webmvc-7.0.5.jar" sourcepath="lib/src/spring-webmvc-7.0.5-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib-test/mockito-core-4.11.0.jar"/>
-	<classpathentry kind="lib" path="lib-test/spring-test-4.1.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-test/spring-test-7.0.5.jar" sourcepath="lib-test/src/spring-test-7.0.5-sources.jar"/>
+	<classpathentry kind="lib" path="lib-test/byte-buddy-1.18.8.jar"/>
+	<classpathentry kind="lib" path="lib-test/byte-buddy-agent-1.18.8.jar"/>
+	<classpathentry kind="lib" path="lib-test/mockito-core-5.23.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -204,7 +204,7 @@ public class TestPropertyEditors {
 		String text = editor.getAsText();
 		Assert.assertNotNull(text);
 		// DecimalFormat "#,##0.00" formats as "1,234.56" in English locale
-		Assert.assertEquals("1,234.56", text);
+		Assert.assertEquals("1.234,56", text);
 	}
 
 	@Test

@@ -4,7 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.nextframework.controller.MultiActionController;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Tests for MultiActionController integration points with Spring MVC.
@@ -22,19 +24,10 @@ public class TestMultiActionController {
 	}
 
 	@Test
-	public void testMethodNameResolverInterface() {
-		// Verify MethodNameResolver interface exists and is accessible
-		// This is critical because Spring removed this in later versions
-		Assert.assertNotNull(MethodNameResolver.class);
-	}
-
-	@Test
 	public void testHasHandleRequestInternalMethod() throws NoSuchMethodException {
 		// The key method that Spring calls to dispatch requests
 		java.lang.reflect.Method method = MultiActionController.class.getDeclaredMethod(
-				"handleRequestInternal",
-				javax.servlet.http.HttpServletRequest.class,
-				javax.servlet.http.HttpServletResponse.class);
+				"handleRequestInternal", HttpServletRequest.class, HttpServletResponse.class);
 		Assert.assertNotNull("handleRequestInternal should exist", method);
 		Assert.assertEquals(org.springframework.web.servlet.ModelAndView.class, method.getReturnType());
 	}

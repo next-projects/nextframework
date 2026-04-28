@@ -1,12 +1,15 @@
 package org.nextframework.test.types;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.nextframework.types.Cep;
@@ -20,8 +23,6 @@ import org.nextframework.types.hibernate.CpfUserType;
 import org.nextframework.types.hibernate.PhoneBrazilUserType;
 import org.nextframework.types.hibernate.PhoneUserType;
 
-import static org.mockito.Mockito.*;
-
 public class TestHibernateUserTypes {
 
 	// ================= CpfUserType =================
@@ -29,9 +30,7 @@ public class TestHibernateUserTypes {
 	@Test
 	public void testCpfUserTypeSqlTypes() {
 		CpfUserType ut = new CpfUserType();
-		int[] types = ut.sqlTypes();
-		Assert.assertEquals(1, types.length);
-		Assert.assertEquals(Types.VARCHAR, types[0]);
+		Assert.assertEquals(Types.VARCHAR, ut.getSqlType());
 	}
 
 	@Test
@@ -44,10 +43,10 @@ public class TestHibernateUserTypes {
 	public void testCpfUserTypeNullSafeGet() throws SQLException {
 		CpfUserType ut = new CpfUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		// Valid CPF: 07357279618
-		when(rs.getString("cpf")).thenReturn("07357279618");
-		Object result = ut.nullSafeGet(rs, new String[] { "cpf" }, session, null);
+		when(rs.getString(1)).thenReturn("07357279618");
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result instanceof Cpf);
 		Assert.assertEquals("07357279618", ((Cpf) result).getValue());
@@ -57,9 +56,9 @@ public class TestHibernateUserTypes {
 	public void testCpfUserTypeNullSafeGetNull() throws SQLException {
 		CpfUserType ut = new CpfUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("cpf")).thenReturn(null);
-		Object result = ut.nullSafeGet(rs, new String[] { "cpf" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn(null);
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNull(result);
 	}
 
@@ -67,9 +66,9 @@ public class TestHibernateUserTypes {
 	public void testCpfUserTypeNullSafeGetEmpty() throws SQLException {
 		CpfUserType ut = new CpfUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("cpf")).thenReturn("");
-		Object result = ut.nullSafeGet(rs, new String[] { "cpf" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn("");
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNull(result);
 	}
 
@@ -77,7 +76,7 @@ public class TestHibernateUserTypes {
 	public void testCpfUserTypeNullSafeSet() throws SQLException {
 		CpfUserType ut = new CpfUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		Cpf cpf = new Cpf("07357279618", false);
 		ut.nullSafeSet(ps, cpf, 1, session);
 		verify(ps).setString(1, "07357279618");
@@ -87,7 +86,7 @@ public class TestHibernateUserTypes {
 	public void testCpfUserTypeNullSafeSetNull() throws SQLException {
 		CpfUserType ut = new CpfUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		ut.nullSafeSet(ps, null, 1, session);
 		verify(ps).setNull(1, Types.VARCHAR);
 	}
@@ -124,9 +123,7 @@ public class TestHibernateUserTypes {
 	@Test
 	public void testCnpjUserTypeSqlTypes() {
 		CnpjUserType ut = new CnpjUserType();
-		int[] types = ut.sqlTypes();
-		Assert.assertEquals(1, types.length);
-		Assert.assertEquals(Types.VARCHAR, types[0]);
+		Assert.assertEquals(Types.VARCHAR, ut.getSqlType());
 	}
 
 	@Test
@@ -139,9 +136,9 @@ public class TestHibernateUserTypes {
 	public void testCnpjUserTypeNullSafeGet() throws SQLException {
 		CnpjUserType ut = new CnpjUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("cnpj")).thenReturn("11222333000181");
-		Object result = ut.nullSafeGet(rs, new String[] { "cnpj" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn("11222333000181");
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result instanceof Cnpj);
 	}
@@ -150,9 +147,9 @@ public class TestHibernateUserTypes {
 	public void testCnpjUserTypeNullSafeGetNull() throws SQLException {
 		CnpjUserType ut = new CnpjUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("cnpj")).thenReturn(null);
-		Object result = ut.nullSafeGet(rs, new String[] { "cnpj" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn(null);
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNull(result);
 	}
 
@@ -160,7 +157,7 @@ public class TestHibernateUserTypes {
 	public void testCnpjUserTypeNullSafeSet() throws SQLException {
 		CnpjUserType ut = new CnpjUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		Cnpj cnpj = new Cnpj("00621311700130", false);
 		ut.nullSafeSet(ps, cnpj, 1, session);
 		verify(ps).setString(1, "00621311700130");
@@ -170,7 +167,7 @@ public class TestHibernateUserTypes {
 	public void testCnpjUserTypeNullSafeSetNull() throws SQLException {
 		CnpjUserType ut = new CnpjUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		ut.nullSafeSet(ps, null, 1, session);
 		verify(ps).setNull(1, Types.VARCHAR);
 	}
@@ -193,9 +190,7 @@ public class TestHibernateUserTypes {
 	@Test
 	public void testCepUserTypeSqlTypes() {
 		CepUserType ut = new CepUserType();
-		int[] types = ut.sqlTypes();
-		Assert.assertEquals(1, types.length);
-		Assert.assertEquals(Types.VARCHAR, types[0]);
+		Assert.assertEquals(Types.VARCHAR, ut.getSqlType());
 	}
 
 	@Test
@@ -208,9 +203,9 @@ public class TestHibernateUserTypes {
 	public void testCepUserTypeNullSafeGet() throws SQLException {
 		CepUserType ut = new CepUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("cep")).thenReturn("01310100");
-		Object result = ut.nullSafeGet(rs, new String[] { "cep" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn("01310100");
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result instanceof Cep);
 		Assert.assertEquals("01310100", ((Cep) result).getValue());
@@ -220,9 +215,9 @@ public class TestHibernateUserTypes {
 	public void testCepUserTypeNullSafeGetNull() throws SQLException {
 		CepUserType ut = new CepUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("cep")).thenReturn(null);
-		Object result = ut.nullSafeGet(rs, new String[] { "cep" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn(null);
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNull(result);
 	}
 
@@ -230,7 +225,7 @@ public class TestHibernateUserTypes {
 	public void testCepUserTypeNullSafeSet() throws SQLException {
 		CepUserType ut = new CepUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		Cep cep = new Cep("01310100");
 		ut.nullSafeSet(ps, cep, 1, session);
 		verify(ps).setString(1, "01310100");
@@ -240,7 +235,7 @@ public class TestHibernateUserTypes {
 	public void testCepUserTypeNullSafeSetNull() throws SQLException {
 		CepUserType ut = new CepUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		ut.nullSafeSet(ps, null, 1, session);
 		verify(ps).setNull(1, Types.VARCHAR);
 	}
@@ -285,9 +280,7 @@ public class TestHibernateUserTypes {
 	@Test
 	public void testPhoneUserTypeSqlTypes() {
 		PhoneUserType ut = new PhoneUserType();
-		int[] types = ut.sqlTypes();
-		Assert.assertEquals(1, types.length);
-		Assert.assertEquals(Types.VARCHAR, types[0]);
+		Assert.assertEquals(Types.VARCHAR, ut.getSqlType());
 	}
 
 	@Test
@@ -300,9 +293,9 @@ public class TestHibernateUserTypes {
 	public void testPhoneUserTypeNullSafeGet() throws SQLException {
 		PhoneUserType ut = new PhoneUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("phone")).thenReturn("3198980909");
-		Object result = ut.nullSafeGet(rs, new String[] { "phone" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn("3198980909");
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result instanceof Phone);
 	}
@@ -311,9 +304,9 @@ public class TestHibernateUserTypes {
 	public void testPhoneUserTypeNullSafeGetNull() throws SQLException {
 		PhoneUserType ut = new PhoneUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("phone")).thenReturn(null);
-		Object result = ut.nullSafeGet(rs, new String[] { "phone" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn(null);
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNull(result);
 	}
 
@@ -321,7 +314,7 @@ public class TestHibernateUserTypes {
 	public void testPhoneUserTypeNullSafeSet() throws SQLException {
 		PhoneUserType ut = new PhoneUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		Phone phone = new Phone("3198980909");
 		ut.nullSafeSet(ps, phone, 1, session);
 		verify(ps).setString(1, "3198980909");
@@ -331,7 +324,7 @@ public class TestHibernateUserTypes {
 	public void testPhoneUserTypeNullSafeSetNull() throws SQLException {
 		PhoneUserType ut = new PhoneUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		ut.nullSafeSet(ps, null, 1, session);
 		verify(ps).setNull(1, Types.VARCHAR);
 	}
@@ -354,9 +347,7 @@ public class TestHibernateUserTypes {
 	@Test
 	public void testPhoneBrazilUserTypeSqlTypes() {
 		PhoneBrazilUserType ut = new PhoneBrazilUserType();
-		int[] types = ut.sqlTypes();
-		Assert.assertEquals(1, types.length);
-		Assert.assertEquals(Types.VARCHAR, types[0]);
+		Assert.assertEquals(Types.VARCHAR, ut.getSqlType());
 	}
 
 	@Test
@@ -369,9 +360,9 @@ public class TestHibernateUserTypes {
 	public void testPhoneBrazilUserTypeNullSafeGet() throws SQLException {
 		PhoneBrazilUserType ut = new PhoneBrazilUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("phone")).thenReturn("3198980909");
-		Object result = ut.nullSafeGet(rs, new String[] { "phone" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn("3198980909");
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result instanceof PhoneBrazil);
 	}
@@ -380,9 +371,9 @@ public class TestHibernateUserTypes {
 	public void testPhoneBrazilUserTypeNullSafeGetNull() throws SQLException {
 		PhoneBrazilUserType ut = new PhoneBrazilUserType();
 		ResultSet rs = mock(ResultSet.class);
-		SessionImplementor session = mock(SessionImplementor.class);
-		when(rs.getString("phone")).thenReturn(null);
-		Object result = ut.nullSafeGet(rs, new String[] { "phone" }, session, null);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
+		when(rs.getString(1)).thenReturn(null);
+		Object result = ut.nullSafeGet(rs, 1, session, null);
 		Assert.assertNull(result);
 	}
 
@@ -390,7 +381,7 @@ public class TestHibernateUserTypes {
 	public void testPhoneBrazilUserTypeNullSafeSet() throws SQLException {
 		PhoneBrazilUserType ut = new PhoneBrazilUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		PhoneBrazil phone = new PhoneBrazil("3198980909");
 		ut.nullSafeSet(ps, phone, 1, session);
 		verify(ps).setString(1, "3198980909");
@@ -400,7 +391,7 @@ public class TestHibernateUserTypes {
 	public void testPhoneBrazilUserTypeNullSafeSetNull() throws SQLException {
 		PhoneBrazilUserType ut = new PhoneBrazilUserType();
 		PreparedStatement ps = mock(PreparedStatement.class);
-		SessionImplementor session = mock(SessionImplementor.class);
+		SharedSessionContractImplementor session = mock(SharedSessionContractImplementor.class);
 		ut.nullSafeSet(ps, null, 1, session);
 		verify(ps).setNull(1, Types.VARCHAR);
 	}
@@ -409,8 +400,7 @@ public class TestHibernateUserTypes {
 	public void testPhoneBrazilUserTypeDeepCopyNull() {
 		PhoneBrazilUserType ut = new PhoneBrazilUserType();
 		Object result = ut.deepCopy(null);
-		Assert.assertNotNull(result);
-		Assert.assertTrue(result instanceof PhoneBrazil);
+		Assert.assertNull(result);
 	}
 
 	@Test
