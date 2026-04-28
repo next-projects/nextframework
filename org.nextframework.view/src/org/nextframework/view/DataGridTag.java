@@ -487,6 +487,7 @@ public class DataGridTag extends BaseTag {
 		while (iterator.hasNext()) {
 
 			_current = iterator.next();
+			_isLast = !iterator.hasNext();
 
 			getRequest().setAttribute(var, _current);
 			getRequest().setAttribute(varIndex, _index);
