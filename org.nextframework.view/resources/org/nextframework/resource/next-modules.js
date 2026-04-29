@@ -811,7 +811,7 @@ NextDom.prototype.getSelectedValue = function(el){
 				result.push(ops[i].value);
 			}
 		}
-		return result;
+		return result.length > 0 ? result : null;
 	}
 	if(el.selectedIndex < 0){
 		return null;
