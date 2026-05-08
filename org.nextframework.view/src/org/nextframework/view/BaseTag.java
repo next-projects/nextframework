@@ -539,16 +539,16 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 			if (value == null || value.length() == 0) {
 				bw.setPropertyValue(field, defaultStyleClass);
 			} else if (value.contains("+")) {
-				value = value.replace("+", defaultStyleClass);
-				bw.setPropertyValue(field, value);
+				value = value.replace("+", " " + defaultStyleClass + " ");
+				bw.setPropertyValue(field, value.trim());
 			}
 		} else if ("class".equals(field)) {
 			String value = (String) getDynamicAttributesMap().get("class");
 			if (value == null || value.length() == 0) {
 				setDynamicAttribute(null, "class", defaultStyleClass);
 			} else if (value.contains("+")) {
-				value = value.replace("+", defaultStyleClass);
-				setDynamicAttribute(null, "class", value);
+				value = value.replace("+", " " + defaultStyleClass + " ");
+				setDynamicAttribute(null, "class", value.trim());
 			}
 		}
 	}
