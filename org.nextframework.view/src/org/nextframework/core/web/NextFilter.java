@@ -80,7 +80,7 @@ public class NextFilter implements Filter {
 		response.setCharacterEncoding(viewConfig.getJSPDefaultCharset());
 
 		boolean nextRequest = request.getServletPath().equals(URL_NEXT);
-		Exception ex = (Exception) ((HttpServletRequest) req).getSession().getServletContext().getAttribute(ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+		Exception ex = (Exception) request.getServletContext().getAttribute(ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
 		if (nextRequest || ex != null) {
 
@@ -89,7 +89,9 @@ public class NextFilter implements Filter {
 		} else {
 
 			if (request.getServletPath().equals(URL_LOGOUT)) {
-				request.getSession().invalidate();
+				if (request.getSession(false) != null) {
+					request.getSession(false).invalidate();
+				}
 				response.sendRedirect(request.getContextPath());
 				return;
 			}

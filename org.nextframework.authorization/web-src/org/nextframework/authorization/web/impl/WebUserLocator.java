@@ -30,6 +30,7 @@ package org.nextframework.authorization.web.impl;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.nextframework.authorization.AuthorizationDAO;
 import org.nextframework.authorization.User;
@@ -62,7 +63,8 @@ public class WebUserLocator implements UserLocator {
 	}
 
 	public static User getSessionUser(HttpServletRequest request) {
-		return (User) request.getSession().getAttribute(USER_ATTRIBUTE);
+		HttpSession session = request.getSession(false);
+		return session != null ? (User) session.getAttribute(USER_ATTRIBUTE) : null;
 	}
 
 	public static void setSessionUser(HttpServletRequest servletRequest, User user) {

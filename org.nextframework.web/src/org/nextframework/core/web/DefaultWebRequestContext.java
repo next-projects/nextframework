@@ -56,6 +56,7 @@ import org.springframework.web.servlet.LocaleResolver;
 public class DefaultWebRequestContext implements WebRequestContext {
 
 	public static final String ACTION_PARAMETER = "ACTION";
+	private static final String SESSION_MESSAGES_ATTRIBUTE = "_MESSAGES";
 
 	@Deprecated
 	public static final String USER_ATTRIBUTE = "USER"; //TODO REFACTOR USE USER LOCATOR
@@ -71,8 +72,6 @@ public class DefaultWebRequestContext implements WebRequestContext {
 
 	private TimeZone timeZone;
 	private Locale locale;
-
-	protected List<Message> messages = null;
 
 	protected BindException bindException = new BindException(new Object(), "");
 
@@ -91,8 +90,6 @@ public class DefaultWebRequestContext implements WebRequestContext {
 		initRequestQuery();
 
 		initLocation(request);
-
-		this.messages = getSessionMessages();
 
 	}
 
@@ -117,17 +114,6 @@ public class DefaultWebRequestContext implements WebRequestContext {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<Message> getSessionMessages() {
-		HttpSession session = httpServletRequest.getSession();
-		List<Message> attribute = (List<Message>) session.getAttribute("_MESSAGES");
-		if (attribute == null) {
-			attribute = new ArrayList<Message>();
-			session.setAttribute("_MESSAGES", attribute);
-		}
-		return attribute;
-	}
-
 	@Override
 	public String getParameter(String parameter) {
 		return httpServletRequest.getParameter(parameter);
@@ -144,7 +130,8 @@ public class DefaultWebRequestContext implements WebRequestContext {
 	}
 
 	public boolean hasRole(String role) {
-		return httpServletRequest.getSession().getAttribute("ROLE_" + role.toUpperCase()) != null;
+		HttpSession session = httpServletRequest.getSession(false);
+		return session != null ? session.getAttribute("ROLE_" + role.toUpperCase()) != null : false;
 	}
 
 	@Override
@@ -169,7 +156,7 @@ public class DefaultWebRequestContext implements WebRequestContext {
 
 	@Override
 	public WebApplicationContext getWebApplicationContext() {
-		return NextWeb.getWebApplicationContext(httpServletRequest.getSession().getServletContext());
+		return applicationContext;
 	}
 
 	@Override
@@ -196,44 +183,62 @@ public class DefaultWebRequestContext implements WebRequestContext {
 		return locale;
 	}
 
+	@SuppressWarnings("unchecked")
+	private List<Message> getSessionMessages(boolean create) {
+		HttpSession session = httpServletRequest.getSession(create);
+		if (session == null) {
+			return null;
+		}
+		List<Message> attribute = (List<Message>) session.getAttribute(SESSION_MESSAGES_ATTRIBUTE);
+		if (attribute == null && create) {
+			attribute = new ArrayList<Message>();
+			session.setAttribute(SESSION_MESSAGES_ATTRIBUTE, attribute);
+		}
+		return attribute;
+	}
+
 	@Override
 	public void addMessage(Object source, MessageType type) {
-		messages.add(new Message(type, source));
+		getSessionMessages(true).add(new Message(type, source));
 	}
 
 	@Override
 	public void addMessage(Object source) {
-		messages.add(new Message(MessageType.INFO, source));
+		getSessionMessages(true).add(new Message(MessageType.INFO, source));
 	}
 
 	@Override
 	public void addWarn(Object source) {
-		messages.add(new Message(MessageType.WARN, source));
+		getSessionMessages(true).add(new Message(MessageType.WARN, source));
 	}
 
 	@Override
 	public void addError(Object source) {
-		messages.add(new Message(MessageType.ERROR, source));
+		getSessionMessages(true).add(new Message(MessageType.ERROR, source));
 	}
 
 	@Override
 	public void addMessage(Message message) {
-		messages.add(message);
+		getSessionMessages(true).add(message);
 	}
 
 	@Override
 	public void addAllMessages(List<Message> messageList) {
-		messages.addAll(messageList);
+		getSessionMessages(true).addAll(messageList);
 	}
 
 	@Override
 	public Message[] getMessages() {
-		return messages.toArray(new Message[messages.size()]);
+		List<Message> messages = getSessionMessages(false);
+		return messages != null ? messages.toArray(new Message[messages.size()]) : new Message[0];
 	}
 
 	@Override
 	public void clearMessages() {
-		messages.clear();
+		List<Message> messages = getSessionMessages(false);
+		if (messages != null) {
+			messages.clear();
+		}
 	}
 
 	@Override
@@ -256,7 +261,11 @@ public class DefaultWebRequestContext implements WebRequestContext {
 
 	@Override
 	public Object getUserAttribute(String name) {
-		return httpServletRequest.getSession().getAttribute(name);
+		HttpSession session = httpServletRequest.getSession(false);
+		if (session == null) {
+			return null;
+		}
+		return session.getAttribute(name);
 	}
 
 	@Override
@@ -307,7 +316,7 @@ public class DefaultWebRequestContext implements WebRequestContext {
 
 	public String getUserName() {
 		//TODO CREATE A SERVICE TO PROVIDE THIS INFORMATION
-		Object userObject = getSession().getAttribute(USER_ATTRIBUTE);
+		Object userObject = getUserAttribute(USER_ATTRIBUTE);
 		if (userObject == null) {
 			return null;
 		}

@@ -51,7 +51,7 @@ public class NextWeb extends Next {
 		if (request == null || response == null) {
 			throw new NullPointerException();
 		}
-		ServletContext servletContext = request.getSession().getServletContext();
+		ServletContext servletContext = request.getServletContext();
 		getWebApplicationContext(servletContext);
 		getRequestContext(request, response);
 	}
@@ -91,13 +91,13 @@ public class NextWeb extends Next {
 	}
 
 	public static WebRequestContext getRequestContext(HttpServletRequest request, HttpServletResponse response) {
-		createApplicationContext(request.getSession().getServletContext());
+		createApplicationContext(request.getServletContext());
 		WebRequestContext requestContext = (WebRequestContext) request.getAttribute(WebRequestContext.REQUEST_CONTEXT_ATTRIBUTE);
 		//O requestContext pode atualizar por causa do multipart
 		if (requestContext == null || requestContext.getServletRequest() != request) {
 			log.trace("Creating NEXT request context... ");
-			//requestContext = new DefaultWebRequestContext(request, response, getWebApplicationContext(request.getSession().getServletContext()));
-			requestContext = webRequestFactory.createWebRequestContext(request, response, getWebApplicationContext(request.getSession().getServletContext()));
+			//requestContext = new DefaultWebRequestContext(request, response, getWebApplicationContext(request.getServletContext()));
+			requestContext = webRequestFactory.createWebRequestContext(request, response, getWebApplicationContext(request.getServletContext()));
 			request.setAttribute(WebRequestContext.REQUEST_CONTEXT_ATTRIBUTE, requestContext);
 			Next.requestContext.set(requestContext);
 		}
