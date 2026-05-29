@@ -24,12 +24,16 @@
 package org.nextframework.types;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.nextframework.types.hibernate.CnpjUserType;
 
 public class Cnpj extends CnpjUserType implements Document, Serializable {
 
 	private static final long serialVersionUID = 7515600575750828297L;
+	private static final int[] DV_WEIGHTS = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+	private static final String CNPJ_PATTERN = "[A-Z\\d]{2,3}\\.?[A-Z\\d]{3}\\.?[A-Z\\d]{3}/?[A-Z\\d]{4}-?\\d{2}";
+	private static final String NORMALIZED_CNPJ_PATTERN = "[A-Z\\d]{12}\\d{2}";
 
 	public static boolean AUTO_VALIDATION = true;
 
@@ -45,13 +49,14 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 	public Cnpj(String cnpj, boolean check) {
 		if (cnpj == null)
 			throw new NullPointerException();
-		checkPattern(cnpj);
+		String normalizedInput = normalizeInput(cnpj);
+		checkPattern(normalizedInput);
 		String original = cnpj;
-		cnpj = removeSymbols(cnpj);
+		cnpj = normalizeDocument(normalizedInput);
 		if (check && !cnpjValido(cnpj)) {
 			throw new IllegalArgumentException("O CNPJ '" + original + "' não é válido");
 		}
-		value = cnpj.trim().equals("") ? null : cnpj;
+		value = cnpj.equals("") ? null : cnpj;
 	}
 
 	public Cnpj(String cnpj) {
@@ -65,48 +70,26 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 	*/
 	public static boolean cnpjValido(String str_cnpj) {
 
-		if (str_cnpj.length() != 15 && str_cnpj.length() != 14) {
+		if (str_cnpj == null) {
 			return false;
 		}
-		if (str_cnpj.length() == 15) {
-			str_cnpj = str_cnpj.substring(1, 15);
+		str_cnpj = normalizeDocument(str_cnpj);
+		if (str_cnpj.length() != 14) {
+			return false;
+		}
+		if (!str_cnpj.matches(NORMALIZED_CNPJ_PATTERN)) {
+			return false;
 		}
 
-		int soma = 0, dig;
-		String cnpj_calc = str_cnpj.substring(0, 12);
+		String cnpjCalc = str_cnpj.substring(0, 12);
+		cnpjCalc += calculateDigit(cnpjCalc);
+		cnpjCalc += calculateDigit(cnpjCalc);
 
-		if (str_cnpj.length() != 14)
-			return false;
-
-		char[] chr_cnpj = str_cnpj.toCharArray();
-
-		/* Primeira parte */
-		for (int i = 0; i < 4; i++)
-			if (chr_cnpj[i] - 48 >= 0 && chr_cnpj[i] - 48 <= 9)
-				soma += (chr_cnpj[i] - 48) * (6 - (i + 1));
-		for (int i = 0; i < 8; i++)
-			if (chr_cnpj[i + 4] - 48 >= 0 && chr_cnpj[i + 4] - 48 <= 9)
-				soma += (chr_cnpj[i + 4] - 48) * (10 - (i + 1));
-		dig = 11 - (soma % 11);
-
-		cnpj_calc += (dig == 10 || dig == 11) ? "0" : Integer.toString(dig);
-
-		/* Segunda parte */
-		soma = 0;
-		for (int i = 0; i < 5; i++)
-			if (chr_cnpj[i] - 48 >= 0 && chr_cnpj[i] - 48 <= 9)
-				soma += (chr_cnpj[i] - 48) * (7 - (i + 1));
-		for (int i = 0; i < 8; i++)
-			if (chr_cnpj[i + 5] - 48 >= 0 && chr_cnpj[i + 5] - 48 <= 9)
-				soma += (chr_cnpj[i + 5] - 48) * (10 - (i + 1));
-		dig = 11 - (soma % 11);
-		cnpj_calc += (dig == 10 || dig == 11) ? "0" : Integer.toString(dig);
-
-		return str_cnpj.equals(cnpj_calc);
+		return str_cnpj.equals(cnpjCalc);
 	}
 
 	private void checkPattern(String value) throws IllegalArgumentException {
-		if (!value.trim().equals("") && !value.matches("\\d{2,3}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}")) {
+		if (!value.equals("") && !value.matches(CNPJ_PATTERN)) {
 			throw new IllegalArgumentException("O CNPJ '" + value + "' não está no formato correto");
 		}
 	}
@@ -159,7 +142,30 @@ public class Cnpj extends CnpjUserType implements Document, Serializable {
 		}
 	}
 
-	private String removeSymbols(String value2) {
+	private static int calculateDigit(String cnpj) {
+		int soma = 0;
+		int offset = DV_WEIGHTS.length - cnpj.length();
+		for (int i = 0; i < cnpj.length(); i++) {
+			soma += getDigitValue(cnpj.charAt(i)) * DV_WEIGHTS[offset + i];
+		}
+		int digito = soma % 11;
+		return digito <= 1 ? 0 : 11 - digito;
+	}
+
+	private static int getDigitValue(char digit) {
+		return digit - '0';
+	}
+
+	private static String normalizeInput(String value) {
+		return value.trim().toUpperCase(Locale.ROOT);
+	}
+
+	private static String normalizeDocument(String value) {
+		String normalizedValue = removeSymbols(normalizeInput(value));
+		return normalizedValue.length() == 15 ? normalizedValue.substring(1) : normalizedValue;
+	}
+
+	private static String removeSymbols(String value2) {
 		return value2.replace(".", "").replace("-", "").replace("/", "");
 	}
 

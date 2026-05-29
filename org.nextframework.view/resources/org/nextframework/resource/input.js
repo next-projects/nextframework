@@ -38,6 +38,30 @@ function valida_tecla(campo, event, acceptEnter) {
 	return (isNum(key));
 }
 
+function valida_tecla_cnpj(campo, event, acceptEnter) {
+	var BACKSPACE = 8;
+	var key;
+	var tecla;
+	CheckTAB=true;
+	if(navigator.appName.indexOf("Netscape")!= -1) {
+		tecla = event.which;
+	} else {
+		tecla = event.keyCode;
+	}
+	key = String.fromCharCode(tecla);
+	if (tecla == 13) {
+		if(acceptEnter){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	if (tecla == BACKSPACE) {
+		return true;
+	}
+	return (isAlphaNum(key));
+}
+
 function valida_tecla_data(campo, event, pattern) {
 
 	var BACKSPACE = 8;
@@ -133,6 +157,14 @@ function isNum( caractere ) {
 		return false; 
 	}
 	return true; 
+}
+
+function isAlphaNum( caractere ) {
+	var strValidos = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	if (strValidos.indexOf(caractere) == -1) {
+		return false;
+	}
+	return true;
 }
 
 //------------------------------------------------------------
@@ -278,6 +310,7 @@ function mascara_cep(el) {
 
 function mascara_cnpj(el) {
 	var mydata = '';
+	el.value = el.value.toUpperCase();
 	mydata = mydata + el.value;
 	if (mydata.length == 2) {
 		mydata = mydata + '.';
@@ -297,16 +330,24 @@ function mascara_cnpj(el) {
 	}
 }
 
+function normalizeCnpjInput(value) {
+	value = String(value).replace(/^\s+|\s+$/g, "").toUpperCase().replace(/[.\/-]/g, "");
+	if (value.length == 15) {
+		value = value.substring(1);
+	}
+	return value;
+}
+
 function formata_cnpj (numCICEl) {
-	numCIC = String(ApenasNum(numCICEl.value));
+	numCIC = normalizeCnpjInput(numCICEl.value);
 	switch (numCIC.length) {
-		case 15 :
+		case 14 :
 			numCICEl.value = numCIC.substring(0,2) + "." + numCIC.substring(2,5) + "." + numCIC.substring(5,8) + "/" + numCIC.substring(8,12) + "-" + numCIC.substring(12,14);
 			return;
 		case 0:
 			return;
 		default : 
-			alert("Tamanho incorreto do CNPJ. O CNPJ deve conter 15 dígitos");
+			alert("Tamanho incorreto do CNPJ. O CNPJ deve conter 14 caracteres");
 			numCICEl.focus();
 			return;
 	}

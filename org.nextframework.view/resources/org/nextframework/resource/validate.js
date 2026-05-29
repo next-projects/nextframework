@@ -97,6 +97,33 @@
 		return strRet;
 	}
 
+	function normalizeCnpj(strParm) {
+		strParm = String(strParm).replace(/^\s+|\s+$/g, "").toUpperCase().replace(/[.\/-]/g, "");
+		if (strParm.length == 15) {
+			strParm = strParm.substring(1);
+		}
+		return strParm;
+	}
+
+	function isValidCnpjPattern(strParm) {
+		return /^[A-Z\d]{12}\d{2}$/.test(strParm);
+	}
+
+	function calculateCnpjDigitValue(caractere) {
+		return caractere.charCodeAt(0) - 48;
+	}
+
+	function calculateCnpjDigit(baseCnpj) {
+		var pesos = new Array(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+		var offset = pesos.length - baseCnpj.length;
+		var soma = 0;
+		for (var i = 0; i < baseCnpj.length; i++) {
+			soma = soma + (calculateCnpjDigitValue(baseCnpj.charAt(i)) * pesos[offset + i]);
+		}
+		var resto = soma % 11;
+		return resto <= 1 ? 0 : 11 - resto;
+	}
+
 //----------------------------------------------------------------------
 
 	/**
@@ -1594,7 +1621,7 @@
 				if(field.value.replace( /\s*/, "" ).length==0) { 
 					continue;
 				}
-				if (!digitoCNPJ(ApenasNum(field.value))) {
+				if (!digitoCNPJ(field.value)) {
 					if (i == 0) {
 						focusField = field;
 					}
@@ -1615,72 +1642,19 @@
 
 //-----------------------------------------------------------------------------
 	
-	//Fun??o para C?lculo do Digito do CPF/CNPJ
+	//Função para Cálculo do Digito do CPF/CNPJ
 	function digitoCNPJ(numCIC) {
-
-		var numDois = numCIC.substring(numCIC.length-2, numCIC.length);
-		var novoCIC = numCIC.substring(0, numCIC.length-2);
-
-		switch (numCIC.length){
-			case 15 :
-				numLim = 9;
-				break;	
-			case 14 :
-				novoCIC = '0' + novoCIC;
-				numLim = 9;
-				break;
-			default :
-				return false;
-		}
-
-		var numSoma = 0;
-		var Fator = 1;
-		for (var i=novoCIC.length-1; i>=0; i--) {
-			Fator = Fator + 1;
-			if (Fator > numLim) {
-				Fator = 2;
-			}
-			numSoma = numSoma + (Fator * Number(novoCIC.substring(i, i+1)));
-		}
-		numSoma = numSoma/11;
-		var numResto = Math.round( 11 * (numSoma - Math.floor(numSoma)));
-		if (numResto > 1) {
-			numResto = 11 - numResto;
-		}
-		else {
-			numResto = 0;
-		}
-		//-- Primeiro d?gito calculado.  Far? parte do novo c?lculo.
-		//--
-		var numDigito = String(numResto);
-		novoCIC = novoCIC.concat(numResto);
-		//--
-		numSoma = 0;
-		Fator = 1;
-		for (var i=novoCIC.length-1; i>=0; i--) {
-			Fator = Fator + 1;
-			if (Fator > numLim) {
-				Fator = 2;
-			}
-			numSoma = numSoma + (Fator * Number(novoCIC.substring(i, i+1)));
-		}
-		numSoma = numSoma/11;
-		numResto = numResto = Math.round( 11 * (numSoma - Math.floor(numSoma)));
-		if (numResto > 1) {
-			numResto = 11 - numResto;
-		}
-		else {
-			numResto = 0;
-		}
-		//-- Segundo d?gito calculado.
-		numDigito = numDigito.concat(numResto);
-		//
-		if (numDigito == numDois) {
-			return true;
-		}
-		else {
+		numCIC = normalizeCnpj(numCIC);
+		if (!isValidCnpjPattern(numCIC)) {
 			return false;
 		}
+
+		var baseCnpj = numCIC.substring(0, numCIC.length - 2);
+		var numDigito = String(calculateCnpjDigit(baseCnpj));
+		baseCnpj = baseCnpj.concat(numDigito);
+		numDigito = numDigito.concat(calculateCnpjDigit(baseCnpj));
+
+		return numDigito == numCIC.substring(numCIC.length - 2, numCIC.length);
 	}
 
 //----------------------------------------------------------------------
