@@ -38,8 +38,17 @@
  */
 package org.nextframework.compilation;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 /**
- * @author rogelgarcia
+ * @author rogelgarcia | marcusabreu
  */
 public class SourceCodeUtils {
 
@@ -96,6 +105,62 @@ public class SourceCodeUtils {
 		}
 		sb.append(str.substring(1));
 		return sb.toString();
+	}
+
+	public static String buildCompilerClassPath(boolean defaultClassPath, String customClassPath, boolean threadClassLoader, ClassLoader classLoader) {
+		LinkedHashSet<String> classPathEntries = new LinkedHashSet<String>();
+		if (defaultClassPath) {
+			addClassPathEntries(classPathEntries, System.getProperty("java.class.path"));
+		}
+		if (customClassPath != null) {
+			addClassPathEntries(classPathEntries, customClassPath);
+		}
+		if (threadClassLoader) {
+			addClassLoaderUrls(classPathEntries, Thread.currentThread().getContextClassLoader());
+		}
+		if (classLoader != null) {
+			addClassLoaderUrls(classPathEntries, classLoader);
+		}
+		return String.join(File.pathSeparator, classPathEntries);
+	}
+
+	private static void addClassPathEntries(LinkedHashSet<String> classPathEntries, String classPath) {
+		if (classPath == null || classPath.trim().isEmpty()) {
+			return;
+		}
+		for (String entry : classPath.split(File.pathSeparator)) {
+			if (!entry.trim().isEmpty()) {
+				classPathEntries.add(entry);
+			}
+		}
+	}
+
+	private static void addClassLoaderUrls(LinkedHashSet<String> classPathEntries, ClassLoader classLoader) {
+		Set<ClassLoader> visited = Collections.newSetFromMap(new IdentityHashMap<ClassLoader, Boolean>());
+		ClassLoader current = classLoader;
+		while (current != null && visited.add(current)) {
+			if (current instanceof URLClassLoader) {
+				URL[] urls = ((URLClassLoader) current).getURLs();
+				for (URL url : urls) {
+					String path = toClassPathEntry(url);
+					if (path != null) {
+						classPathEntries.add(path);
+					}
+				}
+			}
+			current = current.getParent();
+		}
+	}
+
+	private static String toClassPathEntry(URL url) {
+		if (url == null || !"file".equalsIgnoreCase(url.getProtocol())) {
+			return null;
+		}
+		try {
+			return new File(url.toURI()).getPath();
+		} catch (URISyntaxException e) {
+			return new File(url.getPath()).getPath();
+		}
 	}
 
 }

@@ -2,6 +2,7 @@ package org.nextframework.report.renderer.jasper;
 
 import java.io.InputStream;
 
+import org.nextframework.compilation.SourceCodeUtils;
 import org.nextframework.report.definition.ReportDefinition;
 import org.nextframework.report.renderer.ReportRendererFactory;
 import org.nextframework.report.renderer.jasper.builder.JasperDesignBuilder;
@@ -10,12 +11,15 @@ import org.nextframework.report.renderer.jasper.builder.MappedJasperPrint;
 import org.nextframework.report.renderer.jasper.builder.MappedJasperReport;
 import org.springframework.beans.BeanUtils;
 
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.SimpleJasperReportsContext;
+import net.sf.jasperreports.engine.design.JRCompiler;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
@@ -55,7 +59,11 @@ public class JasperReportsRenderer extends AbstractJasperReportsRenderer impleme
 
 	@Override
 	public JasperReport convertToJasperReport(JasperDesign jasperDesign) throws JRException {
-		return JasperCompileManager.compileReport(jasperDesign);
+		SimpleJasperReportsContext context = new SimpleJasperReportsContext(DefaultJasperReportsContext.getInstance());
+		String compilerClasspath = DefaultJasperReportsContext.getInstance().getProperty(JRCompiler.COMPILER_CLASSPATH);
+		String finalClasspath = SourceCodeUtils.buildCompilerClassPath(true, compilerClasspath, true, JasperReportsRenderer.class.getClassLoader());
+		context.setProperty(JRCompiler.COMPILER_CLASSPATH, finalClasspath);
+		return JasperCompileManager.getInstance(context).compile(jasperDesign);
 	}
 
 	@Override

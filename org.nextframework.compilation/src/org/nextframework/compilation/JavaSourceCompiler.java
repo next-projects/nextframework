@@ -76,7 +76,7 @@ public class JavaSourceCompiler {
 
 			DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 
-			List<String> options = getCompilerOptions();
+			List<String> options = getCompilerOptions(classLoader);
 
 			CompilationTask task = compiler.getTask(null, memoryManager, diagnostics, options, null, compilationUnits);
 
@@ -122,10 +122,11 @@ public class JavaSourceCompiler {
 
 	}
 
-	private static List<String> getCompilerOptions() {
+	private static List<String> getCompilerOptions(ClassLoader classLoader) {
 		List<String> options = new ArrayList<>();
 		options.add("-classpath");
-		options.add(System.getProperty("java.class.path"));
+		String classpath = SourceCodeUtils.buildCompilerClassPath(true, null, true, classLoader);
+		options.add(classpath);
 		return options;
 	}
 

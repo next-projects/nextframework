@@ -115,9 +115,9 @@ public class PrintElement {
 		if (jrPrintElement instanceof JRPrintText) {
 			String reportName = jrPrintElement.getOrigin().getReportName();
 			if (reportName == null) {
-				return ((JRPrintText) jrPrintElement).getText();
+				return ((JRPrintText) jrPrintElement).getFullText();
 			}
-			return ((JRPrintText) jrPrintElement).getText() + " (" + reportName + ")";
+			return ((JRPrintText) jrPrintElement).getFullText() + " (" + reportName + ")";
 		}
 		if (jrPrintElement instanceof JRPrintFrame) {
 			List<JRPrintElement> elements = ((JRPrintFrame) jrPrintElement).getElements();

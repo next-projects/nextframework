@@ -48,7 +48,7 @@ import org.nextframework.summary.definition.SummaryGroupDefinition;
 import org.nextframework.view.chart.aggregate.ChartSumAggregateFunction;
 
 import net.sf.jasperreports.engine.type.PositionTypeEnum;
-import net.sf.jasperreports.engine.type.VerticalAlignEnum;
+import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 
 @SuppressWarnings("deprecation")
 public abstract class BaseReportBuilder extends AbstractReportBuilder {
@@ -249,7 +249,7 @@ public abstract class BaseReportBuilder extends AbstractReportBuilder {
 		reportLabel.setHeight(2);
 		reportLabel.getStyle().setBorderBottom(new Border(1));
 		reportLabel.setRenderParameter(JasperRenderParameters.POSITION_TYPE, PositionTypeEnum.FLOAT);
-		reportLabel.setRenderParameter("jasper-vertical-alignment", VerticalAlignEnum.BOTTOM);
+		reportLabel.setRenderParameter("jasper-vertical-alignment", VerticalTextAlignEnum.BOTTOM);
 		return reportLabel;
 	}
 

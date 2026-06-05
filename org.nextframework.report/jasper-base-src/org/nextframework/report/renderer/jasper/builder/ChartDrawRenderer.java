@@ -21,10 +21,11 @@ import org.nextframework.chart.Chart;
 import org.nextframework.chart.ChartRendererFactory;
 import org.nextframework.view.chart.jfree.ChartRendererJFreeChart;
 
-import net.sf.jasperreports.engine.JRAbstractSvgRenderer;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperReportsContext;
+import net.sf.jasperreports.renderers.AbstractRenderToImageDataRenderer;
 
-public class ChartDrawRenderer extends JRAbstractSvgRenderer {
+public class ChartDrawRenderer extends AbstractRenderToImageDataRenderer {
 
 	static Log logger = LogFactory.getLog(ChartDrawRenderer.class);
 
@@ -47,7 +48,7 @@ public class ChartDrawRenderer extends JRAbstractSvgRenderer {
 	}
 
 	@Override
-	public void render(Graphics2D grx, Rectangle2D rectangle) throws JRException {
+	public void render(JasperReportsContext jasperReportsContext, Graphics2D grx, Rectangle2D rectangle) throws JRException {
 		if (chart != null) {
 			JFreeChart jFreeChart = (JFreeChart) ChartRendererFactory.getRendererForOutput(ChartRendererJFreeChart.TYPE).renderChart(chart);
 			reduceChartFonts(jFreeChart);

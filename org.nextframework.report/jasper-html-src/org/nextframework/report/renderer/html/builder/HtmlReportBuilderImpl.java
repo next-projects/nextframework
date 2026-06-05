@@ -48,12 +48,14 @@ import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JRPrintElement;
 import net.sf.jasperreports.engine.JRPrintFrame;
 import net.sf.jasperreports.engine.JRPrintImage;
-import net.sf.jasperreports.engine.Renderable;
 import net.sf.jasperreports.engine.fill.JRTemplatePrintFrame;
 import net.sf.jasperreports.engine.fill.JRTemplatePrintLine;
 import net.sf.jasperreports.engine.fill.JRTemplatePrintText;
 import net.sf.jasperreports.engine.type.ImageTypeEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
+import net.sf.jasperreports.engine.util.JRTypeSniffer;
+import net.sf.jasperreports.renderers.DataRenderable;
+import net.sf.jasperreports.renderers.Renderable;
 
 public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 
@@ -384,7 +386,7 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 
 		}
 
-		if (jrPrintElement.getModeValue() == ModeEnum.OPAQUE) {
+		if (jrPrintElement.getMode() == ModeEnum.OPAQUE) {
 			tag.getStyle().put("background-color", toRgb(jrPrintElement.getBackcolor()));
 		}
 
@@ -405,23 +407,23 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 			tag = new HtmlTag("div");
 			String id = printElement.getMappedJasperReport().getReportDefinition().getReportName() + "_" + jrPrintImage.getSourceElementId() + "_" + printElement.getUniqueId();
 
-			Renderable renderer = jrPrintImage.getRenderable();
-			if (renderer instanceof ChartDrawRenderer) {
+			Renderable renderer = jrPrintImage.getRenderer();
+			if (renderer instanceof ChartDrawRenderer renderer2) {
 
 				//byte[] chartDataDecoded = Base64.decode(chartData);
-				Chart chart = ((ChartDrawRenderer) renderer).getChart();
+				Chart chart = renderer2.getChart();
 				chart.setId("chart" + id);
 				tag.setInnerHTML("<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
 						"<script type=\"text/javascript\">" + ChartRendererFactory.getRendererForOutput(ChartRendererGoogleTools.TYPE).renderChart(chart) + "</script>" +
 						"<div id=\"" + "chart" + id + "\"></div>");
 
-			} else {
+			} else if (renderer instanceof DataRenderable renderer2) {
 
 				try {
 
 					String chartData = null;
 
-					byte[] imageData = renderer.getImageData(DefaultJasperReportsContext.getInstance());
+					byte[] imageData = renderer2.getData(DefaultJasperReportsContext.getInstance());
 					if (imageData != null) {
 
 						ImageReader imageReader = ImageIO.getImageReadersByFormatName("png").next();
@@ -462,15 +464,19 @@ public class HtmlReportBuilderImpl implements HtmlReportBuilder {
 			tag = new HtmlTag("img");
 
 			try {
-				Renderable renderer = jrPrintImage.getRenderable();
-				if (renderer != null) {
-					String encode = new String(Base64.encodeBase64(renderer.getImageData(DefaultJasperReportsContext.getInstance())));
-					if (renderer.getImageTypeValue() == ImageTypeEnum.PNG) {
-						tag.getAttributes().put("src", "data:image/png;base64," + encode);
-					} else if (renderer.getImageTypeValue() == ImageTypeEnum.JPEG) {
-						tag.getAttributes().put("src", "data:image/jpeg;base64," + encode);
-					} else if (renderer.getImageTypeValue() == ImageTypeEnum.GIF) {
-						tag.getAttributes().put("src", "data:image/gif;base64," + encode);
+				Renderable renderer = jrPrintImage.getRenderer();
+				if (renderer != null && renderer instanceof DataRenderable renderer2) {
+					byte[] bytes = renderer2.getData(DefaultJasperReportsContext.getInstance());
+					if (bytes != null && bytes.length > 0) {
+						ImageTypeEnum tipo = JRTypeSniffer.getImageTypeValue(bytes);
+						String encode = new String(Base64.encodeBase64(bytes));
+						if (tipo == ImageTypeEnum.PNG) {
+							tag.getAttributes().put("src", "data:image/png;base64," + encode);
+						} else if (tipo == ImageTypeEnum.JPEG) {
+							tag.getAttributes().put("src", "data:image/jpeg;base64," + encode);
+						} else if (tipo == ImageTypeEnum.GIF) {
+							tag.getAttributes().put("src", "data:image/gif;base64," + encode);
+						}
 					}
 				}
 			} catch (JRException e) {

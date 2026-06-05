@@ -42,10 +42,11 @@ import net.sf.jasperreports.engine.design.JRDesignSubreport;
 import net.sf.jasperreports.engine.design.JRDesignTextElement;
 import net.sf.jasperreports.engine.design.JRDesignTextField;
 import net.sf.jasperreports.engine.type.EvaluationTimeEnum;
-import net.sf.jasperreports.engine.type.HorizontalAlignEnum;
+import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.OnErrorTypeEnum;
 import net.sf.jasperreports.engine.type.PositionTypeEnum;
+import net.sf.jasperreports.engine.type.TextAdjustEnum;
 
 public class JasperDesignBuilderImplComponentMapper {
 
@@ -93,7 +94,7 @@ public class JasperDesignBuilderImplComponentMapper {
 			}
 			jrDesignTextField.setBlankWhenNull(true);
 			jrDesignTextField.setEvaluationTime(EvaluationTimeEnum.AUTO);
-			jrDesignTextField.setStretchWithOverflow(true);
+			jrDesignTextField.setTextAdjust(TextAdjustEnum.STRETCH_HEIGHT);
 			jrDesignTextField.setPositionType(PositionTypeEnum.FLOAT);
 			jrDesignTextField.setPattern(reportTextField.getPattern());
 			configureFrameWidthForTextElement(returnElement, computeWidth);
@@ -236,14 +237,14 @@ public class JasperDesignBuilderImplComponentMapper {
 	void configureTextElement(int width, ReportTextElement reportTextField, JRDesignTextElement jrDesignTextElement, ReportSection section, JRStyle jrStyle) {
 
 		jrDesignTextElement.setHeight(14);
-		Integer fontSize = reportTextField.getStyle().getFontSize();
+		Number fontSize = reportTextField.getStyle().getFontSize();
 		if (fontSize != null) {
-			jrDesignTextElement.setFontSize(fontSize);
+			jrDesignTextElement.setFontSize(fontSize.floatValue());
 		} else {
 			fontSize = jrStyle != null ? jrStyle.getFontSize() : null;
 		}
 		if (fontSize != null) {
-			jrDesignTextElement.setHeight((int) (Math.round(fontSize * 1.3 + 0.1)));
+			jrDesignTextElement.setHeight((int) (Math.round(fontSize.floatValue() * 1.3 + 0.1)));
 		}
 
 		//TODO PEGAR DO TEMPLATE
@@ -256,7 +257,7 @@ public class JasperDesignBuilderImplComponentMapper {
 			jrDesignTextElement.setHeight(reportTextField.getHeight());
 		}
 
-		HorizontalAlignEnum horizontalAlign = HorizontalAlignEnum.LEFT;
+		HorizontalTextAlignEnum horizontalAlign = HorizontalTextAlignEnum.LEFT;
 		ReportAlignment alignment = reportTextField.getStyle().getAlignment();
 		if (alignment == null) {
 			alignment = ReportAlignment.LEFT;
@@ -264,19 +265,19 @@ public class JasperDesignBuilderImplComponentMapper {
 
 		switch (alignment) {
 			case LEFT:
-				horizontalAlign = HorizontalAlignEnum.LEFT;
+				horizontalAlign = HorizontalTextAlignEnum.LEFT;
 				break;
 			case RIGHT:
-				horizontalAlign = HorizontalAlignEnum.RIGHT;
+				horizontalAlign = HorizontalTextAlignEnum.RIGHT;
 				break;
 			case CENTER:
-				horizontalAlign = HorizontalAlignEnum.CENTER;
+				horizontalAlign = HorizontalTextAlignEnum.CENTER;
 				break;
 			case JUSTIFIED:
-				horizontalAlign = HorizontalAlignEnum.JUSTIFIED;
+				horizontalAlign = HorizontalTextAlignEnum.JUSTIFIED;
 				break;
 		}
-		jrDesignTextElement.setHorizontalAlignment(horizontalAlign);
+		jrDesignTextElement.setHorizontalTextAlign(horizontalAlign);
 
 		if (reportTextField.getStyle().getForegroundColor() != null) {
 			jrDesignTextElement.setForecolor(reportTextField.getStyle().getForegroundColor());

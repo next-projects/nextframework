@@ -50,7 +50,7 @@ public class GroupPrintElements extends PrintElement {
 				result += "rect " + ((JRPrintRectangle) printElement.getJrPrintElement()).getUUID() + ", ";
 			}
 			if (printElement.getJrPrintElement() instanceof JRPrintText) {
-				result += ((JRPrintText) printElement.getJrPrintElement()).getText() + ", ";
+				result += ((JRPrintText) printElement.getJrPrintElement()).getFullText() + ", ";
 			} else {
 				result += printElement + ", ";
 			}

@@ -133,7 +133,7 @@ public class UnpagedJasperPrint {
 			return null;
 		}
 		if (//(pageNumber > 0 && element.getOrigin().getBandTypeValue() == BandTypeEnum.PAGE_HEADER) || 
-		element.getOrigin().getBandTypeValue() == BandTypeEnum.TITLE) {
+		element.getOrigin().getBandType() == BandTypeEnum.TITLE) {
 			return null;
 		}
 		if (element instanceof JRPrintLine) {

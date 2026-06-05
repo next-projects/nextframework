@@ -31,7 +31,7 @@ import org.nextframework.summary.Summary;
 import org.nextframework.summary.compilation.SummaryResult;
 import org.nextframework.util.Util;
 
-import net.sf.jasperreports.engine.type.VerticalAlignEnum;
+import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 
 public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 
@@ -159,10 +159,8 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 
 	public DynamicReportLayoutBuilder newInstance() {
 		try {
-			return this.getClass().newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
+			return this.getClass().getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -314,7 +312,7 @@ public class DynamicReportLayoutBuilder extends RepositoryReportLayoutBuilder {
 	protected ReportItem addItemToDefinition(int column, ReportSection section, ReportItem reportItem) {
 		if (section.getType() == ReportSectionType.DETAIL_HEADER || section.getType() == ReportSectionType.SUMARY_DATA_HEADER) {
 			((ReportLabel) reportItem).setHeight(22);
-			((ReportLabel) reportItem).setRenderParameter("jasper-vertical-alignment", VerticalAlignEnum.TOP);
+			((ReportLabel) reportItem).setRenderParameter("jasper-vertical-alignment", VerticalTextAlignEnum.TOP);
 		}
 		return super.addItemToDefinition(column, section, reportItem);
 	}

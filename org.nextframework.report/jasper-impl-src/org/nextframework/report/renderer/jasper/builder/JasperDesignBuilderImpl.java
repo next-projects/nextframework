@@ -307,7 +307,6 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 		return expression.contains("\"") || expression.contains("\'");
 	}
 
-	@SuppressWarnings("deprecation")
 	protected JRDesignExpression createExpression(String expression, Class<?> class1, boolean callToString) {
 
 		if (expression.startsWith("param.")) {
@@ -317,13 +316,6 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				expression2.setText(getConverterExpression("$P{" + expression.substring(6) + "}"));
 			} else {
 				expression2.setText("$P{" + expression.substring(6) + "}");
-			}
-			if (class1 != null) {
-				expression2.setValueClass(class1);
-				expression2.setValueClassName(class1.getName());
-			} else {
-				expression2.setValueClass(Object.class);
-				expression2.setValueClassName("java.lang.Object");
 			}
 			return expression2;
 
@@ -340,13 +332,6 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 
 			JRDesignExpression expression2 = new JRDesignExpression();
 			expression2.setText(expression);
-			if (class1 != null) {
-				expression2.setValueClass(class1);
-				expression2.setValueClassName(class1.getName());
-			} else {
-				expression2.setValueClass(Object.class);
-				expression2.setValueClassName("java.lang.Object");
-			}
 			return expression2;
 
 		} else {
@@ -356,13 +341,6 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				expression2.setText(getConverterExpression("$F{" + expression + "}"));
 			} else {
 				expression2.setText("$F{" + expression + "}");
-			}
-			if (class1 != null) {
-				expression2.setValueClass(class1);
-				expression2.setValueClassName(class1.getName());
-			} else {
-				expression2.setValueClass(Object.class);
-				expression2.setValueClassName("java.lang.Object");
 			}
 			return expression2;
 
@@ -408,7 +386,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 				element.setPrintInFirstWholeBand(true);
 				JRGroup[] groups = template.getGroups();
 				if (groups.length > 0) {
-					element.setPrintWhenGroupChanges(groups[groups.length - 1]);
+					element.setPrintWhenGroupChanges(groups[groups.length - 1].getName());
 				}
 			}
 
@@ -502,7 +480,7 @@ public class JasperDesignBuilderImpl extends AbstractJasperDesignBuilder {
 			backgroundFrame = new JRDesignFrame();
 			backgroundFrame.setKey(BACKGROUND_FRAME_KEY + " " + (elementKeySequence++));
 			backgroundFrame.setBackcolor(section.getStyle().getBackgroundColor());
-			backgroundFrame.setStretchType(StretchTypeEnum.RELATIVE_TO_BAND_HEIGHT);
+			backgroundFrame.setStretchType(StretchTypeEnum.CONTAINER_HEIGHT);
 			configurer.configureItem(backgroundFrame);
 			getReportBandFor(template, section).addElement(backgroundFrame);
 		}

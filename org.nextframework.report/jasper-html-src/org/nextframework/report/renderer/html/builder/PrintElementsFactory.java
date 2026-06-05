@@ -68,7 +68,7 @@ public class PrintElementsFactory {
 		if (element.getKey() == null) {
 			return false;
 		}
-		if (element.getOrigin().getBandTypeValue() == BandTypeEnum.TITLE) {
+		if (element.getOrigin().getBandType() == BandTypeEnum.TITLE) {
 			return false;
 		}
 		if (element instanceof JRPrintLine) {
