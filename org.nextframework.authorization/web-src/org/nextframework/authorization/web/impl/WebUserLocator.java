@@ -91,12 +91,11 @@ public class WebUserLocator implements UserLocator {
 					// userPrincipal.getName() não deve retornar null
 					throw new RuntimeException("Erro inesperado: Algoritmo inválido em UserLocatorImpl");
 				}
-			} else {
-				//NINGUEM LOGADO
-				user = null;
 			}
 			//TODO TROCAR PARA DEFAULTREQUESTCONTEXT QUANDO TIVER
-			setSessionUser(servletRequest, user);
+			if (user != null) {
+				setSessionUser(servletRequest, user);
+			}
 		}
 		return user;
 	}
