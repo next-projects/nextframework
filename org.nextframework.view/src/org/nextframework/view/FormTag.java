@@ -50,10 +50,12 @@ public class FormTag extends BaseTag {
 
 	protected String method = "POST";
 
-	protected String enctype = "multipart/form-data";
+	protected String enctype;
 
 	@Override
 	protected void doComponent() throws Exception {
+
+		enctype = Util.strings.isNotEmpty(enctype) ? enctype : getViewConfig().getDefaultFormEnctype();
 
 		if (Util.strings.isEmpty(action)) {
 			action = NextWeb.getRequestContext().getLastAction();

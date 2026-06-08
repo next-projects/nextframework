@@ -46,6 +46,11 @@ public class DefaultViewConfig implements ViewConfig {
 	}
 
 	@Override
+	public String getDefaultFormEnctype() {
+		return "application/x-www-form-urlencoded";
+	}
+
+	@Override
 	public Map<Class<?>, InputTagType> getCustomInputTypes() {
 		return customInputTypesMap;
 	}

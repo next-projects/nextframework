@@ -10,6 +10,8 @@ public interface ViewConfig {
 
 	String getJSPDefaultCharset();
 
+	String getDefaultFormEnctype();
+
 	Map<Class<?>, InputTagType> getCustomInputTypes();
 
 	boolean isDefaultShowCalendar();
