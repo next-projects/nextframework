@@ -27,8 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -434,12 +432,14 @@ public class SourceCodeBuilder {
 	}
 
 	public <X> Class<X> generateClass() throws InstantiationException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		if (superClass != null) {
-			return generateClass(new URLClassLoader(new URL[0], superClass.getClassLoader()));
-		} else {
-			ClassLoader classLoader = this.getClass().getClassLoader();
-			return generateClass(new URLClassLoader(new URL[0], classLoader));
+			classLoader = superClass.getClassLoader();
 		}
+		if (classLoader == null) {
+			classLoader = this.getClass().getClassLoader();
+		}
+		return generateClass(classLoader);
 	}
 
 }

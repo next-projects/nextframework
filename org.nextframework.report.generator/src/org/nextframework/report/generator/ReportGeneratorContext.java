@@ -26,7 +26,9 @@ class ReportGeneratorContext {
 	}
 
 	protected static Class<IReportBuilder> createReportClass(ReportGenerator generator) {
-		return createReportClass(new URLClassLoader(new URL[0], ReportGeneratorContext.class.getClassLoader()), generator);
+		Class<?> mainType = generator.getReportElement().getData().getMainType();
+		ClassLoader parentClassLoader = mainType != null ? mainType.getClassLoader() : ReportGeneratorContext.class.getClassLoader();
+		return createReportClass(new URLClassLoader(new URL[0], parentClassLoader), generator);
 		//return createReportClass(ReportGeneratorContext.class.getClassLoader(), generator);
 	}
 

@@ -36,7 +36,8 @@ class DynamicSummaryImpl<E> extends DynamicSummary<E> {
 	}
 
 	protected Class<Summary<E>> createSummaryClass() {
-		return createSummaryClass(DynamicSummary.class.getClassLoader());
+		ClassLoader classLoader = getReferenceClass() != null ? getReferenceClass().getClassLoader() : DynamicSummary.class.getClassLoader();
+		return createSummaryClass(classLoader);
 	}
 
 	public String getSourceCode() {

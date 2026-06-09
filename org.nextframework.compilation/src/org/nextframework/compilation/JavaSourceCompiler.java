@@ -24,10 +24,14 @@
 package org.nextframework.compilation;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -46,6 +50,7 @@ import javax.tools.ToolProvider;
 public class JavaSourceCompiler {
 
 	private static List<JavaFileObject> compiledFiles = new ArrayList<JavaFileObject>();
+	private static final Map<ClassLoader, WeakReference<MemoryClassLoader>> generatedClassLoaders = Collections.synchronizedMap(new WeakHashMap<ClassLoader, WeakReference<MemoryClassLoader>>());
 
 	/**
 	 * Compiles a source code, load and return the compiled class. <BR>
@@ -56,11 +61,20 @@ public class JavaSourceCompiler {
 	 */
 	public static synchronized Class<?> compileClass(ClassLoader classLoader, String className, byte[] source) throws ClassNotFoundException, InstantiationException {
 
+		MemoryClassLoader memoryClassLoader = getTargetClassLoader(classLoader);
+
 		try {
 			//verificar se a classe já está compilada e carregada
 			Class<?> class1 = classLoader.loadClass(className);
 			return class1;
 		} catch (Exception e) {
+		}
+
+		if (memoryClassLoader != classLoader) {
+			try {
+				return memoryClassLoader.loadClass(className);
+			} catch (ClassNotFoundException e) {
+			}
 		}
 
 		MemoryJavaOutputFileManager memoryManager = null;
@@ -85,7 +99,6 @@ public class JavaSourceCompiler {
 				throw new RuntimeException(errorMessage);
 			}
 
-			MemoryClassLoader memoryClassLoader = new MemoryClassLoader(classLoader);
 			for (MemoryJavaOutputFileObject javaFileObject : memoryManager.getOutputs()) {
 				compiledFiles.add(javaFileObject);
 				byte[] byteArray = javaFileObject.toByteArray();
@@ -104,6 +117,19 @@ public class JavaSourceCompiler {
 			}
 		}
 
+	}
+
+	private static MemoryClassLoader getTargetClassLoader(ClassLoader classLoader) {
+		if (classLoader instanceof MemoryClassLoader) {
+			return (MemoryClassLoader) classLoader;
+		}
+		WeakReference<MemoryClassLoader> reference = generatedClassLoaders.get(classLoader);
+		MemoryClassLoader memoryClassLoader = reference != null ? reference.get() : null;
+		if (memoryClassLoader == null) {
+			memoryClassLoader = new MemoryClassLoader(classLoader);
+			generatedClassLoaders.put(classLoader, new WeakReference<MemoryClassLoader>(memoryClassLoader));
+		}
+		return memoryClassLoader;
 	}
 
 	/**

@@ -39,6 +39,7 @@
 package org.nextframework.compilation;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -139,8 +140,8 @@ public class SourceCodeUtils {
 		Set<ClassLoader> visited = Collections.newSetFromMap(new IdentityHashMap<ClassLoader, Boolean>());
 		ClassLoader current = classLoader;
 		while (current != null && visited.add(current)) {
-			if (current instanceof URLClassLoader) {
-				URL[] urls = ((URLClassLoader) current).getURLs();
+			URL[] urls = getClassLoaderUrls(current);
+			if (urls != null) {
 				for (URL url : urls) {
 					String path = toClassPathEntry(url);
 					if (path != null) {
@@ -150,6 +151,20 @@ public class SourceCodeUtils {
 			}
 			current = current.getParent();
 		}
+	}
+
+	private static URL[] getClassLoaderUrls(ClassLoader classLoader) {
+		if (classLoader instanceof URLClassLoader) {
+			return ((URLClassLoader) classLoader).getURLs();
+		}
+		try {
+			Method method = classLoader.getClass().getMethod("getURLs");
+			if (URL[].class.isAssignableFrom(method.getReturnType())) {
+				return (URL[]) method.invoke(classLoader);
+			}
+		} catch (Exception e) {
+		}
+		return null;
 	}
 
 	private static String toClassPathEntry(URL url) {
