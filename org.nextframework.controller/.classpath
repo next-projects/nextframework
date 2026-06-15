@@ -20,8 +20,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/spring-webmvc-7.0.5.jar" sourcepath="lib/src/spring-webmvc-7.0.5-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib-test/spring-test-7.0.5.jar" sourcepath="lib-test/src/spring-test-7.0.5-sources.jar"/>
-	<classpathentry kind="lib" path="lib-test/byte-buddy-1.18.8.jar"/>
-	<classpathentry kind="lib" path="lib-test/byte-buddy-agent-1.18.8.jar"/>
-	<classpathentry kind="lib" path="lib-test/mockito-core-5.23.0.jar"/>
+	<classpathentry kind="lib" path="lib-test/byte-buddy-1.18.8.jar" sourcepath="lib-test/src/byte-buddy-1.18.8-sources.jar"/>
+	<classpathentry kind="lib" path="lib-test/byte-buddy-agent-1.18.8.jar" sourcepath="lib-test/src/byte-buddy-agent-1.18.8-sources.jar"/>
+	<classpathentry kind="lib" path="lib-test/mockito-core-5.23.0.jar" sourcepath="lib-test/src/mockito-core-5.23.0-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
