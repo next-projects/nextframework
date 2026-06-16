@@ -352,7 +352,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	@SuppressWarnings("all")
-	protected Map<String, Object> getFilterMap(WebRequestContext request, ReportDesignModel model, ReportElement reportElement, boolean bind) {
+	protected Map<String, Object> getFilterMap(WebRequestContext request, ReportDesignModel model, ReportElement reportElement, boolean bind) throws Exception{
 		Map<String, Object> filterMap = null;
 		if (!bind) {
 			filterMap = (Map<String, Object>) request.getUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId());

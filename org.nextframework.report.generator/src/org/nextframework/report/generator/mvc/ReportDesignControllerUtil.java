@@ -310,11 +310,15 @@ public class ReportDesignControllerUtil {
 		return Date.class.isAssignableFrom(propertyClass) || Calendar.class.isAssignableFrom(propertyClass);
 	}
 
-	public Map<String, Object> getFilterMap(HttpServletRequest request, ReportElement reportElement) {
+	public Map<String, Object> getFilterMap(HttpServletRequest request, ReportElement reportElement) throws Exception {
 
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
 
-		ServletRequestDataBinderNext dataBinder = new ServletRequestDataBinderNext(new Object(), "");
+		//We don't care about the dummy object. We need the mpvs, but it's important to use a dummy of the main type.
+		//Within the bind method, some checks verify the attributes of the main type.
+		Class<?> mainType = Util.objects.getRealClass(reportElement.getData().getMainType());
+		Object dummy = mainType.getConstructor().newInstance();
+		ServletRequestDataBinderNext dataBinder = new ServletRequestDataBinderNext(dummy, "");
 		MutablePropertyValues mpvs = new ServletRequestParameterPropertyValues(request);
 		dataBinder.bind(mpvs);
 
@@ -361,6 +365,9 @@ public class ReportDesignControllerUtil {
 		try {
 			if (filterElement.isFilterSelectMultiple()) {
 				String[] parameterValues = request.getParameterValues(name);
+				if (parameterValues == null && mpvs.contains(name)) {
+					return mpvs.getPropertyValue(name).getValue();
+				}
 				if (ServletRequestDataBinderNext.isObjectValue(parameterValues)) {
 					return ServletRequestDataBinderNext.translateObjectValue(name, parameterValues, mpvs);
 				}
@@ -374,6 +381,9 @@ public class ReportDesignControllerUtil {
 				value = dataBinder.convertIfNecessary(parameterValues, type);
 			} else {
 				String parameterValue = request.getParameter(name);
+				if (parameterValue == null && mpvs.contains(name)) {
+					return mpvs.getPropertyValue(name).getValue();
+				}
 				if (ServletRequestDataBinderNext.isObjectValue(parameterValue)) {
 					return ServletRequestDataBinderNext.translateObjectValue(name, parameterValue, mpvs);
 				}
