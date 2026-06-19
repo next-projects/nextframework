@@ -18,7 +18,7 @@
 	<classpathentry kind="lib" path="provided/commons-lang3-3.20.0.jar" sourcepath="provided/src/commons-lang3-3.20.0-sources.jar"/>
 	<classpathentry kind="lib" path="provided/error_prone_annotations-2.48.0.jar" sourcepath="provided/src/error_prone_annotations-2.48.0-sources.jar"/>
 	<classpathentry kind="lib" path="provided/gson-2.13.2.jar" sourcepath="provided/src/gson-2.13.2-sources.jar"/>
-	<classpathentry kind="lib" path="provided/guava-33.5.0-jre.jar" sourcepath="provided/src/guava-33.5.0-jre-sources.jar"/>
 	<classpathentry kind="lib" path="provided/javaparser-1.0.8.jar" sourcepath="provided/src/javaparser-1.0.8-sources.jar"/>
+	<classpathentry kind="lib" path="provided/guava-33.6.0-jre.jar" sourcepath="provided/src/guava-33.6.0-jre-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
