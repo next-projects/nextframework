@@ -1,7 +1,6 @@
 package org.nextframework.context;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -165,6 +164,10 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 		IGNORED_PACKAGES.add("org.nextframework");
 		IGNORED_PACKAGES.add("org.stjs");
 		IGNORED_PACKAGES.add("org.eclipse");
+		IGNORED_PACKAGES.add("org.springframework");
+		IGNORED_PACKAGES.add("org.hibernate");
+		IGNORED_PACKAGES.add("google.maps");
+		IGNORED_PACKAGES.add("i18n");
 	}
 
 	private Collection<? extends String> searchPackages(String basePackage, File dir) {
@@ -183,13 +186,20 @@ public class NextStandardApplicationContext extends GenericApplicationContext im
 					packages.addAll(searchPackages(packageName, new File(dir, child)));
 					continue;
 				}
-				if (IGNORED_PACKAGES.contains(packageName)) {
+				if (isIgnoredPackage(packageName)) {
 					continue;
 				}
 				packages.add(packageName);
 			}
 		}
 		return packages;
+	}
+
+	private boolean isIgnoredPackage(String packageName) {
+		if (IGNORED_PACKAGES.contains(packageName)) {
+			return true;
+		}
+		return packageName.endsWith(".test") || packageName.contains(".test.");
 	}
 
 	@Override

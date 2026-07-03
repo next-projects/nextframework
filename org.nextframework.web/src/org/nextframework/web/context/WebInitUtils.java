@@ -1,5 +1,6 @@
 package org.nextframework.web.context;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -8,6 +9,17 @@ import jakarta.servlet.ServletContext;
 class WebInitUtils {
 
 	private static final String BASE_PATH = "/WEB-INF/classes/";
+	private static final Set<String> IGNORED_PACKAGES = new HashSet<String>();
+
+	static {
+		IGNORED_PACKAGES.add("org.nextframework");
+		IGNORED_PACKAGES.add("org.stjs");
+		IGNORED_PACKAGES.add("org.eclipse");
+		IGNORED_PACKAGES.add("org.springframework.orm.hibernate4");
+		IGNORED_PACKAGES.add("org.hibernate.community.dialect");
+		IGNORED_PACKAGES.add("google.maps");
+		IGNORED_PACKAGES.add("i18n");
+	}
 
 	static String[] findScanPaths(ServletContext servletContext) {
 		Set<String> searchContexts = new TreeSet<String>();
@@ -27,11 +39,12 @@ class WebInitUtils {
 					continue;
 				}
 				String formatedPackage = packagePath.substring(0, packagePath.length() - 1).replace('/', '.');
+				if (isIgnoredPackage(formatedPackage)) {
+					continue;
+				}
 				//(avoid adding org, com or net packages)
 				if (formatedPackage.equals("org") || formatedPackage.equals("com") || formatedPackage.equals("net")) {
 					searchContexts(servletContext, path, searchContexts);
-				} else if (formatedPackage.equals("org.nextframework")) { // ignore org.nextframework
-					continue;
 				} else {
 					Set<String> packageResources = servletContext.getResourcePaths(path);
 					boolean hasFiles = false;
@@ -50,6 +63,13 @@ class WebInitUtils {
 				}
 			}
 		}
+	}
+
+	private static boolean isIgnoredPackage(String packageName) {
+		if (IGNORED_PACKAGES.contains(packageName)) {
+			return true;
+		}
+		return packageName.endsWith(".test") || packageName.contains(".test.");
 	}
 
 }

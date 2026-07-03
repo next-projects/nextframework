@@ -112,8 +112,8 @@ public class PersistenceUtils {
 	}
 
 	public static <ENTITY> SingularAttribute<? super ENTITY, ?> getIdPropertyMetadata(Class<ENTITY> fromClass, SessionFactory sessionFactory) {
-		EntityType<ENTITY> entity = getClassMetadata(fromClass, sessionFactory);
-		return entity.getSingularAttributes().stream()
+		EntityType<ENTITY> entityType = getClassMetadata(fromClass, sessionFactory);
+		return entityType.getSingularAttributes().stream()
 				.filter(jakarta.persistence.metamodel.SingularAttribute::isId)
 				.findFirst()
 				.orElseThrow(() -> new PersistenceException("Cannot find ID property for " + fromClass));
@@ -124,7 +124,9 @@ public class PersistenceUtils {
 	}
 
 	public static <ENTITY> Serializable getId(ENTITY entity, SessionFactory sessionFactory) {
-		return (Serializable) sessionFactory.getPersistenceUnitUtil().getIdentifier(entity);
+		//return (Serializable) sessionFactory.getPersistenceUnitUtil().getIdentifier(entity);
+		String idProperty = getIdPropertyName(entity.getClass(), sessionFactory);
+		return (Serializable) getProperty(entity, idProperty);
 	}
 
 	@SuppressWarnings("unchecked")

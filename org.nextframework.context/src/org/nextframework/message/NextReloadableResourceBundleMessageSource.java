@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.jspecify.annotations.Nullable;
 import org.nextframework.util.Util;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -25,6 +26,15 @@ public class NextReloadableResourceBundleMessageSource extends ReloadableResourc
 	private PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
 	private String[] optionalPrefixes = new String[0];
+
+	@Override
+	protected String formatMessage(String msg, Object @Nullable [] args, @Nullable Locale locale) {
+		//Spring fix
+		if (locale == null) {
+			locale = Locale.getDefault();
+		}
+		return super.formatMessage(msg, args, locale);
+	}
 
 	@Override
 	public void setResourceLoader(ResourceLoader resourceLoader) {

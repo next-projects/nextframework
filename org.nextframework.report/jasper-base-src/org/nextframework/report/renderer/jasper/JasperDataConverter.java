@@ -1,5 +1,6 @@
 package org.nextframework.report.renderer.jasper;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Formattable;
 import java.util.HashMap;
@@ -115,10 +116,10 @@ public class JasperDataConverter {
 		for (Object registro : rows) {
 			BeanDescriptor bd = BeanDescriptorFactory.forBean(registro);
 			Map mapa = new HashMap();
-			List<ReportItem> reportItens = report.getReportItens();
 			if (registro instanceof Map) {
 				mapa.putAll((Map) registro);
 			} else {
+				List<ReportItem> reportItens = report.getReportItens();
 				for (ReportItem reportItem : reportItens) {
 					try {
 						addItemToMap(mapa, reportItem, bd);
@@ -187,6 +188,9 @@ public class JasperDataConverter {
 			if (!reportImage.isRendered() && reportImage.isFieldReference()) {
 				Object value = bd.getPropertyDescriptor(reportImage.getReference()).getValue();
 				//System.out.println(isReportImageOK((InputStream) value));
+				if (value instanceof byte[]) {
+					value = new ByteArrayInputStream((byte[]) value);
+				}
 				mapa.put(reportImage.getReference(), value);
 			}
 		} else if (reportItem instanceof ReportChart) {
