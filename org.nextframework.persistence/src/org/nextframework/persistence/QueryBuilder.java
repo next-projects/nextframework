@@ -711,7 +711,11 @@ public class QueryBuilder<E> {
 		});
 
 		if (qbt != null) {
-			list = organizeListWithResultTranslator(qbt, list);
+			try {
+				list = organizeListWithResultTranslator(qbt, list);
+			} catch (Exception e) {
+				throw new QueryBuilderException("Erro ao aplicar translator " + qbt.getClass(), e);
+			}
 		}
 
 		try {
@@ -737,7 +741,7 @@ public class QueryBuilder<E> {
 		QueryBuilderResultTranslator qbt = getQueryBuilderResultTranslator();
 		final boolean useUnique = qbt == null;
 
-		Object result = hibernateSessionProvider.execute(new HibernateCommand() {
+		Object result = hibernateSessionProvider.execute(new HibernateCommand<Object>() {
 
 			public Object doInHibernate(Session session) {
 
@@ -775,12 +779,16 @@ public class QueryBuilder<E> {
 		});
 
 		if (qbt != null) {
-			result = organizeUniqueResultWithTranslator(qbt, result);
+			try {
+				result = organizeUniqueResultWithTranslator(qbt, result);
+			} catch (Exception e) {
+				throw new QueryBuilderException("Erro ao aplicar translator " + qbt.getClass(), e);
+			}
 		}
 
 		try {
 			initializeProxys(result);
-		} catch (RuntimeException e) {
+		} catch (Exception e) {
 			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 			throw new QueryBuilderException("Erro ao inicializar Proxys (Coleções). " + stackTrace[7], e);
 		}
@@ -789,7 +797,7 @@ public class QueryBuilder<E> {
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	protected Object organizeUniqueResultWithTranslator(QueryBuilderResultTranslator qbt, Object resultadoOriginal) {
+	protected Object organizeUniqueResultWithTranslator(QueryBuilderResultTranslator qbt, Object resultadoOriginal) throws Exception {
 		if (resultadoOriginal instanceof List) {
 			List<Object> resultadoOriginalList = (List<Object>) resultadoOriginal;
 			if (resultadoOriginalList.isEmpty()) {
@@ -802,7 +810,7 @@ public class QueryBuilder<E> {
 		return qbt.translate((Object[]) resultadoOriginal);
 	}
 
-	protected List<Object> organizeListWithResultTranslator(QueryBuilderResultTranslator qbt, List<Object> resultadoOriginal) {
+	protected List<Object> organizeListWithResultTranslator(QueryBuilderResultTranslator qbt, List<Object> resultadoOriginal) throws Exception {
 		List<Object> resultadoNovo = new ArrayList<Object>(resultadoOriginal.size());
 		for (int j = 0; j < resultadoOriginal.size(); j++) {
 			Object item = resultadoOriginal.get(j);
@@ -822,7 +830,7 @@ public class QueryBuilder<E> {
 		if (useTranslator && resultTranslatorClass != null && (select.select.contains(",") || select.select.contains("."))) {
 
 			try {
-				qbt = resultTranslatorClass.newInstance();
+				qbt = resultTranslatorClass.getConstructor().newInstance();
 				qbt.init(getSessionFactory(), this);
 			} catch (Exception e) {
 				throw new QueryBuilderException("Não foi possível inicializar o " + resultTranslatorClass.getSimpleName(), e);

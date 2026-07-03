@@ -40,8 +40,8 @@ public interface QueryBuilderResultTranslator {
 	 * @param values
 	 * @return
 	 */
-	public Object translate(Object[] values);
+	public Object translate(Object[] values) throws Exception;
 
-	public List<?> translate(List<?> values);
+	public List<?> translate(List<?> values) throws Exception;
 
 }

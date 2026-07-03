@@ -165,12 +165,14 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 				aliasMap.setFullProperty(true);
 			} else {
 				String pkProperty = getPkProperty(aliasMap);
-				propertyIndex = lookForProperty(pkProperty, selectedProperties);
-				if (propertyIndex == null) {
-					extraFields.add(pkProperty);
-					propertyIndex = extraFields.size() + selectedProperties.length - 1;
+				if (pkProperty != null) {
+					propertyIndex = lookForProperty(pkProperty, selectedProperties);
+					if (propertyIndex == null) {
+						extraFields.add(pkProperty);
+						propertyIndex = extraFields.size() + selectedProperties.length - 1;
+					}
+					aliasMap.setPkPropertyIndex(propertyIndex);
 				}
-				aliasMap.setPkPropertyIndex(propertyIndex);
 			}
 
 		}
@@ -258,6 +260,9 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 	}
 
 	private String getPkProperty(AliasMap aliasMap) {
+		if (aliasMap.getCollectionType() != null) {
+			return null;
+		}
 		String pkname = PersistenceUtils.getIdPropertyName(aliasMap.getType(), sessionFactory);
 		return aliasMap.getAlias() + "." + pkname;
 	}
@@ -281,7 +286,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 	/**
 	 * Thread-safe
 	 */
-	public List<?> translate(List<?> values) {
+	public List<?> translate(List<?> values) throws Exception {
 		List<Object> list = new ArrayList<Object>();
 		ObjectTreeBuilder treeBuilder = getThreadSafeTreeBuilder();
 		for (Object object : values) {
@@ -300,7 +305,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		return treeBuilder.getThreadSafeInstance();
 	}
 
-	public Object translate(Object[] values, ObjectTreeBuilder treeBuilder) {
+	public Object translate(Object[] values, ObjectTreeBuilder treeBuilder) throws Exception {
 		ObjectTree objectTree = treeBuilder.buildObjectTree(values);
 		mapper.map(values, objectTree);
 		if (objectTree.isNew) {
@@ -320,7 +325,7 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 	/**
 	 * Não é Thread-safe a chamada deve ser synchronizada do lado de fora
 	 */
-	public Object translate(Object[] values) {
+	public Object translate(Object[] values) throws Exception {
 		ObjectTree objectTree = treeBuilder.buildObjectTree(values);
 		mapper.map(values, objectTree);
 		if (objectTree.isNew) {
@@ -337,8 +342,8 @@ public class QueryBuilderResultTranslatorImpl implements QueryBuilderResultTrans
 		}
 	}
 
-	protected Object newInstance(Class<?> clazz) throws InstantiationException, IllegalAccessException {
-		return clazz.newInstance();
+	protected Object newInstance(Class<?> clazz) throws Exception {
+		return clazz.getConstructor().newInstance();
 	}
 
 }
@@ -377,7 +382,7 @@ class ObjectTreeBuilder {
 		return objectTreeBuilder;
 	}
 
-	ObjectTree buildObjectTree(Object[] values) {
+	ObjectTree buildObjectTree(Object[] values) throws Exception {
 		ObjectTree objectTree = new ObjectTree();
 		for (ObjectCreator creator : creators) {
 			CreateResult create = creator.create(objectTree, values);
@@ -400,11 +405,11 @@ class ObjectTreeBuilder {
 	 */
 	interface ObjectCreator {
 
-		CreateResult create(ObjectTree objectTree, Object[] values);
+		CreateResult create(ObjectTree objectTree, Object[] values) throws Exception;
 
 		String getAlias();
 
-		void setMapping(ObjectTree objectTree);
+		void setMapping(ObjectTree objectTree) throws Exception;
 
 		ObjectCreator getThreadSafeObjectCretor();
 
@@ -451,7 +456,7 @@ class ObjectTreeBuilder {
 			this.fullProperty = aliasMap.isFullProperty();
 		}
 
-		public CreateResult create(ObjectTree objectTree, Object[] values) {
+		public CreateResult create(ObjectTree objectTree, Object[] values) throws Exception {
 			try {
 				Object object = null;
 				if (values[pkPropertyIndex] != null) {
@@ -529,16 +534,18 @@ class ObjectTreeBuilder {
 			this.dependencias = aliasMap.getDependencias();
 		}
 
-		public CreateResult create(ObjectTree objectTree, Object[] values) {
+		public CreateResult create(ObjectTree objectTree, Object[] values) throws Exception {
 			try {
 				Object newInstance = null;
 				Map</*ALIAS*/String, /*VALORPK*/Object> chave = new HashMap</*ALIAS*/String, /*VALORPK*/Object>();
 				for (AliasMap dp : dependencias) {
-					chave.put(dp.getAlias(), values[dp.getPkPropertyIndex()]);
+					if (dp.getPkPropertyIndex() > -1) {
+						chave.put(dp.getAlias(), values[dp.getPkPropertyIndex()]);
+					}
 				}
 				boolean usenull = false;
-				if (values[pkPropertyIndex] != null && ((newInstance = objects.get(chave)) == null)) {
-					newInstance = collectionItemClass.newInstance();
+				if (pkPropertyIndex > -1 && values[pkPropertyIndex] != null && ((newInstance = objects.get(chave)) == null)) {
+					newInstance = collectionItemClass.getConstructor().newInstance();
 					objects.put(chave, newInstance);
 				} else {
 					usenull = true;
@@ -565,7 +572,7 @@ class ObjectTreeBuilder {
 		}
 
 		@SuppressWarnings("unchecked")
-		public void setMapping(ObjectTree objectTree) {
+		public void setMapping(ObjectTree objectTree) throws Exception {
 			Object owner = objectTree.aliasObjectMap.get(ownerAlias);
 			try {
 				if (owner == null && objectTree.aliasObjectMap.get(alias) == null) {
@@ -574,7 +581,7 @@ class ObjectTreeBuilder {
 				}
 				Collection<Object> collection = (Collection<Object>) getter.invoke(owner);
 				if (collection == null) {
-					collection = (Collection<Object>) collectionClass.newInstance();
+					collection = (Collection<Object>) collectionClass.getConstructor().newInstance();
 				}
 				if (lastCreatedObject != null) {
 					collection.add(lastCreatedObject);
@@ -620,7 +627,7 @@ class ObjectTreeBuilder {
 		public RootObjectCreator() {
 		}
 
-		public CreateResult create(ObjectTree objectTree, Object[] values) {
+		public CreateResult create(ObjectTree objectTree, Object[] values) throws Exception {
 			try {
 				Object id = values[pkPropertyIndex];
 				Object object = resultados.get(id);
