@@ -1,3 +1,39 @@
+4.0.0 - Has compatibility breaks
+
+- [Improvement] Framework baseline upgraded to Java 25
+- [Improvement] Spring upgraded from 4.1.5 to 7.0.5
+- [Improvement] Hibernate upgraded from 4.3.8 to 7.2.5
+- [Improvement] JasperReports upgraded from 6.0.3 to 7.0.7
+- [Improvement] Several dependencies were updated to current versions, including Jackson and Guava
+- [Improvement] Projects and build files were updated for Java 25 compatibility
+- [Improvement] Runtime compilation infrastructure was updated. JavaSourceCompiler and related classes were reworked for newer JDK behavior
+- [Improvement] Servlet integration was migrated from javax.servlet.* to jakarta.servlet.*
+- [Improvement] Persistence integration was migrated from javax.persistence.* to jakarta.persistence.*
+- [Improvement] JAXB integration was migrated from javax.xml.bind.* to jakarta.xml.bind.*
+- [Improvement] Registration of handlers, interceptors and resolvers was revised in NextDispatcherServlet and related MVC classes
+- [Improvement] NextAnnotationHandlerMapping now extends SimpleUrlHandlerMapping because the previous annotation mapping hierarchy is no longer available
+- [Improvement] Created NextHandlerInterceptor support to automatically register interceptors for next controllers
+- [Improvement] Multipart configuration and servlet initialization were updated for the newer servlet container behavior
+- [Improvement] FormTag keeps application/x-www-form-urlencoded by default and switches to multipart/form-data only when needed
+- [Improvement] View taglibs were standardized to current taglib declarations
+- [Improvement] JSTL taglib URIs were updated to the Jakarta standard
+- [Improvement] Report rendering and report generator modules were updated for the new JasperReports version
+- [Improvement] QueryBuilder, QueryBuilderResultTranslator and PersistenceUtils were updated for the new Hibernate metadata and query APIs
+- [Improvement] SaveOrUpdateStrategy and related persistence flows were revised to support the new ORM behavior
+- [Improvement] UserType support was significantly revised to match the new Hibernate strategy
+- [Improvement] Several API usages were migrated due to framework changes. Examples: Session.delete() -> remove(), saveOrUpdate() -> merge(), setString() -> setParameter()
+- [Improvement] Legacy compatibility classes such as HibernateDaoSupport, HibernateCallback and HibernateTemplate were recreated to keep older code compiling while applications migrate
+- [Improvement] Removed old GZIPFilter support
+- [Improvement] Many framework modules were internally updated, especially view, report, dao, persistence, controller, web, stjs and compilation
+- [Important] Applications MUST migrate imports from javax.* to jakarta.* packages where applicable
+- [Important] Applications MUST update Spring XML schema references such as spring-beans-2.5.xsd to spring-beans.xsd
+- [Important] Applications using org.springframework.orm.hibernate4.HibernateTransactionManager MUST migrate to org.springframework.orm.jpa.hibernate.HibernateTransactionManager
+- [Important] Applications using com.sliic.framework.persistence.hibernate.SliicLocalSessionFactoryBean MUST migrate to org.springframework.orm.jpa.hibernate.LocalSessionFactoryBean
+- [Important] Applications MUST configure packagesToScan, including org.nextframework.persistence.internal when required by the persistence setup
+- [Important] Entity mappings may require updates, including replacing GenerationType.AUTO with GenerationType.IDENTITY in auto-generated identifiers
+- [Important] Applications MUST update taglib URIs. Examples: http://java.sun.com/jsp/jstl/core -> jakarta.tags.core, http://java.sun.com/jsp/jstl/fmt -> jakarta.tags.fmt, http://java.sun.com/jsp/jstl/functions -> jakarta.tags.functions
+- [Important] Applications MUST update next taglib URIs. Examples: http://www.nextframework.org/tag-lib/next -> nextframework.tags.next, http://www.nextframework.org/tag-lib/template -> nextframework.tags.template, report-generator -> nextframework.tags.reportgenerator, ajax -> nextframework.tags.ajax, code -> nextframework.tags.code, combo -> nextframework.tags.combo
+
 3.8.1 and over
 
 Access https://github.com/next-projects/nextframework/issues?q=is%3Aissue+is%3Aclosed

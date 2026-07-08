@@ -4,9 +4,11 @@
 
 - **Project Type:** Multi-module Java web framework
 - **Build System:** Apache Ant + Apache IVY
-- **Version:** 3.9.0-beta
+- **Version:** 4.0.0
 - **Total Modules:** 23 core modules
-- **Base Framework:** Spring 4.1.5.RELEASE + Hibernate 4.3.8.Final
+- **Java Baseline:** Java 25
+- **Base Framework:** Spring 7.0.5 + Hibernate ORM 7.2.5.Final
+- **Platform Migration:** Jakarta Servlet / JSP / Persistence APIs
 
 ---
 
@@ -14,22 +16,22 @@
 
 | Module | Purpose | Key Dependencies |
 |--------|---------|------------------|
-| org.nextframework | Root/Base module | javax.mail, aopalliance |
-| org.nextframework.core | Utilities, exceptions | Spring Core |
-| org.nextframework.beans | Bean introspection | Spring Beans |
-| org.nextframework.context | Spring context integration | Spring Context, AOP |
-| org.nextframework.controller | MVC controllers, JSON | Spring WebMVC, Jackson |
-| org.nextframework.persistence | Hibernate ORM | Hibernate Core, JPA |
-| org.nextframework.dao | Generic DAOs | Spring JDBC, ORM, TX |
-| org.nextframework.types | Custom types (Cpf, Cnpj, Money) | Hibernate (provided) |
-| org.nextframework.validation | Validation framework | Commons Validator |
-| org.nextframework.view | JSP tags, UI components | OGNL, JSTL |
-| org.nextframework.web | Servlet/JSP integration | Spring Web, Servlet API |
-| org.nextframework.services | Logging, services | Log4j 2.17.1 |
+| org.nextframework | Root/Base module | Configuration only |
+| org.nextframework.core | Utilities, exceptions | Spring Core 7.0.5 |
+| org.nextframework.beans | Bean introspection | Spring Beans 7.0.5 |
+| org.nextframework.context | Spring context integration | Spring Context 7.0.5, AOP, Micrometer |
+| org.nextframework.controller | MVC controllers, JSON | Spring WebMVC 7.0.5, Jackson 2.21 |
+| org.nextframework.persistence | Hibernate ORM | Hibernate ORM 7.2.5, Jakarta Persistence 3.2 |
+| org.nextframework.dao | Generic DAOs | Spring JDBC 7.0.5, Spring TX 7.0.5 |
+| org.nextframework.types | Custom types (Cpf, Cnpj, Money) | Hibernate ORM 7.2.5 (provided) |
+| org.nextframework.validation | Validation framework | Commons Validator 1.10.1 |
+| org.nextframework.view | JSP tags, UI components | OGNL 3.4.10, Jakarta JSTL 3.0 |
+| org.nextframework.web | Servlet/JSP integration | Spring Web 7.0.5, Jakarta Servlet 6.1 |
+| org.nextframework.services | Logging, services | Log4j 2.25.3 |
 | org.nextframework.authorization | Security interfaces | None |
 | org.nextframework.authorization.dashboard | Security UI | None |
-| org.nextframework.report | JasperReports integration | JasperReports, iTextPDF |
-| org.nextframework.report.generator | Report generation | Servlet/JSP API |
+| org.nextframework.report | JasperReports integration | JasperReports 7.0.7, OpenPDF |
+| org.nextframework.report.generator | Report generation | Jakarta Servlet/JSP APIs |
 | org.nextframework.chart | Charting | JFreeChart, Batik SVG |
 | org.nextframework.stjs | Java to JavaScript conversion | BCEL, Gson, Guava |
 | org.nextframework.jsbuilder | JavaScript generation | None |
@@ -46,7 +48,7 @@
 - **Path:** `org.nextframework/`
 - **Purpose:** Base framework module with sample data
 - **Packages:** None (configuration only)
-- **External Dependencies:** javax.mail:mail v1.4.7, aopalliance v1.0
+- **External Dependencies:** None declared directly in Ivy
 
 ### org.nextframework.core
 - **Path:** `org.nextframework.core/`
@@ -54,14 +56,14 @@
 - **Packages:**
   - `org.nextframework.exception` - Exception handling
   - `org.nextframework.util` - Utility functions
-- **External Dependencies:** Spring Core 4.1.5.RELEASE
+- **External Dependencies:** Spring Core 7.0.5
 
 ### org.nextframework.beans
 - **Path:** `org.nextframework.beans/`
 - **Purpose:** Bean introspection, reflection, and property descriptors
 - **Packages:**
   - `org.nextframework.bean` - Bean metadata and descriptors
-- **External Dependencies:** Spring Beans 4.1.5.RELEASE
+- **External Dependencies:** Spring Beans 7.0.5
 - **Test Support:** Yes
 
 ### org.nextframework.context
@@ -75,7 +77,7 @@
   - `org.nextframework.exception` - Exception handling
   - `org.nextframework.message` - Messaging
   - `org.nextframework.util` - Utilities
-- **External Dependencies:** Spring Context, Context Support, AOP, Expression
+- **External Dependencies:** Spring Context 7.0.5, Spring Context Support 7.0.5, Spring AOP 7.0.5, Spring Expression 7.0.5, Micrometer Observation 1.16.3, Micrometer Commons 1.16.3, JSpecify 1.0.0, AOP Alliance 1.0
 - **Test Support:** Yes
 
 ### org.nextframework.controller
@@ -87,10 +89,13 @@
   - `org.nextframework.service` - Service layer
 - **Key Classes:** MultiActionController, NextDispatcherServlet, Custom property editors
 - **External Dependencies:**
-  - Spring WebMVC 4.1.5.RELEASE
-  - Jackson Databind 2.7.4
-  - Commons FileUpload 1.2.2
-  - Commons IO 1.4
+  - Spring WebMVC 7.0.5
+  - Jackson Core 2.21.0
+  - Jackson Databind 2.21.0
+  - Jackson Annotations 2.21
+  - Jackson Model Versioning 1.2.2
+  - Commons IO 2.21.0
+  - Spring Test 7.0.5 and Mockito 5.23.0 for tests
 
 ### org.nextframework.persistence
 - **Path:** `org.nextframework.persistence/`
@@ -98,10 +103,19 @@
 - **Packages:**
   - `org.nextframework.persistence` - DAO interfaces and utilities
 - **External Dependencies:**
-  - Hibernate Core 4.3.8.Final
-  - Hibernate JPA 2.1-api
-  - DOM4J, ANTLR, JavaAssist
-  - HSQLDB 2.3.2 (test)
+  - Hibernate Core 7.2.5.Final
+  - Hibernate Models 1.0.1
+  - Jakarta Persistence API 3.2.0
+  - Spring ORM 7.0.5
+  - Spring TX 7.0.5
+  - DOM4J 2.2.0
+  - Hibernate Commons Annotations 7.0.3.Final
+  - Jakarta Transaction API 2.0.1
+  - Jakarta XML Bind API 4.0.5
+  - Byte Buddy 1.18.5
+  - ANTLR 4.13.2
+  - JBoss Logging 3.6.2.Final
+  - HSQLDB 2.7.4 (test)
 - **Test Support:** Yes
 
 ### org.nextframework.dao
@@ -111,9 +125,9 @@
   - `org.nextframework.controller` - DAO controllers
   - `org.nextframework.persistence` - Data access objects
 - **External Dependencies:**
-  - Spring JDBC 4.1.5.RELEASE
-  - Spring ORM 4.1.5.RELEASE
-  - Spring TX 4.1.5.RELEASE
+  - Spring JDBC 7.0.5
+  - Spring TX 7.0.5
+  - Mockito 5.23.0 for tests
 - **Test Support:** Yes
 
 ### org.nextframework.types
@@ -121,7 +135,7 @@
 - **Purpose:** Custom Java types (Cpf, Cnpj, Money, Phone, Cep, etc.)
 - **Packages:**
   - `org.nextframework.types` - Custom type system
-- **External Dependencies:** Hibernate Core, Hibernate JPA (provided)
+- **External Dependencies:** Hibernate Core 7.2.5.Final (provided), Jakarta Persistence API 3.2.0 (provided), Mockito 5.23.0 for tests
 - **Test Support:** Yes
 
 ### org.nextframework.validation
@@ -130,7 +144,7 @@
 - **Packages:**
   - `org.nextframework.validation` - Validation framework
 - **Features:** Annotation support, validation registry, JS validation generation
-- **External Dependencies:** Commons Validator 1.4.1
+- **External Dependencies:** Commons Validator 1.10.1
 
 ### org.nextframework.view
 - **Path:** `org.nextframework.view/`
@@ -146,7 +160,7 @@
   - Chart integration
   - AJAX callbacks
   - Menu builders
-- **External Dependencies:** OGNL 2.6.7, JSTL 1.2
+- **External Dependencies:** OGNL 3.4.10, Javassist 3.30.2-GA, Jakarta JSTL API 3.0.2, Jakarta JSTL implementation 3.0.1
 
 ### org.nextframework.web
 - **Path:** `org.nextframework.web/`
@@ -155,10 +169,11 @@
   - `org.nextframework.core.web` - Web context interfaces
   - `org.nextframework.web` - Servlet integration
 - **External Dependencies:**
-  - Spring Web 4.1.5.RELEASE
-  - Spring WebMVC 4.1.5.RELEASE
-  - Servlet API 3.1.0 (provided)
-  - JSP API 2.2.1 (provided)
+  - Spring Web 7.0.5
+  - Spring WebMVC 7.0.5
+  - Jakarta Servlet API 6.1.0 (provided)
+  - Jakarta JSP API 4.0.0 (provided)
+  - Jakarta EL API 6.0.1 (provided)
 
 ### org.nextframework.services
 - **Path:** `org.nextframework.services/`
@@ -166,8 +181,8 @@
 - **Packages:**
   - `org.nextframework.service` - Service layer abstractions
 - **External Dependencies:**
-  - Log4j 2.17.1 (API, Core, JCL bridge)
-  - Commons Logging 1.2
+  - Log4j 2.25.3 (API, Core, JCL bridge)
+  - Commons Logging 1.3.5
 
 ### org.nextframework.authorization
 - **Path:** `org.nextframework.authorization/`
@@ -193,10 +208,19 @@
   - JasperReports implementation sources
   - Report builder sources
 - **External Dependencies:**
-  - JasperReports 6.0.3
-  - iTextPDF 5.5.5
-  - Commons Collections 3.2.1
-  - Commons Digest, BeanUtils, Codec
+  - JasperReports 7.0.7
+  - JasperReports PDF 7.0.7
+  - Jackson Core 2.21.0
+  - Jackson Databind 2.21.0
+  - Jackson Annotations 2.21
+  - Jackson Dataformat XML 2.21.0
+  - Commons Logging 1.3.6
+  - Commons Collections4 4.5.0
+  - Commons BeanUtils2 2.0.0-M2
+  - Commons Lang3 3.20.0
+  - OpenPDF 1.3.43
+  - XMP Core 6.1.11
+  - Commons Codec 1.21.0
   - Barbecue (barcode library) 1.5-beta1
 
 ### org.nextframework.report.generator
@@ -204,7 +228,7 @@
 - **Purpose:** Compile-time report generation
 - **Packages:**
   - `org.nextframework.report` - Report generation
-- **External Dependencies:** Servlet API 3.0.1, JSP API 2.2.1 (provided)
+- **External Dependencies:** Jakarta Servlet API 6.1.0 (provided), Jakarta JSP API 4.0.0 (provided), Jakarta EL API 6.0.1 (provided)
 
 ### org.nextframework.chart
 - **Path:** `org.nextframework.chart/`
@@ -221,7 +245,7 @@
 - **Path:** `org.nextframework.stjs/`
 - **Purpose:** Static Type JavaScript (Java to JavaScript conversion)
 - **Sub-modules:** Generator, JS builder, js-lib, js-next, js-google
-- **External Dependencies:** BCEL 5.2, Gson 2.1, Guava 16.0, JavaParser 1.0.8 (provided)
+- **External Dependencies:** BCEL 6.12.0, Commons IO 2.21.0, Commons Lang3 3.20.0, Gson 2.13.2, Guava 33.6.0-jre, JavaParser 1.0.8, Error Prone Annotations 2.48.0 (provided)
 
 ### org.nextframework.jsbuilder
 - **Path:** `org.nextframework.jsbuilder/`
@@ -340,14 +364,20 @@
 - **View Layer:** view + web modules
 
 ### Spring Framework Integration
-- Built on Spring 4.1.5.RELEASE
-- Uses Spring Context, Beans, WebMVC, JDBC, ORM, TX
+- Built on Spring Framework 7.0.5
+- Uses Spring Context, Beans, WebMVC, Web, JDBC, ORM and TX
 - Spring-based service discovery via `ServiceFactory`
 
 ### Hibernate/JPA ORM
-- Hibernate 4.3.8.Final as primary ORM
+- Hibernate ORM 7.2.5.Final as primary ORM
+- Jakarta Persistence API 3.2.0
 - Generic DAO pattern for database access
 - Custom types via Hibernate type system
+
+### Java/Jakarta Platform
+- Compiles and packages against Java 25
+- Servlet stack migrated to Jakarta Servlet 6.1 / JSP 4.0 / EL 6.0
+- Persistence and XML binding migrated to Jakarta Persistence 3.2 / JAXB 4.0
 
 ### JSP Tag Library System
 - Extensive custom tag library for form rendering
