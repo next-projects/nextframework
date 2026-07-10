@@ -1177,6 +1177,16 @@ NextDomForm.prototype.newForm = function(){
 	return new NextDomForm();
 }
 
+NextDom.prototype.checkFormMultipart = function (form){
+	if (form.enctype !== 'multipart/form-data') {
+		const hasFileInput = form.querySelector('input[type="file"]');
+		if (hasFileInput && form.method.toUpperCase() === 'POST') {
+			console.info('Ajustando enctype para multipart/form-data...');
+			form.enctype = 'multipart/form-data';
+		}
+	}
+}
+
 /**
  * Associa os elementos do HTML aos atributos do objeto.
  * O elemento deve ter como id um '#' seguido do nome do atributo.
@@ -1587,9 +1597,6 @@ NextAjax.prototype.send = function(options){
 				exmessage = req.getResponseHeader("EX-ERROR-MESSAGE");
 			}
 			var message = "Erro " + status + ": Erro no servidor ao efetuar AJAX\nURL: " + options.url;
-			if (options.params) {
-				message += "?" + options.params;
-			}
 			if (exmessage) {
 				message += "\n\n" + exmessage;
 			}
@@ -1655,16 +1662,20 @@ NextAjax.prototype.send = function(options){
 	}
 
 	if (options.method == 'GET') {
-		var paramsGet = options.params;
-		if(options.params instanceof FormData){
-			paramsGet = Object.keys()
-				.map(function(key){return key + "=" + encodeURIComponent(options.params[key]);})
-				.join("&");
+		let queryParams;
+		if (options.params instanceof FormData) {
+			queryParams = new URLSearchParams(options.params).toString();
+		} else if (typeof options.params === 'object' && options.params !== null) {
+			queryParams = new URLSearchParams(options.params).toString();
+		} else if (options.params instanceof URLSearchParams) {
+			queryParams = options.params.toString();
+		} else {
+			queryParams = options.params;
 		}
-		if(paramsGet.startsWith('&')){
-			paramsGet = paramsGet.substring(1);
+		if (queryParams) {
+			options.url += (options.url.includes("?") ? "&" : "?") + queryParams;
+			options._originalParamsSerialized = queryParams; // Guarda para o log de erro se necessário
 		}
-		options.url += (!options.url.includes("?") ? "?" : "&") + paramsGet;
 		options.params = '';
 	}
 
@@ -1676,18 +1687,19 @@ NextAjax.prototype.send = function(options){
 
 	if(next.util.typeOf(options.headers) == 'string'){
 		var headersSplitted = options.headers.split(";");
-		for (i = 0; i < headersSplitted.length; i++) {
+		for (let i = 0; i < headersSplitted.length; i++) {
 			var headerKey = headersSplitted[i].substr(0, headersSplitted[i].indexOf("="));
 			var headerValue = headersSplitted[i].substr(headersSplitted[i].indexOf("=") + 1);
 			request.setRequestHeader(headerKey, headerValue);
 		}
 	}else if(next.util.typeOf(options.headers) == 'array'){
-		for (i = 0; i < options.headers.length; i++) {
+		for (let i = 0; i < options.headers.length; i++) {
 			request.setRequestHeader(options.headers[i][0], options.headers[i][1]);
 		}
 	}
 
 	request.send(options.params);
+
 }
 
 NextAjax.prototype.getXMLHTTPRequest = function(){

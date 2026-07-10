@@ -36,23 +36,13 @@
 				${tag.name}.${tag.actionParameter}.value = action;
 			}
 
-			${tag.submitFunction}_checkMultipart(${tag.name});
+			next.dom.checkFormMultipart(${tag.name});
 			${tag.name}.submit();
 
 		}
 
-		function ${tag.submitFunction}_checkMultipart(form) {
-			if (form.enctype !== 'multipart/form-data') {
-				const hasFileInput = form.querySelector('input[type="file"]');
-				if (hasFileInput && form.method.toUpperCase() === 'POST') {
-					console.info('Ajustando enctype para multipart/form-data...');
-					 form.enctype = 'multipart/form-data';
-				}
-			}
-		}
-
 		document.addEventListener('submit', function(event) {
-			${tag.submitFunction}_checkMultipart(event.target);
+			next.dom.checkFormMultipart(event.target);
 		});
 
 	</script>
