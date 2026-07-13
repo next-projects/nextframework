@@ -167,6 +167,9 @@ public class ReportDesignControllerUtil {
 				if (filter.getFilterDisplayName() != null) {
 					map.put("filterDisplayName", filter.getFilterDisplayName());
 				}
+				if (filter.isFilterSelectMultiple()) {
+					map.put("filterSelectMultiple", filter.isFilterSelectMultiple());
+				}
 				if (filter.getPreSelectDate() != null) {
 					map.put("preSelectDate", filter.getPreSelectDate().toString());
 				}
@@ -176,9 +179,7 @@ public class ReportDesignControllerUtil {
 				if (filter.getFixedCriteria() != null) {
 					map.put("fixedCriteria", filter.getFixedCriteria());
 				}
-				if (filter.isFilterSelectMultiple()) {
-					map.put("filterSelectMultiple", filter.isFilterSelectMultiple());
-				}
+				map.put("ignoreFalse", filter.isIgnoreFalse());
 				map.put("requiredFilter", filter.isFilterRequired());
 			}
 		}
@@ -351,6 +352,9 @@ public class ReportDesignControllerUtil {
 				String entityStr = filterElement.getPreSelectEntity();
 				if (value == null && entityStr != null) {
 					value = ServletRequestDataBinderNext.translateObjectValue(entityStr);
+				}
+				if (filterElement.isIgnoreFalse() && (value == null || value == Boolean.FALSE)) {
+					continue;
 				}
 				parametersMap.put(name, value);
 			}

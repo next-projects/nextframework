@@ -78,6 +78,7 @@ public class ReportDesigner {
 	Select filterPreSelectDate;
 	Select filterPreSelectEntity;
 	Input filterSelectMultiple;
+	Input filterIgnoreFalse;
 	Input filterRequired;
 
 	Select charts;
@@ -126,6 +127,7 @@ public class ReportDesigner {
 		filterPreSelectDate = (Select) next.dom.getInnerElementById(mainDiv, "filterPreSelectDate");
 		filterPreSelectEntity = (Select) next.dom.getInnerElementById(mainDiv, "filterPreSelectEntity");
 		filterSelectMultiple = (Input) next.dom.getInnerElementById(mainDiv, "filterSelectMultiple");
+		filterIgnoreFalse = (Input) next.dom.getInnerElementById(mainDiv, "filterIgnoreFalse");
 		filterRequired = (Input) next.dom.getInnerElementById(mainDiv, "filterRequired");
 
 		calculatedFieldsSelect = next.dom.toElement("calculatedFields");
@@ -183,6 +185,7 @@ public class ReportDesigner {
 		hideFilterPreSelectDate();
 		hideFilterPreSelectEntity();
 		hideFilterSelectMultiple();
+		hideFilterIgnoreFalse();
 		hideFilterRequired();
 	}
 
@@ -665,6 +668,14 @@ public class ReportDesigner {
 
 	public void hideFilterSelectMultiple() {
 		next.effects.hideProperty(filterSelectMultiple);
+	}
+
+	public void showFilterIgnoreFalse() {
+		next.effects.showProperty(filterIgnoreFalse);
+	}
+
+	public void hideFilterIgnoreFalse() {
+		next.effects.hideProperty(filterIgnoreFalse);
 	}
 
 	public void showFilterRequired() {

@@ -53,6 +53,14 @@ public class ReportPropertyConfigUtils {
 		properties.$put("filterSelectMultiple", checked);
 	}
 
+	public static boolean isFilterIgnoreFalse(Map<String, Object> properties) {
+		return (Boolean) properties.$get("ignoreFalse");
+	}
+
+	public static void setFilterIgnoreFalse(Map<String, Object> properties, boolean checked) {
+		properties.$put("ignoreFalse", checked);
+	}
+
 	public static boolean isFilterRequired(Map<String, Object> properties) {
 		return (Boolean) properties.$get("requiredFilter");
 	}
@@ -117,6 +125,11 @@ public class ReportPropertyConfigUtils {
 	public static void setProcessors(Map<String, Object> properties, Array<String> processors) {
 		String sProcessors = NextGlobalJs.next.util.join(processors, ",");
 		properties.$put("processors", sProcessors);
+	}
+
+	public static boolean isBoolean(Map<String, Object> options) {
+		Object type = getType(options);
+		return type.equals("boolean") || type.equals("java.lang.Boolean");
 	}
 
 	public static boolean isDate(Map<String, Object> options) {

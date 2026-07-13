@@ -150,6 +150,7 @@ public class ReportReader {
 					getAttribute(filterNode, "preSelectDate", true),
 					getAttribute(filterNode, "preSelectEntity", true),
 					getAttribute(filterNode, "fixedCriteria", true),
+					getAttribute(filterNode, "ignoreFalse", true),
 					getAttribute(filterNode, "requiredFilter", true)));
 		}
 		return filterElements;

@@ -27,6 +27,7 @@
     this.filterPreSelectDate = next.dom.getInnerElementById(this.mainDiv, "filterPreSelectDate");
     this.filterPreSelectEntity = next.dom.getInnerElementById(this.mainDiv, "filterPreSelectEntity");
     this.filterSelectMultiple = next.dom.getInnerElementById(this.mainDiv, "filterSelectMultiple");
+    this.filterIgnoreFalse = next.dom.getInnerElementById(this.mainDiv, "filterIgnoreFalse");
     this.filterRequired = next.dom.getInnerElementById(this.mainDiv, "filterRequired");
     this.calculatedFieldsSelect = next.dom.toElement("calculatedFields");
     this.charts = next.dom.getInnerElementById(this.mainDiv, "charts");
@@ -73,6 +74,7 @@ ReportDesigner.prototype.filterFixedCriteria = null;
 ReportDesigner.prototype.filterPreSelectDate = null;
 ReportDesigner.prototype.filterPreSelectEntity = null;
 ReportDesigner.prototype.filterSelectMultiple = null;
+ReportDesigner.prototype.filterIgnoreFalse = null;
 ReportDesigner.prototype.filterRequired = null;
 ReportDesigner.prototype.charts = null;
 ReportDesigner.prototype.selectables = null;
@@ -106,6 +108,7 @@ ReportDesigner.prototype.hideAll = function() {
     this.hideFilterPreSelectDate();
     this.hideFilterPreSelectEntity();
     this.hideFilterSelectMultiple();
+    this.hideFilterIgnoreFalse();
     this.hideFilterRequired();
 };
 ReportDesigner.prototype.removeSelectedCalculatedProperty = function() {
@@ -518,6 +521,12 @@ ReportDesigner.prototype.showFilterSelectMultiple = function() {
 ReportDesigner.prototype.hideFilterSelectMultiple = function() {
     next.effects.hideProperty(this.filterSelectMultiple);
 };
+ReportDesigner.prototype.showFilterIgnoreFalse = function() {
+    next.effects.showProperty(this.filterIgnoreFalse);
+};
+ReportDesigner.prototype.hideFilterIgnoreFalse = function() {
+    next.effects.hideProperty(this.filterIgnoreFalse);
+};
 ReportDesigner.prototype.showFilterRequired = function() {
     next.effects.showProperty(this.filterRequired);
 };
@@ -559,7 +568,7 @@ ReportDesigner.prototype.removeSelectedChart = function() {
     }
     this.writeXml();
 };
-ReportDesigner.$typeDescription={"instance":"ReportDesigner", "mainDiv":"Div", "outputXml":"TextArea", "fields":{name:"Map", arguments:[null,{name:"Map", arguments:[null,"Object"]}]}, "avaiableProperties":{name:"Array", arguments:[null]}, "fieldSelect":"ReportGeneratorSelectManyBoxView", "groupSelect":"ReportGeneratorSelectManyBoxView", "filterSelect":"ReportGeneratorSelectManyBoxView", "calculatedFieldsSelect":"Select", "definition":"ReportDefinition", "calculatedFieldsManager":"ReportCalculatedFieldsManager", "layoutManager":"ReportLayoutManager", "groupManager":"ReportGroupManager", "filterManager":"ReportFilterManager", "reportTitleInput":"Input", "reportData":"ReportData", "labelInput":"Input", "patternDateInput":"Select", "patternNumberInput":"Select", "aggregateInput":"Input", "aggregateTypeInput":"Select", "patternDateInputGroup":"Select", "filterLabel":"Input", "filterFixedCriteria":"Select", "filterPreSelectDate":"Select", "filterPreSelectEntity":"Select", "filterSelectMultiple":"Input", "filterRequired":"Input", "charts":"Select", "selectables":{name:"Array", arguments:["Selectable"]}};
+ReportDesigner.$typeDescription={"instance":"ReportDesigner", "mainDiv":"Div", "outputXml":"TextArea", "fields":{name:"Map", arguments:[null,{name:"Map", arguments:[null,"Object"]}]}, "avaiableProperties":{name:"Array", arguments:[null]}, "fieldSelect":"ReportGeneratorSelectManyBoxView", "groupSelect":"ReportGeneratorSelectManyBoxView", "filterSelect":"ReportGeneratorSelectManyBoxView", "calculatedFieldsSelect":"Select", "definition":"ReportDefinition", "calculatedFieldsManager":"ReportCalculatedFieldsManager", "layoutManager":"ReportLayoutManager", "groupManager":"ReportGroupManager", "filterManager":"ReportFilterManager", "reportTitleInput":"Input", "reportData":"ReportData", "labelInput":"Input", "patternDateInput":"Select", "patternNumberInput":"Select", "aggregateInput":"Input", "aggregateTypeInput":"Select", "patternDateInputGroup":"Select", "filterLabel":"Input", "filterFixedCriteria":"Select", "filterPreSelectDate":"Select", "filterPreSelectEntity":"Select", "filterSelectMultiple":"Input", "filterIgnoreFalse":"Input", "filterRequired":"Input", "charts":"Select", "selectables":{name:"Array", arguments:["Selectable"]}};
 
 
 var ReportData = function(designer) {

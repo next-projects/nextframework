@@ -212,7 +212,7 @@ public class BeanExtender {
 		}
 		X newBean;
 		try {
-			newBean = extendedClass.newInstance();
+			newBean = extendedClass.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException("cannot instantiate extended bean", e);
 		}

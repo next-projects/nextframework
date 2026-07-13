@@ -8,25 +8,31 @@ public class FilterElement {
 	ReportFilterDateAutoFilter preSelectDate;
 	String preSelectEntity;
 	String fixedCriteria;
+	boolean ignoreFalse;
 	boolean required;
 
-	public FilterElement(String property, String displayName, String selectMultiple, String dateAutoFilter, String preSelectEntity, String fixedCriteria, String required) {
+	public FilterElement(String property, String displayName, String selectMultiple, String dateAutoFilter, String preSelectEntity, String fixedCriteria, String ignoreFalse, String required) {
 		this.name = property;
 		this.displayName = displayName;
 		this.selectMultiple = "true".equals(selectMultiple);
-		this.required = "true".equals(required);
+		if (dateAutoFilter != null) {
+			try {
+				this.preSelectDate = ReportFilterDateAutoFilter.valueOf(dateAutoFilter);
+			} catch (Exception e) {
+			}
+		}
 		this.preSelectEntity = preSelectEntity;
 		this.fixedCriteria = fixedCriteria;
-		try {
-			if (dateAutoFilter != null) {
-				this.preSelectDate = ReportFilterDateAutoFilter.valueOf(dateAutoFilter);
-			}
-		} catch (Exception e) {
-		}
+		this.ignoreFalse = "true".equals(ignoreFalse);
+		this.required = "true".equals(required);
 	}
 
 	public FilterElement() {
 
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public String getFilterDisplayName() {
@@ -35,10 +41,6 @@ public class FilterElement {
 
 	public boolean isFilterSelectMultiple() {
 		return selectMultiple;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public ReportFilterDateAutoFilter getPreSelectDate() {
@@ -51,6 +53,10 @@ public class FilterElement {
 
 	public String getFixedCriteria() {
 		return fixedCriteria;
+	}
+
+	public boolean isIgnoreFalse() {
+		return ignoreFalse;
 	}
 
 	public boolean isFilterRequired() {
@@ -66,13 +72,14 @@ public class FilterElement {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((displayName == null) ? 0 : displayName.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((displayName == null) ? 0 : displayName.hashCode());
+		result = prime * result + (selectMultiple ? 1231 : 1237);
 		result = prime * result + ((preSelectDate == null) ? 0 : preSelectDate.hashCode());
 		result = prime * result + ((preSelectEntity == null) ? 0 : preSelectEntity.hashCode());
 		result = prime * result + ((fixedCriteria == null) ? 0 : fixedCriteria.hashCode());
+		result = prime * result + (ignoreFalse ? 1231 : 1237);
 		result = prime * result + (required ? 1231 : 1237);
-		result = prime * result + (selectMultiple ? 1231 : 1237);
 		return result;
 	}
 
@@ -88,6 +95,13 @@ public class FilterElement {
 			return false;
 		}
 		FilterElement other = (FilterElement) obj;
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
 		if (displayName == null) {
 			if (other.displayName != null) {
 				return false;
@@ -95,11 +109,7 @@ public class FilterElement {
 		} else if (!displayName.equals(other.displayName)) {
 			return false;
 		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
+		if (selectMultiple != other.selectMultiple) {
 			return false;
 		}
 		if (preSelectDate != other.preSelectDate) {
@@ -119,10 +129,10 @@ public class FilterElement {
 		} else if (!fixedCriteria.equals(other.fixedCriteria)) {
 			return false;
 		}
-		if (required != other.required) {
+		if (ignoreFalse != other.ignoreFalse) {
 			return false;
 		}
-		if (selectMultiple != other.selectMultiple) {
+		if (required != other.required) {
 			return false;
 		}
 		return true;

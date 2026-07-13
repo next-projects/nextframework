@@ -187,6 +187,12 @@ ReportFilterManager.prototype.onSelectElement = function(value) {
         this.designer.hideFilterFixedCriteria();
     }
     var isFixedCriteria = ReportPropertyConfigUtils.getFilterFixedCriteria(properties) != null;
+    if (ReportPropertyConfigUtils.isBoolean(properties) && !isFixedCriteria) {
+        this.designer.showFilterIgnoreFalse();
+        this.configureFilterIgnoreFalse(properties);
+    } else {
+        this.designer.hideFilterIgnoreFalse();
+    }
     if (ReportPropertyConfigUtils.isDate(properties) && !isFixedCriteria) {
         this.designer.showFilterPreSelectDate();
         this.configureFilterPreSelectDateCombo(properties);
@@ -286,6 +292,15 @@ ReportFilterManager.prototype.configureFilterSelectMultiple = function(propertie
         return true;
     };
 };
+ReportFilterManager.prototype.configureFilterIgnoreFalse = function(properties) {
+    var bigThis = this;
+    this.designer.filterIgnoreFalse.checked = ReportPropertyConfigUtils.isFilterIgnoreFalse(properties);
+    this.designer.filterIgnoreFalse.onchange = function(p1) {
+        ReportPropertyConfigUtils.setFilterIgnoreFalse(properties, bigThis.designer.filterIgnoreFalse.checked);
+        bigThis.designer.writeXml();
+        return true;
+    };
+};
 ReportFilterManager.prototype.configureFilterRequired = function(properties) {
     var bigThis = this;
     this.designer.filterRequired.checked = ReportPropertyConfigUtils.isFilterRequired(properties);
@@ -313,6 +328,7 @@ ReportFilterManager.prototype.toString = function() {
         var fpd = ReportPropertyConfigUtils.getFilterPreSelectDate(el.value);
         var fpe = ReportPropertyConfigUtils.getFilterPreSelectEntity(el.value);
         var fsm = ReportPropertyConfigUtils.isFilterSelectMultiple(el.value);
+        var igf = ReportPropertyConfigUtils.isFilterIgnoreFalse(el.value);
         var fr = ReportPropertyConfigUtils.isFilterRequired(el.value);
         value += "            <filter name='" + el.name + "'";
         if (fdn != dn) {
@@ -329,6 +345,9 @@ ReportFilterManager.prototype.toString = function() {
         }
         if (fsm) {
             value += " filterSelectMultiple='true'";
+        }
+        if (igf) {
+            value += " ignoreFalse='true'";
         }
         if (fr) {
             value += " requiredFilter='true'";

@@ -30,6 +30,12 @@ ReportPropertyConfigUtils.isFilterSelectMultiple = function(properties) {
 ReportPropertyConfigUtils.setFilterSelectMultiple = function(properties, checked) {
     properties["filterSelectMultiple"] = checked;
 };
+ReportPropertyConfigUtils.isFilterIgnoreFalse = function(properties) {
+    return properties["ignoreFalse"];
+};
+ReportPropertyConfigUtils.setFilterIgnoreFalse = function(properties, checked) {
+    properties["ignoreFalse"] = checked;
+};
 ReportPropertyConfigUtils.isFilterRequired = function(properties) {
     return properties["requiredFilter"];
 };
@@ -83,6 +89,10 @@ ReportPropertyConfigUtils.getProcessors = function(properties) {
 ReportPropertyConfigUtils.setProcessors = function(properties, processors) {
     var sProcessors = next.util.join(processors, ",");
     properties["processors"] = sProcessors;
+};
+ReportPropertyConfigUtils.isBoolean = function(options) {
+    var type = ReportPropertyConfigUtils.getType(options);
+    return (type == "boolean") || (type == "java.lang.Boolean");
 };
 ReportPropertyConfigUtils.isDate = function(options) {
     var type = ReportPropertyConfigUtils.getType(options);

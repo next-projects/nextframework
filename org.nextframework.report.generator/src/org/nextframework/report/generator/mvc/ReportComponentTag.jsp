@@ -132,32 +132,34 @@
 			</t:formTable>
 		</n:panel>
 		<n:panel title="Filtros">
-			<t:formTable columns="12">
+			<t:formTable columns="10">
 
 				<n:panel colspan="10">
 					<n:input name="filters" type="select-many-box" itens="${emptyList}" useType="java.lang.String" />
 				</n:panel>
-				<n:panel colspan="2" />
 
-				<t:propertyLayout label="Legenda" bodyId="filterLabel" colspan="8">
+				<t:propertyLayout label="Legenda" bodyId="filterLabel" colspan="5">
 					<input id="filterLabel" class="${inputTagClass}" />
 				</t:propertyLayout>
-				<n:panel colspan="4" />
+				<n:panel colspan="5" />
 
-				<t:propertyLayout label="Valor padrão" bodyId="filterPreSelectDate" colspan="4">
+				<t:propertyLayout label="Valor padrão" bodyId="filterPreSelectDate" colspan="5">
 					<n:input id="filterPreSelectDate" itens="${reportFilterDateAutoFilterList}" type="${ReportFilterDateAutoFilterType}" />
 				</t:propertyLayout>
-				<t:propertyLayout label="Valor padrão" bodyId="filterPreSelectEntity" colspan="4">
+				<t:propertyLayout label="Valor padrão" bodyId="filterPreSelectEntity" colspan="5">
 					<select id="filterPreSelectEntity" class="${inputSelectTagClass}"></select>
 				</t:propertyLayout>
-				<t:propertyLayout label="Critério fixo" bodyId="filterFixedCriteria" colspan="4">
+				<t:propertyLayout label="Critério fixo" bodyId="filterFixedCriteria" colspan="5">
 					<select id="filterFixedCriteria" class="${inputSelectTagClass}"></select>
 				</t:propertyLayout>
 
-				<t:propertyLayout label="Múltiplos valores" bodyId="filterSelectMultiple" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="Múltiplos valores" bodyId="filterSelectMultiple" invertLabel="true" colspan="3" labelColspan="2">
 					<n:input id="filterSelectMultiple" type="checkbox" class="${inputCheckTagClass}"/>
 				</t:propertyLayout>
-				<t:propertyLayout label="Obrigatório" bodyId="filterRequired" invertLabel="true" colspan="4" labelColspan="3">
+				<t:propertyLayout label="Ignorar caso falso" bodyId="filterIgnoreFalse" invertLabel="true" colspan="3" labelColspan="2">
+					<n:input id="filterIgnoreFalse" type="checkbox" class="${inputCheckTagClass}"/>
+				</t:propertyLayout>
+				<t:propertyLayout label="Obrigatório" bodyId="filterRequired" invertLabel="true" colspan="3" labelColspan="2">
 					<n:input id="filterRequired" type="checkbox" class="${inputCheckTagClass}"/>
 				</t:propertyLayout>
 

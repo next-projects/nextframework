@@ -268,6 +268,13 @@ class ReportFilterManager extends AbstractManager {
 
 		boolean isFixedCriteria = ReportPropertyConfigUtils.getFilterFixedCriteria(properties) != null;
 
+		if (ReportPropertyConfigUtils.isBoolean(properties) && !isFixedCriteria) {
+			designer.showFilterIgnoreFalse();
+			configureFilterIgnoreFalse(properties);
+		} else {
+			designer.hideFilterIgnoreFalse();
+		}
+
 		if (ReportPropertyConfigUtils.isDate(properties) && !isFixedCriteria) {
 			designer.showFilterPreSelectDate();
 			configureFilterPreSelectDateCombo(properties);
@@ -407,6 +414,20 @@ class ReportFilterManager extends AbstractManager {
 		};
 	}
 
+	private void configureFilterIgnoreFalse(final Map<String, Object> properties) {
+		final ReportFilterManager bigThis = this;
+		designer.filterIgnoreFalse.checked = ReportPropertyConfigUtils.isFilterIgnoreFalse(properties);
+		designer.filterIgnoreFalse.onchange = new Function1<DOMEvent, Boolean>() {
+
+			public Boolean $invoke(DOMEvent p1) {
+				ReportPropertyConfigUtils.setFilterIgnoreFalse(properties, bigThis.designer.filterIgnoreFalse.checked);
+				bigThis.designer.writeXml();
+				return true;
+			}
+
+		};
+	}
+
 	private void configureFilterRequired(final Map<String, Object> properties) {
 		final ReportFilterManager bigThis = this;
 		designer.filterRequired.checked = ReportPropertyConfigUtils.isFilterRequired(properties);
@@ -446,6 +467,7 @@ class ReportFilterManager extends AbstractManager {
 			String fpd = ReportPropertyConfigUtils.getFilterPreSelectDate(el.value);
 			String fpe = ReportPropertyConfigUtils.getFilterPreSelectEntity(el.value);
 			boolean fsm = ReportPropertyConfigUtils.isFilterSelectMultiple(el.value);
+			boolean igf = ReportPropertyConfigUtils.isFilterIgnoreFalse(el.value);
 			boolean fr = ReportPropertyConfigUtils.isFilterRequired(el.value);
 
 			value += "            <filter name='" + el.name + "'";
@@ -463,6 +485,9 @@ class ReportFilterManager extends AbstractManager {
 			}
 			if (fsm) {
 				value += " filterSelectMultiple='true'";
+			}
+			if (igf) {
+				value += " ignoreFalse='true'";
 			}
 			if (fr) {
 				value += " requiredFilter='true'";
