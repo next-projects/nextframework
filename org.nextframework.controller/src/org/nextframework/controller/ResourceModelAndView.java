@@ -34,20 +34,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class ResourceModelAndView extends ModelAndView {
 
-	private Resource resource;
-
 	public ResourceModelAndView(Resource res) {
 		this(res, true);
 	}
 
-	public Resource getResource() {
-		return resource;
-	}
-
-	public ResourceModelAndView(Resource res, final boolean useAttachment) {
-
-		this.resource = res;
-
+	public ResourceModelAndView(Resource resource, final boolean useAttachment) {
 		setView(new View() {
 
 			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -63,7 +54,6 @@ public class ResourceModelAndView extends ModelAndView {
 			}
 
 		});
-
 	}
 
 }
