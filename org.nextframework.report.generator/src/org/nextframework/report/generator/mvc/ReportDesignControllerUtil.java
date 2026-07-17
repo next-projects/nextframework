@@ -315,13 +315,20 @@ public class ReportDesignControllerUtil {
 
 		BeanDescriptor bd = BeanDescriptorFactory.forClass(reportElement.getData().getMainType());
 
-		//We don't care about the dummy object. We need the mpvs, but it's important to use a dummy of the main type.
+		//We don't care about the dummy object. We don't need the binding itself.
+		//We need the mpvs only, but it's important to use a dummy of the main type.
 		//Within the bind method, some checks verify the attributes of the main type.
-		Class<?> mainType = Util.objects.getRealClass(reportElement.getData().getMainType());
-		Object dummy = mainType.getConstructor().newInstance();
-		ServletRequestDataBinderNext dataBinder = new ServletRequestDataBinderNext(dummy, "");
-		MutablePropertyValues mpvs = new ServletRequestParameterPropertyValues(request);
-		dataBinder.bind(mpvs);
+		ServletRequestDataBinderNext dataBinder = null;
+		MutablePropertyValues mpvs = null;
+		try {
+			Class<?> mainType = Util.objects.getRealClass(reportElement.getData().getMainType());
+			Object dummy = mainType.getConstructor().newInstance();
+			dataBinder = new ServletRequestDataBinderNext(dummy, "");
+			mpvs = new ServletRequestParameterPropertyValues(request);
+			dataBinder.bind(mpvs);
+		} catch (Exception e) {
+			// Nothing
+		}
 
 		Map<String, Object> parametersMap = new HashMap<>();
 
