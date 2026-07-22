@@ -1,0 +1,71 @@
+graph LR
+  subgraph Misc
+    nf["org.nextframework"]
+    build["org.nextframework.build"]
+  end
+
+  subgraph Base
+    core["org.nextframework.core"]
+    services["org.nextframework.services"]
+    compilation["org.nextframework.compilation"]
+    jsbuilder["org.nextframework.jsbuilder"]
+    stjs["org.nextframework.stjs"]
+  end
+
+  subgraph Foundation
+    beans["org.nextframework.beans"]
+    context["org.nextframework.context"]
+    persistence["org.nextframework.persistence"]
+    summary["org.nextframework.summary"]
+    web["org.nextframework.web"]
+    types["org.nextframework.types"]
+  end
+
+  subgraph Feature
+    authorization["org.nextframework.authorization"]
+    dao["org.nextframework.dao"]
+    validation["org.nextframework.validation"]
+    chart["org.nextframework.chart"]
+    controller["org.nextframework.controller"]
+    report["org.nextframework.report"]
+    view["org.nextframework.view"]
+    reportgen["org.nextframework.report.generator"]
+    legacy["org.nextframework.legacy"]
+    authdash["org.nextframework.authorization.dashboard"]
+  end
+
+  beans --> services
+  beans --> core
+  context --> beans
+  persistence --> services
+  summary --> compilation
+  summary --> beans
+  web --> context
+  types --> persistence
+  types --> summary
+  authorization --> web
+  authorization --> persistence
+  dao --> context
+  dao --> persistence
+  dao --> types
+  validation --> types
+  validation --> web
+  chart --> jsbuilder
+  chart --> summary
+  controller --> dao
+  controller --> validation
+  controller --> web
+  controller --> authorization
+  report --> chart
+  view --> controller
+  view --> chart
+  view --> persistence
+  view --> web
+  reportgen --> stjs
+  reportgen --> view
+  reportgen --> report
+  reportgen --> persistence
+  legacy --> controller
+  legacy --> report
+  authdash --> controller
+  authdash --> authorization
