@@ -69,7 +69,7 @@ public class AjaxServlet extends HttpServlet {
 				simpleName = simpleName.substring(0, simpleName.length() - "callback".length());
 			}
 			try {
-				callbacks.put(simpleName, class1.newInstance());
+				callbacks.put(simpleName, class1.getConstructor().newInstance());
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

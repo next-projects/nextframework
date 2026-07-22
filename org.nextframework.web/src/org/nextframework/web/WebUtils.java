@@ -69,10 +69,9 @@ public class WebUtils {
 		return ServiceFactory.getService(UrlRewriter.class).rewriteUrl(url);
 	}
 
-	@Deprecated
-	public static String getFullUrl(HttpServletRequest request) {
-		String path = request.getServletPath() + request.getPathInfo();
-		return getFullUrl(request, path);
+	public static boolean isSimpleResource(HttpServletRequest request) {
+		String uri = request.getRequestURI();
+		return uri.length() < 10 || (uri.substring(uri.length() - 10).contains(".") && !uri.contains(".jsp"));
 	}
 
 	public static String getFullUrl(HttpServletRequest request, String path) {

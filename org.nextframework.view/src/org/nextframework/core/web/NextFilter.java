@@ -99,8 +99,7 @@ public class NextFilter implements Filter {
 			//cria o contexto de requisicao NEXT
 			NextWeb.createRequestContext(request, response);
 
-			boolean simpleResource = isSimpleResource(request);
-			if (simpleResource) {
+			if (WebUtils.isSimpleResource(request)) {
 				chain.doFilter(request, response);
 				return;
 			}
@@ -194,11 +193,6 @@ public class NextFilter implements Filter {
 			return contextName;
 		}
 		return new DefaultWebApplicationContext(request.getServletContext()).getApplicationName();
-	}
-
-	public boolean isSimpleResource(HttpServletRequest request) {
-		String uri = request.getRequestURI();
-		return uri.length() < 10 || (uri.substring(uri.length() - 10).contains(".") && !uri.contains(".jsp")) || uri.contains("/ajax/");
 	}
 
 	public String getUserProcessPrefix(HttpServletRequest request) {
