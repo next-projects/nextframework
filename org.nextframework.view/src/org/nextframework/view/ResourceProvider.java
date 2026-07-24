@@ -72,7 +72,7 @@ public class ResourceProvider {
 
 		if (tipo.equals(RESOURCE)) {
 			HttpSession session = request.getSession();
-			Integer id = new Integer(request.getParameter("id"));
+			Integer id = Integer.valueOf(request.getParameter("id"));
 			Resource recurso = ResourceUtil.get(session, id);
 			if (recurso != null) {
 				response.setContentType(recurso.getContentType());

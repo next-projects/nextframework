@@ -99,7 +99,7 @@ public class NextFilter implements Filter {
 			//cria o contexto de requisicao NEXT
 			NextWeb.createRequestContext(request, response);
 
-			if (WebUtils.isSimpleResource(request)) {
+			if (WebUtils.isSimpleResource(request) || WebUtils.isNextServlet(request)) {
 				chain.doFilter(request, response);
 				return;
 			}

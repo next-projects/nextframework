@@ -74,6 +74,14 @@ public class WebUtils {
 		return uri.length() < 10 || (uri.substring(uri.length() - 10).contains(".") && !uri.contains(".jsp"));
 	}
 
+	public static boolean isNextServlet(HttpServletRequest request) {
+		String servlet = request.getServletPath().substring(1);
+		return "ajax".equalsIgnoreCase(servlet) ||
+				"resource".equalsIgnoreCase(servlet) ||
+				"downloadfile".equalsIgnoreCase(servlet) ||
+				"selectcreate".equalsIgnoreCase(servlet);
+	}
+
 	public static String getFullUrl(HttpServletRequest request, String path) {
 		//nao utilizar o nome do módulo igual ao nome da aplicacao
 		String contextPath = request.getContextPath();
