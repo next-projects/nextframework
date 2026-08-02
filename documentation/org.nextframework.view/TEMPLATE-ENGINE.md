@@ -121,8 +121,8 @@ In the template, the tag instance is available as `${tag}`:
 
 ```jsp
 <%-- InputTag-text.jsp --%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="n" uri="nextframework.tags.next" %>
 
 <input
     id="${tag.id}"
@@ -285,8 +285,8 @@ Create template at:
 Full JSP with tag libraries and EL:
 
 ```jsp
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="n" uri="nextframework.tags.next" %>
 
 <div id="${tag.id}" class="${tag.styleClass}">
     <c:if test="${tag.showHeader}">

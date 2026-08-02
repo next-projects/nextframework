@@ -10,6 +10,7 @@ Each framework module has its own documentation folder:
 
 ```
 documentation/
+├── org.nextframework/
 ├── org.nextframework.core/
 ├── org.nextframework.web/
 ├── org.nextframework.controller/
@@ -23,6 +24,8 @@ documentation/
 └── ...
 ```
 
+The `bin/` directory in this project is generated IDE output, not a framework module.
+
 Each module folder contains:
 - `README.md` - Module overview, architecture, and quick start
 - Additional `.md` files for specific topics (where needed)
@@ -33,6 +36,7 @@ Each module folder contains:
 
 | Module | Description |
 |--------|-------------|
+| [base](org.nextframework/) | Root module, sample app files, and release notes |
 | [core](org.nextframework.core/) | Core utilities and base classes |
 | [services](org.nextframework.services/) | Service layer abstractions |
 | [beans](org.nextframework.beans/) | Bean introspection and property access |
@@ -61,6 +65,7 @@ Each module folder contains:
 ## Quick Links
 
 ### Getting Started
+- [Base Module](org.nextframework/) - Sample configuration files and release notes
 - [Build Module](org.nextframework.build/) - How to compile and set up the framework
 
 ### Core Concepts

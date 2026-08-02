@@ -23,8 +23,8 @@ Comprehensive JSP tag library framework providing UI components for web applicat
 ### Include Tag Library
 
 ```jsp
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
+<%@ taglib prefix="n" uri="nextframework.tags.next" %>
+<%@ taglib prefix="t" uri="nextframework.tags.template" %>
 ```
 
 ### Basic Form
@@ -63,7 +63,7 @@ Comprehensive JSP tag library framework providing UI components for web applicat
 ### Tag Hierarchy
 
 ```
-javax.servlet.jsp.tagext.SimpleTagSupport
+jakarta.servlet.jsp.tagext.SimpleTagSupport
   └─ BaseTag (framework foundation)
        ├─ Form Tags (FormTag, BeanTag, InputTag, OutputTag)
        ├─ Layout Tags (PanelGridTag, PanelTag, GroupTag, TabPanelTag)

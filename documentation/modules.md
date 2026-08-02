@@ -6,9 +6,9 @@
 - **Build System:** Apache Ant + Apache IVY
 - **Version:** 4.0.0
 - **Total Modules:** 23 core modules
-- **Java Baseline:** Java 25
 - **Base Framework:** Spring 7.0.5 + Hibernate ORM 7.2.5.Final
 - **Platform Migration:** Jakarta Servlet / JSP / Persistence APIs
+- **Compatibility Notes:** `releaseNotes.txt` describes the 4.0.0 Java 25 / Jakarta migration, while `org.nextframework.build/tools/*.sh` still compile with `-source 1.8 -target 1.8` and `setup-env.sh` still checks for Java 8
 
 ---
 

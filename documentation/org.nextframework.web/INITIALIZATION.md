@@ -213,7 +213,7 @@ public class MyContextLoaderListener extends NextContextLoaderListener {
 }
 ```
 
-Register via SPI in `META-INF/services/javax.servlet.ServletContextListener`:
+Register via SPI in `META-INF/services/jakarta.servlet.ServletContextListener`:
 
 ```
 com.myapp.MyContextLoaderListener

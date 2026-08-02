@@ -163,7 +163,7 @@ SourceCodeBuilder builder = new SourceCodeBuilder();
 builder.setPackage("com.example");
 builder.setClassName("MyEntity");
 builder.addAnnotation("@Entity");
-builder.addImport("javax.persistence.Entity");
+builder.addImport("jakarta.persistence.Entity");
 ```
 
 ### Constructor

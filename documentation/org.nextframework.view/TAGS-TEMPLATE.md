@@ -3,7 +3,7 @@
 High-level view composition tags for building CRUD screens quickly.
 
 ```jsp
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template" %>
 ```
 
 ---
@@ -430,8 +430,8 @@ For more control over column rendering, use `n:column`:
 ### List Screen
 
 ```jsp
-<%@ taglib prefix="t" uri="http://www.nextframework.org/tag-lib/template"%>
-<%@ taglib prefix="n" uri="http://www.nextframework.org/tag-lib/next"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template" %>
+<%@ taglib prefix="n" uri="nextframework.tags.next" %>
 
 <t:listView title="Products">
 
