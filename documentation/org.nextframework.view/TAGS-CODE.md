@@ -6,7 +6,7 @@ Define reusable template fragments within a page using the `code:` tag library.
 <%@ taglib prefix="code" uri="code"%>
 ```
 
----
+## Basic Structure
 
 **Example of use:**
 
@@ -33,8 +33,6 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/public/home.jsp`
     </code:main>
 </code:class>
 ```
-
-## Basic Structure
 
 ```jsp
 <code:class>

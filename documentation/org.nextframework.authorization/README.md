@@ -23,7 +23,7 @@ Request arrives
 └─────────────────────────────┘
 ```
 
----
+## Module Authentication
 
 **Example of use:**
 
@@ -33,8 +33,6 @@ File: `samples/showcase_app/src/authentication.properties`
 public=false
 app=true
 ```
-
-## Module Authentication
 
 Controllers are organized into **modules** (first path segment). You can require authentication for entire modules via `authentication.properties`.
 

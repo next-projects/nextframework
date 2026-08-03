@@ -2,6 +2,8 @@
 
 Automatic Spring context setup and component scanning.
 
+## Auto-Configuration
+
 **Example of use:**
 
 File: `samples/showcase_app/src/org/erplite/Main.java`
@@ -16,8 +18,6 @@ Context context = tomcat.addWebapp("/app", new File("WebContent").getAbsolutePat
 configureJarScanner(context);
 tomcat.start();
 ```
-
-## Auto-Configuration
 
 The module uses `web-fragment.xml` for zero-configuration setup:
 

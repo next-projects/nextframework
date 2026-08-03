@@ -2,7 +2,7 @@
 
 Build infrastructure for the Next Framework. Provides shell scripts and Ant build files for compiling, packaging, and deploying framework modules.
 
----
+## Quick Start
 
 **Example of use:**
 
@@ -13,8 +13,6 @@ cd samples/showcase_app
 ./scripts/build.sh
 ./scripts/run.sh 8080
 ```
-
-## Quick Start
 
 ```bash
 cd org.nextframework.build

@@ -33,7 +33,7 @@ Template tags provide pre-built structures for common view patterns:
 └─────────────────────────────────────────────────────────┘
 ```
 
----
+## t:view
 
 **Example of use:**
 
@@ -51,8 +51,6 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
     </t:listPanel>
 </t:listView>
 ```
-
-## t:view
 
 Base view container. Wraps content in a standard page structure.
 

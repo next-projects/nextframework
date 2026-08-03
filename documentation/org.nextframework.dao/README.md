@@ -17,7 +17,7 @@ Person loaded = personDAO.loadById(1L);
 List<Person> all = personDAO.findAll();
 ```
 
----
+## GenericDAO
 
 **Example of use:**
 
@@ -40,8 +40,6 @@ public class AuthorizationDAO extends AbstractAuthorizationDAO {
     }
 }
 ```
-
-## GenericDAO
 
 Extend for any entity to get full CRUD support:
 

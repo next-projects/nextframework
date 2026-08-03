@@ -2,7 +2,7 @@
 
 Base class for standard CRUD (Create, Read, Update, Delete) operations. Provides pre-built actions for listing, viewing, creating, editing, and deleting records.
 
----
+## Quick Start
 
 **Example of use:**
 
@@ -13,8 +13,6 @@ File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
 public class UserCrudController extends CrudController<ListViewFilter, User, User> {
 }
 ```
-
-## Quick Start
 
 ```java
 @Controller(path = "/admin/products")
@@ -68,7 +66,7 @@ CrudController<FILTER, FORMBEAN, BEAN>
 | `FORMBEAN` | Form binding class |
 | `BEAN` | Entity class |
 
----
+## Built-in Actions
 
 **Example of use:**
 
@@ -86,8 +84,6 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
     </t:listPanel>
 </t:listView>
 ```
-
-## Built-in Actions
 
 ### doList (Default Action)
 
@@ -200,7 +196,7 @@ protected ModelAndView doDelete(WebRequestContext request, FORMBEAN form) {
 }
 ```
 
----
+## Overridable Methods
 
 **Example of use:**
 
@@ -229,8 +225,6 @@ protected void save(WebRequestContext request, User user) throws Exception {
     super.save(request, user);
 }
 ```
-
-## Overridable Methods
 
 ### Loading Data
 

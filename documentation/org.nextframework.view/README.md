@@ -16,7 +16,7 @@ Comprehensive JSP tag library framework providing UI components for web applicat
 └─────────────────────────────────────────────────────────────────┘
 ```
 
----
+## Quick Start
 
 **Example of use:**
 
@@ -36,8 +36,6 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/public/login.jsp`
     </n:bean>
 </n:form>
 ```
-
-## Quick Start
 
 ### Include Tag Library
 

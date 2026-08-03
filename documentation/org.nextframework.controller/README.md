@@ -36,7 +36,7 @@ public class ProductController extends MultiActionController {
 - **Multiple view types** - JSP, JSON, redirects, resources
 - **Error handling** - `@Input`, `@OnErrors` for error flows
 
----
+## Quick Start
 
 **Example of use:**
 
@@ -52,8 +52,6 @@ public class HomeController extends MultiActionController {
     }
 }
 ```
-
-## Quick Start
 
 ### 1. Create a Controller
 
@@ -80,7 +78,7 @@ http://localhost:8080/app/admin/hello
 http://localhost:8080/app/admin/hello?action=save
 ```
 
----
+## Modules
 
 **Example of use:**
 
@@ -98,8 +96,6 @@ public class HomeController extends MultiActionController { }
 @Controller(path = "/app/home")
 public class AppHomeController extends MultiActionController { }
 ```
-
-## Modules
 
 Controllers are organized into **modules**. The module is the **first segment** of the controller path.
 
@@ -425,7 +421,7 @@ public ModelAndView handleException(WebRequestContext request,
 }
 ```
 
----
+## CRUD Controller
 
 **Example of use:**
 
@@ -439,8 +435,6 @@ public class UserCrudController extends CrudController<ListViewFilter, User, Use
     private UserService userService;
 }
 ```
-
-## CRUD Controller
 
 For standard create/read/update/delete operations:
 
