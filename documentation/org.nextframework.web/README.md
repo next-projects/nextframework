@@ -45,24 +45,19 @@ ServletContext servletContext = app.getServletContext();
 File: `samples/showcase_app/src/org/erplite/Main.java`
 
 ```java
-public static void main(String[] args) throws Exception {
-    int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
-    String webRoot = new File("WebContent").getAbsolutePath();
-
-    Tomcat tomcat = new Tomcat();
-    tomcat.setPort(port);
-    tomcat.setBaseDir("build/tomcat");
-    tomcat.getConnector();
-
-    Context context = tomcat.addWebapp("/app", webRoot);
-    configureJarScanner(context);
-
-    tomcat.start();
-    tomcat.getServer().await();
+private static void configureJarScanner(Context context) {
+    String jarsToScan = "next-view-*.jar,next-web-*.jar,jakarta.servlet.jsp.jstl-*.jar,jakarta.servlet.jsp.jstl-api-*.jar";
+    StandardJarScanner scanner = (StandardJarScanner) context.getJarScanner();
+    StandardJarScanFilter filter = new StandardJarScanFilter();
+    filter.setDefaultTldScan(false);
+    filter.setDefaultPluggabilityScan(false);
+    filter.setTldScan(jarsToScan);
+    filter.setPluggabilityScan(jarsToScan);
+    scanner.setJarScanFilter(filter);
 }
 ```
 
-The module auto-configures via `web-fragment.xml`:
+In the sample app, embedded Tomcat is configured to scan the framework jars that provide `web-fragment.xml` and tag libraries. Once those jars are visible, `next-web` initializes itself automatically:
 - Component scanning of application packages
 - Spring context initialization
 - Thread-local context setup per request

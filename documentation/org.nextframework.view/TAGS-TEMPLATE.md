@@ -37,22 +37,31 @@ Template tags provide pre-built structures for common view patterns:
 
 **Example of use:**
 
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp` and `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
 
 ```jsp
+<t:formView title="User" showNewLink="false">
+    <t:formPanel>
+        <t:formTable>
+            <t:property name="username"/>
+            <t:property name="password"/>
+        </t:formTable>
+    </t:formPanel>
+</t:formView>
+
 <t:listView title="Users">
     <t:listPanel>
         <t:listTable>
-            <t:property name="id"/>
             <t:property name="username"/>
             <t:property name="name"/>
-            <t:property name="createdAt"/>
         </t:listTable>
     </t:listPanel>
 </t:listView>
 ```
 
 Base view container. Wraps content in a standard page structure.
+
+The showcase app does not use raw `t:view` directly. It uses `t:formView` and `t:listView`, which are specialized containers built on top of `t:view`.
 
 ```jsp
 <t:view title="Product Management">

@@ -9,17 +9,19 @@ Automatic Spring context setup and component scanning.
 File: `samples/showcase_app/src/org/erplite/Main.java`
 
 ```java
-Tomcat tomcat = new Tomcat();
-tomcat.setPort(port);
-tomcat.setBaseDir("build/tomcat");
-tomcat.getConnector();
-
-Context context = tomcat.addWebapp("/app", new File("WebContent").getAbsolutePath());
-configureJarScanner(context);
-tomcat.start();
+private static void configureJarScanner(Context context) {
+    String jarsToScan = "next-view-*.jar,next-web-*.jar,jakarta.servlet.jsp.jstl-*.jar,jakarta.servlet.jsp.jstl-api-*.jar";
+    StandardJarScanner scanner = (StandardJarScanner) context.getJarScanner();
+    StandardJarScanFilter filter = new StandardJarScanFilter();
+    filter.setDefaultTldScan(false);
+    filter.setDefaultPluggabilityScan(false);
+    filter.setTldScan(jarsToScan);
+    filter.setPluggabilityScan(jarsToScan);
+    scanner.setJarScanFilter(filter);
+}
 ```
 
-The module uses `web-fragment.xml` for zero-configuration setup:
+The sample app lets the container discover the framework's `web-fragment.xml` and tag libraries by scanning the NextFramework jars. From there, the module performs zero-configuration setup:
 
 ```xml
 <!-- Automatically loaded by Servlet 3.0+ containers -->
@@ -80,7 +82,9 @@ Application Startup
     └─► Load custom BeanDefinitionLoaders
 ```
 
----
+## Package Scanning
+
+The framework automatically discovers and scans application packages.
 
 **Example of use:**
 
@@ -95,18 +99,14 @@ public class FlywayInitializer {
 
     @PostConstruct
     public void migrate() {
-        Flyway.configure()
+        Flyway flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:db/migration")
-                .load()
-                .migrate();
+                .load();
+        flyway.migrate();
     }
 }
 ```
-
-## Package Scanning
-
-The framework automatically discovers and scans application packages.
 
 ### How It Works
 

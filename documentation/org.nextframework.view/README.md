@@ -222,7 +222,13 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
 
 **Example of use:**
 
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java` and `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+
+```java
+@Controller(path = "/app/users")
+public class UserCrudController extends CrudController<ListViewFilter, User, User> {
+}
+```
 
 ```jsp
 <t:listView title="Users">
@@ -236,6 +242,8 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
     </t:listPanel>
 </t:listView>
 ```
+
+The showcase app already uses `ListViewFilter` on the controller side, but this screen currently renders only the list section. Add a `t:filterPanel` above `t:listPanel` when the page needs filter inputs.
 
 ```jsp
 <t:view title="Products">

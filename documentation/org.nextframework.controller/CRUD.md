@@ -70,20 +70,21 @@ CrudController<FILTER, FORMBEAN, BEAN>
 
 **Example of use:**
 
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
 
-```jsp
-<t:listView title="Users">
-    <t:listPanel>
-        <t:listTable>
-            <t:property name="id"/>
-            <t:property name="username"/>
-            <t:property name="name"/>
-            <t:property name="createdAt"/>
-        </t:listTable>
-    </t:listPanel>
-</t:listView>
+```java
+@Controller(path = "/app/users")
+public class UserCrudController extends CrudController<ListViewFilter, User, User> {
+
+    @Override
+    protected void save(WebRequestContext request, User user) throws Exception {
+        // sample-specific save customization
+        super.save(request, user);
+    }
+}
 ```
+
+By extending `CrudController`, the sample app automatically exposes the standard CRUD actions at `/app/users`, including `doList`, `doForm`, `doSave`, and `doDelete`.
 
 ### doList (Default Action)
 
