@@ -2,6 +2,21 @@
 
 Automatic Spring context setup and component scanning.
 
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/Main.java`
+
+```java
+Tomcat tomcat = new Tomcat();
+tomcat.setPort(port);
+tomcat.setBaseDir("build/tomcat");
+tomcat.getConnector();
+
+Context context = tomcat.addWebapp("/app", new File("WebContent").getAbsolutePath());
+configureJarScanner(context);
+tomcat.start();
+```
+
 ## Auto-Configuration
 
 The module uses `web-fragment.xml` for zero-configuration setup:
@@ -66,6 +81,28 @@ Application Startup
 ```
 
 ---
+
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/config/FlywayInitializer.java`
+
+```java
+@Component
+public class FlywayInitializer {
+
+    @Autowired
+    private DataSource dataSource;
+
+    @PostConstruct
+    public void migrate() {
+        Flyway.configure()
+                .dataSource(dataSource)
+                .locations("classpath:db/migration")
+                .load()
+                .migrate();
+    }
+}
+```
 
 ## Package Scanning
 

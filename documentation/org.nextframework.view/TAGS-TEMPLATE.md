@@ -35,6 +35,23 @@ Template tags provide pre-built structures for common view patterns:
 
 ---
 
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+
+```jsp
+<t:listView title="Users">
+    <t:listPanel>
+        <t:listTable>
+            <t:property name="id"/>
+            <t:property name="username"/>
+            <t:property name="name"/>
+            <t:property name="createdAt"/>
+        </t:listTable>
+    </t:listPanel>
+</t:listView>
+```
+
 ## t:view
 
 Base view container. Wraps content in a standard page structure.
@@ -57,6 +74,23 @@ Base view container. Wraps content in a standard page structure.
 
 #### t:listView
 
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+
+```jsp
+<t:listView title="Users">
+    <t:listPanel>
+        <t:listTable>
+            <t:property name="id"/>
+            <t:property name="username"/>
+            <t:property name="name"/>
+            <t:property name="createdAt"/>
+        </t:listTable>
+    </t:listPanel>
+</t:listView>
+```
+
 View for list screens with "New" button.
 
 ```jsp
@@ -77,6 +111,24 @@ View for list screens with "New" button.
 ```
 
 #### t:formView
+
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
+
+```jsp
+<t:formView title="User" showNewLink="false">
+    <t:formPanel>
+        <t:formTable>
+            <t:property name="id"/>
+            <t:property name="username"/>
+            <t:property name="password"/>
+            <t:property name="name"/>
+            <t:property name="createdAt" mode="output" write="true"/>
+        </t:formTable>
+    </t:formPanel>
+</t:formView>
+```
 
 View for form screens with navigation links.
 

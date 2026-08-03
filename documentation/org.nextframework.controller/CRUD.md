@@ -4,6 +4,16 @@ Base class for standard CRUD (Create, Read, Update, Delete) operations. Provides
 
 ---
 
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
+
+```java
+@Controller(path = "/app/users")
+public class UserCrudController extends CrudController<ListViewFilter, User, User> {
+}
+```
+
 ## Quick Start
 
 ```java
@@ -59,6 +69,23 @@ CrudController<FILTER, FORMBEAN, BEAN>
 | `BEAN` | Entity class |
 
 ---
+
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+
+```jsp
+<t:listView title="Users">
+    <t:listPanel>
+        <t:listTable>
+            <t:property name="id"/>
+            <t:property name="username"/>
+            <t:property name="name"/>
+            <t:property name="createdAt"/>
+        </t:listTable>
+    </t:listPanel>
+</t:listView>
+```
 
 ## Built-in Actions
 
@@ -174,6 +201,34 @@ protected ModelAndView doDelete(WebRequestContext request, FORMBEAN form) {
 ```
 
 ---
+
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
+
+```java
+@Override
+protected void save(WebRequestContext request, User user) throws Exception {
+    User existing = user.getId() != null ? userService.loadById(user.getId()) : null;
+
+    if (existing != null) {
+        user.setCreatedAt(existing.getCreatedAt());
+    } else {
+        user.setCreatedAt(new java.util.Date());
+    }
+
+    String password = user.getPassword();
+    if (password == null || password.isEmpty()) {
+        if (existing != null) {
+            user.setPassword(existing.getPassword());
+        }
+    } else if (!password.startsWith("$2a$")) {
+        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(10)));
+    }
+
+    super.save(request, user);
+}
+```
 
 ## Overridable Methods
 

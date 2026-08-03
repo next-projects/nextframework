@@ -19,6 +19,28 @@ List<Person> all = personDAO.findAll();
 
 ---
 
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/dao/UserDAO.java` and `samples/showcase_app/src/org/erplite/dao/AuthorizationDAO.java`
+
+```java
+@Repository
+public class UserDAO extends GenericDAO<User> {
+}
+
+@Repository
+public class AuthorizationDAO extends AbstractAuthorizationDAO {
+
+    @Autowired
+    private UserDAO userDAO;
+
+    @Override
+    public User findUserByUsername(String username) {
+        return userDAO.findByPropertyUnique("username", username);
+    }
+}
+```
+
 ## GenericDAO
 
 Extend for any entity to get full CRUD support:
@@ -260,4 +282,3 @@ if (DAOUtils.isTransient(entity)) {
     // New entity
 }
 ```
-

@@ -25,6 +25,15 @@ Request arrives
 
 ---
 
+**Example of use:**
+
+File: `samples/showcase_app/src/authentication.properties`
+
+```properties
+public=false
+app=true
+```
+
 ## Module Authentication
 
 Controllers are organized into **modules** (first path segment). You can require authentication for entire modules via `authentication.properties`.
@@ -51,6 +60,32 @@ public=false
 4. If not logged in → redirects to login page
 
 ### Login Controller
+
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/controller/LoginController.java`
+
+```java
+@Controller(path = "/public/login")
+public class LoginController extends org.nextframework.authorization.LoginController {
+
+    @Action("logout")
+    public String doLogout() {
+        getRequest().getSession().invalidate();
+        return redirectToAction("doPage");
+    }
+
+    @Override
+    protected boolean validPassword(String persisted, String provided) {
+        return BCrypt.checkpw(provided, persisted);
+    }
+
+    @Override
+    protected String afterLoginRedirectTo() {
+        return "/app/home";
+    }
+}
+```
 
 You need a login controller implementing `AuthenticationController`:
 
@@ -93,6 +128,17 @@ public class LoginController extends MultiActionController
 **Important:** Login controller must be in a **public module** (not marked as `true` in authentication.properties).
 
 ### Example Module Organization
+
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/index.jsp`, `samples/showcase_app/src/org/erplite/controller/HomeController.java`, `samples/showcase_app/src/org/erplite/controller/LoginController.java`, `samples/showcase_app/src/org/erplite/controller/AppHomeController.java`, and `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
+
+```text
+/public/home       anonymous landing page
+/public/login      login form
+/app/home          authenticated home
+/app/users         authenticated CRUD screen
+```
 
 ```properties
 # authentication.properties

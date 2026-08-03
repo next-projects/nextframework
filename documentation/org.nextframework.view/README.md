@@ -18,6 +18,25 @@ Comprehensive JSP tag library framework providing UI components for web applicat
 
 ---
 
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/public/login.jsp`
+
+```jsp
+<%@ taglib prefix="n" uri="nextframework.tags.next"%>
+<%@ taglib prefix="t" uri="nextframework.tags.template"%>
+
+<n:form>
+    <n:bean name="user">
+        <n:panelGrid columns="2" propertyRenderAs="double">
+            <t:property name="username"/>
+            <t:property name="password" type="password"/>
+        </n:panelGrid>
+        <n:submit action="doLogin" type="submit">Login</n:submit>
+    </n:bean>
+</n:form>
+```
+
 ## Quick Start
 
 ### Include Tag Library
@@ -42,6 +61,24 @@ Comprehensive JSP tag library framework providing UI components for web applicat
 ```
 
 ### High-Level Template View
+
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
+
+```jsp
+<t:formView title="User" showNewLink="false">
+    <t:formPanel>
+        <t:formTable>
+            <t:property name="id"/>
+            <t:property name="username"/>
+            <t:property name="password"/>
+            <t:property name="name"/>
+            <t:property name="createdAt" mode="output" write="true"/>
+        </t:formTable>
+    </t:formPanel>
+</t:formView>
+```
 
 ```jsp
 <t:view title="Products">
@@ -151,6 +188,24 @@ See [TAGS-AJAX.md](TAGS-AJAX.md) for details.
 
 ### Data Entry Form
 
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
+
+```jsp
+<t:formView title="User" showNewLink="false">
+    <t:formPanel>
+        <t:formTable>
+            <t:property name="id"/>
+            <t:property name="username"/>
+            <t:property name="password"/>
+            <t:property name="name"/>
+            <t:property name="createdAt" mode="output" write="true"/>
+        </t:formTable>
+    </t:formPanel>
+</t:formView>
+```
+
 ```jsp
 <t:view title="Edit Product">
     <t:formPanel>
@@ -166,6 +221,23 @@ See [TAGS-AJAX.md](TAGS-AJAX.md) for details.
 ```
 
 ### List with Filter
+
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+
+```jsp
+<t:listView title="Users">
+    <t:listPanel>
+        <t:listTable>
+            <t:property name="id"/>
+            <t:property name="username"/>
+            <t:property name="name"/>
+            <t:property name="createdAt"/>
+        </t:listTable>
+    </t:listPanel>
+</t:listView>
+```
 
 ```jsp
 <t:view title="Products">

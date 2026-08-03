@@ -38,6 +38,21 @@ public class ProductController extends MultiActionController {
 
 ---
 
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/controller/HomeController.java`
+
+```java
+@Controller(path = "/public/home")
+public class HomeController extends MultiActionController {
+
+    @DefaultAction
+    public String home() {
+        return "home";
+    }
+}
+```
+
 ## Quick Start
 
 ### 1. Create a Controller
@@ -66,6 +81,23 @@ http://localhost:8080/app/admin/hello?action=save
 ```
 
 ---
+
+**Example of use:**
+
+File: `samples/showcase_app/src/authentication.properties`, `samples/showcase_app/src/org/erplite/controller/HomeController.java`, and `samples/showcase_app/src/org/erplite/controller/AppHomeController.java`
+
+```properties
+public=false
+app=true
+```
+
+```java
+@Controller(path = "/public/home")
+public class HomeController extends MultiActionController { }
+
+@Controller(path = "/app/home")
+public class AppHomeController extends MultiActionController { }
+```
 
 ## Modules
 
@@ -394,6 +426,19 @@ public ModelAndView handleException(WebRequestContext request,
 ```
 
 ---
+
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
+
+```java
+@Controller(path = "/app/users")
+public class UserCrudController extends CrudController<ListViewFilter, User, User> {
+
+    @Autowired
+    private UserService userService;
+}
+```
 
 ## CRUD Controller
 

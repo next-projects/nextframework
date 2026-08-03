@@ -8,6 +8,32 @@ Define reusable template fragments within a page using the `code:` tag library.
 
 ---
 
+**Example of use:**
+
+File: `samples/showcase_app/WebContent/WEB-INF/jsp/public/home.jsp`
+
+```jsp
+<code:class>
+    <code:method name="featureCard">
+        <div class="col-lg-4 col-md-6">
+            <div class="feature-card p-4">
+                <div class="feature-icon mb-3">
+                    <i class="bi ${icon}"></i>
+                </div>
+                <h5 class="fw-bold">${title}</h5>
+                <p class="text-muted mb-0">${CALL_BODY}</p>
+            </div>
+        </div>
+    </code:method>
+
+    <code:main>
+        <code:call method="featureCard" icon="bi-people" title="Customer Management">
+            Keep track of all your customers in one organized place.
+        </code:call>
+    </code:main>
+</code:class>
+```
+
 ## Basic Structure
 
 ```jsp

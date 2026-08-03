@@ -40,6 +40,28 @@ ServletContext servletContext = app.getServletContext();
 
 ### Automatic Initialization
 
+**Example of use:**
+
+File: `samples/showcase_app/src/org/erplite/Main.java`
+
+```java
+public static void main(String[] args) throws Exception {
+    int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
+    String webRoot = new File("WebContent").getAbsolutePath();
+
+    Tomcat tomcat = new Tomcat();
+    tomcat.setPort(port);
+    tomcat.setBaseDir("build/tomcat");
+    tomcat.getConnector();
+
+    Context context = tomcat.addWebapp("/app", webRoot);
+    configureJarScanner(context);
+
+    tomcat.start();
+    tomcat.getServer().await();
+}
+```
+
 The module auto-configures via `web-fragment.xml`:
 - Component scanning of application packages
 - Spring context initialization
