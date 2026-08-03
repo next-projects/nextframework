@@ -4,16 +4,6 @@ Build infrastructure for the Next Framework. Provides shell scripts and Ant buil
 
 ## Quick Start
 
-**Example of use:**
-
-File: `samples/showcase_app/scripts/build.sh` and `samples/showcase_app/scripts/run.sh`
-
-```bash
-cd samples/showcase_app
-./scripts/build.sh
-./scripts/run.sh 8080
-```
-
 ```bash
 cd org.nextframework.build
 source tools/setup-env.sh
@@ -26,7 +16,7 @@ This runs the full setup:
 4. Compiles all modules
 5. Generates JavaScript files
 
-**Prerequisites:** Java 8 JDK, curl
+**Prerequisites:** Java 25 JDK, curl
 
 ---
 
@@ -115,26 +105,6 @@ ant -f build-js.xml
 
 ### build-web-deploy.xml
 
-**Example of use:**
-
-File: `samples/showcase_app/build.xml`
-
-```xml
-<property name="deploy.dir" location="WebContent"/>
-<property name="webroot.dir" value="WebContent"/>
-
-<import file="${next.root}/org.nextframework.build/build-web-deploy.xml"/>
-
-<target name="compile-app-only">
-    <mkdir dir="${classes.dir}"/>
-    <copy todir="${classes.dir}">
-        <fileset dir="${src.dir}">
-            <exclude name="**/*.java"/>
-        </fileset>
-    </copy>
-</target>
-```
-
 Deploys framework and application to a web server.
 
 **Required Property:**
@@ -219,23 +189,6 @@ Output: `next-{version}-full.zip`
 
 ### Using build-web-deploy.xml
 
-**Example of use:**
-
-File: `samples/showcase_app/build.properties` and `samples/showcase_app/build.xml`
-
-```properties
-deploy.dir=WebContent
-deploy.exploded=true
-module.name=showcase_app
-```
-
-```xml
-<property file="build.config"/>
-<property file="build.properties"/>
-<property name="next.root" value="../.."/>
-<import file="${next.root}/org.nextframework.build/build-web-deploy.xml"/>
-```
-
 Create a `build.xml` in your project:
 
 ```xml
@@ -254,27 +207,6 @@ Create a `build.xml` in your project:
 ```
 
 ### Using Ivy for Dependencies
-
-**Example of use:**
-
-File: `samples/showcase_app/ivy.xml`
-
-```xml
-<ivy-module version="2.0">
-    <info organisation="org.erplite" module="showcase_app"/>
-
-    <configurations>
-        <conf name="provided"/>
-        <conf name="lib"/>
-    </configurations>
-
-    <dependencies>
-        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-core" rev="9.0.115" conf="lib->default"/>
-        <dependency org="com.h2database" name="h2" rev="2.2.220" conf="lib->default"/>
-        <dependency org="org.flywaydb" name="flyway-core" rev="9.22.3" conf="lib->default"/>
-    </dependencies>
-</ivy-module>
-```
 
 Create an `ivy.xml` in your project:
 

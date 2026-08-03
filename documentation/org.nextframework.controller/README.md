@@ -38,21 +38,6 @@ public class ProductController extends MultiActionController {
 
 ## Quick Start
 
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/controller/HomeController.java`
-
-```java
-@Controller(path = "/public/home")
-public class HomeController extends MultiActionController {
-
-    @DefaultAction
-    public String home() {
-        return "home";
-    }
-}
-```
-
 ### 1. Create a Controller
 
 ```java
@@ -79,23 +64,6 @@ http://localhost:8080/app/admin/hello?action=save
 ```
 
 ## Modules
-
-**Example of use:**
-
-File: `samples/showcase_app/src/authentication.properties`, `samples/showcase_app/src/org/erplite/controller/HomeController.java`, and `samples/showcase_app/src/org/erplite/controller/AppHomeController.java`
-
-```properties
-public=false
-app=true
-```
-
-```java
-@Controller(path = "/public/home")
-public class HomeController extends MultiActionController { }
-
-@Controller(path = "/app/home")
-public class AppHomeController extends MultiActionController { }
-```
 
 Controllers are organized into **modules**. The module is the **first segment** of the controller path.
 
@@ -422,19 +390,6 @@ public ModelAndView handleException(WebRequestContext request,
 ```
 
 ## CRUD Controller
-
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
-
-```java
-@Controller(path = "/app/users")
-public class UserCrudController extends CrudController<ListViewFilter, User, User> {
-
-    @Autowired
-    private UserService userService;
-}
-```
 
 For standard create/read/update/delete operations:
 

@@ -19,16 +19,6 @@ List<Person> all = personDAO.findAll();
 
 ## GenericDAO
 
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/dao/UserDAO.java`
-
-```java
-@Repository
-public class UserDAO extends GenericDAO<User> {
-}
-```
-
 Extend for any entity to get full CRUD support:
 
 ```java

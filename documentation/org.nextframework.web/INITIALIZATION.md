@@ -4,23 +4,6 @@ Automatic Spring context setup and component scanning.
 
 ## Auto-Configuration
 
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/Main.java`
-
-```java
-private static void configureJarScanner(Context context) {
-    String jarsToScan = "next-view-*.jar,next-web-*.jar,jakarta.servlet.jsp.jstl-*.jar,jakarta.servlet.jsp.jstl-api-*.jar";
-    StandardJarScanner scanner = (StandardJarScanner) context.getJarScanner();
-    StandardJarScanFilter filter = new StandardJarScanFilter();
-    filter.setDefaultTldScan(false);
-    filter.setDefaultPluggabilityScan(false);
-    filter.setTldScan(jarsToScan);
-    filter.setPluggabilityScan(jarsToScan);
-    scanner.setJarScanFilter(filter);
-}
-```
-
 The sample app lets the container discover the framework's `web-fragment.xml` and tag libraries by scanning the NextFramework jars. From there, the module performs zero-configuration setup:
 
 ```xml
@@ -85,28 +68,6 @@ Application Startup
 ## Package Scanning
 
 The framework automatically discovers and scans application packages.
-
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/config/FlywayInitializer.java`
-
-```java
-@Component
-public class FlywayInitializer {
-
-    @Autowired
-    private DataSource dataSource;
-
-    @PostConstruct
-    public void migrate() {
-        Flyway flyway = Flyway.configure()
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .load();
-        flyway.migrate();
-    }
-}
-```
 
 ### How It Works
 

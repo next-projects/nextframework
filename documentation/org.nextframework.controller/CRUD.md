@@ -4,16 +4,6 @@ Base class for standard CRUD (Create, Read, Update, Delete) operations. Provides
 
 ## Quick Start
 
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
-
-```java
-@Controller(path = "/app/users")
-public class UserCrudController extends CrudController<ListViewFilter, User, User> {
-}
-```
-
 ```java
 @Controller(path = "/admin/products")
 public class ProductController extends CrudController<Product> {
@@ -67,24 +57,6 @@ CrudController<FILTER, FORMBEAN, BEAN>
 | `BEAN` | Entity class |
 
 ## Built-in Actions
-
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
-
-```java
-@Controller(path = "/app/users")
-public class UserCrudController extends CrudController<ListViewFilter, User, User> {
-
-    @Override
-    protected void save(WebRequestContext request, User user) throws Exception {
-        // sample-specific save customization
-        super.save(request, user);
-    }
-}
-```
-
-By extending `CrudController`, the sample app automatically exposes the standard CRUD actions at `/app/users`, including `doList`, `doForm`, `doSave`, and `doDelete`.
 
 ### doList (Default Action)
 
@@ -198,34 +170,6 @@ protected ModelAndView doDelete(WebRequestContext request, FORMBEAN form) {
 ```
 
 ## Overridable Methods
-
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java`
-
-```java
-@Override
-protected void save(WebRequestContext request, User user) throws Exception {
-    User existing = user.getId() != null ? userService.loadById(user.getId()) : null;
-
-    if (existing != null) {
-        user.setCreatedAt(existing.getCreatedAt());
-    } else {
-        user.setCreatedAt(new java.util.Date());
-    }
-
-    String password = user.getPassword();
-    if (password == null || password.isEmpty()) {
-        if (existing != null) {
-            user.setPassword(existing.getPassword());
-        }
-    } else if (!password.startsWith("$2a$")) {
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(10)));
-    }
-
-    super.save(request, user);
-}
-```
 
 ### Loading Data
 

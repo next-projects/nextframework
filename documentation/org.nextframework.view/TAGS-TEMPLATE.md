@@ -35,33 +35,7 @@ Template tags provide pre-built structures for common view patterns:
 
 ## t:view
 
-**Example of use:**
-
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp` and `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
-
-```jsp
-<t:formView title="User" showNewLink="false">
-    <t:formPanel>
-        <t:formTable>
-            <t:property name="username"/>
-            <t:property name="password"/>
-        </t:formTable>
-    </t:formPanel>
-</t:formView>
-
-<t:listView title="Users">
-    <t:listPanel>
-        <t:listTable>
-            <t:property name="username"/>
-            <t:property name="name"/>
-        </t:listTable>
-    </t:listPanel>
-</t:listView>
-```
-
 Base view container. Wraps content in a standard page structure.
-
-The showcase app does not use raw `t:view` directly. It uses `t:formView` and `t:listView`, which are specialized containers built on top of `t:view`.
 
 ```jsp
 <t:view title="Product Management">
@@ -80,23 +54,6 @@ The showcase app does not use raw `t:view` directly. It uses `t:formView` and `t
 ### Specialized Views
 
 #### t:listView
-
-**Example of use:**
-
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
-
-```jsp
-<t:listView title="Users">
-    <t:listPanel>
-        <t:listTable>
-            <t:property name="id"/>
-            <t:property name="username"/>
-            <t:property name="name"/>
-            <t:property name="createdAt"/>
-        </t:listTable>
-    </t:listPanel>
-</t:listView>
-```
 
 View for list screens with "New" button.
 
@@ -118,24 +75,6 @@ View for list screens with "New" button.
 ```
 
 #### t:formView
-
-**Example of use:**
-
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
-
-```jsp
-<t:formView title="User" showNewLink="false">
-    <t:formPanel>
-        <t:formTable>
-            <t:property name="id"/>
-            <t:property name="username"/>
-            <t:property name="password"/>
-            <t:property name="name"/>
-            <t:property name="createdAt" mode="output" write="true"/>
-        </t:formTable>
-    </t:formPanel>
-</t:formView>
-```
 
 View for form screens with navigation links.
 

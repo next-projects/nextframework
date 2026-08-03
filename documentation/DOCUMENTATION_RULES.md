@@ -19,7 +19,6 @@
 
 ## AI instructions for generating documentation:
 - You are allowed to run code to verify examples.
-  - Project uses Java 8
 - You are allowed to create new code -- in a temp location -- to help verify examples.
 - Ensure all code examples are accurate and tested.
 - If some Java or tool is not installed, let the user know what to install.

@@ -18,25 +18,6 @@ Comprehensive JSP tag library framework providing UI components for web applicat
 
 ## Quick Start
 
-**Example of use:**
-
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/public/login.jsp`
-
-```jsp
-<%@ taglib prefix="n" uri="nextframework.tags.next"%>
-<%@ taglib prefix="t" uri="nextframework.tags.template"%>
-
-<n:form>
-    <n:bean name="user">
-        <n:panelGrid columns="2" propertyRenderAs="double">
-            <t:property name="username"/>
-            <t:property name="password" type="password"/>
-        </n:panelGrid>
-        <n:submit action="doLogin" type="submit">Login</n:submit>
-    </n:bean>
-</n:form>
-```
-
 ### Include Tag Library
 
 ```jsp
@@ -59,24 +40,6 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/public/login.jsp`
 ```
 
 ### High-Level Template View
-
-**Example of use:**
-
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
-
-```jsp
-<t:formView title="User" showNewLink="false">
-    <t:formPanel>
-        <t:formTable>
-            <t:property name="id"/>
-            <t:property name="username"/>
-            <t:property name="password"/>
-            <t:property name="name"/>
-            <t:property name="createdAt" mode="output" write="true"/>
-        </t:formTable>
-    </t:formPanel>
-</t:formView>
-```
 
 ```jsp
 <t:view title="Products">
@@ -186,24 +149,6 @@ See [TAGS-AJAX.md](TAGS-AJAX.md) for details.
 
 ### Data Entry Form
 
-**Example of use:**
-
-File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
-
-```jsp
-<t:formView title="User" showNewLink="false">
-    <t:formPanel>
-        <t:formTable>
-            <t:property name="id"/>
-            <t:property name="username"/>
-            <t:property name="password"/>
-            <t:property name="name"/>
-            <t:property name="createdAt" mode="output" write="true"/>
-        </t:formTable>
-    </t:formPanel>
-</t:formView>
-```
-
 ```jsp
 <t:view title="Edit Product">
     <t:formPanel>
@@ -219,31 +164,6 @@ File: `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
 ```
 
 ### List with Filter
-
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/controller/UserCrudController.java` and `samples/showcase_app/WebContent/WEB-INF/jsp/app/crud/userList.jsp`
-
-```java
-@Controller(path = "/app/users")
-public class UserCrudController extends CrudController<ListViewFilter, User, User> {
-}
-```
-
-```jsp
-<t:listView title="Users">
-    <t:listPanel>
-        <t:listTable>
-            <t:property name="id"/>
-            <t:property name="username"/>
-            <t:property name="name"/>
-            <t:property name="createdAt"/>
-        </t:listTable>
-    </t:listPanel>
-</t:listView>
-```
-
-The showcase app already uses `ListViewFilter` on the controller side, but this screen currently renders only the list section. Add a `t:filterPanel` above `t:listPanel` when the page needs filter inputs.
 
 ```jsp
 <t:view title="Products">

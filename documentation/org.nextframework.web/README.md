@@ -40,23 +40,6 @@ ServletContext servletContext = app.getServletContext();
 
 ### Automatic Initialization
 
-**Example of use:**
-
-File: `samples/showcase_app/src/org/erplite/Main.java`
-
-```java
-private static void configureJarScanner(Context context) {
-    String jarsToScan = "next-view-*.jar,next-web-*.jar,jakarta.servlet.jsp.jstl-*.jar,jakarta.servlet.jsp.jstl-api-*.jar";
-    StandardJarScanner scanner = (StandardJarScanner) context.getJarScanner();
-    StandardJarScanFilter filter = new StandardJarScanFilter();
-    filter.setDefaultTldScan(false);
-    filter.setDefaultPluggabilityScan(false);
-    filter.setTldScan(jarsToScan);
-    filter.setPluggabilityScan(jarsToScan);
-    scanner.setJarScanFilter(filter);
-}
-```
-
 In the sample app, embedded Tomcat is configured to scan the framework jars that provide `web-fragment.xml` and tag libraries. Once those jars are visible, `next-web` initializes itself automatically:
 - Component scanning of application packages
 - Spring context initialization
