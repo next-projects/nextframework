@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService extends GenericService<User> {
 
-    @Autowired
-    public void setUserDAO(UserDAO userDAO) {
-        super.setGenericDAO(userDAO);
-    }
+	@Autowired
+	public void setUserDAO(UserDAO userDAO) {
+		super.setGenericDAO(userDAO);
+	}
 
 }

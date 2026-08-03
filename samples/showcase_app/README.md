@@ -1,49 +1,117 @@
-# ERP-lite Sample Application
+# ERP-lite Showcase App
 
-A small business management application built with Next Framework. The application handles the core operations of a commercial business: managing customers, tracking product inventory, processing sales orders, and recording payments.
+Small sample application for the local NextFramework mirror. It demonstrates an end-to-end embedded-webapp setup with:
 
-The goal is to demonstrate all major framework features in a realistic business context, including CRUD operations, master-detail forms, reports, charts, and role-based authorization.
+- Embedded Tomcat started from `org.erplite.Main`
+- Next Framework deployment into `WebContent/WEB-INF`
+- H2 file-based persistence
+- Flyway migrations on startup
+- Next authorization login flow
+- A working CRUD for `User`
+
+The repository currently contains a focused showcase, not a full ERP implementation. The landing and app home pages describe broader ERP features, but the implemented domain model is currently centered on users and authentication.
 
 ---
 
 ## Project Structure
 
-```
+```text
 showcase_app/
-├── src/                    # Java sources (org.erplite.*)
+├── src/
+│   ├── org/erplite/              # Java sources
+│   ├── db/migration/             # Flyway SQL migrations
+│   ├── META-INF/services/        # Next service registrations
+│   ├── authentication.properties
+│   ├── connection.properties
+│   └── messages.properties
 ├── WebContent/
-│   └── WEB-INF/
-├── scripts/                # Build and run scripts
-├── ivy.xml                 # Dependencies
-└── build.xml               # Ant build
+│   ├── WEB-INF/jsp/              # JSP views
+│   ├── css/                      # App, landing, and login styles
+│   └── index.jsp                 # Redirects to /public/home
+├── scripts/                      # Bash helper scripts
+├── ivy.xml                       # App-only dependencies
+├── build.xml                     # Ant build entrypoint
+└── build.properties
 ```
 
 **Package:** `org.erplite`
 
-**Runtime:** Embedded Tomcat
+**Context path:** `/app`
 
-**Next Framework:** 3.9.x
+**Entry URL:** `http://localhost:8080/app`
 
-**UI Framework:** Bootstrap 5.3.3 (included via `<n:head/>`)
+---
 
-**Database:** H2 (file-based, auto-configured)
+## What Is Implemented
 
-**Schema Migrations:** Flyway (runs on startup)
+### Controllers
+
+- `HomeController` -> `/public/home`
+- `LoginController` -> `/public/login`
+- `AppHomeController` -> `/app/home`
+- `UserCrudController` -> `/app/users`
+
+### Persistence
+
+- Entity: `User`
+- DAO: `UserDAO`
+- Authorization DAO: `AuthorizationDAO`
+- Service: `UserService`
+
+### Configuration
+
+- `FlywayInitializer` runs migrations at startup
+- `ErpliteViewConfig` customizes the view layer
+- `MessageSourceConfig` loads application messages
+
+### Views
+
+- Public landing page
+- Login page
+- Authenticated home page
+- User list view
+- User form view
+
+---
+
+## Runtime and Dependencies
+
+- Next Framework source is taken from the local mirror via `next.root`
+- Embedded servlet container: Tomcat `11.0.24`
+- Database: H2 `2.2.220`
+- Migrations: Flyway `9.22.3`
+- Logging bridge: `log4j-jul`
+- Password hashing: BCrypt
+
+This sample targets a Java 25 compilation/runtime toolchain in its app build:
+
+- `build.xml` compiles with `source="25"` and `target="25"`
+- the helper scripts delegate to `org.nextframework.build/tools/*`
 
 ---
 
 ## Quick Start
 
+The helper scripts are Bash scripts, so run them from Git Bash, WSL, or another Unix-like shell.
+
 ```bash
-# Build the project (first run may take a few minutes)
+# First-time setup: download tools, resolve deps, compile framework, deploy app, compile app
 ./scripts/build.sh
 
-# Run the application
+# Start on the default port (8080)
 ./scripts/run.sh
 
-# Access the application
-open http://localhost:8080/app
+# Or start on a custom port
+./scripts/run.sh 8081
 ```
+
+Open:
+
+```text
+http://localhost:8080/app
+```
+
+`WebContent/index.jsp` redirects to `/public/home`.
 
 ---
 
@@ -51,89 +119,113 @@ open http://localhost:8080/app
 
 | Script | Description |
 |--------|-------------|
-| `scripts/build.sh` | Resolve dependencies, compile, and set up Next Framework |
-| `scripts/compile.sh` | Compile app source code only (after initial build) |
-| `scripts/run.sh [--compile] [port]` | Start the application (default port: 8080) |
-| `scripts/clean.sh [--all]` | Clean build outputs |
+| `scripts/build.sh` | Downloads Ant/Ivy, resolves dependencies, compiles the framework, deploys it into `WebContent`, and compiles the app |
+| `scripts/compile.sh` | Recompiles app source only |
+| `scripts/run.sh [--compile] [port]` | Starts embedded Tomcat with context path `/app` |
+| `scripts/clean.sh [--all]` | Removes compiled classes and copied JARs; `--all` also removes `build/tomcat` |
+| `scripts/reset-db.sh` | Deletes local H2 database files under `data/` |
 
 ---
 
-## Build Setup
+## Build Notes
 
-The build script (`scripts/build.sh`) sets up the project structure for development:
+`build.sh` auto-detects the local Next Framework root and stores it in `build.config` when needed.
 
-**WEB-INF/classes/** - Next Framework classes (exploded)
-- `org/nextframework/` - Core framework classes
-- `org/stjs/` - JavaScript generation classes
-- `META-INF/` - Framework metadata:
-  - `*.tld` - Tag Library Descriptors (JSP tags)
-  - `web-fragment.xml` - Servlet configuration (filters, listeners, servlets)
-  - `services/` - Service loader configuration
+The build flow is:
 
-**WEB-INF/lib/** - All dependencies (JARs)
-- Embedded Tomcat
-- Spring Framework
-- Hibernate
-- H2 Database
-- Flyway
+1. Download Ant and Ivy with `org.nextframework.build/tools/download-tools.sh`
+2. Resolve framework and app dependencies
+3. Compile Next Framework modules
+4. Deploy framework classes/resources into `WebContent/WEB-INF`
+5. Compile `showcase_app` sources
 
-This structure allows IDE hot-reload of Next Framework classes during development.
+For app-only recompilation after the initial setup:
+
+```bash
+./scripts/compile.sh
+```
 
 ---
 
 ## Database
 
-Next Framework auto-detects database configuration from `connection.properties` in the classpath. When found, the framework automatically creates a `DataSource` bean and `JdbcTemplate`.
+Database configuration lives in `src/connection.properties`.
 
-**Configuration file:** `src/connection.properties`
+Current JDBC URL:
 
-**Database file:** `data/erplite.mv.db` (created on first run)
+```properties
+jdbc:h2:file:./data/erplite;AUTO_SERVER=TRUE;MODE=LEGACY
+```
 
----
+Notes:
 
-## Schema Migrations (Flyway)
+- database files are created under `data/`
+- `AUTO_SERVER=TRUE` allows multiple processes to access the database
+- Flyway migrations are loaded from `src/db/migration/`
 
-Database schema is managed by Flyway, which runs migrations automatically on application startup.
+Current migrations:
 
-**Migrations folder:** `src/db/migration/`
-
-Migration files follow Flyway naming convention: `V1__description.sql`, `V2__description.sql`, etc.
+- `V1__users_table.sql`
+- `V2__users_seed.sql`
 
 ---
 
 ## Authentication
 
-The application uses Next Framework's authorization system with session-based authentication.
+Module access is configured in `src/authentication.properties`:
 
-**Login page:** `/public/login`
+- `public=false`
+- `app=true`
 
-**Protected module:** `/app/*` (requires authentication)
+In practice:
 
-**Password hashing:** BCrypt
+- `/public/*` is the anonymous area
+- `/app/*` is the authenticated area
 
-**Default users:** (all passwords are `admin`)
-- `admin` - Administrator
-- `sales` - Sales User
-- `stock` - Inventory User
-- `viewer` - Viewer
+`LoginController` extends the framework login controller and:
 
-**Key files:**
-- `src/authentication.properties` - Module security configuration
-- `src/org/erplite/controller/LoginController.java` - Login/logout handling
-- `src/org/erplite/dao/AuthorizationDAO.java` - User lookup
+- validates passwords with BCrypt
+- redirects successful logins to `/app/home`
+- exposes logout via `/public/login?action=logout`
+
+Seed users created by `V2__users_seed.sql`:
+
+| Username | Password | Display Name |
+|----------|----------|--------------|
+| `admin` | `admin` | `Administrator` |
+| `sales` | `admin` | `Sales User` |
+| `stock` | `admin` | `Inventory User` |
+| `viewer` | `admin` | `Viewer` |
 
 ---
 
-## Entities
+## User CRUD Sample
 
-- User
-- Company
-- Customer
-- Category
-- Product
-- Supplier
-- Order
-- OrderItem
-- StockMovement
-- Invoice
-- Payment
+The implemented CRUD example is `UserCrudController` at `/app/users`.
+
+Current behavior:
+
+- lists users with `id`, `username`, `name`, and `createdAt`
+- edits and creates users with the template tag views
+- preserves `createdAt` on update
+- hashes new passwords with BCrypt before saving
+- keeps the existing password when an edited form leaves the password blank
+
+Relevant files:
+
+- `src/org/erplite/controller/UserCrudController.java`
+- `WebContent/WEB-INF/jsp/app/crud/userList.jsp`
+- `WebContent/WEB-INF/jsp/app/crud/userForm.jsp`
+
+---
+
+## Embedded Tomcat Notes
+
+`org.erplite.Main` starts Tomcat directly and mounts `WebContent` at `/app`.
+
+It also narrows JAR scanning to:
+
+- `next-view-*.jar`
+- `next-web-*.jar`
+
+That keeps startup faster while still allowing TLD and `web-fragment.xml` discovery for the framework modules that need it.

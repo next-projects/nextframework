@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AuthorizationDAO extends AbstractAuthorizationDAO {
 
-    @Autowired
-    private UserDAO userDAO;
+	@Autowired
+	private UserDAO userDAO;
 
-    @Override
-    public User findUserByUsername(String username) {
-        return userDAO.findByPropertyUnique("username", username);
-    }
+	@Override
+	public User findUserByUsername(String username) {
+		return userDAO.findByPropertyUnique("username", username);
+	}
 
 }

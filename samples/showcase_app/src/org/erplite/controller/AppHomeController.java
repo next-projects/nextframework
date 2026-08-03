@@ -7,9 +7,9 @@ import org.nextframework.controller.MultiActionController;
 @Controller(path = "/app/home")
 public class AppHomeController extends MultiActionController {
 
-    @DefaultAction
-    public String home() {
-        return "app_home";
-    }
+	@DefaultAction
+	public String home() {
+		return "app_home";
+	}
 
 }

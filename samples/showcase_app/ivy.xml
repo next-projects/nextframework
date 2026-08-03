@@ -1,29 +1,32 @@
 <ivy-module version="2.0">
-    <info organisation="org.erplite" module="showcase_app"/>
 
-    <configurations>
-        <conf name="provided"/>
-        <conf name="lib"/>
-    </configurations>
+	<info organisation="org.erplite" module="showcase_app"/>
 
-    <dependencies>
-        <!-- Embedded Tomcat (9.0.x for javax.servlet compatibility) -->
-        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-core" rev="9.0.115" conf="lib->default"/>
-        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-jasper" rev="9.0.115" conf="lib->default"/>
+	<configurations>
+		<conf name="provided"/>
+		<conf name="lib"/>
+	</configurations>
 
-        <!-- H2 Database (file-based) -->
-        <dependency org="com.h2database" name="h2" rev="2.2.220" conf="lib->default"/>
+	<dependencies>
 
-        <!-- Flyway (database migrations) -->
-        <dependency org="org.flywaydb" name="flyway-core" rev="9.22.3" conf="lib->default"/>
+		<!-- Embedded Tomcat -->
+		<dependency org="org.apache.tomcat.embed" name="tomcat-embed-core" rev="11.0.24" conf="lib->default"/>
+		<dependency org="org.apache.tomcat.embed" name="tomcat-embed-jasper" rev="11.0.24" conf="lib->default"/>
 
-        <!-- JUL to Log4j2 bridge (for Tomcat logs) -->
-        <dependency org="org.apache.logging.log4j" name="log4j-jul" rev="2.25.3" conf="lib->default"/>
+		<!-- H2 Database (file-based) -->
+		<dependency org="com.h2database" name="h2" rev="2.2.220" conf="lib->default"/>
 
-        <!-- Lombok (reduce boilerplate) -->
-        <dependency org="org.projectlombok" name="lombok" rev="1.18.42" conf="lib->default"/>
+		<!-- Flyway (database migrations) -->
+		<dependency org="org.flywaydb" name="flyway-core" rev="9.22.3" conf="lib->default"/>
 
-        <!-- BCrypt for password hashing -->
-        <dependency org="org.mindrot" name="jbcrypt" rev="0.4" conf="lib->default"/>
-    </dependencies>
+		<!-- JUL to Log4j2 bridge (for Tomcat logs) -->
+		<dependency org="org.apache.logging.log4j" name="log4j-jul" rev="2.25.3" conf="lib->default"/>
+
+		<!-- BCrypt for password hashing -->
+		<dependency org="org.mindrot" name="jbcrypt" rev="0.4" conf="lib->default"/>
+
+		<dependency org="jakarta.annotation" name="jakarta.annotation-api" rev="3.0.0" conf="lib->default" />
+
+	</dependencies>
+
 </ivy-module>

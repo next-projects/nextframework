@@ -12,33 +12,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Controller(path = "/app/users")
 public class UserCrudController extends CrudController<ListViewFilter, User, User> {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Override
-    protected void save(WebRequestContext request, User user) throws Exception {
-        // Load existing user if editing
-        User existing = user.getId() != null ? userService.loadById(user.getId()) : null;
+	@Override
+	protected void save(WebRequestContext request, User user) throws Exception {
 
-        // Set createdAt: preserve from server if editing, set to now if new
-        if (existing != null) {
-            user.setCreatedAt(existing.getCreatedAt());
-        } else {
-            user.setCreatedAt(new java.util.Date());
-        }
+		// Load existing user if editing
+		User existing = user.getId() != null ? userService.loadById(user.getId()) : null;
 
-        // Handle password
-        String password = user.getPassword();
-        if (password == null || password.isEmpty()) {
-            if (existing != null) {
-                user.setPassword(existing.getPassword());
-            }
-        } else if (!password.startsWith("$2a$")) {
-            // Hash new password
-            user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(10)));
-        }
+		// Set createdAt: preserve from server if editing, set to now if new
+		if (existing != null) {
+			user.setCreatedAt(existing.getCreatedAt());
+		} else {
+			user.setCreatedAt(new java.util.Date());
+		}
 
-        super.save(request, user);
-    }
+		// Handle password
+		String password = user.getPassword();
+		if (password == null || password.isEmpty()) {
+			if (existing != null) {
+				user.setPassword(existing.getPassword());
+			}
+		} else if (!password.startsWith("$2a$")) {
+			// Hash new password
+			user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(10)));
+		}
+
+		super.save(request, user);
+	}
 
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.authorization"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.authorization.dashboard"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.beans"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.chart"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.compilation"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.context"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.controller"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.dao"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.jsbuilder"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.legacy"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.persistence"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.report"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.report.generator"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.services"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.summary"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.types"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.validation"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.view"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.web"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/ecj-3.45.0.jar"/>
+	<classpathentry kind="lib" path="lib/flyway-core-9.22.3.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.10.1.jar"/>
+	<classpathentry kind="lib" path="lib/h2-2.2.220.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta.annotation-api-3.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.15.2.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.15.2.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.15.2.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-dataformat-toml-2.15.2.jar"/>
+	<classpathentry kind="lib" path="lib/jbcrypt-0.4.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-api-2.25.3.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-jul-2.25.3.jar"/>
+	<classpathentry kind="lib" path="lib/tomcat-annotations-api-11.0.24.jar"/>
+	<classpathentry kind="lib" path="lib/tomcat-embed-core-11.0.24.jar"/>
+	<classpathentry kind="lib" path="lib/tomcat-embed-el-11.0.24.jar"/>
+	<classpathentry kind="lib" path="lib/tomcat-embed-jasper-11.0.24.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
