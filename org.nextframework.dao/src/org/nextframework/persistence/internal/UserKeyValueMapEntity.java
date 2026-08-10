@@ -12,7 +12,7 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "_next_keyvalue", uniqueConstraints = @UniqueConstraint(name = "_nx_uk_un_mp", columnNames = { "username", "map_key" }), indexes = @Index(name = "_nx_idx_un", columnList = "username"))
-@TableGenerator(name = "_userkey_gen", table = "_next_hilo_gen", allocationSize = 10)
+@TableGenerator(name = "_userkey_gen", table = "_next_hilo_gen", pkColumnName = "sequence_name", valueColumnName = "sequence_next_hi_value", pkColumnValue = "_next_keyvalue", allocationSize = 10)
 public class UserKeyValueMapEntity {
 
 	@Id

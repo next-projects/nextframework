@@ -3,6 +3,9 @@ package org.nextframework.persistence.internal;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.nextframework.persistence.HibernateTransactionCommand;
+import org.nextframework.persistence.HibernateTransactionSessionProvider;
+import org.nextframework.persistence.PersistenceConfiguration;
 
 public class UserPropertiesDAO {
 
@@ -23,28 +26,42 @@ public class UserPropertiesDAO {
 		}
 	}
 
+	@SuppressWarnings("all")
 	public void delete(UserKeyValueMapEntity userProperty) {
-		Session session = sessionFactory.openSession();
-		try {
-			delete(userProperty, session);
-			session.flush();
-		} finally {
-			session.close();
-		}
+		HibernateTransactionSessionProvider sessionProvider = (HibernateTransactionSessionProvider) PersistenceConfiguration.getConfig().getSessionProvider();
+		sessionProvider.executeInTransaction(new HibernateTransactionCommand() {
+
+			@Override
+			public Object doInHibernate(Session session, Object transactionStatus) {
+				try {
+					session.remove(userProperty);
+					session.flush();
+				} finally {
+					session.close();
+				}
+				return null;
+			}
+
+		});
 	}
 
-	private void delete(UserKeyValueMapEntity userProperty, Session session) {
-		session.remove(userProperty);
-	}
-
+	@SuppressWarnings("all")
 	public void saveKey(UserKeyValueMapEntity keyValueMapEntity) {
-		Session session = sessionFactory.openSession();
-		try {
-			session.merge(keyValueMapEntity);
-			session.flush();
-		} finally {
-			session.close();
-		}
+		HibernateTransactionSessionProvider sessionProvider = (HibernateTransactionSessionProvider) PersistenceConfiguration.getConfig().getSessionProvider();
+		sessionProvider.executeInTransaction(new HibernateTransactionCommand() {
+
+			@Override
+			public Object doInHibernate(Session session, Object transactionStatus) {
+				try {
+					session.merge(keyValueMapEntity);
+					session.flush();
+				} finally {
+					session.close();
+				}
+				return null;
+			}
+
+		});
 	}
 
 	private UserKeyValueMapEntity getUserKey(String propertyName, Session session) {
