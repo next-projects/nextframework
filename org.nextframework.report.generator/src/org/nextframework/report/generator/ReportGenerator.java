@@ -273,7 +273,6 @@ public class ReportGenerator {
 		}
 	}
 
-	@SuppressWarnings("serial")
 	private static Map<String, String> formatTimeMap = new HashMap<String, String>() {
 
 		{
@@ -370,10 +369,8 @@ public class ReportGenerator {
 
 	private IReportBuilder createReportBuilder() {
 		try {
-			return ReportGeneratorContext.getClassFor(this).newInstance();
-		} catch (InstantiationException e) {
-			throw new NextException(e);
-		} catch (IllegalAccessException e) {
+			return ReportGeneratorContext.getClassFor(this).getConstructor().newInstance();
+		} catch (Exception e) {
 			throw new NextException(e);
 		}
 	}

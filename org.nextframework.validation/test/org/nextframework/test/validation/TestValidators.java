@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.nextframework.validation.ObjectAnnotationValidator;
 import org.nextframework.validation.annotation.Email;
 import org.nextframework.validation.annotation.MaxLength;
 import org.nextframework.validation.annotation.MaxValue;
@@ -286,7 +285,6 @@ public class TestValidators {
 		return new BeanPropertyBindingResult(new ValidationTestBean(), "bean");
 	}
 
-	@SuppressWarnings("unchecked")
 	private <T extends Annotation> T getAnnotation(String fieldName, Class<T> annotationType) {
 		try {
 			return ValidationTestBean.class.getDeclaredField(fieldName).getAnnotation(annotationType);

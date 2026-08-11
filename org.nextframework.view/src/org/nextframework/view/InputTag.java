@@ -378,7 +378,7 @@ public class InputTag extends BaseTag {
 		if (checked != null) {
 			return checked ? "checked" : null;
 		}
-		if (value != null && new Boolean(value.toString())) {
+		if (value != null && Boolean.valueOf(value.toString())) {
 			return "checked";
 		}
 		return null;

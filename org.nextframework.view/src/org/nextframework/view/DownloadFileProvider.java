@@ -78,7 +78,7 @@ public class DownloadFileProvider {
 		Pattern pattern = Pattern.compile(".+?/(-?[0-9]+)");
 		Matcher matcher = pattern.matcher(requestURI);
 		if (matcher.find()) {
-			return new Long(matcher.group(1));
+			return Long.valueOf(matcher.group(1));
 		} else {
 			throw new Exception("URL inválida");
 		}
@@ -123,12 +123,11 @@ public class DownloadFileProvider {
 			if (allClassesOfTypeFile.length == 1) {
 				File file;
 				try {
-					file = (File) allClassesOfTypeFile[0].newInstance();
+					file = (File) allClassesOfTypeFile[0].getConstructor().newInstance();
 					file.setCdfile(cdfile);
 					file = fileDAO.loadWithContents(file);
 					return returnFile(file);
-				} catch (InstantiationException e) {
-				} catch (IllegalAccessException e) {
+				} catch (Exception e) {
 				}
 			}
 		}

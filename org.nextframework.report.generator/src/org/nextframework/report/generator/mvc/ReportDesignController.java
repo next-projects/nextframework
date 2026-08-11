@@ -197,7 +197,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	@OnErrors("editDesignForId")
 	public ModelAndView saveReport(WebRequestContext request, ReportDesignModel model) throws Exception {
 
-		CUSTOM_BEAN customBean = (CUSTOM_BEAN) customBeanClass.newInstance();
+		CUSTOM_BEAN customBean = (CUSTOM_BEAN) customBeanClass.getConstructor().newInstance();
 
 		//Faz o bind no bean customizado
 		ServletRequestDataBinder binder = bind(request, customBean, false);
@@ -350,7 +350,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 	}
 
 	@SuppressWarnings("all")
-	protected Map<String, Object> getFilterMap(WebRequestContext request, ReportDesignModel model, ReportElement reportElement, boolean bind) throws Exception{
+	protected Map<String, Object> getFilterMap(WebRequestContext request, ReportDesignModel model, ReportElement reportElement, boolean bind) throws Exception {
 		Map<String, Object> filterMap = null;
 		if (!bind) {
 			filterMap = (Map<String, Object>) request.getUserAttribute(ReportDesignController.class.getSimpleName() + "_" + model.getId());
@@ -440,7 +440,7 @@ public abstract class ReportDesignController<CUSTOM_BEAN extends ReportDesignCus
 		return executeTask(request, model, task);
 	}
 
-	/////////////////////////////////////////////// EXECUTE TASKS ///////////////////////////////////////////////
+	/////////////////////////////////////////////// EXECUTE TASKS
 
 	public interface ReportDesignTask {
 

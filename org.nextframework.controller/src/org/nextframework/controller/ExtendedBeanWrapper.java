@@ -341,7 +341,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 					@Override
 					protected org.nextframework.types.File createFile(Object value) {
 						try {
-							return (org.nextframework.types.File) class1.newInstance();
+							return (org.nextframework.types.File) class1.getConstructor().newInstance();
 						} catch (InstantiationException e) {
 							throw new RuntimeException(e);
 						} catch (IllegalAccessException e) {
@@ -630,7 +630,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 				}
 				if (clazz != null) {
 					errorMsg = "O erro pode ser evitado se a classe " + clazz.getName() + " possuir um construtor público sem argumentos";
-					propertyValue = clazz.newInstance();
+					propertyValue = clazz.getConstructor().newInstance();
 					setPropertyValue(nestedProperty, propertyValue);
 				}
 			} catch (Exception e) {
@@ -774,7 +774,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 									Class clazz = (Class) type;
 									extraMessage = "A classe " + clazz.getName() + " não possui um construtor publico sem argumentos";
 									try {
-										value = clazz.newInstance();
+										value = clazz.getConstructor().newInstance();
 										int index = Integer.parseInt(key);
 										int insertNulls = index - list.size();
 										while (insertNulls > 0) { // 11/06/2012
@@ -782,7 +782,7 @@ public class ExtendedBeanWrapper implements BeanWrapper {
 											insertNulls--;
 										}
 										list.add(index, value); // CÓDIGO 15/01/2007
-									} catch (InstantiationException e1) {
+									} catch (Exception e1) {
 										throw new RuntimeException("Aconteceu um erro ao acessar um elemento da classe " + originalClass.getName()
 												+ " propriedade " + propertyName + "  Não foi possível instanciar um bean para preencher a lista. " + extraMessage, e);
 									}

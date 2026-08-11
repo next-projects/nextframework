@@ -104,7 +104,7 @@ public class FunctionCall {
 					break;
 				case BOOLEAN:
 					clazz = Boolean.class;
-					value = new Boolean(param.getParameterValue());
+					value = Boolean.valueOf(param.getParameterValue());
 					break;
 				case USER:
 					clazz = User.class;

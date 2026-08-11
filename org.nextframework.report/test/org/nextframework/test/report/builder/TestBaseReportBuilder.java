@@ -13,6 +13,7 @@ import org.nextframework.summary.dynamic.DynamicSummary;
 
 import junit.framework.Assert;
 
+@SuppressWarnings("all")
 public class TestBaseReportBuilder {
 
 	@Test

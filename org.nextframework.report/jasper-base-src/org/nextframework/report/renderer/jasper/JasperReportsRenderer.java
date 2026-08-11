@@ -39,7 +39,7 @@ public class JasperReportsRenderer extends AbstractJasperReportsRenderer impleme
 
 	private static JasperDesignBuilder instantiateBuilder(String string) {
 		try {
-			return (JasperDesignBuilder) Class.forName(string).newInstance();
+			return (JasperDesignBuilder) Class.forName(string).getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

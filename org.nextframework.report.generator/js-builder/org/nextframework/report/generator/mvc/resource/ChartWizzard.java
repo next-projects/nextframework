@@ -196,13 +196,13 @@ public class ChartWizzard {
 	protected void configureSerieAggregateType() {
 		if (propertiesAsSeries.getTo().selectedIndex >= 0) {
 			String aggregateFunction = next.dom.getSelectedValue(chartAggregateTypeSerie);
-			String selectedOption = next.dom.getSelectedText(propertiesAsSeries.getTo());
 			Option optionSelected = propertiesAsSeries.getTo().options.$get(propertiesAsSeries.getTo().selectedIndex);
 			Map<String, Object> properties = getPropertiesFromOption(optionSelected);
 			properties.$put(AGGREGATE_FUNCTION, aggregateFunction);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getPropertiesFromOption(Option optionSelected) {
 		Map<String, Object> optionObject = (Map<String, Object>) optionSelected;
 		Map<String, Object> properties = (Map<String, Object>) optionObject.$get("properties");

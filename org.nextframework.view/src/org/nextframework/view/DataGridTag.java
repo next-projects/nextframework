@@ -58,7 +58,6 @@ import jakarta.servlet.jsp.jstl.core.LoopTagStatus;
  * @since 27/01/2006
  * @version 1.1
  */
-@SuppressWarnings("deprecation")
 public class DataGridTag extends BaseTag {
 
 	//Dados

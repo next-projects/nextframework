@@ -62,7 +62,7 @@ public class BeanTag extends BaseTag implements LogicalTag {
 			DataGridTag dataGridTag = (DataGridTag) getParent();
 			if (dataGridTag.currentStatus == Status.DYNALINE) {
 				//if dynaline and there is no bean on scope.. instantiate one
-				bean = valueType.newInstance();
+				bean = valueType.getConstructor().newInstance();
 			}
 		}
 

@@ -66,8 +66,8 @@ public class MenuParser {
 		if (inputStream == null) {
 			throw new NullPointerException("O arquivo de menu não foi encontrado");
 		}
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		documentBuilder.setEntityResolver(new MenuEntityResolver(classLoader));
 

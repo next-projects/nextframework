@@ -34,7 +34,6 @@ import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
 import org.nextframework.exception.NextException;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.NotWritablePropertyException;
 import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.PropertyAccessorFactory;
@@ -208,7 +207,7 @@ public class BeanUtils {
 		BeanDescriptor baseDescriptor = BeanDescriptorFactory.forBean(o);
 		E o2;
 		try {
-			o2 = (E) o.getClass().newInstance();
+			o2 = (E) o.getClass().getConstructor().newInstance();
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(o2);
 			PropertyDescriptor[] propertyDescriptors = baseDescriptor.getPropertyDescriptors();
 			for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
@@ -222,11 +221,7 @@ public class BeanUtils {
 					//if the property is not writable.. do not write
 				}
 			}
-		} catch (InstantiationException e1) {
-			throw new NextException("Não foi possível clonar o bean. Não foi possível criar outra instancia.", e1);
-		} catch (IllegalAccessException e1) {
-			throw new NextException("Não foi possível clonar o bean. Acesso ilegal.", e1);
-		} catch (BeansException e) {
+		} catch (Exception e) {
 			throw new NextException("Não foi possível clonar o bean. ", e);
 		}
 		return o2;

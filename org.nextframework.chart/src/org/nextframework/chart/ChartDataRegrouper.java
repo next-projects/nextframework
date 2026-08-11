@@ -64,10 +64,10 @@ public class ChartDataRegrouper {
 
 				@Override
 				public Number getComposite() {
-					Number sum = new Long(0);
+					Number sum = Long.valueOf(0);
 					for (Number number : v) {
 						if (number instanceof Double) {
-							sum = new Double(sum.doubleValue());
+							sum = Double.valueOf(sum.doubleValue());
 						}
 						if (sum instanceof Double) {
 							sum = number.doubleValue() + sum.doubleValue();

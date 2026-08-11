@@ -36,7 +36,7 @@ public class JSCollections {
 		try {
 			// TODO it could be a cleaner way to inject the implementation, but for the moment this should be enough
 			Class<? extends JSCollectionsImplementor> clazz = (Class<? extends JSCollectionsImplementor>) Class.forName("org.stjs.server.JSCollectionsServerImplementor");
-			implementor = clazz.newInstance();
+			implementor = clazz.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new UnsupportedOperationException();
 		}

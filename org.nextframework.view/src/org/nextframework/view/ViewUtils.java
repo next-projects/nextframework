@@ -38,7 +38,6 @@ import jakarta.servlet.jsp.PageContext;
  * @since 25/01/2006
  * @version 1.1
  */
-@SuppressWarnings("deprecation")
 public class ViewUtils {
 
 	@SuppressWarnings("unchecked")

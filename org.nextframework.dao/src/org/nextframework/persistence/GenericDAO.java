@@ -120,7 +120,7 @@ public class GenericDAO<BEAN> extends HibernateDaoSupport implements DAO<BEAN>, 
 		if (isDetectFileProperties()) {
 			BeanWrapper beanWrapper;
 			try {
-				beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(beanClass.newInstance());
+				beanWrapper = PropertyAccessorFactory.forBeanPropertyAccess(beanClass.getConstructor().newInstance());
 				PropertyDescriptor[] propertyDescriptors = beanWrapper.getPropertyDescriptors();
 				for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
 					if (File.class.isAssignableFrom(propertyDescriptor.getPropertyType())) {

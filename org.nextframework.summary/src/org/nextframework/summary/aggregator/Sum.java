@@ -13,25 +13,25 @@ public class Sum<E extends Number> implements Aggregator<E> {
 			return n1;
 		}
 		if (n1 instanceof Byte) {
-			return (E) new Byte((byte) (n1.byteValue() + n2.byteValue()));
+			return (E) Byte.valueOf((byte) (n1.byteValue() + n2.byteValue()));
 		}
 		if (n1 instanceof Short) {
-			return (E) new Short((short) (n1.shortValue() + n2.shortValue()));
+			return (E) Short.valueOf((short) (n1.shortValue() + n2.shortValue()));
 		}
 		if (n1 instanceof Integer) {
-			return (E) new Integer((n1.intValue() + n2.intValue()));
+			return (E) Integer.valueOf((n1.intValue() + n2.intValue()));
 		}
 		if (n1 instanceof Long) {
-			return (E) new Long((n1.longValue() + n2.longValue()));
+			return (E) Long.valueOf((n1.longValue() + n2.longValue()));
 		}
 		if (n1 instanceof Float) {
-			return (E) new Float((float) (n1.floatValue() + n2.floatValue()));
+			return (E) Float.valueOf((float) (n1.floatValue() + n2.floatValue()));
 		}
 		if (n1 instanceof Double) {
-			return (E) new Double((n1.doubleValue() + n2.doubleValue()));
+			return (E) Double.valueOf((n1.doubleValue() + n2.doubleValue()));
 		}
 		try {
-			return (E) n1.getClass().getConstructor(Double.class).newInstance(new Double((n1.doubleValue() + n2.doubleValue())));
+			return (E) n1.getClass().getConstructor(Double.class).newInstance(Double.valueOf((n1.doubleValue() + n2.doubleValue())));
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException("Could not agrregate sum of " + n1 + " and " + n2 + ". ", e);
 		} catch (SecurityException e) {
@@ -44,7 +44,7 @@ public class Sum<E extends Number> implements Aggregator<E> {
 			throw new IllegalArgumentException("Could not agrregate sum of " + n1 + " and " + n2 + ". ", e);
 		} catch (NoSuchMethodException e) {
 			try {
-				return (E) n1.getClass().getConstructor(double.class).newInstance(new Double((n1.doubleValue() + n2.doubleValue())));
+				return (E) n1.getClass().getConstructor(double.class).newInstance(Double.valueOf((n1.doubleValue() + n2.doubleValue())));
 			} catch (IllegalArgumentException e1) {
 				throw new IllegalArgumentException("Could not agrregate sum of " + n1 + " and " + n2 + ". ", e);
 			} catch (SecurityException e1) {

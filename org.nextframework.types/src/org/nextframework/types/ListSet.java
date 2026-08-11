@@ -49,7 +49,7 @@ public class ListSet<E> extends ArrayList<E> implements Set<E> {
 		if (this.size() < index + 1) {
 			while (this.size() < index + 1) {
 				try {
-					add(clazz.newInstance());
+					add(clazz.getConstructor().newInstance());
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}

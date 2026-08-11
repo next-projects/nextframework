@@ -212,10 +212,8 @@ public class CrudController<FILTER extends ListViewFilter, FORMBEAN, BEAN> exten
 
 	protected BEAN create(WebRequestContext request, BEAN form) throws Exception {
 		try {
-			return beanClass.newInstance();
-		} catch (InstantiationException e) {
-			throw new NextException("cannot instantiate " + formCommandClass, e);
-		} catch (IllegalAccessException e) {
+			return beanClass.getConstructor().newInstance();
+		} catch (Exception e) {
 			throw new NextException("cannot instantiate " + formCommandClass, e);
 		}
 	}

@@ -72,7 +72,7 @@ public abstract class AbstractJFreeTypeRenderer implements JFreeTypeRenderer {
 			}
 
 			public Number getX(int series, int item) {
-				return new Double(item);
+				return Double.valueOf(item);
 			}
 
 			public Number getY(int series, int item) {

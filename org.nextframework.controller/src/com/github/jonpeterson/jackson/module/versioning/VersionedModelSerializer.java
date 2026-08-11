@@ -61,7 +61,7 @@ public class VersionedModelSerializer<T> extends StdSerializer<T> implements Con
 		Class<? extends VersionedModelConverter> converterClass = jsonVersionedModel.toPastConverterClass();
 		if (converterClass != VersionedModelConverter.class)
 			try {
-				this.converter = converterClass.newInstance();
+				this.converter = converterClass.getConstructor().newInstance();
 			} catch (Exception e) {
 				throw new RuntimeException("unable to create instance of converter '" + converterClass.getName() + "'", e);
 			}

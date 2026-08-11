@@ -13,6 +13,7 @@ import org.nextframework.persistence.QueryBuilder;
 
 import junit.framework.Assert;
 
+@SuppressWarnings("all")
 public class TestQueryBuilder extends TestHibernate {
 
 	private HibernateSessionProvider builderSessionProvider;

@@ -33,25 +33,25 @@ public class AverageNN<E extends Number> implements Aggregator<E> {
 			return null;
 		}
 		if (Byte.class.isAssignableFrom(type)) {
-			return (E) new Byte((byte) (avg));
+			return (E) Byte.valueOf((byte) (avg));
 		}
 		if (Short.class.isAssignableFrom(type)) {
-			return (E) new Short((short) (avg));
+			return (E) Short.valueOf((short) (avg));
 		}
 		if (Integer.class.isAssignableFrom(type)) {
-			return (E) new Integer((int) (avg));
+			return (E) Integer.valueOf((int) (avg));
 		}
 		if (Long.class.isAssignableFrom(type)) {
-			return (E) new Long((long) (avg));
+			return (E) Long.valueOf((long) (avg));
 		}
 		if (Float.class.isAssignableFrom(type)) {
-			return (E) new Float((float) (avg));
+			return (E) Float.valueOf((float) (avg));
 		}
 		if (Double.class.isAssignableFrom(type)) {
-			return (E) new Double((double) (avg));
+			return (E) Double.valueOf((double) (avg));
 		}
 		try {
-			return (E) type.getConstructor(Double.class).newInstance(new Double(avg));
+			return (E) type.getConstructor(Double.class).newInstance(Double.valueOf(avg));
 		} catch (IllegalArgumentException e) {
 			throw new IllegalArgumentException("Could not agrregate avg of " + type + ". ", e);
 		} catch (SecurityException e) {
@@ -64,7 +64,7 @@ public class AverageNN<E extends Number> implements Aggregator<E> {
 			throw new IllegalArgumentException("Could not agrregate avg of " + type + ". ", e);
 		} catch (NoSuchMethodException e) {
 			try {
-				return (E) type.getConstructor(double.class).newInstance(new Double(avg));
+				return (E) type.getConstructor(double.class).newInstance(Double.valueOf(avg));
 			} catch (IllegalArgumentException e1) {
 				throw new IllegalArgumentException("Could not agrregate avg of " + type + ". ", e);
 			} catch (SecurityException e1) {

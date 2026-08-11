@@ -16,6 +16,7 @@ import org.nextframework.persistence.PersistenceConfiguration;
 import org.nextframework.types.File;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 
+@SuppressWarnings("all")
 public class TestFileDao extends TestHibernate {
 
 	@Override
@@ -53,7 +54,6 @@ public class TestFileDao extends TestHibernate {
 				try {
 					Object value = execute(new HibernateCommand() {
 
-						@SuppressWarnings("unchecked")
 						@Override
 						public Object doInHibernate(Session session) throws HibernateException {
 							return command.doInHibernate(session, new Object());

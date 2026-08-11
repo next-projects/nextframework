@@ -80,7 +80,7 @@ public class MaxValueValidator implements PropertyValidator {
 			}
 		}
 		String maxValue = String.valueOf(max);
-		if (new Integer((int) max).doubleValue() == max) {
+		if (Integer.valueOf((int) max).doubleValue() == max) {
 			maxValue = NumberFormat.getIntegerInstance().format(max);
 		}
 		return "O campo " + validationItem.getFieldDisplayName() + " deve ter valor menor ou igual a " + maxValue;

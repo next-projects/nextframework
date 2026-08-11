@@ -52,7 +52,6 @@ import jakarta.servlet.jsp.tagext.JspFragment;
  * @since 01/02/2006
  * @version 1.1
  */
-@SuppressWarnings("deprecation")
 public class ComboTag extends BaseTag implements LogicalTag {
 
 	protected void invoke(TagHolder holder) throws JspException, IOException {

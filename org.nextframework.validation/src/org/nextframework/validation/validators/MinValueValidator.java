@@ -80,7 +80,7 @@ public class MinValueValidator implements PropertyValidator {
 			}
 		}
 		String minValue = String.valueOf(min);
-		if (new Integer((int) min).doubleValue() == min) {
+		if (Integer.valueOf((int) min).doubleValue() == min) {
 			minValue = NumberFormat.getIntegerInstance().format(min);
 		}
 		return "O campo " + validationItem.getFieldDisplayName() + " deve ter valor maior ou igual a " + minValue;

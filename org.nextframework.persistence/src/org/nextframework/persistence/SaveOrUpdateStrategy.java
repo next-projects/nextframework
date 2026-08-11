@@ -55,7 +55,7 @@ import org.nextframework.service.ServiceFactory;
  * 
  * @author rogelgarcia | marcusabreu
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class SaveOrUpdateStrategy {
 
 	private Object entity;
@@ -288,7 +288,6 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy saveCollection(String path, final CollectionItemSaveOrUpdateListener collectionItemSaveOrUpdateListener) {
 		try {
 			final Collection<?> collection = (Collection) PersistenceUtils.getProperty(entity, path);
@@ -353,7 +352,6 @@ public class SaveOrUpdateStrategy {
 		return deleteNotInEntity(path, null);
 	}
 
-	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy deleteNotInEntity(String path, CollectionItemDeleteListener<?> listener) {
 		SessionFactory sessionFactory = hibernateTransactionSessionProvider.getSessionFactory();
 		InverseCollectionProperties inverseCollectionProperty = PersistenceUtils.getInverseCollectionProperty(sessionFactory, entity.getClass(), path);
@@ -385,7 +383,6 @@ public class SaveOrUpdateStrategy {
 	 * @param collectionItemDeleteListener Listener que será executado para cada objeto excluido (Não será feita exclusão em batch se listener != null)
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	private SaveOrUpdateStrategy deleteNotInEntity(String path, final String parentProperty, final Class<?> itemClass, boolean insertFirst, final CollectionItemDeleteListener collectionItemDeleteListener) {
 		try {
 			Serializable entityid = PersistenceUtils.getId(entity, hibernateTransactionSessionProvider.getSessionFactory());
@@ -571,7 +568,6 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy saveOrUpdateManagedDeleteFirst(String path, SaveOrUpdateStrategyListener<?> listener) {
 		try {
 			SessionFactory sessionFactory = hibernateTransactionSessionProvider.getSessionFactory();
@@ -650,7 +646,6 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy saveOrUpdateManaged(String path, SaveOrUpdateStrategyListener listener) {
 		flush();
 		return saveOrUpdateManagedDeleteFirst(path, listener);
@@ -665,7 +660,6 @@ public class SaveOrUpdateStrategy {
 	 * @param path
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
 	public SaveOrUpdateStrategy saveOrUpdateManagedNormal(String path) {
 		try {
 			SessionFactory sessionFactory = hibernateTransactionSessionProvider.getSessionFactory();
@@ -680,7 +674,6 @@ public class SaveOrUpdateStrategy {
 		return this;
 	}
 
-	@SuppressWarnings("rawtypes")
 	private void executeManagedSaving(String path, Class itemClass, String parentProperty) {
 		setParent(path, parentProperty);
 		deleteNotInEntity(path, parentProperty, itemClass);
@@ -691,7 +684,6 @@ public class SaveOrUpdateStrategy {
 	 * Excecuta as os comandos desse saveOrUpdateStrategy<BR>
 	 * E dos saveOrUpdateStrategy anexados
 	 */
-	@SuppressWarnings("rawtypes")
 	public void execute() {
 		flush();
 		hibernateTransactionSessionProvider.executeInTransaction(new HibernateTransactionCommand() {

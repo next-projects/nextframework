@@ -376,7 +376,7 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 		}
 
 		for (PropertyValue propertyValue : propertyValues) {
-			if (propertyValue.getName().endsWith(EXCLUDE) && new Boolean((String) propertyValue.getValue())) {
+			if (propertyValue.getName().endsWith(EXCLUDE) && Boolean.valueOf((String) propertyValue.getValue())) {
 				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - EXCLUDE.length());
 				mpvs.removePropertyValue(fieldName);
 				mpvs.removePropertyValue(fieldName + TEMP);

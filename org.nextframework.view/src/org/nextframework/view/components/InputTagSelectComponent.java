@@ -161,7 +161,6 @@ public class InputTagSelectComponent extends InputTagComponent {
 		return class1;
 	}
 
-	@SuppressWarnings("unchecked")
 	private Class<? extends Object> getRawType(Object type, Object autowiredtype) {
 		if (type instanceof Class) {
 			return (Class<? extends Object>) type;

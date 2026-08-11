@@ -21,7 +21,6 @@ import org.nextframework.report.generator.datasource.DataSourceProvider;
 import org.nextframework.report.generator.layout.LayoutElement;
 import org.nextframework.report.generator.layout.LayoutItem;
 import org.nextframework.service.ServiceFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Attr;
@@ -219,7 +218,7 @@ public class ReportReader {
 				String className = "org.nextframework.report.generator.layout." + StringUtils.capitalize(nodeName) + "Element";
 				LayoutItem element;
 				try {
-					element = (LayoutItem) BeanUtils.instantiate(Class.forName(className));
+					element = (LayoutItem) Class.forName(className).getConstructor().newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException("Could not instanciate layout element " + nodeName, e);
 				}

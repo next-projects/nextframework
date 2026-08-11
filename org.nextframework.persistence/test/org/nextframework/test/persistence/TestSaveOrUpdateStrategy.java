@@ -19,12 +19,11 @@ import org.nextframework.persistence.SaveOrUpdateStrategy;
 
 import junit.framework.Assert;
 
+@SuppressWarnings("all")
 public class TestSaveOrUpdateStrategy extends TestHibernate {
 
-	@SuppressWarnings("all")
 	protected HibernateTransactionSessionProvider sessionProvider;
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	@Before
 	public void setUp() throws Exception {
@@ -41,6 +40,7 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 				return TestSaveOrUpdateStrategy.super.sessionFactory;
 			}
 
+			@SuppressWarnings("unchecked")
 			public Object execute(HibernateCommand command) {
 				try {
 					return command.doInHibernate(newSession());
@@ -144,6 +144,7 @@ public class TestSaveOrUpdateStrategy extends TestHibernate {
 	}
 
 	@Test
+	@SuppressWarnings("rawtypes")
 	public void testSave2EntityRollback() {
 
 		TestEntityParent entityA = new TestEntityParent("A");

@@ -66,7 +66,6 @@ public class ReportBuilderSourceGenerator {
 		return generator.getReportElement().getLayout().getItems().size();
 	}
 
-	@SuppressWarnings("serial")
 	Map<String, String> aggregateFunctions = new HashMap<String, String>() {
 
 		{

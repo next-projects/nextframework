@@ -54,7 +54,6 @@ import jakarta.servlet.jsp.PageContext;
  * @since 05/02/2006
  * @version 1.1
  */
-@SuppressWarnings("deprecation")
 public class NextFunctions {
 
 	public static Integer size(Collection<?> collection) {
