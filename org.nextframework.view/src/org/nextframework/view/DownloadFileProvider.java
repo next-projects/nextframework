@@ -1,16 +1,13 @@
 package org.nextframework.view;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.nextframework.classmanager.ClassManagerFactory;
+import org.nextframework.controller.TempFileTokenSupport;
 import org.nextframework.controller.resource.Resource;
 import org.nextframework.core.standard.Next;
+import org.nextframework.exception.NextException;
 import org.nextframework.persistence.FileDAO;
 import org.nextframework.persistence.PersistenceConfiguration;
 import org.nextframework.types.File;
@@ -28,15 +25,43 @@ public class DownloadFileProvider {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		Long cdfile;
+		String fileReference;
 		try {
-			cdfile = extractCdfile(request);
+			fileReference = extractFileReference(request);
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
-		// Checa se há permissão
+		if (TempFileTokenSupport.isValidToken(fileReference)) {
+
+			// Verifica se há permissão
+			if (!checkTempFileToken(request, fileReference)) {
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
+				return;
+			}
+
+			// Obtém o conteúdo
+			Resource resource = getTempFileTokenResource(request, fileReference);
+			if (resource == null) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return;
+			}
+
+			writeResource(response, resource);
+
+			return;
+		}
+
+		Long cdfile;
+		try {
+			cdfile = Long.valueOf(fileReference);
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+
+		// Verifica se há permissão
 		if (!checkCdfile(request, cdfile)) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return;
@@ -49,39 +74,42 @@ public class DownloadFileProvider {
 			return;
 		}
 
-		response.setContentType(resource.getContentType());
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
-		//response.setHeader("Last-Modified", );
-		if (resource.getSize() >= 0) {
-			response.setContentLength((int) resource.getSize());
+		writeResource(response, resource);
+
+	}
+
+	protected String extractFileReference(HttpServletRequest request) throws Exception {
+		String requestURI = request.getRequestURI();
+		int lastSlash = requestURI.lastIndexOf('/');
+		if (lastSlash < 0 || lastSlash == requestURI.length() - 1) {
+			throw new Exception("URL inválida");
 		}
+		String fileReference = requestURI.substring(lastSlash + 1);
+		int sessionSeparatorIndex = fileReference.indexOf(';');
+		if (sessionSeparatorIndex >= 0) {
+			fileReference = fileReference.substring(0, sessionSeparatorIndex);
+		}
+		if (fileReference.length() == 0) {
+			throw new Exception("URL inválida");
+		}
+		return fileReference;
+	}
 
-		response.getOutputStream().write(resource.getContents());
-		response.flushBuffer();
+	protected boolean checkTempFileToken(HttpServletRequest request, String tempFileToken) {
+		return DownloadFileServlet.checkTempFileToken(request.getSession(), tempFileToken);
+	}
 
+	protected Resource getTempFileTokenResource(HttpServletRequest request, String tempFileToken) {
+		try {
+			File file = TempFileTokenSupport.load(tempFileToken);
+			return file != null ? returnFile(file) : null;
+		} catch (NextException e) {
+			return null;
+		}
 	}
 
 	protected boolean checkCdfile(HttpServletRequest request, Long cdfile) {
 		return DownloadFileServlet.checkCdfile(request.getSession(), cdfile);
-	}
-
-	protected long getLastModified(HttpServletRequest request) {
-		try {
-			return getLastModified(request, extractCdfile(request));
-		} catch (Exception e) {
-			return 0;
-		}
-	}
-
-	protected Long extractCdfile(HttpServletRequest request) throws Exception {
-		String requestURI = request.getRequestURI();
-		Pattern pattern = Pattern.compile(".+?/(-?[0-9]+)");
-		Matcher matcher = pattern.matcher(requestURI);
-		if (matcher.find()) {
-			return Long.valueOf(matcher.group(1));
-		} else {
-			throw new Exception("URL inválida");
-		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -103,21 +131,15 @@ public class DownloadFileProvider {
 			//se nao tem FileDAO.. criar um default se só tiver um tipo de arquivo
 			Class<?>[] classes = Util.objects.removeInterfaces(ClassManagerFactory.getClassManager().getAllClassesOfType(File.class));
 			if (classes.length == 1) {
-				//TODO REFATORAR ESSE CÓDIGO, ELE SE REPETE NO GENERICDAO
 				FileDAO<?> fileDAO = new FileDAO(classes[0], true);
 				fileDAO.setHibernateTemplate(Next.getObject(HibernateTemplate.class));
-//				fileDAO.setJdbcTemplate(Next.getObject(JdbcTemplate.class));
-//				fileDAO.setSessionFactory(Next.getObject(SessionFactory.class));
 				fileDAO.setPersistenceContext(PersistenceConfiguration.getConfig().getPersistenceContext());
 				fileDAO.setTransactionTemplate(Next.getObject(TransactionTemplate.class));
 				beansOfType.put("fileDAO", fileDAO);//satisfazemos um FileDAO default
 			}
 		}
 
-		if (cdfile < 0) {
-			File file = load(cdfile);
-			return returnFile(file);
-		} else if (beansOfType.size() == 1) {
+		if (beansOfType.size() == 1) {
 			FileDAO<?> fileDAO = (FileDAO<?>) beansOfType.values().iterator().next();
 			Class<?>[] allClassesOfTypeFile = Util.objects.removeInterfaces(ClassManagerFactory.getClassManager().getAllClassesOfType(File.class));
 			if (allClassesOfTypeFile.length == 1) {
@@ -144,24 +166,39 @@ public class DownloadFileProvider {
 		return resource;
 	}
 
+	private void writeResource(HttpServletResponse response, Resource resource) throws IOException {
+		response.setContentType(resource.getContentType());
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + resource.getFileName() + "\";");
+		//response.setHeader("Last-Modified", );
+		if (resource.getSize() >= 0) {
+			response.setContentLength((int) resource.getSize());
+		}
+		response.getOutputStream().write(resource.getContents());
+		response.flushBuffer();
+	}
+
+	protected long getLastModified(HttpServletRequest request) {
+		try {
+			String fileReference = extractFileReference(request);
+			if (TempFileTokenSupport.isValidToken(fileReference)) {
+				return getLastModified(request, fileReference);
+			}
+			return getLastModified(request, Long.valueOf(fileReference));
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	protected Long extractCdfile(HttpServletRequest request) throws Exception {
+		return Long.valueOf(extractFileReference(request));
+	}
+
 	protected long getLastModified(HttpServletRequest request, Long cdfile) {
 		return -1;
 	}
 
-	public static File load(long tempFileId) {
-		java.io.File tempFile = new java.io.File(System.getProperty("java.io.tmpdir"), Next.getApplicationName() + "_tempFileObject" + tempFileId + ".next");
-		try {
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(tempFile));
-			Object obj = in.readObject();
-			in.close();
-			return (File) obj;
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+	protected long getLastModified(HttpServletRequest request, String tempFileToken) {
+		return -1;
 	}
 
 }

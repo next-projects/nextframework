@@ -78,5 +78,19 @@
 		<servlet-name>downloadFileServlet</servlet-name>
 		<url-pattern>/downloadfile/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>uploadFileServlet</servlet-name>
+		<servlet-class>org.nextframework.view.UploadFileServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>uploadFileServlet</servlet-name>
+		<url-pattern>/UPLOADFILE/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>uploadFileServlet</servlet-name>
+		<url-pattern>/uploadfile/*</url-pattern>
+	</servlet-mapping>
 	
 </web-fragment>

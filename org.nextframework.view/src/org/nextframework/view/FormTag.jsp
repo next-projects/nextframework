@@ -12,38 +12,12 @@
 		${tag.name}.validate = '${tag.validate}';
 
 		function ${tag.submitFunction}(action) {
-
-			try {
-				clearMessages();//limpa as mensagens que vieram do servidor
-			} catch(e){
-			}
-
-			var validar = ${tag.name}.validate;
-			try {
-				${tag.validateFunction};
-			} catch (e) {
-				validar = false;
-			}
-
-			if(validar == 'true') {
-				var valid = ${tag.validateFunction}();
-				if(!valid) {
-					return false;
-				}
-			}
-
-			if(action){
-				${tag.name}.${tag.actionParameter}.value = action;
-			}
-
-			next.dom.checkFormMultipart(${tag.name});
-			${tag.name}.submit();
-
+			return submitNextForm(${tag.name}, {
+				action: action,
+				actionParameter: '${tag.actionParameter}',
+				validateFunction: '${tag.validateFunction}'
+			});
 		}
-
-		document.addEventListener('submit', function(event) {
-			next.dom.checkFormMultipart(event.target);
-		});
 
 	</script>
 	<n:bean name="${tag.forBean}" bypass="${empty tag.forBean}">

@@ -133,6 +133,7 @@ public class InputTag extends BaseTag {
 
 	// arquivo
 	protected Boolean transientFile;
+	protected Boolean ajaxUpload;
 
 	private InputTagComponent inputComponent;
 
@@ -594,6 +595,14 @@ public class InputTag extends BaseTag {
 
 	public void setTransientFile(Boolean transientFile) {
 		this.transientFile = transientFile;
+	}
+
+	public Boolean getAjaxUpload() {
+		return ajaxUpload;
+	}
+
+	public void setAjaxUpload(Boolean ajaxUpload) {
+		this.ajaxUpload = ajaxUpload;
 	}
 
 	public void setBlankLabel(String blankLabel) {

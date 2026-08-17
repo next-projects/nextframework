@@ -23,17 +23,13 @@
  */
 package org.nextframework.controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.nextframework.core.standard.Next;
 import org.nextframework.exception.NextException;
+import org.nextframework.types.File;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.MutablePropertyValues;
@@ -60,11 +56,11 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 	public static final String PARAMETRO_SEPARATOR = "#";
 
 	//propriedade especial.. seta o campo para null
-	public static final String EXCLUDE = "_excludeField";
+	public static final String EXCLUDE_FIELD_SUFIX = "_excludeField";
 
 	//salva o objeto em disco e depois recupera (util em uploads)
-	public static final String TEMP = "_tempField";
-	public static final String FILE = "_fileObject";
+	public static final String TEMP_FILE_TOKEN_SUFFIX = "_tempFileToken";
+	public static final String FILE_OBJECT_SUFFIX = "_fileObject";
 	public static final String DATE_PATTERN = "_datePattern";
 	public static final String NULL_VALUE = "<null>";
 
@@ -363,23 +359,20 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 		PropertyValue[] propertyValues = mpvs.getPropertyValues();
 
 		for (PropertyValue propertyValue : propertyValues) {
-			if (propertyValue.getName().endsWith(FILE)) {
-				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - FILE.length());
-				if (!mpvs.contains(fieldName)) {
+			if (propertyValue.getName().endsWith(FILE_OBJECT_SUFFIX)) {
+				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - FILE_OBJECT_SUFFIX.length());
+				PropertyValue fieldPropertyValue = mpvs.getPropertyValue(fieldName);
+				if (fieldPropertyValue == null || shouldReuseFileValue(fieldPropertyValue.getValue())) {
 					mpvs.addPropertyValue(new PropertyValue(fieldName, propertyValue.getValue()));
-				} else if (mpvs.contains(fieldName) && mpvs.getPropertyValue(fieldName).getValue() instanceof MultipartFile) {
-					if (((MultipartFile) mpvs.getPropertyValue(fieldName).getValue()).getSize() == 0) {
-						mpvs.addPropertyValue(new PropertyValue(fieldName, propertyValue.getValue()));
-					}
 				}
 			}
 		}
 
 		for (PropertyValue propertyValue : propertyValues) {
-			if (propertyValue.getName().endsWith(EXCLUDE) && Boolean.valueOf((String) propertyValue.getValue())) {
-				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - EXCLUDE.length());
+			if (propertyValue.getName().endsWith(EXCLUDE_FIELD_SUFIX) && Boolean.valueOf((String) propertyValue.getValue())) {
+				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - EXCLUDE_FIELD_SUFIX.length());
 				mpvs.removePropertyValue(fieldName);
-				mpvs.removePropertyValue(fieldName + TEMP);
+				mpvs.removePropertyValue(fieldName + TEMP_FILE_TOKEN_SUFFIX);
 				//excluir as propriedades subsequentes também
 				for (int i = 0; i < propertyValues.length; i++) {
 					if (propertyValues[i].getName().startsWith(fieldName)) {
@@ -391,35 +384,46 @@ public class ServletRequestDataBinderNext extends ServletRequestDataBinder {
 
 		propertyValues = mpvs.getPropertyValues();
 		for (PropertyValue propertyValue : propertyValues) {
-			if (propertyValue.getName().endsWith(TEMP)) {
-				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - TEMP.length());
-				if (!mpvs.contains(fieldName)) {
-					mpvs.addPropertyValue(new PropertyValue(fieldName, loadObject((String) mpvs.getPropertyValue(propertyValue.getName()).getValue())));
-				} else if (mpvs.contains(fieldName) && mpvs.getPropertyValue(fieldName).getValue() instanceof MultipartFile) {
-					if (((MultipartFile) mpvs.getPropertyValue(fieldName).getValue()).getSize() == 0) {
-						mpvs.addPropertyValue(new PropertyValue(fieldName, loadObject((String) mpvs.getPropertyValue(propertyValue.getName()).getValue())));
-					}
+			if (propertyValue.getName().endsWith(TEMP_FILE_TOKEN_SUFFIX)) {
+				String fieldName = propertyValue.getName().substring(0, propertyValue.getName().length() - TEMP_FILE_TOKEN_SUFFIX.length());
+				String tempFileToken = (String) mpvs.getPropertyValue(propertyValue.getName()).getValue();
+				if (tempFileToken == null || tempFileToken.trim().length() == 0) {
+					continue;
+				}
+				PropertyValue fieldPropertyValue = mpvs.getPropertyValue(fieldName);
+				if (fieldPropertyValue == null || shouldReuseFileValue(fieldPropertyValue.getValue())) {
+					File file = TempFileTokenSupport.load(tempFileToken);
+					mpvs.addPropertyValue(new PropertyValue(fieldName, file));
 				}
 			}
 		}
 
 	}
 
-	private Object loadObject(String value) {
-		//TODO UNIFICAR O LOCAL DE SALVAR E LER OS ARQUIVOS TEMPORARIOS
-		java.io.File file = new java.io.File(System.getProperty("java.io.tmpdir"), Next.getApplicationName() + value);
-		try {
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-			Object obj = in.readObject();
-			in.close();
-			return obj;
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
+	private boolean shouldReuseFileValue(Object value) {
+		if (value == null) {
+			return true;
 		}
+		if (value instanceof MultipartFile) {
+			return ((MultipartFile) value).getSize() == 0;
+		}
+		if (value instanceof String) {
+			return ((String) value).trim().length() == 0;
+		}
+		if (value.getClass().isArray()) {
+			Object[] values = (Object[]) value;
+			if (values.length == 0) {
+				return true;
+			}
+			Object firstValue = values[0];
+			if (firstValue == null) {
+				return true;
+			}
+			if (firstValue instanceof String) {
+				return ((String) firstValue).trim().length() == 0;
+			}
+		}
+		return false;
 	}
 
 	private void extractDatePattern(MutablePropertyValues mpvs, PropertyValue propertyValue) {

@@ -1177,16 +1177,6 @@ NextDomForm.prototype.newForm = function(){
 	return new NextDomForm();
 }
 
-NextDom.prototype.checkFormMultipart = function (form){
-	if (form.enctype !== 'multipart/form-data') {
-		const hasFileInput = form.querySelector('input[type="file"]');
-		if (hasFileInput && form.method.toUpperCase() === 'POST') {
-			console.info('Ajustando enctype para multipart/form-data...');
-			form.enctype = 'multipart/form-data';
-		}
-	}
-}
-
 /**
  * Associa os elementos do HTML aos atributos do objeto.
  * O elemento deve ter como id um '#' seguido do nome do atributo.
@@ -1589,6 +1579,7 @@ NextAjax.prototype.send = function(options){
 	p("callbackParameters", {});
 	p("onComplete", function(data){});
 	p("afterComplete", function(data){});
+	p("onProgress", function(event){});
 	p("evalResponse", false);
 	p("evalScripts", false);
 	p("onError", function(data, status, cp, req){
@@ -1646,6 +1637,11 @@ NextAjax.prototype.send = function(options){
 	}
 
 	var request = next.ajax.getXMLHTTPRequest();
+	if(request.upload && next.util.isFunction(options.onProgress)){
+		request.upload.onprogress = function(event){
+			options.onProgress(event, request);
+		};
+	}
 	request.onreadystatechange = function () {
 		if(request.readyState == NextAjax.READY_STATE_COMPLETE) {
 			if(request.status && request.status == 200){

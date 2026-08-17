@@ -79,6 +79,7 @@ public class WebUtils {
 		return "ajax".equalsIgnoreCase(servlet) ||
 				"resource".equalsIgnoreCase(servlet) ||
 				"downloadfile".equalsIgnoreCase(servlet) ||
+				"uploadfile".equalsIgnoreCase(servlet) ||
 				"selectcreate".equalsIgnoreCase(servlet);
 	}
 

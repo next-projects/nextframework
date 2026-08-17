@@ -124,6 +124,7 @@ public class PropertyTag extends TemplateTag {
 
 	//arquivo
 	protected Boolean transientFile;
+	protected Boolean ajaxUpload;
 	protected boolean showDeleteButton = true;
 
 	//estilos
@@ -616,6 +617,14 @@ public class PropertyTag extends TemplateTag {
 
 	public void setTransientFile(Boolean transientFile) {
 		this.transientFile = transientFile;
+	}
+
+	public Boolean getAjaxUpload() {
+		return ajaxUpload;
+	}
+
+	public void setAjaxUpload(Boolean ajaxUpload) {
+		this.ajaxUpload = ajaxUpload;
 	}
 
 	public boolean isShowDeleteButton() {

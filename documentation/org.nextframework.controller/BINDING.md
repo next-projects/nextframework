@@ -235,6 +235,36 @@ public class ProductForm {
 }
 ```
 
+### Temporary File Token Binding
+
+For `File` properties rendered by `n:input type="file"` with the current token-based flow, the binder supports two special hidden fields:
+
+- `<propertyName>_fileObject`
+- `<propertyName>_tempFileToken`
+
+`_fileObject` is used only for files already persisted in the database (`cdfile > 0`).
+
+`_tempFileToken` is used for files that are not yet persisted:
+
+- files uploaded asynchronously by `UploadFileServlet`
+- files that returned to the form after a validation error
+
+Binding precedence is:
+
+1. `_tempFileToken`
+2. `_fileObject`
+3. regular request value / multipart field
+
+If the main request field is empty and `_tempFileToken` is present, `ServletRequestDataBinderNext` reloads the file from `TempFileTokenSupport`.
+
+Example:
+
+```html
+<input type="hidden" name="photo_tempFileToken" value="550e8400-e29b-41d4-a716-446655440000_1786963200000"/>
+```
+
+This allows a form with many regular parameters to keep using a non-multipart final POST while still binding `File` properties correctly.
+
 ---
 
 ## Custom Property Editors

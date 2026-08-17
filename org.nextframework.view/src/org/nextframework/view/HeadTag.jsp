@@ -49,6 +49,7 @@
 <script language="JavaScript" src="${app}/resource/js/imask.js"></script>
 
 <script language="JavaScript" src="${app}/resource/js/ajax.js"></script>
+<script language="JavaScript" src="${app}/resource/js/form.js"></script>
 <script language="JavaScript" src="${app}/resource/js/input.js"></script>
 <script language="JavaScript" src="${app}/resource/js/input-selectmanypopup.js"></script>
 <script language="JavaScript" src="${app}/resource/js/validate.js"></script>

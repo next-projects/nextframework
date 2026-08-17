@@ -11,19 +11,6 @@ function selecionarCallbackObject(valueInput, labelInput, valueType, button, but
 	this.callback = callback;
 }
 
-function imprimirVoltar() {
-	if(top.cadastrar) {
-		document.write("<input type='button' value='Voltar' onclick='refreshPai()'>");
-	}
-}
-
-function refreshPai() {
-	//top.opener.document.forms[0].ACTION.value = top.cadastrar;
-	//alert(top.opener.document.forms[0].ACTION.value);
-	top.opener.document.forms[0].submit();
-	top.close();
-}
-
 /**
  * Imprime o botão selecionar onde for necessário.
  * O botão selecionar só é impresso onde a classe for da hierarquia da classe que pediu para selecionar
@@ -52,9 +39,6 @@ function imprimirSelecionar(classesList, texto){
 	}
 }
 
-/**
- *
- */
 function selecionar(valor, label, forcombo){
 	var isNN = navigator.appName.indexOf("Netscape")!= -1;
 	if(top.selecionarCallback){

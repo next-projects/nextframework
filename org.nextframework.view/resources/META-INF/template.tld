@@ -1402,6 +1402,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description>Indica que uploads de FILE devem ser enviados previamente via ajax e substituídos por uploadToken</description>
+			<name>ajaxUpload</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>Indica de deve ser mostrado o botão remover</description>
 			<name>showDeleteButton</name>
 			<required>false</required>
