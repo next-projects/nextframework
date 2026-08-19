@@ -204,26 +204,42 @@ public class BeanUtils {
 
 	@SuppressWarnings("all")
 	public <E> E clone(E o) {
+
 		BeanDescriptor baseDescriptor = BeanDescriptorFactory.forBean(o);
 		E o2;
+
 		try {
+
 			o2 = (E) o.getClass().getConstructor().newInstance();
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(o2);
 			PropertyDescriptor[] propertyDescriptors = baseDescriptor.getPropertyDescriptors();
+
 			for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-				if (propertyDescriptor.getName().equals("class")) {
+
+				String propertyName = propertyDescriptor.getName();
+				if (propertyName.equals("class")) {
 					continue;
 				}
+
+				Method getterMethod = getGetterMethod(o.getClass(), propertyName);
+				Method setterMethod = getSetterMethod(o2.getClass(), propertyName);
+				if (getterMethod == null || setterMethod == null) {
+					continue;
+				}
+
 				Object value = propertyDescriptor.getValue();
 				try {
-					wrapper.setPropertyValue(propertyDescriptor.getName(), value);
+					wrapper.setPropertyValue(propertyName, value);
 				} catch (NotWritablePropertyException e) {
 					//if the property is not writable.. do not write
 				}
+
 			}
+
 		} catch (Exception e) {
 			throw new NextException("Não foi possível clonar o bean. ", e);
 		}
+
 		return o2;
 	}
 
