@@ -26,16 +26,20 @@ package org.nextframework.controller;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Map;
 
 import org.nextframework.core.web.NextWeb;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class FileModelAndView extends ModelAndView {
+
+	private static final int DEFAULT_BUFFER_SIZE = 64 * 1024;
 
 	public FileModelAndView(File file) {
 		this(file, null, true);
@@ -48,21 +52,36 @@ public class FileModelAndView extends ModelAndView {
 			@Override
 			public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+				response.reset();
+
 				response.setContentType(getContentType());
 				if (useAttachment) {
 					response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\";");
 				}
-				response.setContentLengthLong(file.length());
 
-				try (BufferedInputStream input = new BufferedInputStream(new FileInputStream(file))) {
-					byte[] buffer = new byte[8192];
-					int bytesRead = 0;
-					while ((bytesRead = input.read(buffer)) != -1) {
-						response.getOutputStream().write(buffer, 0, bytesRead);
+				response.setBufferSize(DEFAULT_BUFFER_SIZE);
+
+				long fileLength = file.length();
+				response.setContentLengthLong(fileLength);
+
+				ServletOutputStream output = response.getOutputStream();
+				try (FileInputStream fileInputStream = new FileInputStream(file)) {
+					try (BufferedInputStream input = new BufferedInputStream(fileInputStream, DEFAULT_BUFFER_SIZE)) {
+						byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+						long remaining = fileLength;
+						while (remaining > 0) {
+							int bytesToRead = (int) Math.min(buffer.length, remaining);
+							int bytesRead = input.read(buffer, 0, bytesToRead);
+							if (bytesRead == -1) {
+								throw new IOException("Arquivo terminou antes do esperado durante o download: " + file.getAbsolutePath());
+							}
+							output.write(buffer, 0, bytesRead);
+							remaining -= bytesRead;
+						}
 					}
 				}
 
-				response.getOutputStream().flush();
+				output.flush();
 				response.flushBuffer();
 
 			}
