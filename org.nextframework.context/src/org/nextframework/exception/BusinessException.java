@@ -23,6 +23,8 @@
  */
 package org.nextframework.exception;
 
+import java.util.Arrays;
+
 import org.nextframework.util.Util;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.util.ObjectUtils;
@@ -85,6 +87,10 @@ public class BusinessException extends ApplicationException implements MessageSo
 		return this.mensagem;
 	}
 
+	public MessageSourceResolvable getResolvable() {
+		return resolvable;
+	}
+
 	@Override
 	public String[] getCodes() {
 		return this.resolvable != null ? this.resolvable.getCodes() : null;
@@ -116,8 +122,8 @@ public class BusinessException extends ApplicationException implements MessageSo
 
 	@Override
 	public int hashCode() {
-		int hashCode = ObjectUtils.nullSafeHashCode(getCodes());
-		hashCode = 29 * hashCode + ObjectUtils.nullSafeHashCode(getArguments());
+		int hashCode = Arrays.hashCode(getCodes());
+		hashCode = 29 * hashCode + Arrays.hashCode(getArguments());
 		hashCode = 29 * hashCode + ObjectUtils.nullSafeHashCode(getDefaultMessage());
 		return hashCode;
 	}
