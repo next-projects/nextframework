@@ -562,11 +562,18 @@ public class DataGridTag extends BaseTag {
 
 		//getOut().print("</tr>");
 		getOut().println("<script language=\"javascript\">");
-		List<String> tdBodys = new ArrayList<String>();
+		List<String> tdBodys = new ArrayList<>();
+		List<String> tdClass = new ArrayList<>();
 		String nestedPropertyName = null;
+
 		for (PanelRenderedBlock block : blocks) {
+
 			String body = block.body;
 			tdBodys.add(body);
+
+			String blockClass = (String) block.getProperties().get("class");
+			tdClass.add(blockClass != null ? blockClass : "");
+
 			if (nestedPropertyName == null) {
 				int index = body.indexOf("{index}");
 				if (index >= 0) {
@@ -581,10 +588,11 @@ public class DataGridTag extends BaseTag {
 					nestedPropertyName = body.substring(begin, index - 1);
 				}
 			}
+
 		}
 
 		getOut().println(enhanceProperty(id, "trClassModel", Util.strings.isEmpty(bodyStyleClasses) ? Arrays.asList("") : Arrays.asList(bodyStyleClasses.split(","))));
-		getOut().println(enhanceProperty(id, "tdClassModel", Arrays.asList("")));
+		getOut().println(enhanceProperty(id, "tdClassModel", tdClass));
 		getOut().println(enhanceProperty(id, "dataModel", tdBodys));
 		getOut().println(enhanceProperty(id, "indexName", "{index}"));
 		getOut().println(enhanceProperty(id, "indexedProperty", nestedPropertyName));

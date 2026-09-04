@@ -158,6 +158,7 @@ public class ColumnTag extends BaseTag {
 			case DYNALINE:
 				PanelRenderedBlock block = new PanelRenderedBlock();
 				block.setBody(tagBody);
+				block.setProperties(mapBody);
 				dataGrid.add(block);
 				break;
 			case FOOTER:
