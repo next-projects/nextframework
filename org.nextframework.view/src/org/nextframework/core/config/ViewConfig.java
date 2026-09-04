@@ -1,18 +1,14 @@
 package org.nextframework.core.config;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.nextframework.view.BaseTag;
-import org.nextframework.view.InputTagType;
 
 public interface ViewConfig {
 
 	String getJSPDefaultCharset();
 
 	String getDefaultFormEnctype();
-
-	Map<Class<?>, InputTagType> getCustomInputTypes();
 
 	boolean isDefaultShowCalendar();
 

@@ -23,7 +23,6 @@
  */
 package org.nextframework.view;
 
-import java.beans.PropertyEditor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -81,7 +80,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	private String STACK_ATTRIBUTE_NAME = "TagStack";
 	public String TAG_ATTRIBUTE = "tag";
 
-	public static Class<? extends BaseTagPropertyEditorsManager> propertyEditorManagerClass = BaseTagPropertyEditorsManager.class;
+	public static Class<? extends BaseTagManager> propertyEditorManagerClass = BaseTagManager.class;
 	public static BaseTagTemplateManager templateManager = new BaseTagTemplateManager();
 
 	/**atributo que existe em todas as tags*/
@@ -91,8 +90,6 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	protected Boolean bypass;
 	private BaseTag parent;
 	protected Map<String, Object> dynamicAttributesMap = new HashMap<String, Object>();
-
-	protected BaseTagPropertyEditorsManager baseTagPropertyEditorsManagerCache = null;
 
 	public BaseTag() {
 		initPropertyEditors();
@@ -146,13 +143,6 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 
 	public void setDynamicAttributesMap(Map<String, Object> dynamicAttributesMap) {
 		this.dynamicAttributesMap.putAll(dynamicAttributesMap);
-	}
-
-	protected Map<Class<?>, PropertyEditor> getPropertyEditors() {
-		if (baseTagPropertyEditorsManagerCache == null) {
-			baseTagPropertyEditorsManagerCache = TagUtils.getPropertyEditorsManager();
-		}
-		return baseTagPropertyEditorsManagerCache.getPropertyEditors();
 	}
 
 	public String generateUniqueId() {
@@ -275,6 +265,7 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 	/**
 	 * Retorna a primeira tag encontrada que for de alguma das classes passadas
 	 */
+	@SuppressWarnings("unchecked")
 	public BaseTag findFirst(Class<? extends BaseTag>... classes) {
 		List<BaseTag> tags = getTagsFromTopToThis();
 		boolean found = false;

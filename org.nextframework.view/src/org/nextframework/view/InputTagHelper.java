@@ -7,9 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import org.nextframework.core.config.ViewConfig;
 import org.nextframework.exception.NextException;
-import org.nextframework.service.ServiceFactory;
 import org.nextframework.types.File;
 import org.nextframework.types.Password;
 import org.nextframework.util.Util;
@@ -164,22 +162,15 @@ public class InputTagHelper {
 		if (inputTag.itens != null) {
 			return InputTagType.SELECT_ONE;
 		}
-		InputTagType type2 = InputTagTypeManager.getInstance().getTypeForClass(c);
+		InputTagType type2 = TagUtils.getBaseTagManager().getInputType(c);
 		if (type2 == null) {
-			//verificar tipos personalizados
-			type2 = (InputTagType) ServiceFactory.getService(ViewConfig.class).getCustomInputTypes().get(c);
-			if (type2 == null) {
-				type2 = InputTagType.TEXT;
-			}
+			type2 = InputTagType.TEXT;
 		}
 		return type2;
 	}
 
-	protected <A extends Annotation> InputListener<A> getInputListener(InputTag inputTag, A annotation) {
-		if (inputTag.baseTagPropertyEditorsManagerCache == null) {
-			inputTag.baseTagPropertyEditorsManagerCache = TagUtils.getPropertyEditorsManager();
-		}
-		return inputTag.baseTagPropertyEditorsManagerCache.getInputListener(annotation);
+	protected <A extends Annotation> InputListener<A> getInputListener(A annotation) {
+		return TagUtils.getBaseTagManager().getInputListener(annotation);
 	}
 
 	@SuppressWarnings("rawtypes")

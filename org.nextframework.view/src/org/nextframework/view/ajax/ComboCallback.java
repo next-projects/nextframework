@@ -29,18 +29,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import org.nextframework.authorization.Authorization;
 import org.nextframework.bean.BeanDescriptorFactory;
 import org.nextframework.bean.PropertyDescriptor;
-import org.nextframework.controller.BinderConfigurer;
+import org.nextframework.controller.BinderConfigurerUtils;
 import org.nextframework.controller.ServletRequestDataBinderNext;
-import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.persistence.DAO;
 import org.nextframework.util.Util;
+import org.nextframework.view.TagUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -146,12 +145,7 @@ public class ComboCallback implements AjaxCallbackController {
 
 	private ServletRequestDataBinder createBinder(ServletRequest request, Object command, String commandDisplayName) throws Exception {
 		ServletRequestDataBinder binder = new ServletRequestDataBinderNext(command, commandDisplayName);
-		Map<String, BinderConfigurer> binderConfigurersMap = Next.getBeanFactory().getBeansOfType(BinderConfigurer.class);
-		if (binderConfigurersMap != null) {
-			for (BinderConfigurer binderConfigurer : binderConfigurersMap.values()) {
-				binderConfigurer.configureBinder(binder, request, command);
-			}
-		}
+		BinderConfigurerUtils.configureBinder(binder, request, command);
 		return binder;
 	}
 
@@ -163,13 +157,13 @@ public class ComboCallback implements AjaxCallbackController {
 				Object element = iter.next();
 				String description;
 				if (Util.strings.isEmpty(label)) {
-					description = Util.strings.toStringDescription(element);
+					description = TagUtils.getObjectDescriptionToString(element);
 				} else {
 					PropertyDescriptor propertyDescriptor = BeanDescriptorFactory.forBean(element).getPropertyDescriptor(label);
-					description = Util.strings.toStringDescription(propertyDescriptor.getValue());
+					description = TagUtils.getObjectDescriptionToString(propertyDescriptor.getValue());
 				}
 				description = escapeSingleQuotes(description);
-				String id = Util.strings.toStringIdStyled(element);
+				String id = TagUtils.getObjectValueToString(element, false, null);
 				javascript.append("['" + id + "', '" + description + "']");
 				if (iter.hasNext()) {
 					javascript.append(",");

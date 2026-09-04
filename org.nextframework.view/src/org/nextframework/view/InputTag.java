@@ -198,7 +198,7 @@ public class InputTag extends BaseTag {
 
 		// fazer os listeners
 		for (Annotation annotation : getAnnotations()) {
-			inputTagHelper.getInputListener(this, annotation).onRender(this, annotation);
+			inputTagHelper.getInputListener(annotation).onRender(this, annotation);
 		}
 
 		DebugInputsTag debugInputsTag = findParent(DebugInputsTag.class, false);

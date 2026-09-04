@@ -1,6 +1,5 @@
 package org.nextframework.core.config;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,7 +9,6 @@ import org.nextframework.view.BaseTag;
 import org.nextframework.view.DataGridTag;
 import org.nextframework.view.GroupTag;
 import org.nextframework.view.InputTag;
-import org.nextframework.view.InputTagType;
 import org.nextframework.view.LinkTag;
 import org.nextframework.view.MessagesTag;
 import org.nextframework.view.ModalTag;
@@ -36,9 +34,7 @@ import org.nextframework.view.template.ViewTag;
 
 public class DefaultViewConfig implements ViewConfig {
 
-	protected Map<Class<?>, InputTagType> customInputTypesMap = new HashMap<Class<?>, InputTagType>();
-
-	protected Map<Class<? extends BaseTag>, Map<String, String>> styleClassesMap = new LinkedHashMap<Class<? extends BaseTag>, Map<String, String>>();
+	protected Map<Class<? extends BaseTag>, Map<String, String>> styleClassesMap = new LinkedHashMap<>();
 
 	@Override
 	public String getJSPDefaultCharset() {
@@ -48,11 +44,6 @@ public class DefaultViewConfig implements ViewConfig {
 	@Override
 	public String getDefaultFormEnctype() {
 		return "application/x-www-form-urlencoded";
-	}
-
-	@Override
-	public Map<Class<?>, InputTagType> getCustomInputTypes() {
-		return customInputTypesMap;
 	}
 
 	@Override

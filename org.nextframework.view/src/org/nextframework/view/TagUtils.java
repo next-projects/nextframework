@@ -1,8 +1,8 @@
 package org.nextframework.view;
 
 import java.beans.PropertyEditor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +13,7 @@ import java.util.Map;
 import org.hibernate.LazyInitializationException;
 import org.nextframework.bean.annotation.DescriptionProperty;
 import org.nextframework.core.config.ViewConfig;
+import org.nextframework.core.standard.Next;
 import org.nextframework.core.web.NextWeb;
 import org.nextframework.core.web.WebRequestContext;
 import org.nextframework.persistence.DAOUtils;
@@ -103,22 +104,28 @@ public class TagUtils {
 		return false;
 	}
 
-	public static Map<Class<?>, PropertyEditor> getPropertyEditorsFromRequest() {
-		return getPropertyEditorsManager(NextWeb.getRequestContext()).getPropertyEditors();
+	public static BaseTagManager getBaseTagManager() {
+		return getBaseTagManager(NextWeb.getRequestContext());
 	}
 
-	public static BaseTagPropertyEditorsManager getPropertyEditorsManager() {
-		return getPropertyEditorsManager(NextWeb.getRequestContext());
-	}
-
-	public static BaseTagPropertyEditorsManager getPropertyEditorsManager(WebRequestContext requestContext) {
-		String attributeName = BaseTagPropertyEditorsManager.class.getName();
-		BaseTagPropertyEditorsManager baseTagPropertyEditorsManager = (BaseTagPropertyEditorsManager) requestContext.getAttribute(attributeName);
-		if (baseTagPropertyEditorsManager == null) {
-			baseTagPropertyEditorsManager = BeanUtils.instantiate(BaseTag.propertyEditorManagerClass);
-			NextWeb.getRequestContext().setAttribute(attributeName, baseTagPropertyEditorsManager);
+	public static synchronized BaseTagManager getBaseTagManager(WebRequestContext requestContext) {
+		String attributeName = BaseTagManager.class.getName();
+		BaseTagManager baseTagManager = (BaseTagManager) requestContext.getAttribute(attributeName);
+		if (baseTagManager == null) {
+			baseTagManager = BeanUtils.instantiate(BaseTag.propertyEditorManagerClass);
+			configureBaseTagManager(baseTagManager, requestContext);
+			NextWeb.getRequestContext().setAttribute(attributeName, baseTagManager);
 		}
-		return baseTagPropertyEditorsManager;
+		return baseTagManager;
+	}
+
+	private static void configureBaseTagManager(BaseTagManager baseTagManager, WebRequestContext requestContext) {
+		Map<String, BaseTagManagerConfigurer> configurersMap = Next.getBeanFactory().getBeansOfType(BaseTagManagerConfigurer.class);
+		if (configurersMap != null) {
+			for (BaseTagManagerConfigurer configurer : configurersMap.values()) {
+				configurer.configure(baseTagManager, requestContext);
+			}
+		}
 	}
 
 	public static String getObjectValueToString(Object value) {
@@ -149,7 +156,7 @@ public class TagUtils {
 				return Util.strings.toStringDescription(value, pattern, pattern, pattern, NextWeb.getRequestContext().getLocale());
 			}
 
-			PropertyEditor propertyEditor = TagUtils.getPropertyEditorsFromRequest().get(value.getClass());
+			PropertyEditor propertyEditor = getBaseTagManager().getPropertyEditor(value.getClass());
 			if (propertyEditor != null) {
 				propertyEditor.setValue(value);
 				return propertyEditor.getAsText();
@@ -214,14 +221,15 @@ public class TagUtils {
 
 			boolean usePattern = (value instanceof Number && Util.strings.isNotEmpty(formatNumber)) ||
 					((value instanceof Date || value instanceof Calendar) && Util.strings.isNotEmpty(formatDate));
-			if (usePattern || value instanceof MessageSourceResolvable) {
-				return Util.strings.toStringDescription(value, formatDate, formatNumber, formatString, NextWeb.getRequestContext().getLocale());
-			}
 
-			PropertyEditor propertyEditor = getPropertyEditorsFromRequest().get(value.getClass());
-			if (propertyEditor != null) {
-				propertyEditor.setValue(value);
-				return propertyEditor.getAsText();
+			if (!usePattern && !(value instanceof MessageSourceResolvable) && !hasDescriptionProperty(value.getClass())) {
+
+				PropertyEditor propertyEditor = getBaseTagManager().getPropertyEditor(value.getClass());
+				if (propertyEditor != null) {
+					propertyEditor.setValue(value);
+					return propertyEditor.getAsText();
+				}
+
 			}
 
 			return Util.strings.toStringDescription(value, formatDate, formatNumber, formatString, NextWeb.getRequestContext().getLocale());
