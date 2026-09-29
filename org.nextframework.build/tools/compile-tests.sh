@@ -11,6 +11,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="$(dirname "$SCRIPT_DIR")"
 PROJECT_ROOT="$(dirname "$BUILD_DIR")"
+JAVA_RELEASE="25"
 
 # Colors
 RED='\033[0;31m'
@@ -95,7 +96,7 @@ compile_test_module() {
     mkdir -p "$bin_dir"
 
     local output
-    output=$(javac -d "$bin_dir" -cp "$classpath" $java_files 2>&1)
+    output=$(javac -d "$bin_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 $java_files 2>&1)
     local rc=$?
 
     if [ $rc -eq 0 ]; then
@@ -119,7 +120,7 @@ main() {
     echo ""
 
     if ! command -v javac &> /dev/null; then
-        error "javac not found. Please install Java JDK."
+        error "javac not found. Please install Java 25 JDK."
         return 1
     fi
 
