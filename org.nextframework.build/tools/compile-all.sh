@@ -122,6 +122,21 @@ build_classpath() {
     echo "${cp#:}"
 }
 
+# Remove generated output before compiling so deleted or moved classes cannot
+# survive into a later build or package.
+clean_module_outputs() {
+    info "Cleaning module outputs..."
+    for module in "${MODULES[@]}"; do
+        local bin_dir="$PROJECT_ROOT/$module/bin"
+        if [ -d "$bin_dir" ]; then
+            rm -rf -- "$bin_dir" || {
+                error "Unable to clean $bin_dir"
+                return 1
+            }
+        fi
+    done
+}
+
 # Get source directories from .classpath file
 get_src_dirs_from_classpath() {
     local module_dir="$1"
@@ -282,11 +297,6 @@ compile_modules_together() {
         return 0
     fi
 
-    # Create bin directories for all modules
-    for module in "${modules[@]}"; do
-        mkdir -p "$PROJECT_ROOT/$module/bin"
-    done
-
     # Build classpath
     local classpath
     classpath=$(build_classpath "$first_module")
@@ -295,29 +305,116 @@ compile_modules_together() {
     file_count=$(echo "$java_files" | wc -l)
     info "Compiling $file_count files..."
 
-    # Compile to first module's bin (will contain all classes)
-    local bin_dir="$PROJECT_ROOT/$first_module/bin"
-    javac -d "$bin_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 \
+    # First pass: compile the complete cycle into a temporary bootstrap output.
+    # Nothing from this directory is packaged.
+    local temp_dir
+    temp_dir=$(mktemp -d "${TMPDIR:-/tmp}/nextframework-circular.XXXXXX") || {
+        error "Unable to create temporary output for ${modules[*]}"
+        return 1
+    }
+
+    javac -d "$temp_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 \
         $(find $all_src_dirs -name "*.java") 2>&1
 
-    if [ $? -eq 0 ]; then
-        # Copy classes to each module's bin based on package (exclude META-INF)
-        for module in "${modules[@]}"; do
-            if [ "$module" != "$first_module" ]; then
-                # Copy only class files, not META-INF (to avoid duplicate web-fragments)
-                # Use subshell with cd to make paths relative (cp --parents with absolute paths creates wrong structure)
-                (cd "$bin_dir" && find . -name "*.class" -exec cp --parents {} "$PROJECT_ROOT/$module/bin/" \;) 2>/dev/null || \
-                    rsync -a --include='*/' --include='*.class' --exclude='*' "$bin_dir/" "$PROJECT_ROOT/$module/bin/" 2>/dev/null || true
-            fi
-            # Copy resources (META-INF, etc.) to bin - only for this module's own resources
-            copy_resources "$PROJECT_ROOT/$module"
-        done
-        info "${modules[*]}: OK"
-        return 0
-    else
+    if [ $? -ne 0 ]; then
+        rm -rf -- "$temp_dir"
         error "${modules[*]}: FAILED"
         return 1
     fi
+
+    # Distribute each class according to the source file recorded in its class
+    # metadata. This also handles anonymous, inner, and secondary top-level
+    # classes without copying peer-module output.
+    local bootstrap_class_count
+    bootstrap_class_count=$(find "$temp_dir" -type f -name "*.class" | wc -l)
+    if [ "$bootstrap_class_count" -eq 0 ]; then
+        rm -rf -- "$temp_dir"
+        error "Circular bootstrap produced no classes for ${modules[*]}"
+        return 1
+    fi
+    info "Circular bootstrap produced $bootstrap_class_count classes"
+
+    declare -A source_owners=()
+    for module in "${modules[@]}"; do
+        local module_dir="$PROJECT_ROOT/$module"
+        local module_src_dirs
+        module_src_dirs=$(get_src_dirs_from_classpath "$module_dir")
+
+        if [ -z "$module_src_dirs" ]; then
+            for pattern in "src" "web-src" "*-src"; do
+                for dir in "$module_dir"/$pattern; do
+                    [ -d "$dir" ] && module_src_dirs="$module_src_dirs $dir"
+                done
+            done
+        fi
+
+        for src_dir in $module_src_dirs; do
+            while IFS= read -r -d '' source_path; do
+                local source_relative="${source_path#$src_dir/}"
+                local existing_owner="${source_owners[$source_relative]:-}"
+                if [ -n "$existing_owner" ] && [ "$existing_owner" != "$module" ]; then
+                    source_owners[$source_relative]="$existing_owner|$module"
+                else
+                    source_owners[$source_relative]="$module"
+                fi
+            done < <(find "$src_dir" -type f -name "*.java" -print0)
+        done
+    done
+
+    local distribution_failed=0
+    while IFS= read -r -d '' class_file; do
+        local class_relative="${class_file#$temp_dir/}"
+        local class_package_dir
+        class_package_dir=$(dirname "$class_relative")
+        [ "$class_package_dir" = "." ] && class_package_dir=""
+
+        local class_filename="${class_relative##*/}"
+        local outer_class="${class_filename%%\$*}"
+        outer_class="${outer_class%.class}"
+        local source_relative="${class_package_dir:+$class_package_dir/}$outer_class.java"
+        local owner="${source_owners[$source_relative]:-}"
+
+        # A .java file may contain additional package-private top-level classes.
+        # Their bytecode SourceFile attribute identifies the actual source.
+        if [ -z "$owner" ]; then
+            local source_file
+            source_file=$(javap -verbose "$class_file" 2>/dev/null |
+                sed -n 's/.*SourceFile: "\([^"]*\)".*/\1/p' | head -1)
+            source_relative="${class_package_dir:+$class_package_dir/}$source_file"
+            owner="${source_owners[$source_relative]:-}"
+        fi
+
+        if [[ "$owner" == *"|"* ]]; then
+            error "Ambiguous ownership for $class_relative: ${owner//|/ and }"
+            distribution_failed=1
+            continue
+        fi
+        if [ -z "$owner" ]; then
+            error "No source owner found for $class_relative"
+            distribution_failed=1
+            continue
+        fi
+
+        local target="$PROJECT_ROOT/$owner/bin/$class_relative"
+        mkdir -p "$(dirname "$target")"
+        cp "$class_file" "$target" || distribution_failed=1
+    done < <(find "$temp_dir" -type f -name "*.class" -print0)
+
+    if [ "$distribution_failed" -ne 0 ]; then
+        rm -rf -- "$temp_dir"
+        error "${modules[*]}: FAILED while assigning circular output"
+        return 1
+    fi
+
+    for module in "${modules[@]}"; do
+        local module_dir="$PROJECT_ROOT/$module"
+        mkdir -p "$module_dir/bin"
+        copy_resources "$module_dir"
+    done
+
+    rm -rf -- "$temp_dir"
+    info "${modules[*]}: OK"
+    return 0
 }
 
 # Main
@@ -338,6 +435,8 @@ main() {
     java_version=$(javac -version 2>&1)
     info "Using: $java_version"
     echo ""
+
+    clean_module_outputs || return 1
 
     local failed=0
     local compiled=0
@@ -391,6 +490,8 @@ main() {
     if [ $failed -gt 0 ]; then
         return 1
     fi
+
+    bash "$SCRIPT_DIR/check-duplicate-classes.sh" || return 1
     return 0
 }
 

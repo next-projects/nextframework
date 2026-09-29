@@ -9,7 +9,13 @@
 	<property name="build.package.parameter.lib.dependencies.dir"		value="${build.package.parameter.lib.dir}/dependencies"/>
 	<property name="build.package.parameter.lib.dependencies.src.dir" 	value="${build.package.parameter.lib.dir}/dependencies-src"/>
 	
-	<target name="package-all-modules">
+	<target name="validate-no-duplicate-classes">
+		<exec executable="bash" failonerror="true">
+			<arg value="${basedir}/tools/check-duplicate-classes.sh"/>
+		</exec>
+	</target>
+
+	<target name="package-all-modules" depends="validate-no-duplicate-classes">
 		<build-next-modules target="package-module" parameters="build_package_parameters"/>
 	</target>
 	
