@@ -14,7 +14,7 @@ This runs the full setup:
 4. Compile all modules
 5. Generate JavaScript files
 
-**Prerequisites:** Java 8 JDK, curl
+**Prerequisites:** Java 25 JDK, curl
 
 ---
 

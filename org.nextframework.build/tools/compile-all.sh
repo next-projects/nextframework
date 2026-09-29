@@ -11,6 +11,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="$(dirname "$SCRIPT_DIR")"
 PROJECT_ROOT="$(dirname "$BUILD_DIR")"
+JAVA_RELEASE="25"
 
 # Colors
 RED='\033[0;31m'
@@ -226,10 +227,10 @@ compile_module() {
 
     # Compile all source directories together
     if [ -n "$classpath" ]; then
-        javac -d "$bin_dir" -cp "$classpath" -source 1.8 -target 1.8 -encoding UTF-8 \
+        javac -d "$bin_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 \
             $(find $src_dirs -name "*.java") 2>&1
     else
-        javac -d "$bin_dir" -source 1.8 -target 1.8 -encoding UTF-8 \
+        javac -d "$bin_dir" --release "$JAVA_RELEASE" -encoding UTF-8 \
             $(find $src_dirs -name "*.java") 2>&1
     fi
 
@@ -296,7 +297,7 @@ compile_modules_together() {
 
     # Compile to first module's bin (will contain all classes)
     local bin_dir="$PROJECT_ROOT/$first_module/bin"
-    javac -d "$bin_dir" -cp "$classpath" -source 1.8 -target 1.8 -encoding UTF-8 \
+    javac -d "$bin_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 \
         $(find $all_src_dirs -name "*.java") 2>&1
 
     if [ $? -eq 0 ]; then
@@ -329,7 +330,7 @@ main() {
 
     # Check Java
     if ! command -v javac &> /dev/null; then
-        error "javac not found. Please install Java 8 JDK."
+        error "javac not found. Please install Java 25 JDK."
         return 1
     fi
 

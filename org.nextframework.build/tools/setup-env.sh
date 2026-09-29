@@ -19,7 +19,7 @@
 #   source tools/setup-env.sh --no-compile --no-js
 #
 # Prerequisites:
-#   - Java 8 JDK
+#   - Java 25 JDK
 #   - curl
 #
 
@@ -40,23 +40,47 @@ info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
-# Check if Java 8 is installed
+# Extract the major version from output such as:
+#   openjdk version "25.0.2" ...
+#   javac 25.0.2
+get_java_major_version() {
+    local version_output="$1"
+
+    if [[ "$version_output" =~ \"([0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+    elif [[ "$version_output" =~ ([0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+    fi
+}
+
+# Check if the Java 25 JDK is installed
 check_java() {
     if ! command -v java &> /dev/null; then
-        error "Java is not installed. Please install Java 8."
+        error "Java is not installed. Please install Java 25 JDK."
+        return 1
+    fi
+
+    if ! command -v javac &> /dev/null; then
+        error "javac is not installed. Please install Java 25 JDK."
         return 1
     fi
 
     local java_version
+    local javac_version
+    local java_major
+    local javac_major
     java_version=$(java -version 2>&1 | head -1)
+    javac_version=$(javac -version 2>&1)
+    java_major=$(get_java_major_version "$java_version")
+    javac_major=$(get_java_major_version "$javac_version")
 
-    if [[ "$java_version" =~ "1.8" ]] || [[ "$java_version" =~ '"8.' ]]; then
-        info "Java 8 found: $java_version"
-        return 0
-    else
-        error "Java 8 required. Found: $java_version"
+    if [ "$java_major" != "25" ] || [ "$javac_major" != "25" ]; then
+        error "Java 25 JDK required. Found runtime: $java_version; compiler: $javac_version"
         return 1
     fi
+
+    info "Java 25 JDK found: $java_version; $javac_version"
+    return 0
 }
 
 # Set environment variables
