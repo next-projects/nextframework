@@ -61,7 +61,7 @@ is_wsl() {
     return 1
 }
 
-# Build full classpath (bin + lib + provided + lib-test for all modules)
+# Build full classpath (production/test output + dependencies for all modules)
 build_full_classpath() {
     local root="$1"
     local cp=""
@@ -69,6 +69,9 @@ build_full_classpath() {
         local mod_dir="$root/$mod"
         if [ -d "$mod_dir/bin" ]; then
             cp="$cp:$mod_dir/bin"
+        fi
+        if [ -d "$mod_dir/bin-test" ]; then
+            cp="$cp:$mod_dir/bin-test"
         fi
         for dir in lib provided lib-test; do
             if [ -d "$mod_dir/$dir" ]; then
@@ -170,7 +173,7 @@ copy_to_temp() {
 
     mkdir -p "$temp_dir"
 
-    # Copy only what's needed: bin/, lib/, lib-test/, provided/, test/ for each module
+    # Copy only what's needed for test compilation and execution.
     for mod in "${ALL_MODULES[@]}"; do
         local src="$PROJECT_ROOT/$mod"
         local dst="$temp_dir/$mod"
@@ -181,7 +184,7 @@ copy_to_temp() {
 
         mkdir -p "$dst"
 
-        for dir in bin lib lib-test provided test resources; do
+        for dir in bin bin-test lib lib-test provided test resources; do
             if [ -d "$src/$dir" ]; then
                 cp -a "$src/$dir" "$dst/$dir"
             fi

@@ -5,6 +5,8 @@
 		<include file="../org.nextframework.build/configurations.xml" />
 	</configurations>
 	<dependencies>
-		<dependency org="commons-validator" name="commons-validator"	rev="1.10.1" conf="lib" />
+		<dependency org="commons-validator" name="commons-validator"	rev="1.10.1"	conf="lib"/>
+		<dependency org="junit"				name="junit"				rev="4.13.2"	conf="lib-test"/>
+		<dependency org="org.hamcrest"		name="hamcrest-core"		rev="1.3"		conf="lib-test"/>
 	</dependencies>
 </ivy-module>

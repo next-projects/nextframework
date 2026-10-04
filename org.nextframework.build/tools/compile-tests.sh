@@ -48,7 +48,7 @@ ALL_MODULES=(
     "org.nextframework.legacy"
 )
 
-# Build full classpath (bin + lib + provided + lib-test for all modules)
+# Build the production and test dependency classpath for all modules.
 build_full_classpath() {
     local cp=""
     for mod in "${ALL_MODULES[@]}"; do
@@ -56,6 +56,10 @@ build_full_classpath() {
         if [ -d "$mod_dir/bin" ]; then
             cp="$cp:$mod_dir/bin"
         fi
+        # Keep every test output directory on the classpath even before it is
+        # created. Later modules may extend test fixtures compiled by earlier
+        # modules (for example, dao tests reuse persistence test classes).
+        cp="$cp:$mod_dir/bin-test"
         for dir in lib provided lib-test; do
             if [ -d "$mod_dir/$dir" ]; then
                 for jar in "$mod_dir/$dir"/*.jar; do
@@ -75,7 +79,8 @@ compile_test_module() {
     local classpath="$2"
     local module_dir="$PROJECT_ROOT/$module"
     local test_dir="$module_dir/test"
-    local bin_dir="$module_dir/bin"
+    local production_bin_dir="$module_dir/bin"
+    local test_bin_dir="$module_dir/bin-test"
 
     if [ ! -d "$test_dir" ]; then
         return 0
@@ -93,10 +98,23 @@ compile_test_module() {
 
     info "Compiling tests: $module ($file_count files)..."
 
-    mkdir -p "$bin_dir"
+    # Older versions of this script wrote test classes into bin/. Remove only
+    # artifacts that correspond to current test sources, preserving production
+    # classes in the same output tree.
+    if [ -d "$production_bin_dir" ]; then
+        local java_file
+        while IFS= read -r java_file; do
+            local relative_class="${java_file#$test_dir/}"
+            relative_class="${relative_class%.java}"
+            rm -f -- "$production_bin_dir/$relative_class.class"
+            rm -f -- "$production_bin_dir/$relative_class"\$*.class
+        done < <(find "$test_dir" -name "*.java" -type f)
+    fi
+
+    mkdir -p "$test_bin_dir"
 
     local output
-    output=$(javac -d "$bin_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 $java_files 2>&1)
+    output=$(javac -d "$test_bin_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 $java_files 2>&1)
     local rc=$?
 
     if [ $rc -eq 0 ]; then
@@ -125,6 +143,12 @@ main() {
     fi
 
     info "Building classpath..."
+
+    # Test output is disposable and must never leak stale classes between runs.
+    for mod in "${ALL_MODULES[@]}"; do
+        rm -rf -- "$PROJECT_ROOT/$mod/bin-test"
+    done
+
     local classpath
     classpath=$(build_full_classpath)
 

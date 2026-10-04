@@ -24,11 +24,16 @@ main() {
     echo ""
 
     local count=0
-    for bin_dir in "$PROJECT_ROOT"/org.nextframework.*/bin; do
-        if [ -d "$bin_dir" ]; then
-            local module=$(basename "$(dirname "$bin_dir")")
-            rm -rf "$bin_dir"
-            info "Cleaned $module"
+    for module_dir in "$PROJECT_ROOT"/org.nextframework.*; do
+        local cleaned=false
+        for output_dir in bin bin-test; do
+            if [ -d "$module_dir/$output_dir" ]; then
+                rm -rf -- "$module_dir/$output_dir"
+                cleaned=true
+            fi
+        done
+        if [ "$cleaned" = true ]; then
+            info "Cleaned $(basename "$module_dir")"
             ((count++))
         fi
     done
