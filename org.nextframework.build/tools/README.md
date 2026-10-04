@@ -26,6 +26,8 @@ This runs the full setup:
 | `download-tools.sh` | Downloads Ant and Ivy |
 | `download-dependencies.sh` | Downloads module dependencies via Ivy |
 | `compile-all.sh` | Compiles all modules in dependency order |
+| `compile-tests.sh` | Compiles tests into each module's isolated `bin-test/` directory |
+| `run-tests.sh` | Compiles and runs the JUnit 4 test suite |
 | `generate-js.sh` | Generates JavaScript from Java using STJS |
 | `clean.sh` | Removes all compiled classes |
 | `show-dependencies.sh` | Prints module dependencies in YAML format |

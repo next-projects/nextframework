@@ -122,6 +122,71 @@ build_classpath() {
     echo "${cp#:}"
 }
 
+# Convert paths for javac when this script runs under Git Bash/MSYS. Paths in
+# an @argument file are read by javac itself, so MSYS cannot translate them as
+# it does ordinary command-line arguments.
+to_javac_path() {
+    if command -v cygpath &> /dev/null; then
+        cygpath -m "$1"
+    else
+        printf '%s\n' "$1"
+    fi
+}
+
+to_javac_classpath() {
+    if command -v cygpath &> /dev/null; then
+        cygpath -mp "$1"
+    else
+        printf '%s\n' "$1"
+    fi
+}
+
+# Quote one value using javac's argument-file syntax.
+write_javac_arg() {
+    local value="${1//\\/\\\\}"
+    value="${value//\"/\\\"}"
+    printf '"%s"\n' "$value"
+}
+
+# Compile all Java sources below the supplied directories through an argument
+# file. This avoids the Windows command-line limit for large modules such as
+# org.nextframework.stjs and also keeps the global classpath off the command
+# line.
+run_javac() {
+    local output_dir="$1"
+    local classpath="$2"
+    shift 2
+    local source_dirs=("$@")
+    local arg_file
+
+    arg_file=$(mktemp "${TMPDIR:-/tmp}/nextframework-javac.XXXXXX") || {
+        error "Unable to create javac argument file"
+        return 1
+    }
+
+    {
+        printf '%s\n' '-d'
+        write_javac_arg "$(to_javac_path "$output_dir")"
+        if [ -n "$classpath" ]; then
+            printf '%s\n' '-classpath'
+            write_javac_arg "$(to_javac_classpath "$classpath")"
+        fi
+        printf '%s\n' '--release' "$JAVA_RELEASE" '-encoding' 'UTF-8'
+
+        local source_dir
+        for source_dir in "${source_dirs[@]}"; do
+            while IFS= read -r -d '' source_file; do
+                write_javac_arg "$(to_javac_path "$source_file")"
+            done < <(find "$source_dir" -type f -name "*.java" -print0)
+        done
+    } > "$arg_file"
+
+    javac "@$arg_file" 2>&1
+    local result=$?
+    rm -f -- "$arg_file"
+    return $result
+}
+
 # Remove generated output before compiling so deleted or moved classes cannot
 # survive into a later build or package.
 clean_module_outputs() {
@@ -240,14 +305,9 @@ compile_module() {
 
     info "Compiling $module ($file_count files)..."
 
-    # Compile all source directories together
-    if [ -n "$classpath" ]; then
-        javac -d "$bin_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 \
-            $(find $src_dirs -name "*.java") 2>&1
-    else
-        javac -d "$bin_dir" --release "$JAVA_RELEASE" -encoding UTF-8 \
-            $(find $src_dirs -name "*.java") 2>&1
-    fi
+    # Compile all source directories together without expanding the source list
+    # into the process command line.
+    run_javac "$bin_dir" "$classpath" $src_dirs
 
     if [ $? -eq 0 ]; then
         # Copy resources (META-INF, etc.) to bin
@@ -313,8 +373,7 @@ compile_modules_together() {
         return 1
     }
 
-    javac -d "$temp_dir" -cp "$classpath" --release "$JAVA_RELEASE" -encoding UTF-8 \
-        $(find $all_src_dirs -name "*.java") 2>&1
+    run_javac "$temp_dir" "$classpath" $all_src_dirs
 
     if [ $? -ne 0 ]; then
         rm -rf -- "$temp_dir"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.nextframework" module="next-summary" />
+	<configurations>
+		<include file="../org.nextframework.build/configurations.xml" />
+	</configurations>
+	<dependencies>
+		<dependency org="junit" name="junit" rev="4.13.2" conf="lib-test" />
+		<dependency org="org.hamcrest" name="hamcrest-core" rev="1.3" conf="lib-test" />
+	</dependencies>
+</ivy-module>

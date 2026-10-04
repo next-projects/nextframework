@@ -33,9 +33,13 @@ download_ant() {
 
     info "Downloading Apache Ant $ANT_VERSION..."
     local ant_url="https://dlcdn.apache.org/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz"
+    local ant_archive_url="https://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz"
     local ant_tar="$TOOLS_BIN_DIR/apache-ant-${ANT_VERSION}-bin.tar.gz"
 
-    curl -L -o "$ant_tar" "$ant_url" || { error "Failed to download Ant"; return 1; }
+    if ! curl --fail -L -o "$ant_tar" "$ant_url"; then
+        info "Ant $ANT_VERSION is not on the primary mirror; trying the Apache archive..."
+        curl --fail -L -o "$ant_tar" "$ant_archive_url" || { error "Failed to download Ant"; return 1; }
+    fi
 
     info "Extracting Ant..."
     tar -xzf "$ant_tar" -C "$TOOLS_BIN_DIR" || { error "Failed to extract Ant"; return 1; }
@@ -55,7 +59,7 @@ download_ivy() {
     info "Downloading Apache Ivy $IVY_VERSION..."
     local ivy_url="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${IVY_VERSION}/ivy-${IVY_VERSION}.jar"
 
-    curl -L -o "$IVY_JAR" "$ivy_url" || { error "Failed to download Ivy"; return 1; }
+    curl --fail -L -o "$IVY_JAR" "$ivy_url" || { error "Failed to download Ivy"; return 1; }
 
     info "Ivy installed successfully"
 }
