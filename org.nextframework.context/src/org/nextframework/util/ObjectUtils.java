@@ -165,7 +165,7 @@ public class ObjectUtils {
 	}
 
 	public boolean equals(Object o1, Object o2) {
-		if (o1 == null && o2 == null) {
+		if (o1 == o2) {
 			return true;
 		}
 		if (o1 == null || o2 == null) {
@@ -286,7 +286,7 @@ public class ObjectUtils {
 	public boolean checkResolvableCodeAndArgument(MessageSourceResolvable msg, String code, Object arg) {
 		if (checkResolvableCode(msg, code) && msg.getArguments() != null) {
 			for (Object arg2 : msg.getArguments()) {
-				if (arg2.equals(arg)) {
+				if (equals(arg2, arg)) {
 					return true;
 				}
 			}
