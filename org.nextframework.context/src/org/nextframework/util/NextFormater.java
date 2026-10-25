@@ -30,9 +30,9 @@ import java.util.Date;
 
 public class NextFormater {
 
-	protected SimpleDateFormat simpleDateFormatTime = new SimpleDateFormat("HH:mm");
-	protected SimpleDateFormat simpleDateFormatTimestamp = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-	protected SimpleDateFormat simpleDateFormatDate = new SimpleDateFormat("dd/MM/yyyy");
+	private static final String TIME_PATTERN = "HH:mm";
+	private static final String TIMESTAMP_PATTERN = "dd/MM/yyyy HH:mm";
+	private static final String DATE_PATTERN = "dd/MM/yyyy";
 
 	private static NextFormater instance;
 
@@ -66,14 +66,18 @@ public class NextFormater {
 		} else if (horaClass != null && horaClass.isAssignableFrom(o.getClass())) {
 			return o.toString();
 		} else if (o instanceof Time) {
-			return simpleDateFormatTime.format((Time) o);
+			return formatDate((Time) o, TIME_PATTERN);
 		} else if (o instanceof Timestamp) {
-			return simpleDateFormatTimestamp.format((Timestamp) o);
+			return formatDate((Timestamp) o, TIMESTAMP_PATTERN);
 		} else if (o instanceof Date) {
-			return simpleDateFormatDate.format((Date) o);
+			return formatDate((Date) o, DATE_PATTERN);
 		} else {
 			return o.toString();
 		}
+	}
+
+	private String formatDate(Date date, String pattern) {
+		return new SimpleDateFormat(pattern).format(date);
 	}
 
 }
