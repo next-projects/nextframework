@@ -1,26 +1,28 @@
 package org.nextframework.authorization;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.net.MalformedURLException;
 
 import org.nextframework.controller.Controller;
 import org.nextframework.controller.DefaultAction;
 import org.nextframework.controller.MultiActionController;
+import org.nextframework.controller.NextCompositeViewResolver;
 import org.nextframework.core.standard.MessageType;
+import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.FileCopyUtils;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class LoginController extends MultiActionController implements AuthenticationController {
+
+	static final String DEFAULT_LOGIN_PAGE = "/WEB-INF/nextframework/authorization/login.jsp";
+	static final String EXPLODED_DEFAULT_LOGIN_PAGE = "/WEB-INF/classes/org/nextframework/authorization/login.jsp";
 
 	// The programmer must create a class that implements AuthorizationDAO in order to use this controller
 	@Autowired
 	private AuthorizationDAO authorizationDAO;
-
-	private boolean loginChecked = false;
 
 	@Override
 	public String getPath() {
@@ -39,27 +41,34 @@ public class LoginController extends MultiActionController implements Authentica
 	public String doPage(UserForm user) {
 		copyLoginPageIfNecessary();
 		setAttribute("user", user);
-		return "login";
+		return resolveLoginView(getServletContext(), WebUtils.getRequestModule());
 	}
 
+	/**
+	 * Retained as an extension hook for applications that overrode the old copy
+	 * operation. The default page is now exposed directly from the module JAR.
+	 */
+	@Deprecated
 	protected void copyLoginPageIfNecessary() {
-		if (!loginChecked) {
-			loginChecked = true;
-			// consider the next default behavior for page redirecting
-			String dir = "/WEB-INF/jsp/" + WebUtils.getRequestModule();
-			String pageResource = dir + "/login.jsp";
-			if (getServletContext().getResourceAsStream(pageResource) == null) {
-				String realPath = getServletContext().getRealPath(pageResource);
-				File dirRef = new File(getServletContext().getRealPath(dir));
-				dirRef.mkdirs();
-				try {
-					FileCopyUtils.copy(LoginController.class.getResourceAsStream("login.jsp"), new FileOutputStream(realPath));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
+	}
+
+	protected String resolveLoginView(ServletContext servletContext, String module) {
+		String applicationLoginPage = "/WEB-INF/jsp/" + module + "/login.jsp";
+		try {
+			if (servletContext.getResource(applicationLoginPage) != null) {
+				return "login";
+			}
+			String defaultLoginPage = DEFAULT_LOGIN_PAGE;
+			if (servletContext.getResource(defaultLoginPage) == null) {
+				defaultLoginPage = EXPLODED_DEFAULT_LOGIN_PAGE;
+				if (servletContext.getResource(defaultLoginPage) == null) {
+					throw new IllegalStateException("Default login page is not available at " + DEFAULT_LOGIN_PAGE
+							+ " or " + EXPLODED_DEFAULT_LOGIN_PAGE);
 				}
 			}
+			return NextCompositeViewResolver.WEB_RESOURCE_URL_PREFIX + defaultLoginPage;
+		} catch (MalformedURLException e) {
+			throw new IllegalStateException("Could not resolve the login page", e);
 		}
 	}
 
@@ -81,6 +90,10 @@ public class LoginController extends MultiActionController implements Authentica
 			String passwordProvided = user.getPassword();
 
 			if (userByLogin != null && validPassword(passwordPersisted, passwordProvided)) {
+
+				HttpServletRequest servletRequest = getRequest().getServletRequest();
+				servletRequest.getSession();
+				servletRequest.changeSessionId();
 
 				//Setando o atributo de seção USER fazemos o login do usuário no sistema.
 				getRequest().setUserAttribute("USER", userByLogin);
@@ -104,7 +117,24 @@ public class LoginController extends MultiActionController implements Authentica
 	}
 
 	protected boolean validPassword(String passwordPersisted, String passwordProvided) {
-		return passwordPersisted.equals(passwordProvided);
+		if (passwordPersisted == null || passwordProvided == null) {
+			return false;
+		}
+		try {
+			PasswordEncoder passwordEncoder = getPasswordEncoder();
+			if (passwordEncoder == null) {
+				logger.error("No PasswordEncoder service is available. Authentication was denied.");
+				return false;
+			}
+			return passwordEncoder.matches(passwordProvided, passwordPersisted);
+		} catch (RuntimeException e) {
+			logger.error("Password verification failed. Authentication was denied.", e);
+			return false;
+		}
+	}
+
+	protected PasswordEncoder getPasswordEncoder() {
+		return ServiceFactory.getService(PasswordEncoder.class);
 	}
 
 	protected String afterLoginRedirectTo() {
