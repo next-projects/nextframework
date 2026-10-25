@@ -12,6 +12,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/log4j-api-2.25.3.jar" sourcepath="lib/src/log4j-api-2.25.3-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-core-2.25.3.jar" sourcepath="lib/src/log4j-core-2.25.3-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-jcl-2.25.3.jar" sourcepath="lib/src/log4j-jcl-2.25.3-sources.jar"/>
-	<classpathentry kind="lib" path="lib-test/junit-4.13.2.jar" sourcepath="lib-test/src/junit-4.13.2-sources.jar"/>
+	<classpathentry kind="lib" path="/org.nextframework.build/lib-test/junit-4.13.2.jar" sourcepath="/org.nextframework.build/lib-test/src/junit-4.13.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -8,11 +8,18 @@
 		<echo>Using next workspace: ${next.workspace.dir}</echo>
 		<build-next-modules target="copy-module-dependencies"/>
 	</target>
+
+	<target name="copy-build-test-dependencies" depends="init-ivy">
+		<echo>Downloading shared test dependencies for: ${basedir}</echo>
+		<ivy:retrieve file="ivy.xml" pattern="[conf]/[artifact]-[revision].[ext]" type="jar,bundle" haltonfailure="false"/>
+		<ivy:retrieve file="ivy.xml" pattern="[conf]/src/[artifact]-[revision]-sources.[ext]" type="source" haltonfailure="false"/>
+	</target>
 	
 	<target name="Remove Next Ivy Dependencies" >
 		<dirname  file="${basedir}../" property="next.workspace.dir"/>
 		<echo>Using next workspace: ${next.workspace.dir}</echo>
 		<build-next-modules target="remove-libs"/>
+		<delete dir="lib-test" />
 	</target>
 	
 	<!--
@@ -36,7 +43,7 @@
 		<echo>${basedir} - No ivy.xml</echo>
 	</target>
 	
-	<target name="Download Next Ivy Dependencies" depends="copy-all-dependencies" >
+	<target name="Download Next Ivy Dependencies" depends="copy-build-test-dependencies,copy-all-dependencies" >
 	</target>
 	
 	<target name="Retrieve Ivy Dependencies" depends="copy-module-dependencies" >
