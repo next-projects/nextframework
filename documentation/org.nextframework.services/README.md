@@ -93,6 +93,7 @@ When multiple providers can supply a service, the one with the **lowest priority
 | LowPriorityStaticServiceProvider | services | 100 | Fallback static registration |
 
 Custom providers can define their own priority by implementing the `priority()` method.
+Providers with the same priority are ordered by their fully qualified class name.
 
 ---
 
@@ -116,7 +117,7 @@ public class MyProvider implements ServiceProvider {
 
     @Override
     public int priority() {
-        return 30; // Higher priority than default providers
+        return 20; // Higher priority than default providers
     }
 
     @Override

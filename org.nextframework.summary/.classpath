@@ -9,6 +9,6 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.compilation"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/org.nextframework.beans"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib-test/junit-4.13.2.jar" sourcepath="lib-test/src/junit-4.13.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
