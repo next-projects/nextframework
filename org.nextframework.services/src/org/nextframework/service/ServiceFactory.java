@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
@@ -45,7 +46,11 @@ public class ServiceFactory {
 		providers = Collections.synchronizedSet(new TreeSet<ServiceProvider>(new Comparator<ServiceProvider>() {
 
 			public int compare(ServiceProvider o1, ServiceProvider o2) {
-				return o1.priority() - o2.priority();
+				int priorityComparison = Integer.compare(o1.priority(), o2.priority());
+				if (priorityComparison != 0) {
+					return priorityComparison;
+				}
+				return o1.getClass().getName().compareTo(o2.getClass().getName());
 			}
 
 		}));
@@ -67,21 +72,27 @@ public class ServiceFactory {
 
 	}
 
-	public static void registerProvider(ServiceProvider provider) {
+	public synchronized static void registerProvider(ServiceProvider provider) {
 		init();
 		providers.add(provider);
 	}
 
 	public static Set<ServiceProvider> getProviders() {
+		return Collections.unmodifiableSet(getProviderSnapshot());
+	}
+
+	private synchronized static Set<ServiceProvider> getProviderSnapshot() {
 		init();
-		return Collections.unmodifiableSet(providers);
+		synchronized (providers) {
+			return new LinkedHashSet<ServiceProvider>(providers);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <E> E[] loadServices(Class<E> serviceInterface) {
 		init();
 		List<E> list = new ArrayList<E>();
-		for (ServiceProvider provider : providers) {
+		for (ServiceProvider provider : getProviderSnapshot()) {
 			E[] services = provider.loadServices(serviceInterface);
 			list.addAll(Arrays.asList(services));
 		}
@@ -94,6 +105,7 @@ public class ServiceFactory {
 	 * It will search throught the service providers avaiable for a service of the class.<BR>
 	 * The first service found is returned.<BR>
 	 * The service providers are ordered by its priority() method (the lower the priority number is, the higher the priority will be).
+	 * Providers with the same priority are ordered by their fully qualified class name.
 	 * That is, if two service providers provides services for the same class, the privider A has a priority of 10 and the provider B has 
 	 * a priority of 20. The provider A will provide the service as it has the lower priority number.
 	 * @param <E>
@@ -106,13 +118,14 @@ public class ServiceFactory {
 		if (service == null) {
 			throw new IllegalArgumentException("Service interface must not be null");
 		}
-		for (ServiceProvider provider : providers) {
+		Set<ServiceProvider> providerSnapshot = getProviderSnapshot();
+		for (ServiceProvider provider : providerSnapshot) {
 			E serviceObject = provider.getService(service);
 			if (serviceObject != null) {
 				return serviceObject;
 			}
 		}
-		throw ServiceException.noServiceFound(service.toString(), "Using providers " + providers);
+		throw ServiceException.noServiceFound(service.toString(), "Using providers " + providerSnapshot);
 	}
 
 	/**
@@ -120,9 +133,8 @@ public class ServiceFactory {
 	 * After this call the ServiceFactory release all resources, so it cannot be used anymore.<BR>
 	 * Any attempt to use the ServiceFactory will result in {@link IllegalStateException}
 	 */
-	public static void release() {
-		Set<ServiceProvider> providers = getProviders();
-		for (ServiceProvider serviceProvider : providers) {
+	public synchronized static void release() {
+		for (ServiceProvider serviceProvider : getProviderSnapshot()) {
 			try {
 				serviceProvider.release();
 			} catch (Throwable e) {
