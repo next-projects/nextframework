@@ -7,14 +7,16 @@ import java.util.Date;
 
 public class DateUtils {
 
-	private final SimpleDateFormat sdfDMY = new SimpleDateFormat("dd/MM/yyyy");
-	private final SimpleDateFormat sdfDMYHM = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-	private final SimpleDateFormat sdfDMYHMS = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	private final SimpleDateFormat sdfYMD_HMS = new SimpleDateFormat("yy/MM/dd,HH:mm:ss");
-	private final SimpleDateFormat sdfyyyyMMdd_HHmmss = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private static final String DMY_PATTERN = "dd/MM/yyyy";
+	private static final String DMY_HM_PATTERN = "dd/MM/yyyy HH:mm";
+	private static final String DMY_HMS_PATTERN = "dd/MM/yyyy HH:mm:ss";
+	private static final String YMD_HMS_PATTERN = "yy/MM/dd,HH:mm:ss";
+	private static final String YYYYMMDD_HHMMSS_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
 	/**
-	 * Retornar true se as duas datas são a mesma data. Ignorando as horas minutos segundos e milisegundos
+	 * Retornar true se as duas datas são a mesma data. Ignorando as horas minutos
+	 * segundos e milisegundos
+	 * 
 	 * @param a
 	 * @param b
 	 * @return
@@ -28,7 +30,9 @@ public class DateUtils {
 	}
 
 	/**
-	 * Retornar true se as duas datas são a mesma data. Ignorando as horas minutos segundos e milisegundos
+	 * Retornar true se as duas datas são a mesma data. Ignorando as horas minutos
+	 * segundos e milisegundos
+	 * 
 	 * @param a
 	 * @param b
 	 * @return
@@ -51,8 +55,9 @@ public class DateUtils {
 	}
 
 	/**
-	 * Configura como 0 as horas minutos segundos e milisegundos.
-	 * Retorna a nova data configurada.
+	 * Configura como 0 as horas minutos segundos e milisegundos. Retorna a nova
+	 * data configurada.
+	 * 
 	 * @param date
 	 * @return
 	 */
@@ -64,8 +69,9 @@ public class DateUtils {
 	}
 
 	/**
-	 * Configura como 0 as horas minutos segundos e milisegundos.
-	 * Retorna o calendar alterado (mesma instancia do que foi passado como parâmetro).
+	 * Configura como 0 as horas minutos segundos e milisegundos. Retorna o calendar
+	 * alterado (mesma instancia do que foi passado como parâmetro).
+	 * 
 	 * @param date
 	 * @return
 	 */
@@ -78,11 +84,7 @@ public class DateUtils {
 	}
 
 	public Date toDate(String date, String pattern) {
-		try {
-			return new SimpleDateFormat(pattern).parse(date);
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		return parse(date, pattern);
 	}
 
 	public Calendar toCalendar(String date, String pattern) {
@@ -102,129 +104,122 @@ public class DateUtils {
 
 	/**
 	 * Retorna o Date correspondente a string no formato dd/MM/yyyy HH:mm
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public Date dmyhm(String date) {
-		try {
-			return sdfDMYHM.parse(date);
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		return parse(date, DMY_HM_PATTERN);
 	}
 
 	/**
 	 * Retorna o Date correspondente a string no formato yy/MM/dd,HH:mm:ss
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public Date ymd_hms(String date) {
-		try {
-			return sdfYMD_HMS.parse(date);
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		return parse(date, YMD_HMS_PATTERN);
 	}
 
 	/**
 	 * Retorna o Date correspondente a string no formato yyyy-MM-dd HH:mm:ss
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public Date yyyyMMdd_HHmmss(String date) {
-		try {
-			return sdfyyyyMMdd_HHmmss.parse(date);
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		return parse(date, YYYYMMDD_HHMMSS_PATTERN);
 	}
 
 	/**
 	 * Retorna o Date correspondente a string no formato dd/MM/yyyy
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public Date dmy(String date) {
-		try {
-			return sdfDMY.parse(date);
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		return parse(date, DMY_PATTERN);
 	}
 
 	/**
 	 * Retorna o Calendar correspondente a string no formato dd/MM/yyyy HH:mm
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public Calendar dmyhmCalendar(String date) {
-		try {
-			Calendar c = Calendar.getInstance();
-			c.setTime(sdfDMYHM.parse(date));
-			return c;
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(parse(date, DMY_HM_PATTERN));
+		return c;
 	}
 
 	/**
 	 * Retorna o Calendar correspondente a string no formato dd/MM/yyyy
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public Calendar dmyCalendar(String date) {
-		try {
-			Calendar c = Calendar.getInstance();
-			c.setTime(sdfDMY.parse(date));
-			return c;
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(parse(date, DMY_PATTERN));
+		return c;
 	}
 
 	/**
-	 * Retorna o String dd/MM/yyyy HH:mm correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String dd/MM/yyyy HH:mm correspondente ao Date ou Calendar passado
+	 * como parâmetro
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public String toDmyhm(Object data) {
-		if (data instanceof Calendar) {
-			data = ((Calendar) data).getTime();
-		}
-		return sdfDMYHM.format(data);
+		return format(data, DMY_HM_PATTERN);
 	}
 
 	/**
-	 * Retorna o String dd/MM/yyyy HH:mm:ss correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String dd/MM/yyyy HH:mm:ss correspondente ao Date ou Calendar
+	 * passado como parâmetro
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public String toDmyhms(Object data) {
-		if (data instanceof Calendar) {
-			data = ((Calendar) data).getTime();
-		}
-		return sdfDMYHMS.format(data);
+		return format(data, DMY_HMS_PATTERN);
 	}
 
 	/**
-	 * Retorna o String dd/MM/yyyy correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String dd/MM/yyyy correspondente ao Date ou Calendar passado como
+	 * parâmetro
+	 * 
 	 * @param date
 	 * @return
 	 */
 	public String toDmy(Object data) {
-		if (data instanceof Calendar) {
-			data = ((Calendar) data).getTime();
-		}
-		return sdfDMY.format(data);
+		return format(data, DMY_PATTERN);
 	}
 
 	/**
-	 * Retorna o String no formato informado correspondente ao Date ou Calendar passado como parâmetro
+	 * Retorna o String no formato informado correspondente ao Date ou Calendar
+	 * passado como parâmetro
+	 * 
 	 * @param data
 	 * @param pattern
 	 * @return
 	 */
 	public String toString(Object data, String pattern) {
+		return format(data, pattern);
+	}
+
+	private Date parse(String date, String pattern) {
+		try {
+			return new SimpleDateFormat(pattern).parse(date);
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private String format(Object data, String pattern) {
 		if (data instanceof Calendar) {
 			data = ((Calendar) data).getTime();
 		}
