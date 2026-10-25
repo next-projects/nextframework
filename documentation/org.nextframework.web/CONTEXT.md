@@ -136,7 +136,7 @@ String appName = appCtx.getApplicationName();
 
 ## NextWeb Static Access
 
-The `NextWeb` class provides static access to contexts via ThreadLocal:
+The `NextWeb` class provides static access to contexts via request-scoped `InheritableThreadLocal`s. The context is removed from the request thread when filter processing finishes:
 
 ```java
 public class NextWeb {
@@ -182,6 +182,8 @@ HttpServletRequest request = WebContext.getRequest();
 
 Used internally by `WebContextFilter` to set up the thread context.
 
+New child threads inherit the current context. They must finish before request processing completes and must not retain request, session, or user state beyond that boundary. Executor workers should receive the values they need explicitly because thread-local inheritance occurs when a worker thread is created, not when a task is submitted.
+
 ---
 
 ## Context Lifecycle
@@ -190,7 +192,7 @@ Used internally by `WebContextFilter` to set up the thread context.
 2. **ThreadLocal setup** - `WebContext.setServletRequest(request)`
 3. **Context creation** - `NextWeb.createRequestContext(request, response)`
 4. **Request processing** - Context available via `NextWeb.getRequestContext()`
-5. **Request completes** - ThreadLocal cleared
+5. **Request completes or fails** - Both filters clear their ThreadLocals in `finally` blocks
 
 ```
 HTTP Request

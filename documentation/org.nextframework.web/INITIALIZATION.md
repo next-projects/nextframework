@@ -245,13 +245,13 @@ Prevents common memory leaks during hot redeploys.
 
 The `web-fragment.xml` ordering ensures:
 
-1. `WebContextFilter` (listener) - Sets up ServletContext ThreadLocal
+1. `WebContextFilter` (listener) - Sets up the startup ServletContext and NEXT application-context ThreadLocals for subsequent listeners
 2. `NextWebApplicationInitializer` - Creates Spring context
 3. `MemoryLeakDestroyerListener` - Cleanup on shutdown
 
 Filters:
 
-1. `WebContextFilter` - First filter, sets up request ThreadLocal
+1. `WebContextFilter` - First filter; its initialization rebinds the existing startup context without replacing it, and each request sets up and removes its own ThreadLocal state in a `finally` block
 
 ---
 
@@ -270,7 +270,7 @@ Code is running outside a web request. Common causes:
 - Static initializer
 - Timer/scheduled task
 
-Solution: Use `InheritableThreadLocal` or manually propagate context.
+Solution: New child threads inherit the current NEXT context. For executor-backed or longer-lived work, explicitly provide the required values and do not retain request, session, or user state after the request completes.
 
 ### Bean not auto-wired
 
