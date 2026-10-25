@@ -52,14 +52,12 @@ public class AppLoginController extends LoginController {
     protected String afterLoginRedirectTo() {
         return "/app/dashboard";  // Redirect after successful login
     }
-
-    @Override
-    protected boolean validPassword(String persisted, String provided) {
-        // Custom password validation (e.g., BCrypt)
-        return BCrypt.checkpw(provided, persisted);
-    }
 }
 ```
+
+The framework provides a `PasswordEncoder` service backed by
+PBKDF2-HMAC-SHA-256. Use `PasswordEncoder.encode(...)` when creating or changing
+passwords; plaintext passwords are never accepted by the login controller.
 
 ### 2. Create Authorization Controller
 
@@ -111,7 +109,7 @@ User submits username/password
         ▼
 ┌─────────────────────────────┐
 │  Validate password          │
-│  (validPassword method)     │
+│  (PasswordEncoder service)  │
 └─────────────────────────────┘
         │
         ├─► Valid → Set session attribute "USER" → Redirect
@@ -132,22 +130,37 @@ protected String afterLoginRedirectTo() {
 }
 
 /**
- * Password validation logic.
- * Default: plain text comparison
+ * Resolves the password encoder used by validPassword(). Applications can
+ * override this method when the encoder is managed by another container.
  */
 @Override
-protected boolean validPassword(String passwordPersisted, String passwordProvided) {
-    return BCrypt.checkpw(passwordProvided, passwordPersisted);
+protected PasswordEncoder getPasswordEncoder() {
+    return ServiceFactory.getService(PasswordEncoder.class);
 }
 ```
 
-### Auto-Copy Login JSP
+The shipped `Pbkdf2PasswordEncoder` uses PBKDF2-HMAC-SHA-256, a random 128-bit
+salt, and 600,000 iterations. Applications can provide a different
+`PasswordEncoder` service when migrating an existing password format. A
+runtime override can be registered during application initialization:
 
-On first access, if no `login.jsp` exists in the module's JSP folder, the framework copies a default one from the dashboard resources:
+```java
+StaticServiceProvider.registerService(PasswordEncoder.class, customPasswordEncoder);
+```
+
+If no encoder is available, if either credential is null, or if verification
+fails, the default controller denies authentication.
+
+### Default Login JSP
+
+If no `login.jsp` exists in the application's module JSP folder, the framework
+renders a default page exposed directly from the dashboard JAR. The
+deployment is never modified, so this also works with packed or read-only WARs:
 
 ```
-Source: org/nextframework/authorization/login.jsp (in JAR)
-Target: /WEB-INF/jsp/{module}/login.jsp
+Application override: /WEB-INF/jsp/{module}/login.jsp
+Source:               org/nextframework/authorization/login.jsp
+Packaged default:     /WEB-INF/nextframework/authorization/login.jsp
 ```
 
 ### Default Login JSP Structure

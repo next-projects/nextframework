@@ -37,6 +37,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 public class NextCompositeViewResolver extends InternalResourceViewResolver {
 
+	public static final String WEB_RESOURCE_URL_PREFIX = "web-resource:";
+
 	private static final Log log = org.apache.commons.logging.LogFactory.getLog(NextCompositeViewResolver.class);
 
 	private String[] baseViews;
@@ -55,6 +57,14 @@ public class NextCompositeViewResolver extends InternalResourceViewResolver {
 		}
 
 		String classpathView = null;
+		String webResourceView = null;
+
+		if (viewName.startsWith(WEB_RESOURCE_URL_PREFIX)) {
+			webResourceView = viewName.substring(WEB_RESOURCE_URL_PREFIX.length());
+			if (getServletContext().getResource(webResourceView) == null) {
+				throw new RuntimeException("view not found " + webResourceView);
+			}
+		}
 
 		if (viewName.startsWith("classpath:")) {
 			viewName = viewName.substring("classpath:".length());
@@ -86,6 +96,9 @@ public class NextCompositeViewResolver extends InternalResourceViewResolver {
 
 		if (classpathView != null) {
 			view.setUrl(classpathView);
+		}
+		if (webResourceView != null) {
+			view.setUrl(webResourceView);
 		}
 
 		if (useBase == null) {

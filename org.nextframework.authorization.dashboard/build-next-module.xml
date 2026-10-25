@@ -1,3 +1,21 @@
 <project>
 	<import file="../org.nextframework.build/include/build-module-basics.xml"/>
+
+	<!-- Keep the JSP beside the authorization sources while exposing it through
+	     Servlet's standard JAR web-resource location in packaged deployments. -->
+	<target name="jar-module-classes" depends="set-information">
+		<jar destfile="${build.lib.dir}/${next.module.name}-${next.version}.jar" whenempty="skip" filesetmanifest="skip">
+			<fileset dir="${project.bin.dir}" includes="**/*"/>
+			<zipfileset dir="resources/org/nextframework/authorization" includes="login.jsp"
+					fullpath="META-INF/resources/WEB-INF/nextframework/authorization/login.jsp"/>
+		</jar>
+	</target>
+
+	<target name="jar-module-resources" depends="set-information">
+		<jar destfile="${build.lib.dir}/${next.module.name}-${next.version}.jar" filesonly="true" whenempty="skip" filesetmanifest="skip">
+			<fileset dir="${project.bin.dir}" includes="META-INF/**/*"/>
+			<zipfileset dir="resources/org/nextframework/authorization" includes="login.jsp"
+					fullpath="META-INF/resources/WEB-INF/nextframework/authorization/login.jsp"/>
+		</jar>
+	</target>
 </project>

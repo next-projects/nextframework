@@ -2,8 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-25"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.controller"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.nextframework.authorization"/>
+	<classpathentry kind="lib" path="/org.nextframework.build/lib-test/junit-4.13.2.jar" sourcepath="/org.nextframework.build/lib-test/src/junit-4.13.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
