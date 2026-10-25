@@ -21,8 +21,6 @@
 		<dependency org="net.bytebuddy"					name="byte-buddy"						rev="1.18.8"		conf="lib-test"/>
 		<dependency org="net.bytebuddy"					name="byte-buddy-agent"					rev="1.18.8"		conf="lib-test"/>
 
-		<dependency org="junit"							name="junit"							rev="4.13.2"		conf="lib-test" />
-		<dependency org="org.hamcrest"					name="hamcrest-core"					rev="1.3"			conf="lib-test" />
 
 	</dependencies>
 </ivy-module>

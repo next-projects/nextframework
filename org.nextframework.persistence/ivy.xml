@@ -25,8 +25,6 @@
 
 		<!-- Test -->
 		<dependency org="org.hsqldb" 						name="hsqldb" 							rev="2.7.4" 		conf="lib-test"/>
-		<dependency org="junit"								name="junit"							rev="4.13.2"		conf="lib-test"/>
-		<dependency org="org.hamcrest"						name="hamcrest-core"					rev="1.3"			conf="lib-test"/>
 
 	</dependencies>
 </ivy-module>

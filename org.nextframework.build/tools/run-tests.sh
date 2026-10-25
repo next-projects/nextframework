@@ -65,6 +65,14 @@ is_wsl() {
 build_full_classpath() {
     local root="$1"
     local cp=""
+    local shared_test_lib="$root/org.nextframework.build/lib-test"
+    if [ -d "$shared_test_lib" ]; then
+        for jar in "$shared_test_lib"/*.jar; do
+            if [ -f "$jar" ]; then
+                cp="$cp:$jar"
+            fi
+        done
+    fi
     for mod in "${ALL_MODULES[@]}"; do
         local mod_dir="$root/$mod"
         if [ -d "$mod_dir/bin" ]; then
@@ -199,6 +207,9 @@ copy_to_temp() {
     # Copy build tools
     mkdir -p "$temp_dir/org.nextframework.build/tools"
     cp "$SCRIPT_DIR/compile-tests.sh" "$temp_dir/org.nextframework.build/tools/"
+    if [ -d "$BUILD_DIR/lib-test" ]; then
+        cp -a "$BUILD_DIR/lib-test" "$temp_dir/org.nextframework.build/lib-test"
+    fi
 
     echo "$temp_dir"
 }

@@ -21,7 +21,7 @@
     <orderEntry type="module-library">
       <library name="junit4">
         <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit4.jar!/" />
+          <root url="jar://$MODULE_DIR$/../org.nextframework.build/lib-test/junit-4.13.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

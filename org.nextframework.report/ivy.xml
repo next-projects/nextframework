@@ -24,10 +24,5 @@
 
 		<!-- Barcode library -->
 		<dependency org="net.sourceforge.barbecue"			name="barbecue"						rev="1.5-beta1" conf="lib"/>
-
-		<!-- Test dependencies -->
-		<dependency org="junit"								name="junit"						rev="4.13.2"	conf="lib-test"/>
-		<dependency org="org.hamcrest"						name="hamcrest-core"				rev="1.3"		conf="lib-test"/>
-
 	</dependencies>
 </ivy-module>

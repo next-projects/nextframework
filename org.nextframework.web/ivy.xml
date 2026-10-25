@@ -10,7 +10,5 @@
 		<dependency org="jakarta.el"			name="jakarta.el-api"			rev="6.0.1"		conf="provided" />
 		<dependency org="org.springframework"	name="spring-web"				rev="7.0.5"		conf="lib" />
 		<dependency org="org.springframework"	name="spring-webmvc"			rev="7.0.5"		conf="lib" />
-		<dependency org="junit"					name="junit"					rev="4.13.2"	conf="lib-test" />
-		<dependency org="org.hamcrest"			name="hamcrest-core"			rev="1.3"		conf="lib-test" />
 	</dependencies>
 </ivy-module>

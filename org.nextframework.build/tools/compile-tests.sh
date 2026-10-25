@@ -51,6 +51,14 @@ ALL_MODULES=(
 # Build the production and test dependency classpath for all modules.
 build_full_classpath() {
     local cp=""
+    local shared_test_lib="$PROJECT_ROOT/org.nextframework.build/lib-test"
+    if [ -d "$shared_test_lib" ]; then
+        for jar in "$shared_test_lib"/*.jar; do
+            if [ -f "$jar" ]; then
+                cp="$cp:$jar"
+            fi
+        done
+    fi
     for mod in "${ALL_MODULES[@]}"; do
         local mod_dir="$PROJECT_ROOT/$mod"
         if [ -d "$mod_dir/bin" ]; then
@@ -143,6 +151,10 @@ main() {
     fi
 
     info "Building classpath..."
+    if [ ! -f "$PROJECT_ROOT/org.nextframework.build/lib-test/junit-4.13.2.jar" ]; then
+        error "Shared JUnit dependency not found. Run tools/download-dependencies.sh first."
+        return 1
+    fi
 
     # Test output is disposable and must never leak stale classes between runs.
     for mod in "${ALL_MODULES[@]}"; do

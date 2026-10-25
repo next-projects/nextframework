@@ -10,7 +10,7 @@ source tools/setup-env.sh
 This runs the full setup:
 1. Download Ant + Ivy (cached in `tools/bin/`)
 2. Set PATH for current shell
-3. Download all module dependencies
+3. Download all module dependencies and the shared JUnit test dependencies
 4. Compile all modules
 5. Generate JavaScript files
 
@@ -31,6 +31,10 @@ This runs the full setup:
 | `generate-js.sh` | Generates JavaScript from Java using STJS |
 | `clean.sh` | Removes all compiled classes |
 | `show-dependencies.sh` | Prints module dependencies in YAML format |
+
+JUnit and Hamcrest are declared once in `org.nextframework.build/ivy.xml` and
+retrieved into `org.nextframework.build/lib-test/`. Test-bearing modules use
+that shared location instead of declaring their own copies.
 
 ---
 
