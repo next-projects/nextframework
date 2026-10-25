@@ -132,6 +132,8 @@ ServletContext servletContext = appCtx.getServletContext();
 String appName = appCtx.getApplicationName();
 ```
 
+For non-root deployments, the application name is the context path without its leading slash. A root deployment uses the `application.name` servlet init parameter when configured, otherwise the servlet display name, and finally `ROOT` as a stable default.
+
 ---
 
 ## NextWeb Static Access

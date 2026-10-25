@@ -51,8 +51,6 @@ public class NextWeb extends Next {
 		if (request == null || response == null) {
 			throw new NullPointerException();
 		}
-		ServletContext servletContext = request.getServletContext();
-		getWebApplicationContext(servletContext);
 		getRequestContext(request, response);
 	}
 
@@ -91,16 +89,15 @@ public class NextWeb extends Next {
 	}
 
 	public static WebRequestContext getRequestContext(HttpServletRequest request, HttpServletResponse response) {
-		createApplicationContext(request.getServletContext());
+		WebApplicationContext applicationContext = getWebApplicationContext(request.getServletContext());
 		WebRequestContext requestContext = (WebRequestContext) request.getAttribute(WebRequestContext.REQUEST_CONTEXT_ATTRIBUTE);
 		//O requestContext pode atualizar por causa do multipart
 		if (requestContext == null || requestContext.getServletRequest() != request) {
 			log.trace("Creating NEXT request context... ");
-			//requestContext = new DefaultWebRequestContext(request, response, getWebApplicationContext(request.getServletContext()));
-			requestContext = webRequestFactory.createWebRequestContext(request, response, getWebApplicationContext(request.getServletContext()));
+			requestContext = webRequestFactory.createWebRequestContext(request, response, applicationContext);
 			request.setAttribute(WebRequestContext.REQUEST_CONTEXT_ATTRIBUTE, requestContext);
-			Next.requestContext.set(requestContext);
 		}
+		Next.requestContext.set(requestContext);
 		return requestContext;
 	}
 
@@ -108,8 +105,12 @@ public class NextWeb extends Next {
 		//verificar se já existe um applicationContext
 		WebApplicationContext applicationContext = (WebApplicationContext) servletContext.getAttribute(WebApplicationContext.APPLICATION_CONTEXT_ATTRIBUTE);
 		if (applicationContext == null) {
-			applicationContext = createApplicationContext(servletContext);
-			//throw new NotInNextContextException("O contexto de aplicação NEXT ainda não foi criado. Verifique se o listener ContextLoaderListener está configurado no web.xml");
+			synchronized (servletContext) {
+				applicationContext = (WebApplicationContext) servletContext.getAttribute(WebApplicationContext.APPLICATION_CONTEXT_ATTRIBUTE);
+				if (applicationContext == null) {
+					applicationContext = createApplicationContext(servletContext);
+				}
+			}
 		}
 		Next.applicationContext.set(applicationContext);
 		return applicationContext;

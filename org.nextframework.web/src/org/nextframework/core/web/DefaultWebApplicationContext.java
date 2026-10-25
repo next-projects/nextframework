@@ -37,6 +37,8 @@ import jakarta.servlet.ServletContext;
 public class DefaultWebApplicationContext extends AbstractApplicationContext implements WebApplicationContext {
 
 	private static final String APPLICATION_DIR = "application.data.dir";
+	private static final String APPLICATION_NAME = "application.name";
+	private static final String DEFAULT_APPLICATION_NAME = "ROOT";
 
 	private ServletContext servletContext;
 
@@ -50,7 +52,19 @@ public class DefaultWebApplicationContext extends AbstractApplicationContext imp
 
 	@Override
 	public String getApplicationName() {
-		return getServletContext().getContextPath().substring(1);
+		String contextPath = getServletContext().getContextPath();
+		if (contextPath != null && contextPath.length() > 1) {
+			return contextPath.substring(1);
+		}
+		String applicationName = getServletContext().getInitParameter(APPLICATION_NAME);
+		if (applicationName != null && !applicationName.trim().isEmpty()) {
+			return applicationName.trim();
+		}
+		String servletContextName = getServletContext().getServletContextName();
+		if (servletContextName != null && !servletContextName.trim().isEmpty()) {
+			return servletContextName.trim();
+		}
+		return DEFAULT_APPLICATION_NAME;
 	}
 
 	private String cachedApplicationDir = null;
