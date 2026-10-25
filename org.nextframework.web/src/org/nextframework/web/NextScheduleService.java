@@ -67,6 +67,8 @@ public class NextScheduleService {
 					runnable.run();
 				} catch (Throwable ex) {
 					log.error("Erro ao invocar tarefa agendada do framework [" + name + "]", ex);
+				} finally {
+					Next.remove();
 				}
 			}
 

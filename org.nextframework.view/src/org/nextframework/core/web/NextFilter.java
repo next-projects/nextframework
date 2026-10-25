@@ -71,6 +71,14 @@ public class NextFilter implements Filter {
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+		try {
+			doFilterInternal(req, res, chain);
+		} finally {
+			NextWeb.remove();
+		}
+	}
+
+	private void doFilterInternal(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;

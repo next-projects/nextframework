@@ -38,13 +38,17 @@ public class WebContextFilter implements Filter, ServletContextListener {
 			log.debug("Filter Initialized");
 		}
 		WebContext.setServletContext(filterConfig.getServletContext());
-		NextWeb.createApplicationContext(filterConfig.getServletContext());
+		NextWeb.getWebApplicationContext(filterConfig.getServletContext());
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		WebContext.setServletRequest(request);
-		chain.doFilter(request, response);
+		try {
+			chain.doFilter(request, response);
+		} finally {
+			WebContext.remove();
+		}
 	}
 
 	@Override

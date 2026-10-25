@@ -52,7 +52,7 @@ public class AjaxServlet extends HttpServlet {
 
 		super.init();
 
-		//some containers do not use the same Thread for filter and servlet initialization
+		// some containers do not use the same Thread for filter and servlet initialization
 		WebContext.setServletContext(getServletContext());
 
 		callbacks.put("combo", new ComboCallback());

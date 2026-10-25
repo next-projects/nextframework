@@ -59,6 +59,14 @@ public class Next {
 	}
 
 	/**
+	 * Removes all NEXT state associated with the current thread.
+	 */
+	public static void remove() {
+		requestContext.remove();
+		applicationContext.remove();
+	}
+
+	/**
 	 * Retorna um objeto registrado no Spring de determinada classe 
 	 * <B>IMPORTANTE:</B>
 	 * Inicialmente, o objeto será obtido a partir do nome simples da classe com a primeira letra minúscula.

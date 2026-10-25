@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class WebContext {
 
-	private static ThreadLocal<ServletContext> sctl = new InheritableThreadLocal<ServletContext>();
-	private static ThreadLocal<HttpServletRequest> srtl = new InheritableThreadLocal<HttpServletRequest>();
+	private static final InheritableThreadLocal<ServletContext> sctl = new InheritableThreadLocal<ServletContext>();
+	private static final InheritableThreadLocal<HttpServletRequest> srtl = new InheritableThreadLocal<HttpServletRequest>();
 
 	public static void setServletContext(ServletContext servletContext) {
 		sctl.set(servletContext);
@@ -17,6 +17,11 @@ public class WebContext {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		setServletContext(httpServletRequest.getServletContext());
 		srtl.set(httpServletRequest);
+	}
+
+	public static void remove() {
+		srtl.remove();
+		sctl.remove();
 	}
 
 	public static ServletContext getServletContext() {
