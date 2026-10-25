@@ -25,12 +25,12 @@ package org.nextframework.authorization.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.nextframework.authorization.Authorization;
 import org.nextframework.authorization.AuthorizationDAO;
@@ -147,24 +147,10 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 		}
 	}
 
-	protected Map<String, List<String>> cacheResourceRoles = new HashMap<>();
+	protected final Map<String, List<String>> cacheResourceRoles = new ConcurrentHashMap<>();
 
 	protected boolean checkStaticAuthorization(User user, String resource, String actionParameter, AuthorizationModule authorizationModule) {
-		List<String> roles = cacheResourceRoles.get(resource);
-		if (roles == null) {
-			roles = new ArrayList<String>();
-			cacheResourceRoles.put(resource, roles);
-			AntPathMatcher antPathMatcher = new AntPathMatcher();
-			@SuppressWarnings("all")
-			Enumeration<String> keys = (Enumeration<String>) authorizationProperties.propertyNames();
-			while (keys.hasMoreElements()) {
-				String resourceKey = keys.nextElement();
-				if (antPathMatcher.match(resourceKey, resource)) {
-					String rolesValue = authorizationProperties.getProperty(resourceKey);
-					roles.addAll(Arrays.asList(rolesValue.split(",")));
-				}
-			}
-		}
+		List<String> roles = cacheResourceRoles.computeIfAbsent(resource, this::findStaticRoles);
 		if (roles.isEmpty()) {
 			return true;
 		}
@@ -173,11 +159,32 @@ public class AuthorizationManagerImpl implements AuthorizationManager {
 		}
 		Role[] userRoles = authorizationDAO.findUserRoles(user);
 		for (Role role : userRoles) {
-			if (roles.contains(role.getName().toLowerCase())) {
+			if (roles.contains(normalizeRole(role.getName()))) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	private List<String> findStaticRoles(String resource) {
+		List<String> roles = new ArrayList<>();
+		AntPathMatcher antPathMatcher = new AntPathMatcher();
+		for (String resourceKey : authorizationProperties.stringPropertyNames()) {
+			if (antPathMatcher.match(resourceKey, resource)) {
+				String rolesValue = authorizationProperties.getProperty(resourceKey);
+				for (String role : rolesValue.split(",")) {
+					String normalizedRole = normalizeRole(role);
+					if (!normalizedRole.isEmpty()) {
+						roles.add(normalizedRole);
+					}
+				}
+			}
+		}
+		return Collections.unmodifiableList(roles);
+	}
+
+	private String normalizeRole(String role) {
+		return role == null ? "" : role.trim().toLowerCase(Locale.ROOT);
 	}
 
 	private UserAuthorization createAuthorization(User usuario, String resource, AuthorizationModule authorizationModule) {
