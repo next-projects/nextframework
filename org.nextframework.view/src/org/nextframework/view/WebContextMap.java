@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.nextframework.core.standard.Next;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,9 +44,15 @@ public class WebContextMap extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = 1L;
 	private HttpServletRequest httpRequest;
+	private BeanWrapper beanProperties;
 
 	public WebContextMap(HttpServletRequest request) {
+		this(request, null);
+	}
+
+	public WebContextMap(HttpServletRequest request, Object bean) {
 		this.httpRequest = request;
+		this.beanProperties = bean != null ? PropertyAccessorFactory.forBeanPropertyAccess(bean) : null;
 	}
 
 	public int size() {
@@ -64,7 +72,7 @@ public class WebContextMap extends HashMap<String, Object> {
 	}
 
 	public Object get(Object key) {
-		//precedencia: request, session, application, beans do spring
+		//precedencia: request, session, application, beans do spring, propriedades do bean
 		Object object = httpRequest.getAttribute(key.toString());
 		if (object == null) {
 			object = httpRequest.getSession().getAttribute(key.toString());
@@ -74,11 +82,13 @@ public class WebContextMap extends HashMap<String, Object> {
 		}
 		if (object == null) {
 			try {
-				//TODO PROCURAR BEANS
 				object = Next.getBeanFactory().getBean(key.toString());
 			} catch (NoSuchBeanDefinitionException e) {
-				//se nao tiver o bean, nao tem problema.. retorna null
+				//se nao tiver o bean, nao tem problema...
 			}
+		}
+		if (object == null && beanProperties != null && beanProperties.isReadableProperty(key.toString())) {
+			object = beanProperties.getPropertyValue(key.toString());
 		}
 		return object;
 	}

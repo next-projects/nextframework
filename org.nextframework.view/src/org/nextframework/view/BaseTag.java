@@ -780,7 +780,9 @@ public class BaseTag extends SimpleTagSupport implements DynamicAttributes {
 		@SuppressWarnings("unchecked")
 		@Override
 		public <E> E evaluate(String expression, Class<E> expectedType, BaseTag baseTag) {
-			WebContextMap contextMap = new WebContextMap(baseTag.getRequest());
+			BeanTag beanTag = baseTag.findParent2(BeanTag.class, false);
+			Object bean = beanTag != null && beanTag.getBeanDescriptor() != null ? beanTag.getBeanDescriptor().getTargetBean() : null;
+			WebContextMap contextMap = new WebContextMap(baseTag.getRequest(), bean);
 			E value;
 			if (expectedType != null) {
 				value = OgnlExpressionParser.parse(expression, expectedType, contextMap);

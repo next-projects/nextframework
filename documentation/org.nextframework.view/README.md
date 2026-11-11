@@ -56,6 +56,29 @@ Comprehensive JSP tag library framework providing UI components for web applicat
 
 ---
 
+## OGNL Bean Properties
+
+Expressions evaluated by tags can reference readable properties of the nearest enclosing `n:bean` directly:
+
+```jsp
+<n:bean name="dto">
+    <n:input name="vigencia"
+             itens="regraAgendamentoEmbarqueVigenciaService.obtemVigenciasCache(localEmbarque)" />
+</n:bean>
+```
+
+The explicit path `dto.localEmbarque` remains supported. Name resolution keeps its existing precedence:
+request attributes, session attributes, application attributes and Spring beans. Only names unresolved by
+those sources are looked up as readable properties of the nearest enclosing bean.
+
+This applies to OGNL expressions in combo and checklist `itens`, data grid `itens`, and dynamic attributes
+prefixed with `ognl:`. Nested beans use the innermost enclosing bean; missing or null properties do not
+fall back to outer beans. Exceptions raised by property getters propagate normally.
+
+AJAX combos retain their existing `FunctionCall` resolution, using property paths relative to the bean.
+JSP EL expressions (`${...}`) and the `n:ognl(...)` function retain their existing behavior; the latter
+has no tag bean context.
+
 ## Architecture
 
 ### Tag Hierarchy
