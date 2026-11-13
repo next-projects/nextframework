@@ -52,12 +52,18 @@ public class AppLoginController extends LoginController {
     protected String afterLoginRedirectTo() {
         return "/app/dashboard";  // Redirect after successful login
     }
+
+    @Override
+    protected boolean validPassword(String persisted, String provided) {
+        // The application owns its password storage and verification policy.
+        return BCrypt.checkpw(provided, persisted);
+    }
 }
 ```
 
-The framework provides a `PasswordEncoder` service backed by
-PBKDF2-HMAC-SHA-256. Use `PasswordEncoder.encode(...)` when creating or changing
-passwords; plaintext passwords are never accepted by the login controller.
+Password hashing, migration, and verification are application responsibilities.
+Applications should override `validPassword(...)` with their chosen password
+library and storage policy.
 
 ### 2. Create Authorization Controller
 
@@ -109,7 +115,7 @@ User submits username/password
         ▼
 ┌─────────────────────────────┐
 │  Validate password          │
-│  (PasswordEncoder service)  │
+│  (validPassword method)     │
 └─────────────────────────────┘
         │
         ├─► Valid → Set session attribute "USER" → Redirect
@@ -130,26 +136,16 @@ protected String afterLoginRedirectTo() {
 }
 
 /**
- * Resolves the password encoder used by validPassword(). Applications can
- * override this method when the encoder is managed by another container.
+ * Password validation logic. The application is responsible for using its
+ * password hashing library and storage policy here.
  */
 @Override
-protected PasswordEncoder getPasswordEncoder() {
-    return ServiceFactory.getService(PasswordEncoder.class);
+protected boolean validPassword(String passwordPersisted, String passwordProvided) {
+    return BCrypt.checkpw(passwordProvided, passwordPersisted);
 }
 ```
 
-The shipped `Pbkdf2PasswordEncoder` uses PBKDF2-HMAC-SHA-256, a random 128-bit
-salt, and 600,000 iterations. Applications can provide a different
-`PasswordEncoder` service when migrating an existing password format. A
-runtime override can be registered during application initialization:
-
-```java
-StaticServiceProvider.registerService(PasswordEncoder.class, customPasswordEncoder);
-```
-
-If no encoder is available, if either credential is null, or if verification
-fails, the default controller denies authentication.
+The framework does not select, configure, or provide a password encoder.
 
 ### Default Login JSP
 

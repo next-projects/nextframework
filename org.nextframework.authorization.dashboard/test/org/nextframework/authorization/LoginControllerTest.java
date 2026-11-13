@@ -1,8 +1,6 @@
 package org.nextframework.authorization;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -19,26 +17,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.nextframework.authorization.impl.AbstractAuthorizationDAO;
 import org.nextframework.core.web.WebRequestContext;
-import org.nextframework.service.ServiceFactory;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 public class LoginControllerTest {
-
-	private static final PasswordEncoder TEST_PASSWORD_ENCODER = new PasswordEncoder() {
-
-		@Override
-		public String encode(CharSequence rawPassword) {
-			return rawPassword.toString();
-		}
-
-		@Override
-		public boolean matches(CharSequence rawPassword, String encodedPassword) {
-			return encodedPassword != null && encodedPassword.contentEquals(rawPassword);
-		}
-	};
 
 	@Test
 	public void successfulLoginRotatesSessionBeforeStoringUser() throws Exception {
@@ -56,46 +40,6 @@ public class LoginControllerTest {
 	}
 
 	@Test
-	public void nullStoredPasswordIsRejectedWithoutRotatingSession() throws Exception {
-		List<String> events = new ArrayList<>();
-		Map<String, Object> sessionAttributes = new HashMap<>();
-		TestLoginController controller = controller(requestContext(events, sessionAttributes), user("user", null));
-
-		assertEquals("login", controller.doLogin(user("user", "secret")));
-
-		assertFalse(events.contains("changeSessionId"));
-		assertFalse(sessionAttributes.containsKey("USER"));
-	}
-
-	@Test
-	public void missingEncoderAndNullCredentialsFailClosed() {
-		TestLoginController controller = new TestLoginController(null, null);
-
-		assertFalse(controller.verify("secret", "secret"));
-		assertFalse(controller.verify(null, "secret"));
-		assertFalse(controller.verify("encoded", null));
-	}
-
-	@Test
-	public void shippedEncoderUsesSaltedAdaptiveHashes() {
-		PasswordEncoder encoder = new Pbkdf2PasswordEncoder();
-
-		String first = encoder.encode("secret");
-		String second = encoder.encode("secret");
-
-		assertNotEquals(first, second);
-		assertTrue(encoder.matches("secret", first));
-		assertFalse(encoder.matches("wrong", first));
-		assertFalse(encoder.matches("secret", "secret"));
-		assertFalse(encoder.matches("secret", "pbkdf2-sha256$999999999$invalid$invalid"));
-	}
-
-	@Test
-	public void shippedEncoderIsAvailableAsAService() {
-		assertTrue(ServiceFactory.getService(PasswordEncoder.class) instanceof Pbkdf2PasswordEncoder);
-	}
-
-	@Test
 	public void packedWarUsesPackagedLoginPageWithoutResolvingARealPath() throws Exception {
 		URL packagedPage = new URL("jar:file:/application/WEB-INF/lib/dashboard.jar!/META-INF/resources" + LoginController.DEFAULT_LOGIN_PAGE);
 		ServletContext servletContext = proxy(ServletContext.class, (proxy, method, args) -> {
@@ -109,7 +53,7 @@ public class LoginControllerTest {
 		});
 
 		assertEquals("web-resource:" + LoginController.DEFAULT_LOGIN_PAGE,
-				new TestLoginController(null, null).resolveLoginView(servletContext, "app"));
+				new TestLoginController(null).resolveLoginView(servletContext, "app"));
 	}
 
 	@Test
@@ -122,7 +66,7 @@ public class LoginControllerTest {
 			return defaultValue(method.getReturnType());
 		});
 
-		assertEquals("login", new TestLoginController(null, null).resolveLoginView(servletContext, "app"));
+		assertEquals("login", new TestLoginController(null).resolveLoginView(servletContext, "app"));
 	}
 
 	@Test
@@ -139,7 +83,7 @@ public class LoginControllerTest {
 		});
 
 		assertEquals("web-resource:" + LoginController.EXPLODED_DEFAULT_LOGIN_PAGE,
-				new TestLoginController(null, null).resolveLoginView(servletContext, "app"));
+				new TestLoginController(null).resolveLoginView(servletContext, "app"));
 	}
 
 	@Test
@@ -152,7 +96,7 @@ public class LoginControllerTest {
 			}
 			return defaultValue(method.getReturnType());
 		});
-		TestLoginController controller = new TestLoginController(null, null);
+		TestLoginController controller = new TestLoginController(null);
 
 		try {
 			controller.resolveLoginView(servletContext, "app");
@@ -166,7 +110,7 @@ public class LoginControllerTest {
 	}
 
 	private TestLoginController controller(WebRequestContext request, User persistedUser) throws Exception {
-		TestLoginController controller = new TestLoginController(request, TEST_PASSWORD_ENCODER);
+		TestLoginController controller = new TestLoginController(request);
 		AuthorizationDAO dao = new AbstractAuthorizationDAO() {
 			@Override
 			public User findUserByUsername(String username) {
@@ -247,11 +191,9 @@ public class LoginControllerTest {
 	private static class TestLoginController extends LoginController {
 
 		private final WebRequestContext request;
-		private final PasswordEncoder passwordEncoder;
 
-		TestLoginController(WebRequestContext request, PasswordEncoder passwordEncoder) {
+		TestLoginController(WebRequestContext request) {
 			this.request = request;
-			this.passwordEncoder = passwordEncoder;
 		}
 
 		@Override
@@ -264,13 +206,5 @@ public class LoginControllerTest {
 			return "login";
 		}
 
-		@Override
-		protected PasswordEncoder getPasswordEncoder() {
-			return passwordEncoder;
-		}
-
-		boolean verify(String persisted, String provided) {
-			return validPassword(persisted, provided);
-		}
 	}
 }

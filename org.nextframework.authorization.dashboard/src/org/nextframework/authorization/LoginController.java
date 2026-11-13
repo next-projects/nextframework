@@ -7,7 +7,6 @@ import org.nextframework.controller.DefaultAction;
 import org.nextframework.controller.MultiActionController;
 import org.nextframework.controller.NextCompositeViewResolver;
 import org.nextframework.core.standard.MessageType;
-import org.nextframework.service.ServiceFactory;
 import org.nextframework.util.Util;
 import org.nextframework.web.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,24 +116,7 @@ public class LoginController extends MultiActionController implements Authentica
 	}
 
 	protected boolean validPassword(String passwordPersisted, String passwordProvided) {
-		if (passwordPersisted == null || passwordProvided == null) {
-			return false;
-		}
-		try {
-			PasswordEncoder passwordEncoder = getPasswordEncoder();
-			if (passwordEncoder == null) {
-				logger.error("No PasswordEncoder service is available. Authentication was denied.");
-				return false;
-			}
-			return passwordEncoder.matches(passwordProvided, passwordPersisted);
-		} catch (RuntimeException e) {
-			logger.error("Password verification failed. Authentication was denied.", e);
-			return false;
-		}
-	}
-
-	protected PasswordEncoder getPasswordEncoder() {
-		return ServiceFactory.getService(PasswordEncoder.class);
+		return passwordPersisted.equals(passwordProvided);
 	}
 
 	protected String afterLoginRedirectTo() {
